@@ -368,7 +368,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var keys = _.keys(this.fields_view.fields);
         if (keys.length) {
             return this.dataset.default_get(keys).then(function(r) {
-                self.trigger('load_record', r);
+                self.trigger('load_record', _.clone(r));
             });
         }
         return self.trigger('load_record', {});
@@ -4243,7 +4243,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 switch (command[0]) {
                     case commands.CREATE:
                         obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
-                        obj.defaults = {};
+                        obj.defaults = self.dataset.last_default_get;
                         self.dataset.to_create.push(obj);
                         self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
                         ids.push(obj.id);

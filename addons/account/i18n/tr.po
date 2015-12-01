@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-02 16:33+0000\n"
-"Last-Translator: gezgin biri <gezginbiri@hotmail.com>\n"
+"PO-Revision-Date: 2015-11-28 08:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Merhaba ${object.partner_id.name},</p>\n\n    <p>Size yeni bir fatura kesildi: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERANSLAR</strong><br />\n       &nbsp;&nbsp;Fautora No: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Fatura Toplamı: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fatura Tarihi: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Sipariş Referansı: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;İşlemi Yapan: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Bu faturanızı doğrudan Paypal ile ödeyebilirsiniz:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Eğer herhangi bir sorunuz varsa, lütfen bizimle temasa geçmek için tereddüt etmeyin.</p>\n    <p>${object.company_id.name or 'us'} seçtiğiniz için teşekkür ederiz.</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -557,7 +557,7 @@ msgstr "= Teorik Kapanış Bakiyesi"
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr "Kontrol paneli için kullanılan geçici tablo"
+msgstr "Yönetim paneli için kullanılan geçici tablo"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -580,7 +580,7 @@ msgstr "Seçilen hareket satırı zaten uzlaştı."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "Bir vergi mali durumu, aynı vergilerde yalnızca bir kez tanımlanabilir."
+msgstr "Bir vergi mali koşulu, aynı vergilerde yalnızca bir kez tanımlanabilir."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -1102,7 +1102,7 @@ msgstr "İzin Verilen Hesaplar (denetlenmemesi için boş bırak)"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "Hesapların Mali Durumu"
+msgstr "Hesapların Mali Koşulu"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -1402,7 +1402,7 @@ msgstr "Tutar türü"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr "Bir hesabın mali durumu aynı hesap üzerinde yalnız bir kez tanımlanabilir."
+msgstr "Bir hesabın mali koşulu aynı hesap üzerinde yalnız bir kez tanımlanabilir."
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -1609,7 +1609,7 @@ msgstr "Uygula"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position if the conditions match."
-msgstr ""
+msgstr "Tüm şartlar uygunsa bu mali koşulu otomatik uygula"
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
@@ -2043,7 +2043,7 @@ msgstr "Satış Temsilcisine Göre"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "Bu kutunun onayını kaldırırsanız, mali durumu silmeden gizleyebilirsiniz."
+msgstr "Bu kutunun onayını kaldırırsanız, mali koşulu silmeden gizleyebilirsiniz."
 
 #. module: account
 #: field:account.chart.template,visible:0
@@ -2480,7 +2480,7 @@ msgstr "Bu kutuyu işaretle"
 msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
-msgstr "Paydaş KDV ne tabi ise bu kutuyu işaretleyin. KDV bildirimlerinde kullanılacaktır."
+msgstr "İş Ortağı KDV'ye tabi ise bu kutuyu işaretleyin. KDV bildirimlerinde kullanılacaktır."
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -3054,7 +3054,7 @@ msgstr "İade Oluştur"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr "Borç Silme Oluştur"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -4454,31 +4454,31 @@ msgstr "Mali Eşleştirme"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "Mali Durum"
+msgstr "Mali Koşul"
 
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr "Mali Durum Açıklaması:"
+msgstr "Mali Koşul Açıklaması:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 #: view:account.fiscal.position.template:account.view_account_position_template_search
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "Mali Durum Şablonu"
+msgstr "Mali Koşul Şablonu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "Mali Durum Şablonları"
+msgstr "Mali Koşul Şablonları"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Mali Durumlar"
+msgstr "Mali Koşullar"
 
 #. module: account
 #: field:account.aged.trial.balance,fiscalyear_id:0
@@ -5098,7 +5098,7 @@ msgstr "Eğer bu kutuyu işaretlemezseniz faturalama & ödemeler yapabilirsiniz,
 msgid ""
 "If you put \"%(year)s\" in the prefix, it will be replaced by the current "
 "year."
-msgstr "Eğer sıraya \"%(year)s\" eklerseniz, 2013 gibi yıl ile değiştirilecektir."
+msgstr "Eğer sıraya \"%(year)s\" eklerseniz, 2016 gibi yıl ile değiştirilecektir."
 
 #. module: account
 #: help:res.company,tax_calculation_rounding_method:0
@@ -9460,7 +9460,7 @@ msgstr "Vergiler"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "Vergilerin Mali Durumu"
+msgstr "Vergilerin Mali Koşulu"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9506,12 +9506,12 @@ msgstr "Mali Hesap Eşleştirme Şablonu"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "Vergi Mali Durumu Şablonu"
+msgstr "Vergi Mali Koşul Şablonu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Mali Durum Şablonu"
+msgstr "Mali Koşul Şablonu"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -9699,7 +9699,7 @@ msgstr "Uzlaştırılacak girişler aynı şirkete ait olmalı"
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Mali durum, iş ortağı için kullanılacak vergileri ve hesapları belirlemek için kullanılır."
+msgstr "Mali koşul, iş ortağı için kullanılacak vergileri ve hesapları belirlemek için kullanılır."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -10091,7 +10091,7 @@ msgid ""
 "This allows you to manage the assets owned by a company or a person.\n"
 "It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Bu modül, bir firma yad kişiye ait varlıkları yönetmenizi sağlar.\nBu varlıklarda oluşan amortismanları izler ve bu amortisman satırları için hesap hareketi oluşturur.\n-account_asset Modülünü kurar. Bu kutuyu işaretlemezseniz, faturalama ve ödeme yapabilirsiniz ancak muhasebe işlemleri (Günlük Öğeleri, Hesap Planları, ...) yapamazsınız."
+msgstr "Bu modül, bir firma yada kişiye ait demirbaşları yönetmenizi sağlar.\nBu demirbaşlarda oluşan amortismanları izler ve bu amortisman satırları için hesap hareketi oluşturur.\n-account_asset Modülünü kurar. Bu kutuyu işaretlemezseniz, faturalama ve ödeme yapabilirsiniz ancak muhasebe işlemleri (Günlük Öğeleri, Hesap Planları, ...) yapamazsınız."
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -11124,6 +11124,13 @@ msgid ""
 msgstr "Hem borç hem de alacak hesaplarından işlemler seçiyorsunuz.\n\nSürdürmek için önce %s işleminden seçimi kaldırmalısınız."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11749,4 +11756,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Sayın Yetkili,\n\nKayıtlarımıza göre hesabınızda halen yapılmamış ödemeler bulunmaktadır. Lütfen aşağıdaki ayrıntıları inceleyin.\nEğer ödeme yaptıysanız, lütfen bu yazımızı dikkate almayın. Aksi durumda, aşağıda belirtilen tutarı tarafımıza ödemenizi rica ederiz.\nHesabınızla ilgili herhangi bir sorunuz olursa, lütfen bize danışın.\n\nİşbirliğiniz için şimdiden teşekkür ederiz.\n\nSaygılarımızla,"
