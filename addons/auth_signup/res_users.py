@@ -265,8 +265,7 @@ class res_users(osv.Model):
 
         res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=expiration, context=context)
 
-        if not context:
-            context = {}
+        context = dict(context or {})
 
         # send email to users with their signup url
         template = False
@@ -283,6 +282,7 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+            context['lang'] = user.lang                
             self.pool.get('mail.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
 
     def create(self, cr, uid, values, context=None):

@@ -53,7 +53,7 @@ if(!$('.o_website_quote').length) {
             'submit #accept': 'submitForm',
         },
         initSignature: function(ev){
-            this.$("#signature").empty().jSignature({'decor-color' : '#D1D0CE'});
+            this.$("#signature").empty().jSignature({'decor-color' : '#D1D0CE', 'color': '#000', 'background-color': '#fff'});
             this.empty_sign = this.$("#signature").jSignature("getData",'image');
         },
         clearSignature: function(ev){

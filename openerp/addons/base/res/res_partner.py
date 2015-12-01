@@ -260,7 +260,7 @@ class res_partner(osv.Model, format_address):
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
-        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users', auto_join=True),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields

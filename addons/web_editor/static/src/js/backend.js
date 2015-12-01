@@ -122,8 +122,8 @@ var FieldTextHtmlSimple = widget.extend({
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
-            this.internal_set_value(this.$content.html());
         }
+        this.internal_set_value(this.$content.html());
     },
     destroy_content: function () {
         $(".oe-view-manager-content").off("scroll");

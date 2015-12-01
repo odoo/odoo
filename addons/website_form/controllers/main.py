@@ -15,13 +15,11 @@ class WebsiteForm(http.Controller):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
-
         if not model_record:
             return json.dumps(False)
 
         try:
             data = self.extract_data(model_record, ** kwargs)
-
         # If we encounter an issue while extracting data
         except ValidationError, e:
             # I couldn't find a cleaner way to pass data to an exception
@@ -96,7 +94,7 @@ class WebsiteForm(http.Controller):
             'custom': '',        # Custom fields values
         }
 
-        authorized_fields = model.sudo().get_authorized_fields();
+        authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
 
         for field_name, field_value in kwargs.items():
@@ -183,7 +181,7 @@ class WebsiteForm(http.Controller):
     def insert_attachment(self, model, id_record, files):
         orphan_attachment_ids = []
         record = model.env[model.model].browse(id_record)
-        authorized_fields = model.sudo().get_authorized_fields()
+        authorized_fields = model.sudo()._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {

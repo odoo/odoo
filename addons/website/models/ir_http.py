@@ -275,7 +275,8 @@ class ir_http(orm.AbstractModel):
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'],
+                                            context=request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True and not v.page]
                     values['views'] = to_reset
             elif code == 403:

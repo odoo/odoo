@@ -5,11 +5,8 @@
         <div class="container-fluid o_web_settings_dashboard">
             <div class="row">
                 <div class="o_web_settings_dashboard_enterprise"/>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> <div class="text-center o_web_settings_dashboard_apps"></div>
-                    <ul class="nav nav-pills o_web_settings_dashboard_pills">
-                        <li role="presentation" class="text-center"><a href="https://www.odoo.com/apps/modules" target="_blank"><i class="fa fa-rocket fa-2x text-muted"/> App store </a></li>
-                        <li role="presentation" class="text-center pull-right"><a href="https://www.odoo.com/apps/themes" target="_blank"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a></li>
-                    </ul>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_apps"></div>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> 
                     <div class="text-center o_web_settings_dashboard_invitations"></div>
@@ -25,19 +22,26 @@
     </t>
 
     <t t-name="DashboardApps">
-        <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
-        <div class="o_web_settings_dashboard_header">
-            <t t-if="installed_apps">
-                <t t-esc="installed_apps"></t>
-                <t t-if="installed_apps == 1">Installed App</t>
-                <t t-if="installed_apps > 1">Installed Apps</t>
-            </t>
-            <t t-if="! installed_apps">
-                No app installed 
-            </t>
-        </div>
-        <div>
-            <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
+        <div class="text-center o_web_settings_dashboard_apps">
+            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
+            <div class="o_web_settings_dashboard_header">
+                <t t-if="installed_apps">
+                    <t t-esc="installed_apps"></t>
+                    <t t-if="installed_apps == 1">Installed App</t>
+                    <t t-if="installed_apps > 1">Installed Apps</t>
+                </t>
+                <t t-if="! installed_apps">
+                    No app installed
+                </t>
+            </div>
+            <div>
+                <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
+            </div>
+            <div class="o_web_settings_dashboard_pills">
+                <a href="https://www.odoo.com/apps/modules" target="_blank" class="pull-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
+                <a href="https://www.odoo.com/apps/themes" target="_blank" class="pull-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
+            </div>
+            <div class="clearfix"/>
         </div>
     </t>
     <t t-name="DashboardInvitations">
@@ -137,27 +141,14 @@
     </t>
 
     <t t-name="DashboardEnterprise">
-        <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+        <hr class="mt16"/>
+        <div class="text-center o_web_settings_dashboard_enterprise">
             <div class="text-center o_web_settings_dashboard_enterprise">
-                <div class="text-center o_web_settings_dashboard_enterprise">
-                    <i class="fa fa-cloud-upload fa-4x text-muted"></i>
-                    <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
-                    <div>
-                        <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
-                    </div>
-                    <hr/>
-                    <div class="text-left">
-                        Get more features with Odoo Enterprise!
-                        <ul class="list-unstyled">
-                            <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
-                            <li><i class="fa fa-check"></i> New design</li>
-                            <li><i class="fa fa-check"></i> Mobile support</li>
-                            <li><i class="fa fa-check"></i> Upgrade to future versions</li>
-                            <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
-                            <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
-                        </ul>
-                        <img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/>
-                    </div>
+                <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
+                <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
+                <div><img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/></div>
+                <div>
+                    <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
                 </div>
             </div>
         </div>

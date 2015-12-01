@@ -532,6 +532,9 @@ var CalendarView = View.extend({
                     else if (value instanceof Array) {
                         temp_ret[fieldname] = value[1]; // no name_get to make
                     }
+                    else if (_.contains(["date", "datetime"], self.fields[fieldname].type)) {
+                        temp_ret[fieldname] = instance.web.format_value(value, self.fields[fieldname]);
+                    }
                     else {
                         throw new Error("Incomplete data received from dataset for record " + evt.id);
                     }

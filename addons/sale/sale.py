@@ -486,7 +486,9 @@ class SaleOrderLine(models.Model):
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
-        that this is the case only if the refund is generated from the SO.
+        that this is the case only if the refund is generated from the SO and that is intentional: if
+        a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
+        it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
         for line in self:
             qty_invoiced = 0.0
@@ -543,7 +545,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
-            if line.state != 'sale':
+            if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
             qty = 0.0
             for proc in line.procurement_ids:

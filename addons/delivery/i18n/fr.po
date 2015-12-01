@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-21 00:00+0000\n"
+"PO-Revision-Date: 2015-11-24 23:09+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -582,7 +582,7 @@ msgstr "Indique les différentes façons d'emballer un même article. Ceci n'a p
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr "Donne l'ordre de séquence lors de l'affichage d'une liste de tarifs de livraison."
+msgstr "Donne l'ordre de la séquence lors du calcul du transporteur."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
@@ -603,7 +603,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "si elle est cochée, de nouveaux messages requièrent votre attention."
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -614,7 +614,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr "Si l'évaluation permanente est activée pour un produit, le système créera automatiquement les entrées de journal correspondant aux mouvements de stock, avec un prix de produit conforme à la méthode des coûts. La variation du compte de stock établie sur la catégorie de produit représentera la valeur actuelle des stocks, le compte des sorties et entrées en stock et présenteront la contrepartie des mouvements."
+msgstr "Si l'évaluation permanente est activée pour un produit, le système créera automatiquement les entrées de journal correspondant aux mouvements de stock, avec un prix de produit conforme à la méthode de coût. La variation du compte de stock établi sur la catégorie de produit représentera la valeur actuelle des stocks, les comptes de sortie et d'entrée de stock présenteront la contrepartie des mouvements."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -635,7 +635,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr "Pour la facturation au coût, les frais seront facturés sur l'ordre de vente au coût de la ligne analytique; pour la facturation au prix de vente, c'est le prix du produit qui sera utilisé."
+msgstr "Pour la facturation au coût, les frais seront facturés sur l'ordre de vente au coût de la ligne analytique; pour la facturation au prix de vente, c'est le prix de l'article qui sera utilisé."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -698,7 +698,7 @@ msgstr "Valorisation de l'inventaire"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "Facturer sur livraison"
+msgstr "Facturer le transport à la livraison"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state

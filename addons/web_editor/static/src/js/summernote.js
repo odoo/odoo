@@ -2320,6 +2320,12 @@ function summernote_paste (event) {
 
     var html = clipboardData.getData("text/html");
     var $node = $('<div/>').html(html);
+    // if copying source did not provide html, default to plain text
+    if(!html) {
+      $node.text(clipboardData.getData("text/plain")).html(function(_, html){
+          return html.replace(/\r?\n/g,'<br>');
+      });
+    }
 
     /* 
         remove undesirable tag

@@ -76,7 +76,8 @@ return Widget.extend({
         this.fold();
     },
     on_keydown: function (event) {
-        if (event.which === $.ui.keyCode.ENTER) {
+        // ENTER key (avoid requiring jquery ui for external livechat)
+        if (event.which === 13) {
             var message = {
                 content: this.$input.val(),
                 attachment_ids: [],

@@ -215,7 +215,7 @@ class XMLTranslator(object):
         if (
             isinstance(node, SKIPPED_ELEMENT_TYPES) or
             node.tag in SKIPPED_ELEMENTS or
-            node.get("translation", "").strip() == "off" or
+            node.get("t-translation", "").strip() == "off" or
             node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS
         ):
             # do not translate the contents of the node

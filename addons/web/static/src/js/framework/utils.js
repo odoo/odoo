@@ -322,7 +322,16 @@ function round_precision (value, precision) {
     var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
     var epsilon = Math.pow(2, epsilon_magnitude - 53);
     normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
-    var rounded_value = Math.round(normalized_value);
+
+    /**
+     * Javascript performs strictly the round half up method, which is asymmetric. However, in
+     * Python, the method is symmetric. For example:
+     * - In JS, Math.round(-0.5) is equal to -0.
+     * - In Python, round(-0.5) is equal to -1.
+     * We want to keep the Python behavior for consistency.
+     */
+    var sign = normalized_value < 0 ? -1.0 : 1.0;
+    var rounded_value = sign * Math.round(Math.abs(normalized_value));
     return rounded_value * precision;
 }
 

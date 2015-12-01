@@ -9,7 +9,7 @@
     reference_type: none
     payment_term_id: account.account_payment_term
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - name: 'Dell Inspiron Laptop without OS'
         product_id: product.product_product_49
@@ -27,7 +27,7 @@
     partner_id: base.res_partner_2
     currency_id: base.EUR
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-08'
+    date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
       - name: '8-port Switch'
         product_id: product.product_product_51
@@ -94,7 +94,7 @@
     reference_type: none
     payment_term_id: account.account_payment_term
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - name: 'Toner Cartridge'
         price_unit: 10.0
@@ -112,7 +112,7 @@
     partner_id: base.res_partner_12
     currency_id: base.EUR
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
 -
   !python {model: ir.model.data} : |
       line_vals = {
@@ -133,7 +133,7 @@
     partner_id: base.res_partner_1
     currency_id: base.EUR
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-15'
+    date_invoice: !eval time.strftime('%Y-%m')+'-15'
 -
   !python {model: ir.model.data} : |
       line_vals = {

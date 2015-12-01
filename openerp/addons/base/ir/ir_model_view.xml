@@ -41,7 +41,7 @@
                     </group>
                     <notebook>
                         <page string="Fields">
-                            <field context="{'manual':True}" name="field_id">
+                            <field name="field_id">
                                 <tree string="Fields Description">
                                     <field name="name"/>
                                     <field name="field_description"/>
@@ -203,7 +203,7 @@
             <field name="name">Models</field>
             <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
-            <field name="context">{'manual':True}</field>
+            <field name="context">{}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
@@ -351,7 +351,7 @@
             <field name="name">Fields</field>
             <field name="res_model">ir.model.fields</field>
             <field name="view_type">form</field>
-            <field name="context">{'manual':True}</field>
+            <field name="context">{}</field>
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
