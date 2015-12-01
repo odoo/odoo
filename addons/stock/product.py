@@ -387,7 +387,7 @@ class product_template(osv.osv):
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             product_tmpl_id = data['__domain'][1][2][0]
-            res[product_tmpl_id]['nbr_reordering_rules'] = int(data['product_id_count'])
+            res[product_tmpl_id]['nbr_reordering_rules'] = res[product_tmpl_id].get('nbr_reordering_rules', 0) + int(data['product_id_count'])
             res[product_tmpl_id]['reordering_min_qty'] = data['product_min_qty']
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
