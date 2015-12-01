@@ -20,7 +20,6 @@ class Users(models.Model):
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    chatter_needaction_auto = fields.Boolean('Automatically set needaction as Read')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
