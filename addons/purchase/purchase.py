@@ -1506,9 +1506,12 @@ class procurement_order(osv.osv):
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
+
+                    po_to_update = {'origin': po_rec.origin and ', '.join([po_rec.origin, procurement.origin]) or procurement.origin}
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
-                        po_obj.write(cr, uid, [po_id], {'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+                        po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+                    po_obj.write(cr, uid, [po_id], po_to_update, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
