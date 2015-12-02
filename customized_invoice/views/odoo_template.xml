@@ -5,13 +5,22 @@
    	    <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
      </template>
 
-    <template id="template_5_duplicate" name="Odoo Duplicate">
-	   <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
-    </template>
+<template id="odoo_duplicate" inherit_id="account.report_invoice_document" primary="True" name="Odoo Duplicate">
+    <xpath expr="//h2" position="replace">
+        <h2>
+            <span>Duplicate# </span>
+            <span t-field="o.number"/>
+        </h2>
+    </xpath>
+</template>
+
+<template id="template_5_duplicate" name="Odoo Duplicate">
+   <t t-call="customized_invoice.odoo_duplicate" t-lang="o.partner_id.lang"/>
+</template>
 
 <!--This template is to take care of duplicates priting for invoices already validated before installation of this module -->
  <template id="account.report_invoice_duplicate" name="Odoo Duplicate">
-     <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
+     <t t-call="customized_invoice.odoo_duplicate" t-lang="o.partner_id.lang"/>
  </template>
 </data>
 </openerp>
