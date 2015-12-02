@@ -348,12 +348,14 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
-        class dotdict(dict):
-            """ Dictionary class that allow to access a dictionary value by using '.'. This is needed to eval correctly
-                statements like 'parent.fieldname' in context.
+        class dotdict(object):
+            """ Dictionary class that allow to access a dictionary value by using '.'.
+                This is needed to eval correctly statements like 'parent.fieldname' in context.
             """
+            def __init__(self, d):
+                self._dict = d
             def __getattr__(self, attr):
-                return self.get(attr)
+                return self._dict.get(attr, False)
 
         def _get_right_one2many_view(fg, field_name, view_type):
             one2many_view = fg[field_name]['views'].get(view_type)
@@ -409,8 +411,7 @@ class YamlInterpreter(object):
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            missing_default_ctx = self.context.copy()
-            missing_default_ctx.update(context)
+            missing_default_ctx = dict(self.context, **context)
             defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
@@ -430,12 +431,11 @@ class YamlInterpreter(object):
                         if (view is not False) and (fg[field_name]['type']=='one2many'):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
-                        ctx = context.copy()
+                        ctx = dict(context)
                         if default and el.get('context'):
-                            browsable_parent = dotdict(parent)
-                            ctx_env = dict(parent=browsable_parent)
-                            evaluated_ctx = eval(el.get('context'), globals_dict=ctx_env, locals_dict=record_dict)
-                            ctx.update(evaluated_ctx)
+                            ctx.update(eval(el.get('context'),
+                                            globals_dict={'parent': dotdict(parent)},
+                                            locals_dict=record_dict))
 
                         field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default, context=ctx)
 
@@ -470,7 +470,7 @@ class YamlInterpreter(object):
         else:
             record_dict = {}
 
-        for field_name, expression in fields.items():
+        for field_name, expression in fields.iteritems():
             if record_dict.get(field_name):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
@@ -479,8 +479,11 @@ class YamlInterpreter(object):
         # filter returned values; indeed the last modification in the import process have added a default
         # value for all fields in the view; however some fields present in the view are not stored and
         # should not be sent to create. This bug appears with not stored function fields in the new API.
-        record_dict = dict((key, record_dict.get(key)) for key in record_dict if (key in model._columns or key in model._inherit_fields))
-        return record_dict
+        return {
+            key: val
+            for key, val in record_dict.iteritems()
+            if (key in model._columns or key in model._inherit_fields)
+        }
 
     def process_ref(self, node, field=None):
         assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
