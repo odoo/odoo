@@ -18,8 +18,8 @@ class ChannelPartner(models.Model):
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
-    partner_id = fields.Many2one('res.partner', string='Recipient')
-    channel_id = fields.Many2one('mail.channel', string='Channel')
+    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
+    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimied")
