@@ -11,10 +11,11 @@ class TestFiscalPosition(AccountingTestCase):
         self.fiscal_position_model = self.registry('account.fiscal.position')
         self.res_partner_model = self.registry('res.partner')
         self.res_country_model = self.registry('res.country')
+        self.ir_data_model = self.registry('ir.model.data')
 
     def test_fiscal_position(self):
         cr, uid = self.cr, self.uid
-        country_id = self.res_country_model.search(cr, uid, [('name', '=', 'France')])[0]
+        country_id = self.ir_data_model.xmlid_to_res_id(cr, uid, 'base.be')
         partner_id = self.res_partner_model.create(cr, uid, dict(
                                                    name="George",
                                                    vat="BE0477472701",
