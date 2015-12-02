@@ -126,7 +126,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
+                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -136,9 +136,9 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_model" string="Incoming Emails create"/>
-                                <field name="alias_model" class="oe_inline" nolabel="1"/>
-                                <field name="alias_contact" class="oe_inline"
+                                <label for="alias_model" string="Incoming Emails create" groups="base.group_no_one"/>
+                                <field name="alias_model" class="oe_inline" nolabel="1" groups="base.group_no_one"/>
+                                <field name="alias_contact" class="oe_inline" groups="base.group_no_one"
                                         string="Accept Emails From"/>
                             </group>
                         </page>
@@ -547,6 +547,9 @@
                             You can also add a description to help your coworkers understand the meaning and purpose of the stage.
                         </p>
                         <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Projects using this stage">
+                        <field name="project_ids" widget="many2many_tags"/>
                     </group>
                 </form>
             </field>
