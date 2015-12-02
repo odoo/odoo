@@ -674,6 +674,8 @@ var ChatterComposer = ChatComposer.extend({
             }, {
                 on_close: function() {
                     self.trigger('need_refresh');
+                    var parent = self.getParent();
+                    chat_manager.get_messages({model: parent.model, res_id: parent.res_id});
                 },
             });
         });
@@ -741,15 +743,18 @@ var Chatter = form_common.AbstractField.extend({
 
     fetch_and_render_thread: function (ids, options) {
         var self = this;
-        return chat_manager.fetch_messages(ids, options).then(function (raw_messages) {
+        options = options || {};
+        options.ids = ids;
+        return chat_manager.get_messages(options).then(function (raw_messages) {
             self.thread.render(raw_messages, {display_load_more: raw_messages.length < ids.length});
         });
     },
 
     on_post_message: function (message) {
         var self = this;
+        var options = {model: this.model, res_id: this.res_id};
         chat_manager
-            .post_message_in_document(this.model, this.res_id, message)
+            .post_message(message, options)
             .then(function () {
                 self.close_composer();
                 if (message.partner_ids.length) {

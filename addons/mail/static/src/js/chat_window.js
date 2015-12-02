@@ -82,10 +82,9 @@ return Widget.extend({
                 content: this.$input.val(),
                 attachment_ids: [],
                 partner_ids: [],
-                channel_id: this.channel_id,
             };
             this.$input.val('');
-            this.trigger('post_message', message);
+            this.trigger('post_message', message, this.channel_id);
         }
     },
     on_click_close: function (event) {
