@@ -196,7 +196,7 @@ class product_product(osv.osv):
         #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
         for product in self.browse(cr, uid, ids, context=context):
-            if product.id and product.type != 'service':
+            if product.type != 'service':
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
 
@@ -340,10 +340,10 @@ class sale_order_line(osv.osv):
                     uom_record = product_obj.uom_id
                 compare_qty = float_compare(product_obj.qty_available, qty, precision_rounding=uom_record.rounding)
                 if compare_qty == -1:
-                    warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s in stock ! \nThe total quantity of incoming stock is %.2f %s.') % \
+                    warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s in stock ! \nThe total quantity incoming and in stock is %.2f %s. (without reservations)') % \
                         (qty, uom_record.name,
-                         max(0,product_obj.qty_available), uom_record.name,
-                         max(0,product_obj.incoming_qty), uom_record.name)
+                         max(0,product_obj.virtual_available), uom_record.name,inco
+                         max(0,product_obj.qty_available), uom_record.name)
                     warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
 
         #update of warning messages
@@ -424,8 +424,6 @@ class stock_move(osv.osv):
                     fp = move.picking_id.sale_id.fiscal_position
                     res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), context=context)
                     extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
-                else:
-                    extra_move_tax[0, move.product_id] = [(6, 0, [x.id for x in move.product_id.product_tmpl_id.taxes_id])]
         return (is_extra_move, extra_move_tax)
 
     def _get_taxes(self, cr, uid, move, context=None):
@@ -480,7 +478,7 @@ class stock_picking(osv.osv):
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
         inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
         sale = move.picking_id.sale_id
-        if sale and inv_type in ('out_invoice', 'out_refund'):
+        if sale:
             inv_vals.update({
                 'fiscal_position': sale.fiscal_position.id,
                 'payment_term': sale.payment_term.id,
