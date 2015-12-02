@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 from openerp.osv import fields
+from openerp import tools, SUPERUSER_ID
 
 class ir_ui_menu(osv.osv):
     """ Override of ir.ui.menu class. When adding mail_thread module, each
@@ -55,3 +56,22 @@ class ir_ui_menu(osv.osv):
         if count:
             return len(ids)
         return ids
+
+
+class ir_translation(osv.Model):
+    _name = "ir.translation"
+    _inherit = "ir.translation"
+
+    @tools.ormcache_multi(skiparg=3, multi=6)
+    def _get_ids(self, cr, uid, name, tt, lang, ids):
+        res = super(ir_translation, self)._get_ids(cr, uid, name, tt, lang, ids)
+        if ids and name == 'ir.ui.menu,name' and tt == 'model':
+            no_translation_menu_ids = [menu_id for menu_id, translation in res.items() if not translation]
+            if no_translation_menu_ids:
+                # SUPERUSER_ID is used:
+                # - to bypass the security, for greater performances
+                # - the list `ids` already contains only the menu ids that the user can access to.
+                to_translate_mail_group_menu_ids = self.pool['ir.ui.menu'].search_read(cr, SUPERUSER_ID, [('id', 'in', no_translation_menu_ids), ('mail_group_id', '!=', False)], ['mail_group_id'])
+                mail_group_translations = self._get_ids(cr, uid, 'mail.group,name', tt, lang, [menu['mail_group_id'][0] for menu in to_translate_mail_group_menu_ids])
+                res.update(dict((menu['id'], mail_group_translations[menu['mail_group_id'][0]]) for menu in to_translate_mail_group_menu_ids))
+        return res
