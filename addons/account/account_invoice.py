@@ -1347,13 +1347,16 @@ class account_invoice_line(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
 
-        taxes = fpos.map_tax(taxes)
-        values['invoice_line_tax_id'] = taxes.ids
+        fp_taxes = fpos.map_tax(taxes)
+        values['invoice_line_tax_id'] = fp_taxes.ids
 
         if type in ('in_invoice', 'in_refund'):
-            values['price_unit'] = price_unit or product.standard_price
+            if price_unit and price_unit != product.standard_price:
+                values['price_unit'] = price_unit
+            else:
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.standard_price, taxes, fp_taxes.ids)
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.lst_price, taxes, fp_taxes.ids)
 
         values['uos_id'] = product.uom_id.id
         if uom_id:
@@ -1368,8 +1371,6 @@ class account_invoice_line(models.Model):
 
         if company and currency:
             if company.currency_id != currency:
-                if type in ('in_invoice', 'in_refund'):
-                    values['price_unit'] = product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
             if values['uos_id'] and values['uos_id'] != product.uom_id.id:
