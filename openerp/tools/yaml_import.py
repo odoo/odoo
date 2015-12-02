@@ -453,33 +453,8 @@ class YamlInterpreter(object):
                     if not el.attrib.get('on_change', False):
                         continue
 
-                    if el.attrib['on_change'] in ('1', 'true'):
-                        # New-style on_change
-                        recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
-                        result = recs.onchange(record_dict, field_name, onchange_spec)
-
-                    else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
-                        assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
-
-                        # creating the context
-                        class parent2(object):
-                            def __init__(self, d):
-                                self.d = d
-                            def __getattr__(self, name):
-                                return self.d.get(name, False)
-
-                        ctx = record_dict.copy()
-                        ctx['context'] = self.context
-                        ctx['uid'] = SUPERUSER_ID
-                        ctx['parent'] = parent2(parent)
-                        for a in fg:
-                            if a not in ctx:
-                                ctx[a] = process_val(a, defaults.get(a, False))
-
-                        # Evaluation args
-                        args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                        result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
+                    recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
+                    result = recs.onchange(record_dict, field_name, onchange_spec)
 
                     for key, val in (result or {}).get('value', {}).items():
                         if key in fg:
@@ -487,10 +462,9 @@ class YamlInterpreter(object):
                                 # do not shadow values explicitly set in yaml.
                                 record_dict[key] = process_val(key, val)
                         else:
-                            _logger.debug("The returning field '%s' from your on_change call '%s'"
-                                            " does not exist either on the object '%s', either in"
-                                            " the view '%s'",
-                                            key, match.group(1), model._name, view_info['name'])
+                            _logger.debug("The field '%s' returned by 'onchange' exists"
+                                          " neither on model '%s', nor in view '%s'",
+                                          key, model._name, view_info['name'])
                 else:
                     nodes = list(el) + nodes
         else:
