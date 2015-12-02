@@ -440,12 +440,12 @@ class ir_translation(osv.osv):
                     # Check if record exists, else create it (at once)
                     sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value, module)
                         SELECT %s, %s, %s, 'model', %s, %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model' AND module=%s);
+                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
                         UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model' AND module=%s;
                         """
                     src = record[f['name']] or None
                     name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src, name, f['id'], src, module, lg, name, f['id'], module, src, lg, name, id, module))
+                    cr.execute(sql, (lg, src, name, f['id'], src, module, lg, name, f['id'], src, lg, name, id, module))
 
         action = {
             'name': 'Translate',
