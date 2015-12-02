@@ -103,7 +103,7 @@ class product_template(osv.osv):
         accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
         return accounts
 
-    def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
+    def do_change_standard_price(self, cr, uid, ids, new_price, account_id, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
@@ -127,22 +127,24 @@ class product_template(osv.osv):
                         # Accounting Entries
                         amount_diff = abs(diff * qty)
                         if diff * qty > 0:
-                            debit_account_id = datas['expense'].id
+                            debit_account_id = account_id
                             credit_account_id = datas['stock_valuation'].id
                         else:
                             debit_account_id = datas['stock_valuation'].id
-                            credit_account_id = datas['expense'].id
+                            credit_account_id = account_id
 
                         lines = [(0, 0, {'name': _('Standard Price changed'),
                                         'account_id': debit_account_id,
                                         'debit': amount_diff,
                                         'credit': 0,
+                                        'product_id': product.id,
                                         }),
                                  (0, 0, {
                                         'name': _('Standard Price changed'),
                                         'account_id': credit_account_id,
                                         'debit': 0,
                                         'credit': amount_diff,
+                                        'product_id': product.id,
                                         })]
                         move_vals = {
                             'journal_id': datas['stock_journal'].id,
