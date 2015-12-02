@@ -22,6 +22,14 @@ class TestSale(TestMail):
         group_id = IrModelData.xmlid_to_res_id('account.group_account_invoice') or False
         company_id = IrModelData.xmlid_to_res_id('base.main_company') or False
 
+        deposit = self.env['product.product'].create({
+            'name': "Deposit",
+            'standard_price': 100,
+            'list_price': 150,
+            'type':'service',
+            'invoice_policy': 'order',
+        })
+
         # Usefull accounts
         user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_revenue')
         account_rev_id = account_obj.create({'code': 'X2020', 'name': 'Sales - Test Sales Account', 'user_type_id': user_type_id, 'reconcile': True})
@@ -29,7 +37,7 @@ class TestSale(TestMail):
         account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type_id': user_type_id, 'reconcile': True})
 
         # Add account to product
-        product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
+        product_template_id = deposit.product_tmpl_id
         product_template_id.write({'property_account_income_id': account_rev_id})
 
         # Create Sale Journal
@@ -63,7 +71,7 @@ class TestSale(TestMail):
         payment = self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'fixed',
             'amount': 5,
-            'product_id': self.env.ref('sale.advance_product_0').id,
+            'product_id': deposit.id,
         })
         invoice = payment.with_context(context).create_invoices()
         assert order.invoice_ids, "No any invoice is created for this sale order"

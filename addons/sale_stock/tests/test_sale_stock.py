@@ -55,6 +55,8 @@ class TestSaleStock(TestSale):
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
+        # Without timesheet, we manually set the delivered qty for the product serv_del
+        self.so.order_line[1]['qty_delivered'] = 2.0
         # invoice on delivery
         inv_id = self.so.action_invoice_create()
         self.assertEqual(self.so.invoice_status, 'invoiced',
@@ -83,7 +85,7 @@ class TestSaleStock(TestSale):
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
-            'product_id': self.env.ref('sale.advance_product_0').id,
+            'product_id': self.deposit.id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.invoice'].browse(act['res_id'])
@@ -110,8 +112,10 @@ class TestSaleStock(TestSale):
         of the picking. Check that a refund invoice is well generated.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_product_47')
+        self.partner = self.env['res.partner'].create({
+            'name': "Marc Afleche"
+        })
+        self.product = self.products['prod_del']
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,

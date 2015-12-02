@@ -103,8 +103,20 @@ class TestSaleOrder(TestSale):
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
-        serv_cost = self.env.ref('product.product_product_1b')
-        prod_gap = self.env.ref('product.product_product_1')
+        serv_cost = self.env['product.product'].create({
+            'name': "External Audit",
+            'standard_price': 160,
+            'list_price': 180,
+            'type': 'service',
+            'invoice_policy': 'cost'
+        })
+        prod_gap = self.env['product.product'].create({
+            'name': "GAP Analysis Service",
+            'standard_price': 20.5,
+            'list_price': 30.75,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            })
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -114,7 +126,9 @@ class TestSaleOrder(TestSale):
         })
         so.action_confirm()
         so._create_analytic_account()
-        inv_partner = self.env.ref('base.res_partner_2')
+        inv_partner = self.env['res.partner'].create({
+            'name': "Jerry Khan"
+        })
         company = self.env.ref('base.main_company')
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
         account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'Sale - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
