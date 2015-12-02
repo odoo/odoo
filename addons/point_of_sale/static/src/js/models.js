@@ -1052,9 +1052,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
         },
         get_display_price: function(){
-            return this.get_base_price();
             if (this.pos.config.iface_tax_included) {
-                return this.get_all_prices().priceWithTax;
+                return this.get_price_with_tax();
             } else {
                 return this.get_base_price();
             }
