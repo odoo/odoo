@@ -104,10 +104,8 @@
                    </xpath>
                    <xpath expr="//field[@name='code']" position="after">
                         <label for="alias_name" string="Email Alias"
-                            groups="base.group_no_one"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                         <div name="alias_def"
-                            groups="base.group_no_one"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}">
                             <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
@@ -116,8 +114,9 @@
                             </div>
                         </div>
                         <field name="alias_contact" class="oe_inline"
-                           string="Accept Emails From"
-                           attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
+                            groups="base.group_no_one"
+                            string="Accept Emails From"
+                            attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
                 </field>
             </record>
