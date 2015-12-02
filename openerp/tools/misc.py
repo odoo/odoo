@@ -1053,14 +1053,15 @@ def dumpstacks(sig=None, frame=None):
     _logger.info("\n".join(code))
 
 def freehash(arg):
-    if isinstance(arg, Mapping):
-        return hash(frozendict(arg))
-    elif isinstance(arg, Iterable):
-        return hash(frozenset(arg))
-    elif isinstance(arg, Hashable):
+    try:
         return hash(arg)
-    else:
-        return id(arg)
+    except Exception:
+        if isinstance(arg, Mapping):
+            return hash(frozendict(arg))
+        elif isinstance(arg, Iterable):
+            return hash(frozenset(map(freehash, arg)))
+        else:
+            return id(arg)
 
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
