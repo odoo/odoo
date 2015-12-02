@@ -452,7 +452,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var oldest_msg_selector = '.o_thread_message[data-message-id="' + oldest_msg_id + '"]';
         var offset = -framework.getPosition(document.querySelector(oldest_msg_selector)).top;
         return chat_manager
-            .fetch_more(this.channel, this.domain)
+            .get_messages({channel_id: this.channel.id, domain: this.domain, load_more: true})
             .then(function(result) {
                 if (self.messages_separator_position === 'top') {
                     self.messages_separator_position = undefined; // reset value to re-compute separator position
@@ -494,9 +494,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_post_message: function (message) {
-        message.channel_id = this.channel.id;
+        var options = {channel_id: this.channel.id};
         chat_manager
-            .post_message(message)
+            .post_message(message, options)
             .fail(function () {
                 // todo: display notification
             });

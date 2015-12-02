@@ -177,39 +177,6 @@ function add_channel_to_message (message, channel_id) {
     message.channel_ids = _.uniq(message.channel_ids);
 }
 
-function post_channel_message (data) {
-    return ChannelModel.call('message_post', [data.channel_id], {
-        message_type: 'comment',
-        content_subtype: 'html',
-        partner_ids: data.partner_ids,
-        body: _.str.trim(data.content),
-        subtype: 'mail.mt_comment',
-        attachment_ids: data.attachment_ids,
-    });
-}
-
-function post_document_message (model_name, res_id, data) {
-    var values = {
-        attachment_ids: data.attachment_ids,
-        body: _.str.trim(data.content),
-        content_subtype: data.content_subtype,
-        context: data.context,
-        message_type: data.message_type,
-        partner_ids: data.partner_ids,
-        subtype: data.subtype,
-        subtype_id: data.subtype_id,
-    };
-
-    var model = new Model(model_name);
-    return model.call('message_post', [res_id], values).then(function (msg_id) {
-        return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
-            msgs[0].model = model_name;
-            msgs[0].res_id = res_id;
-            add_message(msgs[0]);
-        });
-    });
-}
-
 function add_channel (data, options) {
     options = typeof options === "object" ? options : {};
     var channel = chat_manager.get_channel(data.id);
@@ -516,35 +483,75 @@ function on_chat_session_notification (chat_session) {
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
-    post_message: post_channel_message,
-    post_message_in_document: post_document_message,
+    post_message: function (data, options) {
+        options = options || {};
+        var msg = {
+            partner_ids: data.partner_ids,
+            body: _.str.trim(data.content),
+            attachment_ids: data.attachment_ids,
+        };
+        if ('channel_id' in options) {
+            // post a message in a channel
+            return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
+                message_type: 'comment',
+                content_subtype: 'html',
+                subtype: 'mail.mt_comment',
+            }));
+        }
+        if ('model' in options && 'res_id' in options) {
+            // post a message in a chatter
+            _.extend(msg, {
+                content_subtype: data.content_subtype,
+                context: data.context,
+                message_type: data.message_type,
+                subtype: data.subtype,
+                subtype_id: data.subtype_id,
+            });
+
+            var model = new Model(options.model);
+            return model.call('message_post', [options.res_id], msg).then(function (msg_id) {
+                return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
+                    msgs[0].model = options.model;
+                    msgs[0].res_id = options.res_id;
+                    add_message(msgs[0]);
+                });
+            });
+        }
+    },
 
     get_messages: function (options) {
-        if ('channel_id' in options) { // channel message
-            var channel = this.get_channel(options.channel_id);
+        var channel;
+
+        if ('channel_id' in options && options.load_more) {
+            // get channel messages, force load_more
+            channel = this.get_channel(options.channel_id);
+            return fetch_from_channel(channel, {domain: options.domain || {}, load_more: true});
+        }
+        if ('channel_id' in options) {
+            // channel message, check in cache first
+            channel = this.get_channel(options.channel_id);
             var channel_cache = get_channel_cache(channel, options.domain);
             if (channel_cache.loaded) {
                 return $.when(channel_cache.messages);
             } else {
                 return fetch_from_channel(channel, {domain: options.domain});
             }
-        } else { // chatter message
         }
-    },
-    fetch: function (channel, domain) {
-        return fetch_from_channel(channel, {domain: domain});
-    },
-    fetch_more: function (channel, domain) {
-        return fetch_from_channel(channel, {domain: domain, load_more: true});
-    },
-    /**
-     * Fetches chatter messages from their ids
-     */
-    fetch_messages: function (message_ids, options) {
-        return fetch_document_messages(message_ids, options).then(function(result) {
-            chat_manager.mark_as_read(message_ids);
-            return result;
-        });
+        if ('ids' in options) {
+            // get messages from their ids (chatter is the main use case)
+            return fetch_document_messages(options.ids, options).then(function(result) {
+                chat_manager.mark_as_read(options.ids);
+                return result;
+            });
+        }
+        if ('model' in options && 'res_id' in options) {
+            // get messages for a chatter, when it doesn't know the ids (use
+            // case is when using the full composer)
+            var domain = [['model', '=', options.model], ['res_id', '=', options.res_id]];
+            MessageModel.call('message_fetch', [domain], {limit: 30}).then(function (msgs) {
+                return _.map(msgs, add_message);
+            });
+        }
     },
     toggle_star_status: function (message_id) {
         var msg = _.findWhere(messages, { id: message_id });

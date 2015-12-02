@@ -37,8 +37,8 @@ function open_chat (session) {
             chat_manager.fold_channel(channel_id);
         });
 
-        chat_session.window.on("post_message", null, function (message) {
-            chat_manager.post_message(message);
+        chat_session.window.on("post_message", null, function (message, channel_id) {
+            chat_manager.post_message(message, {channel_id: channel_id});
         });
         chat_session.window.on("messages_read", null, function () {
             chat_manager.mark_channel_as_seen(channel);
