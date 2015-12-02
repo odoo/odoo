@@ -132,8 +132,10 @@ $('.oe_website_sale').each(function () {
         return false;
     });
 
-    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function () {
-        $(this).closest('form').submit();
+    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
+        if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
+            $(this).closest('form').submit();
+        }
     });
     $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function () {
         $(this).closest("form").submit();
@@ -226,11 +228,11 @@ $('.oe_website_sale').each(function () {
         if (product_id) {
             $parent.removeClass("css_not_available");
             $product_id.val(product_id);
-            $parent.find(".js_check_product").removeAttr("disabled");
+            $parent.find("#add_to_cart").removeClass("disabled");
         } else {
             $parent.addClass("css_not_available");
             $product_id.val(0);
-            $parent.find(".js_check_product").attr("disabled", "disabled");
+            $parent.find("#add_to_cart").addClass("disabled");
         }
     });
 
