@@ -4,7 +4,6 @@
   !record {model: account.invoice, id: demo_invoice_1}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     user_id: base.user_demo
     reference_type: none
     payment_term_id: account.account_payment_term
@@ -25,7 +24,6 @@
   !record {model: account.invoice, id: demo_invoice_2}:
     company_id: base.main_company
     partner_id: base.res_partner_2
-    currency_id: base.EUR
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
@@ -43,7 +41,6 @@
   !record {model: account.invoice, id: demo_invoice_3}:
     company_id: base.main_company
     partner_id: base.res_partner_2
-    currency_id: base.EUR
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
@@ -61,7 +58,6 @@
   !record {model: account.invoice, id: demo_invoice_invest_sale}:
     company_id: base.main_company
     partner_id: base.res_partner_3
-    currency_id: base.EUR
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
 -
@@ -89,7 +85,6 @@
   !record {model: account.invoice, id: demo_invoice_0}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     user_id: base.user_demo
     reference_type: none
     payment_term_id: account.account_payment_term
@@ -110,7 +105,6 @@
   !record {model: account.invoice, id: demo_invoice_january_wages}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
 -
@@ -131,7 +125,6 @@
   !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
     company_id: base.main_company
     partner_id: base.res_partner_1
-    currency_id: base.EUR
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-15'
 -
