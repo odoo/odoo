@@ -364,6 +364,7 @@ var KanbanView = View.extend({
             this.$el.addClass('o_kanban_grouped');
             this.render_grouped(fragment);
         } else if (this.data.is_empty) {
+            this.$el.addClass('o_kanban_ungrouped');
             this.render_no_content(fragment);
         } else {
             this.$el.addClass('o_kanban_ungrouped');
