@@ -16,7 +16,11 @@ class sale_order_line(models.Model):
         res = super(sale_order_line, self)._check_routing(product, warehouse)
         if not res:
             for route in product.route_ids:
-                for pull_rule in route.pull_ids:
+                # multicompany rule on procurement rule may not be working as company_id
+                # field is not displayed and is probably not set
+                # search to benefit from stock.picking.type multicompany filter
+                picking_type_ids = self.env['stock.picking.type'].search([]).ids
+                for pull_rule in self.env['procurement.rule'].search([('id', 'in', route.pull_ids.ids), ('picking_type_id', 'in', picking_type_ids)]):
                     if (pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and
                             pull_rule.picking_type_id.default_location_dest_id.usage == 'customer'):
                         return True
