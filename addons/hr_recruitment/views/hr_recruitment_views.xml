@@ -587,6 +587,7 @@
                     <group>
                         <field name="name"/>
                         <field name="sequence" groups="base.group_no_one"/>
+                        <field name="job_id"/>
                     </group>
                     <group>
                          <field name="fold"/>
@@ -620,7 +621,7 @@
         name="Stages"
         parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_stage_act"
-        sequence="1" groups="base.group_no_one"/>
+        sequence="1"/>
 
     <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">

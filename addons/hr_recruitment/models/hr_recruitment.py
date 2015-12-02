@@ -51,12 +51,11 @@ class RecruitmentStage(models.Model):
 
     name = fields.Char("Stage name", required=True, translate=True)
     sequence = fields.Integer(
-        "Sequence", default=1,
+        "Sequence", default=10,
         help="Gives the sequence order when displaying a list of stages.")
-    job_ids = fields.Many2many(
-        'hr.job', 'job_stage_rel', 'stage_id', 'job_id',
-        string='Job Stages',
-        default=lambda self: [(4, self._context['default_job_id'])] if self._context.get('default_job_id') else None)
+    job_id = fields.Many2one('hr.job', string='Job Specific',
+                             ondelete='cascade',
+                             help='Specific job that uses this stage. Other jobs will not use this stage.')
     requirements = fields.Text("Requirements")
     template_id = fields.Many2one(
         'mail.template', "Use template",
@@ -64,6 +63,14 @@ class RecruitmentStage(models.Model):
     fold = fields.Boolean(
         "Folded in Recruitment Pipe",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
+
+    @api.model
+    def default_get(self, fields):
+        if self._context and self._context.get('default_job_id') and not self._context.get('hr_recruitment_stage_mono', False):
+            context = dict(self._context)
+            context.pop('default_job_id')
+            self = self.with_context(context)
+        return super(RecruitmentStage, self).default_get(fields)
 
 
 class RecruitmentDegree(models.Model):
@@ -87,9 +94,11 @@ class Applicant(models.Model):
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
             return self.env['hr.recruitment.stage'].search([
-                ('job_ids', '=', self._context['default_job_id']),
+                '|',
+                ('job_id', '=', False),
+                ('job_id', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids[0]
+            ], order='sequence asc', limit=1).id
         return False
 
     def _default_company_id(self):
@@ -112,7 +121,8 @@ class Applicant(models.Model):
     create_date = fields.Datetime("Creation Date", readonly=True, select=True)
     write_date = fields.Datetime("Update Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                               domain="[('job_ids', '=', job_id)]", copy=False, select=1,
+                               domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
+                               copy=False, select=1,
                                default=_default_stage_id)
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
@@ -180,20 +190,11 @@ class Applicant(models.Model):
             order = "%s desc" % order
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
-        department_id = self._context.get('default_department_id')
-        search_domain = []
+        search_domain = [('job_id', '=', False)]
         if job_id:
-            search_domain = [('job_ids', '=', job_id)]
-        if department_id:
-            if search_domain:
-                search_domain = ['|', ('job_ids.department_id', '=', department_id)] + search_domain
-            else:
-                search_domain = [('job_ids.department_id', '=', department_id)]
+            search_domain = ['|'] + search_domain + [('job_id', '=', job_id)]
         if self.ids:
-            if search_domain:
-                search_domain = ['|', ('id', 'in', self.ids)] + search_domain
-            else:
-                search_domain = [('id', 'in', self.ids)]
+            search_domain = ['|'] + search_domain + [('id', 'in', self.ids)]
 
         stage_ids = Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
         stages = Stage.sudo(access_rights_uid).browse(stage_ids)
@@ -227,9 +228,11 @@ class Applicant(models.Model):
             user_id = job.user_id.id
             if not self.stage_id:
                 stage_id = self.env['hr.recruitment.stage'].search([
-                    ('job_ids', '=', job.id),
+                    '|',
+                    ('job_id', '=', False),
+                    ('job_id', '=', job.id),
                     ('fold', '=', False)
-                ], order='sequence asc', limit=1).ids[0]
+                ], order='sequence asc', limit=1).id
 
         return {'value': {
             'department_id': department_id,
@@ -444,9 +447,9 @@ class Applicant(models.Model):
     @api.multi
     def reset_applicant(self):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
-        for applicant in self:
-            first_stage_obj = self.env['hr.recruitment.stage'].search([('job_ids', 'in', applicant.job_id.id)], order="sequence asc", limit=1)
-            applicant.write({'active': True, 'stage_id': first_stage_obj.id})
+        default_stage_id = self._default_stage_id()
+        self.write({'active': True, 'stage_id': default_stage_id})
+
 
 class applicant_category(models.Model):
     _name = "hr.applicant.category"
