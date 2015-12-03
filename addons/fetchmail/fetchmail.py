@@ -161,6 +161,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
+            # Add timeout on socket
+            connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
