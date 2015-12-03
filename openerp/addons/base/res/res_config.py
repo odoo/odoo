@@ -460,10 +460,6 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             cr, SUPERUSER_ID, [('name', '=', module_name.replace("module_", '')),
             ('state','in', ['to install', 'installed', 'to upgrade'])],
             context=context)
-        installed_module_ids = module_pool.search(
-            cr, SUPERUSER_ID, [('name', '=', module_name.replace("module_", '')),
-            ('state', 'in', ['uninstalled'])],
-            context=context)
 
         if module_ids and not field_value:
             dep_ids = module_pool.downstream_dependencies(cr, SUPERUSER_ID, module_ids, context=context)
@@ -476,18 +472,6 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                     'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
                 }
             }
-        if installed_module_ids and field_value:
-            dep_ids = module_pool.upstream_dependencies(cr, SUPERUSER_ID, installed_module_ids, context=context)
-            dep_name = [x['display_name'] for x in module_pool.search_read(
-                cr, SUPERUSER_ID, ['|', ('id', 'in', installed_module_ids), ('id', 'in', dep_ids), ('application', '=', True)], context=context)]
-            if dep_name:
-                message = ''.join(["- %s \n" % name for name in dep_name])
-                return {
-                    'warning': {
-                        'title': _('Warning!'),
-                        'message': _('Enabling this feature will install the following paying application(s) : \n%s') % message,
-                    }
-                }
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):
