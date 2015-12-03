@@ -992,8 +992,8 @@
                                         <field name="date_maturity"/>
                                     </group>
                                     <group string="Taxes">
-                                        <field name="tax_line_id"/>
-                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="tax_line_id" readonly="1"/>
+                                        <field name="tax_ids" widget="many2many_tags" readonly="1"/>
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
@@ -1049,8 +1049,8 @@
                                 <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
-                                <field name="tax_ids"/>
-                                <field name="tax_line_id"/>
+                                <field name="tax_ids" readonly="1"/>
+                                <field name="tax_line_id" readonly="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
