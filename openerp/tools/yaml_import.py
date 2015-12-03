@@ -434,47 +434,55 @@ class YamlInterpreter(object):
 
         if view_info:
             fg = view_info['fields']
-            onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
-            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
-            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            missing_default_ctx = dict(self.context, **context)
-            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx) or {}
-
-            # copy the default values in record_dict, only if they are in the view (because that's what the client does)
-            # the other default values will be added later on by the create(). The other fields in the view that haven't any
-            # default value are set to False because we may have references to them in other field's context
-            record_dict = default and {key: defaults.get(key, False) for key in fg} or {}
-
-            # Process all on_change calls
             elems = get_field_elems(view_info)
+            recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
+            onchange_spec = recs._onchange_spec(view_info)
+            record_dict = {}
+
+            if default:
+                # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+                # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+                missing_default_ctx = dict(self.context, **context)
+                defaults = model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx)
+
+                # copy the default values in record_dict, only if they are in the view (because that's what the client does)
+                # the other default values will be added later on by the create(). The other fields in the view that haven't any
+                # default value are set to False because we may have references to them in other field's context
+                record_dict = dict.fromkeys(fg, False)
+                record_dict.update(process_vals(fg, defaults))
+
+                # execute onchange on default values first
+                default_names = [name for name in elems if name in record_dict]
+                result = recs.onchange(record_dict, default_names, onchange_spec)
+                record_dict.update(process_vals(fg, result.get('value', {})))
+
+            # fill in fields, and execute onchange where necessary
             for field_name, field_elem in elems.iteritems():
                 assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                 if is_readonly(field_elem):
                     # skip readonly fields
                     continue
 
-                if field_name in fields:
-                    form_view = view_info
-                    if fg[field_name]['type'] == 'one2many':
-                        # evaluate one2many fields using the inline form view defined in the parent
-                        form_view = get_2many_view(fg, field_name, 'form')
-                    ctx = dict(context)
-                    if default and field_elem.get('context'):
-                        ctx.update(eval(field_elem.get('context'),
-                                        globals_dict={'parent': dotdict(parent)},
-                                        locals_dict=record_dict))
-
-                    field_value = self._eval_field(model, field_name, fields[field_name], form_view, parent=record_dict, default=default, context=ctx)
-                    record_dict.update(process_vals(fg, {field_name: field_value}))
-
-                elif field_name not in defaults:
+                if field_name not in fields:
                     continue
+
+                form_view = view_info
+                if fg[field_name]['type'] == 'one2many':
+                    # evaluate one2many fields using the inline form view defined in the parent
+                    form_view = get_2many_view(fg, field_name, 'form')
+                ctx = dict(context)
+                if default and field_elem.get('context'):
+                    ctx.update(eval(field_elem.get('context'),
+                                    globals_dict={'parent': dotdict(parent)},
+                                    locals_dict=record_dict))
+
+                field_value = self._eval_field(model, field_name, fields[field_name], form_view, parent=record_dict, default=default, context=ctx)
+                record_dict.update(process_vals(fg, {field_name: field_value}))
 
                 # if field_name is given or has a default value, we evaluate its onchanges
                 if not field_elem.attrib.get('on_change', False):
                     continue
 
-                recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
                 result = recs.onchange(record_dict, field_name, onchange_spec)
                 record_dict.update(process_vals(fg, {
                     key: val
