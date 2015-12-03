@@ -397,7 +397,7 @@ class YamlInterpreter(object):
                     field_value = field_value[0]
                 elif fg[field_name]['type'] in ('one2many', 'many2many'):
                     # 2many fields: sanitize field values of sub-records
-                    sub_fg = get_2many_view(fg, field_name, 'tree')['fields']
+                    sub_fg = get_2many_view(fg, field_name, 'form')['fields']
                     def process(command):
                         if isinstance(command, (tuple, list)) and command[0] in (0, 1):
                             return (command[0], command[1], process_vals(sub_fg, command[2]))
@@ -416,7 +416,7 @@ class YamlInterpreter(object):
                     continue
                 if fg[field_name]['type'] in ('one2many', 'many2many'):
                     # 2many fields: filter field values of sub-records
-                    sub_view = get_2many_view(fg, field_name, 'tree')
+                    sub_view = get_2many_view(fg, field_name, 'form')
                     sub_fg = sub_view['fields']
                     sub_elems = get_field_elems(sub_view)
                     def process(command):
