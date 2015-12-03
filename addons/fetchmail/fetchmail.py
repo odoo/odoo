@@ -147,10 +147,10 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         if server.type == 'imap':
             if server.is_ssl:
                 connection = IMAP4SSLTimeout(
-                    server.server, int(server.port), MAIL_TIMEOUT)
+                    server.server, int(server.port), timeout=MAIL_TIMEOUT)
             else:
                 connection = IMAP4Timeout(
-                    server.server, int(server.port), MAIL_TIMEOUT)
+                    server.server, int(server.port), timeout=MAIL_TIMEOUT)
             connection.login(server.user, server.password)
         elif server.type == 'pop':
             if server.is_ssl:
