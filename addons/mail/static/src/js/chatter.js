@@ -189,14 +189,9 @@ var Followers = form_common.AbstractField.extend({
     },
 
     fetch_followers: function (value_) {
-        var self = this;
         this.value = value_ || [];
         return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
-            .then(function (followers) {
-                self.trigger('followers_update', followers);
-                self.display_followers(followers);
-                self.fetch_generic();
-            })
+            .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
     },
@@ -237,6 +232,7 @@ var Followers = form_common.AbstractField.extend({
     display_followers: function (records) {
         var self = this;
         this.followers = records || this.followers;
+        this.trigger('followers_update', this.followers);
 
         // clean and display title
         var $followers_list = this.$('.o_followers_list').empty();
@@ -272,25 +268,25 @@ var Followers = form_common.AbstractField.extend({
         }
     },
 
-    /** Fetch subtypes, only if current user is follower */
+    /** Fetch subtypes, only if current user is follower or if follower_id is given, i.e. if
+     *  the current user is editing the subtypes of another follower
+     */
     fetch_subtypes: function (follower_id) {
         var self = this;
         var dialog = false;
 
         if (follower_id) {
             dialog = true;
-        }
-        else {
+        } else {
             this.$('.o_subtypes_list ul').empty();
-            if (! this.message_is_follower) {
+            if (!this.message_is_follower) {
                 this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
                 return;
-            }
-            else {
+            } else {
                 this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
             }
         }
-        if (this.follower_id) {
+        if (this.follower_id || follower_id) {
             return ajax.jsonRpc('/mail/read_subscription_data', 'call', {
                 res_model: this.view.model,
                 res_id: this.view.datarecord.id,
@@ -305,7 +301,6 @@ var Followers = form_common.AbstractField.extend({
 
     /** Display subtypes: {'name': default, followed} */
     display_subtypes:function (data, dialog) {
-        var self = this;
         var old_parent_model;
         var $list;
         if (dialog) {
@@ -316,10 +311,10 @@ var Followers = form_common.AbstractField.extend({
         $list.empty();
 
         this.data_subtype = data;
-        this.records_length = $.map(data, function(value, index) { return index; }).length;
+        this.records_length = _.map(data, function(value, index) { return index; }).length;
 
         if (this.records_length > 1) {
-            self.display_followers();
+            this.display_followers();
         }
 
         _.each(data, function (record) {
