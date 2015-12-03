@@ -193,7 +193,9 @@ class ir_translation(osv.osv):
                 model = self.pool.get(model_name)
                 if model is None:
                     continue
-                field = model._fields[field_name]
+                field = model._fields.get(field_name)
+                if field is None:
+                    continue
                 if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
