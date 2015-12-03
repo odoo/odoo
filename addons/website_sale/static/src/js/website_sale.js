@@ -52,7 +52,7 @@ $('.oe_website_sale').each(function () {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
-    $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
+    $(oe_website_sale).find("input.js_quantity[data-product-id]").on("change", function () {
         var $input = $(this);
         if ($input.data('update_change')) {
             return;
@@ -126,7 +126,7 @@ $('.oe_website_sale').each(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().find("input");
-        var product_id = +$input.closest('div:has(input[name="product_id"])').find('input[name="product_id"]').val();
+        var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
