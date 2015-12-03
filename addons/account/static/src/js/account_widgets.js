@@ -1409,6 +1409,12 @@ openerp.account = function (instance) {
     
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
+
+            // Reset partial reconciliation
+            _.each(self.get("mv_lines_selected"), function(line) {
+                if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
+                if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
+            });
         
             var added_lines = _.difference(val.newValue, val.oldValue);
             var removed_lines = _.difference(val.oldValue, val.newValue);
@@ -1556,15 +1562,6 @@ openerp.account = function (instance) {
             var self = this;
             var mv_lines_selected = self.get("mv_lines_selected");
             var lines_selected_num = mv_lines_selected.length;
-
-            // Undo partial reconciliation if necessary
-            if (lines_selected_num !== 1) {
-                _.each(mv_lines_selected, function(line) {
-                    if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
-                    if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-                });
-                self.updateAccountingViewMatchedLines();
-            }
 
             // Compute balance
             var balance = 0;
