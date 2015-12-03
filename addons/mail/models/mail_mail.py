@@ -3,12 +3,10 @@
 import base64
 import datetime
 import logging
-import threading
-
-from email.utils import formataddr
-from urlparse import urljoin
-
 import psycopg2
+import threading
+from email.utils import formataddr
+
 
 from openerp import _, api, fields, models
 from openerp import tools
