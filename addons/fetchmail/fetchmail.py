@@ -21,9 +21,13 @@
 
 import logging
 import poplib
+import socket
+import ssl
 import time
 from imaplib import IMAP4
+from imaplib import IMAP4_PORT
 from imaplib import IMAP4_SSL
+from imaplib import IMAP4_SSL_PORT
 from poplib import POP3
 from poplib import POP3_SSL
 try:
@@ -142,9 +146,11 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         server = self.browse(cr, uid, server_id, context)
         if server.type == 'imap':
             if server.is_ssl:
-                connection = IMAP4_SSL(server.server, int(server.port))
+                connection = IMAP4SSLTimeout(
+                    server.server, int(server.port), MAIL_TIMEOUT)
             else:
-                connection = IMAP4(server.server, int(server.port))
+                connection = IMAP4Timeout(
+                    server.server, int(server.port), MAIL_TIMEOUT)
             connection.login(server.user, server.password)
         elif server.type == 'pop':
             if server.is_ssl:
@@ -155,8 +161,6 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
-        # Add timeout on socket
-        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
@@ -318,6 +322,38 @@ class mail_mail(osv.osv):
             values['fetchmail_server_id'] = fetchmail_server_id
         res = super(mail_mail, self).write(cr, uid, ids, values, context=context)
         return res
+
+
+class IMAP4Timeout(IMAP4):
+    def __init__(self, host='', port=IMAP4_PORT, timeout=None):
+        self.timeout = timeout
+        # no super(), it's an old-style class
+        IMAP4.__init__(self, host, port)
+
+    def open(self, host='', port=IMAP4_PORT):
+        self.host = host
+        self.port = port
+        self.sock = socket.create_connection(
+            (host, port), timeout=self.timeout)
+        self.file = self.sock.makefile('rb')
+
+
+class IMAP4SSLTimeout(IMAP4_SSL):
+    def __init__(
+        self, host='', port=IMAP4_SSL_PORT, keyfile=None, certfile=None,
+        timeout=None
+    ):
+        self.timeout = timeout
+        # no super(), it's an old-style class
+        IMAP4_SSL.__init__(self, host, port, keyfile, certfile)
+
+    def open(self, host='', port=IMAP4_SSL_PORT):
+        self.host = host
+        self.port = port
+        self.sock = socket.create_connection(
+            (host, port), timeout=self.timeout)
+        self.sslobj = ssl.wrap_socket(self.sock, self.keyfile, self.certfile)
+        self.file = self.sslobj.makefile('rb')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
