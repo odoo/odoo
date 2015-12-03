@@ -1557,14 +1557,15 @@ openerp.account = function (instance) {
             var mv_lines_selected = self.get("mv_lines_selected");
             var lines_selected_num = mv_lines_selected.length;
 
+            // Remove this part to allow partial reconciliation on multiple lines.
             // Undo partial reconciliation if necessary
-            if (lines_selected_num !== 1) {
-                _.each(mv_lines_selected, function(line) {
-                    if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
-                    if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-                });
-                self.updateAccountingViewMatchedLines();
-            }
+            //if (lines_selected_num !== 1) {
+            //    _.each(mv_lines_selected, function(line) {
+            //        if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
+            //        if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
+            //    });
+            //    self.updateAccountingViewMatchedLines();
+            //}
 
             // Compute balance
             var balance = 0;
