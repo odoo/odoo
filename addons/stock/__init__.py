@@ -4,6 +4,7 @@
 from stock import *
 import inherit_stock_move
 import inherit_stock_picking
+import inherit_product
 import partner
 import product
 import procurement
