@@ -121,7 +121,7 @@ class account_invoice_line(osv.osv):
                         'account_id':fiscal_pool.map_account(cr, uid, fpos, cacc),
                         'product_id':i_line.product_id.id,
                         'uos_id':i_line.uos_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
                         'taxes':i_line.invoice_line_tax_id,
                     },
                 ]
