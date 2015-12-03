@@ -408,6 +408,27 @@ class YamlInterpreter(object):
                 result[field_name] = field_value
             return result
 
+        def post_process(fg, elems, vals):
+            """ filter out readonly fields from vals """
+            result = {}
+            for field_name, field_value in vals.iteritems():
+                if is_readonly(elems[field_name]):
+                    continue
+                if fg[field_name]['type'] in ('one2many', 'many2many'):
+                    # 2many fields: filter field values of sub-records
+                    sub_view = get_2many_view(fg, field_name, 'tree')
+                    sub_fg = sub_view['fields']
+                    sub_elems = get_field_elems(sub_view)
+                    def process(command):
+                        if isinstance(command, (tuple, list)) and command[0] in (0, 1):
+                            return (command[0], command[1], post_process(sub_fg, sub_elems, command[2]))
+                        elif isinstance(command, dict):
+                            return (0, 0, post_process(sub_fg, sub_elems, command))
+                        return command
+                    field_value = map(process, field_value or [])
+                result[field_name] = field_value
+            return result
+
         context = context or {}
         fields = fields or {}
 
@@ -460,6 +481,8 @@ class YamlInterpreter(object):
                     for key, val in result.get('value', {}).iteritems()
                     if key not in fields        # do not shadow values explicitly set in yaml
                 }))
+
+            record_dict = post_process(fg, elems, record_dict)
 
         else:
             record_dict = {}
