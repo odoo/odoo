@@ -4,10 +4,10 @@
 import logging
 
 from odoo import api, models
-from odoo.addons.mail.models.mail_thread import decode_header
-from odoo.tools import email_split
+from odoo.tools import decode_message_header, email_split
 
 _logger = logging.getLogger(__name__)
+
 
 class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
@@ -18,13 +18,13 @@ class MailThread(models.AbstractModel):
 
         if res:
             alias = route[4]
-            email_from = decode_header(message, 'From')
+            email_from = decode_message_header(message, 'From')
             message_id = message.get('Message-Id')
 
             # Identically equal to the definition in mail module because sub methods are local
             # variables and cannot be called with super
             def _create_bounce_email(body_html):
-                bounce_to = decode_header(message, 'Return-Path') or email_from
+                bounce_to = decode_message_header(message, 'Return-Path') or email_from
                 bounce_mail_values = {
                     'body_html': body_html,
                     'subject': 'Re: %s' % message.get('subject'),
