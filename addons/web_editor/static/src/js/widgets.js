@@ -1079,7 +1079,7 @@ var LinkDialog = Dialog.extend({
         return this.get_data()
             .then(function (url, new_window, label, classes) {
                 self.data.url = url;
-                self.data.newWindow = new_window;
+                self.data.isNewWindow = new_window;
                 self.data.text = label;
                 self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
 

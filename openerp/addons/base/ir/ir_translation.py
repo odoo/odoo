@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from difflib import get_close_matches
 import logging
 
@@ -496,6 +497,40 @@ class ir_translation(osv.osv):
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
+    @api.multi
+    def check(self, mode):
+        """ Check access rights of operation ``mode`` on ``self`` for the
+        current user. Raise an AccessError in case conditions are not met.
+        """
+        if self.env.user._is_admin():
+            return
+
+        # collect translated field records (model_ids) and other translations
+        trans_ids = []
+        model_ids = defaultdict(list)
+        model_fields = defaultdict(list)
+        for trans in self:
+            if trans.type == 'model':
+                mname, fname = trans.name.split(',')
+                model_ids[mname].append(trans.res_id)
+                model_fields[mname].append(fname)
+            else:
+                trans_ids.append(trans.id)
+
+        # check for regular access rights on other translations
+        if trans_ids:
+            records = self.browse(trans_ids)
+            records.check_access_rights(mode)
+            records.check_access_rule(mode)
+
+        # check for read/write access on translated field records
+        fmode = 'read' if mode == 'read' else 'write'
+        for mname, ids in model_ids.iteritems():
+            records = self.env[mname].browse(ids)
+            records.check_access_rights(fmode)
+            records.check_field_access_rights(fmode, model_fields[mname])
+            records.check_access_rule(fmode)
+
     @api.model
     def create(self, vals):
         if vals.get('type') == 'model' and vals.get('value'):
@@ -503,7 +538,8 @@ class ir_translation(osv.osv):
             mname, fname = vals['name'].split(',')
             field = self.env[mname]._fields[fname]
             vals['value'] = field.check_trans_value(vals['value'])
-        record = super(ir_translation, self).create(vals)
+        record = super(ir_translation, self.sudo()).create(vals).with_env(self.env)
+        record.check('create')
         self.clear_caches()
         return record
 
@@ -520,19 +556,17 @@ class ir_translation(osv.osv):
                 vals['value'] = field.check_trans_value(vals['value'])
         elif vals.get('src') or not vals.get('value', True):
             vals.setdefault('state', 'to_translate')
-        result = super(ir_translation, self).write(vals)
+        self.check('write')
+        result = super(ir_translation, self.sudo()).write(vals)
+        self.check('write')
         self.clear_caches()
         return result
 
-    def unlink(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def unlink(self):
+        self.check('unlink')
         self.clear_caches()
-        result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
-        return result
+        return super(ir_translation, self.sudo()).unlink()
 
     @api.model
     def insert_missing(self, field, records):
