@@ -108,16 +108,16 @@ class AccountAnalyticLine(models.Model):
 
         lines = super(AccountAnalyticLine, self).write(values)
         for line in self:
-            res = line._get_sale_order_line(vals=values)
+            res = line.sudo()._get_sale_order_line(vals=values)
             super(AccountAnalyticLine, line).write(res)
 
-        self.mapped('so_line')._compute_analytic()
+        self.mapped('so_line').sudo()._compute_analytic()
         return lines
 
     @api.model
     def create(self, values):
         line = super(AccountAnalyticLine, self).create(values)
-        res = line._get_sale_order_line(vals=values)
+        res = line.sudo()._get_sale_order_line(vals=values)
         line.with_context(create=True).write(res)
-        line.mapped('so_line')._compute_analytic()
+        line.mapped('so_line').sudo()._compute_analytic()
         return line
