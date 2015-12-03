@@ -4,9 +4,8 @@
 import logging
 import re
 
-from openerp.addons.mail.models.mail_message import decode
-from openerp.addons.mail.models.mail_thread import decode_header
 from openerp.osv import osv
+from openerp.tools import decode_smtp_header, decode_smtp_headers
 
 _logger = logging.getLogger(__name__)
 
@@ -23,8 +22,8 @@ class MailThread(osv.AbstractModel):
         return False to end the routing process. """
         bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
         message_id = message.get('Message-Id')
-        email_from = decode_header(message, 'From')
-        email_to = decode_header(message, 'To')
+        email_from = decode_smtp_headers(message, 'From')
+        email_to = decode_smtp_headers(message, 'To')
 
         # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
         if bounce_alias and bounce_alias in email_to:
@@ -68,6 +67,6 @@ class MailThread(osv.AbstractModel):
         by using the References header of the incoming message and looking for
         matching message_id in mail.mail.statistics. """
         if message.get('References'):
-            message_ids = [x.strip() for x in decode(message['References']).split()]
+            message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
             self.pool['mail.mail.statistics'].set_replied(cr, uid, mail_message_ids=message_ids, context=context)
         return super(MailThread, self).message_route_process(cr, uid, message, message_dict, routes, context=context)
