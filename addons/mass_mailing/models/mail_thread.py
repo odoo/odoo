@@ -5,10 +5,7 @@ import logging
 import re
 
 from odoo import api, models
-
-from odoo.addons.mail.models.mail_message import decode
-from odoo.addons.mail.models.mail_thread import decode_header
-
+from odoo.tools import decode_smtp_header, decode_message_header
 
 _logger = logging.getLogger(__name__)
 
@@ -24,8 +21,8 @@ class MailThread(models.AbstractModel):
         return False to end the routing process. """
         bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
         message_id = message.get('Message-Id')
-        email_from = decode_header(message, 'From')
-        email_to = decode_header(message, 'To')
+        email_from = decode_message_header(message, 'From')
+        email_to = decode_message_header(message, 'To')
 
         # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
         if bounce_alias and bounce_alias in email_to:
@@ -70,6 +67,6 @@ class MailThread(models.AbstractModel):
         by using the References header of the incoming message and looking for
         matching message_id in mail.mail.statistics. """
         if message.get('References'):
-            message_ids = [x.strip() for x in decode(message['References']).split()]
+            message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
             self.env['mail.mail.statistics'].set_replied(mail_message_ids=message_ids)
         return super(MailThread, self).message_route_process(message, message_dict, routes)
