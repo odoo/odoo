@@ -15,6 +15,7 @@ var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
+var UserModel = new Model('res.users', session.context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -147,6 +148,13 @@ function make_message (data) {
                                msg.email_from || _t('Anonymous');
     }
 
+    // Don't redirect on author clicked of self-posted messages
+    if (msg.author_id && msg.author_id[0] === session.partner_id) {
+        msg.author_redirect = false;
+    } else {
+        msg.author_redirect = true;
+    }
+
     // Compute the avatar_url
     if (msg.author_id && msg.author_id[0]) {
         msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
@@ -167,39 +175,6 @@ function make_message (data) {
 function add_channel_to_message (message, channel_id) {
     message.channel_ids.push(channel_id);
     message.channel_ids = _.uniq(message.channel_ids);
-}
-
-function post_channel_message (data) {
-    return ChannelModel.call('message_post', [data.channel_id], {
-        message_type: 'comment',
-        content_subtype: 'html',
-        partner_ids: data.partner_ids,
-        body: _.str.trim(data.content),
-        subtype: 'mail.mt_comment',
-        attachment_ids: data.attachment_ids,
-    });
-}
-
-function post_document_message (model_name, res_id, data) {
-    var values = {
-        attachment_ids: data.attachment_ids,
-        body: _.str.trim(data.content),
-        content_subtype: data.content_subtype,
-        context: data.context,
-        message_type: data.message_type,
-        partner_ids: data.partner_ids,
-        subtype: data.subtype,
-        subtype_id: data.subtype_id,
-    };
-
-    var model = new Model(model_name);
-    return model.call('message_post', [res_id], values).then(function (msg_id) {
-        return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
-            msgs[0].model = model_name;
-            msgs[0].res_id = res_id;
-            add_message(msgs[0]);
-        });
-    });
 }
 
 function add_channel (data, options) {
@@ -399,7 +374,7 @@ function on_needaction_notification (message) {
 
 function on_channel_notification (message) {
     var def;
-    if ((message.channel_ids.length === 1) && !chat_manager.get_channel(message.channel_ids[0])) {
+    if (message.channel_ids.length === 1) {
         def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
     } else {
         def = $.when();
@@ -508,35 +483,75 @@ function on_chat_session_notification (chat_session) {
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
-    post_message: post_channel_message,
-    post_message_in_document: post_document_message,
+    post_message: function (data, options) {
+        options = options || {};
+        var msg = {
+            partner_ids: data.partner_ids,
+            body: _.str.trim(data.content),
+            attachment_ids: data.attachment_ids,
+        };
+        if ('channel_id' in options) {
+            // post a message in a channel
+            return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
+                message_type: 'comment',
+                content_subtype: 'html',
+                subtype: 'mail.mt_comment',
+            }));
+        }
+        if ('model' in options && 'res_id' in options) {
+            // post a message in a chatter
+            _.extend(msg, {
+                content_subtype: data.content_subtype,
+                context: data.context,
+                message_type: data.message_type,
+                subtype: data.subtype,
+                subtype_id: data.subtype_id,
+            });
+
+            var model = new Model(options.model);
+            return model.call('message_post', [options.res_id], msg).then(function (msg_id) {
+                return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
+                    msgs[0].model = options.model;
+                    msgs[0].res_id = options.res_id;
+                    add_message(msgs[0]);
+                });
+            });
+        }
+    },
 
     get_messages: function (options) {
-        if ('channel_id' in options) { // channel message
-            var channel = this.get_channel(options.channel_id);
+        var channel;
+
+        if ('channel_id' in options && options.load_more) {
+            // get channel messages, force load_more
+            channel = this.get_channel(options.channel_id);
+            return fetch_from_channel(channel, {domain: options.domain || {}, load_more: true});
+        }
+        if ('channel_id' in options) {
+            // channel message, check in cache first
+            channel = this.get_channel(options.channel_id);
             var channel_cache = get_channel_cache(channel, options.domain);
             if (channel_cache.loaded) {
                 return $.when(channel_cache.messages);
             } else {
                 return fetch_from_channel(channel, {domain: options.domain});
             }
-        } else { // chatter message
         }
-    },
-    fetch: function (channel, domain) {
-        return fetch_from_channel(channel, {domain: domain});
-    },
-    fetch_more: function (channel, domain) {
-        return fetch_from_channel(channel, {domain: domain, load_more: true});
-    },
-    /**
-     * Fetches chatter messages from their ids
-     */
-    fetch_messages: function (message_ids, options) {
-        return fetch_document_messages(message_ids, options).then(function(result) {
-            chat_manager.mark_as_read(message_ids);
-            return result;
-        });
+        if ('ids' in options) {
+            // get messages from their ids (chatter is the main use case)
+            return fetch_document_messages(options.ids, options).then(function(result) {
+                chat_manager.mark_as_read(options.ids);
+                return result;
+            });
+        }
+        if ('model' in options && 'res_id' in options) {
+            // get messages for a chatter, when it doesn't know the ids (use
+            // case is when using the full composer)
+            var domain = [['model', '=', options.model], ['res_id', '=', options.res_id]];
+            MessageModel.call('message_fetch', [domain], {limit: 30}).then(function (msgs) {
+                return _.map(msgs, add_message);
+            });
+        }
     },
     toggle_star_status: function (message_id) {
         var msg = _.findWhere(messages, { id: message_id });
@@ -549,7 +564,8 @@ var chat_manager = {
     mark_as_read: function (message_ids) {
         var ids = _.filter(message_ids, function (id) {
             var message = _.findWhere(messages, {id: id});
-            return message.is_needaction;
+            // If too many messages, not all are fetched, and some might not be found
+            return !message || message.is_needaction;
         });
         if (ids.length) {
             return MessageModel.call('set_message_done', [ids]);
@@ -638,15 +654,21 @@ var chat_manager = {
     },
     join_channel: function (channel_id, options) {
         if (channel_id in channel_defs) {
+            // prevents concurrent calls to channel_join_and_get_info
             return channel_defs[channel_id];
         }
-        var def = ChannelModel
-            .call('channel_join_and_get_info', [[channel_id]])
-            .then(function (result) {
-                add_channel(result, options);
-            });
-        channel_defs[channel_id] = def;
-        return def;
+        var channel = this.get_channel(channel_id);
+        if (channel) {
+            // channel already joined
+            channel_defs[channel_id] = $.when(channel);
+        } else {
+            channel_defs[channel_id] = ChannelModel
+                .call('channel_join_and_get_info', [[channel_id]])
+                .then(function (result) {
+                    return add_channel(result, options);
+                });
+        }
+        return channel_defs[channel_id];
     },
 
     unsubscribe: function (channel) {
@@ -670,6 +692,38 @@ var chat_manager = {
         return ChannelModel.call("channel_fold", [], {uuid : channel.uuid}).then(function () {
             channel.is_folded = !channel.is_folded;
         });
+    },
+    /**
+     * Special redirection handling for given model and id
+     *
+     * If the model is res.partner, and there is a user associated with this
+     * partner which isn't the current user, open the DM with this user.
+     * Otherwhise, open the record's form view, if this is not the current user's.
+     */
+    redirect: function (res_model, res_id, dm_redirection_callback) {
+        var self = this;
+        var redirect_to_document = function (res_model, res_id) {
+            web_client.do_action({
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: res_model,
+                views: [[false, 'form']],
+                res_id: res_id,
+            });
+        };
+        if (res_model === "res.partner") {
+            var domain = [["partner_id", "=", res_id]];
+            UserModel.call("search", [domain]).then(function (user_ids) {
+                if (user_ids.length && user_ids[0] !== session.uid) {
+                    self.create_channel(res_id, 'dm').then(dm_redirection_callback || function () {});
+                } else if (!user_ids.length) {
+                    redirect_to_document(res_model, res_id);
+                }
+            });
+        } else {
+            redirect_to_document(res_model, res_id);
+        }
     },
 };
 

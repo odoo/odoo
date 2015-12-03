@@ -34,6 +34,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
+                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Public Information">
                                 <group>
@@ -45,7 +46,6 @@
                                         <field name="work_location"/>
                                         <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
-                                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
