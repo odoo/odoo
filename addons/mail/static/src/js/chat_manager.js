@@ -557,7 +557,8 @@ var chat_manager = {
     mark_as_read: function (message_ids) {
         var ids = _.filter(message_ids, function (id) {
             var message = _.findWhere(messages, {id: id});
-            return message.is_needaction;
+            // If too many messages, not all are fetched, and some might not be found
+            return !message || message.is_needaction;
         });
         if (ids.length) {
             return MessageModel.call('set_message_done', [ids]);
