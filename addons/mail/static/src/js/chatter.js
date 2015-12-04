@@ -114,7 +114,7 @@ var Followers = form_common.AbstractField.extend({
         var follower_id = $currentTarget.data('oe-id');
         var is_channel = $currentTarget.data('oe-model') === 'mail.channel';
         self.dialog = new Dialog(this, {
-                        size: 'small',
+                        size: 'medium',
                         title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                         buttons: [
                                 {
@@ -131,7 +131,7 @@ var Followers = form_common.AbstractField.extend({
                                 },
                             ],
                 }).open();
-        return self.fetch_subtypes($currentTarget.data('id'));
+        return self.fetch_subtypes($currentTarget.data('id'), $currentTarget.data('oe-model'));
     },
 
     on_invite_follower: function (channel_only) {
@@ -270,8 +270,10 @@ var Followers = form_common.AbstractField.extend({
 
     /** Fetch subtypes, only if current user is follower or if follower_id is given, i.e. if
      *  the current user is editing the subtypes of another follower
+     *  @param {int} [follower_id] the id of the follower
+     *  @param {string} [follower_model] 'res.partner' or 'mail.channel'
      */
-    fetch_subtypes: function (follower_id) {
+    fetch_subtypes: function (follower_id, follower_model) {
         var self = this;
         var dialog = false;
 
@@ -292,7 +294,7 @@ var Followers = form_common.AbstractField.extend({
                 res_id: this.view.datarecord.id,
                 follower_id: follower_id,
             }).then(function (data) {
-                self.display_subtypes(data, dialog);
+                self.display_subtypes(data, dialog, (follower_model === 'mail.channel'));
             });
         } else  {
             return $.Deferred().resolve();
@@ -300,11 +302,11 @@ var Followers = form_common.AbstractField.extend({
     },
 
     /** Display subtypes: {'name': default, followed} */
-    display_subtypes:function (data, dialog) {
+    display_subtypes:function (data, dialog, display_warning) {
         var old_parent_model;
         var $list;
         if (dialog) {
-            $list = this.dialog.$el;
+            $list = $('<ul>').appendTo(this.dialog.$el);
         } else {
             $list = this.$('.o_subtypes_list ul');
         }
@@ -324,9 +326,14 @@ var Followers = form_common.AbstractField.extend({
             old_parent_model = record.parent_model;
             record.followed = record.followed || undefined;
             $(qweb.render('mail.Followers.subtype', {'record': record,
-                                                     'dialog': dialog}))
+                                                     'dialog': dialog,
+                                                     'display_warning': display_warning && record.internal}))
             .appendTo($list);
         });
+
+        if (display_warning) {
+            $(qweb.render('mail.Followers.subtypes.warning')).appendTo(this.dialog.$el);
+        }
     },
 
     do_follow: function () {
