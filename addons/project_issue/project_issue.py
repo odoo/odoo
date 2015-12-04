@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import calendar
-from datetime import datetime,date
-from dateutil import relativedelta
-import json
-import time
+from datetime import datetime
+
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import fields, osv, orm
+from openerp.exceptions import UserError, AccessError
+from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import html2plaintext
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
-from openerp.exceptions import UserError, AccessError
 
 
 class project_issue(osv.Model):
