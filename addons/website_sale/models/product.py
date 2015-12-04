@@ -138,11 +138,6 @@ class Product(models.Model):
 
     # Wrappers for call_kw with inherits
     @api.multi
-    def open_website_url(self):
-        self.ensure_one()
-        return self.product_tmpl_id.open_website_url()
-
-    @api.multi
     def website_publish_button(self):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()

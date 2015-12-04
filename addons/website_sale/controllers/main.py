@@ -240,8 +240,6 @@ class WebsiteSale(http.Controller):
             'compute_currency': compute_currency,
             'keep': keep,
             'parent_category_ids': parent_category_ids,
-            'style_in_product': lambda style, product: style.id in product.website_style_ids.ids,
-            'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib', i) for i in attribs]),
         }
         if category:
             values['main_object'] = category
