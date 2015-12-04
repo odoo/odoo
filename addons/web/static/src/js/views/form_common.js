@@ -679,6 +679,9 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             this.$el.addClass('oe_form_field_translatable');
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
+        if (this.field.company_dependent && this.session.debug) {
+            this.$el.find('.oe_field_property').click(this.on_property_open);
+        }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
         this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (session.debug) {
@@ -772,6 +775,21 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         var trans = new data.DataSet(this, 'ir.translation');
         return trans.call_button('translate_fields', [this.view.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).done(function(r) {
             self.do_action(r);
+        });
+    },
+    on_property_open: function(e) {
+        var self = this;
+        e.stopImmediatePropagation();
+        new data.DataSetSearch(self, 'ir.model.fields').call('search',
+        [[['name', '=', self.name], ['model', '=', self.field_manager.model]]]).then(function(result) {
+            self.do_action({
+                name: _t("Company Properties"),
+                res_model : 'ir.property',
+                domain : [['fields_id', '=', result[0]]],
+                views: [[false, 'list'], [false, 'form']],
+                type : 'ir.actions.act_window',
+                context: {'default_fields_id': result[0]}
+            });
         });
     },
 
