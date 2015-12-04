@@ -7,7 +7,6 @@ from openerp import _, api, fields, models, SUPERUSER_ID
 from openerp import tools
 from openerp.exceptions import UserError, AccessError
 
-
 _logger = logging.getLogger(__name__)
 
 

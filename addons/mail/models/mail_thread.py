@@ -920,20 +920,41 @@ class MailThread(models.AbstractModel):
         # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
         email_from = tools.decode_smtp_headers(message, 'From')
+        email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
         email_to = tools.decode_smtp_headers(message, 'To')
         references = tools.decode_smtp_headers(message, 'References')
         in_reply_to = tools.decode_smtp_headers(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
+        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
 
-        # 0. First check if this is a bounce message or not.
-        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-        #    As all MTA does not respect this RFC (googlemail is one of them),
-        #    we also need to verify if the message come from "mailer-daemon"
-        localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
-        if message.get_content_type() == 'multipart/report' or localpart == 'mailer-daemon':
-            _logger.info("Not routing bounce email from %s to %s with Message-Id %s",
-                         email_from, email_to, message_id)
-            return []
+        # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
+        if bounce_alias and bounce_alias in email_to or \
+                message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
+            original = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+            if original and original.get_payload():
+                original_pl = original.get_payload()[0]
+                original_references = tools.decode_smtp_headers(original_pl, 'References')
+                original_in_reply_to = tools.decode_smtp_headers(original_pl, 'In-Reply-To').strip()
+                # TDE: clear variable use in this method
+                (ref_match, bounce_model, bounce_thread_id, bounce_hostname) = tools.email_references(original_references or original_in_reply_to)
+
+            # bounce alias: find original thread
+            if not bounce_model and not bounce_thread_id and bounce_alias:
+                # Bounce regex
+                # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
+                # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+                import re
+                bounce_re = re.compile("%s-(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+                bounce_match = bounce_re.search(email_to)
+                if bounce_match:
+                    bounce_model = bounce_match.group(2)
+                    bounce_thread_id = bounce_match.group(3)
+
+            _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail model: %s, thread_id: %s',
+                         email_from, email_to, message_id, bounce_model, bounce_thread_id)
+            if bounce_model and bounce_model in self.pool and hasattr(self.pool[bounce_model], 'message_receive_bounce') and bounce_thread_id:
+                self.env[bounce_model].browse(bounce_thread_id).message_receive_bounce()
+            return False
 
         # 1. message is a reply to an existing message (exact match of message_id)
         ref_match, reply_model, reply_thread_id, reply_hostname = tools.email_references(thread_references)
@@ -1219,6 +1240,16 @@ class MailThread(models.AbstractModel):
         if update_vals:
             self.write(update_vals)
         return True
+
+    @api.multi
+    def message_receive_bounce(self, mail_id=None):
+        """Called by ``message_process`` when a bounce email (such as Undelivered
+        Mail Returned to Sender) is received for an existing thread. The default
+        behavior is to check is an integer  ``message_bounce`` column exists.
+        If it is the case, its content is incremented. """
+        if 'message_bounce' in self._fields:
+            for obj in self:
+                obj.write({'message_bounce': obj.message_bounce + 1})
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
