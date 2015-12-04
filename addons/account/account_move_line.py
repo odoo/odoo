@@ -747,7 +747,7 @@ class account_move_line(osv.osv):
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
                 part = partner_obj.browse(cr, uid, partner_id, context=context)
-                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
+                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids, context=context)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
             val['account_tax_id'] = tax_id
