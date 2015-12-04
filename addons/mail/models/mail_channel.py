@@ -159,11 +159,14 @@ class Channel(models.Model):
 
     @api.multi
     def action_unfollow(self):
-        result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
+        partner_id = self.env.user.partner_id.id
+        channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
+        result = self.write({'channel_partner_ids': [(3, partner_id)]})
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), channel_info)
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-            self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+            # post 'channel left' message as root since the partner just unsubscribed from the channel
+            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner_id)
         return result
 
     @api.multi
