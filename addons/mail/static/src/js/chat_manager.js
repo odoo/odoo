@@ -48,6 +48,9 @@ function add_message (data, options) {
                 if (options.domain && options.domain !== []) {
                     add_to_cache(msg, options.domain);
                 }
+                if (options.increment_unread) {
+                    update_channel_unread_counter(channel, channel.unread_counter+1);
+                }
             }
             if (channel && channel.hidden) {
                 channel.hidden = false;
@@ -380,13 +383,7 @@ function on_channel_notification (message) {
         def = $.when();
     }
     def.then(function () {
-        _.each(message.channel_ids, function (channel_id) {
-            var channel = chat_manager.get_channel(channel_id);
-            if (channel) {
-                update_channel_unread_counter(channel, channel.unread_counter+1);
-            }
-        });
-        add_message(message, { show_notification: true });
+        add_message(message, { show_notification: true, increment_unread: true });
         invalidate_caches(message.channel_ids);
     });
 }
