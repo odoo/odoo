@@ -5906,20 +5906,23 @@ class BaseModel(object):
         if match:
             method, params = match.groups()
 
+            class RawRecord(object):
+                def __init__(self, record):
+                    self._record = record
+                def __getitem__(self, name):
+                    field = self._record._fields[name]
+                    value = self._record[name]
+                    return field.convert_to_write(value)
+                def __getattr__(self, name):
+                    return self[name]
+
             # evaluate params -> tuple
             global_vars = {'context': self._context, 'uid': self._uid}
             if self._context.get('field_parent'):
-                class RawRecord(object):
-                    def __init__(self, record):
-                        self._record = record
-                    def __getattr__(self, name):
-                        field = self._record._fields[name]
-                        value = self._record[name]
-                        return field.convert_to_write(value)
                 record = self[self._context['field_parent']]
                 global_vars['parent'] = RawRecord(record)
-            field_vars = self._convert_to_write(self._cache)
-            params = eval("[%s]" % params, global_vars, field_vars)
+            field_vars = RawRecord(self)
+            params = eval("[%s]" % params, global_vars, field_vars, nocopy=True)
 
             # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)
