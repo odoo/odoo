@@ -583,6 +583,6 @@ class email_template(osv.osv):
         return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
-        return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
+        return self.generate_email_batch(cr, uid, template_id, [res_id], context=context)[res_id]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
