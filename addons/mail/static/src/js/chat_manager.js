@@ -27,6 +27,42 @@ var emoji_substitutions = {};
 var needaction_counter = 0;
 var mention_partner_suggestions = [];
 var discuss_ids = {};
+var global_unread_counter = 0;
+
+// Window focus/unfocus, beep and title
+//----------------------------------------------------------------------------------
+var beep = (function () {
+    if (typeof(Audio) === "undefined") {
+        return function () {};
+    }
+    var audio = new Audio();
+    var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
+    audio.src = session.url("/mail/static/src/audio/ting" + ext);
+    return function () { audio.play(); };
+})();
+
+bus.on("window_focus", null, function() {
+    global_unread_counter = 0;
+    notify();
+});
+
+function increment_global_unread_counter () {
+    if (!bus.is_odoo_focused()) {
+        global_unread_counter++;
+        notify(bus.is_master);
+    }
+}
+
+function notify (play_sound) {
+    var title;
+    if (global_unread_counter > 0) {
+        title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
+        if (play_sound) {
+            beep();
+        }
+    }
+    web_client.set_title_part("_chat", title);
+}
 
 // Message and channel manipulation helpers
 //----------------------------------------------------------------------------------
@@ -42,7 +78,7 @@ function add_message (data, options) {
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
-
+            var is_chat = channel && !_.contains(["public", "private"], channel.type);
             if (channel) {
                 add_to_cache(msg, []);
                 if (options.domain && options.domain !== []) {
@@ -56,7 +92,7 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if (channel && !_.contains(["public", "private"], channel.type) && (options.show_notification)) {
+            if (is_chat && options.show_notification) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
@@ -69,6 +105,9 @@ function add_message (data, options) {
                     };
                     web_client.do_notify(title, trunc_text(msg.body, preview_msg_max_size));
                 }
+            }
+            if (is_chat && options.increment_unread && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
+                increment_global_unread_counter();
             }
         });
         if (!options.silent) {
