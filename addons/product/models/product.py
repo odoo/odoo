@@ -66,7 +66,6 @@ class ProductCategory(models.Model):
             product_categories = self.search(args, limit=limit)
         return product_categories.name_get()
 
-    @api.multi
     def _compute_name_get_fnc(self):
         name_get = dict(self.name_get())
         for pc in self:
@@ -79,8 +78,9 @@ class ProductCategory(models.Model):
 
     @api.constrains('parent_id')
     def _check_recursion(self):
-        if self == self.parent_id:
-            raise ValidationError(_("Error ! You cannot create recursive categories."))
+        for category in self:
+            if category == category.parent_id:
+                raise ValidationError(_("Error ! You cannot create recursive categories."))
 
 
 class ProducePriceHistory(models.Model):
@@ -93,7 +93,7 @@ class ProducePriceHistory(models.Model):
     _order = 'datetime desc'
 
     def _default_get_company(self):
-        return self.env.context.get('force_company', self.env.user.company_id).id
+        return self.env.context.get('force_company') or self.env.user.company_id.id
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_get_company)
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
@@ -113,9 +113,7 @@ class ProductTemplate(models.Model):
         return self.env["product.uom"].search([], limit=1, order='id').id
 
     def _default_get_category(self):
-        if self.env.context.get('categ_id'):
-            return self.env.context['categ_id']
-        return self.env.ref('product.product_category_all').id
+        return self.env.context.get('categ_id') or self.env.ref('product.product_category_all').id
 
     @api.model
     def _get_product_template_type(self):
@@ -188,7 +186,6 @@ class ProductTemplate(models.Model):
     default_code = fields.Char(compute='_compute_product_template_field', inverse='_inverse_default_code_product_template_field', string='Internal Reference', store=True)
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', string='Pricelist Items')
 
-    @api.multi
     def _compute_product_template_price(self):
         context = self.env.context
         ProductPricelist = self.env['product.pricelist']
@@ -208,8 +205,8 @@ class ProductTemplate(models.Model):
 
     def _inverse_product_template_price(self):
         for product in self:
-            value = product.price or 0.0
-            if 'uom' in self.env.context:
+            value = product.price
+            if self.env.context.get('uom'):
                 value = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(product.price, product.uom_id.id)
             product.list_price = value
 
@@ -256,21 +253,15 @@ class ProductTemplate(models.Model):
         for product in self:
             product.image = tools.image_resize_image_big(product.image_small)
 
-    @api.multi
     def _compute_is_product_variant(self):
         for product in self:
             product.is_product_variant = False
 
-    @api.multi
     def _compute_product_variant_count(self):
         for product in self:
             product.product_variant_count = len(product.product_variant_ids)
 
-    @api.v7
-    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
-        return self._price_get(products, ptype='list_price')
-
-    @api.v8
+    @api.model
     def _price_get(self, products, ptype='list_price'):
         context = self.env.context
         if context.get('currency_id'):
@@ -299,8 +290,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('uom_id', 'uom_po_id')
     def onchange_uom(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id
+        self.uom_po_id = self.uom_id
 
     @api.multi
     def create_variant_ids(self):
@@ -373,9 +363,9 @@ class ProductTemplate(models.Model):
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
-        if self.uom_id.category_id != self.uom_po_id.category_id:
-            return ValidationError(_('Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
-        return True
+        for uom in self:
+            if uom.uom_id.category_id != uom.uom_po_id.category_id:
+                return ValidationError(_('Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
 
     @api.model
     def create(self, vals):
@@ -422,17 +412,17 @@ class ProductTemplate(models.Model):
                 name=name, args=args, operator=operator, limit=limit)
         results = Product.name_search(name, args, operator=operator, limit=limit)
         product_ids = [p[0] for p in results]
-        template_ids = map(int, Product.browse(product_ids).mapped('product_tmpl_id'))
+        template_ids = Product.browse(product_ids).mapped('product_tmpl_id').ids
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
             args = args if args is not None else []
             results = Product.name_search(
                 name, args+domain, operator=operator, limit=limit)
             product_ids = [p[0] for p in results]
-            template_ids = map(int, Product.browse(product_ids).mapped('product_tmpl_id'))
+            template_ids = Product.browse(product_ids).mapped('product_tmpl_id').ids
 
         # re-apply product.template order + name_get
-        return super(ProductTemplate, self).name_search('', args=[('id', 'in', list(template_ids))], operator='ilike', limit=limit)
+        return super(ProductTemplate, self).name_search('', args=[('id', 'in', template_ids)], operator='ilike', limit=limit)
 
 
 class ProductProduct(models.Model):
@@ -477,7 +467,6 @@ class ProductProduct(models.Model):
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
     ]
 
-    @api.multi
     def _compute_product_price(self):
         context = self.env.context
         ProductPricelist = self.env['product.pricelist']
@@ -500,11 +489,11 @@ class ProductProduct(models.Model):
 
     def _inverse_product_price(self):
         for product in self:
-            if 'uom' in self.env.context:
-                product.price = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(product.price, product.uom_id.id)
-            product.list_price = product.price
+            price = product.price
+            if self.env.context.get('uom'):
+                price = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(price, product.uom_id.id)
+            product.list_price = price
 
-    @api.multi
     def _compute_price_extra(self):
         for product in self:
             price_extra = 0.0
@@ -513,28 +502,24 @@ class ProductProduct(models.Model):
                     price_extra += price_id.price_extra
             product.price_extra = price_extra
 
-    @api.multi
     def _compute_product_lst_price(self):
         for product in self:
-            if 'uom' in self.env.context:
-                amount = product.uom_id._compute_price(product.list_price, self.env.context['uom'])
-            else:
-                amount = product.list_price
+            amount = product.list_price
+            if self.env.context.get('uom'):
+                amount = product.uom_id._compute_price(amount, self.env.context['uom'])
             product.lst_price = amount + float(product.price_extra)
 
     def _inverse_product_lst_price(self):
         for product in self:
             value = product.lst_price
-            if 'uom' in self.env.context:
+            if self.env.context.get('uom'):
                 value = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(value, product.uom_id.id)
             product.list_price = value - float(product.price_extra)
 
-    @api.multi
     def _compute_product_code(self):
         for product in self:
             product.code = product._get_partner_code_name(self.env.context.get('partner_id', None))['code']
 
-    @api.multi
     def _compute_product_partner_ref(self):
         for product in self:
             data = product._get_partner_code_name(self.env.context.get('partner_id', None))
@@ -542,7 +527,6 @@ class ProductProduct(models.Model):
             data['name'] = data['name'] or product.name
             product.partner_ref = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
 
-    @api.multi
     def _compute_is_product_variant_impl(self):
         for product in self:
             product.is_product_variant = True
@@ -595,6 +579,7 @@ class ProductProduct(models.Model):
         return res
 
     def _get_partner_code_name(self, partner_id):
+        self.ensure_one()
         for supinfo in self.seller_ids.filtered(lambda s: s.name.id == partner_id):
             return {'code': supinfo.product_code or self.default_code, 'name': supinfo.product_name or self.name}
         return {'code': self.default_code, 'name': self.name}
@@ -664,19 +649,18 @@ class ProductProduct(models.Model):
                     sellers = product.seller_ids.filtered(lambda x: x.name.id in partner_ids and x.product_id == product)
                 if not sellers:
                     sellers = product.seller_ids.filtered(lambda x: x.name.id in partner_ids and not x.product_id)
-            if sellers:
-                for s in sellers:
-                    seller_variant = s.product_name and (
-                        variant and "%s (%s)" % (s.product_name, variant) or s.product_name
-                        ) or False
-                    mydict = {'id': product.id,
-                              'name': seller_variant or name,
-                              'default_code': s.product_code or product.default_code,
-                              }
-                    temp = _name_get(mydict)
-                    if temp not in result:
-                        result.append(temp)
-            else:
+            for s in sellers:
+                seller_variant = s.product_name and (
+                    variant and "%s (%s)" % (s.product_name, variant) or s.product_name
+                    ) or False
+                mydict = {'id': product.id,
+                          'name': seller_variant or name,
+                          'default_code': s.product_code or product.default_code,
+                          }
+                temp = _name_get(mydict)
+                if temp not in result:
+                    result.append(temp)
+            if not sellers:
                 mydict = {'id': product.id,
                           'name': name,
                           'default_code': product.default_code}
@@ -740,7 +724,7 @@ class ProductProduct(models.Model):
         self.env['product.price.history'].create({
             'product_id': self.id,
             'cost': value,
-            'company_id': self.env.context.get('force_company', self.env.user.company_id.id)
+            'company_id': self.env.context.get('force_company') or self.env.user.company_id.id
             })
 
     @api.constrains('attribute_value_ids')
@@ -752,12 +736,10 @@ class ProductProduct(models.Model):
                     raise ValidationError(_("Error! It is not allowed to choose more than one value for a given attribute."))
                 else:
                     attributes.add(value.attribute_id)
-        return True
 
     @api.model
     def create(self, vals):
-        ctx = dict(self.env.context or {}, create_product_product=True)
-        product_product = super(ProductProduct, self.with_context(ctx)).create(vals)
+        product_product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
         product_product._set_standard_price(vals.get('standard_price', 0.0))
         return product_product
 
@@ -790,7 +772,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def unlink(self):
-        unlink_ids = []
+        Products = self.env['product.product']
         ProductTemplate = self.env['product.template']
         for product in self:
             # Check if product still exists, in case it has been unlinked by unlinking its template
@@ -800,9 +782,8 @@ class ProductProduct(models.Model):
             other_product_ids = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
             if not other_product_ids:
                 ProductTemplate += product.product_tmpl_id
-            unlink_ids.append(product.id)
-        unlink = self.browse(unlink_ids)
-        res = super(ProductProduct, unlink).unlink()
+            Products |= product
+        res = super(ProductProduct, Products).unlink()
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
         ProductTemplate.unlink()

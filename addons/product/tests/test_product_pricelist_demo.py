@@ -14,8 +14,8 @@ class TestProductPricelistDemo(TransactionCase):
         self.custom_computer_kit = self.env.ref("product.product_product_5")
         self.ipad_mini = self.env.ref("product.product_product_6")
         self.apple_in_ear_headphones = self.env.ref("product.product_product_7")
-        self.laptop_E5023 = self.env.ref('product.product_product_25')
-        self.laptop_S3450 = self.env.ref("product.product_product_26")
+        self.laptop_E5023 = self.env.ref('product.product_delivery_01')
+        self.laptop_S3450 = self.env.ref("product.product_product_25")
         self.category_5_id = self.ref('product.product_category_5')
         self.uom_unit_id = self.ref('product.product_uom_unit')
         self.list0 = self.ref('product.list0')
@@ -39,7 +39,7 @@ class TestProductPricelistDemo(TransactionCase):
             }), (0, 0, {
                 'name': '1 surchange on Laptop',
                 'applied_on': '1_product',
-                'sequence': 1,
+                'sequence': 4,
                 'product_id': self.laptop_E5023.id,
                 'compute_price': 'formula',
                 'base': 'list_price',

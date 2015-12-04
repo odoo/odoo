@@ -10,8 +10,8 @@ class TestPricelist(TransactionCase):
         super(TestPricelist, self).setUp()
         self.ProductPricelist = self.env['product.pricelist']
 
-        self.datacard = self.env.ref('product.product_product_46')
-        self.usb_adapter = self.env.ref('product.product_product_48')
+        self.datacard = self.env.ref('product.product_delivery_02')
+        self.usb_adapter = self.env.ref('product.product_delivery_01')
         self.uom_ton = self.env.ref('product.product_uom_ton')
         self.uom_unit_id = self.ref('product.product_uom_unit')
         self.uom_dozen_id = self.ref('product.product_uom_dozen')

@@ -116,9 +116,7 @@ class ProductUom(models.Model):
         to_unit = self.browse(to_uom_id)
         if self.category_id != to_unit.category_id:
             return price
-        amount = price * self.factor
-        if to_uom_id:
-            amount = amount / to_unit.factor
+        amount = (price * self.factor) / to_unit.factor
         return amount
 
     @api.onchange('uom_type')

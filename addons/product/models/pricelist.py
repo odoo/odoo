@@ -88,10 +88,10 @@ class ProductPricelist(models.Model):
         return results
 
     def _price_get_multi(self, products_by_qty_by_partner):
-        self.ensure_one()
         return dict((key, price[0]) for key, price in self._price_rule_get_multi(products_by_qty_by_partner).items())
 
     def _price_rule_get_multi(self, products_by_qty_by_partner):
+        self.ensure_one()
         date = self.env.context.get('date') and fields.Date.from_string(self.env.context['date']) or fields.Date.today()
         products = map(lambda x: x[0], products_by_qty_by_partner)
         if not products:
@@ -215,7 +215,7 @@ class ProductPricelist(models.Model):
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
                 user_company = self.env.user.company_id
                 price = user_company.currency_id.compute(price, self.currency_id)
-            results[product.id] = (price, suitable_rule and suitable_rule.id or False)
+            results[product.id] = (price, suitable_rule and suitable_rule.id)
         return results
 
     @api.multi
@@ -270,15 +270,15 @@ class ProductPricelistItem(models.Model):
 
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
-        if self.price_min_margin > self.price_max_margin:
-            raise ValidationError(_("Error! The minimum margin should be lower than the maximum margin."))
-        return True
+        for item in self:
+            if item.price_min_margin > item.price_max_margin:
+                raise ValidationError(_("Error! The minimum margin should be lower than the maximum margin."))
 
     @api.constrains('base_pricelist_id')
     def _check_recursion(self):
-        if self.base == 'pricelist' and self.pricelist_id == self.base_pricelist_id:
-            raise ValidationError(_("Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"))
-        return True
+        for item in self:
+            if item.base == 'pricelist' and item.pricelist_id == item.base_pricelist_id:
+                raise ValidationError(_("Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"))
 
 class ProductPricelistItemNew(models.Model):
     _inherit = "product.pricelist.item"

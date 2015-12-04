@@ -57,7 +57,7 @@ class ProductAttributeValue(models.Model):
 
     @api.multi
     def name_get(self):
-        if not self.env.context.get('show_attribute', True):
+        if not self.env.context.get('show_attribute'):
             return super(ProductAttributeValue, self).name_get()
         res = []
         for value in self:
@@ -99,6 +99,7 @@ class ProductAttributeLine(models.Model):
 
     @api.constrains('attribute_id')
     def _check_valid_attribute(self):
-        if self.value_ids <= self.attribute_id.value_ids:
-            return True
-        raise ValidationError(_("Error ! You cannot use this attribute with the following value."))
+        for attr in self:
+            if attr.value_ids <= attr.attribute_id.value_ids:
+                return True
+            raise ValidationError(_("Error ! You cannot use this attribute with the following value."))
