@@ -805,7 +805,7 @@ class sale_order(osv.osv):
                 elif line[1]:
                     prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
                 if prod and prod.taxes_id:
-                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]
                 order_line.append(line)
 
             # link      (4, ID)
@@ -815,7 +815,7 @@ class sale_order(osv.osv):
                 for line_id in line_ids:
                     prod = line_obj.browse(cr, uid, line_id, context=context).product_id
                     if prod and prod.taxes_id:
-                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]}])
+                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]}])
                     else:
                         order_line.append([4, line_id])
             else:
@@ -1147,7 +1147,7 @@ class sale_order_line(osv.osv):
             taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
         else:
             taxes = product_obj.taxes_id
-        result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
