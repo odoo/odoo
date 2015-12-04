@@ -431,19 +431,19 @@ class YamlInterpreter(object):
 
         context = context or {}
         fields = fields or {}
+        parent_values = {context['field_parent']: parent} if context.get('field_parent') else {}
 
         if view_info:
             fg = view_info['fields']
             elems = get_field_elems(view_info)
-            recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
+            recs = model.browse(self.cr, SUPERUSER_ID, [], dict(self.context, **context))
             onchange_spec = recs._onchange_spec(view_info)
             record_dict = {}
 
             if default:
                 # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
                 # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-                missing_default_ctx = dict(self.context, **context)
-                defaults = model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx)
+                defaults = recs.sudo(self.uid)._add_missing_default_values({})
 
                 # copy the default values in record_dict, only if they are in the view (because that's what the client does)
                 # the other default values will be added later on by the create(). The other fields in the view that haven't any
@@ -453,7 +453,7 @@ class YamlInterpreter(object):
 
                 # execute onchange on default values first
                 default_names = [name for name in elems if name in record_dict]
-                result = recs.onchange(record_dict, default_names, onchange_spec)
+                result = recs.onchange(dict(record_dict, **parent_values), default_names, onchange_spec)
                 record_dict.update(process_vals(fg, result.get('value', {})))
 
             # fill in fields, and execute onchange where necessary
@@ -466,11 +466,12 @@ class YamlInterpreter(object):
                 if field_name not in fields:
                     continue
 
+                ctx = dict(context)
                 form_view = view_info
                 if fg[field_name]['type'] == 'one2many':
                     # evaluate one2many fields using the inline form view defined in the parent
                     form_view = get_2many_view(fg, field_name, 'form')
-                ctx = dict(context)
+                    ctx['field_parent'] = fg[field_name]['relation_field']
                 if default and field_elem.get('context'):
                     ctx.update(eval(field_elem.get('context'),
                                     globals_dict={'parent': dotdict(parent)},
@@ -483,7 +484,7 @@ class YamlInterpreter(object):
                 if not field_elem.attrib.get('on_change', False):
                     continue
 
-                result = recs.onchange(record_dict, field_name, onchange_spec)
+                result = recs.onchange(dict(record_dict, **parent_values), field_name, onchange_spec)
                 record_dict.update(process_vals(fg, {
                     key: val
                     for key, val in result.get('value', {}).iteritems()
