@@ -3,13 +3,14 @@
 # * account_voucher
 # 
 # Translators:
+# Sadig Adam <sadig41@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-04 08:01+0000\n"
+"Last-Translator: Sadig Adam <sadig41@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* تستخدم الحالة `مسودة` عندما يشفر المستخدم قسيمة جديدة.\n*  تستخدم الحالة Pro-forma عندما لاتحوي القسيمة رقما\n* تستخدم الحالة `مرسل` عند انشاء المستخدم لقسيمة، ويولد رقم للقسيمة ويتم انشاء مدخلات القسيمة في حساب\n* تستخدم الحالة `ملغاة عندما يلغي المستخدم القسيمة"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -45,7 +46,7 @@ msgstr "السند المحاسبي"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "الاجراء المطلوب"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -161,7 +162,7 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -196,12 +197,12 @@ msgstr "المتابعون"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "المتابعون (القنوات)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "المتابعون (الشرماء)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -229,7 +230,7 @@ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتب�
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، توجد رسالة جديدة"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -246,7 +247,7 @@ msgstr "ملاحظات داخلية"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -313,17 +314,17 @@ msgstr "عدد"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "عدد الاجراءات"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "عدد الرسائل الواجب اجراءها"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "عدد الرسائل غير المقروءة"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -550,7 +551,7 @@ msgstr "رسائل غير مقروءة"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "عداد الرسائل الغير مقروءة"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form

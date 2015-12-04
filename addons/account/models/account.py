@@ -329,7 +329,7 @@ class AccountJournal(models.Model):
         prefix = code.upper()
         if refund:
             prefix = 'R' + prefix
-        return prefix + '/%(year)s/'
+        return prefix + '/%(range_year)s/'
 
     @api.model
     def _create_sequence(self, vals, refund=False):
@@ -390,7 +390,7 @@ class AccountJournal(models.Model):
         if vals.get('type') in ('bank', 'cash'):
             # For convenience, the name can be inferred from account number
             if not vals.get('name') and 'bank_acc_number' in vals:
-                vals['name'] = _('Bank') + ' ' + vals['bank_acc_number']
+                vals['name'] = vals['bank_acc_number']
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
@@ -679,7 +679,7 @@ class AccountTax(models.Model):
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
         # FIXME get currency in param?
-        incl_tax = prod_taxes.filtered(lambda tax: tax.id not in line_taxes and tax.price_include)
+        incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax.price_include)
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']
         return price

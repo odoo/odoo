@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:56+0000\n"
+"POT-Creation-Date: 2015-09-21 09:20+0000\n"
+"PO-Revision-Date: 2015-11-11 13:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -318,6 +318,12 @@ msgid "A tag must be unique!"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Műveletek"
@@ -507,13 +513,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Név megjelenítése"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
 #: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
 msgid "Display order"
-msgstr ""
+msgstr "Sorrend megjelenítés"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -647,13 +653,13 @@ msgstr "Követők"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Követők (csatornák)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Követők (Partnerek)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -702,11 +708,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread
-#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread
 msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: website_slides
@@ -750,7 +760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_last_post
@@ -765,7 +775,7 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -834,7 +844,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Legtöbb szavazatot kapott"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_name
@@ -846,18 +856,6 @@ msgid "Name"
 msgstr "Név"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
@@ -865,7 +863,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
-msgstr ""
+msgstr "Legújabb"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -898,6 +896,12 @@ msgid "Not Published"
 msgstr "Nem publikált"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -924,14 +928,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
@@ -1234,7 +1238,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Slides"
-msgstr ""
+msgstr "Diák"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
@@ -1277,7 +1281,7 @@ msgstr "A"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "A teljes URL elérési út a weboldalon keresztüli belépéshez a szerver eléréséhez."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_4
@@ -1383,7 +1387,7 @@ msgstr "Olvasatlan üzenetek"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1457,7 +1461,7 @@ msgstr "Látható a weboldalon"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Jjóváhagyásra vár"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1504,6 +1508,11 @@ msgstr "Honlap meta kulcsszavai"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_meta_title
 msgid "Website meta title"
 msgstr "Honlap meta cím"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

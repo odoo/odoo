@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"PO-Revision-Date: 2015-11-12 13:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vereist actie"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -105,31 +105,18 @@ msgstr "Toepassen"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
-msgid "Asset Categories"
-msgstr ""
+msgstr "Investering"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5393
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
 msgid "Asset Category"
-msgstr ""
+msgstr "Invetseringscategorie"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
 msgid "Asset Name"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
-#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
-msgid "Assets"
-msgstr ""
+msgstr "Activanaam"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
@@ -181,7 +168,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Available"
-msgstr ""
+msgstr "Beschikbaar"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -339,7 +326,7 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_display_name
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Schermnaam"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -370,6 +357,7 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model,name:hr_equipment.model_hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_count
 msgid "Equipment"
 msgstr ""
@@ -382,6 +370,8 @@ msgid "Equipment Assigned"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 msgid "Equipment Categories"
 msgstr ""
@@ -392,7 +382,12 @@ msgid "Equipment Name"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_ids
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
+#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 msgid "Equipments"
 msgstr ""
@@ -426,14 +421,14 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Volgers (Kanalen)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Volgers (Partners)"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
@@ -475,13 +470,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
-#: model:ir.model,name:hr_equipment.model_hr_equipment
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
-msgid "IT Assets"
-msgstr ""
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
@@ -493,14 +481,14 @@ msgstr "Als dit is ingeschakeld, zijn er nieuwe berichten die uw aandacht vragen
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Belangrijke berichten"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -518,7 +506,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Is Volger"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
@@ -539,7 +527,7 @@ msgstr "Datum laatste bericht"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request___last_update
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Laatst Aangepast op"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_write_uid
@@ -562,7 +550,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
 msgid "Location"
-msgstr ""
+msgstr "Locatie"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
@@ -653,7 +641,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "My Assets"
+msgid "My Equipments"
 msgstr ""
 
 #. module: hr_equipment
@@ -688,25 +676,25 @@ msgstr "Opmerking"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Aantal acties"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Aantal ongelezen berichten"
 
 #. module: hr_equipment
 #: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Assets Menu"
+msgid "Open Equipments Menu"
 msgstr ""
 
 #. module: hr_equipment
@@ -861,7 +849,7 @@ msgstr "Volgorde"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_serial_no
 msgid "Serial Number"
-msgstr ""
+msgstr "Partijnummer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_active
@@ -877,7 +865,7 @@ msgstr "Instellingen"
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_software
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_stage_id
@@ -941,19 +929,20 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
+msgid ""
+"This application helps you to track equipments used by employees.\n"
+"                Create some laptop, printer or phone and link each equipment to\n"
+"                an employee or departement. You will manage allocations, issues\n"
+"                and maintenance of equipment."
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
 "                You will manage allocations, issues and mainteannce of equipment."
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
-msgid ""
-"This application helps you to track equipments used by employees.\n"
-"                Create some laptops, printers or phones and link each asset to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
 #. module: hr_equipment
@@ -983,7 +972,7 @@ msgstr "Ongelezen berichten"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Teller ongelezen berichten"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
@@ -1005,7 +994,7 @@ msgstr "Gebruikers"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Vendor"
-msgstr ""
+msgstr "Fabrikant"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_ref

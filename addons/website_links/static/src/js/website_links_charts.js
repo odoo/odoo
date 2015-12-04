@@ -59,8 +59,6 @@ if(!$('.o_website_links_chart').length) {
                 var chart = nv.models.lineChart()
                     .x(function(d) { return getDate(d); })
                     .y(function(d) { return getNbClicks(d); })
-                    .tooltips(true)
-                    .transitionDuration(0)
                     .showYAxis(true)
                     .showXAxis(true);
 

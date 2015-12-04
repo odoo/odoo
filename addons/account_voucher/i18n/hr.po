@@ -3,13 +3,15 @@
 # * account_voucher
 # 
 # Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-21 19:15+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* 'Nacrt' status se koristi kad korisnik unosi novi i nepotvrđeni vaucher.\n* 'Pro-forma' se koristi kada vaucher još nema svoj broj.\n* 'Knjiženo' je status u kojem su kreirane stavke, vaucher ima svoj broj, i stavke su proknjižene.\n' Otkazano' je status otkazanog dokumenta."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -35,7 +37,7 @@ msgstr "Konto"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Datum konta"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -45,7 +47,7 @@ msgstr "Knjigovodstveni vaučer"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebna dodatna radnja"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -76,7 +78,7 @@ msgstr "Podaci o plaćanju"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Vezna oznaka računa"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -102,12 +104,12 @@ msgstr "Otvorene ili plaćene vaučere nije moguće pobrisati."
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Kliknite za stvaranje prodajne potvrde"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Kliknite za stvaranje nabavne potvrde"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -161,7 +163,7 @@ msgstr "Opis"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Naziv za prikaz"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -186,7 +188,7 @@ msgstr "Datum dospijeća"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_date
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Efektivni datum za knjigovodstvene stavke"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_follower_ids
@@ -196,12 +198,12 @@ msgstr "Pratitelji"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratitelji (Kanali)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratitelji (Partneri)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -229,7 +231,7 @@ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -246,7 +248,7 @@ msgstr "Interne bilješke"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je pratitelj"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -276,7 +278,7 @@ msgstr "Datum zadnje poruke"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja promjena"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
@@ -313,17 +315,17 @@ msgstr "Broj"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Broj akcija"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Broj nepročitanih poruka"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -354,7 +356,7 @@ msgstr "Plati direktno"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Plati kasnije"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -494,12 +496,12 @@ msgstr "Porez"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Iznos poreza"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Ispravak poreza"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -550,7 +552,7 @@ msgstr "Nepročitane poruke"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Brojač nepročitanih poruka"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -563,7 +565,7 @@ msgstr "Ovjeri"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr ""
+msgstr "Dobavljač"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -615,7 +617,7 @@ msgstr "Website poruke"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -635,4 +637,4 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:345
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Prvo morate odabrati partnera!"

@@ -770,9 +770,9 @@ class calendar_event(osv.Model):
             time = _("AllDay , %s") % (event_date)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime(format_time), tz)
+            time = _("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime(format_time), tz)
         else:
-            time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime(format_date), date_deadline.strftime(format_time), tz)
+            time = _("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime(format_date), date_deadline.strftime(format_time), tz)
         return time
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
@@ -1011,8 +1011,10 @@ class calendar_event(osv.Model):
             return value
         start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
         value['stop_date'] = (start + timedelta(hours=duration)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        value['stop'] = (start + timedelta(hours=duration)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         value['stop_datetime'] = (start + timedelta(hours=duration)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         value['start_date'] = start.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        value['start'] = start.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': value}
 
     def onchange_dates(self, cr, uid, ids, fromtype, start=False, end=False, checkallday=False, allday=False, context=None):
@@ -1036,16 +1038,6 @@ class calendar_event(osv.Model):
             if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
-
-        else:
-            if fromtype == 'start' and start:
-                start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
-                value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            if fromtype == 'stop' and end:
-                end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         return {'value': value}

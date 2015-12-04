@@ -12,8 +12,8 @@ import urllib2
 import werkzeug.wrappers
 
 import openerp
-from openerp.addons.web.controllers.main import WebClient
-from openerp.addons.web_editor.controllers.main import Web_Editor
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
+from openerp.addons.web.controllers.main import WebClient, Binary
 from openerp.addons.web import http
 from openerp.http import request
 
@@ -38,9 +38,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
-                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
                     return request.redirect(first_menu.url)
-                if first_menu.url.startswith('/page/'):
+                if first_menu.url and first_menu.url.startswith('/page/'):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
         r = super(Website, self).web_login(redirect=redirect, *args, **kw)
-        if request.params['login_success'] and not redirect:
+        if not redirect and request.params['login_success']:
             if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
@@ -303,7 +303,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable, disable):
+    def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -316,6 +316,10 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         set_active(disable, False)
         set_active(enable, True)
+
+        if get_bundle:
+            bundle = AssetsBundle('website.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
+            return bundle.to_html()
 
         return True
 
@@ -369,3 +373,29 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
+
+
+#------------------------------------------------------
+# Retrocompatibility routes
+#------------------------------------------------------
+class WebsiteBinary(openerp.http.Controller):
+    @http.route([
+        '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:width>x<int:height>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
+    ], type='http', auth="public", website=False, multilang=False)
+    def content_image(self, id=None, max_width=0, max_height=0, **kw):
+        if max_width:
+            kw['width'] = max_width
+        if max_height:
+            kw['height'] = max_height
+        if id:
+            id, _, unique = id.partition('_')
+            kw['id'] = int(id)
+            if unique:
+                kw['unique'] = unique
+        return Binary().content_image(**kw)

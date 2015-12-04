@@ -141,13 +141,33 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of')
+                  'child_of', 'parent_of')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+
+# Negation of domain expressions
+DOMAIN_OPERATORS_NEGATION = {
+    AND_OPERATOR: OR_OPERATOR,
+    OR_OPERATOR: AND_OPERATOR,
+}
+TERM_OPERATORS_NEGATION = {
+    '<': '>=',
+    '>': '<=',
+    '<=': '>',
+    '>=': '<',
+    '=': '!=',
+    '!=': '=',
+    'in': 'not in',
+    'like': 'not like',
+    'ilike': 'not ilike',
+    'not in': 'in',
+    'not like': 'like',
+    'not ilike': 'ilike',
+}
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -245,51 +265,36 @@ def distribute_not(domain):
          ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
-    def negate(leaf):
-        """Negates and returns a single domain leaf term,
-        using the opposite operator if possible"""
-        left, operator, right = leaf
-        mapping = {
-            '<': '>=',
-            '>': '<=',
-            '<=': '>',
-            '>=': '<',
-            '=': '!=',
-            '!=': '=',
-        }
-        if operator in ('in', 'like', 'ilike'):
-            operator = 'not ' + operator
-            return [(left, operator, right)]
-        if operator in ('not in', 'not like', 'not ilike'):
-            operator = operator[4:]
-            return [(left, operator, right)]
-        if operator in mapping:
-            operator = mapping[operator]
-            return [(left, operator, right)]
-        return [NOT_OPERATOR, (left, operator, right)]
 
-    def distribute_negate(domain):
-        """Negate the domain ``subtree`` rooted at domain[0],
-        leaving the rest of the domain intact, and return
-        (negated_subtree, untouched_domain_rest)
-        """
-        if is_leaf(domain[0]):
-            return negate(domain[0]), domain[1:]
-        if domain[0] == AND_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [OR_OPERATOR] + done1 + done2, todo2
-        if domain[0] == OR_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [AND_OPERATOR] + done1 + done2, todo2
-    if not domain:
-        return []
-    if domain[0] != NOT_OPERATOR:
-        return [domain[0]] + distribute_not(domain[1:])
-    if domain[0] == NOT_OPERATOR:
-        done, todo = distribute_negate(domain[1:])
-        return done + distribute_not(todo)
+    # This is an iterative version of a recursive function that split domain
+    # into subdomains, processes them and combine the results. The "stack" below
+    # represents the recursive calls to be done.
+    result = []
+    stack = [False]
+
+    for token in domain:
+        negate = stack.pop()
+        # negate tells whether the subdomain starting with token must be negated
+        if is_leaf(token):
+            if negate:
+                left, operator, right = token
+                if operator in TERM_OPERATORS_NEGATION:
+                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                else:
+                    result.append(NOT_OPERATOR)
+                    result.append(token)
+            else:
+                result.append(token)
+        elif token == NOT_OPERATOR:
+            stack.append(not negate)
+        elif token in DOMAIN_OPERATORS_NEGATION:
+            result.append(DOMAIN_OPERATORS_NEGATION[token] if negate else token)
+            stack.append(negate)
+            stack.append(negate)
+        else:
+            result.append(token)
+
+    return result
 
 
 # --------------------------------------------------
@@ -706,6 +711,8 @@ class expression(object):
             """ Return a domain implementing the child_of operator for [(left,child_of,ids)],
                 either as a range using the parent_left/right tree lookup fields
                 (when available), or as an expanded [(left,in,child_ids)] """
+            if not ids:
+                return FALSE_DOMAIN
             if left_model._parent_store and (not left_model.pool._init):
                 # TODO: Improve where joins are implemented for many with '.', replace by:
                 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
@@ -724,6 +731,34 @@ class expression(object):
                     ids2 = model.search(cr, uid, [(parent_field, 'in', ids)], context=context)
                     return ids + recursive_children(ids2, model, parent_field)
                 return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
+
+        def parent_of_domain(left, ids, left_model, parent=None, prefix='', context=None):
+            """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
+                either as a range using the parent_left/right tree lookup fields
+                (when available), or as an expanded [(left,in,parent_ids)] """
+            if left_model._parent_store and (not left_model.pool._init):
+                doms = []
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    if doms:
+                        doms.insert(0, OR_OPERATOR)
+                    doms += [AND_OPERATOR, ('parent_right', '>', node.parent_left), ('parent_left', '<=',  node.parent_left)]
+                if prefix:
+                    return [(left, 'in', left_model.search(cr, uid, doms, context=context))]
+                return doms
+            else:
+                def get_parent_ids(record, parent_field):
+                    ids = set([record.id])
+                    while record[parent_field]:
+                        record = record[parent_field]
+                        ids.add(record.id)
+                    return ids
+                parent_ids = set()
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    parent_ids |= get_parent_ids(node, parent or left_model._parent_name)
+                return [(left, 'in', list(parent_ids))]
+
+        HIERARCHY_FUNCS = {'child_of': child_of_domain,
+                           'parent_of': parent_of_domain}
 
         def pop():
             """ Pop a leaf to process. """
@@ -791,9 +826,9 @@ class expression(object):
                 leaf.add_join_context(next_model, model._inherits[next_model._name], 'id', model._inherits[next_model._name])
                 push(leaf)
 
-            elif left == 'id' and operator == 'child_of':
+            elif left == 'id' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, model, context)
-                dom = child_of_domain(left, ids2, model)
+                dom = HIERARCHY_FUNCS[operator](left, ids2, model)
                 for dom_leaf in reversed(dom):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
@@ -906,12 +941,12 @@ class expression(object):
             # -------------------------------------------------
 
             # Applying recursivity on field(one2many)
-            elif column._type == 'one2many' and operator == 'child_of':
+            elif column._type == 'one2many' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, comodel, context)
                 if column._obj != model._name:
-                    dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                    dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                 else:
-                    dom = child_of_domain('id', ids2, model, parent=left)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                 for dom_leaf in reversed(dom):
                     push(create_substitution_leaf(leaf, dom_leaf, model))
 
@@ -952,14 +987,15 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
-                if operator == 'child_of':
+
+                if operator in HIERARCHY_FUNCS:
                     def _rec_convert(ids):
                         if comodel == model:
                             return ids
                         return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
 
                     ids2 = to_ids(right, comodel, context)
-                    dom = child_of_domain('id', ids2, comodel)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
                     ids2 = comodel.search(cr, uid, dom, context=context)
                     push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
                 else:
@@ -992,12 +1028,12 @@ class expression(object):
                         push(create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), model))
 
             elif column._type == 'many2one':
-                if operator == 'child_of':
+                if operator in HIERARCHY_FUNCS:
                     ids2 = to_ids(right, comodel, context)
                     if column._obj != model._name:
-                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                        dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                     else:
-                        dom = child_of_domain('id', ids2, model, parent=left)
+                        dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                     for dom_leaf in reversed(dom):
                         push(create_substitution_leaf(leaf, dom_leaf, model))
                 else:

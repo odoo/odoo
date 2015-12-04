@@ -233,7 +233,7 @@ field:
             </field>
         </record>
 
-    will ask the client to open a form for the record if it fullfils some
+    will ask the client to open a form for the record if it fulfills some
     condition
 
 This tends to be the only action type created from :ref:`data files

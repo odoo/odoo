@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_adyen
+# 
+# Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-10-15 18:02+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
+"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:123
+#, python-format
+msgid "; multiple order found"
+msgstr "; pronađen višestruki nalog"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:121
+#, python-format
+msgid "; no order found"
+msgstr "; nema pronađenog naloga"
+
+#. module: payment_adyen
+#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Otkaži,</i> Vaše plaćanje je otkazano.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Gotovo,</i> Vaše online plaćanje je uspješno odrađeno.  Hvala na vašoj narudžbi.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Pogreška,</i> Imajte na umu da je došlo do pogreške tijekom transakcije. Nalog je potvrđen, ali nije plaćen. Ne ustručavajte se kontaktirati nas ako imate bilo kakvih pitanja o statusu narudžbe.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Na čekanju,</i> Vaše online plaćanje je uspješno odrađeno. Ali Vaš nalog još nije potvrđen.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:169
+#, python-format
+msgid "Adyen: feedback error"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:131
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:119
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:112
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+msgid "Merchant Account"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Stjecatelj plaćanja"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcija plaćanja"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+msgid "Skin Code"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr ""
+
+#. module: payment_adyen
+#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr ""

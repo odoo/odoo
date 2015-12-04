@@ -58,7 +58,7 @@ class account_analytic_line(models.Model):
     def _update_values(self, values):
         if values.get('task_id', False):
             task = self.env['project.task'].browse(values['task_id'])
-            values['so_line'] = task.sale_line_id and task.sale_line_id.id or False
+            values['so_line'] = task.sale_line_id and task.sale_line_id.id or values.get('so_line', False)
 
     @api.model
     def create(self, values):

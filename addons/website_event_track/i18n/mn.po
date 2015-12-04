@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:54+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-11-18 13:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Author"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Үйлдэл Шаардлагатай"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -208,7 +213,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -312,12 +317,12 @@ msgstr "Дагагчид"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Дагагчид (Сувагууд)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Дагагчид (Харилцагчид)"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -383,10 +388,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -396,7 +405,7 @@ msgstr "Зураг"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Чухал зурвасууд"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -406,7 +415,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -425,7 +434,7 @@ msgstr "Сүүлийн зурвасын огноо"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location___last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_uid
@@ -525,16 +534,6 @@ msgid "Morning break"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program (valid from Oct. 2013)."
 msgstr ""
@@ -573,14 +572,19 @@ msgid "No tracks found!"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Үйлдлийн тоо"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоо"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -700,7 +704,7 @@ msgid "Responsible"
 msgstr "Хариуцлага"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Өрөө"
@@ -949,7 +953,7 @@ msgstr "Уншаагүй Зурвасууд"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social

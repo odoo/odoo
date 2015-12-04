@@ -44,9 +44,6 @@
                         attrs="{'invisible': ['|', ('state', 'not in', ('open','done')), ('exclusive', '=', 'exclusive')]}" groups="purchase.group_advance_bidding"/>
                     <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
                         attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                    <button name="%(action_purchase_requisition_partner)d" type="action"
-                        string="Request a Quotation" icon="fa-cogs"
-                        attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                 </div>
                 <div class="pull-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
@@ -93,6 +90,9 @@
                             </form>
                         </field>
                         <separator string="Requests for Quotation"/>
+                        <button name="%(action_purchase_requisition_partner)d" type="action"
+                        string="Request a Quotation" icon="fa-cogs"
+                        attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                         <field name="purchase_ids" options="{'reload_on_button': true}">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>

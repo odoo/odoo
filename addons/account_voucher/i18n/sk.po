@@ -3,13 +3,14 @@
 # * account_voucher
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 18:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-28 11:06+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* Status \"Návrh\" sa používa, keď používateľ kóduje nový a nepotvrdený poukaz.\n\n* \"Pro-forma\" status sa používa, keď poukaz nemá číslo poukážky.\n\n* Status \"Uverejnené\"  sa používa, keď používateľ vytvorí poukážku, číslo poukážky je vygenerované a položky poukážky sú vytvorené v účte.\n\n * Status \"Zrušené\" sa používa keď užívateľ zruší poukážku."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -45,7 +46,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebná akcia"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -150,7 +151,7 @@ msgstr "Dátum"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dátum poslednej správy zaslanej záznamu."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
@@ -161,7 +162,7 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobraziť meno"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -191,17 +192,17 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Odberatelia"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Odberatelia (Kanály)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Odberatelia (Partneri)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -224,12 +225,12 @@ msgstr "ID"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -241,12 +242,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interné poznámky"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je odberateľ"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -254,7 +255,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Journal"
-msgstr ""
+msgstr "Účtovná kniha"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
@@ -270,13 +271,13 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Dátum poslednej správy"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Posledná modifikácia"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
@@ -293,12 +294,12 @@ msgstr "Naposledy upravované"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Správy"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Správa a história komunikácie"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -313,17 +314,17 @@ msgstr "Číslo"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Počet akcií"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Počet správ ktoré vyžadujú akciu"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Počet neprečítaných správ"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -359,7 +360,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
@@ -406,7 +407,7 @@ msgstr "Produkt"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Nákup"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -545,12 +546,12 @@ msgstr "Jednotková cena"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neprečítané správy"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Počítadlo neprečítaných správ"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -610,12 +611,12 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Správy webovej stránky"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "História komunikácie webovej stránky"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt

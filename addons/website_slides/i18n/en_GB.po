@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 11:01+0000\n"
+"POT-Creation-Date: 2015-09-21 09:20+0000\n"
+"PO-Revision-Date: 2015-11-06 14:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-9/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -319,6 +319,12 @@ msgid "A tag must be unique!"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
+msgid "Action Needed"
+msgstr "Action Needed"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Actions"
@@ -326,7 +332,7 @@ msgstr "Actions"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
-msgstr ""
+msgstr "Authentified Users Only"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
@@ -469,14 +475,14 @@ msgstr "Created on"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_last_post
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date of the last message posted on the record."
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_public
 msgid ""
 "Default channel for slides, all public users can access content of this "
 "channel."
-msgstr ""
+msgstr "Default channel for slides, all public users can access content of this channel."
 
 #. module: website_slides
 #. openerp-web
@@ -648,13 +654,13 @@ msgstr "Followers"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Followers (Channels)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Followers (Partners)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -703,12 +709,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread
-#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread
 msgid "If checked new messages require your attention."
 msgstr "If checked new messages require your attention."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "If checked, new messages require your attention."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -751,13 +761,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Is Follower"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_last_post
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Last Message Date"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
@@ -847,18 +857,6 @@ msgid "Name"
 msgstr "Name"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
@@ -899,6 +897,12 @@ msgid "Not Published"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Number of Actions"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -925,14 +929,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Number of messages which requires an action"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Number of unread messages"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
@@ -1311,7 +1315,7 @@ msgstr ""
 #: model:slide.channel,access_error_msg:website_slides.channel_private
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
-msgstr ""
+msgstr "This channel is private and its content is restricted to some users."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:285
@@ -1361,12 +1365,12 @@ msgstr "Type"
 #: code:addons/website_slides/controllers/main.py:140
 #, python-format
 msgid "Uncategorized"
-msgstr ""
+msgstr "Uncategorised"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Uncategorized presentation"
-msgstr ""
+msgstr "Uncategorised presentation"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:453
@@ -1384,7 +1388,7 @@ msgstr "Unread Messages"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Unread Messages Counter"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1469,7 +1473,7 @@ msgstr "Website"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_website_message_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Website Messages"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
@@ -1486,7 +1490,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_channel_website_message_ids
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Website communication history"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_website_meta_description
@@ -1505,6 +1509,11 @@ msgstr "Website meta keywords"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_meta_title
 msgid "Website meta title"
 msgstr "Website meta title"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

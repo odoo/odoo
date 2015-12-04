@@ -102,14 +102,6 @@ function PhantomTest() {
     // run test
     // ----------------------------------------------------
     this.run = function(url_path, code, ready) {
-        if(self.options.login) {
-            var qp = [];
-            qp.push('db=' + self.options.db);
-            qp.push('login=' + self.options.login);
-            qp.push('key=' + self.options.password);
-            qp.push('redirect=' + encodeURIComponent(url_path));
-            url_path = "/login?" + qp.join('&');
-        }
         var url = self.origin + url_path;
         code = code || "true";
         ready = ready || "true";

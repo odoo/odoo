@@ -43,6 +43,7 @@ class account_analytic_account(models.Model):
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
+    # FIXME: account_type is probably not necessary anymore, could be removed in v10
     account_type = fields.Selection([
         ('normal', 'Analytic View')
         ], string='Type of Account', required=True, default='normal')
@@ -51,7 +52,9 @@ class account_analytic_account(models.Model):
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    partner_id = fields.Many2one('res.partner', string='Customer')
+
+    # use auto_join to speed up name_search call
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True)
 
     balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
     debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
@@ -74,7 +77,11 @@ class account_analytic_account(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-        recs = self.search(['|', '|', ('code', operator, name), ('partner_id', operator, name), ('name', operator, name)] + args, limit=limit)
+        domain = ['|', ('code', operator, name), ('name', operator, name)]
+        partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)
+        if partners:
+            domain = ['|'] + domain + [('partner_id', 'in', partners.ids)]
+        recs = self.search(domain + args, limit=limit)
         return recs.name_get()
 
 

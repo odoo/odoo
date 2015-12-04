@@ -3,4 +3,3 @@
 
 import mail_mail
 import portal_sale
-import res_config

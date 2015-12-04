@@ -3,13 +3,14 @@
 # * hr_payroll
 # 
 # Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-07 21:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2015-10-27 11:57+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +31,13 @@ msgid ""
 "* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr ""
+msgstr "* Kun palkkalaskelma on luotu, tila on 'Luonnos'.\n* Kun palkkalaskelma on vahvistettavana, tila on 'Odottaa'.\n* Kun palkkalaskelma on hyväksytty, tila on 'Valmis'.\n* Kun käyttäjä peruuttaa palkkalaskelman, tila on 'Hylätty'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>Osoite</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -144,13 +145,13 @@ msgstr "Lisää sisäinen ilmoitus..."
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr ""
+msgstr "Kaikki alasäännöt"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
-msgstr ""
+msgstr "Aina tosi"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
@@ -166,12 +167,12 @@ msgstr "Määrä"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Amount Type"
-msgstr ""
+msgstr "Määrän tyyppi"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Annually"
-msgstr ""
+msgstr "Vuosittain"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
@@ -185,7 +186,7 @@ msgstr "Näkyy palkkalaskelmassa"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr ""
+msgstr "Tätä sääntöä käytetään laskemiseen jos ehto on tosi. Voit määrittää ehtoja, kuten \"perus > 1000\""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -216,11 +217,11 @@ msgstr "Peruuta"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Cancel Payslip"
-msgstr ""
+msgstr "Peru palkkalaskelma"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9141
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9081
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Ryhmä"
@@ -228,7 +229,7 @@ msgstr "Ryhmä"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Child Rules"
-msgstr ""
+msgstr "Alasäännöt"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
@@ -413,14 +414,14 @@ msgstr "Hyvityslasku"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
 msgid "Date From"
-msgstr ""
+msgstr "Alkupäivä"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
-msgstr ""
+msgstr "Päättymispäivä"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
@@ -474,7 +475,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näytä nimi"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -528,7 +529,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Työntekijän palkkalaskelmat"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
@@ -577,7 +578,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Generate Payslips"
-msgstr ""
+msgstr "Luo palkkalaskelmat"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -688,7 +689,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimeksi muokattu"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
@@ -862,7 +863,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
-msgstr ""
+msgstr "Palkkalaskelman nimi"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
@@ -1032,7 +1033,7 @@ msgstr ""
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Neljännesvuosittain"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -1087,7 +1088,7 @@ msgstr "Hylätty"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
 msgid "Rule"
-msgstr ""
+msgstr "Sääntö"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -1152,7 +1153,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
 msgid "Salary Structure"
-msgstr ""
+msgstr "Palkkarakenne"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
@@ -1169,7 +1170,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "Ajoitettu maksu"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1179,12 +1180,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Search Payslip Lines"
-msgstr ""
+msgstr "Hae palkkalaskelman riveistä"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Search Payslips"
-msgstr ""
+msgstr "Hae palkkalaskelmista"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
@@ -1194,7 +1195,7 @@ msgstr ""
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Semi-annually"
-msgstr ""
+msgstr "Puolivuosittain"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
@@ -1231,11 +1232,6 @@ msgstr "Tila"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
 msgid "Structure"
 msgstr "Rakenne"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_employee_total_wage
-msgid "Sum of all current contract's wage of employee."
-msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
@@ -1299,11 +1295,6 @@ msgstr "Tämä avustaja luo palkkalaskelmat kaikille valituille työntekijöille
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
 msgstr "Yhteensä"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_total_wage
-msgid "Total Basic Salary"
-msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form

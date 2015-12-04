@@ -3,13 +3,16 @@
 # * website_mail
 # 
 # Translators:
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Melanie Bernard <mbe@odoo.com>, 2015
+# Phyrexian <phyrexian09@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-11-12 22:13+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +31,11 @@ msgid "Email Thread"
 msgstr "Discussion par courriel"
 
 #. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Leave a comment"
+msgstr "Laisser un commentaire"
+
+#. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
 msgid "Message"
 msgstr "Message"
@@ -35,12 +43,12 @@ msgstr "Message"
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_message_description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "Description du message : soit le sujet ou le commencement du corps du message"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "Oops! Something went wrong. Try to reload the page and to log in."
-msgstr ""
+msgstr "Oups! Il y a eu un problème. Essayer de recharger la page et de vous identifier. "
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
@@ -74,7 +82,7 @@ msgstr "Se désabonner"
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_message_website_published
 msgid "Visible on the website as a comment"
-msgstr ""
+msgstr "Visible sur le site web comme commentaire"
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_thread_website_message_ids
@@ -87,11 +95,26 @@ msgid "Website communication history"
 msgstr "Historique de communication du site web"
 
 #. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Write a message..."
+msgstr "Envoyer un message..."
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "You must be"
+msgstr "Vous devez être"
+
+#. module: website_mail
 #. openerp-web
 #: code:addons/website_mail/static/src/xml/chatter_message.xml:8
 #, python-format
 msgid "just now"
-msgstr ""
+msgstr "tout de suite"
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "logged in"
+msgstr "Connecté en tant que"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
@@ -102,6 +125,11 @@ msgstr "le"
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "to post a comment."
+msgstr "pour poster un commentaire."
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_description

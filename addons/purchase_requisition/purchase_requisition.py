@@ -144,7 +144,7 @@ class purchase_requisition(osv.osv):
 
         taxes = product.supplier_taxes_id
         fpos = supplier.property_account_position_id.id
-        taxes_id = fpos.map_tax(taxes) if fpos else []
+        taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
         seller = requisition_line.product_id._select_seller(

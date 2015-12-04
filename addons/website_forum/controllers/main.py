@@ -97,7 +97,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
-        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_read(read=True)
+        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
     @http.route(['/forum/<model("forum.forum"):forum>',
@@ -384,7 +384,7 @@ class WebsiteForum(http.Controller):
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),

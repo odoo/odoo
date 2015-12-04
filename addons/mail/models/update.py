@@ -39,6 +39,8 @@ class publisher_warranty_contract(AbstractModel):
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.pool['ir.module.module'].search_read(cr, SUPERUSER_ID, domain, ['name'])
 
+        enterprise_code = get_param('database.enterprise_code')
+
         web_base_url = get_param('web.base.url')
         msg = {
             "dbuuid": dbuuid,
@@ -52,8 +54,11 @@ class publisher_warranty_contract(AbstractModel):
             "language": user.lang,
             "web_base_url": web_base_url,
             "apps": [app['name'] for app in apps],
+            "enterprise_code": enterprise_code,
         }
-        msg.update(self.pool.get("res.company").read(cr, uid, [1], ["name", "email", "phone"])[0])
+        if user.partner_id.company_id:
+            company_id = user.partner_id.company_id.id
+            msg.update(self.pool["res.company"].read(cr, uid, [company_id], ["name", "email", "phone"])[0])
         return msg
 
     def _get_sys_logs(self, cr, uid):
@@ -102,6 +107,11 @@ class publisher_warranty_contract(AbstractModel):
                     poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])
                 except Exception:
                     pass
+            if result.get('enterprise_info'):
+                # Update expiration date
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_date', result.get('enterprise_info').get('expiration_date'), ['base.group_user'])
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_reason', result.get('enterprise_info').get('expiration_reason', 'trial'), ['base.group_system'])
+
         except Exception:
             if cron_mode:
                 return False    # we don't want to see any stack trace in cron

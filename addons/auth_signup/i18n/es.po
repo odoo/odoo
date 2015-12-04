@@ -3,12 +3,13 @@
 # * auth_signup
 # 
 # Translators:
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-18 08:33+0000\n"
+"PO-Revision-Date: 2015-10-04 00:54+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Se ha solicitado un restablecimiento de contraseña para la cuenta Odoo enlazada a este correo electrónico.</p>\n\n<p>Puede cambiar su contraseña accediendo a <a href=\"${object.signup_url}\">este enlace</a>, que será válido durante 24 horas.</p>\n\n<p>Nota: Si no esperaba esta notificación, puede ignorarla sin más.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "Invitación de ${object.company_id.name} para conectar a Odoo"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Se ha solicitado un restablecimiento de contraseña para este usuario. Se ha enviado un correo electrónico conteniendo el siguiente enlace:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Se ha enviado un correo electrónico de invitación conteniendo el siguiente enlace de suscripción:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -92,7 +93,7 @@ msgstr "Se ha enviado un correo electrónico con las credenciales para restablec
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autenticación fallida."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -104,7 +105,7 @@ msgstr "Volver al Inicio de sesión"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "No se puede enviar el correo electrónico: el usuario %s no tiene dirección de correo electrónico."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -119,7 +120,7 @@ msgstr "Confirmar contraseña"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Conectado"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
@@ -166,7 +167,7 @@ msgstr "Restablecer contraseña"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Perfil privado"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -177,7 +178,7 @@ msgstr "Restablecer contraseña"
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Restablecimiento de contraseña: usuario o correo electrónico no válido"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -238,7 +239,7 @@ msgstr "Plantilla de usuario para los nuevos usuarios creados a través del ingr
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "La URL completa para acceder al documento a través del sitio web."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password

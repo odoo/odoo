@@ -3,13 +3,14 @@
 # * sales_team
 # 
 # Translators:
+# Ali zuaby <ali@zuaby.net>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 10:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-11-04 07:23+0000\n"
+"Last-Translator: Ali zuaby <ali@zuaby.net>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +60,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
+msgid "Action Needed"
+msgstr "الاجراء المطلوب"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
@@ -147,7 +153,7 @@ msgstr "المبيعات المباشر"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -164,12 +170,12 @@ msgstr "المتابعون"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "المتابعون (القنوات)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "المتابعون (الشرماء)"
 
 #. module: sales_team
 #. openerp-web
@@ -196,10 +202,14 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
 msgid "If checked new messages require your attention."
 msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "عند التفعيل، توجد رسالة جديدة"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -223,7 +233,7 @@ msgstr "مفوتر"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_message_last_post
@@ -285,16 +295,6 @@ msgid "My Salesteams"
 msgstr "فريقي"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
@@ -309,18 +309,23 @@ msgid "Next Actions"
 msgstr "الاجراء التالي"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الاجراءات"
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "عدد الرسائل الواجب اجراءها"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "عدد الرسائل غير المقروءة"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "يمكنك استخدام الأعداد الطبيعية فقط."
@@ -335,7 +340,7 @@ msgstr "الشريك"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
 #, python-format
 msgid "Performance"
-msgstr ""
+msgstr "الأداء"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
@@ -372,7 +377,7 @@ msgstr "فريق المبيعات"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Salesteam name..."
-msgstr ""
+msgstr "اسم فريق المبيعات..."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -389,7 +394,7 @@ msgstr "الإعدادات"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
 #, python-format
 msgid "Target"
-msgstr ""
+msgstr "الهدف"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
@@ -499,7 +504,7 @@ msgstr "رسائل غير مقروءة"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "عداد الرسائل الغير مقروءة"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
@@ -530,7 +535,7 @@ msgstr "ساعات العمل"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Wrong value entered!"
 msgstr "أدخلت قيمة خاطئة!"
@@ -556,4 +561,4 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
-msgstr ""
+msgstr "المتأخر"

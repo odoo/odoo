@@ -8,6 +8,7 @@ import os
 import time
 import datetime
 import dateutil
+import pytz
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -22,7 +23,7 @@ from openerp.tools import ormcache
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import openerp.workflow
-from openerp.exceptions import UserError
+from openerp.exceptions import MissingError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -80,6 +81,9 @@ class actions(osv.osv):
             'time': time,
             'datetime': datetime,
             'dateutil': dateutil,
+            # NOTE: only `timezone` function. Do not provide the whole `pytz` module as users
+            #       will have access to `pytz.os` and `pytz.sys` to do nasty things...
+            'timezone': pytz.timezone,
         }
 
 class ir_actions_report_xml(osv.osv):
@@ -401,7 +405,12 @@ class ir_actions_act_window(osv.osv):
     @openerp.api.multi
     def exists(self):
         ids = self._existing()
-        return self.filtered(lambda rec: rec.id in ids)
+        existing = self.filtered(lambda rec: rec.id in ids)
+        if len(existing) < len(self):
+            # mark missing records in cache with a failed value
+            exc = MissingError(_("Record does not exist or has been deleted."))
+            (self - existing)._cache.update(openerp.fields.FailedValue(exc))
+        return existing
 
     @openerp.api.model
     @ormcache()

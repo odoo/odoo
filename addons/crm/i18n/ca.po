@@ -3,13 +3,15 @@
 # * crm
 # 
 # Translators:
+# Carles Antolí <carlesantoli@hotmail.com>, 2015
+# Eugeni Chafer <eugenichafer@me.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:17+0000\n"
-"PO-Revision-Date: 2015-09-22 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-11-21 21:26+0000\n"
+"Last-Translator: Eugeni Chafer <eugenichafer@me.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,17 +29,17 @@ msgstr "Reunions"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
 msgid "# of Activities"
-msgstr ""
+msgstr "d'Activitats"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(if leads are activated)"
-msgstr ""
+msgstr "(Si iniciatives estan activat)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(you can change it here)"
-msgstr ""
+msgstr "(pots canviar-lo aquí)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -47,7 +49,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-question-circle\"> veure exemples</i>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -69,27 +71,27 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instal·lar trameses"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Slides"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instal·lar publicacions"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Surveys"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install enquestes"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Website Live Chat"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> instal·lar xat de web"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install e-Commerce"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> instalar  e-Commerce"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -137,14 +139,14 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Iniciativa</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">Opportunity</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Oportunitat</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -161,16 +163,16 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
-msgstr ""
+msgid "<span class=\"oe_grey\"> at </span>"
+msgstr "<span class=\"oe_grey\"> a </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -562,7 +564,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Cal fer alguna acció"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_search
@@ -581,6 +583,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "Actiu"
@@ -700,7 +703,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr ""
+msgstr "Arxiva"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -977,7 +980,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_color
 msgid "Color Index"
-msgstr ""
+msgstr "Índex de color"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
@@ -1027,7 +1030,7 @@ msgstr "Nom del contacte"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Contact Us"
-msgstr ""
+msgstr "Contacta'ns"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
@@ -1191,7 +1194,7 @@ msgstr "Data de creació"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Month"
-msgstr ""
+msgstr "Mes de creació"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1247,7 +1250,7 @@ msgstr "Data"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data de l'últim missatge enviat al registre."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
@@ -1297,7 +1300,7 @@ msgstr "Retard per tancar"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Delete"
-msgstr ""
+msgstr "Elimina"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1354,7 +1357,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostra Nom"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1423,7 +1426,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_email
@@ -1607,16 +1610,21 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidors"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Followers (Canals)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_partner_ids
 msgid "Followers (Partners)"
+msgstr "Seguidors (Socis)"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
 msgstr ""
 
 #. module: crm
@@ -1635,6 +1643,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr ""
@@ -1643,13 +1658,6 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:558
 #, python-format
 msgid "From %s : %s"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: crm
@@ -1750,7 +1758,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Ocult"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_hidden
@@ -1795,12 +1803,12 @@ msgstr "ID"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si està marcat hi ha missatges nous pendents."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_opt_out
@@ -1866,10 +1874,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Entrant"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1881,6 +1894,11 @@ msgstr ""
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
 msgstr ""
 
 #. module: crm
@@ -1907,7 +1925,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "És seguidor"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -1932,7 +1950,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Últim Missatge"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard___last_update
@@ -2143,7 +2161,7 @@ msgstr "Línies"
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
+msgstr "Relació entre etapes i equips de vendes. Si és definit, limita l'etapa actual a l'equip de vendes actual."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2371,7 +2389,7 @@ msgstr "Missatges"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historial de missatges i comunicació"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
@@ -2502,7 +2520,7 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:1011
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Sense assumpte"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2533,7 +2551,7 @@ msgstr "Notes"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Nombre d'accions"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
@@ -2565,16 +2583,22 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Nombre de missatges que requereixen una atenció"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Nombre de missatges no llegits"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Odoo Default"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
 msgstr ""
 
 #. module: crm
@@ -3110,7 +3134,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "Comercial"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3124,6 +3148,7 @@ msgid "Search Leads"
 msgstr "Cerca iniciatives"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "Cerca d'oportunitats"
@@ -3383,12 +3408,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Tag"
-msgstr ""
+msgstr "Etiqueta"
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Nom d'etiqueta ja existeix!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
@@ -3410,7 +3435,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_ids
 msgid "Teams"
-msgstr ""
+msgstr "Equips"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3541,7 +3566,7 @@ msgstr ""
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr ""
+msgstr "Aquest nom us permet fer un seguiment de les diferents accions de campanya. Per ex: Tardor2015, Especial_Nadal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3552,7 +3577,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_medium_id
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "Aquest és el mètode d'enviament. Per exemple: correu, correu electrònic o pancarta"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_source_id
@@ -3560,7 +3585,7 @@ msgstr ""
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of"
 " email list"
-msgstr ""
+msgstr "Aquest és l'origen de l'enllaç. Per ex: cercador, un altre domini o el nom d'una llista de correu electrònic"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -3657,12 +3682,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Missatges pendents de llegir"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Comptador de missatges no llegits"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
@@ -3743,7 +3768,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Utilitzat per ordenar etapes. Inferior és millor."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_user_id
@@ -3778,6 +3803,11 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Very High"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
 msgstr ""
 
 #. module: crm
@@ -3838,12 +3868,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Missatges de la pàgina web"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historial de comunicacions de la pàgina web"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4104,7 +4134,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings

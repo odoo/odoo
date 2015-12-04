@@ -3,13 +3,14 @@
 # * google_drive
 # 
 # Translators:
+# Jason Ouellet, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 19:04+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-09 06:19+0000\n"
+"Last-Translator: Jason Ouellet\n"
 "Language-Team: French (Canada) (http://www.transifex.com/odoo/odoo-9/language/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,29 +38,29 @@ msgstr "Actif"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Au moins une clé ne peut pas être trouvé dans votre modèle de nom Google Disque"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Code d'autorization"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Choisissez comment le nouveau Google Disque sera nommé, du côté de Google. Ex. gdoc_%(nom_champ)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Cliquez pour ajouter un nouveau modèle"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "Configure your templates"
-msgstr ""
+msgstr "Configurez vos modèles"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
@@ -75,7 +76,7 @@ msgstr "Créé le"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "La création de google disque ne peut être fait que par un à la fois."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -85,24 +86,24 @@ msgstr "Client"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom affiché"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:53
 #: code:addons/google_drive/google_drive.py:73
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Allez dans le panneau de configuration"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
 msgid "Google Client "
-msgstr ""
+msgstr "Client Google"
 
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
@@ -113,24 +114,24 @@ msgstr "Google Drive"
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Configuration Google Disque"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Patron de nommage Google Disque"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:55
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google Disque n'est pas configuré, SVP contactez votre administrateur."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Configuration des modèles Google Drive"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
@@ -140,7 +141,7 @@ msgstr "Identifiant"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_uid
@@ -160,7 +161,7 @@ msgid ""
 "spreadsheet to control the quality of your product or review the delivery "
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
-msgstr ""
+msgstr "Lier vos propres modèles google disque à tout dossier de Odoo. Si vous avez des documents spécifiques que votre collaborateur doit remplir, par exemple, utilisez un tableur pour contrôler la qualité de votre produit ou revoyez la liste de contrôle de livraison pour chaque commande dans un pays étranger, ... Il est très facile de les gérer, de les relier à Odoo et de les utiliser pour collaborer avec vos employés."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -172,18 +173,18 @@ msgstr "Modèle"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr ""
+msgstr "Le modèle de filtre sélectionné ne correspond pas au modèle du modèle actuel."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:173
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "SVP entrez un hyperlien Google Document valide"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "Identificateur ressource"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:72
@@ -191,34 +192,34 @@ msgstr ""
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "Quelque chose a mal tourné lors de la génération du jetons. SVP demandez à nouveau un code d'autorisation."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
 msgid "Template Name"
-msgstr ""
+msgstr "Nom modèle"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "Hyperlien Modèle"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_model_config
 msgid "Templates"
-msgstr ""
+msgstr "Modèle"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:90
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Le modèle Google est introuvable. Il a peut-être été supprimé."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "L''hyperlien pour générer le code d'autorisation de Google"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -227,7 +228,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Le nom de la pièce jointe peut utiliser des données fixes ou variables. Pour les distinguer entre document Google Disque\n                                utilisez des mots et des champs fixes. Par exemple, dans l'exemple ci-dessus, si vous avez écrit Agrolait_%(name)s_Vente\n                                dans le champ Nom de Google Disque, le document dans votre Google Disque et dans l'attachement Odoo sera nommé\n                                Agrolait_SO0001_Ventes'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -235,12 +236,12 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "L'autorisation «lecteur» pour «toute personne ayant le lien' n'a pas été écrite sur le document"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "Hyperlien"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:52
@@ -248,20 +249,20 @@ msgstr ""
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Vous n'avez pas configuré votre 'Code d'autorisation' produit par google, SVP générez et configurez le."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "et collez le ici"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr ""
+msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

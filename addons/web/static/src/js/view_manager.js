@@ -129,7 +129,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var view = this.views[view_type];
         var old_view = this.active_view;
-        var switched = $.Deferred();
 
         if (!view) {
             return $.Deferred().reject();
@@ -163,13 +162,11 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.searchview.do_search();
             });
         }
-        $.when(view.created, this.active_search).done(function () {
-            self._display_view(view_options, old_view).done(function() {
+        return $.when(view.created, this.active_search).then(function () {
+            return self._display_view(view_options, old_view).then(function () {
                 self.trigger('switch_mode', view_type, no_store, view_options);
-                switched.resolve();
             });
         });
-        return switched;
     },
     _display_view: function (view_options, old_view) {
         var self = this;

@@ -302,6 +302,8 @@ def init_module_models(cr, module_name, obj_list):
     todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
+    if obj_list:
+        obj_list[0].recompute(cr, openerp.SUPERUSER_ID, {})
     cr.commit()
 
 def load_openerp_module(module_name):

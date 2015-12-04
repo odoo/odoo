@@ -12,7 +12,7 @@ from urlparse import urlparse
 
 from openerp import models, fields, api, _
 
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
+URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
     if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):

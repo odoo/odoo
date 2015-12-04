@@ -317,10 +317,10 @@ var py = {};
                 } else if (token in symbols) {
                     var symbol;
                     // transform 'not in' and 'is not' in a single token
-                    if (token === 'in' && tokens[tokens.length-1].id === 'not') {
+                    if (token === 'in' && tokens.length > 1 && tokens[tokens.length-1].id === 'not') {
                         symbol = symbols['not in'];
                         tokens.pop();
-                    } else if (token === 'not' && tokens.length > 0 && tokens[tokens.length-1].id === 'is') {
+                    } else if (token === 'not' && tokens.length > 1 && tokens[tokens.length-1].id === 'is') {
                         symbol = symbols['is not'];
                         tokens.pop();
                     } else {

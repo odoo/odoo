@@ -35,6 +35,36 @@
     </div>
 </t>
 
+<t t-name="ChangePassword">
+    <form name="change_password_form" method="POST">
+      <div class="oe_form">
+        <table align="center">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
+            <td class="oe_form_group_cell"><input type="password" name="new_password"
+                       minlength="1"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
+                </td>
+            </tr>
+        </table>
+      </div>
+    </form>
+</t>
+
 <t t-name="Menu.needaction_counter">
     <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
@@ -186,8 +216,13 @@
         <t t-raw="0"/>
     </div>
     <div class="btn-group btn-group-sm oe-pager-buttons" style="display: inline-block">
-        <a class="fa fa-chevron-left btn btn-default oe-pager-button" accesskey="O" type="button" data-pager-action="previous"></a>
-        <a class="fa fa-chevron-right btn btn-default oe-pager-button" accesskey="P" type="button" data-pager-action="next"></a>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <a class="fa fa-chevron-left btn btn-default oe-pager-button" t-att="att_prev" type="button" data-pager-action="previous"></a>
+        <a class="fa fa-chevron-right btn btn-default oe-pager-button" t-att="att_next" type="button" data-pager-action="next"></a>
     </div>
 </span>
 
@@ -331,7 +366,7 @@
 <t t-name="ListView.buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
     <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
+        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
             <t t-esc="widget.options.addable"/>
         </button>
     </div>
@@ -372,10 +407,10 @@
 </tr>
 <t t-extend="ListView.buttons">
     <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
+        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
             Save
         </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
+        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
             Discard
         </button>
     </t>
@@ -832,6 +867,9 @@
             class="field_boolean"/>
     </span>
 </t>
+<div t-name="FieldUpgradeBoolean" class="oe_form_field oe_form_field_boolean">
+  <t t-call="FieldBoolean"/>
+</div>
 <t t-name="ProgressBar">
     <div class="o_progressbar">
         <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">
@@ -958,7 +996,8 @@
 <t t-name="HiddenInputFile">
     <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
-            method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+              method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="0"/>
@@ -1391,8 +1430,13 @@
 <div t-name="Pager">
     <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
     <span class="btn-group btn-group-sm">
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" accesskey="O"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" accesskey="P"/>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.getParent().x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next"/>
     </span>
 </div>
 
@@ -1410,6 +1454,25 @@
         <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
         <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
     </t>
+</t>
+
+<t t-name="EnterpriseUpgrade">
+    <div class="row">
+        <div class="col-xs-6">
+            Get this feature and much more with Odoo Enterprise!
+            <ul class="list-unstyled">
+                <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
+                <li><i class="fa fa-check"></i> New design</li>
+                <li><i class="fa fa-check"></i> Mobile support</li>
+                <li><i class="fa fa-check"></i> Upgrade to future versions</li>
+                <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
+                <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-6">
+            <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false"/>
+        </div>
+    </div>
 </t>
 
 </templates>

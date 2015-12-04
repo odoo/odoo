@@ -37,7 +37,7 @@ class ir_ui_menu(osv.osv):
             lambda menu: not menu.groups_id or menu.groups_id & groups)
 
         # take apart menus that have an action
-        action_menus = menus.filtered('action')
+        action_menus = menus.filtered(lambda m: m.action and m.action.exists())
         folder_menus = menus - action_menus
         visible = self.browse()
 
@@ -46,7 +46,6 @@ class ir_ui_menu(osv.osv):
         model_fname = {
             'ir.actions.act_window': 'res_model',
             'ir.actions.report.xml': 'model',
-            'ir.actions.wizard': 'model',
             'ir.actions.server': 'model_id',
         }
         for menu in action_menus:
@@ -317,7 +316,6 @@ class ir_ui_menu(osv.osv):
         'action': fields.reference('Action', selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
-                ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),

@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
-    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Date.context_today)
+    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
 
@@ -162,6 +162,7 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
+    @api.multi
     @api.onchange('partner_shipping_id')
     def onchange_partner_shipping_id(self):
         """
@@ -197,6 +198,7 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
+            'note': self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note,
         }
 
         if self.partner_id.user_id:
@@ -228,8 +230,8 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal_ids = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.company_id.id)], limit=1)
-        if not journal_ids:
+        journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
+        if not journal_id:
             raise UserError(_('Please define an accounting sale journal for this company.'))
         invoice_vals = {
             'name': self.client_order_ref or '',
@@ -238,7 +240,7 @@ class SaleOrder(models.Model):
             'reference': self.client_order_ref or self.name,
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
-            'journal_id': journal_ids[0].id,
+            'journal_id': journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,
@@ -302,6 +304,8 @@ class SaleOrder(models.Model):
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
+                elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
+                    invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -384,6 +388,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         for order in self:
             order.state = 'sale'
+            if self.env.context.get('send_email'):
+                self.force_quotation_send()
             order.order_line._action_procurement_create()
             if not order.project_id:
                 for line in order.order_line:
@@ -421,12 +427,12 @@ class SaleOrderLine(models.Model):
           invoice. This is also hte default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_get_to_invoice_qty()` for more information on how this quantity is calculated.
-        - upselling: we consider the SO line in two situations. First case, the quantity invoiced is
-          larger the the quantity ordered. Second case, the quantity invoiced is at least equal to
-          the quantity ordered, and moreover we have delivered more than ordered. The latter
-          situation could arise if, for example, a project took more time than expected but we
-          decided not to invoice the extra cost to the client.
-        - invoiced: the quantity invoiced is strictly equal to the quantity ordered.
+        - upselling: this is possible only for a product invoiced on ordered quantities for which
+          we delivered more than expected. The could arise if, for example, a project took more
+          time than expected but we decided not to invoice the extra cost to the client. This
+          occurs onyl in state 'sale', so that when a SO is set to done, the upselling opportunity
+          is removed from the list.
+        - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
@@ -434,11 +440,10 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'no'
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 1 or\
-                    (float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0 and\
-                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1):
+            elif line.state == 'sale' and line.product_id.invoice_policy == 'order' and\
+                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
                 line.invoice_status = 'upselling'
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 0:
+            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
@@ -460,7 +465,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = line.product_id.invoice_policy in ('order', 'delivery') and line.order_id.state == 'sale'
+            line.qty_delivered_updateable = line.product_id.invoice_policy in ('order', 'delivery') and line.order_id.state == 'sale' and line.product_id.track_service == 'manual'
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -481,7 +486,9 @@ class SaleOrderLine(models.Model):
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
-        that this is the case only if the refund is generated from the SO.
+        that this is the case only if the refund is generated from the SO and that is intentional: if
+        a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
+        it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
         for line in self:
             qty_invoiced = 0.0
@@ -499,7 +506,6 @@ class SaleOrderLine(models.Model):
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.multi
-    @api.onchange('order_id', 'product_id')
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -539,7 +545,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
-            if line.state != 'sale':
+            if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
             qty = 0.0
             for proc in line.procurement_ids:
@@ -599,29 +605,29 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), default=0.0)
+    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Monetary(compute='_compute_amount', string='Taxes', readonly=True, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', readonly=True, states={'draft': [('readonly', False)]})
+    tax_id = fields.Many2many('account.tax', string='Taxes')
 
-    discount = fields.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'), default=0.0)
+    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
-    product_uom_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
 
     qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
-    qty_delivered = fields.Float(string='Delivered', copy=False, digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -650,20 +656,20 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         res = {}
-        account_id = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
-        if not account_id:
+        account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
+        if not account:
             raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') % \
                             (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
         fpos = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
         if fpos:
-            account_id = self.order_id.fiscal_position_id.map_account(account_id)
+            account = fpos.map_account(account)
 
         res = {
             'name': self.name,
             'sequence': self.sequence,
             'origin': self.order_id.name,
-            'account_id': account_id,
+            'account_id': account.id,
             'price_unit': self.price_unit,
             'quantity': qty,
             'discount': self.discount,
@@ -715,12 +721,14 @@ class SaleOrderLine(models.Model):
             name += '\n' + product.description_sale
         vals['name'] = name
 
+        self._compute_tax_id()
+
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = product.price
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
         self.update(vals)
         return {'domain': domain}
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom:
             self.price_unit = 0.0
@@ -734,7 +742,7 @@ class SaleOrderLine(models.Model):
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id
             )
-            self.price_unit = product.price
+            self.price_unit = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
 
     @api.multi
     def unlink(self):

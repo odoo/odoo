@@ -34,56 +34,16 @@
             };
         })();
     </script>
-    <script>odoo.website_next_define = 'summernote/core/async';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/async.js" />
-    <script>odoo.website_next_define = 'summernote/core/func';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/func.js" />
-    <script>odoo.website_next_define = 'summernote/core/agent';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/agent.js" />
-    <script>odoo.website_next_define = 'summernote/core/list';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/list.js" />
-    <script>odoo.website_next_define = 'summernote/core/dom';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/dom.js" />
-    <script>odoo.website_next_define = 'summernote/core/key';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/key.js" />
-    <script>odoo.website_next_define = 'summernote/core/range';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/range.js" />
-
-    <script>odoo.website_next_define = 'summernote/editing/Bullet';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Bullet.js" />
-    <script>odoo.website_next_define = 'summernote/editing/History';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/History.js" />
-    <script>odoo.website_next_define = 'summernote/editing/Style';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Style.js" />
-    <script>odoo.website_next_define = 'summernote/editing/Table';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Table.js" />
-    <script>odoo.website_next_define = 'summernote/editing/Typing';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Typing.js" />
-    <script>odoo.website_next_define = 'summernote/editing/Editor';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Editor.js" />
-
-    <script>odoo.website_next_define = 'summernote/module/Button';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Button.js" />
-    <script>odoo.website_next_define = 'summernote/module/Dialog';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Dialog.js" />
-    <script>odoo.website_next_define = 'summernote/module/Handle';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Handle.js" />
-    <script>odoo.website_next_define = 'summernote/module/Popover';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Popover.js" />
-    <script>odoo.website_next_define = 'summernote/module/Toolbar';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Toolbar.js" />
-
-    <script>odoo.website_next_define = 'summernote/Renderer';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/Renderer.js" />
-    <script>odoo.website_next_define = 'summernote/EventHandler';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/EventHandler.js" />
-
-    <script>odoo.website_next_define = 'summernote/settings';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/settings.js" />
-
-    <script>odoo.website_next_define = 'summernote/summernote';</script>
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/summernote.js" />
-    
+    <t t-set="summer_js_files" t-value="['core/async', 'core/func', 'core/agent', 'core/list',
+        'core/dom', 'core/key', 'core/range', 'editing/Bullet', 'editing/History', 'editing/Style',
+        'editing/Table', 'editing/Typing', 'module/Editor', 'module/Button', 'module/Clipboard',
+        'module/Codeview', 'module/DragAndDrop', 'module/Fullscreen', 'module/Handle',
+        'module/HelpDialog', 'module/ImageDialog', 'module/LinkDialog', 'module/Popover',
+        'module/Statusbar', 'module/Toolbar', 'Renderer', 'EventHandler', 'defaults', 'summernote']" />
+    <t t-foreach="summer_js_files" t-as="file">
+        <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
+        <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
+    </t>
     <script type="text/javascript" src="/web_editor/static/src/js/summernote.js" />
     <script type="text/javascript">
         window.define = odoo.__define__;

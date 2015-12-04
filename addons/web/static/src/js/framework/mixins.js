@@ -277,6 +277,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         this._trigger_up(event);
     },
     _trigger_up: function(event) {
+        var parent;
         this.__edispatcherEvents.trigger(event.name, event);
         if (!event.is_stopped() && (parent = this.getParent())) {
             parent._trigger_up(event);

@@ -18,20 +18,18 @@ var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
 var round_pr = utils.round_precision;
 
-var onlinePaymentJournal = [];
-
 var _modelproto = pos_model.PosModel.prototype;
 pos_model.PosModel = pos_model.PosModel.extend({
-    allowOnlinePayment: function () {
-        if (onlinePaymentJournal.length) {
-            return true;
-        }
+    getOnlinePaymentJournals: function () {
+        var online_payment_journals = [];
+
         $.each(this.journals, function (i, val) {
             if (val.pos_mercury_config_id) {
-                onlinePaymentJournal.push({label:val.display_name, item:val.id});
+                online_payment_journals.push({label:val.display_name, item:val.id});
             }
         });
-        return onlinePaymentJournal.length;
+
+        return online_payment_journals;
     },
     getCashRegisterByJournalID: function (journal_id) {
         var cashregister_return;
@@ -263,7 +261,7 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
-        if(this.pos.allowOnlinePayment()) {
+        if(this.pos.getOnlinePaymentJournals().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_error_action, this));
         }
     }
@@ -344,7 +342,7 @@ PaymentScreenWidget.include({
 
     // Handler to manage the card reader string
     credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
-        if(!this.pos.allowOnlinePayment()) {
+        if(this.pos.getOnlinePaymentJournals().length === 0) {
             return;
         }
 
@@ -491,15 +489,16 @@ PaymentScreenWidget.include({
     },
 
     credit_code_action: function (parsed_result) {
-        self = this;
+        var self = this;
+        var online_payment_journals = this.pos.getOnlinePaymentJournals();
 
-        if (onlinePaymentJournal.length === 1) {
-            parsed_result.journal_id = onlinePaymentJournal[0].item;
+        if (online_payment_journals.length === 1) {
+            parsed_result.journal_id = online_payment_journals[0].item;
             self.credit_code_transaction(parsed_result);
         } else { // this is for supporting another payment system like mercury
             this.gui.show_popup('selection',{
                 title:   'Pay ' + this.pos.get_order().get_due().toFixed(2) + ' with : ',
-                list:    onlinePaymentJournal,
+                list:    online_payment_journals,
                 confirm: function (item) {
                     parsed_result.journal_id = item;
                     self.credit_code_transaction(parsed_result);
@@ -621,12 +620,12 @@ PaymentScreenWidget.include({
             }
         }
 
-        if (cashregister.journal.type === 'bank') {
+        if (cashregister.journal.pos_mercury_config_id) {
             var already_swipe_pending = false;
             var lines = order.get_paymentlines();
 
             for (i = 0; i < lines.length; i++) {
-                if (lines[i].cashregister.journal.type === 'bank' && lines[i].mercury_swipe_pending) {
+                if (lines[i].cashregister.journal.pos_mercury_config_id && lines[i].mercury_swipe_pending) {
                     already_swipe_pending = true;
                 }
             }
@@ -649,7 +648,7 @@ PaymentScreenWidget.include({
 
     show: function () {
         this._super();
-        if (this.pos.allowOnlinePayment()) {
+        if (this.pos.getOnlinePaymentJournals().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },
@@ -668,7 +667,7 @@ PaymentScreenWidget.include({
             }
         }
 
-        this._super();
+        this._super(force_validation);
     }
 });
 

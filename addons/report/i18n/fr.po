@@ -3,13 +3,15 @@
 # * report
 # 
 # Translators:
+# Florian Hatat, 2015
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-13 21:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-11-03 12:16+0000\n"
+"Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +22,13 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
+msgstr "&lt;!DOCTYPE html&gt;"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -86,12 +88,12 @@ msgstr "A9 13 37 x 52 mm"
 #. module: report
 #: model:ir.model,name:report.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr ""
+msgstr "Autorise la personnalisation d'un rapport"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr ""
+msgstr "Rapports associés"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -144,10 +146,10 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "Bad Report Reference"
-msgstr ""
+msgstr "Référence de rapport incorrecte"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_bottom
@@ -201,12 +203,27 @@ msgstr "Format de papier par défaut ?"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Afficher le nom"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
-msgstr ""
+msgstr "Afficher une ligne d'en-tête"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external footer"
+msgstr "Éditer le pied de page externe"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external header"
+msgstr "Éditer l'en-tête de page externe"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit internal header"
+msgstr "Éditer l'en-tête de page interne"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -216,7 +233,7 @@ msgstr "Courriel :"
 #. module: report
 #: constraint:report.paperformat:0
 msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas sélectionner un format ET une hauteur/largeur de page."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -226,7 +243,7 @@ msgstr "Format exécutif 4 7,5 x 10 pouces, 190,5 x 254 mm"
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr ""
+msgstr "Rapports explicitement associés"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -241,7 +258,7 @@ msgstr "Folio 27  210 x 330 mm"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
 msgid "Header spacing"
-msgstr ""
+msgstr "Espacement de l'en-tête"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
@@ -260,7 +277,7 @@ msgstr "Paysage"
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_write_uid
@@ -307,7 +324,7 @@ msgstr "Orientation"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_dpi
 msgid "Output DPI"
-msgstr ""
+msgstr "Résolution en ppp"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_page_height
@@ -332,7 +349,7 @@ msgstr "Format de papier"
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr ""
+msgstr "Configuration générale du format de page"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
@@ -344,7 +361,7 @@ msgstr "Format du papier"
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
-msgstr ""
+msgstr "Configuration de la page"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_format
@@ -360,6 +377,18 @@ msgstr "Téléphone :"
 #: selection:report.paperformat,orientation:0
 msgid "Portrait"
 msgstr "Portrait"
+
+#. module: report
+#: model:ir.actions.report.xml,name:report.action_report_externalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview External Report"
+msgstr "Aperçu de rapport externe"
+
+#. module: report
+#: model:ir.actions.report.xml,name:report.action_report_internalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview Internal Report"
+msgstr "Aperçu de rapport interne"
 
 #. module: report
 #. openerp-web
@@ -386,7 +415,7 @@ msgstr "Marge de droite (mm)"
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "Search associated QWeb views"
-msgstr ""
+msgstr "Rechercher les vues QWeb associées"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -404,10 +433,20 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Format tabloïd 29 279,4 x 431,8 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: model:ir.ui.view,arch_db:report.preview_externalreport
+msgid "This is a sample of an external report."
+msgstr "Ceci est un exemple d'un rapport externe."
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.preview_internalreport
+msgid "This is a sample of an internal report."
+msgstr "Ceci est un exemple d'un rapport interne."
+
+#. module: report
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "This report is not loaded into the database: %s."
-msgstr ""
+msgstr "Ce rapport n'est pas chargé dans la base de données : %s."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
@@ -430,7 +469,7 @@ msgid "Website:"
 msgstr "Site Web :"
 
 #. module: report
-#: code:addons/report/models/report.py:409
+#: code:addons/report/models/report.py:413
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf a échoué (code d'erreur : %s). Message : %s"
@@ -442,7 +481,7 @@ msgstr "Wkhtmltopdf a échoué (code d'erreur : %s). Message : %s"
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr ""
+msgstr "Vous devez démarrer Odoo avec au moins 2 workers pour imprimer une version PDF des rapports."
 
 #. module: report
 #. openerp-web
@@ -453,7 +492,7 @@ msgid ""
 "Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "Vous devriez mettre à jour la version de \nWkhtmltopdf (0.12.0 min.) pour avoir un affichage correct des entêtes et des pieds de page\nainsi que le support de la table des sauts de page <br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
@@ -463,4 +502,4 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
-msgstr ""
+msgstr "report.abstract_report"

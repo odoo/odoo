@@ -8,6 +8,7 @@ var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
+var session = require('web.session');
 var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
 
@@ -166,31 +167,32 @@ widgets.SidebarFilter.include({
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
-    events: {
-        'click .link2event': function() {
-            var self = this;
-
-            this.rpc("/web/action/load", {
-                action_id: "calendar.action_calendar_event_notify",
-            }).then(function(r) {
-                r.res_id = self.eid;
-                return self.do_action(r);
-            });
-        },
-
-        'click .link2recall': function() {
-            this.destroy(true);
-        },
-
-        'click .link2showed': function() {
-            this.destroy(true);
-            this.rpc("/calendar/notify_ack");
-        },
-    },
 
     init: function(parent, title, text, eid) {
         this._super(parent, title, text, true);
         this.eid = eid;
+
+        this.events = _.extend(this.events || {}, {
+            'click .link2event': function() {
+                var self = this;
+
+                this.rpc("/web/action/load", {
+                    action_id: "calendar.action_calendar_event_notify",
+                }).then(function(r) {
+                    r.res_id = self.eid;
+                    return self.do_action(r);
+                });
+            },
+
+            'click .link2recall': function() {
+                this.destroy(true);
+            },
+
+            'click .link2showed': function() {
+                this.destroy(true);
+                this.rpc("/calendar/notify_ack");
+            },
+        });
     },
 });
 
@@ -251,6 +253,20 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     }
 });
 
+function showCalendarInvitation(db, action, id, view, attendee_data) {
+    session.session_bind(session.origin).then(function () {
+        if (session.session_is_valid(db) && session.username !== "anonymous") {
+            window.location.href = _.str.sprintf('/web?db=%s#id=%s&view_type=form&model=calendar.event', db, id);
+        } else {
+            $("body").prepend(QWeb.render('CalendarInvitation', {attendee_data: JSON.parse(attendee_data)}));
+        }
+    });
+}
+
 core.form_widget_registry.add('many2manyattendee', Many2ManyAttendee);
+
+return {
+    showCalendarInvitation: showCalendarInvitation,
+};
 
 });

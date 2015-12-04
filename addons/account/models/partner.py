@@ -229,22 +229,10 @@ class ResPartner(models.Model):
     _description = 'Partner'
 
     @api.multi
-    def onchange_state(self, state_id):
-        res = super(ResPartner, self).onchange_state(state_id=state_id)
-        res['value']['property_account_position_id'] = self.env['account.fiscal.position']._get_fpos_by_region(
-               country_id=self.env.context.get('country_id'), state_id=state_id, zipcode=self.env.context.get('zip'))
-        return res
-
-    @api.onchange('country_id', 'zip')
-    def _onchange_country_id(self):
-        self.property_account_position_id = self.env['account.fiscal.position']._get_fpos_by_region(
-                country_id=self.country_id.id, state_id=self.state_id.id, zipcode=self.zip)
-
-    @api.multi
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
-        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
+        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.amount_residual)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
@@ -337,11 +325,14 @@ class ResPartner(models.Model):
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
-            domain += [('partner_id', 'in', self.ids)]
+            if 'exclude_given_ids' in self._context:
+                domain += [('partner_id', 'not in', self.ids)]
+            else:
+                domain += [('partner_id', 'in', self.ids)]
         #adding the overdue lines
         overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
         if overdue_only:
@@ -392,7 +383,7 @@ class ResPartner(models.Model):
                     GROUP BY p.last_time_entries_checked
                 ) as s
                 WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-            """ % (self.id,))
+            """, (self.id,))
         self.has_unreconciled_entries = self.env.cr.rowcount == 1
 
     @api.multi
@@ -402,7 +393,7 @@ class ResPartner(models.Model):
     @api.one
     def _get_company_currency(self):
         if self.company_id:
-            self.currency_id = self.company_id.currency_id
+            self.currency_id = self.sudo().company_id.currency_id
         else:
             self.currency_id = self.env.user.company_id.currency_id
 

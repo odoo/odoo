@@ -1,6 +1,11 @@
 define(['summernote/core/func'], function (func) {
   /**
+   * @class core.list
+   *
    * list utils
+   *
+   * @singleton
+   * @alternateClassName list
    */
   var list = (function () {
     /**
@@ -64,10 +69,17 @@ define(['summernote/core/func'], function (func) {
     };
 
     /**
+     * returns index of item
+     */
+    var indexOf = function (array, item) {
+      return $.inArray(item, array);
+    };
+
+    /**
      * returns true if the value is present in the list.
      */
     var contains = function (array, item) {
-      return $.inArray(item, array) !== -1;
+      return indexOf(array, item) !== -1;
     };
 
     /**
@@ -152,7 +164,7 @@ define(['summernote/core/func'], function (func) {
      * @param {Array} array
      */
     var next = function (array, item) {
-      var idx = array.indexOf(item);
+      var idx = indexOf(array, item);
       if (idx === -1) { return null; }
 
       return array[idx + 1];
@@ -163,12 +175,11 @@ define(['summernote/core/func'], function (func) {
      * @param {Array} array
      */
     var prev = function (array, item) {
-      var idx = array.indexOf(item);
+      var idx = indexOf(array, item);
       if (idx === -1) { return null; }
 
       return array[idx - 1];
     };
-
   
     return { head: head, last: last, initial: initial, tail: tail,
              prev: prev, next: next, find: find, contains: contains,

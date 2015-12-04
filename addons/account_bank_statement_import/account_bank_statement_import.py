@@ -129,7 +129,7 @@ class AccountBankStatementImport(models.TransientModel):
         if currency_code:
             currency = self.env['res.currency'].search([('name', '=ilike', currency_code)], limit=1)
             if not currency:
-                raise osv.except_osv(_("No currency found matching '%s'.") % currency_code)
+                raise UserError(_("No currency found matching '%s'.") % currency_code)
             if currency == company_currency:
                 currency = False
 
@@ -148,10 +148,10 @@ class AccountBankStatementImport(models.TransientModel):
         # If importing into an existing journal, its currency must be the same as the bank statement
         if journal:
             journal_currency = journal.currency_id
-            if currency == None:
+            if currency is None:
                 currency = journal_currency
             if currency and currency != journal_currency:
-                statement_cur_code = currency == False and company_currency.name or currency.name
+                statement_cur_code = not currency and company_currency.name or currency.name
                 journal_cur_code = not journal_currency and company_currency.name or journal_currency.name
                 raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s) !') % (statement_cur_code, journal_cur_code))
 

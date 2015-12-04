@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 11:03+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"POT-Creation-Date: 2015-09-30 12:39+0000\n"
+"PO-Revision-Date: 2015-10-05 06:01+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +123,7 @@ msgid ""
 msgstr "\n<header>\n    <strong>${object.name}</strong>\n</header>\n<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n\n% if object.visibility_mode == 'personal':\n    <table width=\"100%\" border=\"1\">\n    <tr>\n        <th>Doelstelling</th>\n        <th>Doel</th>\n        <th>Huidig</th>\n        <th>Volledigheid</th>\n    </tr>\n    % for line in ctx[\"challenge_lines\"]:\n        <tr\n            % if line['completeness'] >= 100:\n                style=\"font-weight:bold;\"\n            % endif\n            >\n            <td>${line['name']}</td>\n            <td>${line['target']}\n            % if line['suffix']:\n                ${line['suffix']}\n            % endif\n            </td>\n            <td>${line['current']}\n            % if line['suffix']:\n                ${line['suffix']}\n            % endif\n            </td>\n            <td>${line['completeness']} %</td>\n        </tr>\n    % endfor\n    </table>\n% else:\n    % for line in ctx[\"challenge_lines\"]:\n        <table width=\"100%\" border=\"1\">\n            <tr>\n                <th colspan=\"4\">${line['name']}</th>\n            </tr>\n            <tr>\n                <th>#</th>\n                <th>Persoon</th>\n                <th>Volledigheid</th>\n                <th>Huidig</th>\n            </tr>\n            % for goal in line['goals']:\n                <tr\n                    % if goal.completeness >= 100:\n                        style=\"font-weight:bold;\"\n                    % endif\n                    >\n                    <td>${goal['rank']}</td>\n                    <td>${goal['name']}</td>\n                    <td>${goal['completeness']}%</td>\n                    <td>${goal['current']}/${line['target']}\n                    % if line['suffix']:\n                        ${line['suffix']}\n                    % endif\n                    </td>\n                </tr>\n            % endfor\n        </table>\n\n        <br/><br/>\n\n    % endfor\n% endif\n            "
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:743
+#: code:addons/gamification/models/challenge.py:746
 #, python-format
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
@@ -131,13 +131,13 @@ msgid ""
 msgstr "<br/>Niemand heeft alle doelen bereikt, er is geen badge uitgereikt voor deze uitdaging."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:741
+#: code:addons/gamification/models/challenge.py:744
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr "<br/>Beloning (badge %s) voor elke succesvolle gebruiker is verstuurd naar %s."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:750
+#: code:addons/gamification/models/challenge.py:753
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -546,12 +546,12 @@ msgid ""
 msgstr "Definitie of hoe de doelstellingen worden berekend. Het resultaat van de bewerking wordt opgeslagen in et veld 'Huidig'."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3025
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_2090
 msgid "Definition Condition"
 msgstr "Definitie conditie"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3034
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_2099
 msgid "Definition Description"
 msgstr "Definitie-beschrijving"
 
@@ -770,7 +770,7 @@ msgstr "Doel"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3036
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_2101
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -1173,12 +1173,17 @@ msgid "No monthly sending limit"
 msgstr "Geen maandelijkse verzendlimiet"
 
 #. module: gamification
+#: model:gamification.badge,description:gamification.badge_problem_solver
+msgid "No one can solve challenges like you do."
+msgstr "Niemand kan uitdagingen oplossen zoals u."
+
+#. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "No one, assigned through challenges"
 msgstr "Niemand aangeduid via uitdagingen"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:753
+#: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr "Niemand heeft de vereiste condities gehaald om speciale badges te krijgen."
@@ -1371,7 +1376,7 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:548
+#: code:addons/gamification/models/challenge.py:551
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr "Ontvang proces voor persoonlijke uitdaging zonder gebruiker informatie"
@@ -1531,7 +1536,7 @@ msgstr "Abonnementen"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3030
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_2095
 msgid "Suffix"
 msgstr "Achtervoegsel"
 
@@ -1556,7 +1561,7 @@ msgid "The action that will be called to update the goal value."
 msgstr "De actie welke wordt aangeroepen om de doelstelling waarde bij te werken."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:737
+#: code:addons/gamification/models/challenge.py:740
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "Het doel %s is voltooid."
@@ -1728,7 +1733,7 @@ msgid "These goals will not be recomputed."
 msgstr "Deze doelen worden niet herberekend."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:222
+#: code:addons/gamification/models/badge.py:223
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "Deze badge kan niet door gebruikers verstuurd worden."
@@ -1834,13 +1839,18 @@ msgid ""
 msgstr "Met deze optie ingeschakeld kan een gebruiker een badge maar één keer krijgen. De top 3 badges worden nog steeds beloond aan het einde van de uitdaging."
 
 #. module: gamification
+#: model:gamification.badge,description:gamification.badge_idea
+msgid "With your brilliant ideas, you are an inspiration to others."
+msgstr "Met uw briljante ideeën bent u een inspiratie voor anderen."
+
+#. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Yearly"
 msgstr "Jaarlijks"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:224
+#: code:addons/gamification/models/badge.py:225
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr "U bevind zich niet in de toegestane gebruikerslijst."
@@ -1863,16 +1873,26 @@ msgid "You can still grant"
 msgstr "U kunt nog steeds toewijzen"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:226
+#: model:gamification.badge,description:gamification.badge_good_job
+msgid "You did great at your job."
+msgstr "U heeft uw job geweldig gedaan."
+
+#. module: gamification
+#: code:addons/gamification/models/badge.py:227
 #, python-format
 msgid "You do not have the required badges."
 msgstr "U hebt niet de benodigde badges"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:228
+#: code:addons/gamification/models/badge.py:229
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr "U hebt deze badge al te vaak verstuurd deze maand."
+
+#. module: gamification
+#: model:gamification.badge,description:gamification.badge_hidden
+msgid "You have found the hidden badge"
+msgstr "U heeft de verborgen badge gevonden"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view

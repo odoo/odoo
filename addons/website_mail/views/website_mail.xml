@@ -44,6 +44,7 @@
             <t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
             <section class="mb32 hidden-print" t-if="can_comment">
                 <form class="o_website_chatter_form" t-attf-action="/website_mail/post/#{chatter_mode}" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 50px; margin-right: 10px;"/>
                     <div class="pull-left mb32" style="width: 75%%">
                         <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
@@ -70,7 +71,8 @@
                     <t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('base.group_website_publisher')">
                         <li class="media" t-if="message.message_type == 'comment'" t-att-id="'message-%s' % message.id">
                             <div class="media-body">
-                                <img class="media-object pull-left img-circle" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                                <img class="media-object pull-left img-circle" t-attf-src="/mail/#{message.model}/#{message.res_id}/avatar/#{message.author_id.id}"
+                                    style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body">
                                 <h5 class="media-heading">
                                     <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>

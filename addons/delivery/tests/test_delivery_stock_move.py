@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests import common
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 
 
-class StockMoveInvoice(common.TransactionCase):
+class StockMoveInvoice(AccountingTestCase):
 
     def setUp(self):
         super(StockMoveInvoice, self).setUp()

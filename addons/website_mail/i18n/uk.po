@@ -3,13 +3,14 @@
 # * website_mail
 # 
 # Translators:
+# ТАрас <tratatuta@i.ua>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-10-30 18:30+0000\n"
+"Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +21,17 @@ msgstr ""
 #. module: website_mail
 #: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
-msgstr ""
+msgstr "Група за інтересами"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Ланцюжки повідомлень"
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Leave a comment"
+msgstr "Коментувати"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
@@ -35,27 +41,27 @@ msgstr "Повідомлення"
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_message_description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "Опис повідомлення: тема або початок тіла листа"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "Oops! Something went wrong. Try to reload the page and to log in."
-msgstr ""
+msgstr "Ой! Щось не так. Спробуйте перезавантажити сторінку та ввійти в систему."
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
 msgid "Published"
-msgstr ""
+msgstr "Опубліковано"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "Send"
-msgstr ""
+msgstr "Надіслати"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
-msgstr ""
+msgstr "Підписатися"
 
 #. module: website_mail
 #: code:addons/website_mail/models/mail_message.py:69
@@ -64,17 +70,17 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Дана операція не може бути виконана через обмеження доступу. Зв'яжіться з Вашим системним адміністратором\n\n(Тип документа: %s, Операція: %s)"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Відписатися"
 
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_message_website_published
 msgid "Visible on the website as a comment"
-msgstr ""
+msgstr "Показано на сайті як коментар"
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_thread_website_message_ids
@@ -87,11 +93,26 @@ msgid "Website communication history"
 msgstr "Історія бесіди на веб-сайті"
 
 #. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Write a message..."
+msgstr "Написати повідомлення..."
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "You must be"
+msgstr "Ви повинні бути"
+
+#. module: website_mail
 #. openerp-web
 #: code:addons/website_mail/static/src/xml/chatter_message.xml:8
 #, python-format
 msgid "just now"
-msgstr ""
+msgstr "щойно"
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "logged in"
+msgstr "в системі"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
@@ -104,6 +125,11 @@ msgid "publisher_warranty.contract"
 msgstr ""
 
 #. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "to post a comment."
+msgstr "опублікувати коментар."
+
+#. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_description
 msgid "unknown"
 msgstr "невідомий"
@@ -111,4 +137,4 @@ msgstr "невідомий"
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
-msgstr ""
+msgstr "Ваш email..."

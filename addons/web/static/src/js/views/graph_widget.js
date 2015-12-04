@@ -1,12 +1,16 @@
 odoo.define('web.GraphWidget', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Model = require('web.DataModel');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var QWeb = core.qweb;
+
+// hide top legend when too many item for device size
+var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
 
 return Widget.extend({
     init: function (parent, model, options) {
@@ -86,8 +90,8 @@ return Widget.extend({
         if (!this.data.length) {
             this.$el.append(QWeb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart.  " +
-                    "Try to add some records, or make sure that" +
+                description: _t("No data available for this chart. " +
+                    "Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else {
@@ -158,8 +162,8 @@ return Widget.extend({
         var chart = nv.models.multiBarChart();
         chart.options({
           delay: 250,
-          transitionDuration: 10,
-          showLegend: true,
+          transition: 10,
+          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
           rightAlignYAxis: false,
@@ -209,10 +213,14 @@ return Widget.extend({
 
         svg.transition().duration(100);
 
+        var legend_right = config.device.size_class > config.device.SIZES.XS;
+
         var chart = nv.models.pieChart();
         chart.options({
           delay: 250,
-          transitionDuration: 100,
+          showLegend: legend_right || _.size(data) <= MAX_LEGEND_LENGTH,
+          legendPosition: legend_right ? 'right' : 'top',
+          transition: 100,
           color: d3.scale.category10().range(),
         });
 
@@ -285,7 +293,7 @@ return Widget.extend({
         chart.options({
           margin: {left: 50, right: 50},
           useInteractiveGuideline: true,
-          showLegend: true,
+          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
         });

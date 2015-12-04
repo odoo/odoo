@@ -966,7 +966,6 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.renderElement();
         this.details_visible = false;
         this.old_client = this.pos.get_order().get_client();
-        this.new_client = this.old_client;
 
         this.$('.back').click(function(){
             self.gui.back();
@@ -1016,6 +1015,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.clear_search();
         });
     },
+    hide: function () {
+        this._super();
+        this.new_client = null;
+    },
     barcode_client_action: function(code){
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
@@ -1058,7 +1061,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 clientline = clientline.childNodes[1];
                 this.partner_cache.cache_node(partner.id,clientline);
             }
-            if( partners === this.new_client ){
+            if( partner === this.old_client ){
                 clientline.classList.add('highlight');
             }else{
                 clientline.classList.remove('highlight');
@@ -1566,7 +1569,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
             if (order.selected_paymentline) {
-                var amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                var amount = this.inputbuffer;
+
+                if (this.inputbuffer !== "-") {
+                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                }
+
                 order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
@@ -1809,6 +1817,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return;
         }
 
+        // get rid of payment lines with an amount of 0, because
+        // since accounting v9 we cannot have bank statement lines
+        // with an amount of 0
+        order.clean_empty_paymentlines();
+
         var plines = order.get_paymentlines();
         for (var i = 0; i < plines.length; i++) {
             if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
@@ -1919,7 +1932,7 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
             };
         });
         self.gui.show_popup('selection',{
-            title: _t('Select Fiscal Position'),
+            title: _t('Select tax'),
             list: selection_list,
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
@@ -1947,6 +1960,7 @@ return {
     OrderWidget: OrderWidget,
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
+    ProductListWidget: ProductListWidget,
 };
 
 });

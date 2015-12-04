@@ -166,6 +166,22 @@ class TestORM(common.TransactionCase):
                         ['date'], ['date:month', 'date:day'], lazy=False)
         self.assertEqual(len(rg), len(all_partners))
 
+    def test_m2m_store_trigger(self):
+        group_user = self.env.ref('base.group_user')
+
+        user = self.env['res.users'].create({
+            'name': 'test',
+            'login': 'test_m2m_store_trigger',
+            'groups_id': [(6, 0, [])],
+        })
+        self.assertTrue(user.share)
+
+        group_user.write({'users': [(4, user.id)]})
+        self.assertFalse(user.share)
+
+        group_user.write({'users': [(3, user.id)]})
+        self.assertTrue(user.share)
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
@@ -252,10 +268,12 @@ class TestInherits(common.TransactionCase):
 
         foo_before, = self.user.read(self.cr, UID, [foo_id])
         del foo_before['__last_update']
+        del foo_before['login_date']
         partners_before = self.partner.search(self.cr, UID, [])
         bar_id = self.user.copy(self.cr, UID, foo_id, {'partner_id': par_id, 'login': 'bar'})
         foo_after, = self.user.read(self.cr, UID, [foo_id])
         del foo_after['__last_update']
+        del foo_after['login_date']
         partners_after = self.partner.search(self.cr, UID, [])
 
         self.assertEqual(foo_before, foo_after)
@@ -265,7 +283,7 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertEqual(bar.partner_id.id, par_id)
         self.assertEqual(bar.login, 'bar', "login is given from copy parameters")
-        self.assertFalse(bar.login_date, "login_date should not be copied from original record")
+        self.assertFalse(bar.password, "password should not be copied from original record")
         self.assertEqual(bar.name, 'Bar', "name is given from specific partner")
         self.assertEqual(bar.signature, foo.signature, "signature should be copied")
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:17+0000\n"
-"PO-Revision-Date: 2015-09-22 09:27+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-10-30 13:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -161,15 +161,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
+msgid "<span class=\"oe_grey\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -524,7 +524,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta varten luodaan uusi tietuetta."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -581,6 +581,7 @@ msgstr "Aktivoidaan oletuksena kun tilataan."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "Aktiivinen"
@@ -633,7 +634,7 @@ msgstr "Alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Aliaksen kontaktien turvallisuus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_domain
@@ -643,7 +644,7 @@ msgstr "Alias Domain"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliaksen nimi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_domain
@@ -1326,7 +1327,7 @@ msgstr "Kuvaus"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr ""
+msgstr "Kuvaus, joka lisätään tähän alatyyppiin lähetettyihin viesteihin. Jos tyhjä,  viesteihin lisätään nimi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1354,7 +1355,7 @@ msgstr "Vastaanottaja"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näytä nimi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1620,6 +1621,11 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "For every deal, review the next action, the expected closing, the pain "
@@ -1635,6 +1641,13 @@ msgid ""
 msgstr "Turvallisuussyistä voit yhdistää max. 3 yhteystietoa. Voit kuitenkin tarvittaessa avata wizardin useampaan kertaan."
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr "Pakota luovutus"
@@ -1644,13 +1657,6 @@ msgstr "Pakota luovutus"
 #, python-format
 msgid "From %s : %s"
 msgstr "Alkaen %s : %s"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
@@ -1755,7 +1761,7 @@ msgstr "Piilotettu"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_hidden
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Piilota alatyyppi seuraajavalinnoista"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -1785,7 +1791,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen sisältävä projekti)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_aggr_ids
@@ -1866,10 +1872,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Saapuva"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1881,6 +1892,11 @@ msgstr ""
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
 msgstr ""
 
 #. module: crm
@@ -1950,7 +1966,7 @@ msgstr "Viimeinen viestipvm"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimeksi muokattu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2578,6 +2594,12 @@ msgid "Odoo Default"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
@@ -2642,7 +2664,7 @@ msgid ""
 "Only the destination contact may be linked to existing Journal Items. Please"
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
-msgstr ""
+msgstr "Ainoastaan kohteena oleva kontakti voidaan kytkeä olemassaoleviin päiväkirjavienteihin. Jos useita olemassaoleviin päiväkirjavienteihin kytkettyjä kontatkeja pitää yhdistää, ota yhteyttä ylläpitäjään."
 
 #. module: crm
 #: model:ir.actions.client,name:crm.action_client_crm_menu
@@ -3124,6 +3146,7 @@ msgid "Search Leads"
 msgstr "Hae liidejä"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "Etsi mahdollisuuksia"
@@ -3781,6 +3804,11 @@ msgid "Very High"
 msgstr "Erittäin korkea"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
@@ -3838,12 +3866,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Verkkosivun ilmoitukset"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Verkkosivun viestihistoria"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

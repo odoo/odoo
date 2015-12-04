@@ -262,7 +262,7 @@
                     log_when_loaded();
                 }
             });
-        }, 100);
+        }, 4000);
     };
     $(log_when_loaded);
 

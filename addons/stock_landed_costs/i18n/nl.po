@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-14 14:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-22 09:50+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +36,11 @@ msgid "Account Journal"
 msgstr "Dagboek"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
 msgstr "Aanvullende kosten"
@@ -44,7 +49,7 @@ msgstr "Aanvullende kosten"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Op huidige kost"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -77,12 +82,12 @@ msgstr "Geannuleerd"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Klik om een nieuwe extra kost aan te maken."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Klik om een nieuwe soort van extra kost aan te maken."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -141,7 +146,7 @@ msgstr "Omschrijving"
 msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
-msgstr ""
+msgstr "Uitschakelen van de kostmethodes staat u niet meer toe om extra kosten te gebruiken."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -211,10 +216,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -245,7 +254,7 @@ msgstr "Extra kosten"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Extra kosten naam"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -316,19 +325,14 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "Need Action"
-msgstr "Vereist actie"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Need Action Counter"
-msgstr "Teller vereiste acties"
+msgid "Number of Actions"
+msgstr "Aantal acties"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr "Aantel vereiste actie berichten"
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread_counter
@@ -339,7 +343,7 @@ msgstr "Aantal ongelezen berichten"
 #: code:addons/stock_landed_costs/stock_landed_costs.py:181
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Alleen concept extra kosten kunnen gevalideerd worden"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -456,7 +460,7 @@ msgstr "Bevestig"
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
-msgstr ""
+msgstr "Gevalideerde extra kosten kunnen niet geannuleerd worden, maar u kan een negatieve extra kost aanmaken om ze om te keren"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
@@ -496,7 +500,7 @@ msgstr "Gewicht"
 msgid ""
 "You cannot validate a landed cost which has no valid valuation adjustments "
 "lines. Did you click on Compute?"
-msgstr ""
+msgstr "U kan geen extra kosten valideren die geen valide correctieregels hebben. Heeft u geklikt op berekenen?"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form

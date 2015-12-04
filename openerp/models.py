@@ -268,7 +268,7 @@ IdType = (int, long, basestring, NewId)
 
 
 # maximum number of prefetched records
-PREFETCH_MAX = 200
+PREFETCH_MAX = 1000
 
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
@@ -372,7 +372,12 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
+        cr.execute("""
+            UPDATE ir_model
+               SET transient=%s
+             WHERE model=%s
+         RETURNING id
+        """, [self._transient, self._name])
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
@@ -1607,14 +1612,14 @@ class BaseModel(object):
             'context': context,
         }
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
 
         :param int id: id of the document to open
         """
-        return self.get_formview_action(cr, uid, id, context=context)
+        return self.get_formview_action(cr, uid, ids[0], context=context)
 
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
         return self.pool['ir.ui.view'].postprocess_and_fields(
@@ -1631,7 +1636,9 @@ class BaseModel(object):
             return len(res)
         return res
 
-    @api.returns('self')
+    @api.returns('self',
+        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
@@ -2152,7 +2159,7 @@ class BaseModel(object):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, alias, field, query):
+    def _inherits_join_calc(self, alias, field, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2172,7 +2179,7 @@ class BaseModel(object):
             # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
             parent_alias, _ = query.add_join(
                 (alias, parent_model._table, parent_field, 'id', parent_field),
-                implicit=True,
+                implicit=implicit, outer=outer,
             )
             model, alias = parent_model, parent_alias
         # handle the case where the field is translated
@@ -2225,7 +2232,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if val is not False:
+                if f._type == 'boolean' or val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     @api.model
@@ -2684,13 +2691,14 @@ class BaseModel(object):
         if stored_fields:
             # trigger computation of new-style stored fields with a compute
             def func(cr):
+                fnames = [f.name for f in stored_fields]
                 _logger.info("Storing computed values of %s fields %s",
-                    self._name, ', '.join(sorted(f.name for f in stored_fields)))
+                             self._name, ', '.join(sorted(fnames)))
                 recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
                 recs = recs.search([])
                 if recs:
+                    recs.invalidate_cache(fnames, recs.ids)
                     map(recs._recompute_todo, stored_fields)
-                    recs.recompute()
 
             todo_end.append((1000, func, ()))
 
@@ -3237,6 +3245,17 @@ class BaseModel(object):
                 if not (f.groups and not self.user_has_groups(f.groups))
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
+            )
+        elif field.column._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = field.column._multi
+            fs.update(
+                f
+                for f in self._fields.itervalues()
+                # select stored fields with the same multi
+                if f.column and f.column._multi == multi
+                # discard fields with groups that the user may not access
+                if not (f.groups and not self.user_has_groups(f.groups))
             )
 
         # special case: discard records to recompute for field
@@ -3877,7 +3896,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        totranslate = context.get('lang') and context['lang'] != 'en_US'
+        has_trans = context.get('lang') and context['lang'] != 'en_US'
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3887,12 +3906,8 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if totranslate and column.translate:
-                        # vals[field] is a translation: do not update the table
-                        if callable(column.translate):
-                            flabel = ffield.get_description(recs.env)['string']
-                            raise UserError(_("You cannot update the translated value of field '%s'") % flabel)
-                    else:
+                    if not (has_trans and column.translate and not callable(column.translate)):
+                        # vals[field] is not a translation: update the table
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
@@ -3921,13 +3936,12 @@ class BaseModel(object):
             for f in direct:
                 column = self._columns[f]
                 if callable(column.translate):
-                    # The English value of a field has been modified,
+                    # The source value of a field has been modified,
                     # synchronize translated terms when possible.
-                    assert not totranslate
                     self.pool['ir.translation']._sync_terms_translations(
                         cr, user, self._fields[f], recs, context=context)
 
-                elif column.translate and totranslate:
+                elif has_trans and column.translate:
                     # The translated value of a field has been modified.
                     src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
                     if not src_trans:
@@ -4666,7 +4680,7 @@ class BaseModel(object):
                 parent_obj = self.pool[self._inherit_fields[order_field][3]]
                 order_column = parent_obj._columns[order_field]
                 if order_column._classic_read:
-                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)]
                     add_dir = True
                 elif order_column._type == 'many2one':
                     key = (parent_obj._name, order_column._obj, order_field)
@@ -5365,6 +5379,11 @@ class BaseModel(object):
         """ Returns a new version of this recordset attached to the provided
         environment
 
+        .. warning::
+            The new environment will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
+
         :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
@@ -5374,6 +5393,25 @@ class BaseModel(object):
 
         Returns a new version of this recordset attached to the provided
         user.
+
+        By default this returns a `SUPERUSER` recordset, where access control
+        and record rules are bypassed.
+
+        .. note::
+            Using `sudo` could cause data access to cross the boundaries of
+            record rules, possibly mixing records that are meant to be
+            isolated (e.g. records from different companies in multi-company
+            environments).
+
+            It may lead to un-intuitive results in methods which select one
+            record among many - for example getting the default company, or
+            selecting a Bill of Materials.
+
+        .. note::
+            Because the record rules and access control will have to be
+            re-evaluated, the new recordset will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
         """
         return self.with_env(self.env(user=user))
 
@@ -5846,7 +5884,19 @@ class BaseModel(object):
                 if 'domain' in method_res:
                     result.setdefault('domain', {}).update(method_res['domain'])
                 if 'warning' in method_res:
-                    result['warning'] = method_res['warning']
+                    if result.get('warning'):
+                        if method_res['warning']:
+                            # Concatenate multiple warnings
+                            warning = result['warning']
+                            warning['message'] = '\n\n'.join(filter(None, [
+                                warning.get('title'),
+                                warning.get('message'),
+                                method_res['warning'].get('title'),
+                                method_res['warning'].get('message')
+                            ]))
+                            warning['title'] = _('Warnings')
+                    else:
+                        result['warning'] = method_res['warning']
             return
 
         # onchange V7
@@ -5884,8 +5934,19 @@ class BaseModel(object):
             if 'domain' in method_res:
                 result.setdefault('domain', {}).update(method_res['domain'])
             if 'warning' in method_res:
-                result['warning'] = method_res['warning']
-
+                if result.get('warning'):
+                    if method_res['warning']:
+                        # Concatenate multiple warnings
+                        warning = result['warning']
+                        warning['message'] = '\n\n'.join(filter(None, [
+                            warning.get('title'),
+                            warning.get('message'),
+                            method_res['warning'].get('title'),
+                            method_res['warning'].get('message')
+                        ]))
+                        warning['title'] = _('Warnings')
+                else:
+                    result['warning'] = method_res['warning']
     @api.multi
     def onchange(self, values, field_name, field_onchange):
         """ Perform an onchange on the given field.

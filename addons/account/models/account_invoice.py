@@ -56,6 +56,8 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_journal(self):
+        if self._context.get('default_journal_id', False):
+            return self.env['account.journal'].browse(self._context.get('default_journal_id'))
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)
@@ -82,16 +84,16 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_company_signed = 0.0
-        sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                residual_company_signed += line.amount_residual * sign
+                residual_company_signed += line.amount_residual
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual_company_signed = residual_company_signed
+        self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
@@ -114,16 +116,21 @@ class AccountInvoice(models.Model):
             if len(lines) != 0:
                 for line in lines:
                     # get the outstanding residual value in invoice currency
+                    # get the outstanding residual value in its currency. We don't want to show it
+                    # in the invoice currency since the exchange rate between the invoice date and
+                    # the payment date might have changed.
                     if line.currency_id:
-                        amount_to_show = line.currency_id.compute(abs(line.amount_residual_currency), self.currency_id)
+                        currency_id = line.currency_id
+                        amount_to_show = abs(line.amount_residual_currency)
                     else:
-                        amount_to_show = line.company_id.currency_id.compute(abs(line.amount_residual), self.currency_id)
+                        currency_id = line.company_id.currency_id
+                        amount_to_show = abs(line.amount_residual)
                     info['content'].append({
                         'journal_name': line.ref or line.move_id.name,
                         'amount': amount_to_show,
-                        'currency': self.currency_id.symbol,
+                        'currency': currency_id.symbol,
                         'id': line.id,
-                        'position': self.currency_id.position,
+                        'position': currency_id.position,
                         'digits': [69, self.currency_id.decimal_places],
                     })
                 info['title'] = type_payment
@@ -137,27 +144,31 @@ class AccountInvoice(models.Model):
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
             for payment in self.payment_move_line_ids:
+                #we don't take into account the movement created due to a change difference
+                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
+                    continue
                 if self.type in ('out_invoice', 'in_refund'):
                     amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                #we don't take into account the movement created due to a change difference
-                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
-                    continue
-                # get the payment value in invoice currency
+                # Get the payment value in its currency. We don't want to show it in the invoice
+                # currency since the exchange rate between the invoice date and the payment date
+                # might have changed.
                 if payment.currency_id and amount_currency != 0:
-                    amount_to_show = amount_currency
+                    currency_id = payment.currency_id
+                    amount_to_show = -amount_currency
                 else:
-                    amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
+                    currency_id = payment.company_id.currency_id
+                    amount_to_show = -amount
                 info['content'].append({
                     'name': payment.name,
                     'journal_name': payment.journal_id.name,
                     'amount': amount_to_show,
-                    'currency': self.currency_id.symbol,
-                    'digits': [69, self.currency_id.decimal_places],
-                    'position': self.currency_id.position,
+                    'currency': currency_id.symbol,
+                    'digits': [69, currency_id.decimal_places],
+                    'position': currency_id.position,
                     'date': payment.date,
                     'payment_id': payment.id,
                     'move_id': payment.move_id.id,
@@ -736,6 +747,9 @@ class AccountInvoice(models.Model):
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
             move = account_move.with_context(ctx_nolang).create(move_vals)
+            # Pass invoice in context in method post: used if you want to get the same
+            # account move reference when creating the same invoice after a cancelled one:
+            move.post()
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
@@ -743,9 +757,6 @@ class AccountInvoice(models.Model):
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
-            # Pass invoice in context in method post: used if you want to get the same
-            # account move reference when creating the same invoice after a cancelled one:
-            move.post()
         return True
 
     @api.multi
@@ -1087,7 +1098,7 @@ class AccountInvoiceLine(models.Model):
 
         part = self.invoice_id.partner_id
         fpos = self.invoice_id.fiscal_position_id
-        company = self.company_id
+        company = self.invoice_id.company_id
         currency = self.invoice_id.currency_id
         type = self.invoice_id.type
 
@@ -1110,7 +1121,8 @@ class AccountInvoiceLine(models.Model):
 
             self.name = product.partner_ref
             account = self.get_invoice_line_account(type, product, fpos, company)
-            self.account_id = account.id
+            if account:
+                self.account_id = account.id
             self._set_taxes()
 
             if type in ('in_invoice', 'in_refund'):
@@ -1130,7 +1142,7 @@ class AccountInvoiceLine(models.Model):
                 if company.currency_id != currency:
                     if type in ('in_invoice', 'in_refund'):
                         self.price_unit = product.standard_price
-                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.date_invoice)).rate
+                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = self.env['product.uom']._compute_price(
@@ -1189,7 +1201,7 @@ class AccountPaymentTerm(models.Model):
     _order = "name"
 
     def _default_line_ids(self):
-        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 0, 'option': 'day_after_invoice_date'})]
+        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")

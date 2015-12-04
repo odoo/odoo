@@ -3,14 +3,14 @@
 # * website_event_track
 # 
 # Translators:
-# MMSRS <h_manuela_rodsilva@gmail.com>, 2015
+# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-15 00:30+0000\n"
-"Last-Translator: MMSRS <h_manuela_rodsilva@gmail.com>\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-11-02 16:16+0000\n"
+"Last-Translator: Manuela Silva <h_manuela_rodsilva@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,11 @@ msgstr "A explicação técnica de Odoo como um CMS e uma plataforma de comérci
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Author"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Ação Necessária"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -209,7 +214,7 @@ msgstr "Descubra Odoo Ponto de Venda: Sua loja de pronto a usar em 30 minutos."
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome a Mostrar"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -313,12 +318,12 @@ msgstr "Seguidores"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores (Canais)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Parceiros)"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -384,9 +389,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
+msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 
 #. module: website_event_track
@@ -397,7 +406,7 @@ msgstr "Imagem"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Mensagens Importantes"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -407,7 +416,7 @@ msgstr "Introdução"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "É um Seguidor"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -493,7 +502,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Imagem em pequeno formato para este contacto. É automaticamente redimensionada para 64x64px com o racio do aspect preservado. Utilize este campo onde quer que uma imagem pequena seja necessária."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -524,16 +533,6 @@ msgstr "Mais"
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
 msgstr "Intervalo Matinal"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -574,14 +573,19 @@ msgid "No tracks found!"
 msgstr "Nenhum tema encontrado!"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de Ações"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Número de mensagens que requerem uma ação"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Número de mensagens não lidas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -647,7 +651,7 @@ msgstr "Prioridade"
 #. module: website_event_track
 #: selection:event.track,state:0
 msgid "Proposal"
-msgstr ""
+msgstr "Proposta"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -701,7 +705,7 @@ msgid "Responsible"
 msgstr "Responsável"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Sala"
@@ -801,7 +805,7 @@ msgstr "Etiqueta"
 #. module: website_event_track
 #: sql_constraint:event.track.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Nome da etiqueta já existe!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_ids
@@ -950,7 +954,7 @@ msgstr "Mensagens por ler"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contador de Mensagens por Ler"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social

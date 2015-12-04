@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import subprocess
 import logging
 import os
+import passlib.utils
 import socket
 import sys
 import threading
@@ -43,7 +44,10 @@ _logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase, etree._Entity)
+
+# Configure default global parser
+etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 #----------------------------------------------------------
 # Subprocesses
@@ -1049,14 +1053,15 @@ def dumpstacks(sig=None, frame=None):
     _logger.info("\n".join(code))
 
 def freehash(arg):
-    if isinstance(arg, Mapping):
-        return hash(frozendict(arg))
-    elif isinstance(arg, Iterable):
-        return hash(frozenset(arg))
-    elif isinstance(arg, Hashable):
+    try:
         return hash(arg)
-    else:
-        return id(arg)
+    except Exception:
+        if isinstance(arg, Mapping):
+            return hash(frozendict(arg))
+        elif isinstance(arg, Iterable):
+            return hash(frozenset(map(freehash, arg)))
+        else:
+            return id(arg)
 
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
@@ -1157,3 +1162,10 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
+def _consteq(str1, str2):
+    """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
+        known length only, because length difference is optimized. """
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+
+consteq = getattr(passlib.utils, 'consteq', _consteq)

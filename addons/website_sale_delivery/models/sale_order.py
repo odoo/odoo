@@ -76,7 +76,7 @@ class SaleOrder(orm.Model):
         # check to add or remove carrier_id
         if not order:
             return False
-        if all(line.product_id.type == "service" for line in order.website_order_line):
+        if all(line.product_id.type in ("service", "digital") for line in order.website_order_line):
             order.write({'carrier_id': None})
             self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
             return True

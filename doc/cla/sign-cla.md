@@ -25,7 +25,7 @@ declaration.
 
 Signed,
 
-<name> <email> https://github.com/<login>
+<name> <git_email> https://github.com/<login>
 ```
 
     Replacing the following placeholders:
@@ -33,7 +33,7 @@ Signed,
     * `<country>`: your country
     * `<date>`: current date in the form `YYYY-MM-DD`
     * `<name>`: your name
-    * `<email>`: your email
+    * `<git_email>`: your git committer email **(use `git config user.email` to see it)**
     * `<login>`: your GitHub login
 
 3. An Odoo R&D Team member will verify and accept your Pull Request. You can
@@ -61,11 +61,11 @@ declaration.
 
 Signed,
 
-<name> <email> https://github.com/<login>
+<name> <git_email> https://github.com/<login>
 
 List of contributors:
 
-<name> <email> https://github.com/<login>
+<name> <git_email> https://github.com/<login>
 ```
 
     The List of contributors should list the individual contributors working
@@ -76,14 +76,14 @@ List of contributors:
     * `<country>`: your country
     * `<date>`: current date in the form `YYYY-MM-DD`
     * `<name>`: your name
-    * `<email>`: your email
+    * `<git_email>`: git committer email **(use `git config user.email` to see it)**
     * `<login>`: your GitHub login
 
 3. An Odoo R&D Team member will verify and accept your Pull Request. You can
 make other pull requests, but we won't be able to merge them until your CLA
 signature is merged.
 
-## If you dont have a github account
+## If you don't have a github account
 
 If you cannot submit your signature using a pull request, you may alternatively
 print the CLA, complete it, sign it, scan it and send it by email to
@@ -95,7 +95,7 @@ make the pull request on your behalf.
 
 # FAQ
 
-## Why do i need to accept a CLA ?
+## Why do I need to accept a CLA ?
 
 The goal of having a Contributor License Agreement for Odoo is to:
 

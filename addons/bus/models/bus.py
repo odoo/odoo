@@ -55,6 +55,13 @@ class ImBus(models.Model):
             if random.random() < 0.01:
                 self.gc()
         if channels:
+            # The notifications must be commited in database because when calling `NOTIFY imbus`, some pertinent
+            # threads will be awakened and will fetch the notification in the bus table, but since the transaction
+            # is not commited, there will be nothing to fetch, the longpolling will return empty list of notification.
+            # For some reason, this happen when `sendmany` is called more than once on the same request.
+            # `self._cr.commit()` is prevented in a test environement, to allow test rollback.
+            if not openerp.tools.config['test_enable']:
+                self._cr.commit()
             with openerp.sql_db.db_connect('postgres').cursor() as cr2:
                 cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
 

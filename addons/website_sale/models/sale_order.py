@@ -17,7 +17,7 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
-                'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
+                'only_services': all(l.product_id and l.product_id.type in ('service', 'digital') for l in order.website_order_line)
             }
         return res
 
@@ -50,13 +50,25 @@ class sale_order(osv.Model):
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
-        product = self.pool['product.product'].browse(cr, uid, product_id, context=context)
+        context = dict(context or {})
+        order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
+        product_context = context.copy()
+        product_context.update({
+            'lang': order.partner_id.lang,
+            'partner': order.partner_id.id,
+            'quantity': qty,
+            'date': order.date_order,
+            'pricelist': order.pricelist_id.id,
+        })
+        product = self.pool['product.product'].browse(cr, uid, product_id, context=product_context)
+
         values = {
             'product_id': product_id,
             'name': product.display_name,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
+            'price_unit': product.price,
         }
         if product.description_sale:
             values['name'] += '\n' + product.description_sale
@@ -80,7 +92,7 @@ class sale_order(osv.Model):
             if not line_id:
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                sol.product_id_change(cr, SUPERUSER_ID, [line_id], context=context)
+                sol._compute_tax_id(cr, SUPERUSER_ID, [line_id], context=context)
                 if add_qty:
                     add_qty -= 1
 
@@ -96,7 +108,6 @@ class sale_order(osv.Model):
             else:
                 # update line
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
-                values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
         return {'line_id': line_id, 'quantity': quantity}
@@ -112,10 +123,16 @@ class sale_order(osv.Model):
 class website(orm.Model):
     _inherit = 'website'
 
+    def _get_pricelist_id(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        pricelist = self.get_current_pricelist(cr, uid, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            res[data.id] = pricelist.id
+        return res
+
     _columns = {
-        'pricelist_id': fields.related(
-            'user_id', 'partner_id', 'property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default Pricelist'),
+        'pricelist_id': fields.function(_get_pricelist_id,\
+            type='many2one', relation="product.pricelist", string='Default Pricelist'),
         'currency_id': fields.related(
             'pricelist_id', 'currency_id',
             type='many2one', relation='res.currency', string='Default Currency'),
@@ -136,7 +153,7 @@ class website(orm.Model):
                                (If not selectable but the current pricelist we had this pricelist anyway)
         :param list all_pl: List of all pricelist available for this website
 
-        :returns: list of pricelist
+        :returns: list of pricelist ids
         """
         pcs = []
 
@@ -154,9 +171,9 @@ class website(orm.Model):
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
         if not pcs or partner.property_product_pricelist.id != website_pl:
             pcs.append(partner.property_product_pricelist)
-        pcs = list(set(pcs))  # remove duplicate
-        pcs.sort(key=lambda x: x.name)  # sort by name
-        return pcs
+        # remove duplicates and sort by name
+        pcs = sorted(set(pcs), key=lambda pl: pl.name)
+        return [pl.id for pl in pcs]
 
     def get_pricelist_available(self, cr, uid, show_visible=False, context=None):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -165,18 +182,15 @@ class website(orm.Model):
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
 
-        :returns: list of pricelist
+        :returns: pricelist recordset
         """
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        return self._get_pl(
-                cr,
-                uid,
-                isocountry,
-                show_visible,
-                request.website.pricelist_id.id,
-                request.session.get('website_sale_current_pl'),
-                request.website.website_pricelist_ids
-        )
+        user_id = self.pool['res.users'].browse(cr, uid, request.uid or uid, context=context)
+        pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
+                              user_id.partner_id.property_product_pricelist.id,
+                              request.session.get('website_sale_current_pl'),
+                              request.website.website_pricelist_ids)
+        return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
 
     def is_pricelist_available(self, cr, uid, pl_id, context=None):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -222,6 +236,11 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id') or (partner.last_website_so_id.id if partner.last_website_so_id and partner.last_website_so_id.state == 'draft' else False)
 
         sale_order = None
+        # Test validity of the sale_order_id
+        if sale_order_id and sale_order_obj.exists(cr, SUPERUSER_ID, sale_order_id, context=context):
+            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+        else:
+            sale_order_id = None
         pricelist_id = request.session.get('website_sale_current_pl')
 
         if force_pricelist and self.pool['product.pricelist'].search_count(cr, uid, [('id', '=', force_pricelist)], context=context):
@@ -236,26 +255,24 @@ class website(orm.Model):
             affiliate_id = request.session.get('affiliate_id')
             salesperson_id = affiliate_id if user_obj.exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id
             for w in self.browse(cr, uid, ids):
+                addr = partner.address_get(['delivery', 'invoice'])
                 values = {
                     'partner_id': partner.id,
                     'pricelist_id': pricelist_id,
+                    'payment_term_id': partner.property_payment_term_id.id if partner.property_payment_term_id else False,
                     'team_id': w.salesteam_id.id,
+                    'partner_invoice_id': addr['invoice'],
+                    'partner_shipping_id': addr['delivery'],
+                    'user_id': salesperson_id or w.salesperson_id.id,
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
-                sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context)
-                values = {'user_id': salesperson_id or w.salesperson_id.id}
-
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
+                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
 
                 if request.website.partner_id.id != partner.id:
                     self.pool['res.partner'].write(cr, SUPERUSER_ID, partner.id, {'last_website_so_id': sale_order_id})
 
         if sale_order_id:
-            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            if not sale_order.exists():
-                request.session['sale_order_id'] = None
-                return None
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
@@ -291,21 +308,19 @@ class website(orm.Model):
                 if flag_pricelist or recent_fiscal_position != fiscal_position:
                     update_pricelist = True
 
-            if (code and code != sale_order.pricelist_id.code) or \
-               (code is not None and code == '' and request.session.get('sale_order_code_pricelist_id') and request.session.get('sale_order_code_pricelist_id') != ''): # empty code so reset
+            if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, uid, [('code', '=', code)], limit=1, context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
-                    request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    request.session['website_sale_current_pl'] = pricelist_id
                     update_pricelist = True
-                elif code == '' and request.session['website_sale_current_pl'] == request.session['sale_order_code_pricelist_id']:
-                    request.session['website_sale_current_pl'] = partner.property_product_pricelist.id
-                    request.session['sale_order_code_pricelist_id'] = False
-                    update_pricelist = True
+            elif code is not None and sale_order.pricelist_id.code:
+                # code is not None when user removes code and click on "Apply"
+                pricelist_id = partner.property_product_pricelist.id
+                update_pricelist = True
 
             # update the pricelist
             if update_pricelist:
+                request.session['website_sale_current_pl'] = pricelist_id
                 values = {'pricelist_id': pricelist_id}
                 sale_order.write(values)
                 for line in sale_order.order_line:
@@ -315,6 +330,10 @@ class website(orm.Model):
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id != partner.id or force_pricelist:
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
+
+        else:
+            request.session['sale_order_id'] = None
+            return None
 
         return sale_order
 
@@ -333,7 +352,6 @@ class website(orm.Model):
         request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,
-            'sale_order_code_pricelist_id': False,
             'website_sale_current_pl': False,
         })
 

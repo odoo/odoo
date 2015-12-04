@@ -388,7 +388,7 @@ class task(osv.osv):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}
@@ -408,9 +408,12 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        current = self.browse(cr, uid, id, context=context)
         if not default.get('name'):
-            current = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % current.name
+        if 'remaining_hours' not in default:
+            default['remaining_hours'] = current.planned_hours
+
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     _columns = {

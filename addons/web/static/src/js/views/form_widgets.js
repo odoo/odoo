@@ -96,10 +96,16 @@ var WidgetButton = common.FormWidget.extend({
         this.$el.css('color', disabled ? 'grey' : '');
     },
     show_wow: function() {
+        var class_to_add = 'o_wow_thumbs';
+        if (Math.random() > 0.9) {
+            var other_classes = ['o_wow_peace', 'o_wow_heart'];
+            class_to_add = other_classes[Math.floor(Math.random()*other_classes.length)];
+        }
+
         var $body = $('body');
-        $body.addClass('o_wow_marked');
+        $body.addClass(class_to_add);
         setTimeout(function() {
-            $body.removeClass('o_wow_marked');
+            $body.removeClass(class_to_add);
         }, 1000);
     }
 });
@@ -732,9 +738,10 @@ var FieldPercentPie = common.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
-                .tooltips(false)
                 .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
+
+            chart.tooltip.enabled(false);
    
             d3.select(svg)
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
@@ -772,12 +779,13 @@ var FieldBarChart = common.AbstractField.extend({
                 .width(width)
                 .height(height)
                 .margin({top: 0, right: 0, bottom: 0, left: 0})
-                .tooltips(false)
                 .showValues(false)
-                .transitionDuration(350)
+                .transition(350)
                 .showXAxis(false)
                 .showYAxis(false);
-   
+
+            chart.tooltip.enabled(false);
+
             d3.select(svg)
                 .datum([{key: 'values', values: value}])
                 .transition()
@@ -1629,6 +1637,92 @@ var FieldToggleBoolean = common.AbstractField.extend({
     },
 });
 
+/**
+    This widget is intended to be used in config settings.
+    When checked, an upgrade popup is showed to the user.
+*/
+
+var AbstractFieldUpgrade = {
+    events: {
+        'click input': 'on_click_input',
+    },
+    
+    start: function() {
+        this._super.apply(this, arguments);
+        
+        this.get_enterprise_label().after($("<span>", {
+            text: "Enterprise",
+            'class': "label label-primary oe_inline"
+        }));
+    },
+    
+    open_dialog: function() {
+        var message = $(QWeb.render('EnterpriseUpgrade'));
+
+        var buttons = [
+            {
+                text: _t("Upgrade now"),
+                classes: 'btn-primary',
+                close: true,
+                click: this.confirm_upgrade,
+            },
+            {
+                text: _t("Cancel"),
+                close: true,
+            },
+        ];
+        
+        return new Dialog(this, {
+            size: 'medium',
+            buttons: buttons,
+            $content: $('<div>', {
+                html: message,
+            }),
+            title: _t("Odoo Enterprise"),
+        }).open();
+    },
+  
+    confirm_upgrade: function() {
+        new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
+            framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
+        });
+    },
+    
+    get_enterprise_label: function() {},
+    on_click_input: function() {},
+};
+
+var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
+    template: "FieldUpgradeBoolean",
+    
+    get_enterprise_label: function() {
+        return this.$label;
+    },
+
+    on_click_input: function(event) {
+        if(this.$checkbox.prop("checked")) {
+            this.open_dialog().on('closed', this, function() {
+                this.$checkbox.prop("checked", false);
+            });
+        }
+    },
+});
+
+var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
+  
+    get_enterprise_label: function() {
+        return this.$('label').last();
+    },
+    
+    on_click_input: function(event) {
+        if($(event.target).val() == 1) {
+            this.open_dialog().on('closed', this, function() {
+                this.$('input').first().prop("checked", true);
+            });
+        }
+    },
+});
+
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1665,7 +1759,9 @@ core.form_widget_registry
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
-    .add('label_selection', LabelSelection);
+    .add('label_selection', LabelSelection)
+    .add('upgrade_boolean', UpgradeBoolean)
+    .add('upgrade_radio', UpgradeRadio);
 
 
 /**

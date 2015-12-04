@@ -4,6 +4,7 @@
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
             <field name="arch" type="xml">
                 <field name="task_id"  position="after">
@@ -12,12 +13,11 @@
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">on_change_project(project_id)</attribute>
                 </field>
-                <field name="active" position="after">
-                    <field name="analytic_account_id"
-                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id)]"/>
-                </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
+                        <group>
+                            <field name="analytic_account_id" domain="[('partner_id', '=', partner_id)]"/>
+                        </group>
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'default_is_timesheet':1}"
                                 groups="base.group_user">
                             <tree editable="top" string="Timesheet Activities">

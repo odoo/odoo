@@ -44,7 +44,6 @@
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator/>
                         <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
-                        <filter string="Assignation Month" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>
@@ -127,7 +126,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
+                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -137,9 +136,9 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_model" string="Incoming Emails create"/>
-                                <field name="alias_model" class="oe_inline" nolabel="1"/>
-                                <field name="alias_contact" class="oe_inline"
+                                <label for="alias_model" string="Incoming Emails create" groups="base.group_no_one"/>
+                                <field name="alias_model" class="oe_inline" nolabel="1" groups="base.group_no_one"/>
+                                <field name="alias_contact" class="oe_inline" groups="base.group_no_one"
                                         string="Accept Emails From"/>
                             </group>
                         </page>
@@ -266,6 +265,7 @@
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 options='{"no_open": True}'
+                                on_change="onchange_user_id(user_id, context)"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
@@ -396,8 +396,6 @@
                     <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="date_start" groups="project.group_time_work_estimation_tasks"/>
-                    <field name="date_end" groups="project.group_time_work_estimation_tasks"/>
                 </tree>
             </field>
         </record>
@@ -549,6 +547,9 @@
                             You can also add a description to help your coworkers understand the meaning and purpose of the stage.
                         </p>
                         <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Projects using this stage">
+                        <field name="project_ids" widget="many2many_tags"/>
                     </group>
                 </form>
             </field>
