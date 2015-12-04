@@ -717,7 +717,7 @@ class account_analytic_account(osv.osv):
         account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
 
         taxes = res.taxes_id or False
-        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
+        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes, context=context)
         values = {
             'name': line.name,
             'account_id': account_id,

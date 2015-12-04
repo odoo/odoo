@@ -110,7 +110,7 @@ class stock_picking(osv.osv):
         fp = invoice.fiscal_position or partner.property_account_position
         if partner:
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fp, account_id)
-            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fp, taxes)
+            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fp, taxes, context=context)
         else:
             taxes_ids = [x.id for x in taxes]
 
