@@ -447,7 +447,11 @@ class stock_picking(osv.osv):
         """ Inherit the original function of the 'stock' module
             We select the partner of the sales order as the partner of the customer invoice
         """
-        if picking.sale_id:
+        if picking.picking_type_id.code == 'incoming':
+            usage = picking.move_lines[0].location_id.usage
+        else:
+            usage = picking.move_lines[0].location_dest_id.usage
+        if picking.sale_id and usage == 'customer':
             saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
             saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
             if saleorders and saleorders[0] and saleorders[0].order_policy == 'picking':
