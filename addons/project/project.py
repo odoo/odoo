@@ -50,7 +50,6 @@ class project_task_type(osv.osv):
         'sequence': 1,
         'project_ids': _get_default_project_ids,
     }
-    _order = 'sequence'
 
 
 class project(osv.osv):
@@ -655,18 +654,12 @@ class task(osv.osv):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.datetime.now()
+        # reset kanban state when changing stage
+        if 'stage_id' in vals:
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
 
-        # Overridden to reset the kanban_state to normal whenever
-        # the stage (stage_id) of the task changes.
-        if vals and not 'kanban_state' in vals and 'stage_id' in vals:
-            new_stage = vals.get('stage_id')
-            vals_reset_kstate = dict(vals, kanban_state='normal')
-            for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.stage_id.id != new_stage else vals
-                super(task, self).write(cr, uid, [t.id], write_vals, context=context)
-            result = True
-        else:
-            result = super(task, self).write(cr, uid, ids, vals, context=context)
+        result = super(task, self).write(cr, uid, ids, vals, context=context)
 
         if any(item in vals for item in ['stage_id', 'remaining_hours', 'user_id', 'kanban_state']):
             self._store_history(cr, uid, ids, context=context)
