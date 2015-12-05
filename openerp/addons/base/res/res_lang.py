@@ -42,6 +42,10 @@ class lang(osv.osv):
         default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
+            # set language of main company, created directly by db bootstrap SQL
+            user = self.pool['res.users'].browse(cr, uid, uid)
+            if not user.company_id.partner_id.lang:
+                user.company_id.partner_id.write({'lang': lang})
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
