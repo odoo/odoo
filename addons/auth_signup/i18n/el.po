@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-11-20 20:50+0000\n"
+"PO-Revision-Date: 2015-12-05 19:25+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Έχετε προσκληθεί για να συνδεθείτε στο \"${object.company_id.name}\" για να έχετε πρόσβαση στα έγγραφά σας στο Odoo.\n                    </p>\n                    <p>\n                        Για να αποδεχθείτε την πρόσκληση, κάντε κλικ στον παρακάτω σύνδεσμο:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Αποδοχή πρόσκλησης για την \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Ευχαριστούμε,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -62,7 +62,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Πρόσκληση της ${object.company_id.name} για σύνδεση στο Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -147,7 +147,7 @@ msgstr "Μη έγκυρο διακριτικό σύνδεσης"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Ποτέ δεν συνδέθηκε"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -188,7 +188,7 @@ msgstr "Αποστολή Οδηγιών Επαναφοράς Κωδικού Πρ
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Στείλτε μια πρόσκληση ηλεκτρονικού ταχυδρομείου"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -259,12 +259,12 @@ msgstr "Ορατό στον Ιστότοπο"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Πλήρης Περιγραφή Συνεργάτη για Ιστότοπο"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "Σύντομη Περιγραφή Συνεργάτη για Ιστότοπο"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
