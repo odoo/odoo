@@ -17,7 +17,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
         <record id="small_business_chart1012" model="account.account.template">
             <field name="code">1012</field>
             <field eval="True" name="reconcile"/>
-            <field name="name">在途资金</field>
+            <field name="name">其他货币资金</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
         <record id="l10n_chart_china_small_business" model="account.chart.template">
@@ -537,7 +537,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="property_account_expense_categ_id" ref="small_business_chart1401"/>
             <field name="property_account_income_categ_id" ref="small_business_chart5001"/>
             <field name="income_currency_exchange_account_id" ref="small_business_chart5301"/>
-            <field name="expense_currency_exchange_account_id" ref="small_business_chart5712"/>
+            <field name="expense_currency_exchange_account_id" ref="small_business_chart5711"/>
         </record>
 
         <record id="l10n_chart_china_small_business_value" model="ir.values">
@@ -550,7 +550,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
 
         <!-- Account Tax Tags-->
         <record id="tax_tag1" model="account.account.tag">
-            <field name="name">17％的增值税销项税</field>
+            <field name="name">增值税17％销项税</field>
         </record>
         <record id="tax_tag2" model="account.account.tag">
             <field name="name">增值税17%进项税</field>
@@ -559,8 +559,8 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
         <!-- 增值税 -->
         <record id="vats_small_business" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
-            <field name="name">17％的增值税销项税 - 中国小企业会计科目表</field>
-            <field name="description">17％的增值税销项税</field>
+            <field name="name">增值税17％销项税</field>
+            <field name="description">增值税17％销项税 - 中国小企业会计科目表</field>
             <field eval="17" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="small_business_chart2221"/>
@@ -571,8 +571,8 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
 
         <record id="vatp_small_business" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
-            <field name="name">增值税17%进项税 - 中国小企业会计科目表</field>
-            <field name="description">增值税17%进项税</field>
+            <field name="name">增值税17%进项税</field>
+            <field name="description">增值税17%进项税 - 中国小企业会计科目表</field>
             <field eval="17" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="small_business_chart2221"/>
