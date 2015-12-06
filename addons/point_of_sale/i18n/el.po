@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-21 23:35+0000\n"
+"PO-Revision-Date: 2015-12-05 23:41+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -384,7 +384,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 msgid "<strong>Total paid</strong>"
-msgstr ""
+msgstr "<strong>Σύνολο πληρωμής</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -1011,7 +1011,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
-msgstr ""
+msgstr "Κωδικός Πελάτη"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_cal_client_id
@@ -1274,7 +1274,7 @@ msgstr "Παράθυρο Debug"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_config
 msgid "Default Point of Sale"
-msgstr "Ο προρυθμισμένος Σταθμός Εργασίας"
+msgstr "Προεπιλεγμένη Εντατική Λιανική"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -1293,28 +1293,28 @@ msgstr "Καθυστέρηση Επικύρωσης"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1168
 #, python-format
 msgid "Delete Paid Orders"
-msgstr ""
+msgstr "Διαγραφή Εντολών Πληρωμής"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:260
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr ""
+msgstr "Διαγραφή Εντολών Πληρωμής;"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1169
 #, python-format
 msgid "Delete Unpaid Orders"
-msgstr ""
+msgstr "Διαγραφή Απλήρωτων Εντολών"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:270
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr ""
+msgstr "Διαγραφή Απλήρωτων Εντολών;"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_delivery_carrier_id
@@ -1590,14 +1590,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1170
 #, python-format
 msgid "Export Paid Orders"
-msgstr ""
+msgstr "Εξαγωγή Εντολών Πληρωμής"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1171
 #, python-format
 msgid "Export Unpaid Orders"
-msgstr ""
+msgstr "Εξαγωγή Απλήρωτων Εντολών"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.chicon_flandria_extra
@@ -2259,7 +2259,7 @@ msgstr "Επόμενη Αναθεώρηση του Συνεργάτη"
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr " Καμία δήλωση μετρητών για αυτή την βάρδια. Αδύνατο να καταγραφεί η επιστροφή μετρητών"
+msgstr "Καμία δήλωση μετρητών για αυτή την βάρδια. Αδύνατο να καταγραφεί η επιστροφή μετρητών"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
@@ -2570,7 +2570,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Paid"
-msgstr "Πληρωμένες"
+msgstr "Εξοφλημένο"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
@@ -2936,7 +2936,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "Προϊόν Προϊόν Κατηγορίες"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_qty
@@ -3813,7 +3813,7 @@ msgid ""
 "The system will open all cash registers, so that you can start recording "
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
-msgstr "Το σύστημα θα ανοίξει όλες τις Ταμειακές Μηχανές, ώστε να αρχίσετε την καταγραφή των πληρωμών. Προτείνεται ο έλεγχος υπολοίπων της κάθε ταμειακής χρησιμοποιώντας την ετικέτα του Ταμείου Μετρητών"
+msgstr "Το σύστημα θα ανοίξει όλες τις Ταμειακές Μηχανές, ώστε να αρχίσετε την καταγραφή των πληρωμών. Προτείνεται ο έλεγχος υπολοίπων της κάθε ταμειακής χρησιμοποιώντας την καρτέλα του Ταμείου Μετρητών"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
@@ -3903,7 +3903,7 @@ msgid ""
 " and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
-msgstr "Αυτό το πεδίο περιγράφει τη μέγιστη διαφορά που επιτρέπετε ανάμεσα στα υπόλοιπα κλεισίματος και τα θεωρητικά μετρητά όταν κλείνει η βάρδια για χρήστες - μη διευθυντές. Εάν αυτό το μέγιστο επιτευχθεί, ο χρήστης θα έχει ένα μύνημα λάθους στο κλείσιμο της βάρδιας του που θα λέει ότι πρέπει να επικοινωνήσει με τον Διευθυντή του."
+msgstr "Αυτό το πεδίο περιγράφει τη μέγιστη διαφορά που επιτρέπετε ανάμεσα στα υπόλοιπα κλεισίματος και τα θεωρητικά μετρητά όταν κλείνει η βάρδια για χρήστες - μη διευθυντές. Εάν αυτό το μέγιστο επιτευχθεί, ο χρήστης θα έχει ένα μήνυμα λάθους στο κλείσιμο της βάρδιας του που θα λέει ότι πρέπει να επικοινωνήσει με τον Διευθυντή του."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image
@@ -4069,7 +4069,7 @@ msgstr "Σύνολο Συναλλαγής"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
 msgid "Total of all paid sale orders"
-msgstr ""
+msgstr "Σύνολο όλων των εξοφλημένων εντολών πώλησης"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end_real
@@ -4272,13 +4272,6 @@ msgid "Yellow Peppers"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid ""
-"You can define another list of available currencies on the\n"
-"                                    <i>Cash Registers</i> tab of the"
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:771
 #, python-format
 msgid ""
@@ -4292,7 +4285,7 @@ msgstr "Δεν μπορείτε να αλλάξετε συναλλασόμενο
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
-msgstr "Δεν μπορείτε να επιβεβαιώσετε όλες τις παραγγελίες από αυτή την βάρδια, γιατί δεν είναι σε καθεστώς 'Πληρωμένες'"
+msgstr "Δεν μπορείτε να επιβεβαιώσετε όλες τις παραγγελίες από αυτή την βάρδια, γιατί δεν είναι σε καθεστώς 'Εξοφλημένες'"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
@@ -4515,12 +4508,7 @@ msgstr "Δεν Χρησιμοποιείται"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1035
 #, python-format
 msgid "paid orders"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "payment method."
-msgstr "μέθοδος πληρωμής."
+msgstr "εντολές πληρωμής"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
@@ -4615,14 +4603,14 @@ msgstr "Άγνωστο"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1036
 #, python-format
 msgid "unpaid orders"
-msgstr ""
+msgstr "απλήρωτες εντολές"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1038
 #, python-format
 msgid "unpaid orders could not be imported"
-msgstr ""
+msgstr "απλήρωτες εντολές δεν μπορούν να εισαχθούν"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid

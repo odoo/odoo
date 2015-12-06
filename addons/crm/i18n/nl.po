@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
+# Eric Geens <eric.geens@vitabiz.be>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-20 09:39+0000\n"
+"PO-Revision-Date: 2015-12-03 10:06+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +64,7 @@ msgid ""
 "<li>ID: ${object.id}</li>\n"
 "<li>Description: ${object.description}</li>\n"
 "</ul>"
-msgstr "<p>Deze opportuniteit vertoonde geen activiteit in de laatste 5 dagen. Hierbij een aantal gegevens:</p>\n<ul>\n<li>Naam: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Omschrijving: ${object.description}</li>\n</ul>"
+msgstr "<p>Deze prospect vertoonde geen activiteit in de laatste 5 dagen. Hierbij een aantal gegevens:</p>\n<ul>\n<li>Naam: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Omschrijving: ${object.description}</li>\n</ul>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -148,7 +149,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
 msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">Opportunity</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Opportuniteit</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Prospect</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -161,7 +162,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Offerte</spa
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
-msgstr "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Vergaderingen</span>\n                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Vergadering</span>"
+msgstr "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Afspraken</span>\n                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Vergadering</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -757,7 +758,7 @@ msgstr "Na het opzetten van dit proces zouden uw doelstellingen behaald moeten z
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Attach a qualification form to every house opportunity"
-msgstr "Voeg een kwalificatieformulier toe aan elke woningopportuniteit"
+msgstr "Voeg een kwalificatieformulier toe aan elke woning prospect"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
@@ -930,7 +931,7 @@ msgstr "Classificeer en analyseer uw leads/prospects categoriën, zoals Training
 #: code:addons/crm/crm_lead.py:922
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr "Klik om een nieuwe opportuniteit toe te voegen"
+msgstr "Klik om een nieuwe prospect toe te voegen"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_activity_action
@@ -940,7 +941,7 @@ msgstr "Klik om een nieuwe activiteit toe te voegen."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Click to create an opportunity related to this customer."
-msgstr "Klik om een opportuniteit voor deze klant aan te maken."
+msgstr "Klik om een prospect voor deze klant aan te maken."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1025,6 +1026,11 @@ msgid "Consumers"
 msgstr "Consumenten"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr "Contactgegevens"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
 msgstr "Naam contactpersoon"
@@ -1055,7 +1061,7 @@ msgstr "Datum conversie"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Datum waarop lead naar opportuniteit werd geconverteerd"
+msgstr "Datum waarop lead naar prospect werd geconverteerd"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1406,7 +1412,7 @@ msgstr "Concept leads"
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
-msgstr "Elke mail verzonden naar de alias maakt een nieuwe opportuniteit aan."
+msgstr "Elke mail verzonden naar de alias maakt een nieuwe prospect aan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2465,7 +2471,7 @@ msgstr "Nieuw"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr "Nieuwe opportuniteit"
+msgstr "Nieuwe prospect"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
@@ -2643,14 +2649,14 @@ msgstr "Odoo helpt u bij het maken van mooie en professionele offertes en contra
 msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                    opportunity and/or a new customer in your address book."
-msgstr "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\neen opportuniteit en/of een nieuwe klant in uw adresboek."
+msgstr "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\neen prospect en/of een nieuwe klant in uw adresboek."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                opportunity and/or a new customer in your address book."
-msgstr "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\neen opportuniteit en/of een nieuwe klant in uw adresboek."
+msgstr "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\neen prospect en/of een nieuwe klant in uw adresboek."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3220,7 +3226,7 @@ msgstr "Stel team in op verkoopafdeling"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Set the sales manager as a follower of every opportunity above $20k"
-msgstr "Maak de verkoopdirecteur een abonnee voor elke opportuniteit boven 20k€"
+msgstr "Maak de verkoopdirecteur een abonnee voor elke prospect boven 20k€"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_on_change
@@ -3356,7 +3362,7 @@ msgstr "Fases"
 msgid ""
 "Stages will allow salespersons to easily track how a specific\n"
 "                lead or opportunity is positioned in the sales cycle."
-msgstr "Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen\nwaar een lead of opportuniteit zich in de verkoopcyclus bevindt."
+msgstr "Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen\nwaar een lead of prospect zich in de verkoopcyclus bevindt."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3744,7 +3750,7 @@ msgstr "Gebruik leads als u eerst een kwalificatie wilt toevoegen voordat u\neen
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Use lost reasons to explain why an opportunity is lost."
-msgstr "Gebruik verliesredenen om uit te leggen waarom een opportuniteit verloren gegaan is."
+msgstr "Gebruik verliesredenen om uit te leggen waarom een prospect verloren gegaan is."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -3993,7 +3999,7 @@ msgid ""
 "You will be able to plan meetings and log activities from\n"
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
-msgstr "U kunt vergaderingen plannen en activiteiten opslaan vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
+msgstr "U kunt afspraken plannen en activiteiten opslaan vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4001,7 +4007,7 @@ msgid ""
 "You will be able to plan meetings and log activities from\n"
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
-msgstr "U kunt vergaderingen plannen en activiteiten opslaan vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
+msgstr "U kunt afspraken plannen en activiteiten opslaan vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
@@ -4010,7 +4016,7 @@ msgid ""
 "You will be able to plan meetings and phone calls from\n"
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
-msgstr "U kunt vergaderingen en telefoongesprekken plannen vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
+msgstr "U kunt afspraken en telefoongesprekken plannen vanuit\nprospects, ze omzetten in offertes, bijbehorende documenten\nbijvoegen, discussies opvolgen en nog veel meer."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

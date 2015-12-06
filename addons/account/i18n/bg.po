@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-11-20 18:34+0000\n"
+"PO-Revision-Date: 2015-11-24 16:36+0000\n"
 "Last-Translator: Любо Енев\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -527,7 +527,7 @@ msgstr "<strong>Фискална позиция отбелязване:</strong>
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr ""
+msgstr "<strong>Дата на фактурата:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -717,19 +717,19 @@ msgstr "Касовия Апарат ви дава възможност да ре
 #: code:addons/account/models/account_invoice.py:1206
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
-msgstr ""
+msgstr "Период на плащане трябва да включва последно поле от тип Салдо"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1209
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr ""
+msgstr "Период на плащане трябва да има само едно поле от тип Салдо"
 
 #. module: account
 #: code:addons/account/models/account.py:469
 #, python-format
 msgid "A bank account can anly belong to one journal."
-msgstr ""
+msgstr "Банкова сметка може да принадлежи само към една книга за текущи сметки"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -737,19 +737,19 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
-msgstr ""
+msgstr "банково извлечение е обобщение на всички финансови\nтранзакции настъпили при даден период от време\n в банковата сметка. Вие трябва да получавате извлечение\nпериодично от вашата банка. "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr ""
+msgstr "поле в банквото извлечение е финансова транзакция от банкова сметка "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "вписване в книгата за текущи сметки съдържа няколко пункта\nвсеки от които е или дебит или кредит транзакция "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -8918,7 +8918,7 @@ msgstr "Доставчик"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Сметка на Доставчик"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:156
@@ -8958,7 +8958,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Refund"
-msgstr ""
+msgstr "Връщане към Доставчик"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id

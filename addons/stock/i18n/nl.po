@@ -3,7 +3,10 @@
 # * stock
 # 
 # Translators:
+# Eric Geens <eric.geens@vitabiz.be>, 2015
 # Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
+# Nils van Odoo <nvo@odoo.com>, 2015
+# Symons Xavier <xsy@openerp.com>, 2015
 # Volluta <volluta@tutanota.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
@@ -11,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-07 10:22+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"PO-Revision-Date: 2015-12-04 20:58+0000\n"
+"Last-Translator: Eric Geens <eric.geens@vitabiz.be>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,7 +457,7 @@ msgid ""
 "requires, each time a Sales Order is confirmed. This does not modify stock "
 "in the medium term because you restock with the exact amount that was "
 "ordered"
-msgstr ""
+msgstr "Bij <strong>Maak op order</strong> wordt het product aangevuld alleen als er vraag voor is, iedere ker als een verkooporder bevestigd wordt. Dit wijzigt niet de voorraad omdat u bijvult met het exacte hoveelheid dat besteld is ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -463,7 +466,7 @@ msgid ""
 "stock. If the quantities in stock are too low to fulfill the order, a "
 "Purchase Order is generated according the minimum stock rules in order to "
 "get the products required"
-msgstr ""
+msgstr "<strong>Maak voor voorraad:</strong> uw klanten ontvangen producten uit de beschikbare voorraad. Indien de aantallen op voorraad te laag zijn om een order compleet te maken, zal een Aankoop Order gegenereerd worden op basis van de minimale bevoorrading regels om het gewenst aantal producten te krijgen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -554,7 +557,7 @@ msgstr "<strong>Serienummer</strong>"
 msgid ""
 "<strong>Service products</strong> are non-material products provided by a "
 "company or an individual"
-msgstr ""
+msgstr "<strong>Service producten</strong> zijn 'niet materiaal' producten. Het zijn diensten die worden geleverd door een ebrdijf of een individu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -610,12 +613,12 @@ msgstr "Een barcode nomenclatuur"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic purchase flow looks like the following:"
-msgstr ""
+msgstr "Een standaard inkoop proces ziet er als volgt uit:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic sales flow looks like the following:"
-msgstr ""
+msgstr "Een standaard verkoop proces ziet er als volgt uit:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -979,7 +982,7 @@ msgstr "Door de hoeveelheid hier te wijzigen accepteert u de nieuwe hoeveel als 
 msgid ""
 "By default, Odoo measures products by 'units', which are generic and "
 "represent just about anything"
-msgstr ""
+msgstr "Standaard meet Odoo producten met 'Eenheden', die generiek zijn en kunnen zowat alles voorstellen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
@@ -1291,6 +1294,14 @@ msgstr "Inhoud"
 #: model:ir.model.fields,field_description:stock.field_stock_location_posx
 msgid "Corridor (X)"
 msgstr "Rij (X)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_immediate_transfer.py:31
+#, python-format
+msgid ""
+"Could not reserve all requested products. Please use the 'Mark as Todo' "
+"button to handle the reservation manually."
+msgstr "Kon niet alle gevraagde producten reserveren. Gebruik aub de 'Markeer als Todo' knop om de reservering manueel af te handelen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1886,7 +1897,7 @@ msgstr "Toon de laatste tellingen en mutaties gedaan op uw producten en sorteer 
 msgid ""
 "Do not hesitate to send us an email to describe your experience or to "
 "suggest improvements!"
-msgstr ""
+msgstr "Aarzel niet om ons een e-mail te sturen om uw ervaring met ons te delen of om verbeteringen voor te stellen!"
 
 #. module: stock
 #: selection:stock.config.settings,module_claim_from_delivery:0
@@ -2282,7 +2293,7 @@ msgstr "Geschiedenis"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "How to use Lot Tracking:"
-msgstr ""
+msgstr "Hoe partijtracering te gebruiken:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_id
@@ -2468,7 +2479,7 @@ msgid ""
 "If you are a developer <strong>you can use our\n"
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
-msgstr ""
+msgstr "Voor ontwikkelaars, <strong>u kan onze API\ngebruiken</strong> om automatisch data te laden via script: neem een kijkje bij onze"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2477,7 +2488,7 @@ msgid ""
 "                        Procurements Orders. You usually don't need to worry about them, but\n"
 "                        sometimes the system can remain blocked without generating a\n"
 "                        corresponding document, usually due to a configuration problem."
-msgstr ""
+msgstr "Als u automatische verwerving hebt geconfigureerd zal Odoo automatisch de\nverwervingsopdrachten genereren. U hoeft zich hierom normaal geen zorgen te maken,\nmaar soms kan het systeem blijven hangen zonder een overeenkomstig\ndocument te genereren, meestal veroorzaakt door een configuratieprobleem."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_filter
@@ -2494,7 +2505,7 @@ msgstr "Indien u een complete voorraadtelling doet, kunt u 'Alle producten' sele
 msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
-msgstr ""
+msgstr "Indien u minder dan 50 leveranciers heeft, adviseren wij u deze \nhandmatig aan te maken."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2536,7 +2547,7 @@ msgid ""
 "In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.\n"
 "                        Odoo will automatically propose a procurement to buy new products if you are\n"
 "                        running out of stock."
-msgstr ""
+msgstr "In Odoo kunnen <strong>Aanvulopdrachtregels</strong> gebruikt worden om uw producten\naan te vullen: Odoo stelt automatisch een verwerving voor om nieuwe producten te kopen\nals uw voorraad opraakt."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2561,14 +2572,14 @@ msgid ""
 "In case of unique serial numbers, each serial number corresponds\n"
 "                        to exactly one piece.  In case of lots, you need to supply the quantity\n"
 "                        for each lot when you move that product."
-msgstr ""
+msgstr "In het geval van unieke serienummers zal elke serienummer overeenkomen\nmet exact één stuk. In het geval van partijen moet u de hoeveelheid ingeven\nvoor elke partij wanneer u het product verplaatst."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "In short, you will get a more efficient warehouse management that leads\n"
 "                        to inventory reduction and better efficiencies in your daily operations."
-msgstr ""
+msgstr "Kort samengevat krijgt u een efficiënter magazijnbeheer wat leidt tot\nvoorraadvermindering en betere efficiëntie in uw dagelijkse handelingen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2887,12 +2898,12 @@ msgid ""
 "It is therefore a good idea to check and try to resolve those procurement\n"
 "                        exceptions. These are accessible from the Schedulers menu (you need the Stock\n"
 "                        Manager role to see it)."
-msgstr ""
+msgstr "Het is daarom een goed idee om uw verwervingsfouten te controleren en op te lossen,\ntoegankelijk vanuit het Planners menu (u heeft de stock\nmanager rol nodig om dit te zien)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "It is time to make your initial Inventory. In order to do so:"
-msgstr ""
+msgstr "Het is tijd om uw initiële voorraad te maken. Om dit te doen:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
@@ -3072,7 +3083,7 @@ msgstr "Laat dit veld leeg als de locatie gedeeld wordt door meerdere bedrijven"
 msgid ""
 "Like with the sales flow, Odoo inventory management is\n"
 "                        fully integrated with the purchase app."
-msgstr ""
+msgstr "Net als de verkoop flow, de Odoo Voorraad Management is\nvolledig geïntegreerd met de Inkoop app."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
@@ -3245,7 +3256,7 @@ msgid ""
 "                        outgoing deliveries according to the settings in the picking type.\n"
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
-msgstr ""
+msgstr "Partijen kunnen gecodeerd worden bij inkomende zendingen, interne mutaties en\nuitgaande leveringen overeenkomstig met de instellingen van het type levering.\nVoor elk product kan u de tracering instellen: geen partijtracering, tracering\nper per lot of op unieke serienummer."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3701,7 +3712,7 @@ msgstr "OK"
 msgid ""
 "Odoo handles <strong>advanced push/pull routes configuration</strong>, for "
 "example:"
-msgstr ""
+msgstr "Odoo hanteert <strong> geavanceerde push/pull routes configuratie </strong>, voor bijvoorbeeld: "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3714,14 +3725,14 @@ msgid ""
 "Odoo inventory management is fully integrated with sales and\n"
 "                        invoicing process. Everything is automated from the initial\n"
 "                        quotation to the delivery and the final invoice."
-msgstr ""
+msgstr "Odoo's voorraadbeheer is volledig geïntegreerd met de processen\nvoor verkoop en facturatie. Alles is geautomatiseerd, vanaf de eerste\nofferte tot de levering en de uiteindelijke facturatie."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
-msgstr ""
+msgstr "Door het gebruik van productpartijen en serienummers biedt Odoo een verregaande\ntraceerbaarheid. Identificatie gebeurt daarbij meestal aan de hand van barcodes op producten."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3729,7 +3740,7 @@ msgid ""
 "Of course, feel free to add your own. Please note that Odoo is able to "
 "convert units within the same category, for example, liters to gallons in "
 "the volume category"
-msgstr ""
+msgstr "Natuurlijk kan u er ook zelf toevoegen. Maar merk daarbij op dat Odoo enkel eenheden binnen eenzelfde categorie kan converteren, bijvoorbeeld in de volume-categorie: liters naar gallons (US inhoudsmaat)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -3753,7 +3764,7 @@ msgid ""
 "Once it's fully working, give us some feedback: we love to hear from our "
 "customer. It would be great if you could send us a photo of your warehouse "
 "to"
-msgstr ""
+msgstr "Geef ons uw feedback eenmaal alles goed werkt; we horen graag succesverhalen van onze klanten. En het zou geweldig zijn als u ons een foto van uw magazijn kan sturen aan"
 
 #. module: stock
 #: code:addons/stock/stock.py:2879
@@ -5606,7 +5617,7 @@ msgstr "De 'Automatische verwerking' / 'Manuele operatie' waarde maakt een stock
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
-msgstr ""
+msgstr "De offerteaanvraag of RfQ wordt een inkooporder, en een transferorder wordt aangemaakt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -5744,7 +5755,7 @@ msgstr "De hoeveelheid om te splitsen moet kleiner zijn dan de hoeveel van To Do
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sale Order and a Transfer Order is created"
-msgstr ""
+msgstr "De offerte veranderd in een Verkoop Order en een Transfer Order wordt aangemaakt."
 
 #. module: stock
 #: code:addons/stock/stock.py:1884
@@ -5853,14 +5864,14 @@ msgstr "Dit veld moet worden ingevuld alleen als alles in de verpakking hetzelfd
 msgid ""
 "This guide helps getting started with Odoo Inventory.\n"
 "                        Once you are done, you will benefit from:"
-msgstr ""
+msgstr "Deze gids helpt u te starten met Odoo Voorraad.\nEenmaal voltooid, zal u genieten van de volgende voordelen:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "This is quite complex to set up, so <strong>contact your Project "
 "Manager</strong> to address this."
-msgstr ""
+msgstr "Dit is best wel complex om op te zetten, dus <strong>contacteer uw projectbeheerder</strong> om dit aan te kaarten."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_dest_id
@@ -6029,7 +6040,7 @@ msgid ""
 "To check the trajectory of a lot, find it back in <strong><i>Inventory Control &gt; Serial Numbers / lots</i></strong>.\n"
 "                       Choose a Lo t in the list and click on <i>Traceability</i>i&gt;. You may also\n"
 "                       filter the Quantitative Valuation of a product with a certain lot."
-msgstr ""
+msgstr "Om het traject van een partij te controleren, zoekt u het terug in <strong><i>Voorraadbeheer &gt; Serienummers / Partijen</i></strong>.\n                       Kies een partij uit de lijst en klik op <i>Traceerbaarheid</i>i&gt;. U kunt eveneens\n                       filteren op de kwantitatieve waardering van een product bij een bepaalde partij."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6214,7 +6225,7 @@ msgstr "Onbekende verpakking"
 msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
-msgstr ""
+msgstr "Tenzij u een nieuw bedrijf start, zal u waarschijnlijk een lijst van leveranciers hebben die u wenst te importeren."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6500,7 +6511,7 @@ msgid ""
 "                                        for you: simply send your Odoo project\n"
 "                                        manager a CSV file containing all your\n"
 "                                        data."
-msgstr ""
+msgstr "Wij handelen het hele importproces voor u \naf: u hoeft enkel het CSV-bestand met al\nuw gegevens naar uw Odoo projectbeheerder\nte versturen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6509,7 +6520,7 @@ msgid ""
 "                                        for you: simply send your Odoo project\n"
 "                                        manager a CSV file containing all your\n"
 "                                        products."
-msgstr ""
+msgstr "Wij handelen het hele importproces voor u \naf: u hoeft enkel het CSV-bestand met al\nuw productgegevens naar uw Odoo project-\nbeheerder te versturen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6559,7 +6570,7 @@ msgstr "Indien aangevinkt, zal de productieroute selecteerbaar zijn op de produc
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "When everything is set, click on <i>Start Inventory</i>"
-msgstr ""
+msgstr "Wanneer alles is ingesteld, klikt u op <i>Start voorraad</i>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
@@ -6684,7 +6695,7 @@ msgstr "Er kunnen alleen regels met de status 'Nieuw' worden verwijderd."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
-msgstr ""
+msgstr "U kunt de vooraf ingestelde eenheden controleren en wijzigen via de"
 
 #. module: stock
 #: code:addons/stock/stock.py:2435
@@ -6893,7 +6904,7 @@ msgstr "Bijv. PO0032"
 msgid ""
 "either by manually updating the Done quantity on the product lines, or let "
 "Odoo do it automatically while validating"
-msgstr ""
+msgstr "door de gedane hoeveelheid manueel te updaten of laat Odoo het automatisch doen tijdens het valideren"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6901,7 +6912,7 @@ msgid ""
 "either by manually updating the Done quantity on the product lines, or scan "
 "them with the Odoo Barcode app, or let Odoo do it automatically while "
 "validating"
-msgstr ""
+msgstr "door de gedane hoeveelheid manueel te updaten of scan ze met de Odoo barcode app, of laat Odoo het automatisch doen tijdens het valideren"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6923,14 +6934,14 @@ msgstr "voor meer\ninformatie."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "from your vendor with the products and the requested quantities"
-msgstr ""
+msgstr "van uw leverancier met de producten en de gevraagde hoeveelheden"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
-msgstr ""
+msgstr "Wordt getoond op de overplaatsing als uw product zijn bevoorrading correct is geconfigureerd. <strong>Controleer de beschikbaarheid</strong> anders manueel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
@@ -6952,12 +6963,12 @@ msgstr "aan"
 msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
-msgstr ""
+msgstr "op het inkooporder formulier of klik op <i>Ontvang producten</i> om de overschrijvingsopdracht te zien"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sale order form to see Transfer Order"
-msgstr ""
+msgstr "op het verkooporder formulier om de overschrijvingsopdracht te zien"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
