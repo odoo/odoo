@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-27 18:09+0000\n"
+"PO-Revision-Date: 2015-12-05 14:35+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -193,7 +193,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Προσφορά' or 'Παραγγελία'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
@@ -230,7 +230,7 @@ msgid ""
 "Members of this group see the online payment options\n"
 "on Sale Orders and Customer Invoices. These options are meant for customers who are accessing\n"
 "their documents through the portal."
-msgstr "Τα μέλη αυτής της ομάδας βλέπουν μόνο τις επιλογές online \nπληρωμών για τις Παραγγελίες Πώλησης και τα Τιμολόγια Πελατών. Αυτές οι επιλογές προορίζονται \nγια πελάτες οι οποίοι έχουν πρόσβαση στα έγγραφά τους μέσω του portal."
+msgstr "Τα μέλη αυτής της ομάδας βλέπουν μόνο τις επιλογές online \nπληρωμών για τις Παραγγελίες Πώλησης και τα Τιμολόγια Πελατών. Αυτές οι επιλογές προορίζονται \nγια πελάτες οι οποίοι έχουν πρόσβαση στα έγγραφά τους μέσω της Πύλης."
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
@@ -241,7 +241,7 @@ msgstr "Εξερχόμενα μηνύματα"
 #: field:account.invoice,portal_payment_options:0
 #: field:sale.order,portal_payment_options:0
 msgid "Portal Payment Options"
-msgstr "Επιλογές Πληρωμής Portal"
+msgstr "Επιλογές Πληρωμής Πύλης"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -269,7 +269,7 @@ msgstr "Εντολές Πώλησης"
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
-msgstr "Εμφάνιση επιλογών online πωλήσεων στις Παραγγελίες Πώλησης και Τιμολογίων Πελατών στους υπαλλήλους. Εάν δεν είναι ενεργοποιημένο, μόνο αυτές οι επιλογές εμφανίζονται στους χρήστες του portal. "
+msgstr "Εμφάνιση των ρυθμίσεων στις online πληρωμές για τις Εντολές πωλήσεων και στα Τιμολόγια Πελατών σε υπαλλήλους. Εάν δεν είναι ενεργοποιημένο, αυτές οι επιλογές θα εμφανίζονται μόνο στους χρήστες της Πύλης."
 
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
