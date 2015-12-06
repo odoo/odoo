@@ -1625,7 +1625,9 @@ class BaseModel(object):
             return len(res)
         return res
 
-    @api.returns('self')
+    @api.returns('self',
+        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
@@ -4849,6 +4851,8 @@ class BaseModel(object):
                     del record['id']
                     # remove source to avoid triggering _set_src
                     del record['source']
+                    # duplicated record is not linked to any module
+                    del record['module']
                     record.update({'res_id': target_id})
                     if user_lang and user_lang == record['lang']:
                         # 'source' to force the call to _set_src

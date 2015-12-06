@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-21 09:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-17 12:24+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,17 +21,17 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr "Pabrik"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "bahan baku"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Manufacturing Pesanan"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -43,14 +43,14 @@ msgstr "%s (copy)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s diproduksi"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity selected.\n"
 "'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
-msgstr ""
+msgstr "'Mengkonsumsi hanya' modus hanya akan mengkonsumsi produk dengan kuantitas yang dipilih. 'Konsumsi & Produksi' mode akan mengkonsumsi serta menghasilkan produk dengan kuantitas yang dipilih dan akan menyelesaikan pesanan produksi dimana total jumlah memerintahkan diproduksi."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
@@ -63,7 +63,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk menambahkan komponen untuk tagihan bahan. </p><p> Tagihan komponen bahan adalah komponen dan produk yang digunakan untuk membuat tagihan master bahan. Gunakan menu ini untuk mencari di mana BoM komponen tertentu digunakan. </p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -77,7 +77,7 @@ msgid ""
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk menambahkan pusat kerja. </p><p> Pusat kerja memungkinkan Anda untuk membuat dan mengelola unit manufaktur. Mereka terdiri dari pekerja dan / atau mesin, yang dianggap sebagai unit untuk tugas penugasan serta kapasitas dan perencanaan perkiraan. </p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -93,7 +93,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk membuat tagihan bahan.\n              </ p> <p>\n                Bills of Material memungkinkan Anda untuk menentukan daftar baku yang dibutuhkan\n                bahan yang digunakan untuk membuat produk jadi; melalui manufaktur\n                pesanan atau paket produk.\n              </ p> <p>\n                Odoo menggunakan BOMS ini untuk secara otomatis mengusulkan manufaktur\n                pesanan sesuai dengan kebutuhan pengadaan.\n              </ p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -112,7 +112,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk membuat grup properti.\n              </ p> <p>\n                Menentukan kelompok properti tertentu yang dapat diberikan ke Anda\n                tagihan bahan dan pesanan penjualan. Properti memungkinkan Odoo\n                untuk secara otomatis memilih tagihan tepat bahan sesuai\n                sifat yang dipilih dalam urutan penjualan oleh penjual.\n              </ p> <p>\n                Misalnya, dalam kelompok properti \"Garansi\", Anda memiliki sebuah\n                dua sifat: 1 tahun garansi, garansi 3 tahun. tergantung\n                pada propoerties dipilih dalam rangka penjualan, Odoo akan\n                jadwal produksi dengan menggunakan tagihan pencocokan bahan.\n              </ p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -128,7 +128,7 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk membuat pesanan manufaktur. </p><p> Perintah manufaktur, berdasarkan tagihan bahan, akan mengkonsumsi bahan baku dan menghasilkan produk jadi. </p><p> Pesanan manufaktur biasanya diusulkan secara otomatis berdasarkan kebutuhan pelanggan atau aturan otomatis seperti aturan stok minimum. </p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -145,7 +145,7 @@ msgid ""
 "                the needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class =\"oe_view_nocontent_create\">\n                Klik untuk membuat properti baru.\n              </p><p>\n                Properties di Odoo digunakan untuk memilih tagihan tepat\n                bahan untuk pembuatan produk ketika Anda memiliki yang berbeda\n                cara membangun produk yang sama. Anda dapat menetapkan beberapa\n                properti untuk setiap tagihan bahan. Ketika seorang tenaga penjualan\n                menciptakan order penjualan, mereka dapat mengaitkannya dengan beberapa properti\n                dan Odoo otomatis akan memilih BoM untuk menggunakan sesuai\n                kebutuhan.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -159,7 +159,7 @@ msgid ""
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk membuat routing. </p><p> Routings memungkinkan Anda untuk membuat dan mengelola operasi manufaktur yang harus diikuti dalam pusat-pusat kerja Anda untuk menghasilkan suatu produk. Mereka melekat pada tagihan bahan yang akan menentukan bahan baku yang dibutuhkan. </p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -175,17 +175,17 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk memulai order manufaktur baru. </p><p> Perintah manufaktur, berdasarkan tagihan bahan, akan mengkonsumsi bahan baku dan menghasilkan produk jadi. </p><p> Pesanan manufaktur biasanya diusulkan secara otomatis berdasarkan kebutuhan pelanggan atau aturan otomatis seperti aturan stok minimum. </p>"
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Faktor dari 0,9 berarti hilangnya 10%selama proses produksi."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr ""
+msgstr "Faktor dari 0,9 berarti hilangnya 10% dalam proses produksi."
 
 #. module: mrp
 #: field:mrp.bom,active:0 field:mrp.routing,active:0
@@ -196,24 +196,24 @@ msgstr "Aktif"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "Id aktif tidak ditemukan"
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "Semua jumlah produk harus lebih besar dari 0. Anda harus menginstal modul mrp_byproduct jika Anda ingin mengelola produk tambahan pada BOMS!"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "Memungkinkan perencanaan rinci dari perintah kerja"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr ""
+msgstr "Biarkan beberapa tagihan bahan per produk menggunakan properti"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -226,22 +226,22 @@ msgid ""
 "* Repair quotation report\n"
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
-msgstr ""
+msgstr "Memungkinkan untuk mengelola semua perbaikan produk. * Tambahkan / menghapus produk dalam perbaikan * Dampak untuk saham * Faktur (produk dan / atau jasa) * Garansi konsep * Laporan Perbaikan kutip * Catatan untuk teknisi dan untuk konsumen akhir. -Ini Menginstal mrp_repair modul."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr ""
+msgstr "Jumlah dalam siklus"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr ""
+msgstr "Jumlah dalam jam"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr ""
+msgstr "Unit mengukur jumlah"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -263,38 +263,38 @@ msgstr "Setuju"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "Rata-rata keterlambatan hari untuk menghasilkan produk ini. Dalam kasus multi-level BOM, pembuatan lead time komponen akan ditambahkan."
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Menunggu Bahan Baku"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Name"
-msgstr ""
+msgstr "Nama BOM"
 
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "BOM Produk Varian diperlukan bentuk menerapkan baris ini."
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Ref"
-msgstr ""
+msgstr "BOM Ref"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Structure"
-msgstr ""
+msgstr "Struktur BOM"
 
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "BOM garis dari bom dimaksud"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -303,26 +303,26 @@ msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr ""
+msgstr "Karena produk%s memerlukan itu, Anda harus menetapkan nomor seri untuk bahan baku%s Anda untuk melangkah lebih jauh dalam produksi Anda. Silakan gunakan tombol 'Menghasilkan' untuk melakukannya."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:website:mrp.report_mrporder
 msgid "Bill Of Material"
-msgstr ""
+msgstr "bahan baku"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr ""
+msgstr "bahan baku"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr ""
+msgstr "Bill of Material Komponen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -334,30 +334,30 @@ msgstr ""
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr ""
+msgstr "Bill of Material"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "Bill of Material Struktur"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "Bill of Material memungkinkan Anda untuk menentukan daftar bahan baku yang dibutuhkan untuk membuat produk jadi."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "BOM"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr ""
+msgstr "BoM \"%s\" berisi garis BoM dengan rekursi produk: \"%s\"."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:315
@@ -365,28 +365,28 @@ msgstr ""
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
 "any BoM defined."
-msgstr ""
+msgstr "BoM \"%s\" berisi baris BoM phantom tapi produk \"%s\" tidak memiliki BoM didefinisikan."
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "BoM Baris Jenis"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr ""
+msgstr "BoM Baris"
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr ""
+msgstr "BoM Jenis"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Tidak dapat menemukan Industri rute generik."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -401,7 +401,7 @@ msgstr "Batalkan"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "Batal Produksi"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -412,52 +412,52 @@ msgstr "Dibatalkan"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Tidak bisa mengkonsumsi bergerak dengan kuantitas negatif atau nol."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "Tidak bisa menghapus order manufaktur di negara '%s'."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:679
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Tidak dapat menemukan tagihan bahan untuk produk ini."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "Tidak dapat menemukan tagihan bahan untuk produk ini."
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Capacity Information"
-msgstr ""
+msgstr "Informasi kapasitas"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr ""
+msgstr "Kapasitas per Cycle"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
-msgstr ""
+msgstr "Ganti produk Jumlah"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Change Quantity"
-msgstr ""
+msgstr "Perubahan Kuantitas"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Perubahan Jumlah Produk"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -489,24 +489,24 @@ msgstr "Perusahaan:"
 #: view:product.template:mrp.product_template_search_view_procurment
 #, python-format
 msgid "Components"
-msgstr ""
+msgstr "Komponen"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
-msgstr ""
+msgstr "Komponen Biaya%s%s"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
-msgstr ""
+msgstr "Komponen pemasok"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Compute Data"
-msgstr ""
+msgstr "Hitung data"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -517,7 +517,7 @@ msgstr "Konfigurasi"
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "Mengkonfigurasi Manufacturing"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -527,74 +527,74 @@ msgstr "Konfirmasi"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Confirm Production"
-msgstr ""
+msgstr "Konfirmasi Produksi"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Mengkonsumsi & Menghasilkan"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Mengkonsumsi Baris"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Mengkonsumsi Pindah"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Hanya mengkonsumsi"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
-msgstr ""
+msgstr "Mengkonsumsi Produk"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr ""
+msgstr "Produk yang digunakan"
 
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Dikonsumsi untuk"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "Biaya Harga per Unit Ukur"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struktur biaya"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr ""
+msgstr "Biaya per siklus"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr ""
+msgstr "Biaya per jam"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Costing Information"
-msgstr ""
+msgstr "Informasi biaya"
 
 #. module: mrp
 #: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
@@ -629,24 +629,24 @@ msgstr "Dibuat pada"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr ""
+msgstr "Akun siklus"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
-msgstr ""
+msgstr "Siklus Biaya"
 
 #. module: mrp
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr ""
+msgstr "Hari demi hari"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -657,7 +657,7 @@ msgstr "Default Unit of Measure"
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
 msgid "Define manufacturers on products "
-msgstr ""
+msgstr "Mendefinisikan produsen pada produk"
 
 #. module: mrp
 #: field:mrp.property,description:0 field:mrp.property.group,description:0
@@ -671,12 +671,12 @@ msgstr "Keterangan"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
+msgstr "Keterangan dari Pusat Kerja. Menjelaskan di sini apa siklus menurut Pusat Kerja ini."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Destination Loc."
-msgstr ""
+msgstr "Loc tujuan."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -713,24 +713,24 @@ msgstr "Informasih tambahan"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "Isi ini hanya jika Anda ingin entri akuntansi analitik otomatis pada pesanan produksi."
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
+msgstr "Isi produk ini dengan mudah melacak biaya produksi Anda dalam akuntansi analitik."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Finished Products"
-msgstr ""
+msgstr "Produk selesai"
 
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 msgid "Finished Products Location"
-msgstr ""
+msgstr "Selesai Produk Lokasi"
 
 #. module: mrp
 #: field:mrp.bom,message_follower_ids:0
@@ -742,14 +742,14 @@ msgstr "Pengikut"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Force Reservation"
-msgstr ""
+msgstr "Angkatan Reservation"
 
 #. module: mrp
 #: help:product.template,track_production:0
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
-msgstr ""
+msgstr "Kekuatan untuk menentukan Nomor Serial untuk semua bergerak mengandung produk ini dan dihasilkan oleh Orde Manufacturing"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -764,23 +764,23 @@ msgstr "Informasi Umum"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr ""
+msgstr "Memberikan urutan urutan ketika menampilkan daftar tagihan bahan."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "Memberikan urutan urutan ketika menampilkan daftar routing Pusat Kerja."
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Memberikan urutan urutan ketika menampilkan daftar perintah kerja."
 
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Memberikan urutan urutan ketika menampilkan."
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -802,18 +802,18 @@ msgstr "Dikelompokan berdasarkan ..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Gelar ringkasan menyimpang (jumlah pesan, ...). Ringkasan ini langsung dalam format html untuk dimasukkan dalam pandangan kanban."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr ""
+msgstr "Akun jam"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Biaya per jam"
 
 #. module: mrp
 #: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
@@ -833,32 +833,32 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Jika varian produk didefinisikan BOM hanya tersedia untuk produk ini."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
 #. module: mrp
 #: help:mrp.bom,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
+msgstr "Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk menyembunyikan tagihan bahan tanpa menghapusnya."
 
 #. module: mrp
 #: help:mrp.routing,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr ""
+msgstr "Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk menyembunyikan routing tanpa menghapusnya."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "In Production"
-msgstr ""
+msgstr "Dalam produksi"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_search_view
@@ -876,14 +876,14 @@ msgstr "Referensi internal"
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Invalid Action!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Pengikut"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -891,7 +891,7 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "Biarkan kosong jika Anda menghasilkan pada lokasi di mana produk jadi yang needed.Set lokasi jika Anda menghasilkan pada lokasi yang tetap. Ini bisa menjadi lokasi mitra jika Anda subkontrak operasi manufaktur."
 
 #. module: mrp
 #: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
@@ -942,7 +942,7 @@ msgstr "Lokasi"
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "Lokasi di mana sistem akan mencari komponen."
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
@@ -953,22 +953,22 @@ msgstr "Lokasi dimana sistem akan menyimpan produk jadi"
 #: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Lot"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr ""
+msgstr "Mengelola routings"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "Mengelola perbaikan produk"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr ""
+msgstr "Mengelola routings dan perintah kerja"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -979,17 +979,17 @@ msgstr "Manajer"
 #: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Pabrik"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Aturan pembuatan"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Manufaktur di Gudang ini"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -997,18 +997,18 @@ msgstr ""
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr ""
+msgstr "Pabrik"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr ""
+msgstr "Manufaktur Efisiensi"
 
 #. module: mrp
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Manufaktur Lead Time"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1023,7 +1023,7 @@ msgstr "Pesanan  Pabrikan"
 #: code:addons/mrp/procurement.py:131
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "Manufaktur <em>Orde%s</em> dibuat."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1035,52 +1035,52 @@ msgstr ""
 #: view:mrp.production:mrp.view_production_calendar
 #: view:mrp.production:mrp.view_production_graph
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Pesanan manufaktur"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
-msgstr ""
+msgstr "Manufaktur Pesanan Untuk Mulai"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
-msgstr ""
+msgstr "Manufaktur Pesanan Menunggu Produk"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr ""
+msgstr "Manufaktur Pesanan in Progress"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Manufaktur Pesanan yang sedang dalam produksi."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "Manufaktur Pesanan yang siap untuk memulai produksi."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr ""
+msgstr "Manufaktur Pesanan yang sedang menunggu untuk bahan baku."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "Tandai sebagai Dimulai"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
 msgid "Master Bill of Materials"
-msgstr ""
+msgstr "Guru Bill of Material"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Master Data"
-msgstr ""
+msgstr "Data master"
 
 #. module: mrp
 #: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
@@ -1092,7 +1092,7 @@ msgstr "Pesan"
 #: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Pesan dan riwayat komunikasi"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1102,7 +1102,7 @@ msgstr "Contoh"
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Mrp workcenter"
 
 #. module: mrp
 #: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
@@ -1121,17 +1121,17 @@ msgstr "Baru"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Tidak ada BoM ada untuk produk ini!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Cycles"
-msgstr ""
+msgstr "No Dari Siklus"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Hours"
-msgstr ""
+msgstr "No Dari Jam"
 
 #. module: mrp
 #: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
@@ -1147,7 +1147,7 @@ msgstr "Tidak begitu penting"
 #. module: mrp
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Tidak digunakan dalam perhitungan, untuk tujuan informasi saja."
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
@@ -1159,32 +1159,32 @@ msgstr "Catatan"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 #: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "Jumlah Siklus"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 #: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Jumlah jam"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr ""
+msgstr "Jumlah iterasi pusat pekerjaan ini harus dilakukan dalam operasi tertentu routing."
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
+msgstr "Jumlah operasi Pusat Kerja ini dapat dilakukan secara paralel. Jika Pusat Kerja ini merupakan tim dari 5 pekerja, kapasitas per siklus adalah 5."
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "Terbuka MRP menu"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
@@ -1199,27 +1199,27 @@ msgstr "Pesanan"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Perencanaan rangka"
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Kuantitas pesanan tidak bisa negatif atau nol!"
 
 #. module: mrp
 #: field:mrp.bom.line,bom_id:0
 msgid "Parent BoM"
-msgstr ""
+msgstr "Induk BoM"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr ""
+msgstr "Routing orangtua"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Partner Ref:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1229,17 +1229,17 @@ msgstr "Ditunda"
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per month"
-msgstr ""
+msgstr "Per bulan"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "Per minggu"
 
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Phantom"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1247,19 +1247,19 @@ msgid ""
 "Phantom: this product line will not appear in the raw materials of "
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
+msgstr "Phantom: lini produk ini tidak akan muncul dalam bahan baku pesanan manufaktur, maka akan langsung diganti dengan bahan baku dari BoM sendiri, tanpa triggeringan rangka manufaktur ekstra."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Planning"
-msgstr ""
+msgstr "Perencanaan"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Harap memberikan jumlah yang tepat."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1270,12 +1270,12 @@ msgstr "Cetak"
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 msgid "Print Cost Structure of Product."
-msgstr ""
+msgstr "Cetak Struktur Biaya Produk."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Tanggal pencetakan:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1290,25 +1290,25 @@ msgstr "procurement"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Aturan Pengadaan"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Produce"
-msgstr ""
+msgstr "Produce"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "Memproduksi beberapa produk dari satu order manufaktur"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "Produk yang dihasilkan"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1326,32 +1326,32 @@ msgstr "Produk"
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 msgid "Product Cost Structure"
-msgstr ""
+msgstr "Struktur Biaya produk"
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "Pindahkan produk"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr ""
+msgstr "Harga produk"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Menghasilkan produk"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Menghasilkan produk Mengkonsumsi baris"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Produk Qty"
 
 #. module: mrp
 #: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
@@ -1363,7 +1363,7 @@ msgstr "Kuantitas"
 #. module: mrp
 #: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
-msgstr ""
+msgstr "Produk Pembulatan"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
@@ -1374,24 +1374,24 @@ msgstr "Produk Template"
 #: field:mrp.bom.line,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "Produk UOS"
 
 #. module: mrp
 #: help:mrp.bom.line,product_uos:0
 msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
-msgstr ""
+msgstr "Produk UOS (Unit Penjualan) adalah unit pengukuran untuk faktur dan promosi saham."
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr ""
+msgstr "Produk UOS Qty"
 
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "Produk UOS Kuantitas"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
@@ -1409,7 +1409,7 @@ msgstr "Produk UoS"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Quantity"
-msgstr ""
+msgstr "Produk UoS Kuantitas"
 
 #. module: mrp
 #: field:mrp.bom,product_id:0
@@ -1419,7 +1419,7 @@ msgstr "Varian Produk"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Produk"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1436,52 +1436,52 @@ msgstr "Lokasi Produksi"
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
 #: field:mrp.production.product.line,production_id:0
 msgid "Production Order"
-msgstr ""
+msgstr "Pesanan produksi"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Production Order N° :"
-msgstr ""
+msgstr "Produksi Orde N °:"
 
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Produksi Pesanan untuk Produk Diproduksi"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Produksi Pesanan untuk Bahan Baku"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Produksi Dijadwalkan Produk"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Produksi Dimulai"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Production Work Centers"
-msgstr ""
+msgstr "Pusat Kerja produksi"
 
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Kemajuan produksi"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr ""
+msgstr "Produksi dimulai akhir"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_production_gantt
 msgid "Productions"
-msgstr ""
+msgstr "Productions"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -1494,24 +1494,24 @@ msgstr "Produk"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Produk Dikonsumsi"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr ""
+msgstr "Produk Konsumsi"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Products to Finish"
-msgstr ""
+msgstr "Produk Selesai"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
-msgstr ""
+msgstr "Produk untuk Menghasilkan"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1527,7 +1527,7 @@ msgstr "Properti"
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr ""
+msgstr "Kategori properti"
 
 #. module: mrp
 #: field:mrp.property,composition:0
@@ -1544,13 +1544,13 @@ msgstr "Properti"
 #: view:mrp.property:mrp.view_mrp_property_search
 #: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr ""
+msgstr "Property Group"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "Grup Properti"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
@@ -1565,17 +1565,17 @@ msgstr "Kuantitas"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Kuantitas (wanprestasi UoM)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Jumlah"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "Bahan Baku Lokasi"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1585,7 +1585,7 @@ msgstr "Siap"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr ""
+msgstr "Siap Menghasilkan"
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
@@ -1596,18 +1596,18 @@ msgstr "Referensi"
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referensi order harus unik per perusahaan!"
 
 #. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
+msgstr "Referensi dari dokumen yang dihasilkan ini permintaan pesanan produksi."
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr ""
+msgstr "Referensi untuk posisi dalam rencana eksternal."
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
@@ -1617,12 +1617,12 @@ msgstr "Sumber Daya"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Sumber daya Daun"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
-msgstr ""
+msgstr "Sumber daya"
 
 #. module: mrp
 #: field:mrp.production,user_id:0
@@ -1632,7 +1632,7 @@ msgstr "Tanggung-jawab"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
+msgstr "Pembulatan diterapkan pada kuantitas produk."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -1645,13 +1645,13 @@ msgstr ""
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.routing:mrp.mrp_routing_tree_view
 msgid "Routing"
-msgstr ""
+msgstr "Penghalaan"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "Routing Pusat Kerja"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -1659,13 +1659,13 @@ msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
 "Routing is indicated then,the third tab of a production order (Work Centers)"
 " will be automatically pre-completed."
-msgstr ""
+msgstr "Routing menunjukkan semua Centers Kerja digunakan, untuk berapa lama dan / atau cycles.If Routing ditunjukkan kemudian, tab ketiga dari produksi pesanan (Pusat Kerja) akan secara otomatis pra-selesai."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr ""
+msgstr "Routings"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
@@ -1674,12 +1674,12 @@ msgid ""
 "should be followed within your work centers in order to produce a product. "
 "They are attached to bills of materials that will define the required raw "
 "materials."
-msgstr ""
+msgstr "Routings memungkinkan Anda untuk membuat dan mengelola operasi manufaktur yang harus diikuti dalam pusat-pusat kerja Anda untuk menghasilkan suatu produk. Mereka melekat pada tagihan bahan yang akan menentukan bahan baku yang dibutuhkan."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "SO Nomor:"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1689,29 +1689,29 @@ msgstr "Tanggal terjadwal"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Dijadwalkan Tanggal Menurut Bulan"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Tanggal dijadwalkan:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Dijadwalkan Bulan"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:mrp.production.product.line:mrp.mrp_production_product_form_view
 #: view:mrp.production.product.line:mrp.mrp_production_product_tree_view
 msgid "Scheduled Products"
-msgstr ""
+msgstr "Produk dijadwalkan"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr ""
+msgstr "Barang dijadwalkan"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1726,37 +1726,37 @@ msgstr "Penelusuran"
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "Cari Bill Of Material"
 
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Cari Bill Of Material Komponen"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr ""
+msgstr "Cari Produksi"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "Cari mrp workcenter"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Hari keamanan untuk setiap operasi manufaktur."
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Pilih Kuantitas"
 
 #. module: mrp
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 msgid "Select time unit"
-msgstr ""
+msgstr "Pilih satuan waktu"
 
 #. module: mrp
 #: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
@@ -1768,14 +1768,14 @@ msgstr "Berurutan"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Setel"
 
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
 "Set: When processing a sales order for this product, the delivery order will"
 " contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "Set: Saat memproses order penjualan untuk produk ini, delivery order akan berisi bahan baku, bukan produk jadi."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1785,7 +1785,7 @@ msgstr "Sumber berkas"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Sumber Dokumen:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1795,19 +1795,19 @@ msgstr "Lokasi Sumber"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr ""
+msgstr "Tentukan Biaya Kerja Pusat per siklus."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "Tentukan Biaya Kerja Pusat per jam."
 
 #. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr ""
+msgstr "Tentukan kuantitas produk untuk memproduksi atau membeli. Laporan dari struktur biaya akan ditampilkan dasar pada kuantitas ini."
 
 #. module: mrp
 #: field:mrp.production,date_start:0
@@ -1828,7 +1828,7 @@ msgstr "Perpindahan Stok"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "Nilai saham"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
@@ -1836,7 +1836,7 @@ msgstr ""
 #: view:report.mrp.inout:mrp.view_report_in_out_picking_graph
 #: view:report.mrp.inout:mrp.view_report_in_out_picking_tree
 msgid "Stock value variation"
-msgstr ""
+msgstr "Variasi nilai saham"
 
 #. module: mrp
 #: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
@@ -1848,12 +1848,12 @@ msgstr "Ringkasan"
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "Pemasok Harga per Unit Ukur"
 
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Bidang teknis yang digunakan untuk membuat traceability produk yang dihasilkan"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -1861,7 +1861,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "Unit Produk Ukur Anda memilih memiliki kategori yang berbeda dari dalam bentuk produk."
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1870,7 +1870,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr ""
+msgstr "Daftar operasi (daftar pusat kerja) untuk menghasilkan produk jadi. Routing terutama digunakan untuk menghitung biaya pusat kerja selama operasi dan merencanakan masa depan beban pada pusat kerja berdasarkan produksi plannification."
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
@@ -1879,21 +1879,21 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr ""
+msgstr "Daftar operasi (daftar pusat kerja) untuk menghasilkan produk jadi. Routing terutama digunakan untuk menghitung biaya pusat kerja selama operasi dan merencanakan masa depan beban pada pusat kerja berdasarkan perencanaan produksi."
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_properties:0
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
+msgstr "Pemilihan RUU hak Material untuk menggunakan akan tergantung pada sifat tertentu pada urutan penjualan dan Bill of Material."
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "Hal ini memungkinkan untuk menambahkan negara, date_start, date_stop di lini operasi produksi pesanan (dalam \"Pusat Kerja\" tab). -Ini Menginstal mrp_operations modul."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -1904,82 +1904,82 @@ msgid ""
 "* Manufacturer Product Code\n"
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
-msgstr ""
+msgstr "Hal ini memungkinkan Anda untuk menentukan berikut untuk produk: * Produsen * Nama Produsen Produk * Kode Produsen Produk * Produk Atribut. -Ini Menginstal product_manufacturer modul."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr ""
+msgstr "Waktu setelah prod."
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr ""
+msgstr "Waktu sebelum prod."
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr ""
+msgstr "Waktu untuk 1 siklus (jam)"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr ""
+msgstr "Waktu di jam untuk melakukan satu siklus."
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
-msgstr ""
+msgstr "Waktu di jam untuk pembersihan."
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr ""
+msgstr "Waktu di jam untuk setup."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr ""
+msgstr "Waktu di jam untuk Pusat Kerja ini untuk mencapai operasi routing yang ditentukan."
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Untuk Mengkonsumsi"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
-msgstr ""
+msgstr "Total Biaya%s%s"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Jumlah Siklus"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Total jam"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 msgid "Total Qty"
-msgstr ""
+msgstr "Total Qty"
 
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Melacak Manufacturing Banyak"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Produksi lagu"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -1991,7 +1991,7 @@ msgstr "Jenis"
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
 msgid "Type of period"
-msgstr ""
+msgstr "Jenis periode"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -2003,7 +2003,7 @@ msgstr "Satuan Ukuran"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Unit Ukur (Unit Ukur) adalah unit pengukuran untuk pengendalian persediaan"
 
 #. module: mrp
 #: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
@@ -2029,39 +2029,39 @@ msgstr "Pengguna"
 #. module: mrp
 #: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Berlaku mulai"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Hari Dari Tanggal Menurut Bulan"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Hari Dari Bulan"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Berlaku hingga"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validitas komponen. Biarkan kosong jika itu selalu berlaku."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validitas BoM ini. Biarkan kosong jika itu selalu berlaku."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Berlainan"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
@@ -2071,7 +2071,7 @@ msgstr "Varian"
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "Sangat mendesak"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -2096,26 +2096,26 @@ msgstr "Perhatian!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Pesan situs"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Sejarah komunikasi situs"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
 #: view:report.workcenter.load:mrp.view_workcenter_load_search
 #: field:report.workcenter.load,name:0
 msgid "Week"
-msgstr ""
+msgstr "Pekan"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
-msgstr ""
+msgstr "Weekly Stock Nilai Variasi"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2123,20 +2123,20 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr "Weekly Stock Nilai Variasi memungkinkan Anda untuk melacak evolusi nilai saham terkait dengan kegiatan manufaktur, penerimaan produk dan perintah pengiriman."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "Saat memproses order penjualan untuk produk ini, delivery order akan berisi bahan baku, bukan produk jadi."
 
 #. module: mrp
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "Ketika produk diproduksi, mereka dapat diproduksi di gudang ini."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2147,7 +2147,7 @@ msgid ""
 "                If the stock is available then the status is set to 'Ready to Produce'.\n"
 "                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr ""
+msgstr "Ketika pesanan produksi dibuat status diatur ke 'Draft'. Jika pesanan dikonfirmasi status diatur ke 'Waiting Barang'. Jika ada pengecualian yang ada, status diatur ke 'Memilih Exception'. Jika saham tersedia maka statusnya diatur ke 'Siap Menghasilkan'. Ketika produksi akan dimulai maka statusnya diatur ke 'Dalam Produksi'. Ketika produksi selesai, status diatur ke 'Selesai'."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2157,87 +2157,87 @@ msgstr ""
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr ""
+msgstr "Kerja Pusat"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr ""
+msgstr "Kerja Pusat Beban"
 
 #. module: mrp
 #: view:report.workcenter.load:mrp.view_workcenter_load_tree
 msgid "Work Center Loads"
-msgstr ""
+msgstr "Kerja Pusat Beban"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr ""
+msgstr "Pekerjaan Center Operations"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "Produk pekerjaan Pusat"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "Kerja Pusat Penggunaan"
 
 #. module: mrp
 #: view:report.workcenter.load:mrp.view_workcenter_load_graph
 #: view:report.workcenter.load:mrp.view_workcenter_load_search
 msgid "Work Center load"
-msgstr ""
+msgstr "Kerja Pusat beban"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
-msgstr ""
+msgstr "Nama pekerjaan Pusat"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr ""
+msgstr "Pusat pekerjaan"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "Kerja Pusat Pemanfaatan"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Biaya kerja"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "Biaya karya%s%s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Perintah kerja"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:website:mrp.report_mrporder
 msgid "Work Orders"
-msgstr ""
+msgstr "gratis work orders"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "WorkCenter"
-msgstr ""
+msgstr "Workcenter"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -2251,7 +2251,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Anda dapat mengkonfigurasi oleh-produk dalam bill of material. Tanpa modul ini: A   B   C -> D. Dengan modul ini: A   B   C -> D   E. -Ini menginstal mrp_byproduct modul."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2259,13 +2259,13 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Anda tidak dapat menghapus Bill of Material dengan menjalankan perintah manufaktur. Silakan tutup atau membatalkannya pertama."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Anda harus menetapkan nomor serial untuk produk%s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
@@ -2275,7 +2275,7 @@ msgstr "hari"
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr ""
+msgstr "Maks."
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2295,7 +2295,7 @@ msgstr "atau"
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr ""
+msgstr "penjumlahan"
 
 #. module: mrp
 #: field:mrp.product.produce,product_id:0
