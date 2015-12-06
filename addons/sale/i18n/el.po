@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-27 17:55+0000\n"
+"PO-Revision-Date: 2015-12-05 23:58+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -130,7 +130,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Προσφορά' or 'Παραγγελία'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -461,7 +461,7 @@ msgstr "Δεν μπορείτε να ακυρώσετε αυτή την εντο
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr "Δεν μπορεί να διαγραφεί η εντολή πλώλησης η οποία είναι σε καθεστώς '%s'."
+msgstr "Δεν μπορεί να διαγραφεί η εντολή πώλησης η οποία είναι σε καθεστώς '%s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -673,12 +673,12 @@ msgstr "Προκαθορισμένες Δυνατότητες"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr "Προκαθορισμένοι Όροι και Προυποθέσεις"
+msgstr "Προκαθορισμένοι Όροι και Προϋποθέσεις"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr "Προκαθορισμένοι Όροι και Προυποθέσεις"
+msgstr "Προκαθορισμένοι Όροι και Προϋποθέσεις"
 
 #. module: sale
 #: help:res.company,sale_note:0
@@ -735,7 +735,7 @@ msgstr "Δείχνει περιθώρια στις εντολές πωλήσεω
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "Είστε σιγουροι ότι θέλετε να δημιουργήσετε το τιμολόγιο(α);"
+msgstr "Είστε σίγουροι ότι θέλετε να δημιουργήσετε το τιμολόγιο(α);"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
@@ -838,7 +838,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr "Πρόβλεψη για τα τιμολογηθέντα έσοδα του τρέχοντος μήνα. Αυτός είναι ο στόχος πωλήσεων \nπου πρέπει να τιμολογήσει η ομάδα πωλήσεων γι' αυτόν τον μήνα. Χρησιμοποιείται για να υπολογίζει την \nπροοδευτική σχέση των τωρινών και των προβλεπόμενων εσόδων στην προβολή kanban. "
+msgstr "Πρόβλεψη για τα τιμολογημένα έσοδα του τρέχοντος μήνα. Αυτός είναι ο στόχος πωλήσεων που πρέπει να τιμολογήσει η ομάδα πωλήσεων γι' αυτόν τον μήνα. Χρησιμοποιείται για να υπολογίζει την προοδευτική σχέση των τωρινών και των προβλεπόμενων εσόδων στην προβολή kanban. "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1890,7 +1890,7 @@ msgstr "Προσθέτει την online προσφορά"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr "Αυτό επιτρέπει να εγκατασταθεί το module sale_analytic_plans."
+msgstr "Αυτό επιτρέπει να εγκατασταθεί το άρθρωμα sale_analytic_plans."
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
