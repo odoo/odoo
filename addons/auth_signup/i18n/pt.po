@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
+# Ricardo Correia <rcorreiavv@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-11-02 15:55+0000\n"
-"Last-Translator: Manuela Silva <h_manuela_rodsilva@gmail.com>\n"
+"PO-Revision-Date: 2015-11-25 14:00+0000\n"
+"Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n\n<p>\n${object.name},\n</p>\n<p>\nFoi convidado para se conectar a \"${object.company_id.name}\" para aceder aos seus documentos no Odoo.\n</p>\n<p>\nPara aceitar este convite, clique na seguinte ligação:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Aceitar convite para \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nObrigado,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -57,26 +58,26 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Uma reposição de password foi pedida para a conta Odoo associada a este email.</p>\n\n<p>Poderá modificar a sua password na seguinte <a href=\"${object.signup_url}\">ligação</a>, que permanecerá válida durante 24 horas.</p>\n\n<p>Nota: Se não pediu ou esperava este pedido, poderá ignorar este email.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} invite para se conectar ao Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Uma reposição de password foi pedida para este utilizador. Um email contendo a seguinte ligação foi enviado:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Um email de convite contendo a seguinte ligação para se subscrever foi enviado:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -87,13 +88,13 @@ msgstr "Permitir que os utilizadores externos se registem"
 #: code:addons/auth_signup/controllers/main.py:60
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Um email foi enviado com as credenciais para repor a sua password"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autenticação falhou."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -105,7 +106,7 @@ msgstr "Voltar ao Login"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Não foi possível enviar o email: o utilizador %s não tem endereço de email associado."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -120,13 +121,13 @@ msgstr "Contrassenha"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Conectado"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Não foi possível repor a password"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -142,12 +143,12 @@ msgstr "Se desmarcado, apenas os utilizadores convidados poderão registar-se."
 #: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Token de entrada inválido"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Nunca se conectou"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -167,7 +168,7 @@ msgstr "Repor senha"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Perfil privado"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -178,53 +179,53 @@ msgstr "Repor a senha"
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Repor a password: nome de utilizador ou email inválidos"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Enviar instruções para repor a password"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Enviar um email de convite"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Inscrição"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Expiração da inscrição"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Token de inscrição"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Tipo de token de inscrição"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "O token de inscrição é válido"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "URL de inscrição"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -239,7 +240,7 @@ msgstr "Utilizador template para novos utilizadores criado através de registo"
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "O endereço URL completo para aceder ao documento através do website."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -305,7 +306,7 @@ msgstr "base.config.settings"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "p.e. José Silva"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_self
