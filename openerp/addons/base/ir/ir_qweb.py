@@ -1172,10 +1172,11 @@ class AssetsBundle(object):
         response = []
         if debug:
             if css and self.stylesheets:
-                self.preprocess_css()
-                if self.css_errors:
-                    msg = '\n'.join(self.css_errors)
-                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
+                if not self.is_css_preprocessed():
+                    self.preprocess_css(debug=debug)
+                    if self.css_errors:
+                        msg = '\n'.join(self.css_errors)
+                        self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1330,7 +1331,27 @@ class AssetsBundle(object):
             }
         """ % message
 
-    def preprocess_css(self):
+    def is_css_preprocessed(self):
+        preprocessed = True
+        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+            assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
+            if assets:
+                assets_domain = [('name', 'in', [asset.html_url % asset.url  for asset in assets])]
+                ira_ids = self.registry['ir.attachment'].search(self.cr, self.uid, assets_domain)
+                if len(ira_ids) != len(assets):
+                    preprocessed = False
+                else:
+                    ira_records = self.registry['ir.attachment'].browse(self.cr, self.uid, ira_ids)
+                    for ira_record in ira_records:
+                        stylesheet = next(stylesheet for stylesheet in self.stylesheets if stylesheet.html_url % stylesheet.url == ira_record.url)
+                        if stylesheet.last_modified > Datetime.from_string(ira_record['__last_update']):
+                            self.registry['ir.attachment'].unlink(self.cr, self.uid, ira_ids)
+                            preprocessed = False
+                            break
+                        stylesheet._content = ira_record.datas.decode('base64').decode('utf8')
+        return preprocessed
+
+    def preprocess_css(self, debug=False):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
             Returns the bundle's flat css.
@@ -1351,6 +1372,24 @@ class AssetsBundle(object):
                     asset_id = fragments.pop(0)
                     asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
                     asset._content = fragments.pop(0)
+
+                    if debug:
+                        try:
+                            ira = self.registry['ir.attachment']
+                            url = asset.html_url % asset.url
+                            with self.cr.savepoint():
+                                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                                    datas=asset.content.encode('utf8').encode('base64'),
+                                    mimetype='text/css',
+                                    type='binary',
+                                    name=url,
+                                    url=url,
+                                ), context=self.context)
+
+                            if self.context.get('commit_assetsbundle') is True:
+                                self.cr.commit()
+                        except psycopg2.Error:
+                            pass
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
@@ -1566,34 +1605,6 @@ class PreprocessedCSS(StylesheetAsset):
 
     def minify(self):
         return self.with_header()
-
-    def to_html(self):
-        if self.url:
-            try:
-                ira = self.registry['ir.attachment']
-                url = self.html_url % self.url
-                domain = [('type', '=', 'binary'), ('url', '=', url)]
-                with self.cr.savepoint():
-                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-                    datas = self.content.encode('utf8').encode('base64')
-                    if ira_id:
-                        # TODO: update only if needed
-                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
-                                  context=self.context)
-                    else:
-                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                            datas=datas,
-                            mimetype='text/css',
-                            type='binary',
-                            name=url,
-                            url=url,
-                        ), context=self.context)
-
-                if self.context.get('commit_assetsbundle') is True:
-                    self.cr.commit()
-            except psycopg2.Error:
-                pass
-        return super(PreprocessedCSS, self).to_html()
 
     def get_source(self):
         content = self.inline or self._fetch_content()
