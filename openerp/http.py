@@ -1592,7 +1592,7 @@ class Root(object):
     def get_db_router(self, db):
         if not db:
             return self.nodb_routing_map
-        return request.registry['ir.http'].routing_map
+        return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
     dbs = openerp.service.db.list_dbs(force)
