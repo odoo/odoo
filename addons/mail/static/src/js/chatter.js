@@ -716,6 +716,7 @@ var Chatter = form_common.AbstractField.extend({
             display_order: ChatThread.ORDER.DESC,
             display_document_link: false,
             display_needactions: false,
+            squash_close_messages: false,
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('toggle_star_status', this, function (message_id) {

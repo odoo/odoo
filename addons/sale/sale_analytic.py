@@ -84,7 +84,7 @@ class AccountAnalyticLine(models.Model):
                 limit=1)
             # Use the existing SO line only if the unit prices are the same, otherwise we create
             # a new line
-            if sol.price_unit == self._get_invoice_price(sol.order_id):
+            if sol and sol.price_unit == self._get_invoice_price(sol.order_id):
                 result.update({'so_line': sol.id})
             else:
                 sol = self.so_line
