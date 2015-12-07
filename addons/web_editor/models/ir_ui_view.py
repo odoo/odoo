@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import copy
-import openerp
-from openerp.exceptions import AccessError
-from openerp.osv import osv
 from lxml import etree, html
-from openerp import api
 
+import odoo
+from odoo import api, models
+from odoo.exceptions import AccessError
 
-class view(osv.osv):
+class View(models.Model):
     _inherit = 'ir.ui.view'
 
+    #TODO convert when base is converted to new api
     @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if not values:
@@ -26,27 +26,28 @@ class view(osv.osv):
             except AccessError:
                 values['editable'] = False
 
-        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
+        return super(View, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
 
     #------------------------------------------------------
     # Save from html
     #------------------------------------------------------
 
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
+    @api.model
+    def extract_embedded_fields(self, arch):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
-    def save_embedded_field(self, cr, uid, el, context=None):
-        Model = self.pool[el.get('data-oe-model')]
+    @api.model
+    def save_embedded_field(self, el):
+        Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        converter = self.pool['ir.qweb'].get_converter_for(el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
-
+        converter = self.env['ir.qweb'].get_converter_for(el.get('data-oe-type'))
+        value = converter.from_html(Model, Model._fields[field], el)
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+            Model.browse(int(el.get('data-oe-id'))).write({
                 field: value
-            }, context=context)
+            })
 
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and
@@ -60,12 +61,13 @@ class view(osv.osv):
         return etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
 
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+    @api.multi
+    def replace_arch_section(self, section_xpath, replacement):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
 
-        [view] = self.browse(cr, uid, [view_id], context=context)
-        arch = etree.fromstring(view.arch.encode('utf-8'))
+        self.ensure_one()
+        arch = etree.fromstring(self.arch.encode('utf-8'))
         # => get the replacement root
         if not section_xpath:
             root = arch
@@ -82,7 +84,8 @@ class view(osv.osv):
 
         return arch
 
-    def to_field_ref(self, cr, uid, el, context=None):
+    @api.model
+    def to_field_ref(self, el):
         # filter out meta-information inserted in the document
         attributes = dict((k, v) for k, v in el.items()
                           if not k.startswith('data-oe-'))
@@ -92,34 +95,33 @@ class view(osv.osv):
         out.tail = el.tail
         return out
 
+    # TODO remove when website converted to new api because in website test case assinged value with res_id = 123.
+    @api.v7
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
+        view = self.browse(cr, odoo.SUPERUSER_ID, int(res_id), context=context)
+        view.save(value=value, xpath=xpath)
+
+    @api.v8
+    def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 
-        :param str model:
-        :param int res_id:
         :param str xpath: valid xpath to the tag to replace
         """
-        res_id = int(res_id)
-
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
-            self.save_embedded_field(cr, uid, arch_section, context=context)
+            self.save_embedded_field(arch_section)
             return
 
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
+        for el in self.extract_embedded_fields(arch_section):
+            self.save_embedded_field(el)
 
             # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+            el.getparent().replace(el, self.to_field_ref(el))
 
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
-            'arch': self._pretty_arch(arch)
-        }, context=context)
+        arch = self.replace_arch_section(xpath, arch_section)
+        self.write({'arch': self._pretty_arch(arch)})
 
-        view = self.browse(cr, openerp.SUPERUSER_ID, res_id, context=context)
-        if view.model_data_id:
-            view.model_data_id.write({'noupdate': True})
+        self.sudo().model_data_id.write({'noupdate': True})

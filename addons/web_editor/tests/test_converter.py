@@ -5,9 +5,9 @@ import unittest
 from lxml import etree, html
 from lxml.builder import E
 
-from openerp.tests import common
-from openerp.addons.base.ir import ir_qweb
-from openerp.addons.web_editor.models.ir_qweb import html_to_text
+from odoo.tests import common
+from odoo.addons.base.ir import ir_qweb
+from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
 class TestHTMLToText(unittest.TestCase):
@@ -119,29 +119,28 @@ class TestConvertBack(common.TransactionCase):
 
     def field_rountrip_result(self, field, value, expected):
         model = 'web_editor.converter.test'
-        Model = self.registry(model)
-        id = Model.create(
-            self.cr, self.uid, {
+        Model = self.env[model]
+        record = Model.create({
                 field: value
             })
-        [record] = Model.browse(self.cr, self.uid, [id])
 
         e = etree.Element('span')
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
+        #TODO when base's render_tag_field method converted to new api just use the self.env instead of registry
         rendered = self.registry('ir.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
+            e, {'field': field_value}, '', ir_qweb.QWebContext(self.env.cr, self.env.uid, {
                 'record': record,
             }, context={'inherit_branding': True}))
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))
 
-        converter = self.registry('ir.qweb').get_converter_for(
+        converter = self.env['ir.qweb'].get_converter_for(
             element.get('data-oe-type'))
 
         value_back = converter.from_html(
-            self.cr, self.uid, model, Model._fields[field], element)
+            model, Model._fields[field], element)
 
         if isinstance(expected, str):
             expected = expected.decode('utf-8')
@@ -199,45 +198,45 @@ class TestConvertBack(common.TransactionCase):
         model = 'web_editor.converter.test'
         field = 'many2one'
 
-        Sub = self.registry('web_editor.converter.test.sub')
-        sub_id = Sub.create(self.cr, self.uid, {'name': "Foo"})
-        sub2_id = Sub.create(self.cr, self.uid, {'name': "Bar"})
+        Sub = self.env['web_editor.converter.test.sub']
+        sub1 = Sub.create({'name': "Foo"})
+        sub2 = Sub.create({'name': "Bar"})
 
-        Model = self.registry(model)
-        id = Model.create(self.cr, self.uid, {field: sub_id})
-        [record] = Model.browse(self.cr, self.uid, [id])
+        Model = self.env[model]
+        record = Model.create({field: sub1.id})
 
         e = etree.Element('span')
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
+        #TODO when base's render_tag_field method converted to new api just use the self.env instead of registry
         rendered = self.registry('ir.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
+            e, {'field': field_value}, '', ir_qweb.QWebContext(self.env.cr, self.env.uid, {
                 'record': record,
             }, context={'inherit_branding': True}))
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
         # emulate edition
-        element.set('data-oe-many2one-id', str(sub2_id))
+        element.set('data-oe-many2one-id', str(sub2.id))
         element.text = "New content"
 
-        converter = self.registry('ir.qweb').get_converter_for(
+        converter = self.env['ir.qweb'].get_converter_for(
             element.get('data-oe-type'))
 
         value_back = converter.from_html(
-            self.cr, self.uid, model, Model._fields[field], element)
+            model, Model._fields[field], element)
 
         self.assertIsNone(
             value_back, "the m2o converter should return None to avoid spurious"
                         " or useless writes on the parent record")
 
         self.assertEqual(
-            Sub.browse(self.cr, self.uid, sub_id).name,
+            sub1.name,
             "Foo",
             "element edition can't change directly the m2o record"
         )
         self.assertEqual(
-            Model.browse(self.cr, self.uid, id).many2one.name,
+            record.many2one.name,
             "Bar",
             "element edition should have been change the m2o id"
         )
