@@ -86,8 +86,6 @@ class AccountAnalyticLine(models.Model):
             # a new line
             if sol and sol.price_unit == self._get_invoice_price(sol.order_id):
                 result.update({'so_line': sol.id})
-            else:
-                sol = self.so_line
 
         if not sol and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
             order_line_vals = self._get_sale_order_line_vals()
@@ -103,19 +101,13 @@ class AccountAnalyticLine(models.Model):
         if self._context.get('create', False):
             return super(AccountAnalyticLine, self).write(values)
 
-        todo = self.mapped('so_line')
-        result = super(AccountAnalyticLine, self).write(values)
-        if 'so_line' in values:
-            todo |= self.mapped('so_line')
-
+        lines = super(AccountAnalyticLine, self).write(values)
         for line in self:
-            res = self._get_sale_order_line(vals=values)
+            res = line._get_sale_order_line(vals=values)
             super(AccountAnalyticLine, line).write(res)
-            if 'so_line' in res:
-                todo |= line.mapped('so_line')
 
-        todo._compute_analytic()
-        return result
+        self.mapped('so_line')._compute_analytic()
+        return lines
 
     @api.model
     def create(self, values):
