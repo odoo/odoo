@@ -34,7 +34,7 @@ var Thread = Widget.extend({
             this.$('.o_thread_message').removeClass('o_thread_selected_message');
             $(event.currentTarget).toggleClass('o_thread_selected_message', !selected);
         },
-        "click span.oe_mail_expand": function (event) {
+        "click .oe_mail_expand": function (event) {
             event.preventDefault();
             var $source = $(event.currentTarget);
             $source.parents('.o_thread_message_core').find('.o_mail_body_short').toggle();
