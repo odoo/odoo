@@ -378,17 +378,17 @@
                     <field name="mobile"/>
                     <field name="state_id"/>
                     <field name="category_id"/>
-                    <field name="image"/>
+                    <field name="image_small"/>
                     <field name="type"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_res_partner_kanban">
                                 <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                 <div class="o_kanban_image">
-                                    <t t-if="record.image.raw_value">
+                                    <t t-if="record.image_small.raw_value">
                                         <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
                                     </t>
-                                    <t t-if="!record.image.raw_value">
+                                    <t t-if="!record.image_small.raw_value">
                                         <t t-if="record.type.raw_value === 'delivery'">
                                             <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                         </t>
