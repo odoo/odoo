@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-24 20:23+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2015-12-02 07:35+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +256,7 @@ msgstr "运行时间表示方式"
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr "辅助核算账薄"
+msgstr "分析分类账"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -639,7 +639,7 @@ msgstr "创建"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr "循环科目"
+msgstr "循环账户"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
@@ -764,7 +764,7 @@ msgstr "强制对包含该产品的所有调拨单指定一个系列号，并生
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
-msgstr "总账"
+msgstr "总账科目"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
@@ -817,7 +817,7 @@ msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr "工时科目"
+msgstr "工时账户"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
@@ -879,7 +879,7 @@ msgstr "不可用"
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Reference"
-msgstr "位置"
+msgstr "内部参考"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
@@ -1542,7 +1542,7 @@ msgstr "属性分类"
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "属性组成"
+msgstr "属性成分"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
@@ -1601,23 +1601,23 @@ msgstr "准备生产"
 #: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
 #: field:mrp.production,name:0
 msgid "Reference"
-msgstr "编号"
+msgstr "参考"
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr "编号必须在公司内唯一！"
+msgstr "每个公司的参考必须唯一！"
 
 #. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr "生成这张生产订单的前置单据编号"
+msgstr "生成此生产订单请求的单据参考"
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr "位置的编号"
+msgstr "在外部方案中的位置参考"
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
@@ -2076,7 +2076,7 @@ msgstr "变型"
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr "系列型号"
+msgstr "变型"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2230,7 +2230,7 @@ msgstr "工作成本"
 #: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr "工时成本：%s %s"
+msgstr "工作成本：%s %s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -2305,7 +2305,7 @@ msgstr "或"
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr "正"
+msgstr "加"
 
 #. module: mrp
 #: field:mrp.product.produce,product_id:0

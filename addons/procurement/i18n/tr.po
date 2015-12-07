@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:48+0000\n"
+"PO-Revision-Date: 2015-12-04 21:24+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +115,7 @@ msgstr "Şirket"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr "Arka planda tüm Alımlarımızı hesaplayın."
+msgstr "Bu işlem tüm planlayıcıları çalıştırır.\n\nÜrünler için stok ihtiyaç kuralları belirlediyseniz bunlar tetiklenir.\n\nÜrün tedarik rotası üretim olan mamüller için otomatik üretim emirleri oluşabilir.\n\nHer seferinde Tüm Planlayıcıları elle çalıştırmak istemiyorsanız Gerçek Zamanlı Tedarik Planlama (Just In Time Procurement) özelliğini kullanarak oluşan kayıtlara göre Odoo'nun sizin için yarı otomatik anlık planlama yapmasını sağlayabilirsiniz.\n\nYarı otomatik şu anlama gelir : Tedarik talepleri havuz olarak otomatik oluşur. Bu havuzdan siparişler oluşturmak ve tedarik emirlerini onaylamak yine sizin onayınız dahilinde olacaktır."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -193,7 +194,7 @@ msgstr "Sabit Tedarik Grubu"
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
@@ -209,7 +210,7 @@ msgstr "Gruplandır"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr "Tedarik Grubun'ları"
+msgstr "Tedarikler"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -243,7 +244,7 @@ msgstr "Geçersiz İşlem!"
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: procurement
 #: field:procurement.order,message_last_post:0
@@ -457,7 +458,7 @@ msgstr "Tedarik Çalıştır"
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
-msgstr "Planlayıcı Çalıştır"
+msgstr "Tüm Planlayıcıları Çalıştır"
 
 #. module: procurement
 #: selection:procurement.order,state:0

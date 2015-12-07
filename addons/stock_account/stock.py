@@ -134,6 +134,7 @@ class stock_move(osv.osv):
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         fp_obj = self.pool.get('account.fiscal.position')
         # Get account_id
+        fp = fp_obj.browse(cr, uid, context.get('fp_id')) if context.get('fp_id') else False
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = move.product_id.property_account_income.id
             if not account_id:
@@ -142,7 +143,7 @@ class stock_move(osv.osv):
             account_id = move.product_id.property_account_expense.id
             if not account_id:
                 account_id = move.product_id.categ_id.property_account_expense_categ.id
-        fiscal_position = partner.property_account_position
+        fiscal_position = fp or partner.property_account_position
         account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
 
         # set UoS if it's a sale and the picking doesn't have one
@@ -320,8 +321,7 @@ class stock_picking(osv.osv):
                     merge_vals['name'] = ', '.join(invoice_name)
                 if merge_vals:
                     invoice.write(merge_vals)
-
-            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=dict(context, fp_id=invoice_vals.get('fiscal_position', False)))
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
             if not is_extra_move[move.id]:
