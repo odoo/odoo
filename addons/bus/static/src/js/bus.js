@@ -106,17 +106,9 @@ bus.Bus = Widget.extend({
  */
 var CrossTabBus = bus.Bus.extend({
     init: function(){
-        var self = this;
         this._super.apply(this, arguments);
         this.is_master = false;
-        tab_manager.register_tab(function () {
-            self.is_master = true;
-            self.start_polling();
-        }, function () {
-            self.is_master = false;
-            self.stop_polling();
-        });
-
+        this.is_registered = false;
         if (parseInt(getItem('bus.last_ts', 0)) + 50000 < new Date().getTime()) {
             setItem('bus.last', -1);
         }
@@ -132,6 +124,19 @@ var CrossTabBus = bus.Bus.extend({
 
     },
     start_polling: function(){
+        var self = this;
+        if (!this.is_registered) {
+            this.is_registered = true;
+            tab_manager.register_tab(function () {
+                self.is_master = true;
+                self.start_polling();
+            }, function () {
+                self.is_master = false;
+                self.stop_polling();
+            });
+            return;  // start_polling will be called again on tab registration
+        }
+
         if (this.is_master) {
             this._super.apply(this, arguments);
         }
