@@ -52,6 +52,7 @@ class Channel(models.Model):
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
+    is_member = fields.Boolean('Is a member', compute='_compute_is_member')
     # access
     public = fields.Selection([
         ('public', 'Everyone'),
@@ -83,6 +84,16 @@ class Channel(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
+
+    @api.multi
+    def _compute_is_member(self):
+        memberships = self.env['mail.channel.partner'].sudo().search([
+            ('channel_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])
+        membership_ids = memberships.mapped('channel_id')
+        for record in self:
+            record.is_member = record in membership_ids
 
     @api.one
     @api.depends('image')
