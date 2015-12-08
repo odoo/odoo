@@ -900,6 +900,10 @@ class pos_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
+    def _add_custom_payment_line_info(self, cr, uid, order_id, data, context=None):
+        '''This method is designed to be inherited in a custom module'''
+        return {}
+
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
         context = dict(context or {})
@@ -955,6 +959,7 @@ class pos_order(osv.osv):
             'journal_id': journal_id,
             'ref': order.session_id.name,
         })
+        args.update(self._add_custom_payment_line_info(cr, uid, order_id, data, context=context))
 
         statement_line_obj.create(cr, uid, args, context=context)
 
@@ -1093,6 +1098,22 @@ class pos_order(osv.osv):
         period_id = self.pool['account.period'].find(cr, uid, dt=date_tz_user, context=local_context)
         return self.pool['account.move'].create(cr, uid, {'ref': ref, 'journal_id': journal_id, 'period_id': period_id[0]}, context=context)
 
+    def _get_product_key(self, values):
+        return ('product', values['partner_id'], values['product_id'], values['analytic_account_id'], values['debit'] > 0)
+
+    def _get_product_values(self, cr, uid, line, income_account, amount, tax_code_id, tax_amount, order, context=None):
+        return {'name': line.product_id.name,
+                'quantity': line.qty,
+                'product_id': line.product_id.id,
+                'account_id': income_account,
+                'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
+                'credit': ((amount>0) and amount) or 0.0,
+                'debit': ((amount<0) and -amount) or 0.0,
+                'tax_code_id': tax_code_id,
+                'tax_amount': tax_amount,
+                'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
+                }
+
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -1160,7 +1181,7 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], values['product_id'], values['analytic_account_id'], values['debit'] > 0)
+                    key = self._get_product_key(values)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
@@ -1245,18 +1266,7 @@ class pos_order(osv.osv):
                         break
 
                 # Create a move for the line
-                insert_data('product', {
-                    'name': line.product_id.name,
-                    'quantity': line.qty,
-                    'product_id': line.product_id.id,
-                    'account_id': income_account,
-                    'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
-                    'credit': ((amount>0) and amount) or 0.0,
-                    'debit': ((amount<0) and -amount) or 0.0,
-                    'tax_code_id': tax_code_id,
-                    'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
-                })
+                insert_data('product', self._get_product_values(cr, uid, line, income_account, amount, tax_code_id, tax_amount, order, context=context))
 
                 # For each remaining tax with a code, whe create a move line
                 for tax in computed_taxes:
