@@ -22,7 +22,8 @@ Allows to automatically select analytic accounts based on criterions:
     'data': [
         'security/ir.model.access.csv',
         'security/account_analytic_default_security.xml',
-        'views/account_analytic_default_view.xml'
+        'views/account_analytic_default_view.xml',
+        'views/product_views.xml'
     ],
     'installable': True,
 }
