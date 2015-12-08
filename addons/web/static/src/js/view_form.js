@@ -2566,6 +2566,15 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this.on("change:effective_readonly", this, function () {
             this.display_field();
         });
+        if (this.options.model_field){
+            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
+                if (self.view && self.view.onchanges_mutex){
+                    self.view.onchanges_mutex.def.then(function(){
+                        self.display_field();
+                    });
+                }
+            });
+        }
         this.display_field();
         return this._super();
     },
