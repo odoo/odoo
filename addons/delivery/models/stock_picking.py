@@ -6,6 +6,7 @@ from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
+
 class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
@@ -21,6 +22,27 @@ class StockQuantPackage(models.Model):
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight')
+    shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
+
+
+class StockPackOperation(models.Model):
+    _inherit = 'stock.pack.operation'
+
+    @api.multi
+    def manage_package_type(self):
+        self.ensure_one()
+        return {
+            'name': _('Package Details'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.quant.package',
+            'view_id': self.env.ref('delivery.view_quant_package_form_save').id,
+            'target': 'new',
+            'res_id': self.result_package_id.id,
+            'context': {
+                'current_package_carrier_type': self.picking_id.carrier_id.delivery_type if self.picking_id.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
+            },
+        }
 
 
 class StockPicking(models.Model):
@@ -52,6 +74,11 @@ class StockPicking(models.Model):
                 weight += uom_obj._compute_qty_obj(packop.product_uom_id , packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
         self.weight_bulk = weight
 
+    @api.one
+    @api.depends('package_ids', 'weight_bulk')
+    def _compute_shipping_weight(self):
+        self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
+
     carrier_price = fields.Float(string="Shipping Cost", readonly=True)
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
@@ -62,6 +89,7 @@ class StockPicking(models.Model):
     weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
+    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
@@ -80,6 +108,30 @@ class StockPicking(models.Model):
             self._add_delivery_cost_to_so()
 
         return res
+
+    @api.multi
+    def put_in_pack(self):
+        self.ensure_one()
+        package_id = super(StockPicking, self).put_in_pack()
+        package = self.env['stock.quant.package'].browse(package_id)
+
+        # By default, sum the weights of all package operations contained in this package
+        pack_operation_ids = self.env['stock.pack.operation'].search([('result_package_id', '=', package_id)])
+        package_weight = sum([x.qty_done * x.product_id.weight for x in pack_operation_ids])
+        package.shipping_weight = package_weight
+
+        return {
+            'name': _('Package Details'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.quant.package',
+            'view_id': self.env.ref('delivery.view_quant_package_form_save').id,
+            'target': 'new',
+            'res_id': package_id,
+            'context': {
+                'current_package_carrier_type': self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
+            },
+        }
 
     @api.multi
     def send_to_shipper(self):
@@ -114,6 +166,17 @@ class StockPicking(models.Model):
         msg = "Shipment %s cancelled" % self.carrier_tracking_ref
         self.message_post(body=msg)
         self.carrier_tracking_ref = False
+
+    @api.multi
+    def check_packages_are_identical(self):
+        '''Some shippers require identical packages in the same shipment. This utility checks it.'''
+        self.ensure_one()
+        if self.package_ids:
+            packages = [p.packaging_id for p in self.package_ids]
+            if len(set(packages)) != 1:
+                package_names = ', '.join([str(p.name) for p in packages])
+                raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
+        return True
 
 
 class StockReturnPicking(models.TransientModel):

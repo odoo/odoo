@@ -19,6 +19,7 @@ invoices from picking, the system is able to add and compute the shipping line.
         'views/delivery_view.xml',
         'views/partner_view.xml',
         'views/product_template_view.xml',
+        'views/product_packaging_view.xml',
         'data/delivery_data.xml',
         'views/report_shipping.xml',
         'views/report_deliveryslip.xml'

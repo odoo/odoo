@@ -166,6 +166,7 @@
                             <field name="weight" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                         </div>
+                        <field name="shipping_weight"/>
                         <field name="number_of_packages"/>
                     </group>
                 </group>
@@ -177,6 +178,9 @@
                 <xpath expr="/form/header/button[last()]" position="after">
                     <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                 </xpath>
+                <field name="result_package_id" position="before">
+                    <button name="manage_package_type" string="Manage Package Type" type="object" icon="fa-dropbox" groups="stock.group_tracking_lot" attrs="{'invisible': [('result_package_id','=', False)]}"/>
+                </field>
               </data>
             </field>
         </record>
@@ -199,9 +203,30 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="weight"/>
+                    <field name="shipping_weight"/>
                 </field>
             </field>
         </record>
+
+
+        <record id="view_quant_package_form_save" model="ir.ui.view">
+            <field name="name">stock.quant.package.form.save</field>
+            <field name="model">stock.quant.package</field>
+            <field eval="99" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Package">
+                    <group>
+                        <field name="packaging_id" domain="[('package_carrier_type', '=', context.get('current_package_carrier_type'))]"/>
+                        <field name="shipping_weight"/>
+                    </group>
+                    <footer>
+                        <button name="write" type="object" string="Save" class="btn btn-sm btn-primary"/>
+                        <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
 
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>
