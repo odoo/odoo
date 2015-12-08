@@ -221,3 +221,11 @@ class MixedModel(models.Model):
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]
+
+
+class BoolModel(models.Model):
+    _name = 'domain.bool'
+
+    bool_true = fields.Boolean('b1', default=True)
+    bool_false = fields.Boolean('b2', default=False)
+    bool_undefined = fields.Boolean('b3')
