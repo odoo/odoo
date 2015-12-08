@@ -239,7 +239,7 @@ class HrExpense(models.Model):
 
                 move_lines.append({
                         'type': 'dest',
-                        'name': '/',
+                        'name': expense.employee_id.name,
                         'price': total,
                         'account_id': emp_account,
                         'date_maturity': expense.date,
