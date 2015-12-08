@@ -25,7 +25,7 @@ var FieldTextHtmlSimple = widget.extend({
     template: 'web_editor.FieldTextHtmlSimple',
     _config: function () {
         var self = this;
-        return {
+        var config = {
             'focus': false,
             'height': 180,
             'toolbar': [
@@ -46,6 +46,10 @@ var FieldTextHtmlSimple = widget.extend({
                 self.trigger('changed_value');
             }
         };
+        if (session.debug) {
+            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
     },
     start: function() {
         var def = this._super.apply(this, arguments);
