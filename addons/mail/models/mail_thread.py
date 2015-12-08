@@ -4,7 +4,6 @@ import base64
 import datetime
 import dateutil
 import email
-import json
 import lxml
 from lxml import etree
 import logging

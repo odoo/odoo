@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import time
 import uuid
 
 from openerp import _, api, fields, models, modules, tools
