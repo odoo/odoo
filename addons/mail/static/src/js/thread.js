@@ -51,6 +51,7 @@ var Thread = Widget.extend({
             display_stars: true,
             display_document_link: true,
             display_avatar: true,
+            shorten_messages: true,
             squash_close_messages: true,
         });
     },

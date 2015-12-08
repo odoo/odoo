@@ -164,7 +164,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.composer = new ChatComposer(this);
         this.thread = new ChatThread(this, {
-            display_help: true
+            display_help: true,
+            shorten_messages: false,
         });
 
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
