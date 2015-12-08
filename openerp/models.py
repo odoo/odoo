@@ -4916,6 +4916,8 @@ class BaseModel(object):
                     del record['id']
                     # remove source to avoid triggering _set_src
                     del record['source']
+                    # duplicated record is not linked to any module
+                    del record['module']
                     record.update({'res_id': target_id})
                     if user_lang and user_lang == record['lang']:
                         # 'source' to force the call to _set_src
