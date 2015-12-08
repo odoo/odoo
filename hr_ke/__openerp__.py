@@ -11,7 +11,7 @@
     'images': ['static/description/hr.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'price': 514,
+    'price': 299,
     'currency': 'EUR',
 
     # Categories can be used to filter modules in modules listing
