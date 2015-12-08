@@ -272,7 +272,7 @@ class hr_employee(osv.osv):
 
 class hr_department(osv.osv):
     _name = "hr.department"
-    _description = "HR Department"
+    _description = "Department"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
