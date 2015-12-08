@@ -1,21 +1,24 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Simonel Criste <simi@erpsystems.ro>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-03 14:58+0000\n"
-"Last-Translator: Lidia Fekete <lidia@erpsystems.ro>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-12-01 06:27+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-04 07:29+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -36,18 +39,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -86,72 +85,6 @@ msgid ""
 "\n"
 "            "
 msgstr ""
-"\n"
-"Buna ziua ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>Următorul contract a expirat: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>Următoarele contracte expirate nu sunt încă procesate: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>Următoarele contracte vor expira în mai puțin de o lună: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    Puteți verifica toate contractele care urmează să fie reînnoite folosind "
-"meniul:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Vanzari / Facturare/ Contracte de reinnoit</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Multumesc,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"Odoo Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
@@ -165,22 +98,11 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
 msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                    Faceti click pentru a crea un sablon al contractului.\n"
-"                </p><p>\n"
-"                    Sabloanele sunt folosite pentru a prefigura "
-"contractul/proiectul care \n"
-"                    poate fi selectat de catre agentii de vanzari pentru a "
-"configura repede\n"
-"                    termenii si conditiile contractului.\n"
-"                </p>\n"
-"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -188,49 +110,25 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. Odoo will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. Odoo will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click pentru a crea un contract nou.\n"
-"                </p><p>\n"
-"                    Utilizați contracte ca să urmariti sarcini, probleme, "
-"pontaje sau pentru facturare pe baza\n"
-"                    lucrărilor efectuate, cheltuielile și / sau ordine de "
-"vânzare. Odoo va gestiona automat\n"
-"                   alertele pentru reînnoirea contractelor pe agentul de "
-"vanzari.\n"
-"                </p>\n"
-"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click aici pentru a crea o cotaţie care pot fi convertită "
-"într-o comandă de vânzare.\n"
-"              </p><p>\n"
-"                Folosiți ordine de vânzare pentru a urmări tot ceea ce ar "
-"trebui să fie facturate \n"
-"                la un preț fix pe un contract.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click aici pentru a crea o cotaţie care pot fi convertită într-o comandă de vânzare.\n              </p><p>\n                Folosiți ordine de vânzare pentru a urmări tot ceea ce ar trebui să fie facturat \n                la un preț fix pe un contract.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -242,63 +140,34 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                Odoo automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                Odoo automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Faceți clic pentru a defini un nou contract.\n"
-"              </p><p>\n"
-"                Veti gasi aici contractele care urmează să fie reînnoite, "
-"deoarece\n"
-"                data de încheiere este depasita sau efortul de lucru este "
-"mai mare decât \n"
-"                maximul autorizat.\n"
-"              </p><p>\n"
-"                Odoo setează automat contractele care sunt în curs de "
-"reînnoire.\n"
-"                După negociere, vânzătorul ar trebui să închidă sau să "
-"reînnoiască\n"
-"               contractele în curs.\n"
-"              </p>\n"
-"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p>\n"
-"                Aici veti gasi fise de pontaj si achizitii pe care le-ati "
-"efectuat pentru\n"
-"                contracte care pot fi refacturate clientului. Daca doriti\n"
-"                sa inregistrati activitati noi de facturat, ar trebui sa "
-"folositi meniul\n"
-"                fiselor de pontaj.\n"
-"              </p>\n"
-"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr "Linia contului analitic"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Account Manager"
-msgstr "Manager financiar contabil"
+msgstr "Manager cont"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
@@ -306,8 +175,6 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
-"Va permite sa setati campul sablonului asa cum trebuie atunci cand creeaza "
-"un cont analitic sau un contract."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,analytic_account_id:0
@@ -324,9 +191,6 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Bazat pe costurile avute in proiect, care ar fi reprezentat veniturile daca "
-"toate aceste costuri ar fi fost facturate la pretul obisnuit de vanzare din "
-"lista de preturi."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -341,7 +205,7 @@ msgstr "Contracte anulate"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed"
-msgstr "Inchis(a)"
+msgstr "Închis"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -353,39 +217,37 @@ msgstr "Contracte inchise"
 msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
-msgstr ""
-"Calculează după formulă: Aşteptat în pontaj - total facturat pe pontaj"
+msgstr "Calculează după formulă: Așteptat în pontaj - total facturat pe pontaj"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Calculat folosind formula: Valoarea Facturata - Costuri Totale."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr "Calculat folosind formula: Suma Facturata / Total Ore"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
-"Calculat folosind formula: Pretul maxim factura - Valoarea facturata."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr "Calculat folosind formula: Timpul Maxim - Timpul Total Lucrat="
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr "Calculat folosind formula: Venitul Teoretic - Costurile Totale"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Calculeaza folosind formula: (Marja reala / Total costuri) * 100"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -396,12 +258,12 @@ msgstr "Contract"
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr "Sablon de Contract"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr "Instiintare de expirare a contractului ${user.company_id.name}"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -413,12 +275,12 @@ msgstr "Contracte"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contracts assigned to a customer."
-msgstr "Contracte atribuite unui client."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contracts in progress (open, draft)"
-msgstr "Contracte in desfasurare (deschise, ciorne)"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -428,13 +290,13 @@ msgstr "Contracte nealocate"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contracts that are not assigned to an account manager."
-msgstr "Contracte care nu sunt atribuite unui manager de cont."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr "Contracte de reinnoit"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
@@ -449,27 +311,27 @@ msgstr "Creat la"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Customer Contracts"
-msgstr "Contractele Clientilor"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "Data ultimului cost/lucrare"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Data Ultimului Cost Facturat"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr "Data urmatoarei facturi"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr "Data cand  s-a lucrat ultima data la acest cont."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
@@ -479,25 +341,25 @@ msgstr "Zi (zile)"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr "Descriere:"
+msgstr "Descriere"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr "Sfarsitul lunii"
+msgstr "Sfârșitul lunii"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End date is in the next month"
-msgstr "Data de sfarsit este luna viitoare"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End date passed or prepaid unit consumed"
-msgstr "Data de sfarsit a trecut sau unitatea preplatita a fost consumata"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:681
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -505,7 +367,7 @@ msgstr "Eroare!"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr "Estimarea Orelor de Facturat"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -514,9 +376,6 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
-"Asteptarile privind veniturile ramase pentru acest contract. Calculat ca "
-"suma subtotalurilor ramase care, in schimb, sunt calculate drept maximul "
-"dintre sumele '(Estimare - Facturat)' si 'De Facturat'"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -531,32 +390,32 @@ msgstr "Expirat sau consumat"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Expiring soon"
-msgstr "Expira in curand"
+msgstr "Expiră în curand"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr "Pret Fix"
+msgstr "Preț Fix"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoices:0
 msgid "Generate recurring invoices automatically"
-msgstr "Generează în mod automat facturi recurente"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr "Grupare după"
+msgstr "Grupează după"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr "Rezumat ore dupa Utilizator"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Rezumat ore dupa luna"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,id:0
@@ -571,13 +430,11 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Daca facturati din contul analitic, suma ramasa ce poate fi facturata "
-"clientului pe baza costurilor totale."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr "Daca facturati din costuri, aceasta este data ultimei facturari."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -585,13 +442,11 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Daca se factureaza din costuri, aceasta este data ultimelor lucrari sau "
-"costuri care au fost facturate."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "In Progress"
-msgstr "In desfasurare"
+msgstr "În desfășurare"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
@@ -611,12 +466,12 @@ msgstr "Facturat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Suma facturata"
+msgstr "Suma facturată"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Ora facturata"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -626,7 +481,7 @@ msgstr "Facturare"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "Data ultimei facturi"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
@@ -641,12 +496,12 @@ msgstr "Ultima actualizare în"
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr "Utilizare obligatorie a sabloanelor in contracte"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr "Utilizare obligatorie a sabloanelor."
+msgstr "Utilizare obligatorie a șabloanelor."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -657,23 +512,23 @@ msgstr "Luna"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr "Lună (luni)"
+msgstr "Luni de zile"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "No Customer Defined!"
-msgstr "Nici un Client Definit!"
+msgstr "Niciun Client Definit!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "No order to invoice, create"
-msgstr "Nici o comanda de facturat, creati una"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Nothing to invoice, create"
-msgstr "Nimic de facturat, creati"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -681,8 +536,6 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
-"Timpul (numarul de ore/zile) (din registrul de tip 'general') care poate fi "
-"facturat daca facturati pe baza contului analitic."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -690,8 +543,6 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
-"Timpul (numarul de ore/zile) care poate fi facturat plus cel care a fost "
-"facturat deja."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -699,23 +550,21 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
-"Numarul de ore pe care le-ati petrecut la contul analitic (din fisa de "
-"pontaj). Calculeaza cantitatile in toare registrele de tipul 'general'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr "Pe Fisele de Pontaj"
+msgstr "Pe Fișele de Pontaj"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr "Cantitate restanta"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Parent"
-msgstr "Parinte"
+msgstr "Părinte"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -725,18 +574,18 @@ msgstr "Partener"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Pending contracts"
-msgstr "Contracte in asteptare"
+msgstr "Contracte în așteptare"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:682
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr "Va rugăm să definiţi un jurnal de vânzari pentru compania \"%s\"."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Pricelist"
-msgstr "Lista de preturi"
+msgstr "Listă de prețuri"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
@@ -751,12 +600,12 @@ msgstr "Cantitate"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Marja reala"
+msgstr "Marja reală"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Rata marjei reale (%)"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
@@ -771,12 +620,12 @@ msgstr "Facturi recurente"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Remaining"
-msgstr "Ramas(a)"
+msgstr "Rămas"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr "Venit ramas"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -794,24 +643,24 @@ msgstr "Repetă la fiecare"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Repetă in fiecare (Zile/Săptămână/Lună/An)"
+msgstr "Repetă în fiecare (Zile/Săptămână/Lună/An)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr "Venit pe Ora (real)"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:550
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
-msgstr "Liniile ordinului de vânzare pentru factura de %s"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr "Comenzi de Vanzari"
+msgstr "Comenzi de vânzări"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -821,43 +670,43 @@ msgstr "Lună de start"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr "Subtotal"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr "Suma cotatiilor pentru acest contract."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr "Suma liniilor fiselor de pontaj facturate pentru acest contract."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Template"
-msgstr "Sablon"
+msgstr "Șablon"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr "Marja teoretica"
+msgstr "Marja teoretică"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr "Venituri teoretice"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr "Timp si Materiale de Facturat"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -865,10 +714,10 @@ msgid "Timesheets"
 msgstr "Fise de pontaj"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:652
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:659
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr "Pontaje la factură de %s"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -878,7 +727,7 @@ msgstr "De facturat"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "To Renew"
-msgstr "Va fi reinnoit"
+msgstr "De Reînnoit"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -893,7 +742,7 @@ msgstr "Total costuri"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr "Estimarea Totala"
+msgstr "Estimarea Totală"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -903,23 +752,23 @@ msgstr "Total Facturat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr "Total ramas"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr "Total Ore"
+msgstr "Timpul Total"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr "Timpul Total Lucrat"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Valoarea totala facturata catre clienti pentru acest cont."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -927,8 +776,6 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-"Total costuri pentru acest cont. Include costurile reale (din facturi) si "
-"costurile indirecte, cum ar fi timpul petrecut conform fiselor de pontaj."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
@@ -938,12 +785,12 @@ msgstr "Totalul de Facturat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Suma nefacturata"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr "Ore nefacturate"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_unit:0
@@ -953,17 +800,17 @@ msgstr "Preț unitar"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,uom_id:0
 msgid "Unit of Measure"
-msgstr "Unitatea de măsură"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Units Consumed"
-msgstr "Unitati Consumate"
+msgstr "Unități Consumate"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Units Remaining"
-msgstr "Unitati Ramase"
+msgstr "Unități Rămase"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -974,7 +821,7 @@ msgstr "Utilizator"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr "Săptămâni"
+msgstr "Săptămână(i)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -984,11 +831,6 @@ msgid ""
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
 msgstr ""
-"Când se refacturează costuri, Odoo utilizează\n"
-"                            lista de prețuri a contractului care utilizează "
-"prețul\n"
-"                            definite pe produsul legat (de exemplu pontajul\n"
-"                            produselor sunt definite pe fiecare angajat)."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
@@ -996,22 +838,21 @@ msgid "Year(s)"
 msgstr "An(i)"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr "Trebuie să selectați mai întâi un client pentru Contractul %s!"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "or view"
-msgstr "sau vizualizare"
+msgstr "or view"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
 msgstr ""
-"va fi necesar campul sablon al conturilor analitice si al contractelor."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -1019,16 +860,14 @@ msgid ""
 "{'required': "
 "[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
 "('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
-msgstr ""
+msgstr "{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_template_required
 msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
-msgstr ""
-"{'obligatoriu': [('tip','=','contract')], 'invizibil': "
-"[('tip','in',['vizualizare', 'normal','sablon'])]}"
+msgstr "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -1038,4 +877,4 @@ msgstr "⇒ Factura"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ create invoices"
-msgstr "⇒ creaza facturi"
+msgstr "⇒ crează facturi"

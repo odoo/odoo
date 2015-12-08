@@ -1,21 +1,24 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Nikos Gkountras <nick@ngsol.net>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Greek <el@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-12-05 19:26+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:54+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -36,18 +39,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -90,7 +89,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Άθροισμα όσων μπορούν να τιμολογηθούν γι' αυτή τη σύμβαση."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -99,12 +98,11 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Επιλέξτε για να δημιουργήσετε ένα πρότυπο σύμβασης.\n                </p><p>\n                    Τα πρότυπα χρησιμοποιούνται για να προεικονίσουν συμβάσεις/πρότζεκτ που\n                    μπορούν να επιλεγούν από πωλητές για άμεση ρύθμιση των\n                    όρων και προϋποθέσεων της σύμβασης.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -112,29 +110,25 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. Odoo will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. Odoo will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Επιλέξτε για να δημιουργήσετε μία νέα σύμβαση.\n                </p><p>\n                    Χρησιμοποιήστε τις συμβάσεις για να παρακολουθείτε καθήκοντα, θέματα, χρονοδιαγράμματα ή τιμολόγια με βάση\n                    την ολοκληρωμένη εργασία, έξοδα και/ή παραγγελίες πώλησης. Το Odoo θα διαχειρίζεται αυτοματοποιημένα\n                    τις ενημερώσεις για ανανέωση των συμβάσεων στον κατάλληλο πωλητή.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε μία προσφορά που μπορεί να μετατραπεί\n                σε παραγγελία πώλησης.\n              </p><p>\n                Χρησιμοποιήστε τις παραγγελίες πώλησης για να παρακολουθείτε όλα όσα πρέπει να τιμολογηθούν\n                σε σταθερή τιμή σύμβασης.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -146,24 +140,20 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                Odoo automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                Odoo automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καθορίσετε μία νέα σύμβαση.\n              </p><p>\n                Εδώ θα βρείτε τις συμβάσεις προς ανανέωση επειδή η\n                ημερομηνία λήξης τους έχει περάσει ή η εργασία είναι μεγαλύτερη από\n                την μέγιστη εγκεκριμένη.\n              </p><p>\n                Το Odoo θέτει αυτοματοποιημένα τις συμβάσεις προς ανανέωση σε κατάσταση\n                εκκρεμότητας. Μετά τη διαπραγμάτευση, ο πωλητής θα πρέπει να κλείσει ή να ανανεώσει\n                τις συμβάσεις σε εκκρεμότητα.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
@@ -177,7 +167,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Account Manager"
-msgstr ""
+msgstr "Υπεύθυνος Λογαριασμού"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
@@ -200,15 +190,12 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
-"Βασισμένο στα κόστη που είχατε σε αυτό το έργο, ποιά θα ήταν τα έσοδα εάν "
-"όλα αυτά τα κόστη είχαν τιμολογηθεί στις κανονικές τιμές πώλησης που "
-"παρέχονται απο τον τιμοκατάλογο."
+msgstr "Βασισμένο στα κόστη που είχατε σε αυτό το έργο, ποιά θα ήταν τα έσοδα εάν όλα αυτά τα κόστη είχαν τιμολογηθεί στις κανονικές τιμές πώλησης που παρέχονται απο τον τιμοκατάλογο."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Cancelled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -218,7 +205,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed"
-msgstr ""
+msgstr "Κλεισμένη"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -235,8 +222,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
-"Υπολογισμός χρησιμοποιώντας την φόρμουλα: Τιμολογημένο Ποσό - Συνολικά Κόστη."
+msgstr "Υπολογισμός χρησιμοποιώντας την φόρμουλα: Τιμολογημένο Ποσό - Συνολικά Κόστη."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -246,9 +232,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
-"Υπολογισμός χρησιμοποιώντας την φόρμουλα: Μέγιστη Τιμή Τιμολογίου - "
-"Τιμολογημένο Ποσό."
+msgstr "Υπολογισμός χρησιμοποιώντας την φόρμουλα: Μέγιστη Τιμή Τιμολογίου - Τιμολογημένο Ποσό."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -263,20 +247,18 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Υπολογισμός χρησιμοποιώντας την φόρμουλα: (Πραγματικό Περιθώριο / Συνολικά "
-"Κόστη) * 100."
+msgstr "Υπολογισμός χρησιμοποιώντας την φόρμουλα: (Πραγματικό Περιθώριο / Συνολικά Κόστη) * 100."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contract"
-msgstr ""
+msgstr "Σύμβαση"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "Πρότυπο Σύμβασης"
 
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
@@ -288,7 +270,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "Συμβάσεις"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -314,22 +296,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Συμβάσεις προς Ανανέωση"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Δημιουργήθηκε από"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Δημιουργήθηκε στις"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Συμβάσεις Πελατών"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -344,34 +326,32 @@ msgstr "Ημερομηνία Τελευταίου Τιμολογημένου Κ�
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Ημερομηνία Επόμενου Τιμολογίου"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
-"Ημερομηνία της τελευταίας εργασίας που πραγματοποιήθηκε σε αυτόν τον "
-"λογαριασμό."
+msgstr "Ημερομηνία της τελευταίας εργασίας που πραγματοποιήθηκε σε αυτόν τον λογαριασμό."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Ημέρα(ες)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Τέλος Μήνα"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End date is in the next month"
-msgstr ""
+msgstr "Η ημερομηνία λήξης είναι τον επόμενο μήνα"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -379,15 +359,15 @@ msgid "End date passed or prepaid unit consumed"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:681
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Σφάλμα!"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Εκτίμηση Ωρών για Τιμολόγηση"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -400,12 +380,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Expected"
-msgstr ""
+msgstr "Αναμένεται"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Expired or consumed"
-msgstr ""
+msgstr "Έληξε ή καταναλώθηκε"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -415,17 +395,17 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Σταθερή τιμή"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoices:0
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "Δημιουργία επαναλαμβανόμενων τιμολογίων αυτοματοποιημένα"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr ""
+msgstr "Ομαδοποίηση Kατά"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -442,16 +422,14 @@ msgstr "Περίληψη Ωρών ανα μήνα"
 #: field:account_analytic_analysis.summary.month,id:0
 #: field:account_analytic_analysis.summary.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
-"Εάν τιμολογήσετε απο αναλυτικό λογαριασμό, το υπολειπόμενο ποσό που μπορείτε "
-"να τιμολογήσετε στον πελάτη βάσει του συνολικού κόστους."
+msgstr "Εάν τιμολογήσετε απο αναλυτικό λογαριασμό, το υπολειπόμενο ποσό που μπορείτε να τιμολογήσετε στον πελάτη βάσει του συνολικού κόστους."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -463,19 +441,17 @@ msgstr ""
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
-"Εάν τιμολογηθεί στο κόστος, αυτή είναι η τελευταία ημέρα τιμολογημένης "
-"εργασίας ή κόστους."
+msgstr "Εάν τιμολογηθεί στο κόστος, αυτή είναι η τελευταία ημέρα τιμολογημένης εργασίας ή κόστους."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "In Progress"
-msgstr ""
+msgstr "Σε εξέλιξη"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Γραμμές Τιμολογίου"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_rule_type:0
@@ -485,12 +461,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Invoiced"
-msgstr ""
+msgstr "Τιμολογημένες"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Τιμολογημένο Ποσό"
+msgstr "Αξία Τιμολογίου"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -510,22 +486,22 @@ msgstr "Τελευταία Ημερομηνία Τιμολογίου"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Υποχρεωτική χρήση των προτύπων στις συμβάσεις"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr ""
+msgstr "Υποχρεωτική χρήση των προτύπων."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -536,23 +512,23 @@ msgstr "Μήνας"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Μήνας(ες)"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Δεν έχει Οριστεί Πελάτης!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "Δεν υπάρχει παραγγελία για τιμολόγηση, δημιουργήστε"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "Δεν υπάρχει κάτι προς τιμολόγηση, δημιουργήστε"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -578,7 +554,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "Με Χρονοδιαγράμματα"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -588,23 +564,23 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Parent"
-msgstr ""
+msgstr "Μητρικός"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Partner"
-msgstr ""
+msgstr "Συνεργάτης"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Pending contracts"
-msgstr ""
+msgstr "Συμβάσεις σε εκκρεμότητα"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:682
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr ""
+msgstr "Παρακαλώ ορίστε ένα ημερολόγιο πωλήσεων για αυτήν την εταιρία \"%s\"."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -614,12 +590,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Προϊόν"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Ποσότητα"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -634,17 +610,17 @@ msgstr "Πραγματικό Ποσοστό Περιθώριου (%)"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Επανάληψη"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Επαναλαμβανόμενα Τιμολόγια"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Remaining"
-msgstr ""
+msgstr "Εναπομείναντα"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -662,12 +638,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Επανάληψη Κάθε"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Επανάληψη κάθε (Ημέρα/Εβδομάδα/Μήνα/Έτος)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -675,7 +651,7 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:550
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
 msgstr ""
@@ -684,7 +660,7 @@ msgstr ""
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Εντολές Πώλησης"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -694,12 +670,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Υποσύνολο"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -714,7 +690,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Template"
-msgstr ""
+msgstr "Πρότυπο"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -730,15 +706,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Χρόνος και Υλικά προς Τιμολόγηση"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Timesheets"
-msgstr ""
+msgstr "Κάρτες Χρόνου"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:652
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:659
 #, python-format
 msgid "Timesheets to Invoice of %s"
 msgstr ""
@@ -746,17 +722,17 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "To Invoice"
-msgstr ""
+msgstr "Για Τιμολόγηση"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "To Renew"
-msgstr ""
+msgstr "Προς Ανανέωση"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Total"
-msgstr ""
+msgstr "Σύνολο"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -766,17 +742,17 @@ msgstr "Συνολικά Κόστη"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Συνολική Εκτίμηση"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Σύνολο Τιμολογημένων"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Απομένουν Συνολικά"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
@@ -799,14 +775,12 @@ msgstr "Συνολικό τιμολογημένο ποσό πελάτη για �
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
-"Συνολικά κόστη για τον λογαριασμό. Περιλαμβάνει τα πραγματικά κόστη (απο "
-"τιμολόγια) και έμεσα κοστη, όπως χρόνος που δαπανήθηκε σε χρονοδιαγράμματα."
+msgstr "Συνολικά κόστη για τον λογαριασμό. Περιλαμβάνει τα πραγματικά κόστη (απο τιμολόγια) και έμεσα κοστη, όπως χρόνος που δαπανήθηκε σε χρονοδιαγράμματα."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Σύνολο προς Τιμολόγηση"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -821,12 +795,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Τιμή Μονάδας"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -836,7 +810,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Units Remaining"
-msgstr ""
+msgstr "Μονάδες που Απομένουν"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -847,7 +821,7 @@ msgstr "Χρήστης"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Εβδομάδες"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -856,15 +830,15 @@ msgid ""
 "                            pricelist of the contract which uses the price\n"
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
-msgstr ""
+msgstr "Όταν επανατιμολογείτε κόστη, το Odoo χρησιμοποιεί τον\n                            τιμοκατάλογο της σύμβασης που χρησιμοποιεί την τιμή που έχει\n                            οριστεί για το σχετικό προϊόν (π.χ. τα προϊόντα\n                            χρονοδιαγράμματος καθορίζονται για τον κάθε εργαζόμενο)."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Ετος(η)"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""
@@ -872,7 +846,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "or view"
-msgstr ""
+msgstr "ή προβολή"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
@@ -898,9 +872,9 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "⇒ Τιμολόγηση"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ create invoices"
-msgstr ""
+msgstr "⇒ δημιουργία τιμολογίων"

@@ -1,24 +1,26 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Greek <el@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-12-05 23:31+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:18+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:260
+#: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
 msgstr ""
@@ -29,19 +31,18 @@ msgid "# Bill of Material"
 msgstr ""
 
 #. module: mrp
-#: field:product.product,mo_count:0
-#: field:product.template,mo_count:0
+#: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:356
+#: code:addons/mrp/mrp.py:323
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (αντίγραφο)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:958
+#: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
 msgstr ""
@@ -49,11 +50,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
 msgstr ""
 
 #. module: mrp
@@ -62,8 +60,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
-"                Bills of materials components are components and by-"
-"products\n"
+"                Bills of materials components are components and by-products\n"
 "                used to create master bills of materials.  Use this menu to\n"
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
@@ -78,8 +75,7 @@ msgid ""
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
@@ -91,10 +87,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required "
-"raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products.\n"
 "              </p><p>\n"
 "                Odoo uses these BoMs to automatically propose manufacturing\n"
@@ -109,17 +103,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
+"                Define specific property groups that can be assigned to your\n"
 "                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials "
-"according\n"
+"                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
+"                For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
 "                on the propoerties selected in the sales order, Odoo will\n"
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
@@ -135,10 +125,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -151,12 +139,10 @@ msgid ""
 "                Click to create a new property.\n"
 "              </p><p>\n"
 "                The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
+"                materials for manufacturing a product when you have different\n"
 "                ways of building the same product.  You can assign several\n"
 "                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
+"                creates a sales order, they can relate it to several properties\n"
 "                and Odoo will automatically select the BoM to use according\n"
 "                the needs.\n"
 "              </p>\n"
@@ -170,8 +156,7 @@ msgid ""
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
@@ -187,10 +172,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -207,8 +190,7 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,active:0
-#: field:mrp.routing,active:0
+#: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
 msgstr "Ενεργό"
 
@@ -222,8 +204,7 @@ msgstr ""
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 
 #. module: mrp
@@ -272,12 +253,12 @@ msgstr "Αναλυτικό Ημερολόγιο"
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Apply"
-msgstr ""
+msgstr "Εφαρμογή"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Approve"
-msgstr ""
+msgstr "Εγκρίνω"
 
 #. module: mrp
 #: help:product.template,produce_delay:0
@@ -289,7 +270,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Αναμονή Πρώτων Υλών"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -313,6 +294,11 @@ msgid "BOM Structure"
 msgstr "Δομή ΚΥ"
 
 #. module: mrp
+#: field:mrp.bom.line,child_line_ids:0
+msgid "BOM lines of the referred bom"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
@@ -329,8 +315,7 @@ msgid "Bill Of Material"
 msgstr "Kατάσταση Υλικών"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Κατάσταση Υλικών"
@@ -346,7 +331,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
-#: view:mrp.bom:mrp.mrp_bom_tree_view
+#: view:mrp.bom.line:mrp.mrp_bom_tree_view
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
@@ -371,22 +356,17 @@ msgid "BoM"
 msgstr "Κ.Υ."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:322
+#: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:348
+#: code:addons/mrp/mrp.py:315
 #, python-format
 msgid ""
-"BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
-"BoM defined."
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,child_complete_ids:0
-msgid "BoM Hierarchy"
+"BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
+"any BoM defined."
 msgstr ""
 
 #. module: mrp
@@ -405,7 +385,7 @@ msgid "BoM Type"
 msgstr "Τύπος Κ.Υ."
 
 #. module: mrp
-#: code:addons/mrp/stock.py:257
+#: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr ""
@@ -423,27 +403,27 @@ msgstr "Ακύρωση"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "Ακύρωση παραγωγής"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Ακυρωμένες"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:182
+#: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:617
+#: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:704
+#: code:addons/mrp/mrp.py:679
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -474,17 +454,17 @@ msgstr "Αλλαγή Ποσ. Προϊόντος"
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Change Quantity"
-msgstr ""
+msgstr "Αλλαγή Ποσότητας"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Αλλαγή ποσότητας των προϊόντων"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Έλεγχος Διαθεσιμότητας"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -494,27 +474,24 @@ msgstr "Κωδικός"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Εταιρείες"
 
 #. module: mrp
-#: field:mrp.bom,company_id:0
-#: field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0
-#: field:mrp.routing.workcenter,company_id:0
+#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
+#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 #: field:report.mrp.inout,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Εταιρεία"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.mrp_bom_component_tree_view
 #: view:product.template:mrp.product_template_search_view_procurment
 #, python-format
 msgid "Components"
-msgstr ""
+msgstr "Εξαρτήματα"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
@@ -580,12 +557,11 @@ msgstr ""
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
-msgstr ""
+msgstr "Αναλώσιμα Προϊόντα"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines2:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
 msgstr "Αναλωθέντα Προϊόντα"
 
@@ -623,46 +599,34 @@ msgid "Costing Information"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,create_uid:0
-#: field:mrp.bom,create_uid:0
-#: field:mrp.bom.line,create_uid:0
-#: field:mrp.config.settings,create_uid:0
+#: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
+#: field:mrp.bom.line,create_uid:0 field:mrp.config.settings,create_uid:0
 #: field:mrp.product.produce,create_uid:0
 #: field:mrp.product.produce.line,create_uid:0
-#: field:mrp.product_price,create_uid:0
-#: field:mrp.production,create_uid:0
+#: field:mrp.product_price,create_uid:0 field:mrp.production,create_uid:0
 #: field:mrp.production.product.line,create_uid:0
 #: field:mrp.production.workcenter.line,create_uid:0
-#: field:mrp.property,create_uid:0
-#: field:mrp.property.group,create_uid:0
-#: field:mrp.routing,create_uid:0
-#: field:mrp.routing.workcenter,create_uid:0
-#: field:mrp.workcenter,create_uid:0
-#: field:mrp.workcenter.load,create_uid:0
+#: field:mrp.property,create_uid:0 field:mrp.property.group,create_uid:0
+#: field:mrp.routing,create_uid:0 field:mrp.routing.workcenter,create_uid:0
+#: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Δημιουργήθηκε από"
 
 #. module: mrp
-#: field:change.production.qty,create_date:0
-#: field:mrp.bom,create_date:0
-#: field:mrp.bom.line,create_date:0
-#: field:mrp.config.settings,create_date:0
+#: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
+#: field:mrp.bom.line,create_date:0 field:mrp.config.settings,create_date:0
 #: field:mrp.product.produce,create_date:0
 #: field:mrp.product.produce.line,create_date:0
-#: field:mrp.product_price,create_date:0
-#: field:mrp.production,create_date:0
+#: field:mrp.product_price,create_date:0 field:mrp.production,create_date:0
 #: field:mrp.production.product.line,create_date:0
 #: field:mrp.production.workcenter.line,create_date:0
-#: field:mrp.property,create_date:0
-#: field:mrp.property.group,create_date:0
-#: field:mrp.routing,create_date:0
-#: field:mrp.routing.workcenter,create_date:0
-#: field:mrp.workcenter,create_date:0
-#: field:mrp.workcenter.load,create_date:0
+#: field:mrp.property,create_date:0 field:mrp.property.group,create_date:0
+#: field:mrp.routing,create_date:0 field:mrp.routing.workcenter,create_date:0
+#: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Δημιουργήθηκε στις"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -676,11 +640,10 @@ msgid "Cycles Cost"
 msgstr "Κόστος Κύκλων"
 
 #. module: mrp
-#: help:mrp.bom,message_last_post:0
-#: help:mrp.production,message_last_post:0
+#: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Ημερομηνία του τελευταίου μηνύματος "
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -691,7 +654,7 @@ msgstr "Καθημερινά"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
 
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
@@ -699,10 +662,8 @@ msgid "Define manufacturers on products "
 msgstr ""
 
 #. module: mrp
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
-#: field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
+#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Περιγραφή"
@@ -732,17 +693,16 @@ msgstr "Ολοκληρώθηκε"
 #. module: mrp
 #: field:mrp.production,date_finished:0
 msgid "End Date"
-msgstr "Ημερ/νία Τέλους"
+msgstr "Ημερομηνία Λήξης"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:704
-#: code:addons/mrp/stock.py:182
-#: code:addons/mrp/stock.py:257
+#: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
+#: code:addons/mrp/stock.py:259
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Σφάλμα!"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -779,7 +739,7 @@ msgstr "Τοποθεσία Ολοκληρωμένων Προϊόντων"
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -827,7 +787,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Ομαδοποίηση Ανά"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -836,16 +796,15 @@ msgstr ""
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr ""
+msgstr "Ομαδοποίηση ανά..."
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0
-#: help:mrp.production,message_summary:0
+#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Κρατά την συνολική σύνοψη (αριθμός των μυνημάτων, ...). Αυτή η σύνοψη είναι κατ' ευθείαν σε html format για να μπορεί να ενσωματωθεί σε εμφανίσεις kanban."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -856,31 +815,21 @@ msgstr "Λογαριασμός Ώρας"
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Ωριαίο Κόστος"
 
 #. module: mrp
-#: field:change.production.qty,id:0
-#: field:mrp.bom,id:0
-#: field:mrp.bom.line,id:0
-#: field:mrp.config.settings,id:0
-#: field:mrp.product.produce,id:0
-#: field:mrp.product.produce.line,id:0
-#: field:mrp.product_price,id:0
-#: field:mrp.production,id:0
-#: field:mrp.production.product.line,id:0
-#: field:mrp.production.workcenter.line,id:0
-#: field:mrp.property,id:0
-#: field:mrp.property.group,id:0
-#: field:mrp.routing,id:0
-#: field:mrp.routing.workcenter,id:0
-#: field:mrp.workcenter,id:0
-#: field:mrp.workcenter.load,id:0
-#: field:report.mrp.inout,id:0
+#: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
+#: field:mrp.config.settings,id:0 field:mrp.product.produce,id:0
+#: field:mrp.product.produce.line,id:0 field:mrp.product_price,id:0
+#: field:mrp.production,id:0 field:mrp.production.product.line,id:0
+#: field:mrp.production.workcenter.line,id:0 field:mrp.property,id:0
+#: field:mrp.property.group,id:0 field:mrp.routing,id:0
+#: field:mrp.routing.workcenter,id:0 field:mrp.workcenter,id:0
+#: field:mrp.workcenter.load,id:0 field:report.mrp.inout,id:0
 #: field:report.mrp.report_mrpbomstructure,id:0
-#: field:report.workcenter.load,id:0
-#: field:stock.move.consume,id:0
+#: field:report.workcenter.load,id:0 field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
@@ -889,11 +838,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
+#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -918,27 +866,26 @@ msgstr "Σε Παραγωγή"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Inactive"
-msgstr ""
+msgstr "Ανενεργός"
 
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Εσωτερικός Κωδικός"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:322
-#: code:addons/mrp/mrp.py:348
-#: code:addons/mrp/mrp.py:617
+#: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
+#: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Μη Έγκυρη Ενέργεια!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -946,65 +893,48 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
-"Αφήστε το κενό αν η παραγωγή γίνεται στα σημεία όπου τα ολοκληρωμένα "
-"προϊόντα καταλήγουν. Αν η παραγωγή γίνεται σε συγκεκριμένο σημείο, ορίστε "
-"την τοποθεσία παραγωγής εδώ. Αυτή, μπορεί να ανήκει σε κάποιο συνεργάτη αν "
-"εφαρμόζετε παραγωγή με υπεργολαβίες."
+msgstr "Αφήστε το κενό αν η παραγωγή γίνεται στα σημεία όπου τα ολοκληρωμένα προϊόντα καταλήγουν. Αν η παραγωγή γίνεται σε συγκεκριμένο σημείο, ορίστε την τοποθεσία παραγωγής εδώ. Αυτή, μπορεί να ανήκει σε κάποιο συνεργάτη αν εφαρμόζετε παραγωγή με υπεργολαβίες."
 
 #. module: mrp
-#: field:mrp.bom,message_last_post:0
-#: field:mrp.production,message_last_post:0
+#: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Τελευταία ημερομηνία μηνύματος"
 
 #. module: mrp
-#: field:change.production.qty,write_uid:0
-#: field:mrp.bom,write_uid:0
-#: field:mrp.bom.line,write_uid:0
-#: field:mrp.config.settings,write_uid:0
+#: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
+#: field:mrp.bom.line,write_uid:0 field:mrp.config.settings,write_uid:0
 #: field:mrp.product.produce,write_uid:0
 #: field:mrp.product.produce.line,write_uid:0
-#: field:mrp.product_price,write_uid:0
-#: field:mrp.production,write_uid:0
+#: field:mrp.product_price,write_uid:0 field:mrp.production,write_uid:0
 #: field:mrp.production.product.line,write_uid:0
 #: field:mrp.production.workcenter.line,write_uid:0
-#: field:mrp.property,write_uid:0
-#: field:mrp.property.group,write_uid:0
-#: field:mrp.routing,write_uid:0
-#: field:mrp.routing.workcenter,write_uid:0
-#: field:mrp.workcenter,write_uid:0
-#: field:mrp.workcenter.load,write_uid:0
+#: field:mrp.property,write_uid:0 field:mrp.property.group,write_uid:0
+#: field:mrp.routing,write_uid:0 field:mrp.routing.workcenter,write_uid:0
+#: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: mrp
-#: field:change.production.qty,write_date:0
-#: field:mrp.bom,write_date:0
-#: field:mrp.bom.line,write_date:0
-#: field:mrp.config.settings,write_date:0
+#: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
+#: field:mrp.bom.line,write_date:0 field:mrp.config.settings,write_date:0
 #: field:mrp.product.produce,write_date:0
 #: field:mrp.product.produce.line,write_date:0
-#: field:mrp.product_price,write_date:0
-#: field:mrp.production,write_date:0
+#: field:mrp.product_price,write_date:0 field:mrp.production,write_date:0
 #: field:mrp.production.product.line,write_date:0
 #: field:mrp.production.workcenter.line,write_date:0
-#: field:mrp.property,write_date:0
-#: field:mrp.property.group,write_date:0
-#: field:mrp.routing,write_date:0
-#: field:mrp.routing.workcenter,write_date:0
-#: field:mrp.workcenter,write_date:0
-#: field:mrp.workcenter.load,write_date:0
+#: field:mrp.property,write_date:0 field:mrp.property.group,write_date:0
+#: field:mrp.routing,write_date:0 field:mrp.routing.workcenter,write_date:0
+#: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Late"
-msgstr ""
+msgstr "Αργοπορημένη"
 
 #. module: mrp
 #: field:stock.move.consume,location_id:0
@@ -1022,11 +952,10 @@ msgid "Location where the system will stock the finished products."
 msgstr "Τοποθεσία όπου το σύστημα θα αποθηκεύσει τα ολοκληρωμένα προϊόντα."
 
 #. module: mrp
-#: field:mrp.product.produce,lot_id:0
-#: field:mrp.product.produce.line,lot_id:0
+#: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Παρτίδα"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1046,11 +975,10 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "Διευθυντής"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:32
-#: code:addons/mrp/stock.py:254
+#: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
 msgstr ""
@@ -1074,8 +1002,7 @@ msgid "Manufacturing"
 msgstr "Μεταποίηση"
 
 #. module: mrp
-#: field:mrp.bom,product_efficiency:0
-#: field:mrp.bom.line,product_efficiency:0
+#: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
 msgid "Manufacturing Efficiency"
 msgstr ""
 
@@ -1083,7 +1010,7 @@ msgstr ""
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Προηγμένος χρόνος παραγωγής"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1095,7 +1022,7 @@ msgid "Manufacturing Order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:124
+#: code:addons/mrp/procurement.py:131
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -1158,23 +1085,21 @@ msgid "Master Data"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0
-#: field:mrp.production,message_ids:0
+#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: mrp
-#: help:mrp.bom,message_ids:0
-#: help:mrp.production,message_ids:0
+#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Μοντέλο"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
@@ -1182,12 +1107,9 @@ msgid "Mrp Workcenter"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,name:0
-#: field:mrp.production.product.line,name:0
-#: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,name:0
-#: field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0
+#: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
+#: view:mrp.property:mrp.view_mrp_property_search field:mrp.property,name:0
+#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
 #: view:website:mrp.report_mrporder
 msgid "Name"
 msgstr "Όνομα"
@@ -1195,10 +1117,10 @@ msgstr "Όνομα"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr ""
+msgstr "Νέα"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:120
+#: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr ""
@@ -1214,8 +1136,7 @@ msgid "No. Of Hours"
 msgstr "Αρ. Ωρών"
 
 #. module: mrp
-#: selection:mrp.bom,type:0
-#: selection:mrp.bom.line,type:0
+#: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
 msgstr "Κανονική"
@@ -1244,8 +1165,7 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0
-#: field:report.workcenter.load,hour:0
+#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "Αριθμός Ωρών"
 
@@ -1271,22 +1191,22 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "Λειτουργία"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Order"
-msgstr ""
+msgstr "Παραγγελία"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Προγραμματισμός Παραγγελιών"
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Η ποσότητα της παραγγελίας δεν μπορεί να είναι αρνητική ή μηδέν!"
 
 #. module: mrp
 #: field:mrp.bom.line,bom_id:0
@@ -1301,12 +1221,12 @@ msgstr "Ευρύτερη Γραμμή Παραγωγής"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Αναφ. Συνεργάτη:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Pending"
-msgstr ""
+msgstr "Εκρεμμής"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1335,13 +1255,13 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Planning"
-msgstr ""
+msgstr "Σχεδιασμός"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Παρακαλώ καταχωρίστε κατάλληλη ποσότητα."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1357,7 +1277,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Ημερομηνία Εκτύπωσης:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1372,14 +1292,14 @@ msgstr "Προμήθειες"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Κανόνας Προμήθειας"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Produce"
-msgstr ""
+msgstr "Παραγωγή"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
@@ -1394,16 +1314,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,product_tmpl_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,product_tmpl_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: field:mrp.bom.line,product_id:0
-#: field:mrp.product.produce.line,product_id:0
+#: field:mrp.bom.line,product_id:0 field:mrp.product.produce.line,product_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
 #: field:mrp.production,product_id:0
 #: field:mrp.production.product.line,product_id:0
-#: field:stock.move.consume,product_id:0
-#: view:website:mrp.report_mrporder
+#: field:stock.move.consume,product_id:0 view:website:mrp.report_mrporder
 msgid "Product"
 msgstr "Προϊόν"
 
@@ -1417,11 +1334,6 @@ msgstr "Δομή Κόστους Προϊόντος"
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
 msgstr ""
-
-#. module: mrp
-#: view:website:mrp.report_mrpbomstructure
-msgid "Product Name"
-msgstr "Όνομα Προϊόντος"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
@@ -1444,23 +1356,21 @@ msgid "Product Qty"
 msgstr "Ποσ. Προϊόντος"
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0
-#: field:mrp.bom.line,product_qty:0
+#: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
 msgstr "Ποσότητα Προϊόντος"
 
 #. module: mrp
-#: field:mrp.bom,product_rounding:0
-#: field:mrp.bom.line,product_rounding:0
+#: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
 msgstr "Στρογγυλοποίηση Προϊόντος"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Πρότυπο Προϊόντος"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1486,13 +1396,12 @@ msgid "Product UOS Quantity"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.bom.line,product_uom:0
+#: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης του Προϊόντος"
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -1507,12 +1416,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_id:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Μεταβλητή Προϊόντος"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Προϊόν:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1582,7 +1491,7 @@ msgstr "Παραγωγές"
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Products"
-msgstr ""
+msgstr "Προϊόντα"
 
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
@@ -1591,8 +1500,7 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
 msgstr ""
 
@@ -1610,8 +1518,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,property_ids:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,property_ids:0
 #: field:mrp.bom.line,property_ids:0
 #: view:mrp.property:mrp.mrp_property_form_view
 #: view:mrp.property:mrp.mrp_property_tree_view
@@ -1637,8 +1544,7 @@ msgstr "Χαρακτηριστικό"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
 #: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Ομάδα Χαρακτηριστικών"
 
@@ -1649,13 +1555,11 @@ msgid "Property Groups"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.product_price,number:0
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:stock.move.consume,product_qty:0
-#: view:website:mrp.report_mrpbomstructure
-#: view:website:mrp.report_mrporder
+#: view:website:mrp.report_mrpbomstructure view:website:mrp.report_mrporder
 #, python-format
 msgid "Quantity"
 msgstr "Ποσότητα"
@@ -1663,12 +1567,12 @@ msgstr "Ποσότητα"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Ποσότητα (στην προεπιλεγμένη μονάδα μέτρησης)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Ποσότητα:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1686,8 +1590,7 @@ msgid "Ready to Produce"
 msgstr "Έτοιμο για Παραγωγή"
 
 #. module: mrp
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,code:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "Παραπομπές"
@@ -1711,33 +1614,31 @@ msgstr "Παραπομπή σε σημείο εξωτερικού σχεδίου
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Πηγή"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Πόροι Αποχώρησης"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
-msgstr ""
+msgstr "Πόροι"
 
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Υπεύθυνος"
 
 #. module: mrp
-#: help:mrp.bom,product_rounding:0
-#: help:mrp.bom.line,product_rounding:0
+#: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,routing_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,routing_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: field:mrp.bom.line,routing_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1758,8 +1659,8 @@ msgstr ""
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers) "
-"will be automatically pre-completed."
+"Routing is indicated then,the third tab of a production order (Work Centers)"
+" will be automatically pre-completed."
 msgstr ""
 
 #. module: mrp
@@ -1790,17 +1691,17 @@ msgstr "Προγραμματισμένη Ημερομηνία"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Προγραμματισμένη Ημερομηνία ανά Μήνα"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Προγραμματισμένη Ημερομηνία:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Προγραμματισμένος Μήνας"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1817,12 +1718,12 @@ msgstr "Προγραμματισμένα αγαθά"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Scrap Products"
-msgstr ""
+msgstr "Άχρηστα Προϊόντα"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -1852,7 +1753,7 @@ msgstr "Ημέρες ασφαλείας για κάθε λειτουργία π�
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Επιλέξτε Ποσότητα"
 
 #. module: mrp
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
@@ -1860,11 +1761,9 @@ msgid "Select time unit"
 msgstr "Επιλογή μονάδας χρόνου"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0
-#: field:mrp.bom.line,sequence:0
+#: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
 #: field:mrp.production.workcenter.line,sequence:0
-#: field:mrp.routing.workcenter,sequence:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
 msgstr "Ιεράρχηση"
 
@@ -1876,19 +1775,19 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
-"Set: When processing a sales order for this product, the delivery order will "
-"contain the raw materials, instead of the finished product."
+"Set: When processing a sales order for this product, the delivery order will"
+" contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
 #: field:mrp.production,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Έγγραφο Προέλευσης"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Πρωτότυπο Παραστατικό:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1915,7 +1814,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr "Ημερ/νία Εκκίνησης"
+msgstr "Ημερομηνία Εκκίνησης"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1926,7 +1825,7 @@ msgstr "Κατάσταση"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Κίνηση Αποθέματος"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -1942,11 +1841,10 @@ msgid "Stock value variation"
 msgstr "Απόκλιση αξίας αποθέματος"
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0
-#: field:mrp.production,message_summary:0
+#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Περίληψη"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -1960,8 +1858,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:366
-#: code:addons/mrp/mrp.py:433
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -1978,8 +1875,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0
-#: help:mrp.bom.line,routing_id:0
+#: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
@@ -1997,8 +1893,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
 msgstr ""
 
@@ -2046,8 +1941,8 @@ msgstr "Χρόνος εγκατάστασης σε ώρες"
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
 msgstr ""
 
 #. module: mrp
@@ -2056,11 +1951,10 @@ msgid "To Consume"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162
-#: code:addons/mrp/report/price.py:213
+#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
-msgstr ""
+msgstr "Συνολικό Κόστος του %s %s"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -2082,7 +1976,7 @@ msgstr "Σύνολο Ποσ."
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Παρακολούθηση Παρτίδων Παραγωγής"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
@@ -2107,24 +2001,22 @@ msgid "Unit of Measure"
 msgstr "Μονάδα Μέτρησης"
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0
-#: help:mrp.bom.line,product_uom:0
+#: help:mrp.bom,product_uom:0 help:mrp.bom.line,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0
-#: field:mrp.production,message_unread:0
+#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Αδιάβαστα Μυνήματα"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "Ανανέωση"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2134,11 +2026,10 @@ msgstr "Επείγον"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #. module: mrp
-#: field:mrp.bom,date_start:0
-#: field:mrp.bom.line,date_start:0
+#: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
 msgstr "Ισχύει Από"
 
@@ -2155,32 +2046,29 @@ msgid "Valid From Month"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,date_stop:0
-#: field:mrp.bom.line,date_stop:0
+#: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
 msgstr "Ισχύει Ως"
 
 #. module: mrp
-#: help:mrp.bom.line,date_start:0
-#: help:mrp.bom.line,date_stop:0
+#: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,date_start:0
-#: help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Παραλλαγή"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr ""
+msgstr "Παραλλαγές"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2193,33 +2081,31 @@ msgid "Warehouse"
 msgstr "Αποθήκη"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:366
-#: code:addons/mrp/mrp.py:433
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Προσοχή"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:42
-#: code:addons/mrp/stock.py:44
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/mrp.py:339 code:addons/mrp/stock.py:42
+#: code:addons/mrp/stock.py:44 code:addons/mrp/stock.py:169
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Προειδοποίηση!"
 
 #. module: mrp
 #: field:mrp.bom,website_message_ids:0
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2237,15 +2123,15 @@ msgstr "Εβδομαδιαία απόκλιση αξίας αποθέματος"
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
 msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
-"linked to manufacturing activities, receipts of products and delivery orders."
+"linked to manufacturing activities, receipts of products and delivery "
+"orders."
 msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
+"                                will contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -2258,14 +2144,10 @@ msgstr ""
 #: help:mrp.production,state:0
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting "
-"Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking "
-"Exception'.\n"
-"                If the stock is available then the status is set to 'Ready "
-"to Produce'.\n"
-"                When the production gets started then the status is set to "
-"'In Production'.\n"
+"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
+"                If the stock is available then the status is set to 'Ready to Produce'.\n"
+"                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
 
@@ -2374,6 +2256,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:339
+#, python-format
+msgid ""
+"You can not delete a Bill of Material with running manufacturing orders.\n"
+"Please close or cancel it first."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
@@ -2382,7 +2272,7 @@ msgstr ""
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "ημέρες"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2395,6 +2285,16 @@ msgid "min"
 msgstr "τουλάχιστον"
 
 #. module: mrp
+#: view:change.production.qty:mrp.view_change_production_qty_wizard
+#: view:mrp.config.settings:mrp.view_mrp_config
+#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
+#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
+#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
+#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
+msgid "or"
+msgstr "ή"
+
+#. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
 msgstr "plus"
@@ -2405,4 +2305,4 @@ msgstr "plus"
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
+msgstr "άγνωστο"

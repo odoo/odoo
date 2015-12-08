@@ -1,21 +1,22 @@
-# Chinese (Traditional) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-12-04 06:06+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -69,7 +70,7 @@ msgstr "公司"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:351
+#: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
 msgstr "設定錯誤！"
@@ -145,7 +146,7 @@ msgstr "國貿條款(INCOTERMS)是一系列事先定義並使用於國際交易�
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "庫存路徑"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -160,10 +161,7 @@ msgstr "依銷售訂單開立發票"
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
 msgstr ""
 
@@ -171,12 +169,12 @@ msgstr ""
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr "承諾客戶日期的邊際誤差，為了處理供應鏈中非預期性的延滯，產品的採購及出貨排程會較實際承諾日期提早該天數。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:346
+#: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "庫存不足！ "
@@ -227,12 +225,12 @@ msgstr "依工時狀況開立發票"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "產品"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "產品範本"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -252,7 +250,7 @@ msgstr "重新建立出貨單"
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "路線"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -303,8 +301,7 @@ msgid "Selectable on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "已出貨"
 
@@ -326,7 +323,7 @@ msgstr "預設開立發票的方式是"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "待開發票"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -341,15 +338,13 @@ msgid "View Delivery Order"
 msgstr "檢視出貨單"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "倉庫"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "您可依銷售訂單或出貨單產生發票。"
 
 #. module: sale_stock
@@ -360,14 +355,12 @@ msgid ""
 msgstr "您必須先取消與此銷售訂單相關的所有出貨單。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:342
+#: code:addons/sale_stock/sale_stock.py:343
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"您計畫售出  %.2f %s ，但您只有 %.2f %s 可用！\n"
-"實際庫存是 %.2f %s。 (不含已預定保留)"
+msgstr "您計畫售出  %.2f %s ，但您只有 %.2f %s 可用！\n實際庫存是 %.2f %s。 (不含已預定保留)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -377,21 +370,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n"
-"根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
+msgstr "您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "天"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
-msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "已提貨"

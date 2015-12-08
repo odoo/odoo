@@ -1116,15 +1116,12 @@ class sale_order_line(osv.osv):
             fpos = partner and partner.property_account_position or False
         else:
             fpos = self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position)
-        if update_tax:  # The quantity only have changed
-            # The superuser is used by website_sale in order to create a sale order. We need to make
-            # sure we only select the taxes related to the company of the partner. This should only
-            # apply if the partner is linked to a company.
-            if uid == SUPERUSER_ID and context.get('company_id'):
-                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
-            else:
-                taxes = product_obj.taxes_id
-            result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, taxes)
+
+        if uid == SUPERUSER_ID and context.get('company_id'):
+            taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
+        else:
+            taxes = product_obj.taxes_id
+        result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, taxes)
 
         if not flag:
             result['name'] = Product.name_get(cr, uid, [product_obj.id], context=ctx_product)[0][1]
@@ -1174,8 +1171,7 @@ class sale_order_line(osv.osv):
                     product, qty or 1.0, partner_id, ctx)[pricelist]
         else:
             price = Product.price_get(cr, uid, [product], ptype='list_price', context=ctx_product)[product] or False
-        if update_tax:
-            price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
+        price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
         if context.get('uom_qty_change', False):
             product_uos_qty = result.get('product_uos_qty')
             result, domain = {}, {}
