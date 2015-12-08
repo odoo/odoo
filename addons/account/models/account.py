@@ -638,7 +638,10 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            tax_amount = currency.round(tax_amount)
+            if company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_amount = round(tax_amount, prec)
+            else:
+                tax_amount = currency.round(tax_amount)
 
             if tax_amount:
                 if tax.price_include:
