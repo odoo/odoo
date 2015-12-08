@@ -12,7 +12,9 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Events">
-                        <field name="module_event_sale" widget="radio"/>
+                        <field name="event_config_type" widget="radio"/>
+                        <field name="module_event_sale" invisible='1'/>
+                        <field name="module_website_event_sale" invisible='1'/>
                         <field name="module_website_event_track" widget="radio"/>
                         <field name="module_website_event_questions" widget="radio"/>
                         <field name="auto_confirmation" widget="radio"/>

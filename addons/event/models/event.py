@@ -194,6 +194,9 @@ class EventEvent(models.Model):
     badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
+    event_schedule_updated = fields.Boolean('Event Schedule Changed',
+        help="If checked, it will indicate a modification in event schedule and "
+             "user will get tip and a redirection option to send an email to it's attendees.")
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
@@ -233,11 +236,14 @@ class EventEvent(models.Model):
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
+        if set(vals.keys()).intersection(['name', 'address_id', 'date_end', 'date_begin']) and\
+                self.registration_ids.filtered(lambda r: r.state != 'cancel'):
+            self.event_schedule_updated = True
         return res
 
     @api.one
     def button_draft(self):
-        self.state = 'draft'
+        self.write({'state': 'draft', 'event_schedule_updated': False})
 
     @api.one
     def button_cancel(self):
@@ -246,10 +252,11 @@ class EventEvent(models.Model):
                 raise UserError(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
         self.state = 'cancel'
+        if self.registration_ids: self.event_schedule_updated = True
 
     @api.one
     def button_done(self):
-        self.state = 'done'
+        self.write({'state': 'done', 'event_schedule_updated': False})
 
     @api.one
     def button_confirm(self):
@@ -275,6 +282,19 @@ class EventEvent(models.Model):
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+
+    @api.multi
+    def action_open_attendees(self):
+        self.ensure_one()
+        if self.registration_ids:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Attendees'),
+                'res_model': 'event.registration',
+                'view_mode': 'tree,form',
+                'view_type': 'form',
+                'domain': [('id', 'in', self.registration_ids.ids)],
+            }
 
 
 class EventRegistration(models.Model):
@@ -396,6 +416,14 @@ class EventRegistration(models.Model):
         except AccessError:     # no read access rights -> ignore suggested recipients
             pass
         return recipients
+
+    @api.multi
+    def notify_schedule_updation(self):
+        """ send email each attendees for change event Schedule"""
+        template = self.env.ref('event.event_change_notification')
+        for attendee in self.filtered(lambda r: r.event_id.event_schedule_updated and (r.event_id.state == 'confirm' or r.event_id.state == 'cancel')):
+            template.send_mail(attendee.id, force_send=True)
+            attendee.event_id.event_schedule_updated = False
 
     @api.multi
     def action_send_badge_email(self):
