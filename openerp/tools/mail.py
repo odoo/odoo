@@ -318,7 +318,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         root = lxml.html.fromstring(html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for node in root.iter():
         # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
         if node.tail:
