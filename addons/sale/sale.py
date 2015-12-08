@@ -825,10 +825,10 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
-                                     help='Manually set quantities on order: It will create invoice for manually entered quanitity and no analytic account created.\n'
-                                     'Timesheets on contract: It will create invoice based on time tracking quantity (Like one hour, 5 hours).\n'
-                                     'Create a task and track hours: On confirmation of sales order it will create a task and work same as Timesheet on contract.',
-                                     default='manual')
+        help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+             "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+             "Create a task and track hours: Create a task on the sale order validation and track the work hours.",
+        default='manual')
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
@@ -859,7 +859,7 @@ class ProductTemplate(models.Model):
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
          ('cost', 'Reinvoice Costs')],
-        string='Invoicing Policy', help='Ordered Quantity: It will create the invoice on the basis of the quantity ordered by customer.\n'
-                                        'Delivered Quantity: It will create the invoice of quantity delivered by vendor.\n'
-                                        'Reinvoice Costs: It will create invoice including some additional charge in terms of expenses (like transfer of that product, labour charge etc.)',
+        string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
+                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n'
+                                        'Reinvoice Costs: Invoice with some additional charges (product transfer, labour charges,...)',
                                         default='order')

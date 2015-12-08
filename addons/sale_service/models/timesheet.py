@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
 
 class product_template(models.Model):
     _inherit = "product.template"
-    project_id = fields.Many2one('project.project', string='Project', help='Project: On confirmation of sales order it will create task under the selected project.',
+    project_id = fields.Many2one('project.project', string='Project', help='Create a task under this project on sale order validation.',
                                  ondelete='set null')
     track_service = fields.Selection(selection_add=[('task', 'Create a task and track hours')])
 

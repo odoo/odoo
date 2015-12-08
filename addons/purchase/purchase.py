@@ -893,8 +893,8 @@ class ProductTemplate(models.Model):
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
         ], string="Control Purchase Bills",
-        help="On ordered quantities: It will control purchase bills on quantity ordered.\n"
-        "On received quantities It will control purchase bills on quantity received.", default="receive")
+        help="On ordered quantities: Invoice this product based on ordered quantities.\n"
+        "On received quantities: Invoice this product based on received quantity.", default="receive")
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
 
 
