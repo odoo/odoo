@@ -33,7 +33,6 @@ return Widget.extend({
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
-            display_avatar: false,
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
@@ -64,7 +63,7 @@ return Widget.extend({
     fold: function () {
         this.update_header();
         this.$el.animate({
-            height: this.folded ? "28px" : "333px"
+            height: this.folded ? "28px" : "400px"
         });
     },
     toggle_fold: function (fold) {

@@ -11,7 +11,7 @@ var web_client = require('web.web_client');
 // chat window management
 //----------------------------------------------------------------
 var chat_sessions = [];
-var CHAT_WINDOW_WIDTH = 260;
+var CHAT_WINDOW_WIDTH = 300;
 
 function open_chat (session) {
     if (!_.findWhere(chat_sessions, {id: session.id})) {
