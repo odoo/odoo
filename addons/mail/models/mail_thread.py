@@ -870,7 +870,7 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             accepted_partner_ids = list(
                 set(partner.id for partner in obj.message_partner_ids) |
-                set(partner.id for channel in obj.message_channel_ids if channel.public != 'public' for partner in channel.channel_partner_ids)
+                set(partner.id for channel in obj.message_channel_ids for partner in channel.channel_partner_ids)
             )
             if not author_id or author_id not in accepted_partner_ids:
                 _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
