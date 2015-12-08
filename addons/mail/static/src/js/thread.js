@@ -36,6 +36,7 @@ var Thread = Widget.extend({
         },
         "click .oe_mail_expand": function (event) {
             event.preventDefault();
+            event.stopPropagation();
             var $source = $(event.currentTarget);
             $source.parents('.o_thread_message_core').find('.o_mail_body_short').toggle();
             $source.parents('.o_thread_message_core').find('.o_mail_body_long').toggle();
