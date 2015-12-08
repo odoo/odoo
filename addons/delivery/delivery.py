@@ -25,13 +25,36 @@ from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
     _description = "Carrier"
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        if context is None:
+            context = {}
+        display_delivery = context.get('display_delivery', False)
+        order_id = context.get('order_id', False)
+        if display_delivery and order_id:
+            order = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
+            currency = order.pricelist_id.currency_id.name or ''
+            res = []
+            for carrier_id in ids:
+                try:
+                    r = self.read(cr, uid, [carrier_id], ['name', 'price'], context)[0]
+                    res.append((r['id'], r['name'] + ' (' + (str(r['price'])) + ' ' + currency + ')'))
+                except ValidationError:
+                    r = self.read(cr, uid, [carrier_id], ['name'], context)[0]
+                    res.append((r['id'], r['name']))
+
+        else:
+            res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
+        return res
 
     def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
