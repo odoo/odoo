@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!--
             Users Groups
@@ -79,9 +79,11 @@
         </record>
 
         <record id="public_user" model="res.users">
-            <field name="groups_id" eval="[(6,0,[ref('base.group_public')])]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
+    </data>
+    <data noupdate="1">
         <record model="ir.rule" id="res_users_log_rule">
             <field name="name">res.users.log per user</field>
             <field name="model_id" ref="model_res_users_log"/>
