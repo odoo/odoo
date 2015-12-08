@@ -10,6 +10,7 @@ import sets
 from functools import partial
 
 import openerp
+import openerp.addons.decimal_precision as dp
 from openerp import tools, models, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
@@ -1324,7 +1325,7 @@ class pos_order(osv.osv):
 
                 # Create the tax lines
                 taxes = []
-                for t in line.product_id.taxes_id:
+                for t in line.tax_ids_after_fiscal_position:
                     if t.company_id.id == current_company.id:
                         taxes.append(t.id)
                 if not taxes:
@@ -1465,7 +1466,7 @@ class pos_order_line(osv.osv):
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=0),
-        'qty': fields.float('Quantity', digits=0),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax'),
         'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=0),

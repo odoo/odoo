@@ -89,7 +89,7 @@ class ir_model(osv.osv):
 
     _defaults = {
         'model': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
     }
 
     def _check_model_name(self, cr, uid, ids, context=None):
@@ -173,10 +173,8 @@ class ir_model(osv.osv):
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
-        if context and context.get('manual'):
-            vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+        if vals.get('state','manual')=='manual':
             # setup models; this automatically adds model in registry
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
@@ -259,7 +257,7 @@ class ir_model_fields(osv.osv):
         'selection': "",
         'domain': "[]",
         'name': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
         'on_delete': 'set null',
         'field_description': '',
         'selectable': 1,
@@ -439,14 +437,12 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
             if not vals.get('selection',False):
                 raise UserError(_('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base') == 'manual':
+        if vals.get('state','manual') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise UserError(_("Custom fields must have a name that starts with 'x_' !"))
 
@@ -474,8 +470,6 @@ class ir_model_fields(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
 
         #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
         if 'serialization_field_id' in vals or 'name' in vals:
@@ -518,7 +512,7 @@ class ir_model_fields(osv.osv):
                         raise UserError(_('Can only rename one field at a time!'))
                     if vals['name'] in obj._fields:
                         raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
-                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
                         raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')

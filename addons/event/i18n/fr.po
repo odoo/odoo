@@ -9,14 +9,15 @@
 # Loic <loic.richard2@gmail.com>, 2015
 # Martin Trigaux, 2015
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Quentin THEURET <quentin@theuret.net>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-11-21 00:00+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"PO-Revision-Date: 2015-12-02 16:08+0000\n"
+"Last-Translator: Saad Thaifa <saad.thaifa@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +109,7 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Bonjour ${object.name},</p>\n<p>L’événement ${object.event_id.name} auquel vous vous êtes inscrit est confirmé et se tiendra du ${object.event_id.date_begin} au ${object.event_id.date_end}.\nPour de plus amples informations, veuillez contacter notre département d’événements.</p>\n<p>Merci pour votre participation !</p>\n<p>Cordialement</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -118,7 +119,7 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Bonjour ${object.name},</p>\n<p>Nous vous confirmons que votre inscription à l’événement ${object.event_id.name} a été enregistrée.\nVous trouverez votre <b>badge</b> attaché à ce courriel.</p>\n<p>Merci pour votre participation !</p>\n<p>Cordialement</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -128,7 +129,7 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Bonjour ${object.name},</p>\n<p>Nous vous confirmons que votre inscription à l'évènement ${object.event_id.name} a été enregistrée.\nVous recevrez automatiquement un courriel avec des informations pratiques supplémentaires (telles que le programme, l'agenda)... dès que l'évènement sera confirmé.</p>\n<p>Merci pour votre participation !</p>\n<p>Cordialement</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -142,7 +143,7 @@ msgid ""
 "        <strong>${object.event_id.organizer_id.name}</strong>\n"
 "    % endif\n"
 "</p>"
-msgstr ""
+msgstr "<p>Bonjour ${object.name},</p>\n<p>Nous vous remercions pour votre présence à notre événement ${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>L'équipe ${object.event_id.organizer_id.name}</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -157,7 +158,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\nà\n</span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -168,7 +169,7 @@ msgid ""
 "developers who need to grasp knowledge of the <strong>business applications "
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
-msgstr ""
+msgstr "<span style=\"text-align: -webkit-center; \">Cette formation est dédiée aux développeurs qui ont besoin d'apprendre les processus de <strong>développement des applications métiers</strong>. Cette formation s'adresse aux nouveaux développeurs et professionnels de l'informatique qui veulent en apprendre plus à propos des aspects techniques.</span> "
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -655,7 +656,7 @@ msgstr "Nom affiché"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr "Afficher la commande"
+msgstr "Afficher l'ordre"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -681,7 +682,7 @@ msgstr "Brouillon"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr ""
+msgstr "Pendant la conférence, notre équipe vous donnera une vue d'ensemble de nos applications d'entreprise. Vous saurez tout des bénéfices que vous tirerez à les utiliser."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -696,12 +697,12 @@ msgstr "Email planifié"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_group_email_scheduling
 msgid "Email Scheduling"
-msgstr "Planification d'email"
+msgstr "Planification de courriel"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 msgid "Email to Send"
-msgstr "Courriel a envoyer"
+msgstr "Courriel à envoyer"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -762,12 +763,12 @@ msgstr "Logo de l'événement"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr "Planificateur d'email de l'évènement"
+msgstr "Planificateur de courriel d'évènement"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr "Planificateurs d'email de l'évènement"
+msgstr "Planificateurs de courriel d'évènement"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -986,7 +987,7 @@ msgstr "Comment débugguer"
 msgid ""
 "I did not expect such a great learning experience. I feel like I can develop"
 " anything now."
-msgstr ""
+msgstr "Je ne m'attendais pas à une telle expérience de formation. Je sens que je peux maintenant développer quelque chose."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id

@@ -160,11 +160,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.composer = new ChatComposer(this, {
-            get_channel_info: function () {
-                return { channel_id: self.channel.id };
-            },
-        });
+        this.composer = new ChatComposer(this);
         this.thread = new ChatThread(this, {
             display_help: true
         });
@@ -183,23 +179,21 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
 
-        this.thread.on('redirect', this, this.on_redirect);
+        this.thread.on('redirect', this, function (res_model, res_id) {
+            chat_manager.redirect(res_model, res_id, this.set_channel.bind(this));
+        });
         this.thread.on('redirect_to_channel', this, function (channel_id) {
-            var channel = chat_manager.get_channel(channel_id);
-            if (channel) {
-                this.set_channel(channel);
-            } else {
-                chat_manager.join_channel(channel_id);
-            }
+            chat_manager.join_channel(channel_id).then(this.set_channel.bind(this));
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
-            chat_manager.mark_as_read(message_id);
+            chat_manager.mark_as_read([message_id]);
         });
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
         });
         this.composer.on('post_message', this, this.on_post_message);
+        this.composer.on('input_focused', this, this.on_composer_input_focused);
 
         var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
         var def2 = this.composer.appendTo(this.$('.o_mail_chat_content'));
@@ -218,6 +212,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 });
                 chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
             });
     },
 
@@ -366,7 +361,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             self.$buttons
                 .find('.o_mail_chat_button_unstar_all')
                 .toggle(channel.id === "channel_starred");
-            self.update_cp();
 
             self.$('.o_chat_composer').toggle(channel.type !== 'static');
 
@@ -384,6 +378,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.$('.o_mail_chat_sidebar').hide();
             }
 
+            self.update_cp();
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,
@@ -424,6 +419,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_needactions: this.channel.display_needactions,
             messages_separator_position: this.messages_separator_position,
             squash_close_messages: this.channel.type !== 'static',
+            display_empty_channel: !messages.length && !this.domain.length,
+            display_no_match: !messages.length && this.domain.length,
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
         };
     },
 
@@ -454,7 +452,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var oldest_msg_selector = '.o_thread_message[data-message-id="' + oldest_msg_id + '"]';
         var offset = -framework.getPosition(document.querySelector(oldest_msg_selector)).top;
         return chat_manager
-            .fetch_more(this.channel, this.domain)
+            .get_messages({channel_id: this.channel.id, domain: this.domain, load_more: true})
             .then(function(result) {
                 if (self.messages_separator_position === 'top') {
                     self.messages_separator_position = undefined; // reset value to re-compute separator position
@@ -477,6 +475,15 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
+    do_show: function () {
+        this._super.apply(this, arguments);
+        this.update_cp();
+        this.action_manager.do_push_state({
+            action: this.action.id,
+            active_id: this.channel.id,
+        });
+    },
+
     on_search: function (domains) {
         var result = pyeval.sync_eval_domains_and_contexts({
             domains: domains
@@ -486,60 +493,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.fetch_and_render_thread();
     },
 
-    /**
-     * Callback performed on o_mail_redirect element clicked
-     *
-     * If the model is res.partner, and there is a user associated with this
-     * partner which isn't the current user, open the DM with this user.
-     * Otherwhise, open the record's form view.
-     */
-    on_redirect: function (res_model, res_id) {
-        var self = this;
-        var redirect_to_document = function (res_model, res_id) {
-            self.action_manager.do_push_state({
-                model: res_model,
-                id: res_id,
-            });
-            self.do_action({
-                type:'ir.actions.act_window',
-                view_type: 'form',
-                view_mode: 'form',
-                res_model: res_model,
-                views: [[false, 'form']],
-                res_id: res_id,
-            }, {
-                on_reverse_breadcrumb: self.on_reverse_breadcrumb,
-            });
-        };
-
-        if (res_model === "res.partner") {
-            var domain = [["partner_id", "=", res_id]];
-            new Model('res.users').call("search", [domain]).then(function (user_ids) {
-                if (user_ids.length && user_ids[0] !== session.uid) {
-                    chat_manager.create_channel(res_id, 'dm').then(function (channel) {
-                        if (!self.channel || self.channel.id !== channel.id) {
-                            self.set_channel(channel);
-                        }
-                    });
-                } else {
-                    redirect_to_document(res_model, res_id);
-                }
-            });
-        } else {
-            redirect_to_document(res_model, res_id);
-        }
-    },
-    on_reverse_breadcrumb: function () {
-        this.update_cp(); // do not reload the client action, just display it, but a refresh of the control panel is needed.
-        this.action_manager.do_push_state({
-            action: this.action.id,
-            active_id: this.channel.id,
-        });
-    },
     on_post_message: function (message) {
-        message.channel_id = this.channel.id;
+        var options = {channel_id: this.channel.id};
         chat_manager
-            .post_message(message)
+            .post_message(message, options)
             .fail(function () {
                 // todo: display notification
             });
@@ -580,6 +537,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.set_channel(channel);
         }
     },
+    on_composer_input_focused: function () {
+        var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
+        this.composer.mention_set_prefetched_partners(suggestions);
+    },
 
     on_click_button_invite: function () {
         var title = _.str.sprintf(_t('Invite people to %s'), this.channel.name);
@@ -599,8 +560,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             res_id: this.channel.id,
             views: [[false, 'form']],
             target: 'current'
-        }, {
-            on_reverse_breadcrumb: this.on_reverse_breadcrumb,
         });
     },
 });

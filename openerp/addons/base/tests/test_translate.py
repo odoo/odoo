@@ -119,7 +119,7 @@ class TranslationToolsTestCase(unittest.TestCase):
         terms = []
         source = """<div>
                         stuff before
-                        <div translation="off">Do not translate this</div>
+                        <div t-translation="off">Do not translate this</div>
                         stuff after
                     </div>"""
         result = xml_translate(terms.append, source)

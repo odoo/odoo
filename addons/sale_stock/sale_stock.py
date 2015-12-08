@@ -113,40 +113,28 @@ class SaleOrderLine(models.Model):
             return self._check_package()
         return {}
 
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id', 'product_uom_qty', 'product_uom', 'route_id')
     def _onchange_product_id_check_availability(self):
-        if not self.product_id:
+        if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if self.product_id.type == 'product':
-            product = self.product_id.with_context(
-                lang=self.order_id.partner_id.lang,
-                partner_id=self.order_id.partner_id.id,
-                date_order=self.order_id.date_order,
-                pricelist_id=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id,
-                warehouse_id=self.order_id.warehouse_id.id
-            )
-            if float_compare(product.virtual_available, self.product_uom_qty, precision_digits=precision) == -1:
-                # Check if MTO, Cross-Dock or Drop-Shipping
-                is_available = False
-                for route in self.route_id+self.product_id.route_ids:
-                    for pull in route.pull_ids:
-                        if pull.location_id.id == self.order_id.warehouse_id.lot_stock_id.id:
-                            is_available = True
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
+                is_available = self._check_routing()
                 if not is_available:
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : _('You plan to sell %.2f %s but you only have %.2f %s available!\nThe stock on hand is %.2f %s.') % \
-                            (self.product_uom_qty, self.product_uom.name or self.product_id.uom_id.name, product.virtual_available, self.product_uom.name or self.product_id.uom_id.name, product.qty_available, self.product_uom.name or self.product_id.uom_id.name)
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
                     }
                     return {'warning': warning_mess}
         return {}
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type != 'service' and self.product_uom_qty < self._origin.product_uom_qty:
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
@@ -171,10 +159,14 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_delivered_qty(self):
+        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
+            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
+            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
@@ -194,6 +186,38 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
+
+    def _check_routing(self):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified,
+            which is the case in MTO, Cross-Dock or Drop-Shipping
+        """
+        is_available = False
+        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
+
+        # Check MTO
+        wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
+        if wh_mto_route and wh_mto_route <= product_routes:
+            is_available = True
+        else:
+            mto_route_id = False
+            try:
+                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+            except models.except_orm:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                pass
+            if mto_route_id and mto_route_id in product_routes.ids:
+                is_available = True
+
+        # Check Drop-Shipping
+        if not is_available:
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
+
+        return is_available
 
 
 class StockLocationRoute(models.Model):
@@ -295,3 +319,14 @@ class AccountInvoiceLine(models.Model):
                 price_unit = average_price_unit or price_unit
                 price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
         return price_unit
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type not in ['service', 'digital']:
+                return True
+        return super(ProductProduct, self)._need_procurement()

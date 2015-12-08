@@ -33,7 +33,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
-from openerp.modules import get_module_resource
+from openerp.modules import get_module_path, get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
@@ -469,12 +469,40 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         last_update = obj['__last_update']
     except AccessError:
         return (403, [], None)
-    status = 200
+
+    status, headers, content = None, [], None
+
+    # attachment by url check
+    module_resource_path = None
+    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        url_match = re.match("^/(\w+)/(.+)$", obj.url)
+        if url_match:
+            module = url_match.group(1)
+            module_path = get_module_path(module)
+            module_resource_path = get_resource_path(module, url_match.group(2))
+            if module_path and module_resource_path:
+                module_path = os.path.join(os.path.normpath(module_path), '') # join ensures the path ends with '/'
+                module_resource_path = os.path.normpath(module_resource_path)
+                if module_resource_path.startswith(module_path):
+                    with open(module_resource_path, 'r') as f:
+                        content = base64.b64encode(f.read())
+                    last_update = str(os.path.getmtime(module_resource_path))
+        
+        if not module_resource_path:
+            module_resource_path = obj.url
+
+        if not content:
+            status = 301
+            content = module_resource_path 
+    else:
+        content = obj[field] or ''
 
     # filename
     if not filename:
         if filename_field in obj:
             filename = obj[filename_field]
+        elif module_resource_path:
+            filename = os.path.basename(module_resource_path)
         else:
             filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
 
@@ -486,32 +514,27 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
             mimetype = mimetypes.guess_type(filename)[0]
         if not mimetype:
             mimetype = default_mimetype
-    headers = [('Content-Type', mimetype)]
+    headers.append(('Content-Type', mimetype))
 
     # cache
     etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
     retag = hashlib.md5(last_update).hexdigest()
-    if etag == retag:
-        status = 304
+    status = status or (304 if etag == retag else 200)
     headers.append(('ETag', retag))
-
-    if unique:
-        headers.append(('Cache-Control', 'max-age=%s' % STATIC_CACHE))
-    else:
-        headers.append(('Cache-Control', 'max-age=0'))
+    headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
 
     # content-disposition default name
     if download:
         headers.append(('Content-Disposition', content_disposition(filename)))
 
-    # get content after cache control
-    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
-        status = 301
-        content = obj.url
-    else:
-        content = obj[field] or ''
-
     return (status, headers, content)
+
+def db_info():
+    version_info = openerp.service.common.exp_version()
+    return {
+        'server_version': version_info.get('server_version'),
+        'server_version_info': version_info.get('server_version_info'),
+    }
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -533,7 +556,7 @@ class Home(http.Controller):
 
         request.uid = request.session.uid
         menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info())})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -1154,7 +1177,7 @@ class Binary(http.Controller):
     ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo.png'
-        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
+        placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1401,7 +1424,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context)
+        ids = ids or Model.search(domain, 0, False, False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']

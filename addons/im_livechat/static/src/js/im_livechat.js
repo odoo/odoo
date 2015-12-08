@@ -42,6 +42,9 @@ var LivechatButton = Widget.extend({
         bus.on('notification', this, function (notification) {
             this.add_message(notification[1]);
             this.render_messages();
+            if (this.chat_window.folded) {
+                this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+            }
         });
         return this._super();
     },
@@ -81,7 +84,7 @@ var LivechatButton = Widget.extend({
                 self.render_messages();
 
                 bus.add_channel(channel.uuid);
-                bus.poll();
+                bus.start_polling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
             }
@@ -93,7 +96,7 @@ var LivechatButton = Widget.extend({
         var options = {
             display_stars: false,
         };
-        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, options);
+        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, channel.message_unread_counter, options);
         this.chat_window.appendTo($('body')).then(function () {
             self.chat_window.$el.css({right: 0, bottom: 0});
             self.$el.hide();
@@ -116,7 +119,6 @@ var LivechatButton = Widget.extend({
 
     close_chat: function () {
         this.chat_window.destroy();
-        this.$el.show();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
 
@@ -125,15 +127,28 @@ var LivechatButton = Widget.extend({
     },
 
     add_message: function (data) {
-        this.messages.push({
+        var msg = {
             id: data.id,
             attachment_ids: data.attachment_ids,
             author_id: data.author_id,
             body: data.body,
-            date: data.date,
+            date: moment(time.str_to_datetime(data.date)),
             is_needaction: false,
             is_note: data.is_note,
-        });
+        };
+
+        // Compute displayed author name or email
+        msg.displayed_author = msg.author_id && msg.author_id[1] ||
+                               this.options.default_username;
+
+        // Compute the avatar_url
+        if (msg.author_id && msg.author_id[0]) {
+            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+        } else {
+            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+        }
+
+        this.messages.push(msg);
     },
 
     render_messages: function () {

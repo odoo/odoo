@@ -18,8 +18,8 @@ class ChannelPartner(models.Model):
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
-    partner_id = fields.Many2one('res.partner', string='Recipient')
-    channel_id = fields.Many2one('mail.channel', string='Channel')
+    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
+    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimied")
@@ -159,12 +159,15 @@ class Channel(models.Model):
 
     @api.multi
     def action_unfollow(self):
-        result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
-        notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-        self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        partner_id = self.env.user.partner_id.id
+        channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
+        result = self.write({'channel_partner_ids': [(3, partner_id)]})
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), channel_info)
+        if not self.email_send:
+            notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+            # post 'channel left' message as root since the partner just unsubscribed from the channel
+            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner_id)
         return result
-
 
     @api.multi
     def message_get_email_values(self, notif_mail=None):
@@ -253,7 +256,6 @@ class Channel(models.Model):
         message_values = message.message_format()[0]
         notifications = []
         for channel in self:
-            message_values['channel_ids'] = [channel.id]
             notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
@@ -281,6 +283,7 @@ class Channel(models.Model):
                 'is_minimized': False,
                 'channel_type': channel.channel_type,
                 'public': channel.public,
+                'mass_mailing': channel.email_send,
             }
             if extra_info:
                 info['info'] = extra_info
@@ -422,6 +425,10 @@ class Channel(models.Model):
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
             channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
+            for partner in partners_to_add:
+                notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+                self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
+
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
 
@@ -500,7 +507,7 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
-        if self.channel_type == 'channel':
+        if self.channel_type == 'channel' and not self.email_send:
             notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.action_follow()
@@ -524,7 +531,7 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info()[0]
+        channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
@@ -537,10 +544,21 @@ class Channel(models.Model):
             user isn't registered to. """
         domain = expression.AND([
                         [('name', 'ilike', search)],
-                        [('channel_type', '!=', 'chat')],
+                        [('channel_type', '=', 'channel')],
                         expression.OR([
                             [('public', '!=', 'private')],
                             [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
                         ])
                     ])
         return self.search_read(domain, ['id', 'name', 'public'], limit=limit)
+
+    @api.model
+    def channel_fetch_listeners(self, uuid):
+        """ Return the id, name and email of partners listening to the given channel """
+        self._cr.execute("""
+            SELECT P.id, P.name, P.email
+            FROM mail_channel_partner CP
+                INNER JOIN res_partner P ON CP.partner_id = P.id
+                INNER JOIN mail_channel C ON CP.channel_id = C.id
+            WHERE C.uuid = %s""", (uuid,))
+        return self._cr.dictfetchall()

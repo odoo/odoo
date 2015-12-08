@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-21 16:56+0000\n"
+"PO-Revision-Date: 2015-12-04 20:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -1288,6 +1288,14 @@ msgstr "İçerik"
 #: model:ir.model.fields,field_description:stock.field_stock_location_posx
 msgid "Corridor (X)"
 msgstr "Koridor (X)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_immediate_transfer.py:31
+#, python-format
+msgid ""
+"Could not reserve all requested products. Please use the 'Mark as Todo' "
+"button to handle the reservation manually."
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -3452,7 +3460,7 @@ msgstr "Negatif Stok Hareketi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_split_from
 msgid "Move Split From"
-msgstr ""
+msgstr "Hareketi böl"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
@@ -4588,7 +4596,7 @@ msgstr "Çoklu Miktar"
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Qty Multiple must be greater than or equal to zero."
 
 #. module: stock
 #: code:addons/stock/stock.py:3756
@@ -5704,7 +5712,7 @@ msgstr "Paket bu miktarı kapsıyor"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "Malzeme çekme türü malzeme çekme görünümü belirler"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -5771,7 +5779,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Seçili stok seçenekler tutarlı değildir."
 
 #. module: stock
 #: code:addons/stock/stock.py:573
@@ -6777,7 +6785,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:48
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "Bir defada sadece bir toplama listesi için ters transfer yapabilirsiniz."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:58
@@ -6808,7 +6816,7 @@ msgstr ""
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
-msgstr ""
+msgstr "Taşındı ürün UoM ile uyumlu değil bir ölçü birimini kullanarak ürün taşımak deneyin. Lütfen bir ölçü birimini aynı ölçü birimini kategorisinde kullanın."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

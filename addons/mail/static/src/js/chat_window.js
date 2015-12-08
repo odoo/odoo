@@ -16,7 +16,7 @@ return Widget.extend({
         "click .o_chat_title": "on_click_fold",
     },
 
-    init: function (parent, channel_id, title, is_folded, options) {
+    init: function (parent, channel_id, title, is_folded, unread_msgs, options) {
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
@@ -25,7 +25,7 @@ return Widget.extend({
         this.options = _.defaults(options || {}, {
             display_stars: true,
         });
-        this.unread_msgs = -1;
+        this.unread_msgs = unread_msgs || 0;
     },
     start: function () {
         this.$content = this.$('.o_chat_content');
@@ -37,18 +37,15 @@ return Widget.extend({
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
-        this.thread.on('toggle_star_status', this, function (message_id) {
-            this.trigger('toggle_star_status', message_id);
-        });
+        this.thread.on('toggle_star_status', null, this.trigger.bind(this, 'toggle_star_status'));
+        this.thread.on('redirect_to_channel', null, this.trigger.bind(this, 'redirect_to_channel'));
+        this.thread.on('redirect', null, this.trigger.bind(this, 'redirect'));
 
         this.fold();
         var def = this.thread.appendTo(this.$content);
         return $.when(this._super(), def);
     },
     render: function (messages) {
-        if (this.folded) {
-            this.unread_msgs++;
-        }
         this.update_header();
         this.thread.render(messages, {display_load_more: false});
     },
@@ -56,6 +53,10 @@ return Widget.extend({
         var title = this.unread_msgs > 0 ?
             this.title + ' (' + this.unread_msgs + ')' : this.title;
         this.$('.o_chat_title').text(title);
+    },
+    update_unread: function (counter) {
+        this.unread_msgs = counter;
+        this.update_header();
     },
     scrollBottom: function () {
         this.$content.scrollTop(this.$content[0].scrollHeight);
@@ -66,23 +67,24 @@ return Widget.extend({
             height: this.folded ? "28px" : "333px"
         });
     },
-    toggle_fold: function () {
-        this.folded = !this.folded;
+    toggle_fold: function (fold) {
+        this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
             this.unread_msgs = 0;
+            this.trigger('messages_read');
         }
         this.fold();
     },
     on_keydown: function (event) {
-        if (event.which === $.ui.keyCode.ENTER) {
+        // ENTER key (avoid requiring jquery ui for external livechat)
+        if (event.which === 13) {
             var message = {
                 content: this.$input.val(),
                 attachment_ids: [],
                 partner_ids: [],
-                channel_id: this.channel_id,
             };
             this.$input.val('');
-            this.trigger('post_message', message);
+            this.trigger('post_message', message, this.channel_id);
         }
     },
     on_click_close: function (event) {

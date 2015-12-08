@@ -1874,6 +1874,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             var propose_partial = self.getCreatedLines().length === 0
                 && balance_type === "greater"
                 && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
+                && self.get("balance") * (last_line.debit - last_line.credit) < 0
                 && ! last_line.partial_reconcile
                 && ! last_line.already_paid;
             last_line.propose_partial_reconcile = propose_partial;

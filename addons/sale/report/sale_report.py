@@ -22,6 +22,7 @@ class sale_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
+        'price_subtotal': fields.float('Untaxed Total Price', readonly=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
         'categ_id': fields.many2one('product.category','Product Category', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),

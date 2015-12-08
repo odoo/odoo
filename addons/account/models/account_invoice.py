@@ -56,6 +56,8 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_journal(self):
+        if self._context.get('default_journal_id', False):
+            return self.env['account.journal'].browse(self._context.get('default_journal_id'))
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)
@@ -82,16 +84,16 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_company_signed = 0.0
-        sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                residual_company_signed += line.amount_residual * sign
+                residual_company_signed += line.amount_residual
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual_company_signed = residual_company_signed
+        self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
@@ -114,16 +116,21 @@ class AccountInvoice(models.Model):
             if len(lines) != 0:
                 for line in lines:
                     # get the outstanding residual value in invoice currency
+                    # get the outstanding residual value in its currency. We don't want to show it
+                    # in the invoice currency since the exchange rate between the invoice date and
+                    # the payment date might have changed.
                     if line.currency_id:
-                        amount_to_show = line.currency_id.compute(abs(line.amount_residual_currency), self.currency_id)
+                        currency_id = line.currency_id
+                        amount_to_show = abs(line.amount_residual_currency)
                     else:
-                        amount_to_show = line.company_id.currency_id.compute(abs(line.amount_residual), self.currency_id)
+                        currency_id = line.company_id.currency_id
+                        amount_to_show = abs(line.amount_residual)
                     info['content'].append({
                         'journal_name': line.ref or line.move_id.name,
                         'amount': amount_to_show,
-                        'currency': self.currency_id.symbol,
+                        'currency': currency_id.symbol,
                         'id': line.id,
-                        'position': self.currency_id.position,
+                        'position': currency_id.position,
                         'digits': [69, self.currency_id.decimal_places],
                     })
                 info['title'] = type_payment
@@ -146,7 +153,9 @@ class AccountInvoice(models.Model):
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                # get the payment value in invoice currency
+                # Get the payment value in its currency. We don't want to show it in the invoice
+                # currency since the exchange rate between the invoice date and the payment date
+                # might have changed.
                 if payment.currency_id and amount_currency != 0:
                     currency_id = payment.currency_id
                     amount_to_show = -amount_currency

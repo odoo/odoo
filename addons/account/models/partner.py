@@ -232,7 +232,7 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
-        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
+        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.amount_residual)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
@@ -325,7 +325,7 @@ class ResPartner(models.Model):
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:

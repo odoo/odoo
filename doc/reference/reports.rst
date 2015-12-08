@@ -216,19 +216,20 @@ Useful Remarks
 * Twitter Bootstrap and FontAwesome classes can be used in your report
   template
 * Local CSS can be put directly in the template
-
 * Global CSS can be inserted in the main report layout by inheriting its
   template and inserting your CSS::
 
-    <template id="report_saleorder_style" inherit_id="report.layout">
-      <xpath expr="//style" position="after">
-        <style type="text/css">
+    <template id="report_saleorder_style" inherit_id="report.style">
+      <xpath expr=".">
+        <t>
           .example-css-class {
             background-color: red;
           }
-        </style>
+        </t>
       </xpath>
     </template>
+* If it appears that your PDF report is missing the styles, please check
+  :ref:`these instructions <reference/backend/reporting/printed-reports/pdf-without-styles>`.
 
 .. _reference/reports/paper_formats:
 
