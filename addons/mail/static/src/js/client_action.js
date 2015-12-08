@@ -120,7 +120,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_attach_callback: function () {
-        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        if (this.channel) {
+            this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        }
     },
     on_detach_callback: function () {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
