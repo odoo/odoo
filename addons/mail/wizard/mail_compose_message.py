@@ -195,15 +195,10 @@ class MailComposer(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
         for wizard in self:
-            Mail = self.env['mail.mail']
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
             # mailing mode. But in 'single post' mode, attachments of an email template
             # also have to be duplicated to avoid changing their ownership.
-            if wizard.template_id:
-                # template user_signature is added when generating body_html
-                # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete, mail_server_id=wizard.template_id.mail_server_id.id)
             if wizard.attachment_ids and wizard.composition_mode != 'mass_mail' and wizard.template_id:
                 new_attachment_ids = []
                 for attachment in wizard.attachment_ids:
@@ -215,7 +210,14 @@ class MailComposer(models.TransientModel):
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
+
+            Mail = self.env['mail.mail']
             ActiveModel = self.env[wizard.model if wizard.model else 'mail.thread']
+            if wizard.template_id:
+                # template user_signature is added when generating body_html
+                # mass mailing: use template auto_delete value -> note, for emails mass mailing only
+                Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete, mail_server_id=wizard.template_id.mail_server_id.id)
+                ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
             if wizard.composition_mode == 'mass_post':
