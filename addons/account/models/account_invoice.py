@@ -1093,9 +1093,9 @@ class AccountInvoiceLine(models.Model):
         fix_price = self.env['account.tax']._fix_tax_included_price
         if type in ('in_invoice', 'in_refund'):
             if not self.price_unit or self.price_unit == self.product_id.standard_price:
-                self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes.ids)
+                self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
-            self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes.ids)
+            self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
