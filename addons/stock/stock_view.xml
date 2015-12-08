@@ -15,6 +15,7 @@
             sequence="100" groups="group_stock_manager,base.group_configuration"/>
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="base.group_configuration" sequence="1"/>
         <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_config_settings" sequence="2" groups="stock.group_adv_location"/>
+        <menuitem id="menu_packages_config" name="Packages" parent="menu_stock_config_settings" sequence="3" groups="product.group_stock_packaging"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
             parent="stock.menu_stock_config_settings" sequence="4"/>
@@ -2165,9 +2166,9 @@
             </field>
         </record>
         <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
-        <menuitem id="menu_packagings" name="Packagings" parent="stock.menu_warehouse_report" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
 
 
+        <menuitem id="menu_packagings" name="Package Types" parent="stock.menu_packages_config" action="product.action_packaging_view" groups="product.group_stock_packaging"/>
 
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
