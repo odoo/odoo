@@ -119,10 +119,10 @@ var Thread = Widget.extend({
            msg.hour = msg.date.fromNow();
         } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
            msg.day = _t("Yesterday");
-           msg.hour = msg.date.format('hh:mm');
+           msg.hour = msg.date.format('LT');
         } else {
             msg.day = msg.date.format('LL');
-            msg.hour = msg.date.format('hh:mm');
+            msg.hour = msg.date.format('LT');
         }
 
         msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
