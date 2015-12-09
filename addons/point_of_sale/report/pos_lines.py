@@ -2,30 +2,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp.osv import osv
-from openerp.report import report_sxw
+from odoo import api, models
 
 
-class pos_lines(report_sxw.rml_parse):
+class ReportPosLines(models.AbstractModel):
+    _name = "report.point_of_sale.report_saleslines"
 
-    def __init__(self, cr, uid, name, context):
-        super(pos_lines, self).__init__(cr, uid, name, context=context)
-        self.total = 0.0
-        self.localcontext.update({
+    @api.multi
+    def render_html(self, data=None):
+        Report = self.env['report']
+        report = Report._get_report_from_name('point_of_sale.report_saleslines')
+        orders = self.env['pos.order'].browse(self.ids)
+
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': report.model,
+            'docs': orders,
             'time': time,
-            'total_quantity': self.__total_quantity__,
-        })
-
-    def __total_quantity__(self, obj):
-        tot = 0
-        for line in obj.lines:
-            tot += line.qty
-        self.total = tot
-        return self.total
-
-
-class report_pos_lines(osv.AbstractModel):
-    _name = 'report.point_of_sale.report_saleslines'
-    _inherit = 'report.abstract_report'
-    _template = 'point_of_sale.report_saleslines'
-    _wrapped_report_class = pos_lines
+        }
+        return Report.render('point_of_sale.report_saleslines', docargs)
