@@ -885,10 +885,11 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         clone: function(){
             var orderline = new module.Orderline({},{
                 pos: this.pos,
-                order: null,
+                order: this.order,
                 product: this.product,
                 price: this.price,
             });
+            orderline.order = null;
             orderline.quantity = this.quantity;
             orderline.quantityStr = this.quantityStr;
             orderline.discount = this.discount;
