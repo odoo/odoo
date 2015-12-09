@@ -746,13 +746,13 @@ var chat_manager = {
      */
     redirect: function (res_model, res_id, dm_redirection_callback) {
         var self = this;
-        var redirect_to_document = function (res_model, res_id) {
+        var redirect_to_document = function (res_model, res_id, view_id) {
             web_client.do_action({
                 type:'ir.actions.act_window',
                 view_type: 'form',
                 view_mode: 'form',
                 res_model: res_model,
-                views: [[false, 'form']],
+                views: [[view_id || false, 'form']],
                 res_id: res_id,
             });
         };
@@ -766,7 +766,9 @@ var chat_manager = {
                 }
             });
         } else {
-            redirect_to_document(res_model, res_id);
+            new Model(res_model).call('get_formview_id', [res_id, session.context]).then(function (view_id) {
+                redirect_to_document(res_model, res_id, view_id);
+            });
         }
     },
 };
