@@ -3,7 +3,6 @@
 import base64
 import logging
 from email.utils import formataddr
-from urlparse import urljoin
 
 import psycopg2
 

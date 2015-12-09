@@ -98,6 +98,7 @@ class pos_config(osv.osv):
         'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+        # TODO master: remove the `iface_fullscreen` field. This is no longer used.
         'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'iface_print_auto': fields.boolean('Automatic Receipt Printing', help='The receipt will automatically be printed at the end of each order'),
         'iface_print_skip_screen': fields.boolean('Skip Receipt Screen', help='The receipt screen will be skipped if the receipt can be printed automatically.'),

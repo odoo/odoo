@@ -185,7 +185,9 @@ class event_event(models.Model):
     def name_get(self):
         result = []
         for event in self:
-            dates = [dt.split(' ')[0] for dt in [event.date_begin, event.date_end] if dt]
+            date_begin = fields.Datetime.from_string(event.date_begin)
+            date_end = fields.Datetime.from_string(event.date_end)
+            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
             dates = sorted(set(dates))
             result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
         return result
