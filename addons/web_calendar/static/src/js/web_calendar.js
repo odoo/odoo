@@ -630,7 +630,7 @@ var CalendarView = View.extend({
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
         } else { // if form all, get color -1
-            r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+            r.className = 'o_calendar_color_'+ self.all_filters[-1] ? self.all_filters[-1].color : 1;
         }
         return r;
     },
