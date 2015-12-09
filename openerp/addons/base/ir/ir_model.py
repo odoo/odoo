@@ -208,7 +208,7 @@ class ir_model(osv.osv):
         if  context is None:
             context = {}
         res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+        if vals.get('state','manual')=='manual':
             # add model in registry
             self.instanciate(cr, user, vals['model'], context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
@@ -372,7 +372,7 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base') == 'manual':
+        if vals.get('state','manual') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
@@ -445,7 +445,7 @@ class ir_model_fields(osv.osv):
                         raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
                     if vals['name'] in obj._columns:
                         raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
-                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
                         raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')

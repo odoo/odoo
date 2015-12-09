@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:44+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-02 23:38+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +159,7 @@ msgid ""
 "In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nDear %(partner_name)s,\n\nDespite several reminders, your account is still not settled.\n\nUnless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n\nI trust that this action will prove unnecessary and details of due payments is printed below.\n\nIn case of any queries concerning this matter, do not hesitate to contact our accounting department.\n\nBest Regards,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -191,7 +191,7 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nDear %(partner_name)s,\n\nException made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n\nWould your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n\nBest Regards,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -215,37 +215,37 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:174
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr "email (s) dikirim"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " email(s) should have been sent, but "
-msgstr ""
+msgstr "email (s) harus telah dikirim, namun"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " had unknown email address(es)"
-msgstr ""
+msgstr "memiliki alamat email yang tidak dikenal (es)"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr "Surat (s) dalam laporan"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr "tindakan manual (s) ditugaskan:"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr "akan dikirim"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -253,60 +253,60 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "$ {} user.company_id.name Pengingat Pembayaran"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(company_name)s"
-msgstr ""
+msgstr "% (COMPANY_NAME) s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(date)s"
-msgstr ""
+msgstr "% (tanggal) s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(partner_name)s"
-msgstr ""
+msgstr "% (PARTNER_NAME) s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(user_signature)s"
-msgstr ""
+msgstr "% (user_signature) s"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:234
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
-msgstr ""
+msgstr "mitra%s tidak memiliki kredit dan sebagai tindakan tersebut dibersihkan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
-msgstr ""
+msgstr ", Terbaru pembayaran tindak lanjut adalah:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Current Date"
-msgstr ""
+msgstr "Tanggal saat ini"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Partner Name"
-msgstr ""
+msgstr "nama Rekanan"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": User Name"
-msgstr ""
+msgstr "Username"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Nama Perusahaan Pengguna"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -319,17 +319,17 @@ msgid ""
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Klik untuk menentukan tindak lanjut tingkat dan tindakan yang terkait. </p><p> Untuk setiap langkah, menentukan tindakan yang akan diambil dan keterlambatan dalam hari. Hal ini dimungkinkan untuk menggunakan cetak dan e-mail template untuk mengirim pesan khusus untuk pelanggan. </p>"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Akun Follow-up"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Account Move line"
-msgstr ""
+msgstr "Akun Pindah baris"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -344,12 +344,12 @@ msgstr "Yang harus dilakukan .."
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr ""
+msgstr "Tindakan yang akan diambil misalnya Berikan phonecall, Periksa apakah itu dibayar, ..."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "After"
-msgstr ""
+msgstr "Sesudah"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:260
@@ -361,29 +361,29 @@ msgstr "Jumlah"
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Jumlah Karena"
 
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
+msgstr "Jumlah tempo"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:281
 #, python-format
 msgid "Amount due"
-msgstr ""
+msgstr "Jumlah karena"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:160
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Ada orang di sana?"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Menetapkan Bertanggung Jawab"
 
 #. module: account_followup
 #: field:account.move.line,result:0 field:account_followup.stat,balance:0
@@ -394,7 +394,7 @@ msgstr "Saldo"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
 msgid "Balance > 0"
-msgstr ""
+msgstr "Keseimbangan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -402,12 +402,12 @@ msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
 "                            order to exclude it from the next follow-up actions."
-msgstr ""
+msgstr "Di bawah ini adalah sejarah transaksi pelanggan ini. Anda dapat memeriksa \"Tidak Ikuti-up\" untuk mengecualikan itu dari tindak lanjut berikutnya."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Diblokir"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -418,12 +418,12 @@ msgstr "Batalkan"
 #: help:account_followup.print,test_print:0
 msgid ""
 "Check if you want to print follow-ups without changing follow-up level."
-msgstr ""
+msgstr "Periksa apakah Anda ingin mencetak tindak lanjut tanpa mengubah tingkat tindak lanjut."
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Click to mark the action as done."
-msgstr ""
+msgstr "Klik untuk menandai tindakan seperti yang dilakukan."
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
@@ -441,7 +441,7 @@ msgstr "Perusahaan:"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr ""
+msgstr "Mengkonfigurasi tingkat tindak lanjut Anda"
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -467,17 +467,17 @@ msgstr "Kredit"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_tree
 msgid "Customer Followup"
-msgstr ""
+msgstr "Tindak pelanggan"
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Janji pelanggan Pembayaran"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Customer ref:"
-msgstr ""
+msgstr "Referensi Pelanggan"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -487,7 +487,7 @@ msgstr "Tanggal:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Hari dari tingkat tindak lanjut harus berbeda"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -505,24 +505,24 @@ msgstr "Keterangan"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "Apakah Pedoman Follow-Ups"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
-msgstr ""
+msgstr "Jangan mengubah teks pesan, jika Anda ingin mengirim email dalam bahasa mitra, atau mengkonfigurasi dari perusahaan"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Document: Customer account statement"
-msgstr ""
+msgstr "Dokumen: Pernyataan account pelanggan"
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Download Letters"
-msgstr ""
+msgstr "Download Surat"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:259
@@ -533,28 +533,28 @@ msgstr "Jatuh Tempo"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Hari karena"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Email Tubuh"
 
 #. module: account_followup
 #: field:account_followup.print,email_subject:0
 msgid "Email Subject"
-msgstr ""
+msgstr "Email Subyek"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "Template Email"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:216
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
-msgstr ""
+msgstr "Email tidak dikirim karena alamat email dari mitra tidak diisi"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -568,28 +568,28 @@ msgstr "Gagal!"
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr ""
+msgstr "Langkah pertama"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Tindak lanjut"
 
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "menindak lanjuti"
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Follow-Up Action"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr ""
+msgstr "Follow-Ups Analisis"
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -598,92 +598,92 @@ msgstr ""
 #: model:ir.ui.menu,name:account_followup.account_followup_main_menu
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-up"
-msgstr ""
+msgstr "Tembusan"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Tindak lanjut Kriteria"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Tindak lanjut Entri dengan periode tahun berjalan"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Tindak lanjut Tingkat"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Tindak lanjut Tingkat"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Tindak lanjut Laporan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Tindak lanjut yang Bertanggung Jawab"
 
 #. module: account_followup
 #: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr ""
+msgstr "Tindak lanjut Mengirim Tanggal"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Tindak lanjut Statistik"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "Tindak lanjut Statistik oleh Partner"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_tree
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Tindak lanjut Langkah"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid "Follow-up letter of "
-msgstr ""
+msgstr "Tindak lanjut surat"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_graph
 msgid "Follow-up lines"
-msgstr ""
+msgstr "Tindak lanjut baris"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Tindak lanjut Sent"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-ups To Do"
-msgstr ""
+msgstr "Tindak lanjut yang Harus Dilakukan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Followup Level"
-msgstr ""
+msgstr "Ikutan Tingkat"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Memberikan urutan urutan ketika menampilkan daftar tindak lanjut baris."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -696,7 +696,7 @@ msgstr "Dikelompokan berdasarkan .."
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr ""
+msgstr "Dia mengatakan masalahnya adalah sementara dan berjanji untuk membayar 50%sebelum tanggal 15 Mei, menyeimbangkan sebelum 1 Juli."
 
 #. module: account_followup
 #: field:account_followup.followup,id:0
@@ -713,12 +713,12 @@ msgstr "ID"
 msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
-msgstr ""
+msgstr "Jika tidak ditentukan oleh tingkat tindak lanjut terbaru, ia akan mengirim dari template email default"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Jurnal termasuk ditandai sebagai litigasi sebuah"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:256
@@ -731,7 +731,7 @@ msgstr "Tanggal Invoice"
 #: code:addons/account_followup/wizard/account_followup_print.py:258
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Faktur Reminder"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -758,47 +758,47 @@ msgstr "Diperbaharui pada"
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr ""
+msgstr "Langkah terakhir"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Terbaru Follow-up"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "Terbaru Follow-up Tanggal"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr ""
+msgstr "Terbaru Follow-up Tingkat"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr ""
+msgstr "Terbaru Follow-up Tingkat tanpa litigasi"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Latest Follow-up Month"
-msgstr ""
+msgstr "Terbaru Follow-up Bulan"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr ""
+msgstr "Tanggal terakhir bahwa tingkat tindak lanjut dari mitra diubah"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Terbaru tindak lanjut"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Ikutan terbaru"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -809,44 +809,44 @@ msgstr "Li."
 #: code:addons/account_followup/account_followup.py:261
 #, python-format
 msgid "Lit."
-msgstr ""
+msgstr "Menyala"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Litigation"
-msgstr ""
+msgstr "Proses pengadilan"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Pengguna Action"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "Pengguna Follow-Ups"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Maturity Date"
-msgstr ""
+msgstr "Tanggal jatuh tempo dari baris ayat yang dihasilkan oleh baris contoh '%s' dari contoh '%s' didasarkan kepada persyaratan pembayaran mitra!\nMohon tetapkan mitra !"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Max Follow Up Tingkat"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
 #: model:ir.ui.menu,name:account_followup.menu_sale_followup
 msgid "My Follow-Ups"
-msgstr ""
+msgstr "Saya Follow-Ups"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "My Follow-ups"
-msgstr ""
+msgstr "Saya Follow-up"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -856,7 +856,7 @@ msgstr "Nama"
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
 msgid "Needs Printing"
-msgstr ""
+msgstr "Kebutuhan Percetakan"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
@@ -866,29 +866,29 @@ msgstr "Aksi Selanjutnya"
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "Berikutnya Aksi Tanggal"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "No Responsible"
-msgstr ""
+msgstr "Tidak Bertanggung Jawab"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Not Litigation"
-msgstr ""
+msgstr "Tidak Litigasi"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Hanya satu tindak lanjut per perusahaan diperbolehkan"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
+msgstr "Opsional Anda dapat menetapkan pengguna untuk bidang ini, yang akan membuat dia bertanggung jawab untuk tindakan."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -901,13 +901,13 @@ msgstr "Rekanan"
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
 msgid "Partner entries"
-msgstr ""
+msgstr "Entri mitra"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_tree
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Mitra untuk Ingatkan"
 
 #. module: account_followup
 #: field:account_followup.print,partner_ids:0
@@ -917,23 +917,23 @@ msgstr "Para Mitra"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Partners with Overdue Credits"
-msgstr ""
+msgstr "Mitra dengan Kredit tempo"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Pembayaran Follow-up"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr ""
+msgstr "Pembayaran Follow-up"
 
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr ""
+msgstr "Pembayaran Catatan"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -943,33 +943,33 @@ msgstr "Periode"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "Cetak Tindak Lanjut & Kirim Surat ke Pelanggan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "Cetak Pembayaran tempo"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print overdue payments report independent of follow-up line"
-msgstr ""
+msgstr "Cetak pembayaran terlambat melaporkan independen garis tindak lanjut"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr ""
+msgstr "Pesan dicetak"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:314
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
+msgstr "Dicetak laporan pembayaran tunggakan"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Rekonsiliasi Faktur & Pembayaran"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -985,17 +985,17 @@ msgstr "Referensi"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Responsible of credit collection"
-msgstr ""
+msgstr "Jawab pengumpulan kredit"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Hasil dari pengiriman surat dan email yang berbeda"
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_filter
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Cari Tindak lanjut"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
@@ -1005,55 +1005,55 @@ msgstr "Pencarian Partner"
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Kirim Konfirmasi Email"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Kirim Email di Mitra Bahasa"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Kirim Follow-Ups"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Kirim Surat dan Email"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:241
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Kirim Surat dan Email: Tindakan Ringkasan"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Kirim tempo Email"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Kirim surat"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Kirim email"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Mengirim email dan menghasilkan surat"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send follow-ups"
-msgstr ""
+msgstr "Kirim follow-up"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1068,17 +1068,17 @@ msgstr "Ringkasan"
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Summary of actions"
-msgstr ""
+msgstr "Ringkasan tindakan"
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Uji Cetak"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "The"
-msgstr ""
+msgstr "The"
 
 #. module: account_followup
 #: code:addons/account_followup/report/account_followup_print.py:82
@@ -1086,19 +1086,19 @@ msgstr ""
 msgid ""
 "The followup plan defined for the current company does not have any followup"
 " action."
-msgstr ""
+msgstr "Rencana tindak lanjut yang ditetapkan untuk perusahaan saat ini tidak memiliki tindakan tindak lanjut."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Maksimum tingkat tindak lanjut"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr ""
+msgstr "Maksimum tingkat tindak lanjut tanpa memperhitungkan garis rekening bergerak dengan litigasi"
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1106,7 +1106,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
+msgstr "Jumlah hari setelah tanggal jatuh tempo faktur menunggu sebelum mengirim pengingat. Bisa negatif jika Anda ingin mengirim peringatan sopan terlebih dahulu."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1114,37 +1114,37 @@ msgstr ""
 msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
-msgstr ""
+msgstr "Mitra tidak memiliki entri akuntansi apapun untuk mencetak dalam laporan terlambat untuk perusahaan saat ini."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:319
 #, python-format
 msgid "There is no followup plan defined for the current company."
-msgstr ""
+msgstr "Tidak ada rencana tindak lanjut yang ditetapkan untuk perusahaan saat ini."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Tahun fiskal ini"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
 "                        set the manual actions per customer, according to the follow-up levels defined."
-msgstr ""
+msgstr "Tindakan ini akan mengirim email follow-up, mencetak surat dan mengatur tindakan pengguna per pelanggan, sesuai dengan tingkat tindak lanjut didefinisikan."
 
 #. module: account_followup
 #: help:account_followup.print,date:0
 msgid "This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
+msgstr "Bidang ini memungkinkan Anda untuk memilih tanggal perkiraan untuk merencanakan Anda follow-up"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action:0
 msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
-msgstr ""
+msgstr "Ini adalah tindakan selanjutnya yang akan diambil. Ini secara otomatis akan mengatur kapan mitra mendapat tingkat tindak lanjut yang memerlukan tindakan manual."
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -1153,7 +1153,7 @@ msgid ""
 "current date when the partner gets a follow-up level that requires a manual "
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
-msgstr ""
+msgstr "Ini adalah ketika manual tindak lanjut yang diperlukan. Tanggal akan ditetapkan untuk tanggal saat ini ketika pasangan mendapat tingkat tindak lanjut yang memerlukan tindakan manual. Dapat menjadi praktis untuk mengatur secara manual misalnya untuk melihat apakah ia terus janjinya."
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -1166,7 +1166,7 @@ msgid ""
 "                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
+msgstr "Untuk mengingatkan pelanggan membayar faktur mereka, Anda dapat\n                        menentukan tindakan yang berbeda tergantung pada seberapa parah\n                        tunggakan pelanggan. Tindakan ini dibundel\n                        ke tingkat tindak lanjut yang dipicu ketika karena\n                        tanggal faktur telah berlalu tertentu\n                        jumlah hari. Jika ada faktur terlambat lain untuk\n                        pelanggan yang sama, tindakan yang paling\n                        faktur terlambat akan dieksekusi."
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1186,24 +1186,24 @@ msgstr "Total:"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Ketika pengolahan, akan mencetak surat"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Ketika pengolahan, ia akan mengirim email"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "Ketika pengolahan, itu akan mengatur tindakan manual yang akan diambil untuk pelanggan itu."
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Terburuk Due Date"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -1213,31 +1213,31 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
+msgstr "Tulis di sini pengenalan dalam surat itu, menurut tingkat tindak lanjut. Anda dapat menggunakan kata kunci berikut dalam teks. Jangan lupa untuk menerjemahkan dalam semua bahasa Anda diinstal dengan menggunakan ke atas icon yang tepat."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291
 #, python-format
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
-msgstr ""
+msgstr "Anda menjadi bertanggung jawab untuk melakukan tindakan selanjutnya untuk pembayaran tindak lanjut dari"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "Deskripsi Anda tidak valid, menggunakan legenda benar atau %% jika Anda ingin menggunakan karakter persen."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "hari terlambat, lakukan tindakan berikut:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr ""
+msgstr "misalnya Panggil pelanggan, memeriksa apakah itu dibayar, ..."
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -1253,4 +1253,4 @@ msgstr "tidak diketahui"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "⇾ Mark as Done"
-msgstr ""
+msgstr "⇾ Tandai sebagai Selesai"

@@ -5,13 +5,14 @@
 # Translators:
 # Alexey Bilkevich <mmmbrsk@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Ivan <jzx115@gmail.com>, 2015
 # Vladlen Bolshakov <vladlensb@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-14 09:35+0000\n"
+"PO-Revision-Date: 2015-11-28 08:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +155,7 @@ msgstr "# транзакции"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Счёт (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
@@ -683,7 +684,7 @@ msgstr "Код и название счета"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Счёт: общее - выписка по счёту"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -1268,17 +1269,17 @@ msgstr "Все проведенные проводки"
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "All accounts"
-msgstr ""
+msgstr "Все счета"
 
 #. module: account
 #: view:website:account.report_generalledger
 msgid "All accounts'"
-msgstr ""
+msgstr "Все счета\""
 
 #. module: account
 #: field:account.bank.statement,all_lines_reconciled:0
 msgid "All lines reconciled"
-msgstr ""
+msgstr "Сверка всех строк завершена."
 
 #. module: account
 #: help:account.move,state:0
@@ -1288,7 +1289,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr ""
+msgstr "Всем новым записям журнала, созданным вручную, обычно присваивается статус \"Неопубликовано\", но вы можете настроить пропуск этого статуса для соответствующего журнала. В этом случае записи будут вести себя так же, как автоматически созданные системой при проверке документов (инвойсов, банковских выписок...), и их статус будет \"Опубликовано\"."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
@@ -1303,7 +1304,7 @@ msgstr "Все выбранные проводки будут утвержден
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Необходимо обработать все строки отчёта, чтобы закрыть выписку."
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -1673,7 +1674,7 @@ msgstr "В качестве примера, десятичной точност�
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Ask Refund"
-msgstr ""
+msgstr "Запросить возврат"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
@@ -6582,7 +6583,7 @@ msgstr "Следующий номер счета поставщика"
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr "Нет журнала аналитики!"
+msgstr "Журнал аналитики отсутствует!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -11121,6 +11122,13 @@ msgid ""
 "You are selecting transactions from both a payable and a receivable account.\n"
 "\n"
 "In order to proceed, you first need to deselect the %s transactions."
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
 msgstr ""
 
 #. module: account
