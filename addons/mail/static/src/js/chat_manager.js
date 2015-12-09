@@ -450,6 +450,10 @@ function on_toggle_star_notification (data) {
             message.is_starred = data.starred;
             if (!message.is_starred) {
                 remove_message_from_channel("channel_starred", message);
+            } else {
+                add_to_cache(message, []);
+                var channel_starred = chat_manager.get_channel('channel_starred');
+                channel_starred.cache = _.pick(channel_starred.cache, "[]");
             }
             chat_manager.bus.trigger('update_message', message);
         }
@@ -487,8 +491,12 @@ function on_mark_as_unread_notification (data) {
         if (message) {
             invalidate_caches(message.channel_ids);
             add_channel_to_message(message, 'channel_inbox');
+            add_to_cache(message, []);
         }
     });
+    var channel_inbox = chat_manager.get_channel('channel_inbox');
+    channel_inbox.cache = _.pick(channel_inbox.cache, "[]");
+
     _.each(data.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
