@@ -25,8 +25,23 @@
 
 
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
+
+        <record id="product_template_action_product" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_products": 1, 'default_type': 'product'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p>
+            </field>
+        </record>
+
         <menuitem
-            action="product.product_template_action_product" id="menu_product_variant_config_stock" name="Products"
+            action="product_template_action_product" id="menu_product_variant_config_stock" name="Products"
             parent="stock.menu_stock_inventory_control" sequence="1"/>
 
         <menuitem id="product_product_menu" name="Product Variants" action="product.product_normal_action"
