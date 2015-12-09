@@ -625,6 +625,7 @@ class website_sale(http.Controller):
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
         order.write({'partner_id': partner_id, 'partner_invoice_id': partner_id})
         order_obj.onchange_partner_id(cr, SUPERUSER_ID, [order.id], context=context)
+        order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
