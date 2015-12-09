@@ -102,7 +102,7 @@ class TestSanitizer(unittest.TestCase):
 
     def test_edi_source(self):
         html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
-        self.assertIn('div style="font-family: \'Lucica Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
+        self.assertIn('div style="font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
             'html_sanitize removed valid style attribute')
         self.assertIn('<span style="color: #222; margin-bottom: 5px; display: block; ">', html,
             'html_sanitize removed valid style attribute')

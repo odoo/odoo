@@ -113,14 +113,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Where
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td  style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                        <div style = "font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                             : ${object.event_id.location}
                                                             <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
                                                                 </span>
@@ -132,14 +132,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.description :
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             What
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${object.event_id.description}
                                                         </div>
                                                     % endif
@@ -149,21 +149,21 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Duration
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td colspan="3" style="vertical-align:text-top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}
                                                         </div>
                                                     % endif
                                                 </td>
                                             </tr>                                                
                                         <tr style=" height: 30px;">
-                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                 <div>
                                                     Attendees
                                                 </div>
@@ -238,14 +238,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Where
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td  style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                        <div style = "font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                             : ${object.event_id.location}
                                                             <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
                                                                 </span>
@@ -257,14 +257,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.description :
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             What
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${object.event_id.description}
                                                         </div>
                                                     % endif
@@ -274,21 +274,21 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Duration
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td colspan="3" style="vertical-align:text-top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}
                                                         </div>
                                                     % endif
                                                 </td>
                                             </tr>                                                
                                         <tr style=" height: 30px;">
-                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                 <div>
                                                     Attendees
                                                 </div>
@@ -362,14 +362,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Where
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td  style="vertical-align:top;">
                                                     % if object.event_id.location:
-                                                        <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                        <div style = "font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                             : ${object.event_id.location}
                                                             <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
                                                                 </span>
@@ -381,14 +381,14 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if object.event_id.description :
-                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             What
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${object.event_id.description}
                                                         </div>
                                                     % endif
@@ -398,21 +398,21 @@
                                             <tr>
                                                 <td style="vertical-align:top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             Duration
                                                         </div>
                                                     % endif
                                                 </td>
                                                 <td colspan="3" style="vertical-align:text-top;">
                                                     % if not object.event_id.allday and object.event_id.duration:
-                                                        <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                        <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                             : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}
                                                         </div>
                                                     % endif
                                                 </td>
                                             </tr>                                                
                                         <tr style=" height: 30px;">
-                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                            <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                 <div>
                                                     Attendees
                                                 </div>
