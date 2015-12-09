@@ -4,12 +4,11 @@
   !record {model: account.invoice, id: demo_invoice_1}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     user_id: base.user_demo
     reference_type: none
     payment_term_id: account.account_payment_term
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - name: 'Dell Inspiron Laptop without OS'
         product_id: product.product_product_49
@@ -25,9 +24,8 @@
   !record {model: account.invoice, id: demo_invoice_2}:
     company_id: base.main_company
     partner_id: base.res_partner_2
-    currency_id: base.EUR
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-08'
+    date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
       - name: '8-port Switch'
         product_id: product.product_product_51
@@ -43,7 +41,6 @@
   !record {model: account.invoice, id: demo_invoice_3}:
     company_id: base.main_company
     partner_id: base.res_partner_2
-    currency_id: base.EUR
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
@@ -61,7 +58,6 @@
   !record {model: account.invoice, id: demo_invoice_invest_sale}:
     company_id: base.main_company
     partner_id: base.res_partner_3
-    currency_id: base.EUR
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
 -
@@ -89,12 +85,11 @@
   !record {model: account.invoice, id: demo_invoice_0}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     user_id: base.user_demo
     reference_type: none
     payment_term_id: account.account_payment_term
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - name: 'Toner Cartridge'
         price_unit: 10.0
@@ -110,9 +105,8 @@
   !record {model: account.invoice, id: demo_invoice_january_wages}:
     company_id: base.main_company
     partner_id: base.res_partner_12
-    currency_id: base.EUR
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-01'
+    date_invoice: !eval time.strftime('%Y-%m')+'-01'
 -
   !python {model: ir.model.data} : |
       line_vals = {
@@ -131,9 +125,8 @@
   !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
     company_id: base.main_company
     partner_id: base.res_partner_1
-    currency_id: base.EUR
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y')+'-01-15'
+    date_invoice: !eval time.strftime('%Y-%m')+'-15'
 -
   !python {model: ir.model.data} : |
       line_vals = {

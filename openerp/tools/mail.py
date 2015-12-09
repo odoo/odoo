@@ -316,7 +316,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         root = lxml.html.fromstring(inner_html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for node in root.iter():
         # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
         if node.tail:
@@ -466,7 +466,7 @@ def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0
     final = ''
-    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s"':]+)(:[0-9]+)?(\/|\/([^\s"']))?)(?![^\s"']*["'])""")
+    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"':]+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
     for item in re.finditer(link_tags, text):
         final += text[idx:item.start()]
         final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))

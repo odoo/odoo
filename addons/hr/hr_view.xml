@@ -34,6 +34,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
+                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Public Information">
                                 <group>
@@ -45,7 +46,6 @@
                                         <field name="work_location"/>
                                         <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
-                                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
@@ -166,11 +166,7 @@
                                 <field name="name"/>
                             </strong>
                             <ul>
-                                <li id="last_login">
-                                    <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
-                                          <t t-esc="moment(record.last_login.raw_value).format('LT')"/>
-                                    </span>
-                                </li>
+                                <li id="last_login"/>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                 <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>

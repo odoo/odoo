@@ -109,7 +109,7 @@ class MailMail(osv.Model):
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
         if mail_sent is True and mail.statistics_ids:
-            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now()}, context=context)
+            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now(), 'exception': False}, context=context)
         elif mail_sent is False and mail.statistics_ids:
             self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'exception': fields.datetime.now()}, context=context)
         return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)

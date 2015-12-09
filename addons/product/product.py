@@ -349,6 +349,14 @@ class product_attribute_line(osv.osv):
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values'),
     }
 
+    def _check_valid_attribute(self, cr, uid, ids, context=None):
+        obj_pal = self.browse(cr, uid, ids[0], context=context)
+        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+
+    _constraints = [
+        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
+    ]
+
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         # TDE FIXME: currently overriding the domain; however as it includes a
         # search on a m2o and one on a m2m, probably this will quickly become
@@ -886,7 +894,12 @@ class product_product(osv.osv):
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+            if context.get('bin_size'):
+                result[obj.id] = obj.image_variant
+            else:
+                result[obj.id] = tools.image_get_resized_images(obj.image_variant, return_big=True, avoid_resize_medium=True)[name]
+            if not result[obj.id]:
+                result[obj.id] = getattr(obj.product_tmpl_id, name)
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):

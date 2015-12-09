@@ -290,7 +290,15 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
+        if user_id and context.get('team_id'):
+            team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
+            if user_id in team.member_ids.ids:
+                return {}
+        team_ids = self.pool.get('crm.team').search(
+            cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], limit=1, context=context)
+        team_id = team_ids and team_ids[0] or False
+        if not team_id:
+            team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
     def stage_find(self, cr, uid, cases, team_id, domain=None, order='sequence', context=None):

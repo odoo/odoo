@@ -3,6 +3,7 @@ import json
 import openerp
 import random
 import re
+from datetime import datetime, timedelta
 
 from openerp import api, fields, models
 from openerp import tools
@@ -40,7 +41,9 @@ class ImLivechatChannel(models.Model):
         compute='_are_you_inside', store=False, readonly=True)
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
-    rating_percentage_satisfaction = fields.Integer('% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1)
+    rating_percentage_satisfaction = fields.Integer(
+        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
+        help="Percentage of happy ratings over the past 7 days")
 
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
@@ -99,7 +102,8 @@ class ImLivechatChannel(models.Model):
     @api.depends('channel_ids.rating_ids')
     def _compute_percentage_satisfaction(self):
         for record in self:
-            repartition = record.channel_ids.rating_get_grades()
+            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
+            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
             total = sum(repartition.values())
             if total > 0:
                 happy = repartition['great']

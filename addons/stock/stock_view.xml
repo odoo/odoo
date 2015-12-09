@@ -1338,6 +1338,7 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
@@ -1501,7 +1502,6 @@
                     <field name="picking_id" string="Reference" invisible="1"/>
                     <field name="sequence" invisible="1"/>
                     <field name="origin"/>
-                    <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>

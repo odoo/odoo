@@ -117,7 +117,7 @@ class MailGroup(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         thread_obj = request.registry.get('mail.message')
 
-        domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
+        domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('message_type', '!=', 'notification')]
         if mode == 'thread':
             domain += [('parent_id', '=', False)]
         if date_begin and date_end:

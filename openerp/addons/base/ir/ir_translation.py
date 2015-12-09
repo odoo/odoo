@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from difflib import get_close_matches
 import logging
 
@@ -130,11 +131,13 @@ class ir_translation_import_cursor(object):
             AND irt.type = ti.type
             AND irt.module = ti.module
             AND irt.name = ti.name
-            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
-            AND (    ti.type NOT IN ('model', 'view')
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
-                )
+            AND (
+                    (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
+                 OR (ti.type = 'field')
+                 OR (ti.type = 'help')
+                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
+            )
         """
 
         # Step 2: update existing (matching) translations
@@ -190,7 +193,9 @@ class ir_translation(osv.osv):
                 model = self.pool.get(model_name)
                 if model is None:
                     continue
-                field = model._fields[field_name]
+                field = model._fields.get(field_name)
+                if field is None:
+                    continue
                 if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
@@ -494,6 +499,40 @@ class ir_translation(osv.osv):
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
+    @api.multi
+    def check(self, mode):
+        """ Check access rights of operation ``mode`` on ``self`` for the
+        current user. Raise an AccessError in case conditions are not met.
+        """
+        if self.env.user._is_admin():
+            return
+
+        # collect translated field records (model_ids) and other translations
+        trans_ids = []
+        model_ids = defaultdict(list)
+        model_fields = defaultdict(list)
+        for trans in self:
+            if trans.type == 'model':
+                mname, fname = trans.name.split(',')
+                model_ids[mname].append(trans.res_id)
+                model_fields[mname].append(fname)
+            else:
+                trans_ids.append(trans.id)
+
+        # check for regular access rights on other translations
+        if trans_ids:
+            records = self.browse(trans_ids)
+            records.check_access_rights(mode)
+            records.check_access_rule(mode)
+
+        # check for read/write access on translated field records
+        fmode = 'read' if mode == 'read' else 'write'
+        for mname, ids in model_ids.iteritems():
+            records = self.env[mname].browse(ids)
+            records.check_access_rights(fmode)
+            records.check_field_access_rights(fmode, model_fields[mname])
+            records.check_access_rule(fmode)
+
     @api.model
     def create(self, vals):
         if vals.get('type') == 'model' and vals.get('value'):
@@ -501,7 +540,8 @@ class ir_translation(osv.osv):
             mname, fname = vals['name'].split(',')
             field = self.env[mname]._fields[fname]
             vals['value'] = field.check_trans_value(vals['value'])
-        record = super(ir_translation, self).create(vals)
+        record = super(ir_translation, self.sudo()).create(vals).with_env(self.env)
+        record.check('create')
         self.clear_caches()
         return record
 
@@ -518,59 +558,62 @@ class ir_translation(osv.osv):
                 vals['value'] = field.check_trans_value(vals['value'])
         elif vals.get('src') or not vals.get('value', True):
             vals.setdefault('state', 'to_translate')
-        result = super(ir_translation, self).write(vals)
+        self.check('write')
+        result = super(ir_translation, self.sudo()).write(vals)
+        self.check('write')
         self.clear_caches()
         return result
 
-    def unlink(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def unlink(self):
+        self.check('unlink')
         self.clear_caches()
-        result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
-        return result
+        return super(ir_translation, self.sudo()).unlink()
 
     @api.model
     def insert_missing(self, field, records):
         """ Insert missing translations for `field` on `records`. """
         records = records.with_context(lang=None)
+        external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s AND module=%(module)s
                         );
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 src = record[field.name] or None
                 for term in set(field.get_trans_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (field.model_name, field.name),
                         'res_id': record.id,
                         'src': term,
+                        'module': module
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
                         UPDATE ir_translation SET src=%(src)s
-                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s;
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 self._cr.execute(query, {
                     'name': "%s,%s" % (field.model_name, field.name),
                     'res_id': record.id,
                     'src': record[field.name] or None,
+                    'module': module
                 })
         self.clear_caches()
 

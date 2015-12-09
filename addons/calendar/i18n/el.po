@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-11-21 23:27+0000\n"
+"POT-Creation-Date: 2015-11-26 09:05+0000\n"
+"PO-Revision-Date: 2015-12-05 23:23+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -374,7 +374,7 @@ msgstr "[Εγώ]"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
@@ -387,16 +387,30 @@ msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - Υπενθύμιση"
 
 #. module: calendar
+#: code:addons/calendar/calendar.py:775
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr "%s στο %s Προς\n %s στο %s (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:773
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr "%s στο (%s Προς %s) (%s)"
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1628
+#: code:addons/calendar/calendar.py:1620
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Εστάλη e-mail "
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -507,7 +521,7 @@ msgstr "Ημερολόγιο"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Υπενθύμιση Ημερολογίου"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -638,7 +652,7 @@ msgstr "Διάρκεια"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
 #: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Διάρκεια σε λεπτά"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -714,7 +728,7 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:44
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Το ημερολόγιο όλων"
 
 #. module: calendar
 #: selection:calendar.event,class:0
@@ -824,7 +838,7 @@ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζοντ�
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Εάν το ενεργό πεδίο έχει οριστεί ως ψευδές, θα σας επιτρέψει να αποκρύψετε τις πληροφορίες ειδοποίησης συμβάντος χωρίς να την καταργήσετε."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -839,7 +853,7 @@ msgstr "Πρόσκληση"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "Διακριτικό Πρόσκλησης"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -969,7 +983,7 @@ msgstr "Συναντήσεις"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
-msgstr "Μύνημα"
+msgstr "Μήνυμα"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_ids
@@ -1384,7 +1398,7 @@ msgstr "Μέχρι"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Ενημέρωσε μόνο αυτό το περιστατικό"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.subtype_invitation
@@ -1458,7 +1472,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1250
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "Το διάστημα δεν μπορεί να είναι αρνητικό."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment

@@ -10,18 +10,21 @@ bus.ERROR_DELAY = 10000;
 
 bus.Bus = Widget.extend({
     init: function(){
-        var self = this;
         this._super();
         this.options = {};
         this.activated = false;
         this.channels = [];
         this.last = 0;
         this.stop = false;
+        this.is_master = true;
 
         // bus presence
         this.set("window_focus", true);
-        this.on("change:window_focus", self, function() {
-            self.options.im_presence = self.get("window_focus");
+        this.on("change:window_focus", this, function () {
+            this.options.im_presence = this.get("window_focus");
+            if (this.get("window_focus")) {
+                this.trigger('window_focus', this.is_master);
+            }
         });
         $(window).on("focus", _.bind(this.window_focus, this));
         $(window).on("blur", _.bind(this.window_blur, this));
@@ -76,6 +79,9 @@ bus.Bus = Widget.extend({
     window_blur: function() {
         this.set("window_focus", false);
     },
+    is_odoo_focused: function () {
+        return this.get("window_focus");
+    },
     update_option: function(key, value){
         this.options[key] = value;
     },
@@ -106,17 +112,9 @@ bus.Bus = Widget.extend({
  */
 var CrossTabBus = bus.Bus.extend({
     init: function(){
-        var self = this;
         this._super.apply(this, arguments);
         this.is_master = false;
-        tab_manager.register_tab(function () {
-            self.is_master = true;
-            self.start_polling();
-        }, function () {
-            self.is_master = false;
-            self.stop_polling();
-        });
-
+        this.is_registered = false;
         if (parseInt(getItem('bus.last_ts', 0)) + 50000 < new Date().getTime()) {
             setItem('bus.last', -1);
         }
@@ -129,9 +127,21 @@ var CrossTabBus = bus.Bus.extend({
             this.channels = getItem('bus.channels', this.channels);
             this.options = getItem('bus.options', this.options);
         }
-
     },
     start_polling: function(){
+        var self = this;
+        if (!this.is_registered) {
+            this.is_registered = true;
+            tab_manager.register_tab(function () {
+                self.is_master = true;
+                self.start_polling();
+            }, function () {
+                self.is_master = false;
+                self.stop_polling();
+            });
+            return;  // start_polling will be called again on tab registration
+        }
+
         if (this.is_master) {
             this._super.apply(this, arguments);
         }
@@ -172,6 +182,10 @@ var CrossTabBus = bus.Bus.extend({
         if(e.key === 'bus.options'){
             this.options = JSON.parse(value);
         }
+        // update focus
+        if(e.key === 'bus.focus'){
+            this.set('window_focus', JSON.parse(value));
+        }
     },
     add_channel: function(){
         this._super.apply(this, arguments);
@@ -188,6 +202,14 @@ var CrossTabBus = bus.Bus.extend({
     delete_option: function(){
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
+    },
+    window_focus: function() {
+        this._super.apply(this, arguments);
+        setItem('bus.focus', true);
+    },
+    window_blur: function() {
+        this._super.apply(this, arguments);
+        setItem('bus.focus', false);
     },
 });
 

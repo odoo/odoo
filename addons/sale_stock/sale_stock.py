@@ -134,7 +134,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type != 'service' and self.product_uom_qty < self._origin.product_uom_qty:
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
@@ -159,10 +159,14 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_delivered_qty(self):
+        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
+            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
+            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
@@ -189,7 +193,7 @@ class SaleOrderLine(models.Model):
             which is the case in MTO, Cross-Dock or Drop-Shipping
         """
         is_available = False
-        product_routes = self.route_id or self.product_id.route_ids
+        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
 
         # Check MTO
         wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id

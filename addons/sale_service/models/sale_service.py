@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp import api, models
 from openerp.osv import fields, osv
 from openerp.exceptions import UserError
@@ -124,7 +125,7 @@ class project_task(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         for task in self.browse(cr, uid, ids, context=context):
             if task.procurement_id:
-                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+                proc_obj.check(cr, SUPERUSER_ID, [task.procurement_id.id], context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """

@@ -1,6 +1,7 @@
 odoo.define('website_sale.cart', function (require) {
 "use strict";
 
+var base = require('web_editor.base');
 var core = require('web.core');
 var _t = core._t;
 
@@ -60,6 +61,13 @@ if(!$('#o_shop_collapse_category, .oe_website_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '#o_shop_collapse_category, .oe_website_sale'");
 }
 
+function update_product_image(event_source, product_id) {
+    var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
+    $img.attr("src", "/web/image/product.product/" + product_id + "/image");
+    $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
+        .data('oe-model', 'product.product').data('oe-id', product_id);
+}
+
 $('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
     $(this).parent().siblings().find('.fa-chevron-down:first').click();
     $(this).parents('li').find('ul:first').show('normal');
@@ -94,7 +102,10 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
         var product_ids = [];
         var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").first();
-        product_dom.data("attribute_value_ids").forEach(function(entry) {
+        if (!product_dom.length) {
+            return;
+        }
+        _.each(product_dom.data("attribute_value_ids"), function(entry) {
             product_ids.push(entry);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
@@ -124,7 +135,7 @@ $('.oe_website_sale').each(function () {
           };
     })();
 
-    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function () {
+    $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
       var $input = $(this);
         if ($input.data('update_change')) {
             return;
@@ -139,9 +150,9 @@ $('.oe_website_sale').each(function () {
       clickwatch(function(){
 
         $dom_optional.each(function(){
+            $(this).find('.js_quantity').text(value);
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
-        if (isNaN(value)) value = 0;
         $input.data('update_change', true);
 
         ajax.jsonRpc("/shop/cart/update_json", 'call', {
@@ -194,17 +205,21 @@ $('.oe_website_sale').each(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().find("input");
+        var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
-        $input.val(quantity > min ? (quantity < max ? quantity : max) : min);
-        $('input[name="'+$input.attr("name")+'"]').val(quantity > min ? (quantity < max ? quantity : max) : min);
+        // if they are more of one input for this product (eg: option modal)
+        $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
+            var $prod = $(this).closest('*:has(input[name="product_id"])');
+            return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
+        }).val(quantity > min ? (quantity < max ? quantity : max) : min);
         $input.change();
         return false;
     });
 
     $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
-        if (!event.isDefaultPrevented()) {
+        if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
             $(this).closest('form').submit();
         }
     });
@@ -241,9 +256,7 @@ $('.oe_website_sale').each(function () {
         var $parent = $(this).closest('.js_product');
         $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
         $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
-
-        var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-        $img.attr("src", "/web/image/product.product/" + $(this).val() + "/image");
+        update_product_image(this, +$(this).val());
     });
 
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function (ev) {
@@ -279,10 +292,7 @@ $('.oe_website_sale').each(function () {
         }
 
         if (product_id) {
-            var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-            $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-            $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product').data('oe-id', product_id);
+            update_product_image(this, product_id);
         }
 
         $parent.find("input.js_variant_change:radio, select.js_variant_change").each(function () {
@@ -306,11 +316,11 @@ $('.oe_website_sale').each(function () {
         if (product_id) {
             $parent.removeClass("css_not_available");
             $product_id.val(product_id);
-            $parent.find(".js_check_product").removeAttr("disabled");
+            $parent.find("#add_to_cart").removeClass("disabled");
         } else {
             $parent.addClass("css_not_available");
             $product_id.val(0);
-            $parent.find(".js_check_product").attr("disabled", "disabled");
+            $parent.find("#add_to_cart").addClass("disabled");
         }
     });
 
