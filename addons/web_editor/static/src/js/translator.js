@@ -129,7 +129,7 @@ var Translate = Widget.extend({
 
         var attrs = ['placeholder', 'title', 'alt'];
         _.each(attrs, function (attr) {
-            $target.find('['+attr+'*="data-oe-translation-id="]').each(function () {
+            $target.find('['+attr+'*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
