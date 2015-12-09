@@ -43,7 +43,9 @@
                                     <span t-field="l.product_id.name"/>
                                 </td>
                                 <td>
-                                    <t t-esc="taxes(l)"/>
+                                    <t t-foreach="l.product_id.taxes_id" t-as="tax">
+                                        <t t-esc="tax.name"/> <t t-if="len(l.product_id.taxes_id) -1 > tax_index">, </t>
+                                    </t>
                                 </td>
                                 <td class="text-right">
                                     <span t-field="l.qty"/>

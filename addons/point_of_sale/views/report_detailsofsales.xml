@@ -51,9 +51,9 @@
                                 <span t-esc="line_ids['pos_name']"/>
                             </td>
                             <td>
-                                [<t t-if="line_ids['code']">
-                                    <span t-esc="line_ids['code']"/>
-                                </t>]
+                                <t t-if="line_ids['code']">
+                                    [ <span t-esc="line_ids['code']"/> ]
+                                </t>
                                 <span t-esc="line_ids['name']"/>
                             </td>
                             <td class="text-right">
