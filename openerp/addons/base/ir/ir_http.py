@@ -54,12 +54,26 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
     def to_url(self, value):
         return ",".join(i.id for i in value)
 
+class SignedIntConverter(werkzeug.routing.BaseConverter):
+    def __init__(self, url_map):
+        super(SignedIntConverter, self).__init__(url_map)
+
+    def to_python(self, value):
+        try:
+            return int(value)
+        except ValueError:
+            raise werkzeug.routing.ValidationError()
+
+    def to_url(self, value):
+        return str(value)
+
+
 class ir_http(osv.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP routing"
 
     def _get_converters(self):
-        return {'model': ModelConverter, 'models': ModelsConverter}
+        return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     def _find_handler(self, return_rule=False):
         return self.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
