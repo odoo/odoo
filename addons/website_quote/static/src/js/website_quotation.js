@@ -102,8 +102,9 @@ if(!$('.o_website_quote').length) {
                     'signer': signer_name,
                     'sign': signature?JSON.stringify(signature[1]):false,
                 }).then(function (data) {
+                    var message_id = (data) ? 3 : 4;
                     self.$el.modal('hide');
-                    window.location.href = '/quote/'+order_id.toString()+'/'+token+'?message=3';
+                    window.location.href = '/quote/'+order_id.toString()+'/'+token+'?message='+message_id;
                 });
                 return false;
             }
