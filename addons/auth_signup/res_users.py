@@ -256,6 +256,8 @@ class res_users(osv.Model):
     def action_reset_password(self, cr, uid, ids, context=None):
         """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
+        if not context:
+            context = {}
         create_mode = bool(context.get('create_user'))
         res_partner = self.pool.get('res.partner')
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
