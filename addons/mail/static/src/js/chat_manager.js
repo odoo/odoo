@@ -137,6 +137,7 @@ function make_message (data) {
         channel_ids: data.channel_ids,
         model: data.model,
         res_id: data.res_id,
+        url: session.url("/mail/view?message_id=" + data.id),
     };
 
     _.each(_.keys(emoji_substitutions), function (key) {
@@ -516,11 +517,12 @@ function on_chat_session_notification (chat_session) {
     }
     // partner specific change (open a detached window for example)
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-        if (chat_session.is_minimized && chat_manager.get_channel(chat_session.id)) {
-            chat_manager.bus.trigger("open_chat", chat_session);
+        var channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
+        if (channel) {
+            chat_manager.bus.trigger("open_chat", channel);
         }
     } else if (chat_session.state === "closed") {
-        chat_manager.bus.trigger("close_chat", chat_session);
+        chat_manager.bus.trigger("close_chat", chat_manager.get_channel(chat_session.id));
     }
 }
 
