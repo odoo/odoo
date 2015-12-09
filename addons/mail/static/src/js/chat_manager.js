@@ -98,7 +98,7 @@ function add_message (data, options) {
                 if (!query.is_displayed) {
                     var title = _t('New message');
                     if (msg.author_id[1]) {
-                        title += _t(' from ') + msg.author_id[1];
+                        title += _t(' from ') + _.escape(msg.author_id[1]);
                     }
                     var trunc_text = function (t, limit) {
                         return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
