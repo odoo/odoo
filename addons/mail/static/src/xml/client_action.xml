@@ -83,7 +83,7 @@
                 <i t-if="channel.mass_mailing" class="fa fa-envelope-o"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
-                      t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
+                      t-att-title="_t('Leave this channel')" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">

@@ -4,7 +4,6 @@ import base64
 import datetime
 import dateutil
 import email
-import json
 import lxml
 from lxml import etree
 import logging
@@ -869,7 +868,11 @@ class MailThread(models.AbstractModel):
                 obj = record_set[0]
             else:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            if not author_id or author_id not in [fol.id for fol in obj.message_partner_ids]:
+            accepted_partner_ids = list(
+                set(partner.id for partner in obj.message_partner_ids) |
+                set(partner.id for channel in obj.message_channel_ids for partner in channel.channel_partner_ids)
+            )
+            if not author_id or author_id not in accepted_partner_ids:
                 _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
                 _create_bounce_email()
                 return False

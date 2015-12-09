@@ -194,6 +194,30 @@
             </field>
         </record>
 
+        <record id="act_hr_timesheet_sheet_my_timesheets" model="ir.actions.act_window">
+            <field name="name">My Timesheets</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                new timesheet.
+              </p><p>
+                You must record timesheets every day and confirm at the end
+                of the week. Once the timesheet is confirmed, it should be
+                validated by a manager.
+              </p><p>
+                Timesheets can also be invoiced to customers, depending on the
+                configuration of each project's related contract.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="act_hr_timesheet_sheet_my_timesheets" id="menu_act_hr_timesheet_sheet_my_timesheets" parent="hr_attendance.menu_hr_time_tracking"
+             sequence="3"/>
+
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
             <field name="name">Timesheets to Approve</field>
             <field name="type">ir.actions.act_window</field>
@@ -225,6 +249,7 @@
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
              sequence="11" groups="base.group_hr_user"/>
+
 
         <!--
             Company inheritancy
