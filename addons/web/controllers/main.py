@@ -1105,13 +1105,13 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
-        if content and width and height:
+        if content and (width or height):
             # resize maximum 500*500
             if width > 500:
                 width = 500
             if height > 500:
                 height = 500
-            content = openerp.tools.image_resize_image(base64_source=content, size=(width, height), encoding='base64', filetype='PNG')
+            content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
 
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))

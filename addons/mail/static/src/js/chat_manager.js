@@ -98,7 +98,7 @@ function add_message (data, options) {
                 if (!query.is_displayed) {
                     var title = _t('New message');
                     if (msg.author_id[1]) {
-                        title += _t(' from ') + msg.author_id[1];
+                        title += _t(' from ') + _.escape(msg.author_id[1]);
                     }
                     var trunc_text = function (t, limit) {
                         return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
@@ -450,6 +450,10 @@ function on_toggle_star_notification (data) {
             message.is_starred = data.starred;
             if (!message.is_starred) {
                 remove_message_from_channel("channel_starred", message);
+            } else {
+                add_to_cache(message, []);
+                var channel_starred = chat_manager.get_channel('channel_starred');
+                channel_starred.cache = _.pick(channel_starred.cache, "[]");
             }
             chat_manager.bus.trigger('update_message', message);
         }
@@ -487,8 +491,12 @@ function on_mark_as_unread_notification (data) {
         if (message) {
             invalidate_caches(message.channel_ids);
             add_channel_to_message(message, 'channel_inbox');
+            add_to_cache(message, []);
         }
     });
+    var channel_inbox = chat_manager.get_channel('channel_inbox');
+    channel_inbox.cache = _.pick(channel_inbox.cache, "[]");
+
     _.each(data.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -738,13 +746,13 @@ var chat_manager = {
      */
     redirect: function (res_model, res_id, dm_redirection_callback) {
         var self = this;
-        var redirect_to_document = function (res_model, res_id) {
+        var redirect_to_document = function (res_model, res_id, view_id) {
             web_client.do_action({
                 type:'ir.actions.act_window',
                 view_type: 'form',
                 view_mode: 'form',
                 res_model: res_model,
-                views: [[false, 'form']],
+                views: [[view_id || false, 'form']],
                 res_id: res_id,
             });
         };
@@ -758,7 +766,9 @@ var chat_manager = {
                 }
             });
         } else {
-            redirect_to_document(res_model, res_id);
+            new Model(res_model).call('get_formview_id', [res_id, session.context]).then(function (view_id) {
+                redirect_to_document(res_model, res_id, view_id);
+            });
         }
     },
 };

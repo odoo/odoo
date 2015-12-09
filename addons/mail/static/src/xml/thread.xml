@@ -21,12 +21,12 @@
     <!-- When a channel is empty-->
     <div t-name="mail.EmptyChannel">
         <t t-if="options.channel_id==='channel_inbox'">
-            <div class="o_thread_title">Congratulation, your inbox is empty</div>
-            <div>New messages will appear here.</div>
+            <div class="o_thread_title">Congratulations, your inbox is empty</div>
+            <div>New messages appear here.</div>
         </t>
         <t t-if="options.channel_id==='channel_starred'">
-            <div class="o_thread_title">No message starred</div>
-            <div> You can mark any message as 'starred', and it will show up in this channel.</div>
+            <div class="o_thread_title">No starred message</div>
+            <div> You can mark any message as 'starred', and it shows up in this channel.</div>
         </t>
     </div>
 
@@ -67,7 +67,7 @@
                     t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
             </div>
-            <div class="o_thread_message_core">
+            <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
                 <p t-if="message.display_author" class="o_mail_info">
                     <t t-if="message.is_note">
                         Note by
@@ -102,7 +102,7 @@
                             t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
                            class="fa fa-check o_thread_message_needaction"
-                           t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
+                           t-att-data-message-id="message.id" t-att-title="_t('Mark as Read')"/>
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
@@ -113,7 +113,7 @@
                 </t>
                 <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                    <t t-if="message.body_short">
+                    <t t-if="options.shorten_messages &amp;&amp; message.body_short">
                         <div class="o_mail_body_short">
                             <t t-raw="message.body_short"/>
                         </div>
@@ -121,7 +121,7 @@
                             <t t-raw="message.body"/>
                         </div>
                     </t>
-                    <t t-if="! message.body_short">
+                    <t t-if="!options.shorten_messages || !message.body_short">
                         <t t-raw="message.body"/>
                     </t>
                 </t>

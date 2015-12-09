@@ -76,7 +76,7 @@ var PartnerInviteDialog = Dialog.extend({
             var ChannelModel = new Model('mail.channel');
             return ChannelModel.call('channel_invite', [], {ids : [this.channel_id], partner_ids: _.pluck(data, 'id')})
                 .then(function(){
-                    var names = _.pluck(data, 'text').join(', ');
+                    var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
                     self.do_notify(_t('New people'), notification);
                 });
@@ -120,7 +120,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_attach_callback: function () {
-        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        if (this.channel) {
+            this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        }
     },
     on_detach_callback: function () {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
@@ -162,7 +164,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.composer = new ChatComposer(this);
         this.thread = new ChatThread(this, {
-            display_help: true
+            display_help: true,
+            shorten_messages: false,
         });
 
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
@@ -291,9 +294,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Channel.call('channel_search_to_join', [search_val]).then(function(result){
             var values = [];
             _.each(result, function(channel){
+                var escaped_name = _.escape(channel.name);
                 values.push(_.extend(channel, {
-                    'value': channel.name,
-                    'label': channel.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;
@@ -305,9 +309,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Partner.call('im_search', [search_val, 20]).then(function(result){
             var values = [];
             _.each(result, function(user){
+                var escaped_name = _.escape(user.name);
                 values.push(_.extend(user, {
-                    'value': user.name,
-                    'label': user.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;

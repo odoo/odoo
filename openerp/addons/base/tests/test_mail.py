@@ -330,6 +330,13 @@ class TestCleaner(unittest.TestCase):
         for ext in test_mail_examples.BUG_3_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
 
+    def test_80_remove_classes(self):
+        new_html = html_email_clean(test_mail_examples.REMOVE_CLASS, remove=True)
+        for ext in test_mail_examples.REMOVE_CLASS_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed classes')
+        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed correctly unwanted classes')
+
     def test_90_misc(self):
         # False boolean for text must return empty string
         new_html = html_email_clean(False)
