@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
@@ -64,6 +64,8 @@ class gamification_goal_definition(osv.Model):
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
+        # model_inherited_model_ids can be removed in master.
+        # It was only used to force a domain in the form view which is now set by `on_change_model_id`
         'model_inherited_model_ids': fields.related('model_id', 'inherited_model_ids', type="many2many", obj="ir.model",
             string="Inherited models", readonly="True"),
         'field_id': fields.many2one('ir.model.fields',
@@ -146,12 +148,14 @@ class gamification_goal_definition(osv.Model):
         return res
 
     def on_change_model_id(self, cr, uid, ids, model_id, context=None):
-        """Prefill field model_inherited_model_ids"""
+        """Force domain for the `field_id` and `field_date_id` fields"""
         if not model_id:
-            return {'value': {'model_inherited_model_ids': []}}
+            return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
         model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
-        # format (6, 0, []) to construct the domain ('model_id', 'in', m and m[0] and m[0][2])
-        return {'value': {'model_inherited_model_ids': [(6, 0, [m.id for m in model.inherited_model_ids])]}}
+        model_fields_domain = ['|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
+        model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
+        return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
+
 
 class gamification_goal(osv.Model):
     """Goal instance for a user
