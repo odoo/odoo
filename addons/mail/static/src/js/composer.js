@@ -23,6 +23,7 @@ var accented_letters_mapping = {
     'oe': 'œ',
     'u': '[ùúûűü]',
     'y': '[ýÿ]',
+    ' ': '[()\\[\\]]',
 };
 
 // The MentionManager allows the Composer to register listeners. For each
