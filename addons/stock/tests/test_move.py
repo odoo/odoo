@@ -57,7 +57,7 @@ class TestMove(TransactionCase):
             'product_uom_qty': 2,
             'product_uom': self.env.ref('product.product_uom_unit').id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             })
 
         move_test1.action_confirm()
