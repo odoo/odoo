@@ -3,6 +3,7 @@
 # * calendar
 # 
 # Translators:
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2015
 # José Vicente <txusev@gmail.com>, 2015
 # Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
@@ -10,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-10-13 06:52+0000\n"
-"Last-Translator: José Vicente <txusev@gmail.com>\n"
+"POT-Creation-Date: 2015-11-26 09:05+0000\n"
+"PO-Revision-Date: 2015-12-03 23:35+0000\n"
+"Last-Translator: Andres Ruiz <andres.ruiz.otalora@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -389,13 +390,27 @@ msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - Recordatorio"
 
 #. module: calendar
+#: code:addons/calendar/calendar.py:775
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr "%s de %s Hasta\n %s de %s (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:773
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr "%s de (%s Hasta %s) (%s)"
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr "<span> horas</span>"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1628
+#: code:addons/calendar/calendar.py:1620
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr "Se ha enviado un correo electrónico para especificar que la fecha se ha cambiado"

@@ -23,6 +23,7 @@ var accented_letters_mapping = {
     'oe': 'œ',
     'u': '[ùúûűü]',
     'y': '[ýÿ]',
+    ' ': '[()\\[\\]]',
 };
 
 // The MentionManager allows the Composer to register listeners. For each
@@ -218,7 +219,8 @@ var MentionManager = Widget.extend({
      */
     generate_links: function (s) {
         var self = this;
-        var mention_link = "<a href='#' class='%s' data-oe-id='%s' data-oe-model='%s'>%s%s</a>";
+        var base_href = session.url("/web");
+        var mention_link = "<a href='%s' class='%s' data-oe-id='%s' data-oe-model='%s' target='_blank'>%s%s</a>";
         _.each(this.listeners, function (listener) {
             var selection = listener.selection;
             if (selection.length) {
@@ -229,7 +231,8 @@ var MentionManager = Widget.extend({
                     var match = matches[i];
                     var end_index = match.index + match[0].length;
                     var match_name = match[0].substring(1);
-                    var processed_text = _.str.sprintf(mention_link, listener.redirect_classname, selection[i].id, listener.model, listener.delimiter, match_name);
+                    var href = base_href + _.str.sprintf("#model=%s&id=%s", listener.model, selection[i].id);
+                    var processed_text = _.str.sprintf(mention_link, href, listener.redirect_classname, selection[i].id, listener.model, listener.delimiter, match_name);
                     var subtext = s.substring(start_index, end_index).replace(match[0], processed_text);
                     substrings.push(subtext);
                     start_index = end_index;

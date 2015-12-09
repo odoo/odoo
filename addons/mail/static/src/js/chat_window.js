@@ -37,9 +37,9 @@ return Widget.extend({
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
-        this.thread.on('toggle_star_status', this, function (message_id) {
-            this.trigger('toggle_star_status', message_id);
-        });
+        this.thread.on('toggle_star_status', null, this.trigger.bind(this, 'toggle_star_status'));
+        this.thread.on('redirect_to_channel', null, this.trigger.bind(this, 'redirect_to_channel'));
+        this.thread.on('redirect', null, this.trigger.bind(this, 'redirect'));
 
         this.fold();
         var def = this.thread.appendTo(this.$content);
@@ -67,8 +67,8 @@ return Widget.extend({
             height: this.folded ? "28px" : "333px"
         });
     },
-    toggle_fold: function () {
-        this.folded = !this.folded;
+    toggle_fold: function (fold) {
+        this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
             this.unread_msgs = 0;
             this.trigger('messages_read');
@@ -82,10 +82,9 @@ return Widget.extend({
                 content: this.$input.val(),
                 attachment_ids: [],
                 partner_ids: [],
-                channel_id: this.channel_id,
             };
             this.$input.val('');
-            this.trigger('post_message', message);
+            this.trigger('post_message', message, this.channel_id);
         }
     },
     on_click_close: function (event) {

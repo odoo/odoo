@@ -31,6 +31,14 @@ website.TopBar.include({
     edit_master: function (ev) {
         ev.preventDefault();
         var $link = $('.js_language_selector a[data-default-lang]');
+        if (!$link.length) {
+            // Fallback for old website
+            var l = false;
+            _.each($('.js_language_selector a'), function(a) {
+               if (!l || a.href.length < l.href.length) { l = a; }
+            });
+            $link = $(l);
+        }
         $link[0].search += ($link[0].search ? '&' : '?') + 'enable_editor=1';
         $link.click();
     },

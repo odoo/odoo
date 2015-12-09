@@ -241,7 +241,6 @@ class MailController(http.Controller):
     def mail_client_action(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
-            'chatter_needaction_auto': request.env.user.chatter_needaction_auto,
             'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
         }

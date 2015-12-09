@@ -193,7 +193,7 @@ class SaleOrderLine(models.Model):
             which is the case in MTO, Cross-Dock or Drop-Shipping
         """
         is_available = False
-        product_routes = self.route_id or self.product_id.route_ids
+        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
 
         # Check MTO
         wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id

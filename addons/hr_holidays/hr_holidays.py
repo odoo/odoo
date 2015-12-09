@@ -122,7 +122,7 @@ class hr_holidays_status(osv.osv):
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Leave"
-    _order = "type desc, date_from asc"
+    _order = "type desc, date_from desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _employee_get(self, cr, uid, context=None):

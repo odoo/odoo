@@ -438,10 +438,18 @@ class project(osv.Model):
             for project_id in ids
         }
 
+    def _issue_needaction_count(self, cr, uid, ids, field_name, arg, context=None):
+        Issue = self.pool['project.issue']
+        res = dict.fromkeys(ids, 0)
+        projects = Issue.read_group(cr, uid, [('project_id', 'in', ids), ('message_needaction', '=', True)], ['project_id'], ['project_id'], context=context)
+        res.update({project['project_id'][0]: int(project['project_id_count']) for project in projects})
+        return res
+
     _columns = {
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                     domain=[('stage_id.fold', '=', False)]),
+        'issue_needaction_count': fields.function(_issue_needaction_count, type='integer', string="Issues",),
     }
 
     @api.multi

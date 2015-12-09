@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-23 18:36+0000\n"
+"PO-Revision-Date: 2015-12-02 10:29+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -188,7 +188,7 @@ msgid ""
 "\n"
 "        \"Python Code\" defines the amount of the tax.\n"
 "        "
-msgstr ""
+msgstr "\n        Egy adót python kóddal határoz meg, mely két python kód darabkából áll és a helyi környezetben hajtódik végre olyan adatokkal, mint az egység ár, termék vagy partner.\n\n        \"Alkalmazható kód\" határozza meg, ha az adót fel kell használni.\n\n        \"Python kód\" határozza meg az adó mennyiségét.\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -307,7 +307,7 @@ msgstr "\n        Automatikus hívás átirányítások, naplók és emailek"
 msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
-msgstr "\n        Készlet felhalmozás bekapcsolása egy terméken a gyorsabb POS betöltési idő eléréséhez."
+msgstr "\n        Készlet tároló bekapcsolása a termékeken a gyorsabb POS betöltési idő eléréséhez."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -378,7 +378,7 @@ msgid ""
 "        The calendars we use are on weekly basis.  It is possible however to have a start date and end date for e.g. the Tuesday delivery.\n"
 "        It is also possible to put exceptions for days when there is none.\n"
 "    "
-msgstr ""
+msgstr "\n        A stock_calendar module kezeli a minimum készlet szabályokat (=rendelési határpontok / újrarendelési szabályok) a beszerzési és kiszállítási\n        naptárak figyelembe vételével a különböző lehetőségekkel számolva.\n\n        Alap esetben, az ütemező végigmegy az összes megrendelési határpontokon és létrehoz egy beszerzést a jelenlegi készlet és a jövőbeni készlet mozgások\n        figyelembe vételével számított mennyiséggel. A friss termékekkel működő vállalatok, ez egy\n        probléma, mert ha egy 2 hét múlva szükséges terméket rendel most és ez holnap megérkezik,  akkor\n        ezek a termékek em lesznek frissek két hét múlva.\n\n        Ennek megoldására, hozzáadtunk egy szállítási naptárat a megrendelési határpontokhoz.  A jövőbeni készlet mozgások (ezek képviselik a szükségleteket)\n        lesznek figyelembe véve és limitálva ezekre a következő második szállításig a naptár szerint.\n        Tehát, ha minden hét kedden és pénteken leszállíttatok, ha hétfőn rendelek,  akkor kedden minden ami szükséges  \n        beérkezik pénteki nap előtt.\n\n        Ez azonban nem elég jó mivel olyan beszerzési megrendelést szeretne létrehozni kizárólag a beszállítást megelőző dátumon \n        ahol a jövőbeni szükségletek változtathatóak.  (egyébként már így is túl sokat rendel)  Ehhez, hozzáadtunk egy \n        beszerzési naptárat és a megrendelési határpontok csak akkor aktiválódnak, ha az ütemező a beszerzési naptár által megadott \n        időintervallumon belül van.  (az utolsó végrehajtási dátumot is ellenőrzi, hogy azt már nem aktiválta ebben az idő intervallumban)\n\n        Azonban, néha dupla rendeléseink is vannak: feltételezzük, hogy kétszer kell pénteken rendelni: egy beszerzési megrendelés hétfőn\n        és egy beszerzési megrendelés csütörtökön. Így két megrendelésnek kell lennie ugyanarra az időpontra.\n        Ennek kezelésére, egy beszerzési csoportot adtunk a naptár tétel sorához és a beszerzési naptár tételsorán el kell végeznünk,\n        a vonatkozó beszállítási tételsor ellenőrzését.  A beszerzési csoporton, megadhatjuk a sokszorozódást a beszerzéshez\n        és ezzel lehetővé válik egy beszerzés hétfői és csütörtöki napra vonatkozó létrehozása.\n\n        Normál rendelési határpontoknál, a beszerzési megrendelések kiválasztott dátumai a termék/vállalat rendszerben meghatározott késleltetésein alapul.\n        Ez nem függ össze azzal amit a naptárakkal végzünk, így a beszerzés/beszállítás dátumok a naptárak által is be lesznek állítva.\n\n        Az általunk használt  naptárak heti alapúak.  Azonban lehetőség van egy indulási és egy befejezési pl. keddi beszállítás, meghatározására.\n        Ezenkívül lehetőség van kivétel napok megadására, ahol nincs művelet végzés.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -2745,7 +2745,7 @@ msgid ""
 "\n"
 "Let your customers follow the signature process easily.\n"
 "    "
-msgstr ""
+msgstr "\nSzignózza és fejezze be a dokumentumait könnyedén. Személyre szabhatja dokumentumait szöveg vagy aláírás mezőkkel és elküldheti a fogadó feleknek.\n\nTegye könnyedén követhetővé az aláírás műveletet a vásárlói részére.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -2968,7 +2968,7 @@ msgid ""
 "This creates a product cache per POS config. It drastically lowers the\n"
 "time it takes to load a POS session with a lot of products.\n"
 "    "
-msgstr ""
+msgstr "\nEz létrehoz egy termék tárolót POS értékesítési pont beállításonként. Ez drasztikusan csökkenti az\nértékesítési pont POS kasszának nagyon sok termékkel történő betöltési idejét.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -3548,7 +3548,7 @@ msgid ""
 "- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-msgstr ""
+msgstr "\nEz a modul vonalkód beolvasó és elemző támogatást ad.\n\nBeolvasás\n--------\nUSB beolvasó használata (az a billentyűzet utánzó beolvasók) ahhoz, hogy a vonalkód leolvasó működjön az Odoo rendszerben.\nA beolvasót úgy kell konfigurálni, hogy ne használjon előtagot, kocsi-vissza és tabulátor utótagot.\nMinden karakter bevitel között a késleltetésnek kisebbnek vagy egyenlőnek kell lennie 50 milliszekundumnál.\nLegtöbb vonalkód olvasó alapértelmezetten tudja ezeket.\nAzonban, győződjön meg arról, hogy a leolvasó ugyanazt a billentyűzet kiosztást használja, mint a csatlakoztatott eszköz.\nVagy a billentyűzet kiosztást állítja be, mint US QWERTY (alapértelmezett a legtöbb olvasónál)\nvagy megváltoztatja a beolvasó billentyűzet kiosztását (ellenőrizze a használati utasításban).\n\nElemzés\n-------\nA vonalkód egy nómenklatúra szabálya szerint kerül értelmezésre.\nEz a következő jellemzőket tartalmazza:\n- Minta a szám értékeket tartalmazó vonalkód értelmezéséhez (pl. súly, ár)\n- Vonalkód álnév meghatározása, mely lehetővé teszi az azonosítását egy terméknek, mely két különböző vonalkóddal rendelkezik\n- Támogatja az EAN-13, EAN-8 és UPC-A kódolásokat\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -3664,7 +3664,7 @@ msgid ""
 "- Check on middle: Peachtree standard\n"
 "- Check on bottom: ADP standard\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul lehetővé teszi a kifizetései nyomtatását az előre-nyomtatott csekk papírra.\nBeállíthatja a kimenet tartalmát (elhelyezés, határ információk, stb.) a vállalat beállításoknál, és kezelheti a csekkek számozását (ha előre-nyomtatott sorszám nélküli csekkeket használ) a napló beállításoknál.\n\nTámogatott formátumok\n-----------------\n- Csekkek felül : Quicken /Gyors / QuickBooks alapértelmezett\n- Csekkek középen : Barackfa alapértelmezett\n- Csekkek allul : ADP alapértelmezett\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -3727,7 +3727,7 @@ msgid ""
 "    - Create & edit susbcriptions\n"
 "    - Modify subscriptions with sales orders\n"
 "    - Generate invoice automatically at fixed intervals\n"
-msgstr ""
+msgstr "\nEz a modul lehetővé teszi a feliratkozások szervezését.\nTulajdonságok:\n    - Létrehozza & szerkeszti a feliratkozásokat\n    - Módosítja a feliratkozásokat a vásárlói megrendelésekkel\n    - Automatikusan létrehozza a számlákat fix időközönként\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -3767,14 +3767,14 @@ msgid ""
 "This module allows you to send your documents through postal mail, thanks to Docsaway.\n"
 "======================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul lehetővé teszi a dokumentumai elküldését póstai levélként, a Docsaway-nak köszönhetően.\n======================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract_asset
 msgid ""
 "\n"
 "This module allows you to set a deferred revenue on your subscription contracts.\n"
-msgstr ""
+msgstr "\nEz a modul lehetővé tesz egy késleltetett bevétel beállítását a feliratkozó kapcsolatain.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating_project_issue
@@ -3783,7 +3783,7 @@ msgid ""
 "This module display project customer satisfaction on your website.\n"
 "==================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul megjeleníti a projekt ügyfél elégedettséget a weboldalán.\n==================================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -3844,7 +3844,7 @@ msgid ""
 "The ability to extract the correctly represented local accounts from IBAN accounts\n"
 "with a single statement.\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul telepíti az alapokat az IBAN (International Bank Account Number - Nemzetközi bankszámlaszám ) bank számlaszámokhoz és azok érvényességének ellenőrzéséhez.\n======================================================================================================================\n\nLehetővé teszi egy egyszerű jelentéssel a helyi számlaszámok rendes IBAN szám szerinti kiemelését.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -3884,7 +3884,7 @@ msgid ""
 "It must be used as a dependency for modules that provide country-specific check templates.\n"
 "The check settings are located in the accounting journals configuration page.\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul alapvető funkciókat nyújt a nyomtatott csekkeken történő befizetéshez.\nEzt mint függőséget kell alkalmazni olyan modulokhoz,melyek ország specifikus csekk sablonokkal kínálnak.\nA csekk beállítás a főkönyvi könyvelési napló beállítások oldalán helyezkedik el.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -3966,7 +3966,7 @@ msgid ""
 "If this automatic reservation would reserve too much, you can\n"
 "still unreserve a picking.\n"
 "    "
-msgstr ""
+msgstr "\nEz a modul automatikusan lefoglalja a kiválogatást a raktárból, amint a vásárlói megrendelés jóváhagyott\n============================================================================================\nVásárlói megrendelés jóváhagyása esetén vagy ,mennyiség hozzáadásakor,\na raktár foglaló kiválogatás lefoglalttá válik, ha a \nszükséges mennyiségek elérhetők.\n\nA legegyszerűbb beállításoknál, ez egy könnyű munka menet:\nelőször érkezik, először kiszolgálva.  Azonban, ha nincs telepítve,  \nhasználhat kézi foglalást vagy futtathat ütemezőt, mellyel a rendszer\nfigyeli a várható dátumokat és a prioritásokat.\n\nHa ez az automata foglalás túl sokat foglalna, akkor még mindig szabaddá teheti a foglalásban lévő termékeket.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -4066,7 +4066,7 @@ msgid ""
 "    - Generate invoice and credit card payments automatically at fixed intervals\n"
 "    - Let your customer edit their subscriptions themselves (options, close their contract) with granular control\n"
 "        "
-msgstr ""
+msgstr "\nFeliratkozások szervezéséhez használja ezt az alkalmazást:\nTulajdonságok:\n    - Létrehozza & szerkeszti a feliratkozásokat a vásárlói megrendelésekkel (automatikus létrehozás a jóváhagyással)\n    - Automatikusan számlát és hitelkártyás fizetéseket hoz létre fix intervallumonként\n    - A felhasználóknak megengedi a feliratkozásaik szerkesztését (lehetőségek, szerződések lezárása) szemcsés felügyelettel\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -4174,7 +4174,7 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nWeboldal élő csevegés támogatása\n=================\n\nLehetővé teszi azonnali beszélgetés/csevegés alkalmazás futtatását a honlapon keresztül,\nelküldi a látogatói igényeket különböző operátorokhoz.\nSegítsen a vásárlóinak ezzel a  társalgással, és elemezze ki a visszajelzéseket.\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -4235,7 +4235,7 @@ msgid ""
 " Module for synchronization of Documents between several companies. For example, this allow you to have a Sale Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
 "\n"
 "    Supported documents are SO, PO and invoices/refunds.\n"
-msgstr ""
+msgstr " Modul a dokumentumok vállalatok közti szinkronizációjához. Például, ez lehetővé teszi az automatikus vásárlói megrendelés létrehozását, miután egy másik kapcsolt vállalat egy beszerzési megrendelést jóváhagyott a rendszerben beszállítóként, vagy fordítva.\n\n    Támogatott dokumentumok VM Vásárlói Megrendelés, BM Beszerzési Megrendelés és számlák/befizetések , jóváírások.\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4365,7 +4365,7 @@ msgstr "'%s' úgy tűnik nem egész szám ehhez a mezőhöz '%%(field)s'"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "(edit)"
-msgstr ""
+msgstr "(szerkeszt)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -4388,7 +4388,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ""
+msgstr ",\n'összegzés': 'Elromlott vagy tönkrement termékek javítása',\nA cél egy komplett modul a termék javítások szervezéséhez.\n====================================================================\n\nA következő témákat kell átfognia ennek a modulnak:\n------------------------------------------------------\n    * A javításhoz hozzáadja/elveszi a termékeket\n    * Raktárral ütköztetés\n    * Számlázás (termékek és/vagy szolgáltatások)\n    * Garancia fogalma\n    * Javítási árajánlat jelentés\n    * Megjegyzések a műszaki szakembernek és az tulajdonos ügyfélnek\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4398,12 +4398,12 @@ msgstr ", vagy az előnyben részesített szöveg szerkesztője"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr ""
+msgstr ", csak olvasható"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", required"
-msgstr ""
+msgstr ", kötelező"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key
@@ -4415,37 +4415,37 @@ msgstr "- Művelet: egy művelet hozzákapcsolva a megadott model egy egységéh
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr ""
+msgstr "- domén ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- field ="
-msgstr ""
+msgstr "- mező ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr ""
+msgstr "- csoportok ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- törlésen ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr ""
+msgstr "- összefüggés ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection ="
-msgstr ""
+msgstr "- kiválasztás ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- méret ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -4470,7 +4470,7 @@ msgstr "- Ez a modul független más, egyéb modultól."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "1.  %b, %B         ==> Dec, December"
-msgstr ""
+msgstr "1.  %b, %B         ==> Dec, December"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4493,7 +4493,7 @@ msgstr "2. Csoport-specifikus szabályok kombinálva a logikai OR (vagy) opetát
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "3.  %y, %Y         ==> 08, 2008"
-msgstr ""
+msgstr "3.  %y, %Y         ==> 08, 2008"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4505,7 +4505,7 @@ msgstr "3. Ha a felhasználó több csoportnak is tagja, akkor a 2. lépés ered
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "4.  %d, %m         ==> 05, 12"
-msgstr ""
+msgstr "4.  %d, %m         ==> 05, 12"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4550,7 +4550,7 @@ msgstr "<code>\n                                                partner_name = o
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr "<code>datetime</code> (Python modul)"
+msgstr "<code>dátumidő</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -4578,7 +4578,7 @@ msgstr "<strong>Alkalmazások</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Attribute</strong>"
-msgstr "<strong>Tulajdonság</strong>"
+msgstr "<strong>Jellemző</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -4628,12 +4628,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Rq</strong>"
-msgstr ""
+msgstr "<strong>Igény</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Seq</strong>"
-msgstr ""
+msgstr "<strong>Sorr.</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -4840,7 +4840,7 @@ msgstr "Számla kapcsolat műszerfal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extension
 msgid "Account Extension"
-msgstr "Számla kiterjesztés"
+msgstr "Számla bővítmény"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_partner_id
@@ -4870,17 +4870,17 @@ msgstr "Számla számnak egyedinek kell lennie"
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
 msgid "Account Report"
-msgstr "Folyószámlajelentés"
+msgstr "Folyószámla jelentés"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_reports
 msgid "Account Reports"
-msgstr "Főkönyvi számlák kimutatásai"
+msgstr "Főkönyvi számlák, folyószámla kimutatásai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
 msgid "Account Tax Cash Basis"
-msgstr ""
+msgstr "Készpénz alap adó főkönyvi számla"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
@@ -5287,14 +5287,14 @@ msgstr " Engedje a kasszának a nyugták újranyomtatását "
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_cash_basis
 msgid "Allow to have cash basis on tax"
-msgstr ""
+msgstr "Megengedi a készpénz alapot az adón"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_version
 msgid ""
 "Allow to save all the versions of your website and allow to perform AB "
 "testing."
-msgstr ""
+msgstr "Lehetővé teszi a weboldala összes verziójának elmentését és lehetővé teszi az A/B teszt végrehajtását."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -5607,7 +5607,7 @@ msgstr "Ausztrália"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
-msgstr ""
+msgstr "Ausztrál  - Könyvelés"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -5645,7 +5645,7 @@ msgstr "Szerző neve"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.Net Payment Acquirer"
+msgstr "Felhat..Net fizetési lebonyolító"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -6744,7 +6744,7 @@ msgstr "Vállalat"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Company Contact"
-msgstr "Cég kapcsolat"
+msgstr "Vállalat kapcsolat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
@@ -7148,7 +7148,7 @@ msgstr "Menü létrehozás"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
 msgid "Create Tasks from SO"
-msgstr ""
+msgstr "Feladat létrehozása a Vásárlói megrendelésből"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
@@ -7369,7 +7369,7 @@ msgstr "Hitelkeret"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr ""
+msgstr "Hitelkártya támogatás az Értékesítési pont kasszához"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -7379,12 +7379,12 @@ msgstr "Horvátország"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (RRIF 2012)"
-msgstr ""
+msgstr "Horvátország - könyvelés (RRIF 2012)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
 msgid "Croatia - RRIF 2012 COA - Accounting Reports"
-msgstr ""
+msgstr "Horvátország  - Croatia - RRIF 2012 COA - Főkönyvi könyvvitel"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7446,7 +7446,7 @@ msgstr "Valuta jele, ami a mennyiségek nyomtatásakor lesz használva."
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Current Company"
-msgstr ""
+msgstr "Jelenlegi vállalat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate
@@ -7508,7 +7508,7 @@ msgstr "Egyéni mező nevének 'x_'-el kell kezdődnie!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr ""
+msgstr "Vásárló értékelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -7562,7 +7562,7 @@ msgstr "Cseh Köztársaság"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Shipping"
-msgstr ""
+msgstr "DHL szállítás"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7703,7 +7703,7 @@ msgstr "Hibakeresés"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_decimal_places
 msgid "Decimal Places"
-msgstr ""
+msgstr "Tizedes helyek"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_decimal_precision
@@ -7749,17 +7749,17 @@ msgstr "Alapértelmezett érték vagy művelet hivatkozás"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme to showcase customization possibilities."
-msgstr ""
+msgstr "Alapértelmezett weboldal téma a személyre szabás lehetőségeinek kitálalására."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_contract_asset
 msgid "Deferred revenue management for contracts"
-msgstr ""
+msgstr "Késleltetett bevétel szervezés a kapcsolatokhoz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr ""
+msgstr "Adó meghatározása Python kódként"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -7815,7 +7815,7 @@ msgid ""
 "Dependencies of compute method; a list of comma-separated field names, like\n"
 "\n"
 "    name, partner_id.name"
-msgstr ""
+msgstr "Számítási mód függőségei; vesszővel elválasztott mező nevek listája, mint\n\n    név, partner_id.name"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency_depend_id
@@ -7835,90 +7835,90 @@ msgstr "Leírás"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_description_html
 msgid "Description HTML"
-msgstr ""
+msgstr "HTML leírás"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_themes
 msgid "Design gorgeous mails with 8 high quality themes"
-msgstr ""
+msgstr "Szerkesszen bámulatos leveleket 8 magas minőségű témával"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
-msgstr ""
+msgstr "Tervezzen, küldjön és kövesse az e-maileket"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_to
 msgid "Destination Activity"
-msgstr ""
+msgstr "Cél tevékenység"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_instance_id
 msgid "Destination Instance"
-msgstr ""
+msgstr "Célpéldány"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_res_model
 #: model:ir.model.fields,field_description:base.field_ir_act_window_res_model
 msgid "Destination Model"
-msgstr ""
+msgstr "Cél Modell"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "Részletes algoritmus:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_position
 msgid ""
 "Determines where the currency symbol should be placed after or before the "
 "amount."
-msgstr ""
+msgstr "Megállapítja hogy a deviza szimbólumot az összeg elé vagy mögé helyezze."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Deutschland - Accounting"
-msgstr ""
+msgstr "Németország - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Deutschland SKR03 - Accounting"
-msgstr ""
+msgstr "Németország SKR03 - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03_reports
 msgid "Deutschland SKR03 - Accounting Reports"
-msgstr ""
+msgstr "Németország SKR03 - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Deutschland SKR04 - Accounting"
-msgstr ""
+msgstr "Németország SKR04 - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04_reports
 msgid "Deutschland SKR04 - Accounting Reports"
-msgstr ""
+msgstr "Németország SKR04 - Főkönyvi kimutatások"
 
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
-msgstr ""
+msgstr "Diagram"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Digital Signatures"
-msgstr ""
+msgstr "Digitális aláírás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_direction
 msgid "Direction"
-msgstr ""
+msgstr "Irány"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "Directory"
-msgstr ""
+msgstr "Mappa"
 
 #. module: base
 #: code:addons/base/res/res_config.py:467
@@ -7926,23 +7926,23 @@ msgstr ""
 msgid ""
 "Disabling this option will also uninstall the following modules \n"
 "%s"
-msgstr ""
+msgstr "Ennek a lehetőségnek a kikapcsolásával, törölni fogja a következő modulokat \n%s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Discuss"
-msgstr ""
+msgstr "Hozzászól"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
-msgstr ""
+msgstr "Hozzászólások, Levelező listák, Hírek"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr ""
+msgstr "Megjelenítés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown_display_name
@@ -8046,19 +8046,19 @@ msgstr "Név megjelenítése"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Display an option on related documents to print this report"
-msgstr ""
+msgstr "Az ide vonatkozó dokumentumokhoz jelenítsen meg egy feltételt enek a jelentésnek a kinyomtatásához."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
-msgstr ""
+msgstr "Az ide vonatkozó dokumentum ezen a szerveren való művelet futtatásához jelenítsen meg egy feltételt"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_group
 msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
-msgstr ""
+msgstr "Jelenítse meg és kezelje az összes ország csoport listát. Létrehozhat és törölhet országcsoportot annak biztosítására, hogy amelyiken műveletet végez, karban legyen tartva."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -8066,38 +8066,38 @@ msgid ""
 "Display and manage the list of all countries that can be assigned to your "
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
-msgstr ""
+msgstr "Jelenítse meg és kezelje minden ország listáját amelyek hozzárendelhetők az ön partner rekordjaihoz. Létrehozhat és törölhet országokat, hogy biztosan karban legyenek tartva, amelyeken jelenleg dolgozik."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Distributor"
-msgstr ""
+msgstr "Nagykereskedő"
 
 #. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
-msgstr ""
+msgstr "Dzsibuti"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
 msgid "Doctor"
-msgstr ""
+msgstr "Doktor"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:824 code:addons/base/ir/ir_model.py:827
 #, python-format
 msgid "Document model"
-msgstr ""
+msgstr "Dokumentum modell"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentáció"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
 msgid "Documentation examples test"
-msgstr ""
+msgstr "Dokumentáció példa szöveg"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_domain
@@ -8105,61 +8105,61 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain_force
 msgid "Domain"
-msgstr ""
+msgstr "Domén"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_domain
 msgid "Domain Value"
-msgstr ""
+msgstr "Domén érték"
 
 #. module: base
 #: model:res.country,name:base.dm
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikai Köztársaság"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
 #: model:ir.module.module,shortdesc:base.module_l10n_do_reports
 msgid "Dominican Republic - Accounting"
-msgstr ""
+msgstr "Dominikai Köztársaság - könyvelés"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
-msgstr ""
+msgstr "Dr."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr ""
+msgstr "Közvetlen szállítás"
 
 #. module: base
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
-msgstr ""
+msgstr "Utánzat"
 
 #. module: base
 #: code:addons/base/workflow/workflow.py:24
 #, python-format
 msgid "Duplicating workflows is not possible, please create a new workflow"
-msgstr ""
+msgstr "A többszörös munkafolyamat nem lehetséges, kérem hozzon létre egy új munkafolyamatot"
 
 #. module: base
 #: code:addons/base/ir/ir_qweb.py:930
 #, python-format
 msgid "Durations can't be negative"
-msgstr ""
+msgstr "Az időtartam nem lehet negatív"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8169,17 +8169,17 @@ msgstr "Dutch (BE) / Holland (BE)"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch / Nederlands"
-msgstr ""
+msgstr "Holland / Nederlands"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Dynamic expression builder"
-msgstr ""
+msgstr "Dinamikus kifejezésépítő"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
-msgstr ""
+msgstr "ESC/POS hardvermeghajtó"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
@@ -8189,27 +8189,27 @@ msgstr "EU Mini One Stop Shop (MOSS)"
 #. module: base
 #: sql_constraint:ir.model:0
 msgid "Each model must be unique!"
-msgstr ""
+msgstr "Minden modellnek egyedinek kell lennie!"
 
 #. module: base
 #: model:res.country,name:base.tp
 msgid "East Timor"
-msgstr ""
+msgstr "Kelet-Timor"
 
 #. module: base
 #: model:res.country,name:base.ec
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekvádor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuador - Accounting"
-msgstr ""
+msgstr "Ecuador - könyvelés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Edit Translations"
-msgstr ""
+msgstr "Fordítások szerkesztése"
 
 #. module: base
 #: model:res.groups,name:base.group_website_publisher
@@ -8219,23 +8219,23 @@ msgstr "Szerkesztő"
 #. module: base
 #: model:res.groups,name:base.group_website_designer
 msgid "Editor and Designer"
-msgstr ""
+msgstr "Szerkesztő és tervező"
 
 #. module: base
 #: model:res.country,name:base.eg
 msgid "Egypt"
-msgstr ""
+msgstr "Egyiptom"
 
 #. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:585
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
-msgstr ""
+msgstr "'%s' elemeket nem lehet megtalálni a szülő nézetben"
 
 #. module: base
 #: code:addons/base/res/res_company.py:105
@@ -8246,23 +8246,23 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_email
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr ""
+msgstr "Email címek"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr ""
+msgstr "Email átjáró"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Email Preferences"
-msgstr ""
+msgstr "Email kiválasztások"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
@@ -8270,32 +8270,32 @@ msgstr ""
 #: model:res.groups,name:base.group_user
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
-msgstr ""
+msgstr "Alkalmazott"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal
 msgid "Employee Appraisals"
-msgstr ""
+msgstr "Munkavállaló értékelések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
 msgid "Employee Contracts"
-msgstr ""
+msgstr "Munkavállalói szerződések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employee Directory"
-msgstr ""
+msgstr "Munkavállalók könyvtára,mappája"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 msgid "Employees"
-msgstr ""
+msgstr "Alkalmazottak"
 
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
 msgid "Enable Light Multi Company"
-msgstr ""
+msgstr "Egyszerű több céges folyamatok bekapcsolása"
 
 #. module: base
 #: code:addons/base/res/res_config.py:479
@@ -8303,7 +8303,7 @@ msgstr ""
 msgid ""
 "Enabling this feature will install the following paying application(s) : \n"
 "%s"
-msgstr ""
+msgstr "Ennek a tulajdonságnak a telepítésével a következő fizetős alkalmazás(ok) települnek : \n%s"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8313,29 +8313,29 @@ msgstr "Angol (AU)"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Angol (UK)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (US)"
-msgstr ""
+msgstr "Angol (US)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Enter Python code here. Help about Python expression is available in the "
 "help tab of this document."
-msgstr ""
+msgstr "A Python kódot ide vigye fel. A Python kifejezés súgóját megtalálja ennek a dokumentumnak a súgó fülén."
 
 #. module: base
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Egyenlítői Guinea"
 
 #. module: base
 #: model:res.groups,name:base.group_equipment_manager
 msgid "Equipment Manager"
-msgstr ""
+msgstr "Eszközök igazgatója"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_equipment
@@ -8345,22 +8345,22 @@ msgstr "Eszközök"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_equipment
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
-msgstr ""
+msgstr "Eszközök, Tárgyi eszközök, Belső gépek, Kiosztás nyomonkövetés"
 
 #. module: base
 #: model:res.country,name:base.er
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #. module: base
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív menüket."
 
 #. module: base
 #: constraint:res.partner.category:0
 msgid "Error ! You can not create recursive tags."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív címkék."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:449
@@ -8368,159 +8368,159 @@ msgstr ""
 msgid ""
 "Error context:\n"
 "View `%(view_name)s`"
-msgstr ""
+msgstr "Kifejezés hiba:\nNézet `%(view_name)s`"
 
 #. module: base
 #: code:addons/models.py:1264
 #, python-format
 msgid "Error details:"
-msgstr ""
+msgstr "Hiba részletek:"
 
 #. module: base
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív cégeket."
 
 #. module: base
 #: model:res.country,name:base.ee
 msgid "Estonia"
-msgstr ""
+msgstr "Észtország"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Estonian / Eesti keel"
-msgstr ""
+msgstr "Észt / Eesti keel"
 
 #. module: base
 #: model:res.country,name:base.et
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiópia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr ""
+msgstr "Etióp könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et_reports
 msgid "Ethiopia - Accounting Reports"
-msgstr ""
+msgstr "Etióp - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_type
 msgid "Evaluation Type"
-msgstr ""
+msgstr "Értékelés típus"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
 msgid "Events"
-msgstr "Események"
+msgstr "Rendezvények"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organisation"
-msgstr ""
+msgstr "Rendezvényszervezés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
-msgstr ""
+msgstr "Rendezvényi értékesítések"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Example of condition expression using Python"
-msgstr ""
+msgstr "Példa az állapot kifejezésre, a Python használatával"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification_sale_crm
 msgid ""
 "Example of goal definitions and challenges that can be used related to the "
 "usage of the CRM Sale module."
-msgstr ""
+msgstr "Példa a célok és feladatok meghatározására, amelyek kapcsolatban vannak a CRM értékesítési modul használatával."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Example of python code"
-msgstr ""
+msgstr "Példa a python kódra"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
-msgstr ""
+msgstr "Például: GLOBÁLIS_SZABÁLY_1 ÉS GLOBÁLIS_SZABÁLY_2 ÉS ( (CSOPORT_A_SZABÁLY_1 VAGY CSOPORT_A_SZABÁLY_2) VAGY (CSOPORT_B_SZABÁLY_1  VAGY CSOPORT_B_SZABÁLY_2) )"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "Examples"
-msgstr ""
+msgstr "Példák"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Execute several actions"
-msgstr ""
+msgstr "Néhány műveletet végrehajt"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Execution"
-msgstr ""
+msgstr "Végrehajtás"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expense Tracker"
-msgstr ""
+msgstr "Kiadás, költség nyomonkövetés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
 msgid "Expenses Validation, Invoicing"
-msgstr ""
+msgstr "Kiadások jóváhagyása, számlázás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_export_id
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export"
-msgstr ""
+msgstr "Export"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Complete"
-msgstr ""
+msgstr "Exportálás elvégezve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_export_fields
 msgid "Export ID"
-msgstr ""
+msgstr "ID azonosító exportálása"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_name
 msgid "Export Name"
-msgstr ""
+msgstr "Név exportálása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Settings"
-msgstr ""
+msgstr "Beállítások exportálása"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
 #: model:ir.ui.menu,name:base.menu_wizard_lang_export
 msgid "Export Translation"
-msgstr ""
+msgstr "Fordítás exportálása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Translations"
-msgstr ""
+msgstr "Fordítások Exportálása"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
 msgid "Export payments as SEPA Credit Transfer files"
-msgstr ""
+msgstr "Kifizetések exportálása mint SEPA Credit utalás fájlok"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_write_expression
 msgid "Expression"
-msgstr ""
+msgstr "Kifejezés"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines_value
@@ -8528,17 +8528,17 @@ msgid ""
 "Expression containing a value specification. \n"
 "When Formula type is selected, this field may be a Python expression  that can use the same values as for the condition field on the server action.\n"
 "If Value type is selected, the value will be used directly without evaluation."
-msgstr ""
+msgstr "Kifejezés, ami egy értékes leírást tartalmaz. \nHa egy forma típusa ki lett választva, akkor ez a mező egy Python kifejezés lehet, ami ugyanazt az értéket használhatja mint a szerver művelet feltétel mezeje.\nHa érték típus választott, akkor az érték lesz használva, mindenféle kiértékelés nélkül."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_condition
 msgid "Expression to be satisfied if we want the transition done."
-msgstr ""
+msgstr "A kifejezésnek teljesülnie kell, hogy az átmenet végbemenjen."
 
 #. module: base
 #: selection:ir.ui.view,mode:0
 msgid "Extension View"
-msgstr ""
+msgstr "Kiterjesztett nézet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_xml_id
@@ -8552,13 +8552,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_xml_id
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "External ID"
-msgstr ""
+msgstr "Külső ID azonosító"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_name
 #: model:ir.ui.view,arch_db:base.view_model_data_search
 msgid "External Identifier"
-msgstr ""
+msgstr "Külső azonosító"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_data
@@ -8567,42 +8567,42 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_data_list
 #: model:ir.ui.view,arch_db:base.view_model_data_search
 msgid "External Identifiers"
-msgstr ""
+msgstr "Külső azonosítók"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_name
 msgid ""
 "External Key/Identifier that can be used for data integration with third-"
 "party systems"
-msgstr ""
+msgstr "Külső kulcs/azonosító, amely adatbeépítésre használható a külső rendszerhez"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_share
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr ""
+msgstr "Külső felhasználó korlátozott hozzáféréssel, az adat megosztás céljából létrehozva."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Extra"
-msgstr ""
+msgstr "Extra"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Extra Rights"
-msgstr ""
+msgstr "Extra jogok"
 
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr ""
+msgstr "Falkland-szigetek"
 
 #. module: base
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Feröer-szigetek"
 
 #. module: base
 #: code:addons/base/res/res_company.py:104
@@ -8612,29 +8612,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_fax
 #, python-format
 msgid "Fax"
-msgstr ""
+msgstr "Fax"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Fax:"
-msgstr ""
+msgstr "Fax:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_state
 #: model:ir.model.fields,field_description:base.field_res_company_state_id
 msgid "Fed. State"
-msgstr ""
+msgstr "Szöv. állam"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 msgid "Fed. States"
-msgstr ""
+msgstr "Szövetségi Államok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping"
-msgstr ""
+msgstr "Fedex szállítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_object_field
@@ -8643,62 +8643,62 @@ msgstr ""
 #: selection:ir.translation,type:0
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Field"
-msgstr ""
+msgstr "Mező"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:162
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
-msgstr ""
+msgstr "\"Modell\" mező nem módosítható a modelleken."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:166
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
-msgstr ""
+msgstr "\"Átmeneti Modell\" mező nem módosítható a modelleken."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:164
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
-msgstr ""
+msgstr "\"Típus\" mező nem módosítható a modelleken."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
-msgstr ""
+msgstr "Súgó mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_field_description
 msgid "Field Label"
-msgstr ""
+msgstr "Felirat mező"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Field Mapping"
-msgstr ""
+msgstr "Leképezés mező"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Field Mappings"
-msgstr ""
+msgstr "Leképezések mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_name
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_name
 msgid "Field Name"
-msgstr ""
+msgstr "Név mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_ttype
 msgid "Field Type"
-msgstr ""
+msgstr "Típus mező"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:909
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
-msgstr ""
+msgstr "`%(field_name)s` mező nem létezik"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -8710,46 +8710,46 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_tree
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Fields"
-msgstr ""
+msgstr "Mezők"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Fields Description"
-msgstr ""
+msgstr "Mezők Leírása"
 
 #. module: base
 #: model:res.country,name:base.fj
 msgid "Fiji"
-msgstr ""
+msgstr "Fidzsi"
 
 #. module: base
 #: selection:ir.attachment,type:0
 #: model:ir.model.fields,field_description:base.field_base_language_export_data
 #: model:ir.model.fields,field_description:base.field_base_language_import_data
 msgid "File"
-msgstr ""
+msgstr "Fájl"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
 msgid "File Content"
-msgstr ""
+msgstr "Fájl tartalom"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_format
 msgid "File Format"
-msgstr ""
+msgstr "Fájlformátum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_name
 #: model:ir.model.fields,field_description:base.field_base_language_import_filename
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas_fname
 msgid "File Name"
-msgstr ""
+msgstr "Fájl neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_file_size
 msgid "File Size"
-msgstr ""
+msgstr "A fájl mérete"
 
 #. module: base
 #: code:addons/base/module/wizard/base_import_language.py:49
@@ -8759,28 +8759,28 @@ msgid ""
 "\n"
 "Technical Details:\n"
 "%s"
-msgstr ""
+msgstr "Fájl nem került importálásra az eltérő  formátum vagy rosszul formázott fájl miatt. (Érvényes formátumok .csv, .po, .pot)\n\nMűszaki részletek:\n%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_filter
 msgid "Filter"
-msgstr ""
+msgstr "Szűrő"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_name
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filter Name"
-msgstr ""
+msgstr "A szűrő neve"
 
 #. module: base
 #: sql_constraint:ir.filters:0
 msgid "Filter names must be unique"
-msgstr ""
+msgstr "A szűrő neveknek egyedieknek kell lennie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Szűrő a dokumentumaimon"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
@@ -8790,107 +8790,107 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr ""
+msgstr "Szűrők"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr ""
+msgstr "Az általam létrehozott szűrők"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr ""
+msgstr "A szűrők megosztásra kerülnek valamennyi felhasználó közt"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters visible only for one user"
-msgstr ""
+msgstr "A szűrők egyszerre csak egy felhasználó részére láthatóak"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_copyvalue
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr ""
+msgstr "Utolsó helykitöltő kifejezés, amit a kívánt sablon mezőbe másolás-beilleszthet"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_financial_management
 msgid "Financial Management"
-msgstr ""
+msgstr "Pénzügyi irányítás"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Financial and Analytic Accounting"
-msgstr ""
+msgstr "Pénzügyi és elemző könyvvitel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Find the ID of a record in the database"
-msgstr ""
+msgstr "Találja meg az adatbázis rekord bejegyzés ID-jét, az adatbázison belül"
 
 #. module: base
 #: model:res.country,name:base.fi
 msgid "Finland"
-msgstr ""
+msgstr "Finnország"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Finnish / Suomi"
-msgstr ""
+msgstr "Finn / Suomi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet Management"
-msgstr ""
+msgstr "Flottakezelő"
 
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr ""
+msgstr "Lebegőpontos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_flow_start
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Flow Start"
-msgstr ""
+msgstr "Folyamat kezdés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_flow_stop
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Flow Stop"
-msgstr ""
+msgstr "Folyamat leállítás"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:81
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "Az alábbi modulok nincsenek telepítve vagy ismeretlenek: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_font
 msgid "Font"
-msgstr ""
+msgstr "Betűkészlet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_font_name
 msgid "Font Name"
-msgstr ""
+msgstr "Betűkészlet neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_font_family
 msgid "Font family"
-msgstr ""
+msgstr "Betűkészlet család"
 
 #. module: base
 #: model:ir.model,name:base.model_res_font
 msgid "Fonts available"
-msgstr ""
+msgstr "Elérhető betűkészletek"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_rml_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "Lábjegyzet szövege megjelenítve minden kimutatás alján."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_name
@@ -8898,7 +8898,7 @@ msgid ""
 "For QWeb reports, name of the template used in the rendering. The method "
 "'render_html' of the model 'report.template_name' will be called (if any) to"
 " give the html. For RML reports, this is the LocalService name."
-msgstr ""
+msgstr "QWeb jelentésekhez, a sablon nevét használja a fordításhoz. A „report.template_name” modellhez  a „render_html” mód kapcsolódó nevet kap (ha létezik) a html webcímhez. Az RML jelentéseknél, ezek a LocalService nevek."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key2
@@ -8909,32 +8909,32 @@ msgid ""
 "  - client_action_relate\n"
 "  - tree_but_open\n"
 "For defaults, an optional condition"
-msgstr ""
+msgstr "A műveletekhez, egy a lehetséges végrehajtási egységekből: \n  - client_action_multi ; kliens_művelet_többszörös\n  - client_print_multi ; kliens_nyomtatás_többszörös\n  - client_action_relate ; kliens_művelet_összefüggő\n  - tree_but_open ; faszerkezet_de_nyitott\nAlap esetben, egy szabadon választható feltétel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ""
 "For more details about translating Odoo in your language, please refer to "
 "the"
-msgstr ""
+msgstr "Az Odoo saját nyelvére való fordításának további részleteihez, kérem hivatkozzon erre"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation_field
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr ""
+msgstr "A one2many mezőknél, a célmodell mezője, amely implementálja az ellentétes many2one kapcsolatot"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "A kapcsolat mezőknél a cél model műszaki neve."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:446
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "A kiválasztás mezőkhöz a Kiválasztás opciót meg kell adni!"
 
 #. module: base
 #: code:addons/models.py:3540
@@ -9151,7 +9151,7 @@ msgstr "Általános modulok"
 msgid ""
 "Generic Wizard to Import Bank Statements. Includes the import of files in "
 ".OFX format"
-msgstr ""
+msgstr "Általános varázsló a bank kivonatok importálásához. Fájlok importálása .OFX formátumban"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -9203,91 +9203,91 @@ msgid ""
 "Group-local rules grant additional permissions, but are constrained within "
 "the bounds of global ones. The first group rules restrict further than "
 "global rules, but any additional group rule will add more permissions"
-msgstr ""
+msgstr "Globális szabályok (nem csoport specifikus) korlátozások, és nem lehet ezeket kikerülni. Helyi csoport szabályok további korlátozásokat megadása, de bele vannak kényszerítve a globális szabályok  kötelékébe. Az első csoport szabályok jobban korlátoznak mint a globálisak, de további csoport szabályok további megszorításokhoz vezetnek"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
 msgid "Glue module holding mail improvements for website."
-msgstr ""
+msgstr "A Glue modul levelezés tökéletesítést ad a honlapjához."
 
 #. module: base
 #: code:addons/base/res/res_config.py:715
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Menjen a beállítások panelhez"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Gold"
-msgstr ""
+msgstr "Arany"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
-msgstr ""
+msgstr "Google Analytics - elemzések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google naptár"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
 msgid "Google Drive™ integration"
-msgstr ""
+msgstr "Google Drive™ integráció"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr ""
+msgstr "Google táblázatkezelő"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
-msgstr ""
+msgstr "Google felhasználók"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Graph"
-msgstr ""
+msgstr "Grafikon"
 
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr ""
+msgstr "Görögország"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr ""
+msgstr "Görög - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_reports
 msgid "Greece - Accounting Reports"
-msgstr ""
+msgstr "Görög - Könyvelési kimutatások"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Görög / Ελληνικά"
 
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr ""
+msgstr "Grönland"
 
 #. module: base
 #: model:res.country,name:base.gd
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_group_id
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 #: model:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr ""
+msgstr "Csoport"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -9311,22 +9311,22 @@ msgstr "Csoportosítás"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_full_name
 msgid "Group Name"
-msgstr ""
+msgstr "Csoportnév"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_group_id
 msgid "Group Required"
-msgstr ""
+msgstr "Csoport kötelező"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups_share
 msgid "Group created to set access rights for sharing data with some users."
-msgstr ""
+msgstr "Néhány felhasználóval megosztani kívánt adat elérési jogosultságaihoz csoport létrehozva."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 msgid "Group name"
-msgstr ""
+msgstr "Csoport név"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
@@ -9348,67 +9348,67 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_form
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Groups"
-msgstr ""
+msgstr "Csoportok"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr ""
+msgstr "Csoportok (globális, ha nincs csoport)"
 
 #. module: base
 #: model:res.country,name:base.gp
 msgid "Guadeloupe (French)"
-msgstr ""
+msgstr "Guadeloupe (Francia)"
 
 #. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
-msgstr ""
+msgstr "Guam (USA)"
 
 #. module: base
 #: model:res.country,name:base.gt
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr ""
+msgstr "Guatemala - Könyvelés"
 
 #. module: base
 #: model:res.country,name:base.gg
 msgid "Guernsey"
-msgstr ""
+msgstr "Guernsey-sziget"
 
 #. module: base
 #: model:res.country,name:base.gn
 msgid "Guinea"
-msgstr ""
+msgstr "Guinea"
 
 #. module: base
 #: model:res.country,name:base.gw
 msgid "Guinea Bissau"
-msgstr ""
+msgstr "Bissau-Guinea"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Gujarati / ગુજરાતી"
-msgstr ""
+msgstr "Gujarati / ગુજરાતી"
 
 #. module: base
 #: model:res.country,name:base.gy
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
 msgid "HR Gamification"
-msgstr ""
+msgstr "HR Gamifikáció, játékosítás"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_type
@@ -9417,69 +9417,69 @@ msgid ""
 " to render the HTML into a PDF file and let you download it, Controller "
 "allows you to define the url of a custom controller outputting any kind of "
 "report."
-msgstr ""
+msgstr "A HTML megnyitja a jelentéseket a weboldalán belül, a PDF használni fogja a wkhtmltopdf-t, amely HTML-t átalakít PDF fájllá, amit letölthet. Az irányító lehetővé teszi az egyéni irányított bármely típusú jelentés létrehozó URL meghatározását."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP útválasztás"
 
 #. module: base
 #: model:res.country,name:base.ht
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scanner
 msgid "Hardware Driver for Barcode Scanners"
-msgstr ""
+msgstr "Hardvermeghajtó a vonalkód beolvasóhoz"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
-msgstr ""
+msgstr "Hardvermeghajtó az ESC/POS nyomtatókhoz és pénztárgépekhez"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scale
 msgid "Hardware Driver for Weighting Scales"
-msgstr ""
+msgstr "Hardvermeghajtó a mérlegekhez"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hardware_drivers
 msgid "Hardware Drivers"
-msgstr ""
+msgstr "Hardver eszközmeghajtók"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
-msgstr ""
+msgstr "Hardver proxy"
 
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "Heard-sziget és McDonald-szigetek"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Hebrew / עִבְרִי"
-msgstr ""
+msgstr "Héber / עִבְרִי"
 
 #. module: base
 #: selection:ir.translation,type:0
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Help"
-msgstr ""
+msgstr "Súgó"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_planner
 msgid "Help to configure application"
-msgstr ""
+msgstr "Súgó az alkalmazás beállításához"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Help with Python expressions."
-msgstr ""
+msgstr "Segítség, Python kifejezésekkel."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_point_of_sale
@@ -9487,179 +9487,179 @@ msgid ""
 "Helps you get the most out of your points of sales with fast sale encoding, "
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
-msgstr ""
+msgstr "Segít Önnek, hogy a legtöbbet hozza ki az értékesítési helyeiből, gyors értékesítési kódolással, egyszerűsített fizetési mód kódolással, automatikus kiválasztási listák generálásával, stb."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
 msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
-msgstr ""
+msgstr "Segít a könyvelés igényeinek kezelésében. Ha Ön nem könyvelő, akkor azt ajánljuk, hogy csak a számlázást telepítse."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "Segít Önnek az árajánlatok, a vevői megrendelések és a számlázás kezelésében."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_lead_automation
 msgid "Helps you manage lead of your marketing campaigns step by step."
-msgstr ""
+msgstr "Segíti Önt a marketing kampányai kezelésében, lépésről, lépésre."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "Segítséget nyújt az események/rendezvények szervezéséhez."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
 msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
-msgstr ""
+msgstr "Segít Önnek a humán erőforrások kezelésében az alkalmazotti struktúra berögzítésével, munkaidő-kimutatások előállításával, jelenlét nyomon követésével, stb."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
-msgstr ""
+msgstr "Segít Önnek a készletek és a fő készletműveletek kezelésében: szállítólevelek, áruátvételek, stb."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing
 msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
-msgstr ""
+msgstr "Segít Önnek a gyártási folyamatok kezelésében és az azokhoz tartozó kimutatás létrehozásában."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_mass_mailing
 msgid ""
 "Helps you manage your mass mailing for design\n"
 "                professional emails and reuse templates."
-msgstr ""
+msgstr "Segít a tömeges levelezések szerkesztésében a professzionális\n                szerkezetű emailek és vázlatok újrahasználatával."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_project_management
 msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
-msgstr ""
+msgstr "Segít Önnek a projektjei és feladatai kezelésében, azok nyomon követésével, tervezések készítésével, stb..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
 msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier bills, etc..."
-msgstr ""
+msgstr "Segít Önnek a beszerzéshez kapcsolódó folyamatainak kezelésében, mint például ajánlatkérések, beszállítói számlák, stb..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_survey
 msgid "Helps you manage your survey for review of different-different users."
-msgstr ""
+msgstr "Segít a felmérései szervezésében, hogy azokat más felhasználók  átnézhessék."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Here is the exported translation file:"
-msgstr ""
+msgstr "Itt van az exportált fordítási fájl:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Rejtett"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Hindi / हिंदी"
-msgstr ""
+msgstr "Hindi / हिंदी"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "History"
-msgstr ""
+msgstr "Előzmények"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Holidays, Allocation and Leave Requests"
-msgstr ""
+msgstr "Ünnepnapok, kiosztási és szabadság igények"
 
 #. module: base
 #: model:res.country,name:base.va
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikánváros (Vatican City State)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_action_id
 msgid "Home Action"
-msgstr ""
+msgstr "Kezdő művelet"
 
 #. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
-msgstr ""
+msgstr "Honduras - Könyvelés"
 
 #. module: base
 #: model:res.country,name:base.hk
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hong Kong"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_host
 msgid "Hostname or IP of SMTP server"
-msgstr ""
+msgstr "Az SMTP szerver hostname vagy IP címe"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Hour 00->12: %(h12)s"
-msgstr ""
+msgstr "Óra 00->12: %(h12)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Hour 00->24: %(h24)s"
-msgstr ""
+msgstr "Óra 00->24: %(h24)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Hours"
-msgstr ""
+msgstr "Órák"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_numbercall
 msgid ""
 "How many times the method is called,\n"
 "a negative number indicates no limit."
-msgstr ""
+msgstr "Hányszor lett az eljárás meghívva,\na negatív szám azt jelöli,, hogy nincs határ."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "How to define a computed field"
-msgstr ""
+msgstr "Hogyan határozzon meg egy számított mezőt"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
 msgid "Human Resources"
-msgstr ""
+msgstr "Emberi erőforrás HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungarian - Accounting"
-msgstr ""
+msgstr "Magyar könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
 msgid "Hungarian - Accounting Reports"
-msgstr ""
+msgstr "Magyar - Főkönyvi kimutatások"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Hungarian / Magyar"
-msgstr ""
+msgstr "Magyar / Hungarian"
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -10447,13 +10447,13 @@ msgstr "Ez egy vállalat"
 #: model:ir.model.fields,field_description:base.field_res_partner_customer
 #: model:ir.model.fields,field_description:base.field_res_users_customer
 msgid "Is a Customer"
-msgstr "Vevő"
+msgstr "Ő egy Vásárló"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_supplier
 #: model:ir.model.fields,field_description:base.field_res_users_supplier
 msgid "Is a Vendor"
-msgstr "Beszállító"
+msgstr "Ő egy Beszállító"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_public
@@ -10622,7 +10622,7 @@ msgstr "Tudás Kezelő"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
-msgstr ""
+msgstr "Kontni načrt za gospodarske družbe"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12985,7 +12985,7 @@ msgstr "Pitcairn-sziget"
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Pivot"
-msgstr ""
+msgstr "Támpont"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_copyvalue
@@ -13178,28 +13178,28 @@ msgstr "Előtag"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_prefix
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Előtag érték, az adatbázis rekord bejegyzés sorrendjénél"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr
 msgid "Present Your Team"
-msgstr ""
+msgstr "A csoportjának bemutatása"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_rml_report
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "Preview RML Report"
-msgstr ""
+msgstr "RML jelentés előnézete"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
 msgid "Price Accuracy"
-msgstr ""
+msgstr "Ár pontosság"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_visible_discount
 msgid "Prices Visible Discounts"
-msgstr ""
+msgstr "Árak látható kedvezményekkel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print
@@ -13209,133 +13209,133 @@ msgstr "Számla nyomtatása"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print_docsaway
 msgid "Print Provider : DocsAway"
-msgstr ""
+msgstr "Nyomtatási  szolgáltató : DocsAway"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print_sale
 msgid "Print Sale"
-msgstr ""
+msgstr "Értékesítés nyomtatás"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_check_printing
 msgid "Print US Checks"
-msgstr ""
+msgstr "US csekkek nyomtatása"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
 msgid "Print and Send Invoices with DocsAway.com"
-msgstr ""
+msgstr "Nyomtasson és küldjön számlákat a DocsAway.com által"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print
 msgid "Print and Send Provider Base Module"
-msgstr ""
+msgstr "Nyomtasson és küldjön, szolgáltatói alap modul"
 
 #. module: base
 #: model:ir.module.module,description:base.module_print
 msgid ""
 "Print and Send Provider Base Module. Print and send your invoice with a "
 "Postal Provider. This required to install a module implementing a provider."
-msgstr ""
+msgstr "Nyomtasson és küldjön, szolgáltatói alap modul. Nyomtassa és küldje a számláit a Posta szolgáltatóval. Ehhez telepítenie kell egy szolgáltató beépülését elősegítő modult."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_sale
 msgid "Print and Send Sale Orders"
-msgstr ""
+msgstr "Nyomtassa és küldje a vásárlói megrendeléseket"
 
 #. module: base
 #: model:ir.module.module,description:base.module_print_sale
 msgid "Print and Send your Sale Order by Post"
-msgstr ""
+msgstr "Nyomtassa és küldje a vásárlói megrendeléseit a postán keresztül"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_priority
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_sequence
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
 msgid "Priority"
-msgstr ""
+msgstr "Elsőbbségi"
 
 #. module: base
 #: code:addons/model.py:175
 #, python-format
 msgid "Private methods (such as %s) cannot be called remotely."
-msgstr ""
+msgstr "Privát mód (mint %s) ami nem hívható be távolról."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
 msgid "Procurements"
-msgstr ""
+msgstr "Beszerzések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
 msgid "Product Email Template"
-msgstr ""
+msgstr "Termék e-mail sablon"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Product Variants"
-msgstr ""
+msgstr "Termékváltozatok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_extended
 msgid "Product extension to track sales and purchases"
-msgstr ""
+msgstr "Termék kibővített meghatározása, az értékesítések és a beszerzések nyomon követéséhez"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Termékek & Árlisták"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr ""
+msgstr "Termékek lejárati ideje"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_prof
 msgid "Prof."
-msgstr ""
+msgstr "Prof."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_prof
 msgid "Professor"
-msgstr ""
+msgstr "Professzor"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
 #: model:ir.ui.menu,name:base.menu_main_pm
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_and_timesheet_management
 msgid "Project & Timesheet Management"
-msgstr ""
+msgstr "Projektek & munkaidő-kimutatások szervezése"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Forecast"
-msgstr ""
+msgstr "Projekt előrejelzés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project Management"
-msgstr ""
+msgstr "Projekt kezelése"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating_project
 msgid "Project Rating"
-msgstr ""
+msgstr "Projekt értékelés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Projects, Tasks"
-msgstr ""
+msgstr "Projektek, feladatok"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Properties"
-msgstr ""
+msgstr "Tulajdonságok"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:501
@@ -13343,61 +13343,61 @@ msgstr ""
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
-msgstr ""
+msgstr "Alapmezőket nem lehet megváltoztatni ilyen módon! Kérem, módosítsa Python kódon keresztül, lehetőleg egyéni modul szerkesztésével!"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospect"
-msgstr ""
+msgstr "Érdeklődő"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_write_expression
 msgid ""
 "Provide an expression that, applied on the current record, gives the field "
 "to update."
-msgstr ""
+msgstr "Kifejezésről gondoskodik, melyet a jelenlegi adatbázis-rekord bejegyzéshez alkalmaz, a mezőhöz ad frissítést."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 msgid "Provide the field where the record id is stored after the operations."
-msgstr ""
+msgstr "Egy mezőt biztosít, ahová a műveletek után az adatbázis rekord bejegyzés azonosítóját tárolja."
 
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Public"
-msgstr ""
+msgstr "Nyilvános"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
 msgid ""
 "Public users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
-msgstr ""
+msgstr "A nyilvános felhasználóknak meghatározott hozzáférési jogosultságaik vannak (mint adatbázis rekord bejegyzés szabály és tiltott menük).\n                Ezek általában függetlenek az általános Odoo csoportoktól."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
 msgid "Publish Associations, Groups and Memberships"
-msgstr ""
+msgstr "Tegyen közzé kapcsolatokat, csoportokat és tagságokat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish Your Channel of Resellers"
-msgstr ""
+msgstr "Tegye közzé a viszonteladói hálózatát"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
 msgid "Publish Your Customer References"
-msgstr ""
+msgstr "Tegye közzé az ügyfél-hivatkozásait"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_published_version
 msgid "Published Version"
-msgstr ""
+msgstr "Közzétett verzió"
 
 #. module: base
 #: model:res.country,name:base.pr
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Puerto Rico"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -13407,151 +13407,151 @@ msgstr "Beszerzés"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase
 msgid "Purchase Management"
-msgstr ""
+msgstr "Beszerzés szervezése"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase Orders, Receipts, Vendor Bills"
-msgstr ""
+msgstr "Beszerzési rendelések, nyugták, beszállítói számlák"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "Beszerzési igénylések"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
 #: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
-msgstr ""
+msgstr "Beszerzések"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_action
 msgid "Python Action"
-msgstr ""
+msgstr "Python művelet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_code
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Python Code"
-msgstr ""
+msgstr "Python kód"
 
 #. module: base
 #: selection:ir.server.object.lines,type:0
 msgid "Python expression"
-msgstr ""
+msgstr "Python kifejezés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: base
 #: model:res.country,name:base.qa
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_values_key2
 msgid "Qualifier"
-msgstr ""
+msgstr "Minősítő"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
 #: model:ir.module.module,shortdesc:base.module_website_event_questions
 msgid "Questions on Events"
-msgstr ""
+msgstr "Kérdések listája"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_settings_dashboard
 msgid ""
 "Quick actions for installing new app, adding users, completing planners, "
 "etc."
-msgstr ""
+msgstr "Gyors műveletek a gyors alkalmazás telepítéséhez, felhasználók hozzáadásához, tervezetek kiegészítéséhez, etc."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Árajánlat, vásárlói megrendelések, szállítás és számlázás ellenőrzés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr ""
+msgstr "Árajánlatok, vásárlói megrendelések, számlázás"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "RML Configuration"
-msgstr ""
+msgstr "RML beállítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_rml_content
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_rml_content_data
 msgid "RML Content"
-msgstr ""
+msgstr "RML Tartalom"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header
 msgid "RML Header"
-msgstr ""
+msgstr "RML fejléc"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header2
 msgid "RML Internal Header"
-msgstr ""
+msgstr "RML belső fejléc"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header3
 msgid "RML Internal Header for Landscape Reports"
-msgstr ""
+msgstr "RML Belső fejléc a fekvő kimutatásokhoz"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "RML Report"
-msgstr ""
+msgstr "RML kimutatás"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML pdf (deprecated)"
-msgstr ""
+msgstr "RML pdf (érvénytelenített)"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML sxw (deprecated)"
-msgstr ""
+msgstr "RML sxw (érvénytelenített)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
 msgid "Rate"
-msgstr ""
+msgstr "Árfolyam"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_ids
 msgid "Rates"
-msgstr ""
+msgstr "Árfolyamok"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_read
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr ""
+msgstr "Olvasási Hozzáférés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read Access Right"
-msgstr ""
+msgstr "Olvasási hozzáférési jog"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_readonly
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr ""
+msgstr "Csak olvasható"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_id_object
 msgid "Record"
-msgstr ""
+msgstr "Adatbázis-rekord bejegyzés"
 
 #. module: base
 #: code:addons/models.py:4827
@@ -13566,19 +13566,19 @@ msgstr "A  #%d rekord ebből %s nem található, nem másolható!"
 #: model:ir.model.fields,field_description:base.field_ir_translation_res_id
 #: model:ir.model.fields,field_description:base.field_ir_values_res_id
 msgid "Record ID"
-msgstr ""
+msgstr "Adatbázisrekord-azonosító"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
-msgstr ""
+msgstr "Adatbázis-rekord szabály"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
 #: model:ir.ui.menu,name:base.menu_action_rule
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rules"
-msgstr ""
+msgstr "Adatbázis-rekord szabályai"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:271
@@ -13586,158 +13586,158 @@ msgstr ""
 msgid ""
 "Record cannot be modified right now: This cron task is currently being "
 "executed and may not be modified Please try again in a few minutes"
-msgstr ""
+msgstr "Adatbázis-rekord nem módosítható most: Ez a futtatási feladat most van műveleti fázisban, ezért nem módosítható. Kérem próbálja meg pár perc múlva"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:407 code:addons/models.py:4952
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr "Record nem létezik vagy törlésre került."
+msgstr "Adatbázis-rekord nem létezik vagy törlésre került."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 #: model:ir.ui.view,arch_db:base.view_rule_tree
 msgid "Record rules"
-msgstr ""
+msgstr "Az adatbázis-rekord bejegyzési szabályai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Toborzási folyamat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_subscription
 msgid "Recurring Documents"
-msgstr ""
+msgstr "Ismétlődő, visszatérő dokumentumok"
 
 #. module: base
 #: code:addons/base/module/module.py:370
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "Rekurziós, visszatérés hiba, a modul függőségekben!"
 
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "Ismétlődést talált a szülő szerver-műveletekben"
 
 #. module: base
 #: code:addons/models.py:4026
 #, python-format
 msgid "Recursivity Detected."
-msgstr "Jelentkezést észlelt."
+msgstr "Ismétlődést észlelt."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_ref_object
 msgid "Reference record"
-msgstr ""
+msgstr "Referencia adatbázis-rekord"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Referenceable Models"
-msgstr "Kapcsolható modellek"
+msgstr "Hivatkozó modellek"
 
 #. module: base
 #: code:addons/base/res/res_company.py:108
 #, python-format
 msgid "Reg"
-msgstr ""
+msgstr "Reg"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_id
 #: model:ir.model.fields,field_description:base.field_res_users_parent_id
 msgid "Related Company"
-msgstr ""
+msgstr "Kapcsolódó cég"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
 msgid "Related Field"
-msgstr ""
+msgstr "Kapcsolódó mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_partner_id
 msgid "Related Partner"
-msgstr ""
+msgstr "Kapcsolódó partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_server_id
 msgid "Related Server Action"
-msgstr ""
+msgstr "Hivatkozó szerver-művelet"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:319
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr ""
+msgstr "Hivatkozó '%s' mező nem rendelkezik társmodellel '%s'"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:317
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
-msgstr ""
+msgstr "Hivatkozó '%s' mező nem rendelkezik típussal '%s'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_field_id
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_field
 msgid "Relation Field"
-msgstr ""
+msgstr "Kapcsolati mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation_name
 msgid "Relation Name"
-msgstr ""
+msgstr "Összefüggés neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_table
 msgid "Relation Table"
-msgstr ""
+msgstr "Összefüggési tábla"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment_use
 msgid "Reload from Attachment"
-msgstr ""
+msgstr "Töltse újra a csatolmányból"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove from the 'More' menu"
-msgstr ""
+msgstr "Eltávolításra kerül a „Még több” menüből"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove from the 'Print' menu"
-msgstr ""
+msgstr "Eltávolításra kerül a „Nyomtatás” menüből"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related this report"
-msgstr ""
+msgstr "A jelentéshez köthető összefüggő művelet eltávolítása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove the contextual action related to this server action"
-msgstr ""
+msgstr "A szerverművelethez köthető összefüggő művelet eltávolítása"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:486
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "\"%s\" mező átnevezése nem megengedett"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Repairs Management"
-msgstr ""
+msgstr "Javítások szervezése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_doall
 msgid "Repeat Missed"
-msgstr ""
+msgstr "Kimaradt ismétlése"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_interval_number
 msgid "Repeat every x."
-msgstr ""
+msgstr "Ismételjen minden x-et."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report
@@ -13745,54 +13745,54 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Report"
-msgstr ""
+msgstr "Kimutatás"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "Report Configuration"
-msgstr ""
+msgstr "Kimutatás beállítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_file
 msgid "Report File"
-msgstr ""
+msgstr "Kimutatás fájl"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_footer
 #: model:ir.model.fields,field_description:base.field_res_company_rml_footer_readonly
 msgid "Report Footer"
-msgstr ""
+msgstr "Kimutatás lábléc"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr ""
+msgstr "Kimutatás modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_type
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Type"
-msgstr ""
+msgstr "Kimutatás típus"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
-msgstr ""
+msgstr "Kimutatás Xml"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr ""
+msgstr "Kimutatás xml"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Report/Template"
-msgstr ""
+msgstr "Kimutatás/Sablon"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Kimutatás készítés"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_xml
@@ -13802,25 +13802,25 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_sale_report
 #: model:ir.ui.menu,name:base.purchase_report
 msgid "Reports"
-msgstr ""
+msgstr "Kimutatások"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link-view
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
 #: model:ir.ui.view,arch_db:base.res_request_link_tree-view
 msgid "Request Link"
-msgstr ""
+msgstr "Kérelem link"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_required
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Required"
-msgstr ""
+msgstr "Követelmény"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
 msgid "Resellers"
-msgstr ""
+msgstr "Viszonteladók"
 
 #. module: base
 #: code:addons/models.py:1083
@@ -13833,280 +13833,280 @@ msgstr "Oldja meg előbb a többi hibát"
 #: model:ir.model.fields,field_description:base.field_ir_property_res_id
 #: model:ir.module.module,shortdesc:base.module_resource
 msgid "Resource"
-msgstr ""
+msgstr "Erőforrás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "Erőforrás mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_id
 #: model:ir.model.fields,field_description:base.field_wkf_instance_res_id
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_res_id
 msgid "Resource ID"
-msgstr ""
+msgstr "Erőforrás ID azonosító"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_model
 msgid "Resource Model"
-msgstr ""
+msgstr "Forrás modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "Erőforrás neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_instance_res_type
 #: model:ir.model.fields,field_description:base.field_wkf_osv
 #: model:ir.ui.view,arch_db:base.view_workflow_instance_search
 msgid "Resource Object"
-msgstr ""
+msgstr "Erőforrás objektum"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Resource management for Project"
-msgstr ""
+msgstr "Alapanyag forrás kezelés a projekt témákhoz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant
 msgid "Restaurant"
-msgstr ""
+msgstr "Étterem"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr ""
+msgstr "Étterem kiegészítés, az eladótéri POS pénztárgéphez "
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Restrict"
-msgstr ""
+msgstr "Korlátozás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Korlátozva a listákra"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Retailer"
-msgstr ""
+msgstr "Kiskereskedő"
 
 #. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
-msgstr ""
+msgstr "Réunion (Francia)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
 msgid "Revenue Recognitions Management"
-msgstr ""
+msgstr "Bevétel elismerés kezelése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_right
 msgid "Right parent"
-msgstr ""
+msgstr "Jobb szülő"
 
 #. module: base
 #: selection:res.lang,direction:0
 msgid "Right-to-Left"
-msgstr ""
+msgstr "Jobbról-balra"
 
 #. module: base
 #: model:res.country,name:base.ro
 msgid "Romania"
-msgstr ""
+msgstr "Románia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro
 msgid "Romania - Accounting"
-msgstr ""
+msgstr "Románia - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_reports
 msgid "Romania - Accounting Reports"
-msgstr ""
+msgstr "Románia - Főkönyvi kimutatások"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Romanian / română"
-msgstr ""
+msgstr "Román / română"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rounding
 msgid "Rounding Factor"
-msgstr ""
+msgstr "Kerekítési tényező"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
-msgstr ""
+msgstr "Szabály meghatározás (Domén szűrő)"
 
 #. module: base
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
-msgstr ""
+msgstr "A szabálynak tartalmaznia kell legalább egy bejelölt hozzáférési jogot !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_rule_groups
 #: model:ir.ui.view,arch_db:base.view_groups_form
 msgid "Rules"
-msgstr ""
+msgstr "Szabályok"
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on Transient models."
-msgstr ""
+msgstr "Szabályok nem érvényesíthetőek az ideiglenes medel-en."
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on the Record Rules model."
-msgstr ""
+msgstr "A szabályok nem alkalmazhatóak a rekord szabály modellhez."
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:878
 #, python-format
 msgid "Run %s"
-msgstr ""
+msgstr "%s futtatása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Run Manually"
-msgstr ""
+msgstr "Futtatás kézzel"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Run Remaining Action Todo"
-msgstr ""
+msgstr "Még hátralévő elvégendő műveletek futtatása"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Russian / русский язык"
-msgstr ""
+msgstr "Orosz / русский язык"
 
 #. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
-msgstr ""
+msgstr "Oroszországi Föderáció"
 
 #. module: base
 #: model:res.country,name:base.rw
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
 msgid "SEPA Credit Transfer"
-msgstr ""
+msgstr "SEPA bevétel jóváírás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_port
 msgid "SMTP Port"
-msgstr ""
+msgstr "SMTP Port"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_port
 msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
-msgstr ""
+msgstr "SMTP Port. Rendszerint 465 az SSL, és 25 vagy 587 egyéb esetben."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_host
 msgid "SMTP Server"
-msgstr ""
+msgstr "SMTP Szerver"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "SQL Constraint"
-msgstr ""
+msgstr "SQL illesztés"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_sxw_content
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_sxw_content_data
 msgid "SXW Content"
-msgstr ""
+msgstr "SXW tartalom"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_sxw
 msgid "SXW Path"
-msgstr ""
+msgstr "SXW útvonal"
 
 #. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
-msgstr ""
+msgstr "Szent Barthélémy"
 
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena"
-msgstr ""
+msgstr "Szent Ilona"
 
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
-msgstr ""
+msgstr "Saint Kitts & Nevis Anguilla"
 
 #. module: base
 #: model:res.country,name:base.lc
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Saint Lucia"
 
 #. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (francia oldal)"
 
 #. module: base
 #: model:res.country,name:base.pm
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Saint Pierre és Miquelon"
 
 #. module: base
 #: model:res.country,name:base.st
 msgid "Saint Tome (Sao Tome) and Principe"
-msgstr ""
+msgstr "Saint Tome (Sao Tome) és Principe"
 
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent & Grenadines"
-msgstr ""
+msgstr "Saint Vincent & Grenadines"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sale
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sale"
-msgstr "Értékesíté"
+msgstr "Értékesítés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Sale & Purchase Vouchers"
-msgstr ""
+msgstr "Értékesítési & Beszerzési nyugták"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_uos
 msgid "Sale - Secondary UoM"
-msgstr ""
+msgstr "Értékesítési  - Másodlagos mértékegység"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "Sale Ebay"
-msgstr ""
+msgstr "EBay értékesítés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sale Layout"
-msgstr ""
+msgstr "Értékesítés szerkezete"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_layout
 msgid "Sale Layout, page-break, subtotals, separators, report"
-msgstr ""
+msgstr "Értékesítés szerkezete, oldaltördelés, részösszegek, elválasztók, jelentés"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -14116,105 +14116,105 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_sales
 #: model:ir.ui.menu,name:base.menu_sales_config
 msgid "Sales"
-msgstr ""
+msgstr "Értékesítések"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Értékesítések & Beszerzések"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Értékesítések költsége"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale
 msgid "Sales Management"
-msgstr ""
+msgstr "Értékesítés szervezés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Team"
-msgstr ""
+msgstr "Értékesítési csapat"
 
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Sales Team Dashboard"
-msgstr ""
+msgstr "Értékesítési csapat műszerfal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sales_team
 #: model:ir.ui.menu,name:base.sales_team_config
 msgid "Sales Teams"
-msgstr ""
+msgstr "Értékesítési csapatok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Értékesítések munkaidő-kimutatása"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr ""
+msgstr "Értékesítés és MRP /Anyagszükséglet Tervezés/ szervezése"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock
 msgid "Sales and Warehouse Management"
-msgstr ""
+msgstr "Értékesítési és raktár szervezés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_user_id
 #: model:ir.model.fields,field_description:base.field_res_users_user_id
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: base
 #: model:res.country,name:base.ws
 msgid "Samoa"
-msgstr ""
+msgstr "Szamoa"
 
 #. module: base
 #: model:res.country,name:base.sm
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Letisztított bankszámla szám"
 
 #. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Szaúd-Arábia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr "Saudi Arabia - Könyvelés"
+msgstr "Szaudi Arábiai - Könyvelés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
-msgstr ""
+msgstr "Mentés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment
 msgid "Save as Attachment Prefix"
-msgstr ""
+msgstr "Mentés, mint melléklet címjelzés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Schedule, Promote and Sell Events"
-msgstr ""
+msgstr "Ütemterv, bevezetés és értékesítési események"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr ""
+msgstr "Ütemezett művelet"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -14224,54 +14224,54 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr ""
+msgstr "Ütemezett műveletek"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Search"
-msgstr ""
+msgstr "Keresés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "Search Actions"
-msgstr ""
+msgstr "Műveletek keresése"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr ""
+msgstr "Partner keresése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_search_view
 msgid "Search View"
-msgstr ""
+msgstr "Nézet keresése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_search_view_id
 msgid "Search View Ref."
-msgstr ""
+msgstr "Nézet hivatkozás keresése"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Search modules"
-msgstr ""
+msgstr "Modul keresés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Second: %(sec)s"
-msgstr ""
+msgstr "Másodperc: %(sec)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Security"
-msgstr ""
+msgstr "Biztonság"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Security and Authentication"
-msgstr ""
+msgstr "Biztonság és hitelesítés"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman
@@ -14287,7 +14287,7 @@ msgstr "Összes érdeklődés megtekintése"
 #: code:addons/base/ir/ir_fields.py:306
 #, python-format
 msgid "See all possible values"
-msgstr ""
+msgstr "Összes lehetséges érték megtekintése"
 
 #. module: base
 #: code:addons/common.py:42
@@ -14300,17 +14300,17 @@ msgstr "Lásd http://openerp.com"
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr ""
+msgstr "Az ide vonatkozó dokumentum modellből válasszon cél mezőt.\nHa ez egy kapcsolódó mező akkor lehetősége lesz mezőt választani a cél mezőt a kapcsolat célállomásán."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_action_id
 msgid "Select the client action that has to be executed."
-msgstr ""
+msgstr "Válassza ki a végrehajtani kívánt kliens műveletet."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_transition_id
 msgid "Select the workflow signal to trigger."
-msgstr ""
+msgstr "Válassza ki a kapcsolni kívánt munkafolyamat jelzőt."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_use_parent_address
@@ -14318,88 +14318,88 @@ msgstr ""
 msgid ""
 "Select this if you want to set company's address information  for this "
 "contact"
-msgstr ""
+msgstr "Válassza ezt, ha be szeretne állítani a címadat információt ehhez a partnerhez"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selectable
 msgid "Selectable"
-msgstr ""
+msgstr "Választható"
 
 #. module: base
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 msgid "Selection"
-msgstr ""
+msgstr "Kiválasztás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selection
 msgid "Selection Options"
-msgstr ""
+msgstr "Választási lehetőségek"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
 msgid "Sell Your Event's Tickets"
-msgstr ""
+msgstr "Értékesítse a jegyeket az eseményeihez"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale
 msgid "Sell Your Products Online"
-msgstr ""
+msgstr "Értékesítse online a termékeit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr ""
+msgstr "Értékesítsen a munkaidő-kimutatások alapján"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
-msgstr ""
+msgstr "Számlák küldése és a fizetések nyomon követése"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote
 msgid "Send Professional Quotations"
-msgstr ""
+msgstr "Küldjön profi árajánlatkéréseket"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sign
 msgid ""
 "Send documents to sign online, receive and archive filled copies (esign)"
-msgstr ""
+msgstr "Küldjön dokumentumokat és írja alá online, érkeztesse és archiválja a kitöltött másodpéldányokat (esign)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
 msgid "Send your shippings through DHL and track them online"
-msgstr ""
+msgstr "Küldje a szállítmányait a DHL szállítmányozóval és kövesse nyomon online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid "Send your shippings through Fedex and track them online"
-msgstr ""
+msgstr "Küldje a szállítmányait a Fedex szállítmányozóval és kövesse nyomon online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_temando
 msgid "Send your shippings through Temando and track them online"
-msgstr ""
+msgstr "Küldje a szállítmányait a Temando szállítmányozóval és kövesse nyomon online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
 msgid "Send your shippings through UPS and track them online"
-msgstr ""
+msgstr "Küldje a szállítmányait a UPS szállítmányozóval és kövesse nyomon online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
 msgid "Send your shippings through USPS and track them online"
-msgstr ""
+msgstr "Küldje a szállítmányait a USPS szállítmányozóval és kövesse nyomon online"
 
 #. module: base
 #: model:res.country,name:base.sn
 msgid "Senegal"
-msgstr ""
+msgstr "Szenegál"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_grouping
 msgid "Separator Format"
-msgstr ""
+msgstr "Elválasztó formátum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sequence
@@ -14416,17 +14416,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_sequence_search
 #: model:ir.ui.view,arch_db:base.view_view_tree
 msgid "Sequence"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_code
 msgid "Sequence Code"
-msgstr ""
+msgstr "Sorszám kódo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
 msgid "Sequence Size"
-msgstr ""
+msgstr "Sorszám méret"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -14435,55 +14435,55 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.sequence_view_tree
 #: model:ir.ui.view,arch_db:base.view_sequence_search
 msgid "Sequences"
-msgstr ""
+msgstr "Sorszámok"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr ""
+msgstr "Sorrendek & Azonosítók"
 
 #. module: base
 #: model:res.country,name:base.rs
 msgid "Serbia"
-msgstr ""
+msgstr "Szerbia"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Cyrillic) / српски"
-msgstr ""
+msgstr "Szerb (cirill) / српски"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Latin) / srpski"
-msgstr ""
+msgstr "Szerb (Latin) / srpski"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "Sorozatosító mező"
 
 #. module: base
 #: code:addons/models.py:426
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr "Soros művelet mező `%s` nem található az elszórt mezőkhöz `%s`!"
+msgstr "Sorozatazonosító művelet mező `%s` nem található az elszórt mezőkhöz `%s`!"
 
 #. module: base
 #: selection:ir.logging,type:0
 msgid "Server"
-msgstr ""
+msgstr "Szerver"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_action_id
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr ""
+msgstr "Szerver művelet"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
 msgid "Server Action value mapping"
-msgstr ""
+msgstr "Térkép a szerver művelet értékekhez"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -14491,42 +14491,42 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 #: model:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr ""
+msgstr "Szerver műveletek"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_services
 #: model:res.partner.category,name:base.res_partner_category_11
 msgid "Services"
-msgstr ""
+msgstr "Szolgáltatások"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
-msgstr ""
+msgstr "NULL-ra állítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_new_password
 msgid "Set Password"
-msgstr ""
+msgstr "Jelszó beállítás"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Set as Todo"
-msgstr ""
+msgstr "Beállítás tennivalóként"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_font
 msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
-msgstr ""
+msgstr "Állítsa be a jelentés fejléc betűtípusát, amit alapértelmezettként használ az felhasználó vállalat RML jelentéseiben"
 
 #. module: base
 #: code:addons/base/res/res_users.py:519
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
-msgstr ""
+msgstr "Üres jelszó beállítása biztonsági okokból nem engedélyezett!"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
@@ -14535,163 +14535,163 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_sale_general_settings
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "Alapbeállítások"
+msgstr "Beállítások"
 
 #. module: base
 #: model:res.country,name:base.sc
 msgid "Seychelles"
-msgstr ""
+msgstr "Seychelle-szigetek"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_share
 msgid "Share Group"
-msgstr ""
+msgstr "Csoport megosztás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_share
 msgid "Share User"
-msgstr ""
+msgstr "Felhasználó megosztás"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
 msgid "Share and Publish Videos, Presentations and Documents"
-msgstr ""
+msgstr "Osszon meg és tegyen nyilvánossá Videókat, Előadásokat és  Dokumentumokat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Shared"
-msgstr ""
+msgstr "Megosztott"
 
 #. module: base
 #: selection:res.partner,type:0
 msgid "Shipping address"
-msgstr ""
+msgstr "Szállítási cím"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show active currencies"
-msgstr ""
+msgstr "Aktív pénznemek mutatása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show inactive currencies"
-msgstr ""
+msgstr "Inaktív pénznemek mutatása"
 
 #. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_signal
 msgid "Signal (Button Name)"
-msgstr ""
+msgstr "Jel (a gomb neve)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_signal_send
 msgid "Signal (subflow.*)"
-msgstr ""
+msgstr "Jel (alfolyamat.*)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_transition_id
 msgid "Signal to Trigger"
-msgstr ""
+msgstr "Jelzés a kapcsolóhoz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_signature
 msgid "Signature"
-msgstr ""
+msgstr "Aláírás"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr ""
+msgstr "Regisztráció"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
 msgid "Silver"
-msgstr ""
+msgstr "Ezüst"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr ""
+msgstr "Egyszerű engedmények az eladótéri pénztárgéphez "
 
 #. module: base
 #: model:res.country,name:base.sg
 msgid "Singapore"
-msgstr ""
+msgstr "Szingapúr"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
 msgid "Singapore - Accounting"
-msgstr ""
+msgstr "Szingapúr - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_reports
 msgid "Singapore - Accounting Reports"
-msgstr ""
+msgstr "Szingapúr - Főkönyvi kimutatások"
 
 #. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Sint Maarten (Holland rész)"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
 msgid "Sir"
-msgstr ""
+msgstr "Úr"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_size
 msgid "Size"
-msgstr ""
+msgstr "Méret"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:291
 #, python-format
 msgid "Size of the field can never be less than 0 !"
-msgstr ""
+msgstr "A mező mérete nem lehet kisebb, mint 0!"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Skip"
-msgstr ""
+msgstr "Kihagy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "Slides"
-msgstr ""
+msgstr "Diák"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Slovak / Slovenský jazyk"
-msgstr ""
+msgstr "Szlovák / Slovenský jazyk"
 
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
-msgstr ""
+msgstr "Szlovákia"
 
 #. module: base
 #: model:res.country,name:base.si
 msgid "Slovenia"
-msgstr ""
+msgstr "Szlovénia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_si
 msgid "Slovenian - Accounting"
-msgstr ""
+msgstr "Szlovén számlatükör"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_si_reports
 msgid "Slovenian - Accounting Reports"
-msgstr ""
+msgstr "Szlovén Főkönyvi kimutatások"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Slovenian / slovenščina"
-msgstr ""
+msgstr "Szlovén / slovenščina"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_image_small
@@ -14706,206 +14706,206 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Ennek a kapcsolatnak a kisméretű arcképe. Automatikusan át lesz méretezve 64x64px-es méretű képpé, megtartva a képarányt. Használja ezt a mezőt bárhol, ahol kis képre van szükség."
 
 #. module: base
 #: model:res.country,name:base.sb
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Salamon-szigetek"
 
 #. module: base
 #: model:res.country,name:base.so
 msgid "Somalia"
-msgstr ""
+msgstr "Szomália"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank_bic
 #: model:ir.model.fields,help:base.field_res_partner_bank_bank_bic
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "Van, amikor BIC-nek, vagy Swift-nek nevezik."
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:353
 #: code:addons/base/ir/ir_model.py:818
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
-msgstr ""
+msgstr "Bocsánat, nincs jogosultsága ehhez a dokumentumhoz."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:820
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
-msgstr ""
+msgstr "Bocsánat, nincs engedélye ilyen dokumentum létrehozásához."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:821
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
-msgstr ""
+msgstr "Bocsánat, nem megengedett, hogy törölje ezt a dokumentumot."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:819
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
-msgstr ""
+msgstr "Bocsánat, nem módosíthatja ezt a dokumentumot."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_sort
 msgid "Sort"
-msgstr ""
+msgstr "Rendez"
 
 #. module: base
 #: code:addons/models.py:4675
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Osztályozó mező %s nem található ezen  a modellen %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_from
 msgid "Source Activity"
-msgstr ""
+msgstr "Forrás tevékenység"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_src_model
 msgid "Source Model"
-msgstr ""
+msgstr "Forrás modell"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Source Object"
-msgstr ""
+msgstr "Forrás Objektum"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_form
 msgid "Source Term"
-msgstr ""
+msgstr "Forrás feltétel"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_act_from
 msgid ""
 "Source activity. When this activity is over, the condition is tested to "
 "determine if we can start the ACT_TO activity."
-msgstr ""
+msgstr "Forrás tevékenység. Ha ez a tevékenység véget ér, a feltétel tesztelésre kerül annak eldöntésére, hogy elindíthatjuk-e az ACT_TO tevékenységet."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_source
 msgid "Source term"
-msgstr ""
+msgstr "Forrás feltétel"
 
 #. module: base
 #: model:res.country,name:base.za
 msgid "South Africa"
-msgstr ""
+msgstr "Dél-Afrikai Köztársaság"
 
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Dél-Georgia és a Dél-Sandwich-szigetek"
 
 #. module: base
 #: model:res.country,name:base.kr
 msgid "South Korea"
-msgstr ""
+msgstr "Dél-Korea"
 
 #. module: base
 #: model:res.country,name:base.ss
 msgid "South Sudan"
-msgstr ""
+msgstr "Dél-Szudán"
 
 #. module: base
 #: model:res.country,name:base.es
 msgid "Spain"
-msgstr ""
+msgstr "Spanyolország"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr ""
+msgstr "Spanyol könyvelési modul (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
-msgstr ""
+msgstr "Spanyol könyvelési modul (PGCE 2008) kimutatások"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (AR) / Español (AR)"
-msgstr ""
+msgstr "Spanyol (AR) / Español (AR)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (BO) / Español (BO)"
-msgstr ""
+msgstr "Spanyol (BO) / Español (BO)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CL) / Español (CL)"
-msgstr ""
+msgstr "Spanyol (CL) / Español (CL)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
-msgstr ""
+msgstr "Spanyol (CO) / Español (CO)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CR) / Español (CR)"
-msgstr ""
+msgstr "Spanyol (CR) / Español (CR)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (DO) / Español (DO)"
-msgstr ""
+msgstr "Spanyol (DO) / Español (DO)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (EC) / Español (EC)"
-msgstr ""
+msgstr "Spanyol (EC) / Español (EC)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (GT) / Español (GT)"
-msgstr ""
+msgstr "Spanyol (GT) / Español (GT)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (MX) / Español (MX)"
-msgstr ""
+msgstr "Spanyol (MX) / Español (MX)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PA) / Español (PA)"
-msgstr ""
+msgstr "Spanyol (PA) / Español (PA)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PE) / Español (PE)"
-msgstr ""
+msgstr "Spanyol (PE) / Español (PE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PY) / Español (PY)"
-msgstr ""
+msgstr "Spanyol (PY) / Español (PY)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (UY) / Español (UY)"
-msgstr ""
+msgstr "Spanyol (UY) / Español (UY)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (VE) / Español (VE)"
-msgstr ""
+msgstr "Spanyol (VE) / Español (VE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish / Español"
-msgstr ""
+msgstr "Spanyol"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
 msgid "Specific Industry Applications"
-msgstr ""
+msgstr "Különleges ipari alkalmazások"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_new_password
@@ -14913,48 +14913,48 @@ msgid ""
 "Specify a value only when creating a user or if you're changing the user's "
 "password, otherwise leave empty. After a change of password, the user has to"
 " login again."
-msgstr ""
+msgstr "Csak felhasználó létrehozásakor határozzon meg értéket, vagy akkor, ha a felhasználó jelszavát módosítja, különben hagyja üresen. Jelszóváltoztatás után, a felhasználónak ismét be kell jelentkeznie."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_doall
 msgid ""
 "Specify if missed occurrences should be executed when the server restarts."
-msgstr ""
+msgstr "Határozza meg, ha elfelejtett eseményeket kell futtatnia a szerver újraindításánál."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_split_mode
 msgid "Split Mode"
-msgstr ""
+msgstr "Osztott üzemmód"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr ""
+msgstr "Támogatás, szponzorok, nyomkövetés, napirend, hírek eseményekről"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
 msgid "Sr."
-msgstr ""
+msgstr "Sr."
 
 #. module: base
 #: model:res.country,name:base.lk
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "Szakaszok"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
-msgstr ""
+msgstr "Általános"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 msgid "Start configuration"
-msgstr ""
+msgstr "Beállítások megkezdése"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:52
@@ -14968,22 +14968,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #, python-format
 msgid "State"
-msgstr ""
+msgstr "Állam/Megye"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
 msgid "State Code"
-msgstr ""
+msgstr "Állam kód"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_name
 msgid "State Name"
-msgstr ""
+msgstr "Állam neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_ids
 msgid "States"
-msgstr ""
+msgstr "Állapotok"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install_state
@@ -15001,38 +15001,38 @@ msgstr "Állapot"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_increment
 msgid "Step"
-msgstr ""
+msgstr "Lépés"
 
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:20 code:addons/base/ir/ir_sequence.py:43
 #, python-format
 msgid "Step must not be zero."
-msgstr ""
+msgstr "Lépés nem lehet nulla."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
 msgid "Sticky memos, Collaborative"
-msgstr ""
+msgstr "Öntapadós feljegyzések, együttműködés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Sticky notes, Collaborative, Memos"
-msgstr ""
+msgstr "Öntapadós feljegyzések, együttműködés, emlékeztetők"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock_management
 msgid "Stock Management"
-msgstr ""
+msgstr "Készletkezelés"
 
 #. module: base
 #: selection:workflow.activity,kind:0
 msgid "Stop All"
-msgstr ""
+msgstr "Mindent leállít"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "Tárolt fájlnév"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_street
@@ -15040,14 +15040,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_street
 #: model:ir.model.fields,field_description:base.field_res_users_street
 msgid "Street"
-msgstr ""
+msgstr "Utca"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Street 2..."
-msgstr ""
+msgstr "2. utca..."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -15055,7 +15055,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street..."
-msgstr ""
+msgstr "Utca..."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_street2
@@ -15063,17 +15063,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_street2
 #: model:ir.model.fields,field_description:base.field_res_users_street2
 msgid "Street2"
-msgstr ""
+msgstr "Utca2"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "Alárendelt-mező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "Alárendel-modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_subflow_id
@@ -15081,166 +15081,166 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 #: selection:workflow.activity,kind:0
 msgid "Subflow"
-msgstr ""
+msgstr "Alfolyamat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
 msgid "Subject"
-msgstr ""
+msgstr "Tárgy"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.edit_menu_access
 msgid "Submenus"
-msgstr ""
+msgstr "Almenük"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_contract
 msgid "Subscription Management"
-msgstr ""
+msgstr "Feliratkozás kezelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_contract
 msgid "Subscription Management (without frontend)"
-msgstr ""
+msgstr "Feliratkozás kezelés (előtérben futás nélkül)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_contract
 msgid "Subscriptions Management Frontend for your customers"
-msgstr ""
+msgstr "Feliratkozás kezelés előtérben futással a vásárlói részére"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_ids
 msgid "Subsequences"
-msgstr ""
+msgstr "Al-sorszámok"
 
 #. module: base
 #: model:res.country,name:base.sd
 msgid "Sudan"
-msgstr ""
+msgstr "Szudán"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_suffix
 msgid "Suffix"
-msgstr ""
+msgstr "Utótag"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_suffix
 msgid "Suffix value of the record for the sequence"
-msgstr ""
+msgstr "A rekord toldalékértéke a számsorhoz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_summary
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_params
 msgid "Supplementary arguments"
-msgstr ""
+msgstr "Kiegészítő jellemzők"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bootswatch
 msgid "Support for Bootswatch themes in master"
-msgstr ""
+msgstr "Mester Bootswatch témához támogatás"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_issue
 msgid "Support, Bug Tracker, Helpdesk"
-msgstr ""
+msgstr "Támogatás, Hiba követés, Ügyfélszolgálat/Panasziroda"
 
 #. module: base
 #: model:res.country,name:base.sr
 msgid "Suriname"
-msgstr ""
+msgstr "Suriname - állam"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_survey
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
-msgstr ""
+msgstr "Felmérés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
 msgid "Survey CRM"
-msgstr ""
+msgstr "Felmérés CRM"
 
 #. module: base
 #: model:res.country,name:base.sj
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Spicbergák és Jan Mayen Szigetek"
 
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Swaziland"
-msgstr ""
+msgstr "Szváziföld"
 
 #. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
-msgstr ""
+msgstr "Svédország"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Swedish / svenska"
-msgstr ""
+msgstr "Svéd"
 
 #. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
-msgstr ""
+msgstr "Svájc"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch
 msgid "Switzerland - Accounting"
-msgstr ""
+msgstr "Svájc - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_reports
 msgid "Switzerland - Accounting Reports"
-msgstr ""
+msgstr "Svájc - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_symbol
 msgid "Symbol"
-msgstr ""
+msgstr "Szimbólum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_position
 msgid "Symbol Position"
-msgstr ""
+msgstr "Szimbólum pozíció"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_synchro
 msgid "Synchronization with the external timesheet application"
-msgstr ""
+msgstr "Szinkronizáció a külső munkaidő-kimutatás alkalmazással"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Synchronize Terms"
-msgstr ""
+msgstr "Kifejezések szinkronizálása"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Synchronize Translation"
-msgstr ""
+msgstr "Fordítás szinkronizálása"
 
 #. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
-msgstr ""
+msgstr "Szíria"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid "System Configuration Done"
-msgstr ""
+msgstr "Rendszer konfigurálása kész"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_configuration.py:20
 #, python-format
 msgid "System Configuration done"
-msgstr ""
+msgstr "Rendszer konfigurálása kész"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -15248,29 +15248,29 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_ir_config_form
 #: model:ir.ui.view,arch_db:base.view_ir_config_list
 msgid "System Parameters"
-msgstr ""
+msgstr "Rendszer paraméterek"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "System Properties"
-msgstr ""
+msgstr "Rendszertulajdonságok"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "System Update"
-msgstr ""
+msgstr "Rendszerfrissítés"
 
 #. module: base
 #: selection:base.language.export,format:0
 msgid "TGZ Archive"
-msgstr ""
+msgstr "TGZ archívum"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ""
 "TGZ format: this is a compressed archive containing a PO file, directly suitable\n"
 "                                for uploading to Odoo's translation platform,"
-msgstr ""
+msgstr "TGZ formátum: ez egy összecsomagolt archívum egy PO fájl-al, direkt feltölthető az \n                                 Odoo fordítási részéhez."
 
 #. module: base
 #: code:addons/base/res/res_company.py:107
@@ -15278,17 +15278,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_vat
 #, python-format
 msgid "TIN"
-msgstr ""
+msgstr "TIN"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Tag"
-msgstr ""
+msgstr "Címke"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_id_972
@@ -15301,44 +15301,44 @@ msgstr "Címkék"
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "Tags..."
-msgstr ""
+msgstr "Címkék..."
 
 #. module: base
 #: model:res.country,name:base.tw
 msgid "Taiwan"
-msgstr ""
+msgstr "Tajvan"
 
 #. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadzsikisztán"
 
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzánia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_act_server_use_relational_model
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_model_id
 msgid "Target Model"
-msgstr ""
+msgstr "Cél modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_model_name
 msgid "Target Model Name"
-msgstr ""
+msgstr "A cél modell neve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_target
 msgid "Target Window"
-msgstr ""
+msgstr "Cél ablak"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
 msgid "Tax ID"
-msgstr ""
+msgstr "Adó azonosító"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_vat
@@ -15346,40 +15346,40 @@ msgstr ""
 msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
-msgstr ""
+msgstr "Adó azonosító szám. Jelölje be a négyzetet, ha a vállalat adóköteles. Egyes jogi kifejezések használják."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
 msgid "Team Page"
-msgstr ""
+msgstr "A csoport oldala"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Technical"
-msgstr ""
+msgstr "Technikai"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Technical Data"
-msgstr ""
+msgstr "Technikai adat"
 
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr ""
+msgstr "Műszaki tulajdonságok"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_name
 msgid "Technical Name"
-msgstr ""
+msgstr "Technikai név"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
-msgstr ""
+msgstr "Technikai beállítások"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_company_type
@@ -15390,92 +15390,92 @@ msgid ""
 "interface. Due to the old API limitations with interface function field, we "
 "implement it by hand instead of a true function field. When migrating to the"
 " new API the code should be simplified."
-msgstr ""
+msgstr "Techniaki mező, csak egy bináris logikai változó rádió gomb használatával való megjelenítésére használja. Mivel az Odoo v9 rendszer a RadioGombot nem használhatja a bináris mezőkben, ez egy interfészként működik. A régi API behatárolt interfész működési mezője miatt, beleillesztettük kézzel mintsem egy tényleges működési mezőt használjunk. Egy új API kód mellet már egyszerűsíteni fogjuk."
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
-msgstr ""
+msgstr "Technikai leírás"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Telugu / తెలుగు"
-msgstr ""
+msgstr "Telugu / తెలుగు"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_temando
 msgid "Temando Shipping"
-msgstr ""
+msgstr "Temando szállítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_name
 msgid "Template Name"
-msgstr ""
+msgstr "Sablonnév"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
 msgid "Test API"
-msgstr ""
+msgstr "Új API tesztelés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Test Connection"
-msgstr ""
+msgstr "Teszt kapcsolat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
 msgid "Testing of access restrictions"
-msgstr ""
+msgstr "Hozzáférés korlátozások tesztelése"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tests
 msgid "Tests"
-msgstr ""
+msgstr "Teszts"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
 msgid "Tests of field conversions"
-msgstr ""
+msgstr "Mezőátváltások tesztelése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_note
 #: selection:ir.property,type:0
 msgid "Text"
-msgstr ""
+msgstr "Szöveg"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
-msgstr ""
+msgstr "Thai / ภาษาไทย"
 
 #. module: base
 #: model:res.country,name:base.th
 msgid "Thailand"
-msgstr ""
+msgstr "Thaiföld"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
-msgstr ""
+msgstr "Thaiföld - könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th_reports
 msgid "Thailand - Accounting Reports"
-msgstr ""
+msgstr "Thaiföld - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars.\n"
 "You can use this field for quick search."
-msgstr ""
+msgstr "Kétbetűs ISO országkód.\nEz a mező a gyors kereséshez használható."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:105
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Az objektum nevének x_-el kell kezdődnie és nem tartalmazhat semmilyen speciális karaktert!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:287
@@ -15483,7 +15483,7 @@ msgstr ""
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
-msgstr ""
+msgstr "A kiválasztási opciók kifejezést [('key','Label'), ...] formátumban szükséges megadni!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:274
@@ -15491,7 +15491,7 @@ msgstr ""
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr ""
+msgstr "A kiválasztási lehetőségek kifejezése nem egy érvényes Python kifejezés. Kérem adjon meg egy kifejezést, a következő formátumban [('key','Label'), ...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -15501,7 +15501,7 @@ msgid ""
 "digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided ',' as the thousand separator in each case."
-msgstr ""
+msgstr "Az elválasztó formátumnak olyannak kell lennie [,n] ahol 0 < n :egység számjegytől indul. A -1 fogja jelezni az elválasztás végét. Pl. a [3,2,-1] fogja jelölni a 106500-nál, hogy 1,06,500 lehessen; az [1,2,-1] fogja lehetővé tenni, hogy a szám 106,50,0 legyen;[3] fogja jelölni mint 106,500. Ebben az esetben mindig a '.' az ezres elválasztó."
 
 #. module: base
 #: code:addons/base/module/module.py:709
@@ -15509,43 +15509,43 @@ msgstr ""
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
 "later."
-msgstr ""
+msgstr "A `%s` modul úgy néz ki most nem elérhető, kérem próbálja meg később."
 
 #. module: base
 #: code:addons/base/module/module.py:558
 #, python-format
 msgid "The `base` module cannot be uninstalled"
-msgstr ""
+msgstr "Az `alap` modult nem lehet törölni"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category_active
 msgid "The active field allows you to hide the category without removing it."
-msgstr ""
+msgstr "Az aktív mező lehetővé teszi a kategória elrejtését törlés nélkül."
 
 #. module: base
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "A kiválasztott vállalat nincs a felhasználó számára engedélyezett vállalatok között."
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Az országkódnak egyedinek kell lennie!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "A nyelvkódnak egyedinek kell lennie!"
 
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "A cég nevének egyedinek kell lennie"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_company_id
 msgid "The company this user is currently working for."
-msgstr ""
+msgstr "A cég, amelynek a jelenlegi felhasználó dolgozik."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -15553,29 +15553,29 @@ msgid ""
 "The configuration wizards are used to help you configure a new instance of "
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
-msgstr ""
+msgstr "A beállításvarázsló segítséget nyújt egy új Odoo rendszer beállításához. Új modulok telepítésénél futnak le, de egyes varázslókat ebből a menüből kézzel is elindíthat."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_related
 msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
-msgstr ""
+msgstr "Az idevonatkozó  kapcsolódó mező, ha létezik. Ennek egy ponttal-elválasztott mező név listának kell lennie."
 
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique!"
-msgstr ""
+msgstr "A valutakódnak egyedinek kell lennie!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_model
 msgid "The database object this attachment will be attached to"
-msgstr ""
+msgstr "Ez az adatbázis-objektum melléklet ehhez lesz adva"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_act_to
 msgid "The destination activity."
-msgstr ""
+msgstr "A céltevékenység."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -15584,7 +15584,7 @@ msgid ""
 "                                            compute the value of the field on a set of records. The value of\n"
 "                                            the field must be assigned to each record with a dictionary-like\n"
 "                                            assignment."
-msgstr ""
+msgstr "A <strong>Számítás</strong> mező az a Python kód, mely\n                                            kiszámítja a beállított rekordok mező értékét. A mező\n                                            értékét hozzá kell rendelni mindegyik rekordhoz egy könyvtár-szerű \n                                            hozzárendeléssel."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -15593,7 +15593,7 @@ msgid ""
 "                                compute the value of the field on a set of records. The value of\n"
 "                                the field must be assigned to each record with a dictionary-like\n"
 "                                assignment."
-msgstr ""
+msgstr "A <strong>Számítás</strong> mező az a Python kód, mely\n                                            kiszámítja a beállított rekordok mező értékét. A mező\n                                            értékét hozzá kell rendelni mindegyik rekordhoz egy könyvtár-szerű \n                                            hozzárendeléssel."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -15603,7 +15603,7 @@ msgid ""
 "                                            field names, like <code>name, size</code>. You can also refer to\n"
 "                                            fields accessible through other relational fields, for instance\n"
 "                                            <code>partner_id.company_id.name</code>."
-msgstr ""
+msgstr "A <strong>Függőségek</strong> mező listák, melyektől\n                                            a jelenlegi mező függ. Ez egy vesszővel-elválasztott mező \n                                            nevek listája, mint <code>név, méret</code>. Hivatkozhat a relációs\n                                            mezőkből elérhető mezőkre, például\n                                            <code>partner_id.company_id.name</code>."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -15613,26 +15613,26 @@ msgid ""
 "                                field names, like <code>name, size</code>. You can also refer to\n"
 "                                fields accessible through other relational fields, for instance\n"
 "                                <code>partner_id.company_id.name</code>."
-msgstr ""
+msgstr "A <strong>Függőségek</strong> mező listák, melyektől\n                                            a jelenlegi mező függ. Ez egy vesszővel-elválasztott mező \n                                            nevek listája, mint <code>név, méret</code>. Hivatkozhat a relációs\n                                            mezőkből elérhető mezőkre, például\n                                            <code>partner_id.company_id.name</code>."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_field_id
 msgid ""
 "The field on the current object that links to the target object record (must"
 " be a many2one, or an integer field with the record ID)"
-msgstr ""
+msgstr "Az aktuális feladat mezője, mely a cél feladat rekordra mutat(many2one-nak kell lennie, vagy egy rekord ID egyész számmal rendelkező mezőnek)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_name
 msgid "The full name of the country."
-msgstr ""
+msgstr "Az ország teljes neve."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_group_id
 msgid ""
 "The group that a user must have to be authorized to validate this "
 "transition."
-msgstr ""
+msgstr "A csoport amihez egy felhasználónak hozzá kell tudni férni, hogy jóvá hagyja ezt az átmenetet."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_user_id
@@ -15640,74 +15640,74 @@ msgstr ""
 msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
-msgstr ""
+msgstr "A belső felhasználó aki a megbízott ehhez a kapcsolathoz, ha van ilyen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
 msgid "The list of models that extends the current model."
-msgstr ""
+msgstr "A jelenlegi modellt túllépő modellek listái."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
-msgstr ""
+msgstr "A menü művelet, ami erre a szűrőre vonatkozik. Ha üresen hagyja, akkor a szűrő ennek a modellnek az összes menüjére vonatkozik."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_model_id
 msgid ""
 "The model that will receive the workflow signal. Note that it should have a "
 "workflow associated with it."
-msgstr ""
+msgstr "A modell, ami a munkafolyamat jelzését fogadja. Követelmény, hogy egy munkafolyamathoz kapcsolódjon."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_model_id
 msgid "The model this field belongs to"
-msgstr ""
+msgstr "Az ehhez a modellhez tartozó mező"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Az ország nevének egyedinek kell lennie!"
 
 #. module: base
 #: code:addons/base/res/res_users.py:116
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr ""
+msgstr "A csoport neve nem kezdődhet „-”-el."
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "A csoport nevének egyedinek kell lennie, egy alkalmazáson belül!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "A nyelv megnevezésnek egyedinek kell lennie!"
 
 #. module: base
 #: code:addons/base/module/module.py:311
 #, python-format
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "A modul nevének egyedinek kell lennie!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_number_increment
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
+msgstr "A következő számot a sorban ezzel a számmal fogjuk növelni"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "The next step depends on the file format:"
-msgstr ""
+msgstr "A következő lépés a fájl formátumától függ:"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "The only predefined variables are"
-msgstr ""
+msgstr "Az egyedüli előre definiált változók a következők"
 
 #. module: base
 #: code:addons/model.py:137
@@ -15716,7 +15716,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr ""
+msgstr "A művelet nem végezhető el, valószínűleg a következők miatt:\n- törlés: rekordot szeretne törölni, de arra még van hivatkozás\n- létrehozás/frissítés: egy szükséges mező nincs rendesen beállítva/kitöltve"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
@@ -15724,7 +15724,7 @@ msgid ""
 "The optional domain to restrict possible values for relationship fields, "
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
-msgstr ""
+msgstr "Feltételes tartomány ahhoz, hogy korlátozni lehessen az összefüggések mezőinek lehetséges értékeit, mint megadott Python kifejezést, ami a háromágú listát írja le. Például: [('szín','=','piros')]"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_tz
@@ -15734,43 +15734,43 @@ msgid ""
 "printed reports. It is important to set a value for this field. You should "
 "use the same timezone that is otherwise used to pick and render date and "
 "time values: your computer's timezone."
-msgstr ""
+msgstr "A partner időzónája lesz felhasználva a nyomtatandó kimutatások igazi dátum- és idő adataihoz. Fontos, hogy ki legyenek töltve ezek a mezők. Ugyanazt az időzónát használja, különben a kiválasztott és hozzáadott dátum- és idő értékek: a számítógépe időzónáját."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_file
 msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
-msgstr ""
+msgstr "A fő kimutatás fájl elérési útvonala (a kimutatás típustól függően), vagy üres, ha a tartalom egy másik mezőn belül található"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_rml
 msgid ""
 "The path to the main report file/controller (depending on Report Type) or "
 "empty if the content is in another data field"
-msgstr ""
+msgstr "A fő jelentés fájl elérési útja/ellenőrzése (a jelentés típusától függően) vagy üres, ha a tartalom egy másik adatmezőben van"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_priority
 msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
-msgstr ""
+msgstr "A munka prioritása, mint egész szám: 0 jelenti a magas prioritást, 10 jelenti az alacsony prioritást."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate_rate
 msgid "The rate of the currency to the currency of rate 1"
-msgstr ""
+msgstr "Átváltási árfolyam az 1 árfolyamához."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate
 msgid "The rate of the currency to the currency of rate 1."
-msgstr ""
+msgstr "Átváltási árfolyam az 1 árfolyamához."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_id
 msgid "The record id this is attached to"
-msgstr ""
+msgstr "A rekordazonosító ID, amelyhez kapcsolódik"
 
 #. module: base
 #: code:addons/models.py:3158 code:addons/models.py:3416
@@ -15780,7 +15780,7 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n\n(Dokumentum típus: %s, Művelet: %s)"
 
 #. module: base
 #: code:addons/fields.py:926
@@ -15788,24 +15788,24 @@ msgstr ""
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
-msgstr ""
+msgstr "A második bizonyításnak a many2many mezőhöz %s egy SQL táblának kell lennie! Ezt használta %s, ami nem érvényes SQL tábla név."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
 msgid ""
 "The selected language has been successfully installed. You must change the "
 "preferences of the user and open a new menu to view the changes."
-msgstr ""
+msgstr "A kiválasztott nyelvet sikeresen betöltötte. A nyelv használatát a felhasználói beállításoknál tudja megadni."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 msgid "The selected modules have been updated / installed !"
-msgstr ""
+msgstr "A kiválasztott modulok telepítve/frissítve lettek!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code in max. three chars."
-msgstr ""
+msgstr "Az államkód max. három karakterrel."
 
 #. module: base
 #: code:addons/custom.py:536
@@ -15813,41 +15813,41 @@ msgstr ""
 msgid ""
 "The sum of the data (2nd field) is null.\n"
 "We can't draw a pie chart !"
-msgstr ""
+msgstr "Az adat (2. mező) összege nulla.\nNem tudunk körgrafikont rajzolni !"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:382
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
-msgstr ""
+msgstr "A %r táblázatot ha más, nem kompatibilis mezőkhöz használja."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_model
 msgid "The technical name of the model this field belongs to"
-msgstr ""
+msgstr "A modell technikai neve, amihez ez a mező tartozik"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_user_id
 msgid ""
 "The user this filter is private to. When left empty the filter is public and"
 " available to all users."
-msgstr ""
+msgstr "Ez a szűrő privát a felhasználóra nézve. Ha a szűrő üresen lett hagyva akkor az publikus és elérhető minden felhasználó számára."
 
 #. module: base
 #: model:res.groups,comment:base.group_equipment_manager
 msgid "The user will be able to manage equipments."
-msgstr ""
+msgstr "A felhasználó képes lesz eszközöket kezelni."
 
 #. module: base
 #: code:addons/models.py:6160
 #, python-format
 msgid "The value for the field '%s' already exists."
-msgstr ""
+msgstr "Ennek a mezőnek '%s' az értéke mér be lett írva."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
 msgid "Theme"
-msgstr ""
+msgstr "Téma"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:79
@@ -15855,35 +15855,35 @@ msgstr ""
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
-msgstr ""
+msgstr "Már be van állítva alapértelmezett megosztott szűrő ehhez %(model)s, törölje vagy változtassa meg, mielőtt új alapértelmezettet állít be"
 
 #. module: base
 #: code:addons/models.py:2646
 #, python-format
 msgid "There is no reference available for %s"
-msgstr ""
+msgstr "Nem elérhető hivatkozás ehhez %s"
 
 #. module: base
 #: code:addons/models.py:2773
 #, python-format
 msgid "There is no reference field '%s' found for '%s'"
-msgstr ""
+msgstr "Nem elérhető hivatkozás mező '%s' ehhez %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_iso_code
 msgid "This ISO code is the name of po files to use for translations"
-msgstr ""
+msgstr "Az ISO kód a fordításokhoz használatos po file-ok neve"
 
 #. module: base
 #: selection:ir.actions.act_url,target:0
 msgid "This Window"
-msgstr ""
+msgstr "Ez az ablak"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:423
 #, python-format
 msgid "This column contains module data and cannot be removed!"
-msgstr ""
+msgstr "Ez az oszlop modul adatokat tartalmaz és ezért nem lehet törölni!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_image
@@ -15891,19 +15891,19 @@ msgstr ""
 msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
-msgstr ""
+msgstr "Ez a mező tartalmazza a képet ami a felhasználó avatárja, korlátozva van a méret erre 1024x1024px"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_code
 msgid "This field is used to set/get locales for user"
-msgstr ""
+msgstr "Ez a mező használatos a helyszínek felhasználóhoz való beállításához/csatolásához"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ""
 "This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
-msgstr ""
+msgstr "Ezt a fájlt az általános <strong>Unicode/UTF-8</strong> fájl kódolással lett létrehozva, kérem nézze meg és szerkessze \n                           ugyanazzal a kódolással."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_views
@@ -15912,7 +15912,7 @@ msgid ""
 "enabled when displaying the result of an action, federating view mode, views"
 " and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
-msgstr ""
+msgstr "Ez a hivatkozási mező számítja ki a nézetek lista elrendezését, amit be kell kapcsolni, ha ki szeretnénk jelezni a művelet eredményét, összesített nézet módot, nézeteket és a hivatkozási nézetet a képernyőre. Az eredményt visszakapjuk, mint egy megrendelési páros listát (nézet_id,nézet_mód)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_attachment
@@ -15920,7 +15920,7 @@ msgid ""
 "This is the filename of the attachment used to store the printing result. "
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
-msgstr ""
+msgstr "Ez a fájlneve annak a csatolmánynak, ami egyébként eltárolja a nyomtatott eredményeket. Tartsa üresen, hogy a nyomtatott kimutatások ne legyenek elmentve. Használhat egy python kifejezést az objektummal és a változókkal kapcsolatban."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -15928,44 +15928,44 @@ msgid ""
 "This is the module to manage the accounting chart for Norway in Odoo.\n"
 "\n"
 "Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
-msgstr ""
+msgstr "Ez a modul a norvég számlatükröt kezeli az Odoo rendszerben.\n\nUpdated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "This module will trigger the uninstallation of below modules."
-msgstr ""
+msgstr "Ez a modul kapcsolja a lenti modulok törlését."
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bootswatch
 msgid ""
 "This theme module is exclusively for master to keep the support of "
 "Bootswatch themes which were previously part of the website module in 8.0."
-msgstr ""
+msgstr "Ez a téma modul kizárólag mester a Bootswatch téma támogatására, mely előzőleg a weboldal modul részét képezte a 8.0 verzióban."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_thousands_sep
 msgid "Thousands Separator"
-msgstr ""
+msgstr "Ezres elválasztó"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_time_format
 msgid "Time Format"
-msgstr ""
+msgstr "Idő Formátum"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Time Tracking"
-msgstr ""
+msgstr "Idő követés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr ""
+msgstr "Ügyek munkaidő-kiosztásai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_issue_sheet
 msgid "Timesheet on Website Project Issue"
-msgstr ""
+msgstr "Weboldal projekt garanciális és egyéb ügyek munkaidő-kiosztásai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
@@ -15975,200 +15975,200 @@ msgstr "Munkaidő-kimutatások"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Attendances, Activities"
-msgstr ""
+msgstr "Időkimutatások, Jelenléti ív,Tevékenységek"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
 #: model:ir.model.fields,field_description:base.field_res_users_tz
 msgid "Timezone"
-msgstr ""
+msgstr "Időzóna"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users_tz_offset
 msgid "Timezone offset"
-msgstr ""
+msgstr "Időzóna eltolódás"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tip
 msgid "Tips"
-msgstr ""
+msgstr "Tippek"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_title
 #: model:ir.model.fields,field_description:base.field_res_partner_title_name
 #: model:ir.model.fields,field_description:base.field_res_users_title
 msgid "Title"
-msgstr ""
+msgstr "Megsz."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
 msgid "To"
-msgstr "Záró dátum"
+msgstr "Címzett"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr ""
+msgstr "Tennivalók"
 
 #. module: base
 #: selection:ir.translation,state:0
 msgid "To Translate"
-msgstr ""
+msgstr "Lefordításhoz"
 
 #. module: base
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be installed"
-msgstr ""
+msgstr "Telepítendő"
 
 #. module: base
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be removed"
-msgstr ""
+msgstr "Eltávolítandó"
 
 #. module: base
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
-msgstr ""
+msgstr "Frissítendő"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr ""
+msgstr "Tennivalók"
 
 #. module: base
 #: model:res.country,name:base.tg
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. module: base
 #: model:res.country,name:base.tk
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. module: base
 #: model:res.country,name:base.to
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tools
 msgid "Tools"
-msgstr ""
+msgstr "Eszközök"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr ""
+msgstr "Érintőképernyős intefész az üzletekhez"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
-msgstr ""
+msgstr "Képzések, konferenciák, találkozók, kiállítások, regisztrációk"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Transfer Payment Acquirer"
-msgstr ""
+msgstr "Átutalásos pénzügyi lebonyolító"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_search
 msgid "Transient"
-msgstr ""
+msgstr "Ideiglenes"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_transient
 msgid "Transient Model"
-msgstr ""
+msgstr "Ideiglenes modell"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: False"
-msgstr ""
+msgstr "Ideiglenes: Hamis"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: True"
-msgstr ""
+msgstr "Ideiglenes: Igaz"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_form
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_search
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_tree
 msgid "Transition"
-msgstr ""
+msgstr "Átmenet"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
 #: model:ir.ui.menu,name:base.menu_workflow_transition
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Transitions"
-msgstr ""
+msgstr "Átmenetek"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_trans_implied_ids
 msgid "Transitively inherits"
-msgstr ""
+msgstr "Tárgyak származtatásai"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_translate
 #: model:ir.model.fields,field_description:base.field_res_lang_translatable
 #: model:ir.ui.view,arch_db:base.res_lang_search
 msgid "Translatable"
-msgstr ""
+msgstr "Fordítható"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Translate"
-msgstr ""
+msgstr "Fordítani"
 
 #. module: base
 #: selection:ir.translation,state:0
 msgid "Translated"
-msgstr ""
+msgstr "Lefordított"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "Translated Terms"
-msgstr ""
+msgstr "Lefordított kifejezések"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_name
 msgid "Translated field"
-msgstr ""
+msgstr "Lefordított mező"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_form
 msgid "Translation"
-msgstr ""
+msgstr "Fordítás"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_value
 msgid "Translation Value"
-msgstr ""
+msgstr "Fordítási érték"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_comments
 msgid "Translation comments"
-msgstr ""
+msgstr "Fordítási megjegyzések"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:582
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
-msgstr ""
+msgstr "Fordítási lehetőségek nem elérhetők amíg egy extra fordítást nem telepít."
 
 #. module: base
 #: selection:ir.translation,state:0
 msgid "Translation in Progress"
-msgstr ""
+msgstr "Fordítás alatt"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -16176,69 +16176,69 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_translation_search
 #: model:ir.ui.view,arch_db:base.view_translation_tree
 msgid "Translations"
-msgstr ""
+msgstr "Fordítások"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
 #: selection:ir.actions.act_window.view,view_mode:0
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Tree"
-msgstr ""
+msgstr "Fa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_trigger_expr_id
 msgid "Trigger Expression"
-msgstr ""
+msgstr "Kifejezés kapcsolása"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_trigger_model
 msgid "Trigger Object"
-msgstr ""
+msgstr "Objektum indítása"
 
 #. module: base
 #: model:res.country,name:base.tt
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad és Tobago"
 
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunézia"
 
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
-msgstr ""
+msgstr "Törökország"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Turkey - Accounting"
-msgstr ""
+msgstr "Török - könyvelés"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Turkish / Türkçe"
-msgstr ""
+msgstr "Török / Türkçe"
 
 #. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Türkmenisztán"
 
 #. module: base
 #: model:res.country,name:base.tc
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks- és Caicos-szigetek"
 
 #. module: base
 #: model:res.country,name:base.tv
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
 msgid "Twitter Roller"
-msgstr ""
+msgstr "Twitter gördítősáv"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
@@ -16246,7 +16246,7 @@ msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
-msgstr ""
+msgstr "Két sorrendet ajánl a tárgy beillesztéshez: Alapértelmezett és „Nincs rés”. A későbbi lassabb mint a mostani, de megtilt minden rést, ami ebben a sorrendben van (mivel ezek az előzőben lehettek)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_type
@@ -16262,7 +16262,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr ""
+msgstr "Típus"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_state
@@ -16275,92 +16275,92 @@ msgid ""
 "- 'Write on a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
 "- 'Send Email': automatically send an email (available in email_template)"
-msgstr ""
+msgstr "Szerver művelet-típus. A következő értékek érhetők el:\n- „Futtatható Python kód”: Egy python kód blokk, amelyet lefuttat\n- „Egy munkafolyamat jelzés kapcsolása”: jelzés küldése egy munkafolyamathoz\n- „Egy kliens művelet futtatás”: válasszon egy kliens műveletet futtatáshoz\n- „Egy új rekord létrehozása vagy másolás”: hozzon létre új rekordot új értékekkel, vagy másoljon meglévő rekordot a saját adatbázisába\n- „Egy rekord felülírása”: frissítse egy rekord értékeit\n- „Hajtson végre több műveletet”: határozzon meg egy műveletet ami elindít több műveletet egy másik szerveren\n- „E-mail küldés”: automatikusan küld egy e-mailt (elérhető ebben: email_template)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint_type
 msgid ""
 "Type of the constraint: `f` for a foreign key, `u` for other constraints."
-msgstr ""
+msgstr "Az illesztés típusa: „f” idegen kulcshoz, „u” egyéb illesztésekhez."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
-msgstr ""
+msgstr "Típus:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae
 msgid "U.A.E. - Accounting"
-msgstr ""
+msgstr "U.A.E./E.A.E könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
-msgstr ""
+msgstr "Egyesült Királyság - Könyvelés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports
 msgid "UK - Accounting Reports"
-msgstr ""
+msgstr "UK - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping"
-msgstr ""
+msgstr "UPS szállítás"
 
 #. module: base
 #: selection:ir.attachment,type:0
 #: model:ir.model.fields,field_description:base.field_ir_module_module_url
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
 msgid "US Check Printing"
-msgstr ""
+msgstr "US csekk nyomtatás"
 
 #. module: base
 #: selection:res.company,rml_paper_format:0
 msgid "US Letter"
-msgstr ""
+msgstr "US levél"
 
 #. module: base
 #: model:res.country,name:base.um
 msgid "USA Minor Outlying Islands"
-msgstr ""
+msgstr "USA kisebb félreeső szigetei"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
 msgid "UTM Trackers"
-msgstr ""
+msgstr "UTM nyomkövetések"
 
 #. module: base
 #: model:res.country,name:base.ug
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_uid
 msgid "Uid"
-msgstr ""
+msgstr "Uid - cégjegyzékszám"
 
 #. module: base
 #: model:res.country,name:base.ua
 msgid "Ukraine"
-msgstr ""
+msgstr "Ukrajna"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Ukrainian / українська"
-msgstr ""
+msgstr "Ukrán / українська"
 
 #. module: base
 #: code:addons/models.py:3627
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr ""
+msgstr "Nem tuja törölni ezt a dokumentumot, mert foglalt alapértelmezett tulajdonként"
 
 #. module: base
 #: code:addons/base/module/module.py:360
@@ -16368,7 +16368,7 @@ msgstr ""
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: "
 "%s"
-msgstr ""
+msgstr "\"%s\" modul telepítése nem lehetséges, mivel egy külső függőség nem került teljesítésre: %s"
 
 #. module: base
 #: code:addons/base/module/module.py:364
@@ -16376,7 +16376,7 @@ msgstr ""
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
 "%s"
-msgstr ""
+msgstr "\"%s\" modul futtatása nem lehetséges, mert nem felel meg a külső függőségeknek: %s"
 
 #. module: base
 #: code:addons/base/module/module.py:362
@@ -16384,24 +16384,24 @@ msgstr ""
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: "
 "%s"
-msgstr ""
+msgstr "Nem lehet a \"%s\" modult frissíteni, mert nem felel meg egy külső feltételnek: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Nem kategorizált"
 
 #. module: base
 #: code:addons/base/module/module.py:561
 #: model:ir.ui.view,arch_db:base.module_form
 #, python-format
 msgid "Uninstall"
-msgstr ""
+msgstr "Eltávolítás"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Uninstallable"
-msgstr ""
+msgstr "Eltávolíthatatlan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_product_uos
@@ -16411,191 +16411,191 @@ msgstr "Eladási egység"
 #. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Egyesült Arab Emirátusok"
 
 #. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
-msgstr ""
+msgstr "Egyesült Királyság"
 
 #. module: base
 #: model:res.country,name:base.us
 msgid "United States"
-msgstr ""
+msgstr "Egyesült Államok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Accounting"
-msgstr ""
+msgstr "Egyesült Államok - Könyvelési "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping"
-msgstr ""
+msgstr "United States Postal Service (USPS) szállítás"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Unknown"
-msgstr ""
+msgstr "Ismeretlen"
 
 #. module: base
 #: code:addons/models.py:1228
 #, python-format
 msgid "Unknown database identifier '%s'"
-msgstr ""
+msgstr "Ismeretlen adatbázis azonosító '%s'"
 
 #. module: base
 #: code:addons/models.py:1081
 #, python-format
 msgid "Unknown error during import:"
-msgstr ""
+msgstr "Ismeretlen hiba az importálás alatt:"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:305
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr ""
+msgstr "Ismeretlen mező név '%s' az összefüggő mezőben '%s'"
 
 #. module: base
 #: code:addons/report_sxw.py:370
 #, python-format
 msgid "Unknown report type: %s"
-msgstr ""
+msgstr "Ismeretlen kimutatás típus: %s"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:350
 #, python-format
 msgid "Unknown sub-field '%s'"
-msgstr ""
+msgstr "Ismeretlen al-mező '%s'"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:165
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
-msgstr ""
+msgstr "Nem értelmezhető érték '%s' a boolean, bináris logikai változó mezőhöz '%%(field)s', feltételezve '%s'"
 
 #. module: base
 #: code:addons/translate.py:650
 #, python-format
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
-msgstr ""
+msgstr "Ismeretlen kiterjesztés: ezek közül az egyiknek kell lennie .csv, .po, or .tgz (received .%s)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Untranslated"
-msgstr ""
+msgstr "Lefordítatlan"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_data_search
 msgid "Updatable"
-msgstr ""
+msgstr "Frissíthető"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Update"
-msgstr ""
+msgstr "Frissítés"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr ""
+msgstr "Modullista frissítés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_date_update
 #: model:ir.model.fields,field_description:base.field_ir_model_data_date_update
 #: model:ir.model.fields,field_description:base.field_ir_model_relation_date_update
 msgid "Update Date"
-msgstr ""
+msgstr "Dátum frissítése"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Update Languague Terms"
-msgstr ""
+msgstr "Nyelvi kifejezések frissítése"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
-msgstr ""
+msgstr "Modul frissítés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Update Module List"
-msgstr ""
+msgstr "Modullista frissítése"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_use_write
 msgid "Update Policy"
-msgstr ""
+msgstr "Frissítési szabály"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Update Terms"
-msgstr ""
+msgstr "Feltételek frissítése"
 
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Update a record linked to the current record using python"
-msgstr ""
+msgstr "Frissítsen egy rekordot, mely python használatával a jelenlegi rekord-bejegyzéshez fűződik"
 
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Update the current record"
-msgstr ""
+msgstr "A jelenlegi adatbázisrekord bejegyzésének frissítése"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
 #: model:ir.ui.menu,name:base.menu_module_updates
 msgid "Updates"
-msgstr ""
+msgstr "Frissítések"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Upgrade"
-msgstr ""
+msgstr "Frissít"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base
 #: model:res.country,name:base.uy
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_reports
 msgid "Uruguay - Accounts Reports"
-msgstr ""
+msgstr "Uruguay - Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy
 msgid "Uruguay - Chart of Accounts"
-msgstr ""
+msgstr "Uruguay-i számlatükör"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:167
 #, python-format
 msgid "Use '1' for yes and '0' for no"
-msgstr ""
+msgstr "Használja az '1'-et az igenhez és a '0'-át a nemhez"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_use_parent_address
 #: model:ir.model.fields,field_description:base.field_res_users_use_parent_address
 msgid "Use Company Address"
-msgstr ""
+msgstr "A cég címeinek használata"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
 msgid "Use a relation field on the base model"
-msgstr ""
+msgstr "Használja az alapmodell relációs mezőjét"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_use_date_range
 msgid "Use subsequences per date_range"
-msgstr ""
+msgstr "Használjon utólagosságot minden dátum_tartomány -hoz"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -16963,7 +16963,7 @@ msgstr "Raktárkezelés: Több hullámban"
 #: code:addons/base/res/res_partner.py:368
 #, python-format
 msgid "Warning"
-msgstr "Figyelem"
+msgstr "Figyelmeztetés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_warning
@@ -17339,8 +17339,8 @@ msgstr "Feladatelemek"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
-msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr ""
+msgid "Worldline SIPS"
+msgstr "Worldline SIPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write
@@ -17619,7 +17619,7 @@ msgstr "account_plaid"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
-msgstr ""
+msgstr "ekkor"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -17765,7 +17765,7 @@ msgstr "adatbázis rekord saját magába:\n        record['size'] = len(record.n
 #. module: base
 #: selection:base.language.export,state:0
 msgid "get"
-msgstr ""
+msgstr "kap"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -18082,7 +18082,7 @@ msgstr "object.partner_id.currency_id"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "ezen"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

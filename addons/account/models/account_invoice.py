@@ -87,13 +87,13 @@ class AccountInvoice(models.Model):
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                residual_company_signed += line.amount_residual * sign
+                residual_company_signed += line.amount_residual
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual_company_signed = residual_company_signed
+        self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
@@ -1083,12 +1083,19 @@ class AccountInvoiceLine(models.Model):
         return accounts['expense']
 
     def _set_taxes(self):
-        """ Used in on_change to set taxes """
+        """ Used in on_change to set taxes and price."""
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
             taxes = self.product_id.taxes_id or self.account_id.tax_ids
         else:
             taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
-        self.invoice_line_tax_ids = self.invoice_id.fiscal_position_id.map_tax(taxes)
+        self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes)
+
+        fix_price = self.env['account.tax']._fix_tax_included_price
+        if type in ('in_invoice', 'in_refund'):
+            if not self.price_unit or self.price_unit == self.product_id.standard_price:
+                self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
+        else:
+            self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -1126,11 +1133,9 @@ class AccountInvoiceLine(models.Model):
             self._set_taxes()
 
             if type in ('in_invoice', 'in_refund'):
-                self.price_unit = self.price_unit or product.standard_price
                 if product.description_purchase:
                     self.name += '\n' + product.description_purchase
             else:
-                self.price_unit = product.lst_price
                 if product.description_sale:
                     self.name += '\n' + product.description_sale
 
@@ -1140,8 +1145,6 @@ class AccountInvoiceLine(models.Model):
 
             if company and currency:
                 if company.currency_id != currency:
-                    if type in ('in_invoice', 'in_refund'):
-                        self.price_unit = product.standard_price
                     self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
