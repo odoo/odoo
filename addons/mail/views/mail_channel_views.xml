@@ -119,7 +119,7 @@
                                 </group>
                             </page>
                             <page string="Members">
-                                <field name="channel_partner_ids" mode="tree" readonly="1">
+                                <field name="channel_partner_ids" mode="tree">
                                     <tree string="members">
                                         <field name="name"/>
                                         <field name="email"/>
@@ -128,6 +128,9 @@
                                 </field>
                             </page>
                         </notebook>
+                        <div class="oe_chatter" groups="base.group_no_one">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                        </div>
                     </sheet>
                 </form>
             </field>

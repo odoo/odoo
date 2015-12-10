@@ -35,5 +35,8 @@ class StockMove(models.Model):
         for proc in procs_to_check:
             pickings = (proc.move_ids.mapped('picking_id')).filtered(lambda record: not record.carrier_id)
             if pickings:
-                pickings.write({'carrier_id': proc.sale_line_id.order_id.carrier_id.id})
+                pickings.write({
+                    'carrier_id': proc.sale_line_id.order_id.carrier_id.id,
+                    'carrier_price': proc.sale_line_id.order_id.delivery_price,
+                })
         return res

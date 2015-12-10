@@ -6,6 +6,7 @@
 # fausthuang, 2015
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015
 # Jonathon <jonathonli@gmail.com>, 2015
 # Rona Lin <ssauapw@qq.com>, 2015
 msgid ""
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-21 10:10+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"PO-Revision-Date: 2015-12-02 07:35+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +124,7 @@ msgstr "%s: 供应产品来自 %s"
 #: code:addons/stock/res_config.py:25
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: 中间库位"
+msgstr "%s: 中转位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -154,7 +155,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "供应商库位：用于从供应商处收货时的库存移动的源库位，是一种虚拟库位. \n                       \n视图：库位树状结构的中间节点，用于组织库位树状结构。该种视图不可在库存移动中使用，但可用于库存统计，即统计其下面的各个库位的总库存 \n                       \n内部库位：仓库中实际存放货物的库位，即库区 \n                       \n客户库位：用于供货给客户时的库存移动的目标库位，是一种虚拟库位。\n                       \n盘点库位：用于盘亏时的目标库位，或者盘盈时的源库位。注意，新上OE系统时候也是从该库位中“移动”产品至各库位，以建立期初库存 \n                       \n补货库位：产品需求单，引起库存移动的“临时”源库位或目标库位。当系统初次生成需求单时候，系统不能确定补货的来源（不确定是通过购买还是通过生产补货）。只有当\n系统运行完补货调度计划（Procurement Scheduler）后，才知道补货来源。默认情况下，系统每天运行一次补货调度计划，当然，你可以在任何时候手动执行补货调度计划。\n补货库位用于初次生成的需求单中的库存移动。每当运行完补货调度计划后，该库位库存数量应为零\n                       \n生产库位：生产时候，生产领料的目标库位或成品入库时候的源库位，是一种虚拟库位。\n                       \n多公司中间库位：多公司时候，用于库存移动时候的中间库位。\n                      "
+msgstr "供应商位置：用于从供应商处收货时的库存移动的源位置，是一种虚拟位置. \n                       \n视图：位置树状结构的中间节点，用于组织位置树状结构。该种视图不可在库存移动中使用，但可用于库存统计，即统计其下面的各个位置的总库存 \n                       \n内部位置：仓库中实际存放货物的位置，即库区 \n                       \n客户位置：用于供货给客户时的库存移动的目标位置，是一种虚拟位置。\n                       \n盘点位置：用于盘亏时的目标位置，或者盘盈时的源位置。注意，新上OE系统时候也是从该位置中“移动”产品至各位置，以建立期初库存 \n                       \n补货位置：产品需求单，引起库存移动的“临时”源位置或目标位置。当系统初次生成需求单时候，系统不能确定补货的来源（不确定是通过购买还是通过生产补货）。只有当\n系统运行完补货调度计划（Procurement Scheduler）后，才知道补货来源。默认情况下，系统每天运行一次补货调度计划，当然，你可以在任何时候手动执行补货调度计划。\n补货位置用于初次生成的需求单中的库存移动。每当运行完补货调度计划后，该位置库存数量应为零\n                       \n生产位置：生产时候，生产领料的目标位置或成品入库时候的源位置，是一种虚拟位置。\n                       \n中转位置：多公司时候，用于库存移动时候的中转位置。\n                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -447,7 +448,7 @@ msgstr "<strong>库存</strong>"
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>库位</strong>"
+msgstr "<strong>位置</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -588,7 +589,7 @@ msgstr "<strong>总数量 </strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Warehouse Locations</strong>"
-msgstr "<strong>仓库库位</strong>"
+msgstr "<strong>仓库位置</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -716,7 +717,7 @@ msgstr "所有作业"
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 #: model:ir.ui.menu,name:stock.all_picking
 msgid "All Transfers"
-msgstr "所有的转移"
+msgstr "所有的调拨"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -950,7 +951,7 @@ msgstr "超级供应商"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "在运送之前将货物送到出货库位（分拣+运送）"
+msgstr "在送货之前将货物送到出货位置（分拣+发货）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
@@ -991,13 +992,13 @@ msgid ""
 "directly create a procurement on the source location (and thus ignore its "
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
-msgstr "默认情况下，系统从源库位的库存中取货，并等待产品可用。另外一个可能是允许您在源库位上直接产生一个需求单(从而忽略它的当前库存)来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
+msgstr "默认情况下，系统从源位置的库存中取货，并等待产品可用。另外一个可能是允许您在源位置上直接产生一个需求单(从而忽略它的当前库存)来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "通过取消勾选有效字段，您能隐藏一个库位而不是删除它"
+msgstr "通过取消勾选有效字段，您能隐藏一个位置而不是删除它"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_active
@@ -1014,7 +1015,7 @@ msgstr "日历视图"
 #: code:addons/stock/stock.py:3358
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "找不到任何客户或供应商库位。"
+msgstr "找不到任何客户或供应商位置。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3466
@@ -1088,13 +1089,13 @@ msgstr "勾选库存相关的移库的存在"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "勾选这个小框允许这个库存作为默认的退回库位"
+msgstr "勾选这个小框允许这个库存作为默认的退回位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_scrap_location
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "这选项允许这库位能不能放置损耗/毁坏的物资"
+msgstr "这选项允许这位置能不能放置损耗/毁坏的物资"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_qty
@@ -1122,7 +1123,7 @@ msgstr "索赔"
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Click here to create a new transfer."
-msgstr "点击这里创建一个新的移动"
+msgstr "点击这里创建一个新的调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -1132,7 +1133,7 @@ msgstr "点击为这个产品添加一个发货单"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
 msgid "Click to add a location."
-msgstr "点击添加库位"
+msgstr "点击添加位置"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1167,7 +1168,7 @@ msgstr "点击创建库存操作"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 msgid "Click to define a new transfer."
-msgstr "点击定义一个新的移动"
+msgstr "点击定义一个新的调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -1225,7 +1226,7 @@ msgstr "公司"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date_done
 msgid "Completion Date of Transfer"
-msgstr "移动的完成日期"
+msgstr "调拨的完成日期"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_orderpoint_compute
@@ -1293,6 +1294,14 @@ msgstr "内容"
 #: model:ir.model.fields,field_description:stock.field_stock_location_posx
 msgid "Corridor (X)"
 msgstr "通道(X)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_immediate_transfer.py:31
+#, python-format
+msgid ""
+"Could not reserve all requested products. Please use the 'Mark as Todo' "
+"button to handle the reservation manually."
+msgstr "不能保留所需要的产品。请使用‘标记为待做’按钮手工的处理保留"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1474,7 +1483,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "当前产品数量。 \n对库位来说，包括了此库位或其子库位的产品。 \n对仓库来说，包括了这个仓库库位或其子库位的产品。  \n另外，包括了所有'内部'类型库位的产品。"
+msgstr "当前产品数量。 \n对位置来说，包括了此位置或其子位置的产品。 \n对仓库来说，包括了这个仓库位置或其子位置的产品。  \n另外，包括了所有'内部'类型位置的产品。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4828
@@ -1498,12 +1507,12 @@ msgstr "客户提前时间"
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "客户库位"
+msgstr "客户位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "客户库位"
+msgstr "客户位置"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -1544,7 +1553,7 @@ msgstr "预计日期"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_date_done
 msgid "Date of Transfer"
-msgstr "转移日期"
+msgstr "调拨日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_date
@@ -1609,7 +1618,7 @@ msgstr "重量的小数精度"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_dest_id
 msgid "Default Destination Location"
-msgstr "默认目的库位"
+msgstr "默认目的位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_owner_id
@@ -1624,7 +1633,7 @@ msgstr "默认补货仓库"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
 msgid "Default Source Location"
-msgstr "默认源库位"
+msgstr "默认源位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1667,7 +1676,7 @@ msgid ""
 "                vendors) and virtual locations which are the counterpart of\n"
 "                the stock operations like the manufacturing orders\n"
 "                consumptions, inventories, etc."
-msgstr "定义库位来反映仓库的结构和组织。Odoo能管理物理库位（仓库，货架，bin位等等），\n业务伙伴库位（客户，供应商）和虚拟库位（是生产订单的消耗，盘点，补货等等）"
+msgstr "定义位置来反映仓库的结构和组织。Odoo能管理物理位置（仓库，货架，bin位等等），\n业务伙伴位置（客户，供应商）和虚拟位置（是生产订单的消耗，盘点，补货等等）"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -1676,7 +1685,7 @@ msgid ""
 "where to store the products. This method can be enforced at the product "
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
-msgstr "定义储存产品的确切位置(层)的默认方法。这个方法可被用于产品类别，如果上级库位没有设置也可以延伸到其上级库位。"
+msgstr "定义储存产品的确切位置(层)的默认方法。这个方法可被用于产品类别，如果上级位置没有设置也可以延伸到其上级位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_removal_strategy_id
@@ -1685,7 +1694,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr "定义此库位提取产品的确切位置(层)的默认方法，这个方法可被用于产品类别，如果上级库位没有设置也可以延伸到其上级库位。"
+msgstr "定义此位置提取产品的确切位置(层)的默认方法，这个方法可被用于产品类别，如果上级位置没有设置也可以延伸到其上级位置。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -1765,7 +1774,7 @@ msgstr "拣货描述"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Pickings (Rack, Row and Case Information)"
-msgstr "拣货描述（货架，列和箱子的信息）"
+msgstr "拣货描述（货架，行和箱子的信息）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
@@ -1789,13 +1798,13 @@ msgstr "目的地址 "
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_location_dest_id
 msgid "Destination Location"
-msgstr "目的库位"
+msgstr "目的位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_dest_id
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Destination Location Zone"
-msgstr "目标库位区域"
+msgstr "目标位置区域"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_move_dest_id
@@ -1824,7 +1833,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr "确定要生成的库存移动的补货方法：是从源库位的可用库存中提取产品还是忽略其库存直接创建补货单。"
+msgstr "确定要生成的库存移动的补货方法：是从源位置的可用库存中提取产品还是忽略其库存直接创建补货单。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -1904,7 +1913,7 @@ msgstr "不处理包装"
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Do not record internal moves within a warehouse"
-msgstr "内部调拨不记录"
+msgstr "内部移动不记录"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -1930,12 +1939,12 @@ msgstr "完成"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr "已完成的转移"
+msgstr "已完成的调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr "已完成的转移，按日期"
+msgstr "已完成的调拨，按日期"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1957,7 +1966,7 @@ msgstr "草稿移动"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Dropshipping"
+msgstr "直接送货"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1982,13 +1991,13 @@ msgid ""
 "                from a vendor, Odoo will move products from the Vendor\n"
 "                location to the Stock location. Each report can be performed on\n"
 "                physical, partner or virtual locations."
-msgstr "每一个Odoo中的库存操作都是产品从一个库位到另一个库位。例如，一旦你从供应商那边收货\n，Odoo将会把产品从供应商库位转移到仓库库位。每个报表都会从物理库位，业务伙伴库位或者虚拟库位反映出来。"
+msgstr "每一个Odoo中的库存操作都是产品从一个位置到另一个位置。例如，一旦你从供应商那边收货\n，Odoo将会把产品从供应商位置转移到仓库位置。每个报表都会从物理位置，业务伙伴位置或者虚拟位置反映出来。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4186
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr "包裹里面的东西应该在同一个库位"
+msgstr "包裹里面的东西应该在同一个位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2020,7 +2029,7 @@ msgstr "外部备注..."
 #: code:addons/stock/stock.py:1500
 #, python-format
 msgid "Extra Move: "
-msgstr "额外调拨： "
+msgstr "额外移动： "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal_method
@@ -2040,12 +2049,12 @@ msgstr "筛选器"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Fixed Locations Per Categories"
-msgstr "每个分类固定库位"
+msgstr "每个分类固定位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr "每个产品分类固定库位"
+msgstr "每个产品分类固定位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_follower_ids
@@ -2094,7 +2103,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "预测数量(计算方法：在手数量-将要出库的数量+将要入库的数量) \n对于一个库位来说，这包括了将要到达此库位或其子库位的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的库位,或其子库位的产品。\n另外，这包括了要到达所有“内部”类型的库位的产品。"
+msgstr "预测数量(计算方法：在手数量-将要出库的数量+将要入库的数量) \n对于一个位置来说，这包括了将要到达此位置或其子位置的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的位置,或其子位置的产品。\n另外，这包括了要到达所有“内部”类型的位置的产品。"
 
 #. module: stock
 #: code:addons/stock/product.py:299
@@ -2117,7 +2126,7 @@ msgstr "从"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
 msgid "Full Location Name"
-msgstr "完整的库位名字"
+msgstr "完整的位置名字"
 
 #. module: stock
 #: code:addons/stock/product.py:303
@@ -2242,7 +2251,7 @@ msgstr "高度(Z)"
 msgid ""
 "Help rental management, by generating automated return moves for rented "
 "products"
-msgstr "租用管理是用自动产生从租借地库位的产品退回移动"
+msgstr "租用管理是用自动产生从租借地位置的产品退回移动"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2514,18 +2523,18 @@ msgstr "如果你想自己做:"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
 msgid "Immediate Transfer"
-msgstr "立即转移"
+msgstr "立即调拨"
 
 #. module: stock
 #: code:addons/stock/stock.py:1559
 #, python-format
 msgid "Immediate Transfer?"
-msgstr "立即转移？"
+msgstr "立即调拨？"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Immediate transfer?"
-msgstr "立即转移？"
+msgstr "立即调拨？"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2624,24 +2633,24 @@ msgstr "信息"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
-msgstr "原始需求"
+msgstr "初始需求"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Initial Inventory"
-msgstr "原始库存"
+msgstr "初始库存"
 
 #. module: stock
 #: code:addons/stock/stock.py:3755
 #: model:stock.location,name:stock.stock_location_company
 #, python-format
 msgid "Input"
-msgstr "输入"
+msgstr "进货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "接收库位"
+msgstr "进货位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_picking_wave
@@ -2653,7 +2662,7 @@ msgstr "安装stock_picking_wave模块，会帮助您分组分拣的货物并批
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr "公司内部运输"
+msgstr "公司间中转"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -2665,13 +2674,13 @@ msgstr "内部"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "内部库位"
+msgstr "内部位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Internal Locations"
-msgstr "内部库位"
+msgstr "内部位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_ref
@@ -2683,12 +2692,12 @@ msgstr "位置"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "内部转移"
+msgstr "内部调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "内部运输库位"
+msgstr "内部中转位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
@@ -2705,7 +2714,7 @@ msgstr "内部相关单号它不同与制造商序列号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
 msgid "Inventoried Location"
-msgstr "已盘存库位"
+msgstr "已盘存位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
@@ -2794,12 +2803,12 @@ msgstr "盘存明细行。"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr "存货库位"
+msgstr "存货位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "存货库位"
+msgstr "存货位置"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -2874,7 +2883,7 @@ msgstr "是否时退货区？"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
 msgid "Is a Scrap Location?"
-msgstr "是一个废品库位？"
+msgstr "是一个废品位置？"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3030,7 +3039,7 @@ msgstr "最近"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "延迟转移"
+msgstr "延迟的调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -3067,7 +3076,7 @@ msgstr "左父项"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr "如果这个库位是公司间共享的，则此字段留空"
+msgstr "如果这个位置是公司间共享的，则此字段留空"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3121,39 +3130,39 @@ msgstr "位置"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Location & Warehouse"
-msgstr "库位和仓库"
+msgstr "位置和仓库"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr "库位条码"
+msgstr "位置条码"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_name
 #: model:ir.model.fields,field_description:stock.field_stock_location_name
 msgid "Location Name"
-msgstr "库位名称"
+msgstr "位置名称"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
 #: model:ir.ui.view,arch_db:stock.stock_location_path_tree
 msgid "Location Paths"
-msgstr "库位路径"
+msgstr "位置路径"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_lot_stock_id
 msgid "Location Stock"
-msgstr "库存库位"
+msgstr "库存位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_usage
 msgid "Location Type"
-msgstr "库位类型"
+msgstr "位置类型"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的库位"
+msgstr "系统存储成品的位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3164,7 +3173,7 @@ msgstr "系统存储成品的库位"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Locations"
-msgstr "库位"
+msgstr "位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -3247,7 +3256,7 @@ msgid ""
 "                        outgoing deliveries according to the settings in the picking type.\n"
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
-msgstr "批次可以根据拣货类型被用在收货，内部转移和发货\n每个产品都可以配置跟踪：不是每一个踪迹，而是批次跟踪，\n或者通过特定的序列号跟踪"
+msgstr "批次可以根据拣货类型被用在收货，内部调拨和发货\n每个产品都可以配置跟踪：不是每一个踪迹，而是批次跟踪，\n或者通过特定的序列号跟踪"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3271,7 +3280,7 @@ msgstr "按订单生成"
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr "将包裹放入到特定库位，然后将他们转移到发出库位等待发货(分拣+打包+发货)"
+msgstr "将包裹放入到专属位置，然后将他们转移到出货位置等待发货(分拣+打包+发货)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -3286,7 +3295,7 @@ msgstr "管理批次和序列号"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr "管理多库位和仓库"
+msgstr "管理多位置和仓库"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -3311,7 +3320,7 @@ msgstr "管理consignee库存"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Manage default locations per product"
-msgstr "为每个产品定义默认库位"
+msgstr "为每个产品定义默认位置"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
@@ -3331,7 +3340,7 @@ msgstr "管理产品的生产链"
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Manage several locations per warehouse"
-msgstr "仓库多库位管理"
+msgstr "仓库多位置管理"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3442,7 +3451,7 @@ msgstr "分录"
 #: code:addons/stock/procurement.py:25
 #, python-format
 msgid "Move From Another Location"
-msgstr "从其它库位移动"
+msgstr "从其它位置移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_lines_related
@@ -3469,7 +3478,7 @@ msgstr "移动供应方法"
 msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
-msgstr "调拨日期: 安排的日期直到调拨完成的日期，这日期是调拨实际处理完成的日期."
+msgstr "移动日期: 安排的日期直到移动完成的日期，这日期是移动实际处理完成的日期."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -3523,7 +3532,7 @@ msgstr "操作此份的移库明细。"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multiple_locations
 msgid "Multi Locations"
-msgstr "多库位"
+msgstr "多位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_name
@@ -3542,7 +3551,7 @@ msgstr "负数"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_negative_dest_location_id
 msgid "Negative Destination Location"
-msgstr "负数目标库位"
+msgstr "负数目标位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -3562,7 +3571,7 @@ msgstr "新在手数量"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr "新的转移"
+msgstr "新的调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_fresh_record
@@ -3612,7 +3621,7 @@ msgstr "没有产品被退货（只有完成状态和未完全退货的 行能�
 #: code:addons/stock/procurement.py:313
 #, python-format
 msgid "No source location defined!"
-msgstr "未定义源库位！"
+msgstr "未定义源位置！"
 
 #. module: stock
 #: selection:stock.config.settings,group_product_variant:0
@@ -3678,7 +3687,7 @@ msgstr "再定点规则被触发之后或者给供应商下单的天数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_delay
 msgid "Number of days needed to transfer the goods"
-msgstr "移动货物需要的天数"
+msgstr "调拨货物需要的天数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_message_needaction_counter
@@ -3832,7 +3841,7 @@ msgstr "送货的可选地址,专门用于配发"
 #: model:ir.model.fields,help:stock.field_stock_location_posy
 #: model:ir.model.fields,help:stock.field_stock_location_posz
 msgid "Optional localization details, for information purpose only"
-msgstr "可选库位，仅供参考"
+msgstr "可选位置，仅供参考"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
@@ -3873,12 +3882,12 @@ msgstr "原始"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin_returned_move_id
 msgid "Origin return move"
-msgstr "恢复出厂"
+msgstr "原始退货移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_orig_ids
 msgid "Original Move"
-msgstr "原移动"
+msgstr "原始移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
@@ -3906,7 +3915,7 @@ msgstr "出货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "出货库位"
+msgstr "出货位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_partner_id
@@ -3927,7 +3936,7 @@ msgstr "所有者 "
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_partner_id
 msgid "Owner of the location if not internal"
-msgstr "如果不是内部库位，则填写库位所有者"
+msgstr "如果不是内部位置，则填写位置所有者"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_owner_id
@@ -3997,7 +4006,7 @@ msgstr "待移动的包裹"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "包裹的移动"
+msgstr "包裹调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4015,7 +4024,7 @@ msgid ""
 "its whole content somewhere else, or to pack it into another bigger package."
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
-msgstr "包裹通常是由包装作业员在转移的时候创建的，能够包含多个不同产品你可以把包裹里面的东西拿出之后再次利用这个包裹，或者把这个包裹打包在更大的包裹中一个包裹可以被拆解，让包裹里面的产品作为一个单一的单位"
+msgstr "包裹通常是由包装作业员在调拨的时候创建的，能够包含多个不同产品你可以把包裹里面的东西拿出之后再次利用这个包裹，或者把这个包裹打包在更大的包裹中一个包裹可以被拆解，让包裹里面的产品作为一个单一的单位"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
@@ -4036,7 +4045,7 @@ msgstr "包装"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr "打包库位"
+msgstr "打包位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
@@ -4064,7 +4073,7 @@ msgstr "参数"
 #: model:ir.model.fields,field_description:stock.field_stock_location_location_id
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "父级库位"
+msgstr "父级位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_id
@@ -4098,7 +4107,7 @@ msgstr "业务伙伴地址"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
-msgstr "业务伙伴库位"
+msgstr "业务伙伴位置"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -4107,7 +4116,7 @@ msgid ""
 "                available per location. You can use it once a year when you do\n"
 "                the general inventory or whenever you need it, to adapt the\n"
 "                current inventory level of a product."
-msgstr "周期性的盘点被用来每个库位的可用数量，\n你可以一点盘点一次或者需要的时候随时进行盘点，\n进而调整库存水平"
+msgstr "周期性的盘点被用来每个位置的可用数量，\n你可以一点盘点一次或者需要的时候随时进行盘点，\n进而调整库存水平"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4122,7 +4131,7 @@ msgstr "实际库存按月份"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
-msgstr "物理库位"
+msgstr "物理位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
@@ -4277,7 +4286,7 @@ msgstr "请先放置部分数量在包裹中"
 #: code:addons/stock/stock.py:2712
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr "请提供一个正数给报废库位。"
+msgstr "请提供一个正数给报废位置。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:155
@@ -4359,7 +4368,7 @@ msgstr "补货组"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_procurement
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_procurement
 msgid "Procurement Location"
-msgstr "需求库位"
+msgstr "需求位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
@@ -4499,7 +4508,7 @@ msgstr "生产单"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_production
 msgid "Production Location"
-msgstr "生产库位"
+msgstr "生产位置"
 
 #. module: stock
 #: code:addons/stock/stock.py:243
@@ -4604,7 +4613,7 @@ msgstr "质量管理"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr "质量管理库位"
+msgstr "质量管理位置"
 
 #. module: stock
 #: code:addons/stock/stock.py:2105
@@ -4612,7 +4621,7 @@ msgstr "质量管理库位"
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
-msgstr "已经被处理过的调拨单中，数量，计量单位，产品和库位不能修改（除非是 管理员）"
+msgstr "已经被处理过的调拨单中，数量，计量单位，产品和位置不能修改（除非是 管理员）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_qty
@@ -4678,7 +4687,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr "计划到达的产品数量。\n对于一个库位来说，这包括了将要到达此库位或其子库位的货物。\n对于一个仓库来说，这包括了将要到达这个仓库的的这个库位,或其子库位的货物。\n另外，这包括了所有“内部”类型库位要到达的货物。"
+msgstr "计划到达的产品数量。\n对于一个位置来说，这包括了将要到达此位置或其子位置的货物。\n对于一个仓库来说，这包括了将要到达这个仓库的的这个位置,或其子位置的货物。\n另外，这包括了所有“内部”类型位置要到达的货物。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_outgoing_qty
@@ -4687,7 +4696,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr "计划出库的产品数量。\n对于一个库位来说，这包括了将要离开此库位或其子库位的货物。\n对于一个仓库来说，这包括了将要离开这个仓库的的这个库位,或其子库位的货物。\n另外，这包括了所有“内部”类型库位要离开的货物。"
+msgstr "计划出库的产品数量。\n对于一个位置来说，这包括了将要离开此位置或其子位置的货物。\n对于一个仓库来说，这包括了将要离开这个仓库的的这个位置,或其子位置的货物。\n另外，这包括了所有“内部”类型位置要离开的货物。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_operation_link_qty
@@ -4968,7 +4977,7 @@ msgstr "退货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_location_id
 msgid "Return Location"
-msgstr "退回库位"
+msgstr "退回位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -4989,7 +4998,7 @@ msgstr "逆转"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "反向转移"
+msgstr "反向调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
@@ -5112,7 +5121,7 @@ msgstr "报废"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_move_scrap_wizard
 msgid "Scrap Location"
-msgstr "报废库位"
+msgstr "报废位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap
@@ -5143,7 +5152,7 @@ msgstr "查询存货"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "Search Stock Location Paths"
-msgstr "查询库存所在库位路径"
+msgstr "查询库存所在位置路径"
 
 #. module: stock
 #: code:addons/stock/stock.py:2867
@@ -5200,7 +5209,7 @@ msgstr "供应仓库"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品分类的源库位。"
+msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品分类的源位置。"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
@@ -5231,7 +5240,7 @@ msgstr "设为草稿"
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr "如果您的产品在一个固定的库位配置一个库位,如果您转包生产这可以是业务伙伴的库位."
+msgstr "如果您的产品在一个固定的位置配置一个位置,如果您转包生产这可以是业务伙伴的位置."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
@@ -5319,13 +5328,13 @@ msgstr "源文档"
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_location_id
 msgid "Source Location"
-msgstr "源库位"
+msgstr "源位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_id
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Source Location Zone"
-msgstr "源库位区域"
+msgstr "源位置区域"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_package_id
@@ -5335,7 +5344,7 @@ msgstr "源包裹"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr "只有Action为Move情况下需要源库位"
+msgstr "只有Action为Move情况下需要源位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
@@ -5430,7 +5439,7 @@ msgstr "库存位置"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr "库存调拨"
+msgstr "库存移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -5480,7 +5489,7 @@ msgstr "库存移动处于已确认、可用或者在等待的状态"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
-msgstr "库存调拨已经被处理"
+msgstr "库存移动已经被处理"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -5574,7 +5583,7 @@ msgstr "该技术字段用来隐藏不必要的帮助提示信息。"
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr "该技术字段是用来记录已创建负数量移动的目标库位"
+msgstr "该技术字段是用来记录已创建负数量移动的目标位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_price_unit
@@ -5589,7 +5598,7 @@ msgstr "该技术字段用来记录用户在分拣确认期间的产品成本变
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr "技术字段是用来记录在调试模式分批移动的目标库位"
+msgstr "技术字段是用来记录在调试模式分批移动的目标位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -5603,12 +5612,12 @@ msgid ""
 "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
 "after the current one.  With 'Automatic No Step Added', the location is "
 "replaced in the original move."
-msgstr "'自动移动' / '手动操作' 这个选项能够在当前的移动下创建一个移库   在 '没有额外步骤的自动',状况下， 在原始移库中库位被代替 "
+msgstr "'自动移动' / '手动操作' 这个选项能够在当前的移动下创建一个移库   在 '没有额外步骤的自动',状况下， 在原始移库中位置被代替 "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
-msgstr "询价单变成采购订单同时收货单生成"
+msgstr "询价单变成采购订单同时调拨单生成"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -5622,7 +5631,7 @@ msgstr "在客户订单确认和完工产品交付之间的平均的延期日子
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr "库位编码必须在公司内唯一！"
+msgstr "位置编码必须在公司内唯一！"
 
 #. module: stock
 #: code:addons/stock/stock.py:4316
@@ -5667,7 +5676,7 @@ msgstr "默认的补给仓库应该和自身仓库不同!"
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr "分拣动作的目标库位必须相同的"
+msgstr "分拣动作的目标位置必须相同的"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -5694,7 +5703,7 @@ msgstr "这是来自于负库存"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
 msgid "The new location where the goods need to go"
-msgstr "货物需要去的新的库位"
+msgstr "货物需要去的新的位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
@@ -5746,7 +5755,7 @@ msgstr "要分离的数量需要小于要作业的数量"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sale Order and a Transfer Order is created"
-msgstr "报价单变为销售订单同时发货单生成"
+msgstr "报价单变为销售订单同时调拨单生成"
 
 #. module: stock
 #: code:addons/stock/stock.py:1884
@@ -5788,7 +5797,7 @@ msgstr "序列号%s已经在库存中 "
 #: code:addons/stock/stock.py:1195
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr "分拣动作的源库位必须相同的"
+msgstr "分拣动作的源位置必须相同的"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
@@ -5871,7 +5880,7 @@ msgid ""
 "with this picking type. It is possible however to change it or that the "
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
-msgstr "当你用这种拣货类型手工创建一个移库时候，这是一个默认的目标库位 你也可以改变这个库位或者在路径设置中更改为其他库位如果为空，系统会检查相关业务伙伴的客户库位 "
+msgstr "当你用这种拣货类型手工创建一个移库时候，这是一个默认的目标位置 你也可以改变这个位置或者在路径设置中更改为其他位置如果为空，系统会检查相关业务伙伴的客户位置 "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -5880,7 +5889,7 @@ msgid ""
 "this picking type. It is possible however to change it or that the routes "
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
-msgstr "当你用这种拣货类型手工创建一个移库时候，这是一个默认的源库位 你也可以改变这个库位或者在路径设置中更改为其他库位如果为空，系统会检查相关业务伙伴的供应商库位 "
+msgstr "当你用这种拣货类型手工创建一个移库时候，这是一个默认的源位置 你也可以改变这个位置或者在路径设置中更改为其他位置如果为空，系统会检查相关业务伙伴的供应商位置 "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -5945,21 +5954,21 @@ msgstr "此数量以该产品的默认计量单位表示"
 msgid ""
 "This rule can be applied when a move is confirmed that has this location as "
 "destination location"
-msgstr "这条规则在以这个库位为目标库位的移动被确认后生效"
+msgstr "这条规则在以这个位置为目标位置的移动被确认后生效"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "这库位替代默认值作为您送货到业务伙伴的目标库位."
+msgstr "这位置替代默认值作为您送货到业务伙伴的目标位置."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "默认作为您接收当前业务伙伴产品的源库位"
+msgstr "默认作为您接收当前业务伙伴产品的源位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_production
@@ -5967,7 +5976,7 @@ msgstr "默认作为您接收当前业务伙伴产品的源库位"
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr "该库位将被使用以替换默认的，同样的，库存移动的源库位将根据制造单生成。"
+msgstr "该位置将被使用以替换默认的，同样的，库存移动的源位置将根据制造单生成。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_procurement
@@ -5975,7 +5984,7 @@ msgstr "该库位将被使用以替换默认的，同样的，库存移动的源
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr "该库位将被使用以替换默认的，同样的，库存移动的源库位将根据补货生成。"
+msgstr "该位置将被使用以替换默认的，同样的，库存移动的源位置将根据补货生成。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_inventory
@@ -5983,7 +5992,7 @@ msgstr "该库位将被使用以替换默认的，同样的，库存移动的源
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "该库位将被使用以替换默认的，同样当您做盘存时，库存移动的源库位将被生成。"
+msgstr "该位置将被使用以替换默认的，同样当您做盘存时，库存移动的源位置将被生成。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_tracking_owner
@@ -5995,7 +6004,7 @@ msgstr "这样你就可以得到一个归属于某个所有者的产品属性。
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr "这将告诉你库位并且允许你定义多个分拣类型和仓库"
+msgstr "这将告诉你位置并且允许你定义多个分拣类型和仓库"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_to_loc
@@ -6023,7 +6032,7 @@ msgid ""
 "                            subdivisions of your Warehouse called <strong>Locations</strong> (ex:\n"
 "                            Shipping area, Merchandise return, Shelf 34 etc).\n"
 "                            Do not use Locations if you do not manage inventory per zone."
-msgstr "为了更好的管理库存，你可以为你的仓库创建\n                            叫做 <strong>库位</strong>的分支 (例如:\n                            发货区, 退货区, 货架 34等等).\n                            原则是涉及盘点的区域都要创建库位."
+msgstr "为了更好的管理库存，你可以为你的仓库创建\n                            叫做 <strong>位置</strong>的分支 (例如:\n                            发货区, 退货区, 货架 34等等).\n                            原则是涉及盘点的区域都要创建位置."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6099,28 +6108,28 @@ msgstr "跟踪"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Transfer"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
 msgid "Transfer Reference"
-msgstr "移库参考"
+msgstr "调拨参考"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr "运输库位"
+msgstr "中转位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr "中间库位"
+msgstr "中转位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_recompute_pack_op
@@ -6221,14 +6230,14 @@ msgstr "除非你要开创一项新的生意，一般情况下你会有一些供
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr "卸货在收货库位然后进入库存（2布）"
+msgstr "在进货位置卸货然后进入库存（2步）"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr "卸载在输入库位,在通过质量管理之前确认现有存货(3个步骤)"
+msgstr "在进货位置卸货,在通过质量管理之前确认现有存货(3个步骤)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -6351,12 +6360,12 @@ msgstr "供应商"
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr "供应商库位"
+msgstr "供应商位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "供应商库位"
+msgstr "供应商位置"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -6381,12 +6390,12 @@ msgstr "查看包含的包裹内容"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_view_location_id
 msgid "View Location"
-msgstr "视图库位"
+msgstr "视图位置"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
 msgid "Virtual Locations"
-msgstr "虚拟库位"
+msgstr "虚拟位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6418,7 +6427,7 @@ msgstr "等待移动"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr "等待转移"
+msgstr "等待调拨"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -6567,7 +6576,7 @@ msgstr "当所有的一切设置好，点击<i>开始盘点</i>"
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr "当方法被确定后，这个库位将被用于存储产品"
+msgstr "当方法被确定后，这个位置将被用于存储产品"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -6654,7 +6663,7 @@ msgstr "你可以立即处理或者标识为稍后处理. "
 msgid ""
 "You can either do it immediatly or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
-msgstr "你可以立即处理或者标识为稍后处理. 用扫描设备校验转移的数量更加快捷."
+msgstr "你可以立即处理或者标识为稍后处理. 用扫描设备校验调拨的数量更加快捷."
 
 #. module: stock
 #: code:addons/stock/product.py:517
@@ -6698,7 +6707,7 @@ msgstr "你不能取消一个标记为‘完成’的库存迁移"
 #: code:addons/stock/stock.py:718
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr "您不能移动到视图类型的库位 %s ."
+msgstr "您不能移动到视图类型的位置 %s ."
 
 #. module: stock
 #: code:addons/stock/stock.py:2946
@@ -6932,7 +6941,7 @@ msgstr "从带有产品和所需数量的供应商那里"
 msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
-msgstr "如果产品的供应链正确的设置就会显示在转移单上不然，就手工的<strong>检查可用数量</strong>"
+msgstr "如果产品的供应链正确的设置就会显示在调拨单上不然，就手工的<strong>检查可用数量</strong>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
@@ -6954,12 +6963,12 @@ msgstr "在"
 msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
-msgstr "子产品表单上或者点击<i>接收货物</i>查看转移单"
+msgstr "子产品表单上或者点击<i>接收货物</i>查看调拨单"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sale order form to see Transfer Order"
-msgstr "在销售订单上查看转移单"
+msgstr "在销售订单上查看调拨单"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
@@ -6999,7 +7008,7 @@ msgstr "供应商列表"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "to mark the products as transferred to your stock location"
-msgstr "标识产品已经移动到你的库存中"
+msgstr "标识产品已经调拨到你的库存中"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty

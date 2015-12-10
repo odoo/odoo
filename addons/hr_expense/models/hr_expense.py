@@ -12,7 +12,7 @@ class HrExpense(models.Model):
     _name = "hr.expense"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Expense"
-    _order = "date"
+    _order = "date desc"
 
     name = fields.Char(string='Expense Description', readonly=True, required=True, states={'draft': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
@@ -239,7 +239,7 @@ class HrExpense(models.Model):
 
                 move_lines.append({
                         'type': 'dest',
-                        'name': '/',
+                        'name': expense.employee_id.name,
                         'price': total,
                         'account_id': emp_account,
                         'date_maturity': expense.date,

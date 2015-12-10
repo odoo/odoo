@@ -19,6 +19,10 @@ var GraphView = View.extend({
     icon: 'fa-bar-chart',
     view_type: 'graph',
 
+    on_detach_callback: function () {
+        $('body > .nvtooltip').remove();
+    },
+
     init: function(parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
 
