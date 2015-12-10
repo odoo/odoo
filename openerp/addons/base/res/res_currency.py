@@ -68,6 +68,12 @@ class res_currency(osv.osv):
         'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
+        'rate_inverted': fields.boolean(
+            'Inverted exchange rate',
+            help='The inverse method is a calculation method that uses the '
+                 'inverse (reciprocal) exchange rate for the multiplier '
+                 'and divisor when converting amounts from one currency to '
+                 'another'),
 
         # Do not use for computation ! Same as rate field with silent failing
         'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
@@ -231,7 +237,14 @@ class res_currency(osv.osv):
             raise UserError(_('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
-        return to_currency.rate/from_currency.rate
+        if (
+            from_currency.rate_inverted and to_currency.rate_inverted or
+                not from_currency.rate_inverted and
+                not to_currency.rate_inverted):
+            return to_currency.rate/from_currency.rate
+        else:
+            return from_currency.rate/to_currency.rate
+
 
     def _compute(self, cr, uid, from_currency, to_currency, from_amount, round=True, context=None):
         if (to_currency.id == from_currency.id):
