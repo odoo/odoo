@@ -163,20 +163,6 @@ class CalendarAttendee(models.Model):
             res = Mail.browse(mail_ids).send()
         return res
 
-    @api.v7
-    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
-        """
-        Make entry on email and availability on change of user_id field.
-        @param ids: list of attendee's IDs
-        @param user_id: changed value of User id
-        @return: dictionary of values which put value in email and availability fields
-        """
-        if not user_id:
-            return {'value': {'email': ''}}
-
-        user = self.pool['res.users'].browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.email, 'availability': user.availability}}
-
     @api.multi
     def do_tentative(self):
         """
