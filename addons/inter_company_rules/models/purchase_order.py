@@ -51,8 +51,9 @@ class purchase_order(models.Model):
         # read it as sudo, because inter-compagny user can not have the access right on PO
         sale_order_data = self.sudo()._prepare_sale_order_data(self.name, company_partner, company, self.dest_address_id and self.dest_address_id.id or False)
         sale_order = SaleOrder.sudo(intercompany_uid).create(sale_order_data[0])
-        for line in self.order_line:
-            so_line_vals = self.sudo()._prepare_sale_order_line_data(line, company, sale_order.id)
+        # lines are browse as sudo to access all data required to be copied on SO line (mainly for company dependent field like taxes)
+        for line in self.order_line.sudo():
+            so_line_vals = self._prepare_sale_order_line_data(line, company, sale_order.id)
             SaleOrderLine.sudo(intercompany_uid).create(so_line_vals)
 
         # write supplier reference field on PO

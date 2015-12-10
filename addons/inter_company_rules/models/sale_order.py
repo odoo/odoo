@@ -54,8 +54,8 @@ class sale_order(models.Model):
         # read it as sudo, because inter-compagny user can not have the access right on PO
         po_vals = self.sudo()._prepare_purchase_order_data(company, company_partner)
         purchase_order = PurchaseOrder.sudo(intercompany_uid).create(po_vals[0])
-        for line in self.order_line:
-            po_line_vals = self.sudo()._prepare_purchase_order_line_data(line, self.date_order, purchase_order.id, company)
+        for line in self.order_line.sudo():
+            po_line_vals = self._prepare_purchase_order_line_data(line, self.date_order, purchase_order.id, company)
             PurchaseOrderLine.sudo(intercompany_uid).create(po_line_vals)
 
         # write customer reference field on SO
