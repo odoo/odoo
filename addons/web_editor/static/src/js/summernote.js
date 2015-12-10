@@ -2298,7 +2298,7 @@ function summernote_paste (event) {
 
     // keep norma feature if copy a picture
     var clipboardData = event.originalEvent.clipboardData;
-    if (clipboardData.items) {
+    if (!_.isEmpty(clipboardData.items)) {
         var item = list.last(clipboardData.items);
         var isClipboardImage = item.kind === 'file' && item.type.indexOf('image/') !== -1;
         if (isClipboardImage) {
