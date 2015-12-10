@@ -1115,7 +1115,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         $(node).html(br);
         node = br;
     } else {
-        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so});
+        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so}) || r.sc;
         if (!contentBefore) {
             var cur = dom.node(dom.lastChild(node.previousSibling));
             if (!dom.isBR(cur)) {
