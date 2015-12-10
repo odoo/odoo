@@ -1475,6 +1475,7 @@ class MailThread(models.AbstractModel):
                 followers = record.message_partner_ids
 
         Partner = self.env['res.partner'].sudo()
+        Users = self.env['res.users'].sudo()
         partner_ids = []
 
         for contact in emails:
@@ -1495,10 +1496,10 @@ class MailThread(models.AbstractModel):
             email_brackets = "<%s>" % email_address
             if not partner_id:
                 # exact, case-insensitive match
-                partners = Partner.search([('email', '=ilike', email_address), ('user_ids', '!=', False)], limit=1)
+                partners = Users.search([('email', '=ilike', email_address)], limit=1).mapped('partner_id')
                 if not partners:
                     # if no match with addr-spec, attempt substring match within name-addr pair
-                    partners = Partner.search([('email', 'ilike', email_brackets), ('user_ids', '!=', False)], limit=1)
+                    partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
                 if partners:
                     partner_id = partners[0].id
             # third try: check in partners
