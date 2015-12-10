@@ -35,16 +35,19 @@ def py2exe_datafiles():
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
-    dudir = dirname(docutils.__file__)
-    for root, _, filenames in os.walk(dudir):
-        base = join('docutils', root[len(dudir) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
-
     import passlib
-    pl = dirname(passlib.__file__)
-    for root, _, filenames in os.walk(pl):
-        base = join('passlib', root[len(pl) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+    import requests
+    data_mapping = ((docutils, 'docutils'),
+                    (passlib, 'passlib'),
+                    (requests, 'requests'))
+
+    for mod, datadir in data_mapping:
+        basedir = dirname(mod.__file__)
+        for root, _, filenames in os.walk(basedir):
+            base = join(datadir, root[len(basedir) + 1:])
+            data_files[base] = [join(root, f)
+                                for f in filenames
+                                if not f.endswith(('.py', '.pyc', '.pyo'))]
 
     return data_files.items()
 

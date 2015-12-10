@@ -99,8 +99,8 @@ class stock_config_settings(osv.osv_memory):
                     This installs the module product_expiry."""),
         'group_uom': fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/purchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_stock_packaging': fields.selection([

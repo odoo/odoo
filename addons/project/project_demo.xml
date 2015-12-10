@@ -55,18 +55,17 @@
             <field name="privacy_visibility">portal</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
-            <field name="type_ids" eval="[(4, ref('project_stage_0')) ,(4,ref('project_stage_1'))]"/>
-            <field name="message_follower_ids" eval="[
-                (0, 0, {'res_model': 'project.project', 'partner_id': ref('portal.partner_demo_portal')})
-            ]"/>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
         </record>
-
+        <function model="project.project" name="message_subscribe"
+            eval="[ref('project_project_1')], [ref('portal.partner_demo_portal')]"/>
 
         <record id="project_project_2" model="project.project">
             <field name="name">Research &amp; Development</field>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
         </record>
 
         <record id="project_project_3" model="project.project">
@@ -75,6 +74,7 @@
             <field name="label_tasks">Trainings</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">employees</field>
         </record>
 
@@ -85,6 +85,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="privacy_visibility">followers</field>
             <field name="alias_model">project.task</field>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">employees</field>
         </record>
 
@@ -94,6 +95,7 @@
             <field name="name">Data Import/Export Plugin</field>
             <field name="label_tasks">Databases</field>
             <field name="alias_model">project.task</field>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">followers</field>
         </record>
 

@@ -107,10 +107,18 @@ class mrp_production_workcenter_line(osv.osv):
             open_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
             if flag:
+                button_produce_done = True
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
-                        prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
-                prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
+                        moves = production.move_lines + production.move_created_ids
+                        # If tracking is activated, we want to make sure the user will enter the
+                        # serial numbers.
+                        if moves.filtered(lambda r: r.product_id.tracking != 'none'):
+                            button_produce_done = False
+                        else:
+                            prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
+                if button_produce_done:
+                    prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
         return
 
     def write(self, cr, uid, ids, vals, context=None, update=True):

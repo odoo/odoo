@@ -16,7 +16,7 @@ This is the base module for managing products and pricelists in Odoo.
 ========================================================================
 
 Products support variants, different pricing methods, vendors information,
-make to stock/order, different unit of measures, packaging and properties.
+make to stock/order, different units of measure, packaging and properties.
 
 Pricelists support:
 -------------------

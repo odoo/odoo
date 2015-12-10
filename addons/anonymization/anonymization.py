@@ -476,8 +476,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         # handle the view:
         view_id = self.pool['ir.model.data'].xmlid_to_res_id(
-            cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form',
-            context=context
+            cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
         )
 
         return {
@@ -583,8 +582,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
             # handle the view:
             view_id = self.pool['ir.model.data'].xmlid_to_res_id(
-                cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form',
-                context=context
+                cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
             )
 
 

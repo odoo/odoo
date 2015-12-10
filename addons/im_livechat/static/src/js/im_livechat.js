@@ -84,7 +84,7 @@ var LivechatButton = Widget.extend({
                 self.render_messages();
 
                 bus.add_channel(channel.uuid);
-                bus.poll();
+                bus.start_polling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
             }
@@ -119,7 +119,6 @@ var LivechatButton = Widget.extend({
 
     close_chat: function () {
         this.chat_window.destroy();
-        this.$el.show();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
 

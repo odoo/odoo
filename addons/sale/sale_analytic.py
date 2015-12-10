@@ -75,26 +75,29 @@ class AccountAnalyticLine(models.Model):
 
     def _get_sale_order_line(self, vals=None):
         result = dict(vals or {})
-        sol = result.get('so_line', False) or self.so_line
-        if not sol and self.account_id and self.product_id and self.product_id.invoice_policy in ('cost', 'order'):
-            sol = self.env['sale.order.line'].search([
+        so_line = result.get('so_line', False) or self.so_line
+        if not so_line and self.account_id and self.product_id and self.product_id.invoice_policy in ('cost', 'order'):
+            so_lines = self.env['sale.order.line'].search([
                 ('order_id.project_id', '=', self.account_id.id),
                 ('state', '=', 'sale'),
-                ('product_id', '=', self.product_id.id)],
-                limit=1)
+                ('product_id', '=', self.product_id.id)])
             # Use the existing SO line only if the unit prices are the same, otherwise we create
             # a new line
-            if sol.price_unit == self._get_invoice_price(sol.order_id):
-                result.update({'so_line': sol.id})
+            for line in so_lines:
+                if line.price_unit == self._get_invoice_price(line.order_id):
+                    result.update({'so_line': line.id})
+                    so_line = line
+                    break
             else:
-                sol = self.so_line
+                # This will trigger the creation of a new SO line
+                so_line = False
 
-        if not sol and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
+        if not so_line and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
             order_line_vals = self._get_sale_order_line_vals()
             if order_line_vals:
-                sol = self.env['sale.order.line'].create(order_line_vals)
-                sol._compute_tax_id()
-                result.update({'so_line': sol.id})
+                so_line = self.env['sale.order.line'].create(order_line_vals)
+                so_line._compute_tax_id()
+                result.update({'so_line': so_line.id})
 
         return result
 
@@ -103,19 +106,13 @@ class AccountAnalyticLine(models.Model):
         if self._context.get('create', False):
             return super(AccountAnalyticLine, self).write(values)
 
-        todo = self.mapped('so_line')
-        result = super(AccountAnalyticLine, self).write(values)
-        if 'so_line' in values:
-            todo |= self.mapped('so_line')
-
+        lines = super(AccountAnalyticLine, self).write(values)
         for line in self:
-            res = self._get_sale_order_line(vals=values)
+            res = line._get_sale_order_line(vals=values)
             super(AccountAnalyticLine, line).write(res)
-            if 'so_line' in res:
-                todo |= line.mapped('so_line')
 
-        todo._compute_analytic()
-        return result
+        self.mapped('so_line')._compute_analytic()
+        return lines
 
     @api.model
     def create(self, values):

@@ -8,7 +8,7 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     @api.multi
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id', 'product_uom')
     def product_id_change_margin(self):
         for line in self:
             if line.order_id.pricelist_id:

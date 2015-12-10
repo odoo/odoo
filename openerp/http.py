@@ -321,6 +321,11 @@ class WebRequest(object):
         """ Indicates whether the current request is in "debug" mode
         """
         debug = 'debug' in self.httprequest.args
+
+        # check if request from rpc in debug mode
+        if not debug:
+            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
+
         if not debug and self.httprequest.referrer:
             debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
         return debug
@@ -1592,7 +1597,7 @@ class Root(object):
     def get_db_router(self, db):
         if not db:
             return self.nodb_routing_map
-        return request.registry['ir.http'].routing_map
+        return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
     dbs = openerp.service.db.list_dbs(force)
