@@ -1767,8 +1767,8 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
     /** Creating */
 
     initializeCreateForm: function() {
-        this.label_field.set("value", this.st_line.name);
         this._super();
+        this.label_field.set("value", this.st_line.name);
     },
 
 
