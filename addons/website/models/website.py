@@ -535,8 +535,10 @@ class website(osv.osv):
         Model = self.pool[model]
         id = int(id)
 
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
+        ids = None
+        if Model.check_access_rights(cr, uid, 'read', raise_exception=False):
+            ids = Model.search(cr, uid,
+                               [('id', '=', id)], context=context)
         if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
