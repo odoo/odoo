@@ -640,6 +640,13 @@
             <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+        <record id="chart6061" model="account.account.template">
+            <field name="code">6061</field>
+            <field name="name">汇兑损益</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
         <record id="chart6101" model="account.account.template">
             <field name="code">6101</field>
             <field name="name">公允价值变动损益</field>
@@ -753,8 +760,8 @@
             <field name="property_account_payable_id" ref="chart2202"/>
             <field name="property_account_expense_categ_id" ref="chart1401"/>
             <field name="property_account_income_categ_id" ref="chart6001"/>
-            <field name="income_currency_exchange_account_id" ref="chart6301"/>
-            <field name="expense_currency_exchange_account_id" ref="chart6711"/>
+            <field name="income_currency_exchange_account_id" ref="chart6061"/>
+            <field name="expense_currency_exchange_account_id" ref="chart6061"/>
         </record>
 
         <record id="l10n_chart_china_standard_business_value" model="ir.values">
