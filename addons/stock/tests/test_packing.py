@@ -61,7 +61,7 @@ class TestPacking(TransactionCase):
         backorder = StockPickObj.search([('backorder_id', '=', pick1.id)])
         assert not backorder, ""
         #Check extra moves created
-        assert len(pick1.move_lines.ids) == 1, ""
+        assert len(pick1.move_lines) == 1, ""
 
         delivery_order1 = StockPickObj.create({
             'name': 'outgoing picking',
@@ -105,7 +105,7 @@ class TestPacking(TransactionCase):
         backorder_ids.action_assign()
         backorder_ids.do_prepare_partial()
         picking = backorder_ids[0]
-        assert len(picking.pack_operation_ids.ids) == 2, "Wrong number of pack operation"
+        assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
         for pack_op in picking.pack_operation_ids:
             assert pack_op.product_qty == 1, "Wrong quantity in pack operation (%s found instead of 1)" % (pack_op.product_qty)
             assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
