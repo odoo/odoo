@@ -103,7 +103,7 @@ class TestMailGroup(TestMail):
         for email in sent_emails:
             self.assertEqual(
                 set(email['email_to']),
-                set([self.user_raoul.email, self.user_bert.email]))
+                set([formataddr((self.user_raoul.name, self.user_raoul.email)), formataddr((self.user_bert.name, self.user_bert.email))]))
 
     def test_mail_group_notification_recipients_separated(self):
         # Remove alias, should trigger classic behavior of mail group
