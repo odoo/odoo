@@ -272,6 +272,7 @@ function make_channel (data, options) {
     if ('direct_partner' in data) {
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
+        channel.direct_partner_id = data.direct_partner[0].id;
         channel.status = data.direct_partner[0].im_status;
     }
     return channel;
@@ -399,6 +400,9 @@ function on_notification (notification) {
     } else if (model === 'res.partner') {
         // channel joined/left, message marked as read/(un)starred, chat open/closed
         on_partner_notification(notification[1]);
+    } else if (model === 'bus.presence') {
+        // update presence of users
+        on_presence_notification(notification[1]);
     }
 }
 
@@ -527,6 +531,14 @@ function on_chat_session_notification (chat_session) {
         if (channel) {
             chat_manager.bus.trigger("close_chat", channel);
         }
+    }
+}
+
+function on_presence_notification (data) {
+    var dm = _.findWhere(channels, {direct_partner_id: data.id});
+    if (dm) {
+        dm.status = data.im_status;
+        chat_manager.bus.trigger('update_dm_presence', dm);
     }
 }
 
