@@ -133,7 +133,7 @@ var KanbanColumn = Widget.extend({
     add_record: function (data, options) {
         var record = new KanbanRecord(this, data, this.record_options);
         this.records.push(record);
-        this.dataset.ids = _.uniq(this.dataset.ids.concat(record.id));
+        this.dataset.add_ids([record.id], this.dataset.size())
         if (options.position === 'before') {
             record.insertAfter(this.quick_create_widget ? this.quick_create_widget.$el : this.$header);
         } else {

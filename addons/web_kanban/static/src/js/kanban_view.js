@@ -711,6 +711,7 @@ var KanbanView = View.extend({
             column.remaining = Math.max(column.remaining - self.limit, 0);
             column.update_column();
             self.postprocess_m2m_tags(column.records);
+            self.dataset.add_ids(_(result.records).pluck('id'), self.dataset.size());
         });
     },
 
