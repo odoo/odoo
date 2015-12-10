@@ -281,36 +281,37 @@ class AccountBankStatement(models.Model):
             statement.state = 'open'
 
     @api.multi
+    def get_lines_to_reconcile(self):
+        """ Returns unreconciled statement lines belonging to self. If self is empty, return all unreconciled lines """
+        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation
+        # process on it later on, this is why we filter out statements lines where account_id is set
+        domain = [('journal_entry_ids', '=', False), ('account_id', '=', False)]
+        if len(self) != 0:
+            domain += [('statement_id', 'in', self.ids)]
+        return self.env['account.bank.statement.line'].search(domain)
+
+    @api.multi
     def reconciliation_widget_preprocess(self):
         """ Get statement lines of the specified statements or all unreconciled statement lines and try to automatically reconcile them / find them a partner.
             Return ids of statement lines left to reconcile and other data for the reconciliation widget.
         """
-        statements = self
-        bsl_obj = self.env['account.bank.statement.line']
-
-        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
-        # this is why we filter out statements lines where account_id is set
-        st_lines_filter = [('journal_entry_ids', '=', False), ('account_id', '=', False)]
-        if statements:
-            st_lines_filter += [('statement_id', 'in', statements.ids)]
+        st_lines = self.get_lines_to_reconcile()
 
         # Try to automatically reconcile statement lines
         automatic_reconciliation_entries = []
-        st_lines_left = self.env['account.bank.statement.line']
-        for st_line in bsl_obj.search(st_lines_filter):
-            res = st_line.auto_reconcile()
-            if not res:
-                st_lines_left = (st_lines_left | st_line)
-            else:
-                automatic_reconciliation_entries.append(res.ids)
+        for st_line in st_lines:
+            counterpart_moves = st_line.auto_reconcile()
+            if counterpart_moves:
+                st_lines -= st_line
+                automatic_reconciliation_entries.append(counterpart_moves.ids)
 
         # Try to set statement line's partner
-        for st_line in st_lines_left:
+        for st_line in st_lines:
             if st_line.name and not st_line.partner_id:
                 additional_domain = [('ref', '=', st_line.name)]
                 match_recs = st_line.get_move_lines_for_reconciliation(limit=1, additional_domain=additional_domain, overlook_partner=True)
-                if match_recs and match_recs[0].partner_id:
-                    st_line.write({'partner_id': match_recs[0].partner_id.id})
+                if match_recs and match_recs.partner_id:
+                    st_line.partner_id = match_recs.partner_id
 
         # Collect various informations for the reconciliation widget
         notifications = []
@@ -329,16 +330,18 @@ class AccountBankStatement(models.Model):
                 }
             }]
 
-        lines = []
-        for el in statements:
-            lines.extend(el.line_ids.ids)
-        lines = list(set(lines))
+        if len(self) > 0:
+            # account_id is set to circumvent manual reconciliation process, see comment in get_lines_to_reconcile
+            domain_already_reconciled = ['&', ('statement_id', 'in', self.ids), '|', ('journal_entry_ids', '!=', False), ('account_id', '!=', False)]
+            num_already_reconciled_lines = self.env['account.bank.statement.line'].search_count(domain_already_reconciled)
+        else:
+            num_already_reconciled_lines = 0
 
         return {
-            'st_lines_ids': st_lines_left.ids,
+            'st_lines_ids': st_lines.ids,
             'notifications': notifications,
-            'statement_name': len(statements) == 1 and statements[0].name or False,
-            'num_already_reconciled_lines': statements and bsl_obj.search_count([('journal_entry_ids', '!=', False), ('id', 'in', lines)]) or 0,
+            'statement_name': len(self) == 1 and self[0].name or False,
+            'num_already_reconciled_lines': num_already_reconciled_lines,
         }
 
     @api.multi
