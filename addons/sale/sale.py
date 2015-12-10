@@ -1173,10 +1173,10 @@ class sale_order_line(osv.osv):
             price = Product.price_get(cr, uid, [product], ptype='list_price', context=ctx_product)[product] or False
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
         if context.get('uom_qty_change', False):
-            product_uos_qty = result.get('product_uos_qty')
-            result, domain = {}, {}
-            if product_uos_qty:
-                result['product_uos_qty'] = product_uos_qty
+            # Remove unnecessary changes
+            domain = {}
+            for key in ["name", "product_uom", "product_uos", "tax_id"]:
+                result.pop(key, None)
         result.update({'price_unit': price})
         return {'value': result, 'domain': domain}
 
