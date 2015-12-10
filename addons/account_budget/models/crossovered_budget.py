@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
-from openerp import api, fields, models
-from openerp.osv import fields, osv
-from openerp.tools import ustr
-from openerp.exceptions import UserError
 
-# ---------------------------------------------------------
-# Utils
-# ---------------------------------------------------------
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import ustr
 
 
 def strToDate(dt):
-    return fields.date.from_string(dt)
+    return fields.Date.from_string(dt)
 
 
 def strToDatetime(strdate):
-    return fields.datetime.from_string(strdate)
+    return fields.Datetime.from_string(strdate)
 
 
 class CrossoveredBudget(models.Model):
@@ -24,90 +19,67 @@ class CrossoveredBudget(models.Model):
     _description = "Budget"
     _inherit = ['mail.thread']
 
-    _columns = {
-        'name': fields.char('Budget Name', required=True, states={'done':[('readonly',True)]}),
-        'creating_user_id': fields.many2one('res.users', 'Responsible'),
-        'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
-        'date_to': fields.date('End Date', required=True, states={'done':[('readonly',True)]}),
-        'state' : fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('confirm','Confirmed'),('validate','Validated'),('done','Done')], 'Status', select=True, required=True, readonly=True, copy=False, track_visibility='always'),
-        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]}, copy=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-    }
+    name = fields.Char(string='Budget Name', required=True, states={'done': [('readonly', True)]})
+    creating_user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid,)
+    date_from = fields.Date(string='Start Date', required=True, states={'done': [('readonly', True)]})
+    date_to = fields.Date(string='End Date', required=True, states={'done': [('readonly', True)]})
+    state = fields.Selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed'), ('validate', 'Validated'), ('done', 'Done')], 'Status', index=True, required=True, readonly=True, copy=False, track_visibility='always', default='draft')
+    crossovered_budget_line = fields.One2many('crossovered.budget.lines', 'crossovered_budget_id', string='Budget Lines', states={'done': [('readonly', True)]}, copy=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
-    _defaults = {
-        'state': 'draft',
-        'creating_user_id': lambda self, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
-    }
+    @api.multi
+    def budget_confirm(self):
+        return self.write({'state': 'confirm'})
 
-    def budget_confirm(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state': 'confirm'
-        })
-        return True
+    @api.multi
+    def budget_draft(self):
+        return self.write({'state': 'draft'})
 
-    def budget_draft(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state': 'draft'
-        })
-        return True
+    @api.multi
+    def budget_validate(self):
+        return self.write({'state': 'validate'})
 
-    def budget_validate(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state': 'validate',
-        })
-        return True
+    @api.multi
+    def budget_cancel(self):
+        return self.write({'state': 'cancel'})
 
-    def budget_cancel(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state': 'cancel'
-        })
-        return True
-
-    def budget_done(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state': 'done'
-        })
-        return True
+    @api.multi
+    def budget_done(self):
+        return self.write({'state': 'done'})
 
 
-class crossovered_budget_lines(osv.osv):
+class CrossoveredBudgetLines(models.Model):
+    _name = "crossovered.budget.lines"
+    _description = "Budget Line"
 
-    def _prac_amt(self, cr, uid, ids, context=None):
-        res = {}
-        result = 0.0
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            acc_ids = [x.id for x in line.general_budget_id.account_ids]
+    crossovered_budget_id = fields.Many2one('crossovered.budget', string='Budget', ondelete='cascade', index=True, required=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
+    general_budget_id = fields.Many2one('account.budget.post', string='Budgetary Position', required=True)
+    date_from = fields.Date(string='Start Date', required=True)
+    date_to = fields.Date(string='End Date', required=True)
+    paid_date = fields.Date('Paid Date')
+    planned_amount = fields.Float(string='Planned Amount', required=True, digits=0)
+    practical_amount = fields.Float(compute='_prac', string='Practical Amount', digits=0)
+    theoritical_amount = fields.Float(compute='_theo', string='Theoretical Amount', digits=0)
+    percentage = fields.Float(compute='_perc', string='Achievement')
+    company_id = fields.Many2one(related='crossovered_budget_id.company_id', comodel_name='res.company', string='Company', store=True, readonly=True)
+
+    def _prac(self):
+        AccountAnalyticLine = self.env['account.analytic.line']
+        for line in self:
+            amount = 0.0
+            acc_ids = line.general_budget_id.account_ids.ids
             if not acc_ids:
                 raise UserError(_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
-            date_to = line.date_to
-            date_from = line.date_from
-            if line.analytic_account_id.id:
-                cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
-                       "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
-                       "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
-                result = cr.fetchone()[0]
-            if result is None:
-                result = 0.00
-            res[line.id] = result
-        return res
+            if line.analytic_account_id:
+                analytic_lines = AccountAnalyticLine.search([('account_id', '=', line.analytic_account_id.id), ('date', '>=', line.date_from), ('date', '<=', line.date_to), ('general_account_id', 'in', acc_ids)])
+                for analytic_line in analytic_lines:
+                    amount += analytic_line.amount
+            line.practical_amount = amount
 
-    def _prac(self, cr, uid, ids, name, args, context=None):
-        res={}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = self._prac_amt(cr, uid, [line.id], context=context)[line.id]
-        return res
-
-    def _theo_amt(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            today = datetime.now()
-
+    def _theo(self):
+        today = strToDatetime(fields.Datetime.now())
+        for line in self:
             if line.paid_date:
                 if strToDate(line.date_to) <= strToDate(line.paid_date):
                     theo_amt = 0.00
@@ -125,37 +97,11 @@ class crossovered_budget_lines(osv.osv):
                     theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
                 else:
                     theo_amt = line.planned_amount
+            line.theoritical_amount = theo_amt
 
-            res[line.id] = theo_amt
-        return res
-
-    def _theo(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = self._theo_amt(cr, uid, [line.id], context=context)[line.id]
-        return res
-
-    def _perc(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.theoritical_amount <> 0.00:
-                res[line.id] = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
+    def _perc(self):
+        for line in self:
+            if line.theoritical_amount != 0.00:
+                line.percentage = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
             else:
-                res[line.id] = 0.00
-        return res
-
-    _name = "crossovered.budget.lines"
-    _description = "Budget Line"
-    _columns = {
-        'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
-        'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
-        'date_from': fields.date('Start Date', required=True),
-        'date_to': fields.date('End Date', required=True),
-        'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount', required=True, digits=0),
-        'practical_amount':fields.function(_prac, string='Practical Amount', type='float', digits=0),
-        'theoritical_amount':fields.function(_theo, string='Theoretical Amount', type='float', digits=0),
-        'percentage':fields.function(_perc, string='Achievement', type='float'),
-        'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
-    }
+                line.percentage = 0.00
