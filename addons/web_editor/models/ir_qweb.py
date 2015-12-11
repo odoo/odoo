@@ -28,6 +28,7 @@ from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html_escape as escape
 from openerp.addons.base.ir import ir_qweb
+from openerp.tools.translate import translate
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -81,6 +82,12 @@ class Field(orm.AbstractModel):
                    or getattr(field, 'placeholder', None)
         if placeholder:
             attrs.append(('placeholder', placeholder))
+
+        if context and context.get('edit_translations') and context.get('translatable') and field.type in ('char', 'text') and field.translate:
+            name = "%s,%s" % (record._model._name, field_name)
+            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', context.get('lang'))]
+            translation = record.env['ir.translation'].search(domain, limit=1)
+            attrs.append(('data-oe-translation-state', translation and translation.state or 'to_translate'))
 
         return itertools.chain(
             super(Field, self).attributes(cr, uid, field_name, record, options,

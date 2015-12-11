@@ -37,10 +37,12 @@ $.fn.extend({
 var RTE_Translate = rte.Class.extend({
     saveElement: function ($el, context) {
         // remove multi edition
+        var key = $el.data('oe-translation-id') ? 'translation:'+$el.data('oe-translation-id') :
+                ($el.data('oe-model') ? $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression') : false);
+        if (!key || this.__saved[key]) return true;
+        this.__saved[key] = true;
+
         if ($el.data('oe-translation-id')) {
-            var key =  'translation:'+$el.data('oe-translation-id');
-            if (this.__saved[key]) return true;
-            this.__saved[key] = true;
             var translation_content = this.getEscapedElement($el).html();
 
             return ajax.jsonRpc('/web/dataset/call', 'call', {
@@ -48,13 +50,24 @@ var RTE_Translate = rte.Class.extend({
                 method: 'write',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {value: translation_content, state: 'translated'},
+                    {'value': translation_content, 'state': 'translated'},
+                    context || base.get_context()
+                ],
+            });
+        } else {
+            var markup = this.getEscapedElement($el).prop('outerHTML');
+
+            return ajax.jsonRpc('/web/dataset/call', 'call', {
+                model: 'ir.ui.view',
+                method: 'save',
+                args: [
+                    $el.data('oe-id'),
+                    markup,
+                    $el.data('oe-xpath') || null,
                     context || base.get_context()
                 ],
             });
         }
-
-        return this._super.apply(this, arguments);
     },
 });
 
@@ -107,13 +120,16 @@ var Translate = Widget.extend({
         return this.edit();
     },
     setTarget: function ($target) {
-        this.$target = $target.find('[data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field]');
+        var $edit = $target.find('[data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field]');
+        $edit.filter(':has([data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field])').attr('data-oe-readonly', true);
+
+        this.$target = $edit.not('[data-oe-readonly]');
 
         // attributes
 
         var attrs = ['placeholder', 'title', 'alt'];
         _.each(attrs, function (attr) {
-            $target.find('['+attr+'*="data-oe-translation-id="]').each(function () {
+            $target.find('['+attr+'*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
@@ -192,7 +208,7 @@ var Translate = Widget.extend({
         }
         event.preventDefault();
         event.stopPropagation();
-        if (event.type !== 'click') {
+        if (event.type !== 'mousedown') {
             return;
         }
 
@@ -302,6 +318,8 @@ if (edit_translations) {
         $('form[action*=edit_translations]').each(function () {
             this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
         });
+
+        $('title').html($('title').html().replace(/&lt;span data-oe-translation-id.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
     });
 }
 

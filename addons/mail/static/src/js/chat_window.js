@@ -33,7 +33,6 @@ return Widget.extend({
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
-            display_avatar: false,
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
@@ -64,7 +63,7 @@ return Widget.extend({
     fold: function () {
         this.update_header();
         this.$el.animate({
-            height: this.folded ? "28px" : "333px"
+            height: this.folded ? "28px" : "400px"
         });
     },
     toggle_fold: function (fold) {
@@ -78,13 +77,16 @@ return Widget.extend({
     on_keydown: function (event) {
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
+            var content = _.str.trim(this.$input.val());
             var message = {
-                content: this.$input.val(),
+                content: content,
                 attachment_ids: [],
                 partner_ids: [],
             };
             this.$input.val('');
-            this.trigger('post_message', message, this.channel_id);
+            if (content) {
+                this.trigger('post_message', message, this.channel_id);
+            }
         }
     },
     on_click_close: function (event) {

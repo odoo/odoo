@@ -5,7 +5,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">RFQ - Send by Email</field>
-            <field name="email_from">${(object.create_uid.email or '')|safe}</field>
+            <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -14,7 +14,7 @@
             <field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 
     <p>Hello ${object.partner_id.name},</p>
 
@@ -68,7 +68,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase_done" model="mail.template">
             <field name="name">Purchase Order - Send by Email</field>
-            <field name="email_from">${object.create_uid.email or ''}</field>
+            <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -77,7 +77,7 @@
             <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 
     <p>Hello ${object.partner_id.name},</p>
 

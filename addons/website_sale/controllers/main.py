@@ -634,7 +634,8 @@ class website_sale(http.Controller):
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
             order.write({'partner_shipping_id': checkout.get('shipping_id')})
-            order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
+
+        order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         order_info = {
             'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
