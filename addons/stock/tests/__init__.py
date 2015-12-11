@@ -10,3 +10,4 @@ from . import test_stock_users
 from . import test_procrule
 from . import test_shipment
 from . import test_packingneg
+from . import  test_wiseoperator
