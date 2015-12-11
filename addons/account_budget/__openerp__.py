@@ -34,22 +34,21 @@ Three reports are available:
         'security/account_budget_security.xml',
         'views/account_budget_view.xml',
         'views/account_budget_workflow.xml',
+        'views/report_analyticaccountbudget.xml',
+        'views/report_budget.xml',
+        'views/report_crossoveredbudget.xml',
         'report/account_budget_report.xml',
         'wizard/account_budget_analytic_view.xml',
         'wizard/account_budget_report_view.xml',
         'wizard/account_budget_crossovered_summary_report_view.xml',
         'wizard/account_budget_crossovered_report_view.xml',
-
-        'views/report_analyticaccountbudget.xml',
-        'views/report_budget.xml',
-        'views/report_crossoveredbudget.xml',
     ],
-    'demo': ['data/account_budget_demo.xml', 'test/account_budget_demo.yml'],
+    'demo': ['data/account_budget_demo.xml', 'data/account_budget_demo.yml'],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/account_budget_demo.yml',
+        'data/account_budget_demo.yml',
         'test/account_budget.yml',
-        'test/account_budget_report.yml',
+        'test/account_budget_report.yml'
     ],
 
 }
