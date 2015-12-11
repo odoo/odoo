@@ -10,11 +10,11 @@
 
     <data noupdate="True">
 
-        <record id="chart10003" model="account.account.template">
-            <field name="name">存放中央银行款项</field>
-            <field name="code">1003</field>
-            <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <record id="chart1012" model="account.account.template">
+            <field name="code">1012</field>
+            <field name="name">其他货币资金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         </record>
 
         <!-- Chart template -->
@@ -24,20 +24,55 @@
             <field name="currency_id" ref="base.CNY"/>
             <field name="cash_account_code_prefix">1001</field>
             <field name="bank_account_code_prefix">1002</field>
-            <field name="transfer_account_id" ref="chart10003"/>
+            <field name="transfer_account_id" ref="chart1012"/>
         </record>
-        <record id="chart10003" model="account.account.template">
+        <record id="chart1012" model="account.account.template">
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
 
         <!-- 会计科目 -->
-        <record id="chart1012" model="account.account.template">
-            <field name="code">1012</field>
-            <field name="name">其他货币资金</field>
+        <record id="chart1001" model="account.account.template">
+            <field name="name">库存现金</field>
+            <field name="code">1001</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1002" model="account.account.template">
+            <field name="name">银行存款</field>
+            <field name="code">1002</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+<!--         <record id="chart1003" model="account.account.template">
+            <field name="name">存放中央银行款项</field>
+            <field name="code">1003</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+        <record id="chart1011" model="account.account.template">
+            <field name="code">1011</field>
+            <field name="name">存放同业</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1021" model="account.account.template">
+            <field name="code">1021</field>
+            <field name="name">结算备付金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1031" model="account.account.template">
+            <field name="code">1031</field>
+            <field name="name">存出保证金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart1101" model="account.account.template">
             <field name="code">1101</field>
             <field name="name">交易性金融资产</field>
@@ -45,11 +80,18 @@
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+<!--         <record id="chart1111" model="account.account.template">
+            <field name="code">1111</field>
+            <field name="name">买入返售金融资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart1121" model="account.account.template">
             <field name="code">1121</field>
             <field name="name">应收票据</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1122" model="account.account.template">
@@ -63,37 +105,100 @@
             <field name="code">1123</field>
             <field name="name">预付账款</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1131" model="account.account.template">
             <field name="code">1131</field>
             <field name="name">应收股利</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1132" model="account.account.template">
             <field name="code">1132</field>
             <field name="name">应收利息</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+<!--         <record id="chart1201" model="account.account.template">
+            <field name="code">1201</field>
+            <field name="name">应收代位追偿款</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1211" model="account.account.template">
+            <field name="code">1211</field>
+            <field name="name">应收分保账款</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1212" model="account.account.template">
+            <field name="code">1212</field>
+            <field name="name">应收分保合同准备金</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart1221" model="account.account.template">
             <field name="code">1221</field>
             <field name="name">其他应收款</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1231" model="account.account.template">
             <field name="code">1231</field>
             <field name="name">坏账准备</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+<!--         <record id="chart1301" model="account.account.template">
+            <field name="code">1301</field>
+            <field name="name">贴现资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1302" model="account.account.template">
+            <field name="code">1302</field>
+            <field name="name">拆出资金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1303" model="account.account.template">
+            <field name="code">1303</field>
+            <field name="name">贷款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1304" model="account.account.template">
+            <field name="code">1304</field>
+            <field name="name">贷款损失准备</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1311" model="account.account.template">
+            <field name="code">1311</field>
+            <field name="name">代理兑付证券</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1321" model="account.account.template">
+            <field name="code">1321</field>
+            <field name="name">代理业务资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart1401" model="account.account.template">
             <field name="code">1401</field>
             <field name="name">材料采购</field>
@@ -157,6 +262,41 @@
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+        <record id="chart1421" model="account.account.template">
+            <field name="code">1421</field>
+            <field name="name">消耗性生物资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1431" model="account.account.template">
+            <field name="code">1431</field>
+            <field name="name">贵金属</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1441" model="account.account.template">
+            <field name="code">1441</field>
+            <field name="name">抵债资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1451" model="account.account.template">
+            <field name="code">1451</field>
+            <field name="name">损余物资</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1461" model="account.account.template">
+            <field name="code">1461</field>
+            <field name="name">融资租赁资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
         <record id="chart1471" model="account.account.template">
             <field name="code">1471</field>
             <field name="name">存货跌价准备</field>
@@ -166,42 +306,63 @@
         </record>
         <record id="chart1501" model="account.account.template">
             <field name="code">1501</field>
-            <field name="name">待摊费用</field>
+            <field name="name">持有至到期投资</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1502" model="account.account.template">
+            <field name="code">1502</field>
+            <field name="name">持有至到期投资减值准备</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1503" model="account.account.template">
+            <field name="code">1503</field>
+            <field name="name">可供出售金融资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1511" model="account.account.template">
+            <field name="code">1511</field>
+            <field name="name">长期股权投资</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1512" model="account.account.template">
+            <field name="code">1512</field>
+            <field name="name">长期股权投资减值准备</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1521" model="account.account.template">
             <field name="code">1521</field>
-            <field name="name">持有至到期投资</field>
+            <field name="name">投资性房地产</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
-        <record id="chart1522" model="account.account.template">
-            <field name="code">1522</field>
-            <field name="name">持有至到期投资减值准备</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
-        <record id="chart1524" model="account.account.template">
-            <field name="code">1524</field>
-            <field name="name">长期股权投资</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
-        <record id="chart1525" model="account.account.template">
-            <field name="code">1525</field>
-            <field name="name">长期投资减值准备</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
-        <record id="chart1421" model="account.account.template">
+        <record id="chart1531" model="account.account.template">
             <field name="code">1531</field>
             <field name="name">长期应收款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1532" model="account.account.template">
+            <field name="code">1532</field>
+            <field name="name">未实现融资收益</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1541" model="account.account.template">
+            <field name="code">1541</field>
+            <field name="name">长期股权投资</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
@@ -210,70 +371,112 @@
             <field name="code">1601</field>
             <field name="name">固定资产</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1602" model="account.account.template">
             <field name="code">1602</field>
             <field name="name">累计折旧</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1603" model="account.account.template">
             <field name="code">1603</field>
             <field name="name">固定资产减值准备</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1604" model="account.account.template">
             <field name="code">1604</field>
             <field name="name">在建工程</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1605" model="account.account.template">
             <field name="code">1605</field>
             <field name="name">工程物资</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1606" model="account.account.template">
             <field name="code">1606</field>
             <field name="name">固定资产清理</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1611" model="account.account.template">
+            <field name="code">1611</field>
+            <field name="name">未担保余值</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1621" model="account.account.template">
+            <field name="code">1621</field>
+            <field name="name">生产性生物资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1622" model="account.account.template">
+            <field name="code">1622</field>
+            <field name="name">生产性生物资产累计折旧</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1623" model="account.account.template">
+            <field name="code">1623</field>
+            <field name="name">公益性生物资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1631" model="account.account.template">
+            <field name="code">1631</field>
+            <field name="name">油气资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1632" model="account.account.template">
+            <field name="code">1632</field>
+            <field name="name">累计折耗</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1701" model="account.account.template">
             <field name="code">1701</field>
             <field name="name">无形资产</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1702" model="account.account.template">
             <field name="code">1702</field>
             <field name="name">累计摊销</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1703" model="account.account.template">
             <field name="code">1703</field>
             <field name="name">无形资产减值准备</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1711" model="account.account.template">
             <field name="code">1711</field>
             <field name="name">商誉</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart1801" model="account.account.template">
@@ -286,6 +489,13 @@
         <record id="chart1811" model="account.account.template">
             <field name="code">1811</field>
             <field name="name">递延所得税资产</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart1821" model="account.account.template">
+            <field name="code">1821</field>
+            <field name="name">独立账户资产</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
@@ -304,6 +514,48 @@
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+ <!--        <record id="chart2002" model="account.account.template">
+            <field name="code">2002</field>
+            <field name="name">存入保证金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2003" model="account.account.template">
+            <field name="code">2003</field>
+            <field name="name">拆入资金</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2004" model="account.account.template">
+            <field name="code">2004</field>
+            <field name="name">向中央银行借款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2011" model="account.account.template">
+            <field name="code">2011</field>
+            <field name="name">吸收存款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2012" model="account.account.template">
+            <field name="code">2012</field>
+            <field name="name">同业存放</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2021" model="account.account.template">
+            <field name="code">2021</field>
+            <field name="name">贴现负债</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart2101" model="account.account.template">
             <field name="code">2101</field>
             <field name="name">交易性金融负债</field>
@@ -311,6 +563,13 @@
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
+<!--         <record id="chart2111" model="account.account.template">
+            <field name="code">2111</field>
+            <field name="name">卖出回购金融资产款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record> -->
         <record id="chart2201" model="account.account.template">
             <field name="code">2201</field>
             <field name="name">应付票据</field>
@@ -329,7 +588,7 @@
             <field name="code">2203</field>
             <field name="name">预收账款</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart2211" model="account.account.template">
@@ -483,21 +742,21 @@
             <field name="code">2231</field>
             <field name="name">应付利息</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart2232" model="account.account.template">
             <field name="code">2232</field>
             <field name="name">应付股利</field>
             <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart2241" model="account.account.template">
             <field name="code">2241</field>
             <field name="name">其他应付款</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart2401" model="account.account.template">
@@ -518,7 +777,28 @@
             <field name="code">2502</field>
             <field name="name">应付债券</field>
             <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2701" model="account.account.template">
+            <field name="code">2701</field>
+            <field name="name">长期应付款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2702" model="account.account.template">
+            <field name="code">2702</field>
+            <field name="name">未确认融资费用</field>
+            <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart2711" model="account.account.template">
+            <field name="code">2711</field>
+            <field name="name">专项应付款</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart2801" model="account.account.template">
@@ -533,6 +813,20 @@
             <field name="name">递延所得税负债</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart3001" model="account.account.template">
+            <field name="code">3001</field>
+            <field name="name">清算资金往来</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart3002" model="account.account.template">
+            <field name="code">3002</field>
+            <field name="name">货币兑换</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
         <record id="chart3101" model="account.account.template">
@@ -573,6 +867,13 @@
         <record id="chart4101" model="account.account.template">
             <field name="code">4101</field>
             <field name="name">盈余公积</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart4102" model="account.account.template">
+            <field name="code">4102</field>
+            <field name="name">一般风险准备</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
@@ -622,6 +923,27 @@
         <record id="chart5301" model="account.account.template">
             <field name="code">5301</field>
             <field name="name">研发支出</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart5401" model="account.account.template">
+            <field name="code">5401</field>
+            <field name="name">工程施工</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart5402" model="account.account.template">
+            <field name="code">5402</field>
+            <field name="name">工程结算</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
+        </record>
+        <record id="chart5403" model="account.account.template">
+            <field name="code">5403</field>
+            <field name="name">机械作业</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
@@ -738,22 +1060,6 @@
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
-
-        <record id="chart7001" model="account.account.template">
-            <field name="code">7001</field>
-            <field name="name">增益账户</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
-        <record id="chart7002" model="account.account.template">
-            <field name="code">7002</field>
-            <field name="name">损益表</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
-
 
         <record id="l10n_chart_china_standard_business" model="account.chart.template">
             <field name="property_account_receivable_id" ref="chart1122"/>
