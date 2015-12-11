@@ -85,6 +85,7 @@ class SaleOrder(models.Model):
         default_team_id = self.env['crm.team']._get_default_team_id()
         return self.env['crm.team'].browse(default_team_id)
 
+    @api.constrains('fiscal_position_id')
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
         """
