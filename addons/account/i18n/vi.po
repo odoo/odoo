@@ -157,11 +157,11 @@ msgid " * The 'Draft' status is used when a user is encoding a new and unconfirm
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+msgstr " * The 'Dự thảo' status is used when a user is encoding a new and unconfirmed Invoice.\n"
 " * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
-" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
-" * The 'Cancelled' status is used when user cancel invoice."
+" * The 'Mở' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+" * The 'Đã thanh toán' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Hủy' status is used when user cancel invoice."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -174,12 +174,12 @@ msgstr " Centralisation"
 #: code:addons/account/static/src/js/account_widgets.js:521
 #, python-format
 msgid " seconds"
-msgstr " seconds"
+msgstr " giây"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr "# Entries"
+msgstr "Số Bút toán"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -191,7 +191,7 @@ msgstr "Số chữ số"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr "# of Entries"
+msgstr "SL Bút toán"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
@@ -201,12 +201,12 @@ msgstr "# of Invoices"
 #. module: account
 #: field:account.entries.report,nbr:0
 msgid "# of Items"
-msgstr "# Số phát sinh"
+msgstr "SL phát sinh"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr "# of Products Qty"
+msgstr ""
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -222,7 +222,7 @@ msgstr "${object.company_id.name|safe} Hóa đơn (Ref ${object.number or 'n/a'}
 #: code:addons/account/account.py:1874
 #, python-format
 msgid "%s (Copy)"
-msgstr "%s (Copy)"
+msgstr "%s (Bản sao)"
 
 #. module: account
 #: code:addons/account/account.py:645
@@ -230,7 +230,7 @@ msgstr "%s (Copy)"
 #: code:addons/account/account.py:797
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (sao chép)"
+msgstr "%s (bản sao)"
 
 #. module: account
 #: view:website:account.report_partnerledger
@@ -284,7 +284,7 @@ msgstr "+ Giao dịch"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15 ngày"
+msgstr "15 Ngày"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -306,7 +306,7 @@ msgstr ": Sổ cái"
 #. module: account
 #: view:website:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ": Cân đối thử"
+msgstr ": Bảng Cân đối thử"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -362,17 +362,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add an account.\n"
-"              </p><p>\n"
-"                An account is part of a ledger allowing your company\n"
-"                to register all kinds of debit and credit transactions.\n"
-"                Companies present their annual accounts in two main parts: the\n"
-"                balance sheet and the income statement (profit and loss\n"
-"                account). The annual accounts of a company are required by law\n"
-"                to disclose a certain amount of information.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -386,16 +376,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add an account.\n"
-"              </p><p>\n"
-"                When doing multi-currency transactions, you may loose or gain\n"
-"                some amount due to changes of exchange rate. This menu gives\n"
-"                you a forecast of the Gain or Loss you'd realized if those\n"
-"                transactions were ended today. Only for accounts having a\n"
-"                secondary currency set.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -411,18 +392,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                the bottom of each invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a customer invoice.\n"
-"              </p><p>\n"
-"                Odoo's electronic invoicing allows to ease and fasten the\n"
-"                collection of customer payments. Your customer receives the\n"
-"                invoice by email and he can pay online and/or import it\n"
-"                in his own system.\n"
-"              </p><p>\n"
-"                The discussions with your customer are automatically displayed at\n"
-"                the bottom of each invoice.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -436,16 +406,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a customer refund.\n"
-"              </p><p>\n"
-"                A refund is a document that credits an invoice completely or\n"
-"                partially.\n"
-"              </p><p>\n"
-"                Instead of manually creating a customer refund, you\n"
-"                can generate it directly from the related customer invoice.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -461,18 +422,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a journal entry.\n"
-"              </p><p>\n"
-"                A journal entry consists of several journal items, each of\n"
-"                which is either a debit or a credit transaction.\n"
-"              </p><p>\n"
-"                Odoo automatically creates one journal entry per accounting\n"
-"                document: invoice, refund, supplier payment, bank statements,\n"
-"                etc. So, you should record journal entries manually only/mainly\n"
-"                for miscellaneous operations.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -504,13 +454,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a statement operation template.\n"
-"              </p><p>\n"
-"                Those can be used to quickly create a move line when reconciling\n"
-"                your bank statements.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -524,16 +468,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new account type.\n"
-"              </p><p>\n"
-"                An account type is used to determine how an account is used in\n"
-"                each journal. The deferral method of an account type determines\n"
-"                the process for the annual closing. Reports such as the Balance\n"
-"                Sheet and the Profit and Loss report use the category\n"
-"                (profit/loss or balance sheet).\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -564,15 +499,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new tax code.\n"
-"              </p><p>\n"
-"                Depending on the country, a tax code is usually a cell to fill\n"
-"                in your legal tax statement. Odoo allows you to define the\n"
-"                tax structure and each tax computation will be registered in\n"
-"                one or several tax code.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -584,14 +511,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to record a new supplier invoice.\n"
-"              </p><p>\n"
-"                You can control the invoice from your supplier according to\n"
-"                what you purchased or received. Odoo can also generate\n"
-"                draft invoices automatically from purchase orders or receipts.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -606,17 +526,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                the related sale or puchase invoices.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to register a bank statement.\n"
-"              </p><p>\n"
-"                A bank statement is a summary of all financial transactions\n"
-"                occurring over a given period of time on a bank account. You\n"
-"                should receive this periodicaly from your bank.\n"
-"              </p><p>\n"
-"                Odoo allows you to reconcile a statement line directly with\n"
-"                the related sale or puchase invoices.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -649,18 +559,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                would be referred to as FY 2011.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to start a new fiscal year.\n"
-"              </p><p>\n"
-"                Define your company's financial year according to your needs. A\n"
-"                financial year is a period at the end of which a company's\n"
-"                accounts are made up (usually 12 months). The financial year is\n"
-"                usually referred to by the date in which it ends. For example,\n"
-"                if a company's financial year ends November 30, 2011, then\n"
-"                everything between December 1, 2010 and November 30, 2011\n"
-"                would be referred to as FY 2011.\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -674,16 +573,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Select the period and the journal you want to fill.\n"
-"              </p><p>\n"
-"                This view can be used by accountants in order to quickly record\n"
-"                entries in Odoo. If you want to record a supplier invoice,\n"
-"                start by recording the line of the expense account. Odoo\n"
-"                will propose to you automatically the Tax related to this\n"
-"                account and the counterpart \"Account Payable\".\n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -697,16 +587,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of Odoo, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -736,29 +617,26 @@ msgid "<p>\n"
 "              </p>\n"
 "            "
 msgstr "<p>\n"
-"                Click to add a new analytic account.\n"
+"                Bấm để tạo mới một tài khoản quản trị.\n"
 "              </p><p>\n"
-"                The normal chart of accounts has a structure defined by the\n"
-"                legal requirement of the country. The analytic chart of\n"
-"                accounts structure should reflect your own business needs in\n"
-"                term of costs/revenues reporting.\n"
+"                Cấu trúc hệ thống tài khoản kế toán thông thường được xác định bởi các yêu cầu của Nhà nước.\n"
+"                Cấu trúc hệ thống tài khoản quản trị được tạo theo nhu cầu của các nhà quản trị trên quan điểm phân tích chi phí / doanh thu\n"
 "              </p><p>\n"
-"                They are usually structured by contracts, projects, products or\n"
-"                departements. Most of the Odoo operations (invoices,\n"
-"                timesheets, expenses, etc) generate analytic entries on the\n"
-"                related account.\n"
+"                Chúng thường được sử dụng bởi hợp đồng, dự án, sản phẩm hoặc\n"
+"                các phòng ban trong doanh nghiệp. Hầu hết các hoạt động trong hệ thống Odoo (ví dụ hóa đơn,\n"
+"                chấm công, chi phí nhân sự, v.v.) sẽ tự tạo các bút toán quản trị ở tài khoản liên quan.\n"
 "              </p>\n"
 "            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "= Theoretical Closing Balance"
-msgstr "= Theoretical Closing Balance"
+msgstr "= Số dư cuối kỳ lý thuyết"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr "A Temporary table used for Dashboard view"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -774,17 +652,17 @@ msgstr "Một phát sinh được chọn đã được đối soát."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "A tax fiscal position could be defined only once time on same taxes."
+msgstr ""
 
 #. module: account
 #: view:website:account.report_centraljournal
 msgid "A/C No."
-msgstr "A/C No."
+msgstr ""
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Acc.Type"
-msgstr "Loại tài khoản"
+msgstr "Kiểu TK"
 
 #. module: account
 #. openerp-web
@@ -823,7 +701,7 @@ msgstr "Tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Account Aged Trial balance Report"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -863,7 +741,7 @@ msgstr "Đối soát tài khoản tự động"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr "Account Base Code"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_central_journal
@@ -879,27 +757,27 @@ msgstr "Mã và tên tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr "Account Common Account Report"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "Account Common Journal Report"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "Account Common Partner Report"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr "Account Common Report"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr "Account Currency"
+msgstr "Tiền tệ Tài khoản"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -929,30 +807,30 @@ msgstr "Sổ nhật ký tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "Account Journal Select"
+msgstr "Chọn Sổ Nhật ký Kế toán"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr "Account Line"
+msgstr ""
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr "Account Mapping"
+msgstr ""
 
 #. module: account
 #: field:account.use.model,model:0
 #: model:ir.model,name:account.model_account_model
 msgid "Account Model"
-msgstr "Account Model"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr "Account Model Entries"
+msgstr ""
 
 #. module: account
 #: view:website:account.report_analyticbalance
@@ -985,12 +863,12 @@ msgstr "Chu kỳ kế toán"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "Account Print Journal"
+msgstr ""
 
 #. module: account
 #: view:product.category:account.view_category_property_form
 msgid "Account Properties"
-msgstr "Account Properties"
+msgstr "Thuộc tính Tài khoản"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -1033,7 +911,7 @@ msgstr "Tài khoản nguồn"
 #: model:ir.actions.act_window,name:account.action_account_state_open
 #: model:ir.model,name:account.model_account_state_open
 msgid "Account State Open"
-msgstr "Account State Open"
+msgstr ""
 
 #. module: account
 #: view:account.account:account.account_account_graph
@@ -1071,7 +949,7 @@ msgstr "Mã số thuế"
 #: view:account.tax.code.template:account.view_tax_code_template_form
 #: view:account.tax.code.template:account.view_tax_code_template_tree
 msgid "Account Tax Code Template"
-msgstr "Account Tax Code Template"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -1082,7 +960,7 @@ msgstr "In tờ khai thuế"
 #: view:account.tax.template:account.view_account_tax_template_form
 #: view:account.tax.template:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "Account Tax Template"
+msgstr ""
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -1119,12 +997,12 @@ msgstr "Tổng tiền tài khoản"
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr "Loại tài khoản"
+msgstr "Kiểu tài khoản"
 
 #. module: account
 #: help:account.account,user_type:0
 msgid "Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
-msgstr "Loại tài khoản được sử dụng cho mục đihs thông tin, để tạo ra báo cáo theo luật định, và thiết lập các quy tắc để kết thúc một năm tài chính và tạo bút toán đầu kỳ"
+msgstr "Kiểu tài khoản được sử dụng cho mục đích thông tin, để tạo ra báo cáo theo luật định, và thiết lập các quy tắc để kết thúc một năm tài chính và tạo bút toán đầu kỳ"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -1141,12 +1019,12 @@ msgstr "Tài khoản chưa đối soát"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
 msgid "Account Unreconcile Reconcile"
-msgstr "Account Unreconcile Reconcile"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr "Account Vat Declaration"
+msgstr "Bản khai VAT tài khoản"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1171,12 +1049,12 @@ msgstr "Mã tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "Account move line reconcile"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "Account move line reconcile (writeoff)"
+msgstr ""
 
 #. module: account
 #: view:account.account:account.view_account_form
@@ -1201,12 +1079,12 @@ msgstr "Tài khoản thuế"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr "Account tax chart"
+msgstr ""
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Account tax charts"
-msgstr "Account tax charts"
+msgstr ""
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -1252,7 +1130,7 @@ msgstr "Thông tin kế toán"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr "Accounting Package"
+msgstr ""
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -1267,7 +1145,7 @@ msgstr "Báo cáo kế toán"
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr "Accounting-related settings are managed on"
+msgstr ""
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1296,7 +1174,7 @@ msgstr "Vị thế tài chính kế toán"
 #: view:account.fiscal.position:account.view_account_position_form
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "Accounts Mapping"
+msgstr ""
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -1372,7 +1250,7 @@ msgstr "Cân đối tuổi nợ"
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
 msgid "Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, Odoo asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). Odoo then calculates a table of credit balance by period. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on."
-msgstr "Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, Odoo asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). Odoo then calculates a table of credit balance by period. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -1504,7 +1382,7 @@ msgstr "Cho phép xuất hóa đơn tạm (Pro-Forma)"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr "Cho phép xóa bỏ"
+msgstr "Cho phép bỏ qua (write off)"
 
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
@@ -1564,7 +1442,7 @@ msgstr "Tính toán giá trị"
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr "Loại tiền của tài khoản"
+msgstr "Tiền tệ"
 
 #. module: account
 #: view:account.payment.term.line:account.view_payment_term_line_form
@@ -1575,12 +1453,12 @@ msgstr "Tổng tiền phải trả"
 #. module: account
 #: field:account.statement.operation.template,amount_type:0
 msgid "Amount type"
-msgstr "Amount type"
+msgstr "Kiểu tổng tiền"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
 msgid "An account fiscal position could be defined only once time on same accounts."
-msgstr "Mọt vị thế tài chính chỉ có thể được xác định duy nhất một lần trên cùng tài khoản"
+msgstr "Một vị thế tài chính chỉ có thể được xác định duy nhất một lần trên cùng tài khoản"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -1606,7 +1484,7 @@ msgstr "Phân tích"
 #: code:addons/account/static/src/js/account_widgets.js:122
 #, python-format
 msgid "Analytic Acc."
-msgstr "Analytic Acc."
+msgstr "TK Quản trị."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
