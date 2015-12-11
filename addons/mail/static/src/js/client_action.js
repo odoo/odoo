@@ -375,7 +375,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .removeClass('o_unread_message')
                 .addClass('o_active');
 
-            self.thread.scroll_to({offset: new_channel_scrolltop});
+            var $new_messages_separator = self.$('.o_thread_new_messages_separator');
+            if ($new_messages_separator.length) {
+                self.thread.$el.scrollTo($new_messages_separator);
+            } else {
+                self.thread.scroll_to({offset: new_channel_scrolltop});
+            }
+
             if (!config.device.touch) {
                 self.composer.focus();
             }
