@@ -77,6 +77,8 @@ class Message(models.Model):
     email_from = fields.Char(
         'From', default=_get_default_from,
         help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    email_to = fields.Char(
+        'To', help="Email address(es) of destination. This field contains the original destinator of an email.")
     author_id = fields.Many2one(
         'res.partner', 'Author', select=1,
         ondelete='set null', default=_get_default_author,

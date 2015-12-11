@@ -934,6 +934,7 @@ class MailThread(models.AbstractModel):
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
+        email_to_set = set(tools.email_split(email_to))
 
         # 0. First check if this is a bounce message or not.
         #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
@@ -949,6 +950,11 @@ class MailThread(models.AbstractModel):
         ref_match = thread_references and tools.reference_re.search(thread_references)
         msg_references = mail_header_msgid_re.findall(thread_references)
         mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        if ref_match and mail_messages:
+            if mail_messages.email_to and not set(tools.email_split(mail_messages.email_to)) & email_to_set:
+                # no common destinator, forward or different target
+                ref_match = False
+
         if ref_match and mail_messages:
             model, thread_id = mail_messages.model, mail_messages.res_id
             alias = Alias.search([('alias_name', '=', (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower())])
