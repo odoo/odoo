@@ -102,7 +102,8 @@ var LivechatButton = Widget.extend({
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            if (this.messages.length > 1) {
+            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled')
+            if (this.messages.length > 1 && !input_disabled) {
                 this.ask_feedback();
             } else {
                 this.close_chat();
