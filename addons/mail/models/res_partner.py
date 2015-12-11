@@ -102,7 +102,7 @@ class Partner(models.Model):
     @api.model
     def _notify_send(self, body, subject, recipients, **mail_values):
         emails = self.env['mail.mail']
-        recipients_nbr, recipients_max = 0, 50
+        recipients_nbr, recipients_max = len(recipients), 50
         email_chunks = [recipients[x:x + recipients_max] for x in xrange(0, len(recipients), recipients_max)]
         for email_chunk in email_chunks:
             create_values = {

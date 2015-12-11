@@ -102,7 +102,8 @@ var LivechatButton = Widget.extend({
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            if (this.messages.length > 1) {
+            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled')
+            if (this.messages.length > 1 && !input_disabled) {
                 this.ask_feedback();
             } else {
                 this.close_chat();
@@ -191,6 +192,7 @@ var Feedback = Widget.extend({
 
     events: {
         'click .o_livechat_rating_choices img': 'on_click_smiley',
+        'click .o_livechat_no_feedback em': 'on_click_no_feedback',
         'click .o_rating_submit_button': 'on_click_send',
     },
 
@@ -215,6 +217,12 @@ var Feedback = Widget.extend({
             close_chat = true;
         }
         this._send_feedback({close: close_chat});
+    },
+
+    on_click_no_feedback: function (ev) {
+        var content = _t("I did not rate this conversation. Bye.");
+        this.trigger("send_message", {content: content});
+        this.trigger("feedback_sent"); // will close the chat
     },
 
     on_click_send: function () {

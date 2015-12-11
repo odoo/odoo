@@ -77,13 +77,16 @@ return Widget.extend({
     on_keydown: function (event) {
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
+            var content = _.str.trim(this.$input.val());
             var message = {
-                content: this.$input.val(),
+                content: content,
                 attachment_ids: [],
                 partner_ids: [],
             };
             this.$input.val('');
-            this.trigger('post_message', message, this.channel_id);
+            if (content) {
+                this.trigger('post_message', message, this.channel_id);
+            }
         }
     },
     on_click_close: function (event) {
