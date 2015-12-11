@@ -812,12 +812,19 @@ class ProcurementOrder(models.Model):
                 continue
             supplier = suppliers[0]
             partner = supplier.name
+
+            gpo = procurement.rule_id.group_propagation_option
+            group = (gpo == 'fixed' and procurement.rule_id.group_id) or \
+                    (gpo == 'propagate' and procurement.group_id) or False
+
             domain = (
                 ('partner_id', '=', partner.id),
                 ('state', '=', 'draft'),
                 ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
                 ('company_id', '=', procurement.company_id.id),
                 ('dest_address_id', '=', procurement.partner_dest_id.id))
+            if group:
+                domain += (('group_id', '=', group.id),)
 
             if domain in cache:
                 po = cache[domain]
