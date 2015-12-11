@@ -29,7 +29,7 @@ import re
 import socket
 import threading
 import time
-from email.utils import getaddresses
+from email.utils import getaddresses, formataddr
 
 import openerp
 from openerp.loglevels import ustr
@@ -675,6 +675,18 @@ def email_split(text):
     if not text:
         return []
     return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]
+
+def email_split_and_format(text):
+    """ Return a list of email addresses found in ``text``, formatted using
+    formataddr. """
+    if not text:
+        return []
+    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.
