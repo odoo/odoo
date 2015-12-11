@@ -330,6 +330,7 @@ var Composer = Widget.extend({
             input_max_height: 150,
             input_min_height: 28,
             mention_fetch_limit: 8,
+            send_text: _('Send'),
         });
         this.context = this.options.context;
 
