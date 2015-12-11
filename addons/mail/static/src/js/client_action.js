@@ -382,6 +382,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.thread.scroll_to({offset: new_channel_scrolltop});
             }
 
+            // Update control panel before focusing the composer, otherwise focus is on the searchview
+            self.update_cp();
             if (!config.device.touch) {
                 self.composer.focus();
             }
@@ -389,7 +391,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.$('.o_mail_chat_sidebar').hide();
             }
 
-            self.update_cp();
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,
