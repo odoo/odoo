@@ -403,9 +403,6 @@ email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""",
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
-# legacy behavior: match [ID] in the Subject, used with the fallback model of the mail gateway
-res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
-
 # update command in emails body
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 

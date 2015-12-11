@@ -560,15 +560,8 @@ class TestMailgateway(TestMail):
                           to='noone@example.com>', subject='spam',
                           extra='In-Reply-To: <12321321-openerp-%d-mail.channel@neighbor.com>' % frog_groups.id)
 
-        # 4. Subject contains [<ID>] + model passed to message+process -> only attached to group, but not to mail (not in msg1.child_ids)
-        self.format_and_process(
-            MAIL_TEMPLATE,
-            to='erroneous@example.com', email_from='other6@gmail.com',
-            extra='', subject='Re: [%s] 1' % self.group_public.id, model='mail.channel',
-            msg_id='<1198923581.41972151344608186803.JavaMail.5@agrolait.com>')
-
         # Test created messages
-        self.assertEqual(len(self.group_public.message_ids), 3, 'message_process: group should contain 6 messages')
+        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain 6 messages')
         self.assertEqual(len(self.group_public.message_ids[0].child_ids), 0, 'message_process: msg1 should not have children')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
