@@ -1530,7 +1530,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 if (order.selected_paymentline) {
                     var amount;
                     try{
-                        amount = instance.web.parse_value(this.inputbuffer, {type: "float"});
+                        amount = instance.web.parse_value(this.inputbuffer, {type: "float"}, 0);
                     }
                     catch(e){
                         amount = 0;
@@ -1538,7 +1538,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     order.selected_paymentline.set_amount(amount);
                     this.order_changes();
                     this.render_paymentlines();
-                    this.$('.paymentline.selected .edit').text(this.inputbuffer);
+                    this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
                 }
             }
         },
