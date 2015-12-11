@@ -180,7 +180,7 @@ class hr_payslip(osv.osv):
 class hr_salary_rule(osv.osv):
     _inherit = 'hr.salary.rule'
     _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'account_debit': fields.many2one('account.account', 'Debit Account', domain=[('deprecated', '=', False)]),
         'account_credit': fields.many2one('account.account', 'Credit Account', domain=[('deprecated', '=', False)]),
@@ -191,7 +191,7 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'journal_id': fields.many2one('account.journal', 'Salary Journal'),
     }
 
