@@ -1039,16 +1039,6 @@ class MailThread(models.AbstractModel):
                         routes.append(route)
                 return routes
 
-        # 5. Fallback to the provided parameters, if they work
-        if not thread_id:
-            # Legacy: fallback to matching [ID] in the Subject
-            match = tools.res_re.search(tools.decode_smtp_headers(message, 'Subject'))
-            thread_id = match and match.group(1)
-            # Convert into int (bug spotted in 7.0 because of str)
-            try:
-                thread_id = int(thread_id)
-            except:
-                thread_id = False
         route = self.message_route_verify(
             message, message_dict,
             (fallback_model, thread_id, custom_values, self._uid, None),
