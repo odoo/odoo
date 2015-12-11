@@ -124,7 +124,7 @@ class project_issue(osv.Model):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
