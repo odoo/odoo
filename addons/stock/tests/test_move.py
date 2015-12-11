@@ -24,16 +24,16 @@ class TestMove(TransactionCase):
         move_test0.action_confirm()
 
         product = move_product.with_context({'location': False})
-        assert product.qty_available == 0, 'Expecting 0 products in stock, got %.2f!' % (product.qty_available,)
-        assert product.virtual_available == -5.0, 'Expecting -5 products in virtual stock, got %.2f!' % (product.virtual_available,)
+        self.assertEqual(product.qty_available, 0, 'Expecting 0 products in stock, got %.2f!' % (product.qty_available,))
+        self.assertEqual(product.virtual_available, -5.0, 'Expecting -5 products in virtual stock, got %.2f!' % (product.virtual_available,))
 
         move_test0.action_done()
 
         product = move_product.with_context({'location': False})
-        assert product.qty_available == -5, 'Expecting -5 products in stock, got %.2f!' % (product.qty_available,)
+        self.assertEqual(product.qty_available, -5, 'Expecting -5 products in stock, got %.2f!' % (product.qty_available,))
 
         product = move_product.with_context({'location': self.env.ref('stock.stock_location_customers').id})
-        assert product.qty_available == 5, 'Expecting 5 products in customer location, got %.2f!' % (product.qty_available,)
+        self.assertEqual(product.qty_available, 5, 'Expecting 5 products in customer location, got %.2f!' % (product.qty_available,))
 
         move_test2 = MoveObj.create({
             'name': 'Move 15 Products',
@@ -48,8 +48,8 @@ class TestMove(TransactionCase):
         move_test2.action_done()
 
         product = move_product.with_context({'location': False})
-        assert product.qty_available == 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,)
-        assert product.virtual_available == 10.0, 'Expecting 10 products in virtual stock, got %.2f!' % (product.virtual_available,)
+        self.assertEqual(product.qty_available, 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,))
+        self.assertEqual(product.virtual_available, 10.0, 'Expecting 10 products in virtual stock, got %.2f!' % (product.virtual_available,))
 
         move_test1 = MoveObj.create({
             'name': 'Move Products',
@@ -63,13 +63,13 @@ class TestMove(TransactionCase):
         move_test1.action_confirm()
 
         product = move_product.with_context({'location': False})
-        assert product.qty_available == 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,)
-        assert product.virtual_available == 8.0, 'Expecting 8 products in virtual stock, got %.2f!' % (product.virtual_available,)
+        self.assertEqual(product.qty_available, 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,))
+        self.assertEqual(product.virtual_available, 8.0, 'Expecting 8 products in virtual stock, got %.2f!' % (product.virtual_available,))
 
         move_test1.action_done()
 
         product = move_product.with_context({'location': False})
-        assert product.qty_available == 8, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,)
+        self.assertEqual(product.qty_available, 8, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,))
 
         product = move_product.with_context({'location': self.env.ref('stock.stock_location_customers').id})
-        assert product.qty_available == 7, 'Expecting 7 products in customer location, got %.2f!' % (product.qty_available,)
+        self.assertEqual(product.qty_available, 7, 'Expecting 7 products in customer location, got %.2f!' % (product.qty_available,))

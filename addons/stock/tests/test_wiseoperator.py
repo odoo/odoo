@@ -37,7 +37,7 @@ class TestWiseOperator(TransactionCase):
         pick1_wise.do_transfer()
 
         reco_id = StockQuantObj.search([('product_id', '=', product_wise.id)])
-        assert len(reco_id) == 2, "The number of quants created is not correct"
+        self.assertEqual(len(reco_id), 2, "The number of quants created is not correct")
 
         delivery_order_wise1 = StockPickObj.create({
             'name': 'outgoing picking',
@@ -75,11 +75,11 @@ class TestWiseOperator(TransactionCase):
         delivery_order_wise1.do_transfer()
 
         reco_id = StockQuantObj.search([('product_id', '=', product_wise.id), ('qty', '<', 0.0)])
-        assert len(reco_id) == 0, 'This should not have created a negative quant'
+        self.assertEqual(len(reco_id), 0, 'This should not have created a negative quant')
 
-        assert delivery_order_wise2.state == 'partially_available', "Delivery order 2 should be back in confirmed state"
+        self.assertEqual(delivery_order_wise2.state, 'partially_available', "Delivery order 2 should be back in confirmed state")
 
         delivery_order_wise2.do_transfer()
 
         reco_id = StockQuantObj.search([('product_id', '=', product_wise.id)])
-        assert all([x.location_id.id == self.env.ref('stock.stock_location_customers').id and x.qty > 0.0 for x in reco_id]), "Negative quant or wrong location detected"
+        self.assertTrue(all([x.location_id.id == self.env.ref('stock.stock_location_customers').id and x.qty > 0.0 for x in reco_id]), "Negative quant or wrong location detected")

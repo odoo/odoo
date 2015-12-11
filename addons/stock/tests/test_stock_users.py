@@ -20,4 +20,3 @@ class TestUser(TransactionCase):
             'email': 'stockuser@yourcompany.com',
             'groups_id': [(4, self.env.ref('stock.group_stock_user').id)]
             })
-        pass

@@ -73,19 +73,20 @@ class TestPackingneg(TransactionCase):
         pallet_3_stock_qty = 0
         for rec in reco_id:
             if rec.package_id.name == 'Palneg 1' and rec.location_id.id == self.env.ref('stock.stock_location_customers').id:
-                assert rec.qty == 120, "Should have 120 pieces on pallet 1"
+                self.assertEqual(rec.qty, 120, "Should have 120 pieces on pallet 1")
             elif rec.package_id.name == 'Palneg 2' and rec.location_id.id == self.env.ref('stock.stock_location_stock').id:
-                assert rec.qty == -20, "Should have -20 pieces in stock on pallet 2. Got " + str(rec.qty)
-                assert rec.lot_id.name == 'Lot neg', "It should have kept its Lot"
+                self.assertEqual(rec.qty, -20, "Should have -20 pieces in stock on pallet 2. Got " + str(rec.qty))
+                self.assertEqual(rec.lot_id.name, 'Lot neg', "It should have kept its Lot")
             elif rec.lot_id.name == 'Lot neg' and rec.location_id.id == self.env.ref('stock.stock_location_customers').id:
-                assert ((rec.qty == 20 or rec.qty == 120) and not rec.package_id), "Should have 140 pieces (120+20) in customer location from pallet 2 and lot A"
+
+                self.assertTrue(((rec.qty == 20 or rec.qty == 120) and not rec.package_id), "Should have 140 pieces (120+20) in customer location from pallet 2 and lot A")
             elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == self.env.ref('stock.stock_location_stock').id:
                 pallet_3_stock_qty += rec.qty
             elif not rec.package_id and not rec.lot_id and rec.location_id.id == self.env.ref('stock.stock_location_customers').id:
-                assert rec.qty == 10, "Should have 10 pieces in customer location from pallet 3"
+                self.assertEqual(rec.qty, 10, "Should have 10 pieces in customer location from pallet 3")
             else:
-                assert False, "Unrecognized quant"
-        assert pallet_3_stock_qty == 50, "Should have 50 pieces in stock on pallet 3"
+                self.assertTrue(False, "Unrecognized quant")
+        self.assertEqual(pallet_3_stock_qty, 50, "Should have 50 pieces in stock on pallet 3")
 
         delivery_reconcile = PickingObj.create({
             'name': 'reconciling_delivery',
@@ -103,6 +104,6 @@ class TestPackingneg(TransactionCase):
         delivery_reconcile.do_transfer()
 
         neg_quants = StockQuantObj.search([('product_id', '=', product_neg.id), ('qty', '<', 0)])
-        assert len(neg_quants) == 0, "Negative quants should have been reconciled"
+        self.assertEqual(len(neg_quants), 0, "Negative quants should have been reconciled")
         customer_quant = StockQuantObj.search([('product_id', '=', product_neg.id), ('location_id', '=', self.env.ref('stock.stock_location_customers').id), ('lot_id.name', '=', 'Lot neg'), ('qty', '=', 20)])
-        assert delivery_reconcile.move_lines[0].id in [x.id for x in customer_quant[0].history_ids]
+        self.assertIn(delivery_reconcile.move_lines[0].id, [x.id for x in customer_quant[0].history_ids])

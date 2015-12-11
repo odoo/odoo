@@ -43,6 +43,6 @@ class TestShipment(TransactionCase):
         backorder.do_transfer()
 
         shipment = PickingObj.search([('backorder_id', '=', self.env.ref("stock.incomming_shipment").id)])[0]
-        assert shipment.state == 'done', "shipment should be close after received."
+        self.assertEqual(shipment.state, 'done', "shipment should be close after received.")
         for move_line in shipment.move_lines:
-            assert move_line.state == 'done', "Move line should be closed."
+            self.assertEqual(move_line.state, 'done', "Move line should be closed.")

@@ -32,4 +32,4 @@ class TestProcurementRule(TransactionCase):
 
         move_id = StockMoveObj.search([('product_id', '=', self.env.ref('product.product_product_3').id), ('location_id', '=', self.env.ref('stock.stock_location_stock').id),
         ('location_dest_id', '=', self.env.ref('stock.stock_location_output').id), ('move_dest_id', '=', pick_output.move_lines[0].id)])
-        assert len(move_id) == 1, "It should have created a picking from Stock to Output with the original picking as destination"
+        self.assertEqual(len(move_id), 1, "It should have created a picking from Stock to Output with the original picking as destination")
