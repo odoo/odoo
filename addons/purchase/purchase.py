@@ -1253,7 +1253,11 @@ class purchase_order_line(osv.osv):
             else:
                 price = product.standard_price
 
-        taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
+        if uid == SUPERUSER_ID:
+            company_id = self.pool['res.users'].browse(cr, uid, [uid]).company_id.id
+            taxes = product.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id)
+        else:
+            taxes = product.supplier_taxes_id
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
