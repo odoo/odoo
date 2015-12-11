@@ -709,7 +709,7 @@
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal'), ('company_id', '=', company_id)]"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -731,7 +731,7 @@
                                 <field name="second_account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="second_amount_type"/>
                                 <field name="second_tax_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
-                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal'), ('company_id', '=', company_id)]"/>
                             </group>
                             <group>
                                 <field name="second_label"/>
@@ -1006,7 +1006,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
+                                        <field name="analytic_account_id" domain="[('account_type','=','normal)]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1239,7 +1239,7 @@
                                 <tree editable="bottom" string="Journal Items">
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
                                     <field name="name"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal')]"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
