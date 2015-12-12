@@ -3,6 +3,7 @@
 # * gamification
 # 
 # Translators:
+# Agathe Mollé <molleagathe@gmail.com>, 2015
 # Clo <clo@odoo.com>, 2015
 # Florian Hatat, 2015
 # Lionel Sausin <ls@numerigraphe.com>, 2015
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-11 17:15+0000\n"
-"Last-Translator: Florian Hatat\n"
+"PO-Revision-Date: 2015-12-02 16:46+0000\n"
+"Last-Translator: Agathe Mollé <molleagathe@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr "\n<p>Félicitations, vous avez reçu le badge <strong>${object.badge_id.name}</strong> !\n% if object.sender_id\nCe badge est délivré par<strong>${object.sender_id.name}</strong>.\n% endif\n</p>\n% if object.comment\n<p><em>${object.comment}</em></p>\n% endif"
+msgstr "\n<p>Félicitations, vous avez reçu le badge <strong>${object.badge_id.name}</strong> !\n% if object.sender_id\nCe badge est délivré par <strong>${object.sender_id.name}</strong>.\n% endif\n</p>\n% if object.comment\n<p><em>${object.comment}</em></p>\n% endif"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -143,7 +144,7 @@ msgstr "<br/>Personne n'a réussi a atteindre tous les objectifs, aucun badge n'
 #: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr "<br/>Récompense (badge %s) pour chaque utilisateur atteignant les objectifs a été envoyée à %s."
+msgstr "<br/>La récompense (badge %s) pour chaque utilisateur atteignant les objectifs a été envoyée à %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:763
@@ -151,7 +152,7 @@ msgstr "<br/>Récompense (badge %s) pour chaque utilisateur atteignant les objec
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr "<br/>Des récompenses spéciales ont été envoyées pour les meilleurs utilisateurs. Le classement pour ce concours est:"
+msgstr "<br/>Des récompenses spéciales ont été envoyées pour les meilleurs utilisateurs. Le classement pour ce défi est :"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -192,7 +193,7 @@ msgid ""
 "                    The dates, values to reach or users are defined in goal instance.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour définir un objectif. \n</p>\n<p>\nLa définition d'un objectif est un modèle technique décrivant une condition atteindre. \nLes dates, valeurs à atteindre ou les utilisateurs sont définis dans l'instance de l'objectif.\n</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour définir un objectif. \n</p>\n<p>\nLa définition d'un objectif est un modèle technique décrivant une condition à atteindre. \nLes dates, valeurs à atteindre ou les utilisateurs sont définis dans l'instance de l'objectif.\n</p>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -215,7 +216,7 @@ msgid ""
 "                Make sure that your challenge is active and assigned to at least one user.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\nIl n'y a pas d'objectifs associés à ce défi correspondant à votre recherche.\nVérifiez que votre défi est actif et attribué à un utilisateur au moins.\n</p>"
+msgstr "<p>\nIl n'y a pas d'objectifs associés à ce défi correspondant à votre recherche.\nVérifiez que votre défi est actif et attribué à au moins un utilisateur.\n</p>"
 
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
@@ -232,7 +233,7 @@ msgstr "Un objectif est atteint lorsque la valeur courante est au moins égale �
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr "Une liste sélectionné d'utilisateurs"
+msgstr "Une sélection d'utilisateurs"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -272,7 +273,7 @@ msgstr "Apparaît sur"
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr "Attribuer un Défi"
+msgstr "Attribuer un Défi à"
 
 #. module: gamification
 #: field:gamification.badge,rule_auth_user_ids:0
@@ -282,7 +283,7 @@ msgstr "Utilisateurs habilités"
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr "Automatique : exécuter du code Python spécifique"
+msgstr "Automatique : exécute du code Python spécifique"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -315,12 +316,12 @@ msgstr "Badge délivré"
 #. module: gamification
 #: view:gamification.badge:gamification.badge_list_view
 msgid "Badge List"
-msgstr "Liste de Badge"
+msgstr "Liste de Badges"
 
 #. module: gamification
 #: field:gamification.badge.user,badge_name:0
 msgid "Badge Name"
-msgstr "Nom de Badge"
+msgstr "Nom du Badge"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
@@ -335,7 +336,7 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr "Les badges sont délivrés en fin de défi. Cette fin est déterminée soit par une période (ex: fin de mois pour un défi mensuel) soit par la date de fin (si une périodicité n'est pas définie) soit par la fermeture manuelle du défi."
+msgstr "Les badges sont délivrés en fin de défi. Un défi se termine soit à la fin d'une période (ex: fin de mois pour un défi mensuel), soit par une date de fin (si une périodicité n'est pas définie) soit par la fermeture manuelle du défi."
 
 #. module: gamification
 #: field:gamification.goal.definition,batch_mode:0
@@ -561,7 +562,7 @@ msgstr "Définit comment seront calculés les objectifs. Le résultat sera enreg
 #. module: gamification
 #: field:gamification.goal,definition_condition:0
 msgid "Definition Condition"
-msgstr "Définition de Condition"
+msgstr "Condition"
 
 #. module: gamification
 #: field:gamification.goal,definition_description:0
@@ -577,7 +578,7 @@ msgstr "Selon le mode d'affichage, les comptes-rendus seront individuels ou part
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "Décrire le défi : Ce qu'il fait, qui il concerne, quel est son intérêt..."
+msgstr "Décrire le défi : ce qu'il fait, qui il concerne, quel est son intérêt..."
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -594,7 +595,7 @@ msgstr "Description"
 #: field:gamification.challenge,visibility_mode:0
 #: field:gamification.goal,definition_display:0
 msgid "Display Mode"
-msgstr "Mode Affichage"
+msgstr "Mode d'affichage"
 
 #. module: gamification
 #: field:gamification.goal.definition,display_mode:0

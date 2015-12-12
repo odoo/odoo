@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-11-26 05:44+0000\n"
+"PO-Revision-Date: 2015-12-02 07:35+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "\n                * 草稿：即未确认状态，直到确认前不会�
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\n创建从供应商直接发到客户的直运dropship路线，增加更加复杂的测试-这会安装 stock_dropshipping模块。"
+msgstr "\n创建从供应商直接发到客户的路线，增加更加复杂的测试-这会安装 stock_dropshipping模块。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
@@ -612,7 +612,7 @@ msgstr "大供应商"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "在运送之前将货物送到出货位置（分拣+运送）"
+msgstr "在送货之前将货物送到出货位置（分拣+发货）"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -961,7 +961,7 @@ msgstr "创建的补货"
 #: field:stock.warehouse,create_uid:0
 #: field:stock.warehouse.orderpoint,create_uid:0
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建人"
 
 #. module: stock
 #: field:make.procurement,create_date:0
@@ -986,7 +986,7 @@ msgstr "创建于"
 #: field:stock.warehouse,create_date:0
 #: field:stock.warehouse.orderpoint,create_date:0
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -1166,7 +1166,7 @@ msgstr "默认所有者"
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
 msgid "Default Resupply Warehouse"
-msgstr "默认补货仓库"
+msgstr "默认补给仓库"
 
 #. module: stock
 #: field:stock.picking.type,default_location_src_id:0
@@ -1525,7 +1525,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "预测数量(计算方法：在手数量-将要出库的数量+将要入库的数量) \n对于一个位置来说，这包括了将要到达此位置或其子位置的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的位置,或其子位置的产品。\n另外，这包括了要到达所有“内部”类型的位置的产品。"
+msgstr "预测数量(计算方法：在手数量-将要出货的数量+将要进货的数量) \n对于一个位置来说，这包括了将要到达此位置或其子位置的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的位置,或其子位置的产品。\n另外，这包括了要到达所有“内部”类型的位置的产品。"
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -1788,7 +1788,7 @@ msgstr "如果这是一个负的份。将会因这个负的份被移动。"
 msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
-msgstr "如果这个装运单被分割，该字段将连接到包括了已经处理的部分的装运单。"
+msgstr "如果这个装运被分割，该字段将连接到包括了已经处理的部分的装运。"
 
 #. module: stock
 #: help:stock.location.path,active:0
@@ -1820,27 +1820,27 @@ msgstr "入库类型"
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr "当采用供应商直接出货时，我们要更精确的了解目的地地址"
+msgstr "当采用供应商直接送货时，我们要更精确的知道目的地地址"
 
 #. module: stock
 #: field:product.product,incoming_qty:0 field:product.template,incoming_qty:0
 msgid "Incoming"
-msgstr "入库"
+msgstr "进货"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "入库产品"
+msgstr "进货产品"
 
 #. module: stock
 #: field:stock.quant,in_date:0
 msgid "Incoming Date"
-msgstr "入库日期"
+msgstr "进货日期"
 
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
 msgid "Incoming Shipments"
-msgstr "入库送货"
+msgstr "进来的装运"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -1943,7 +1943,7 @@ msgstr "内部类型"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
-msgstr "内部相关单号它不同与制造商序列号"
+msgstr "内部参考它不同与制造商的序列号"
 
 #. module: stock
 #: field:stock.inventory,location_id:0
@@ -2386,7 +2386,7 @@ msgstr "按订单生成"
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr "将包裹放入到特定位置，然后将他们转移到出货位置等待发货(分拣+打包+发货)"
+msgstr "将包裹放入到特定位置，然后将他们转移到出货位置等待送货(分拣+打包+发货)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -2426,7 +2426,7 @@ msgstr "管理产品的不同计量单位"
 #. module: stock
 #: field:stock.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr "管理供应商直运"
+msgstr "管理供应商直接送货"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
@@ -2904,12 +2904,12 @@ msgstr "出库类型"
 #. module: stock
 #: field:product.product,outgoing_qty:0 field:product.template,outgoing_qty:0
 msgid "Outgoing"
-msgstr "发件箱"
+msgstr "出货"
 
 #. module: stock
 #: field:stock.warehouse,delivery_steps:0
 msgid "Outgoing Shippings"
-msgstr "出货运输"
+msgstr "出去的送货"
 
 #. module: stock
 #: code:addons/stock/stock.py:3353
@@ -3117,13 +3117,13 @@ msgstr "分拣"
 #: code:addons/stock/stock.py:3395
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr "分拣+包装+运货"
+msgstr "分拣+打包+发货"
 
 #. module: stock
 #: code:addons/stock/stock.py:3394
 #, python-format
 msgid "Pick + Ship"
-msgstr "分拣+运货"
+msgstr "分拣+发货"
 
 #. module: stock
 #: field:stock.warehouse,pick_type_id:0
@@ -3955,17 +3955,17 @@ msgstr "保留的份"
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
 msgid "Resupply From Other Warehouses"
-msgstr "从其他仓库再补给"
+msgstr "从其他仓库补给"
 
 #. module: stock
 #: field:stock.warehouse,resupply_route_ids:0
 msgid "Resupply Routes"
-msgstr "再补给路线"
+msgstr "补给路线"
 
 #. module: stock
 #: field:stock.warehouse,resupply_wh_ids:0
 msgid "Resupply Warehouses"
-msgstr "再补给仓库"
+msgstr "补给仓库"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -3985,7 +3985,7 @@ msgstr "退货分拣记忆"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Return Shipment"
-msgstr "退回运送"
+msgstr "退回的装运"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -4043,7 +4043,7 @@ msgstr "路线"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "这些再补给仓库将会创建路线，您可以在产品和产品类别中选择它们"
+msgstr "这些补给仓库将会创建路线，您可以在产品和产品类别中选择它们"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4109,12 +4109,12 @@ msgstr "此库存移动处理的日程表日期"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr "计划时间的第一部分发货即将进行。在此手动设定一个值表示所有库存移动的期望时间。"
+msgstr "计划时间的第一部分装运即将进行。在此手动设定一个值表示所有库存移动的期望时间。"
 
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr "待处理的最后一部分发货的计划时间"
+msgstr "待处理的最后一部分装运的计划时间"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -4278,7 +4278,7 @@ msgstr "仅发货"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr "直接从仓库发货 (仅发货)"
+msgstr "直接从仓库发货(仅发货)"
 
 #. module: stock
 #: field:stock.warehouse,code:0
@@ -4539,7 +4539,7 @@ msgstr "供应链信息"
 #. module: stock
 #: field:stock.move,procure_method:0
 msgid "Supply Method"
-msgstr "供应方式"
+msgstr "供应方法"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -4571,7 +4571,7 @@ msgstr "本技术字段描述了仓库中下一补货（如果有的话）的路
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr "本技术字段用于对属于此公司之间的仓库进行再补货的路线。"
+msgstr "本技术字段用于对属于此公司之间的仓库进行补给的路线。"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
@@ -4652,7 +4652,7 @@ msgstr "该科目的代码，每家公司必须是唯一的！"
 msgid ""
 "The combination of serial number, internal reference and product must be "
 "unique !"
-msgstr "序列号和内部引用组合必须是唯一的!"
+msgstr "序列号和内部参考组合必须是唯一的!"
 
 #. module: stock
 #: help:stock.quant,company_id:0
@@ -4801,7 +4801,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr "The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)"
+msgstr ""
 
 #. module: stock
 #: field:stock.inventory.line,theoretical_qty:0
@@ -4988,12 +4988,12 @@ msgstr "追溯"
 #. module: stock
 #: field:product.template,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr "跟踪入库批次"
+msgstr "跟踪进货批次"
 
 #. module: stock
 #: field:product.template,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr "跟踪出库批次"
+msgstr "跟踪出货批次"
 
 #. module: stock
 #: help:stock.config.settings,module_product_expiry:0
@@ -5129,7 +5129,7 @@ msgstr "在进货位置卸货，然后进入库存（2步）"
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr "在进货位置卸货, 在通过质量管理之前确认现有存货(3步)"
+msgstr "在进货位置卸货, 确认库存之前, 通过质量管理(3步)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form

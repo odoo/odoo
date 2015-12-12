@@ -22,6 +22,7 @@
 import urlparse
 import werkzeug.urls
 
+from openerp.tools.translate import _
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
@@ -68,7 +69,7 @@ class MailMail(osv.Model):
                 'params': werkzeug.url_encode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
             }
         )
-        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
+        return '<small><a href="%s">%s</a></small>' % (url, msg or _('Click to unsubscribe'))
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
