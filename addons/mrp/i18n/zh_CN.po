@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-21 10:02+0000\n"
+"PO-Revision-Date: 2015-12-11 03:43+0000\n"
 "Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "# 物料清单"
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr "# 制造订单"
+msgstr "# 生产订单"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -136,7 +136,7 @@ msgstr "<strong>序列号</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Document:</strong><br/>"
-msgstr "<strong>原文档:</strong><br/>"
+msgstr "<strong>原单据:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -344,12 +344,12 @@ msgstr "BoM类型"
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Lots"
-msgstr "由很多"
+msgstr "根据批次"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Unique Serial Number"
-msgstr "由唯一序列号"
+msgstr "根据唯一序列号"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -439,7 +439,7 @@ msgstr "点击去添加一个工作中心."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr "点击创建一个帐单材料."
+msgstr "点击创建一个物料清单."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -449,7 +449,7 @@ msgstr "点击以创建一组属性."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr "单击创建一个制造订单."
+msgstr "单击创建一个生产订单."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -464,7 +464,7 @@ msgstr "点击创建一个工艺路线"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 msgid "Click to start a new manufacturing order."
-msgstr "单击去创建一个新的制造订单."
+msgstr "单击去创建一个新的生产订单."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
@@ -559,7 +559,7 @@ msgstr "已投入产品"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
-msgstr "投料为"
+msgstr "投料"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -1072,7 +1072,7 @@ msgstr "制造这个产品"
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "制造"
+msgstr "生产"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
@@ -1222,7 +1222,7 @@ msgstr "在物料清单中不含舍入和效率因子"
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "产品无任何变形"
+msgstr "没有产品型号"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2079,7 +2079,7 @@ msgstr "物料清单有效期。留空表示始终有效。"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "Variants"
-msgstr "变动"
+msgstr "型号"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
