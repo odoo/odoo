@@ -21,7 +21,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr', 'hr_contract', 'account', 'hr_payroll', 'optima_social', 'hr_timesheet_sheet'],
+    'depends': ['base', 'hr', 'hr_contract', 'account', 'hr_payroll', 'hr_payroll_account', 'optima_social', 'hr_timesheet_sheet'],
 
     # always loaded
     'data': [

@@ -34,7 +34,8 @@ class hr_ke_nhif_line(models.Model):
 
 	@api.one
 	def _compute_nhif(self):
-	    self.amount  = self.slip_id.line_ids.search([('code', '=', 'NHIF'), ('slip_id', '=', self.slip_id.id)])[0].total
+	    nhif_code = self.env.ref('hr_ke.ke_rule21').code
+	    self.amount  = self.slip_id.line_ids.search([('code', '=', nhif_code ), ('slip_id', '=', self.slip_id.id)], limit=1).total
 
 
 class hr_ke_nhif(models.Model):

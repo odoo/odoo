@@ -398,20 +398,20 @@
                          <attribute name="string"></attribute>
                  </xpath>
 		 <xpath expr="//group[@name='active_group']" position="inside">
-			 <field name="deduct_nhif"/>
-                         <field name="nhif" attrs="{ 'invisible':[('deduct_nhif', '=', False)],'required':[('deduct_nhif', '=', True)]}"/>
-		         <field name="deduct_nssf"/>
-                         <field name="nssf" attrs="{'invisible':[('deduct_nssf', '=', False)],'required':[('deduct_nssf', '=', True)]}"/>
+			 <!--<field name="deduct_nhif" invisible="1"/> -->
+                         <field name="nhif"/>
+		         <!--<field name="deduct_nssf" invisible="1"/> -->
+                         <field name="nssf"/>
                  </xpath>
 		 <xpath expr="//group[@name='active_group']" position="after">
 			<group>
-			 <field name="deduct_paye"/>
-			 <field name="tax_pin" attrs="{'invisible':[('deduct_paye', '=', False)],'required':[('deduct_paye', '=', True)]}"/>
+			 <!--<field name="deduct_paye"/> -->
+			 <field name="tax_pin"/>
 			 <field name="helb"/>
 			 <field name="helb_rate" attrs="{'invisible': [('helb', '=', False)], 'required': [('helb', '=', True)]}"/>
-			 <field name="disability"/>
+			 <!--<field name="disability"/>
 			 <field name="disability_rate" attrs="{'invisible': [('disability', '=', False)], 'required': [('disability', '=', True)]}"/>
-			 <field name="disability_cert" attrs="{'invisible': [('disability', '=', False)], 'required': [('disability', '=', True)]}"/>
+			 <field name="disability_cert" attrs="{'invisible': [('disability', '=', False)], 'required': [('disability', '=', True)]}"/>-->
 			</group>
 		 </xpath>
 		 <xpath expr="//page[@string='Personal Information']//group[@string='Contact Information']" position="inside">

@@ -509,7 +509,7 @@ PENSIONABLE_PAY = contract.wage
 ACTUAL_CONTRIB = deduction.base
 PERCENT_PAY = PERCENTAGE * PENSIONABLE_PAY
 
-###For Pension/Provident Fund; the lesser of prescibed limit, 30% of pensionable pay or the actual contribution per month is the allowed deduction ####
+###For Pension/Provident Fund; the lesser of: prescribed limit, 30% of pensionable pay or the actual contribution per month is the allowed deduction ####
 result = min(PRESCRIBED_LIMIT, PERCENT_PAY, ACTUAL_CONTRIB)
 	   </field>
 	</record>
@@ -588,7 +588,6 @@ result = deduction.base
 # deduction: this deduction(Salary Advanced)
 # Note: returned value have to be set in the variable 'result'
 
-###Please consult HELB for the formula to use. The default behaviour is to deduct (after Tax) the actual voluntary contribution per employee####
 result = deduction.base
 	   </field>
 	</record>

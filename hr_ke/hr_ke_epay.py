@@ -37,7 +37,8 @@ class hr_ke_epay_line(models.Model):
 
 	@api.one
 	def _compute_net_pay(self):
-	    self.net_pay = self.slip_id.line_ids.search([('code', '=', 'NET_PAY'), ('slip_id', '=', self.slip_id.id)])[0].total
+	    net_pay_code = self.env.ref('hr_ke.ke_rule3').code
+	    self.net_pay = self.slip_id.line_ids.search([('code', '=', net_pay_code), ('slip_id', '=', self.slip_id.id)], limit=1).total
 
 
 class hr_ke_epay(models.Model):

@@ -34,7 +34,8 @@ class hr_ke_nssf_line(models.Model):
 
 	@api.one
 	def _compute_nssf(self):
-	    self.amount  = self.slip_id.line_ids.search([('code', '=', 'NSSF'), ('slip_id', '=', self.slip_id.id)])[0].total
+	    nssf_code = self.env.ref('hr_ke.ke_rule20').code
+	    self.amount  = self.slip_id.line_ids.search([('code', '=', 'NSSF'), ('slip_id', '=', self.slip_id.id)], limit=1).total
 
 
 class hr_ke_nssf(models.Model):
