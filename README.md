@@ -3,6 +3,12 @@
 [![Help](http://img.shields.io/badge/master-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](http://img.shields.io/badge/master-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
 
+Odoo Bolivia.
+------------
+Contribuciones para la adaptacion de Odoo v9.0 a la normativa boliviana.
+
+
+
 Odoo
 ----
 
