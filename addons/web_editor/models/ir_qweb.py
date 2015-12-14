@@ -108,14 +108,14 @@ class Field(orm.AbstractModel):
 
 class Integer(orm.AbstractModel):
     _name = 'ir.qweb.field.integer'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.integer']
+    _inherit = 'ir.qweb.field.integer'
 
     value_from_string = int
 
 
 class Float(orm.AbstractModel):
     _name = 'ir.qweb.field.float'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.float']
+    _inherit = 'ir.qweb.field.float'
 
     def from_html(self, cr, uid, model, field, element, context=None):
         lang = self.user_lang(cr, uid, context=context)
@@ -128,7 +128,7 @@ class Float(orm.AbstractModel):
 
 class ManyToOne(orm.AbstractModel):
     _name = 'ir.qweb.field.many2one'
-    _inherit = ['ir.qweb.field.many2one']
+    _inherit = 'ir.qweb.field.many2one'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
@@ -163,7 +163,7 @@ class ManyToOne(orm.AbstractModel):
 
 class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
-    _inherit = ['ir.qweb.field.contact', 'ir.qweb.field.many2one']
+    _inherit = 'ir.qweb.field.contact'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
@@ -197,7 +197,7 @@ def parse_fuzzy(in_format, value):
 
 class Date(orm.AbstractModel):
     _name = 'ir.qweb.field.date'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.date']
+    _inherit = 'ir.qweb.field.date'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
@@ -218,7 +218,7 @@ class Date(orm.AbstractModel):
 
 class DateTime(orm.AbstractModel):
     _name = 'ir.qweb.field.datetime'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.datetime']
+    _inherit = 'ir.qweb.field.datetime'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
@@ -272,7 +272,7 @@ class DateTime(orm.AbstractModel):
 
 class Text(orm.AbstractModel):
     _name = 'ir.qweb.field.text'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.text']
+    _inherit = 'ir.qweb.field.text'
 
     def from_html(self, cr, uid, model, field, element, context=None):
         return html_to_text(element)
@@ -280,7 +280,7 @@ class Text(orm.AbstractModel):
 
 class Selection(orm.AbstractModel):
     _name = 'ir.qweb.field.selection'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.selection']
+    _inherit = 'ir.qweb.field.selection'
 
     def from_html(self, cr, uid, model, field, element, context=None):
         record = self.browse(cr, uid, [], context=context)
@@ -298,7 +298,7 @@ class Selection(orm.AbstractModel):
 
 class HTML(orm.AbstractModel):
     _name = 'ir.qweb.field.html'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.html']
+    _inherit = 'ir.qweb.field.html'
 
     def from_html(self, cr, uid, model, field, element, context=None):
         content = []
@@ -317,7 +317,7 @@ class Image(orm.AbstractModel):
         set as attribute on the generated <img> tag
     """
     _name = 'ir.qweb.field.image'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.image']
+    _inherit = 'ir.qweb.field.image'
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
@@ -436,7 +436,7 @@ class Image(orm.AbstractModel):
 
 class Monetary(orm.AbstractModel):
     _name = 'ir.qweb.field.monetary'
-    _inherit = ['ir.qweb.field', 'ir.qweb.field.monetary']
+    _inherit = 'ir.qweb.field.monetary'
 
     def from_html(self, cr, uid, model, field, element, context=None):
         lang = self.user_lang(cr, uid, context=context)
@@ -449,10 +449,7 @@ class Monetary(orm.AbstractModel):
 
 class Duration(orm.AbstractModel):
     _name = 'ir.qweb.field.duration'
-    _inherit = [
-        'ir.qweb.field.duration',
-        'ir.qweb.field.float',
-    ]
+    _inherit = 'ir.qweb.field.duration'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
@@ -471,17 +468,14 @@ class Duration(orm.AbstractModel):
 
 class RelativeDatetime(orm.AbstractModel):
     _name = 'ir.qweb.field.relative'
-    _inherit = [
-        'ir.qweb.field.relative',
-        'ir.qweb.field.datetime',
-    ]
+    _inherit = 'ir.qweb.field.relative'
 
     # get formatting from ir.qweb.field.relative but edition/save from datetime
 
 
 class QwebView(orm.AbstractModel):
     _name = 'ir.qweb.field.qweb'
-    _inherit = ['ir.qweb.field.qweb']
+    _inherit = 'ir.qweb.field.qweb'
 
 
 def html_to_text(element):
