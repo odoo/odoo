@@ -110,6 +110,7 @@ class Message(models.Model):
     message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
+    reference_ids = fields.One2many('mail.message.reference', 'mail_message_id', string='Reference')
 
     @api.multi
     def _get_needaction(self):
@@ -266,6 +267,7 @@ class Message(models.Model):
         partners = self.env['res.partner']
         attachments = self.env['ir.attachment']
         trackings = self.env['mail.tracking.value']
+        references = self.env['mail.message.reference']
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partners |= message.author_id
@@ -277,6 +279,8 @@ class Message(models.Model):
                 attachments |= message.attachment_ids
             if message.tracking_value_ids:
                 trackings |= message.tracking_value_ids
+            if message.reference_ids:
+                references |= message.reference_ids
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
         partners_names = partners.sudo().name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
@@ -298,7 +302,15 @@ class Message(models.Model):
             'new_value': tracking.get_new_display_value()[0],
         }) for tracking in trackings)
 
-        # 4. Update message dictionaries
+        # 4. Reference
+        reference_tree = dict((reference.id, {
+            'id': reference.id,
+            'res_id': reference.res_id,
+            'model': reference.model,
+            'record_name': reference.record_name,
+        })for reference in references)
+
+        # 5. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
             message = message_tree[message_id]
@@ -313,6 +325,9 @@ class Message(models.Model):
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
+            doc_name = {}
+            if message.model:
+                doc_name['name'] = self.env['ir.model'].search([('model', '=', message.model)]).display_name
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -322,12 +337,19 @@ class Message(models.Model):
                 if tracking_value.id in tracking_tree:
                     tracking_value_ids.append(tracking_tree[tracking_value.id])
 
+            reference_ids = []
+            for reference_value in message.reference_ids:
+                if reference_value.id in reference_tree:
+                    reference_ids.append(reference_tree[reference_value.id])
             message_dict.update({
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
+                'reference_ids': reference_ids,
+                'doc_name': doc_name
             })
+
             body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
@@ -367,6 +389,8 @@ class Message(models.Model):
                 'is_favorite': self.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
+                'reference_ids': [],
+                'doc_name': False,
                 'channel_ids': self.channel_ids.ids,
             }
 

@@ -103,6 +103,12 @@ class procurement_order(osv.osv):
                 self.production_order_create_note(cr, uid, procurement, context=context)
                 production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
                 production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')
+
+                production = production_obj.browse(cr, uid, [produce_id], context=context)
+                if production.move_prod_id.origin:
+                    saleorder_id = self.pool.get('sale.order').search(cr, uid, [('name', '=', production.move_prod_id.origin)])[0]
+                    references = {'res_id': saleorder_id, 'model': 'sale.order'}
+                    production_obj.message_post(cr, uid, [produce_id], references=[references], context=context)
             else:
                 res[procurement.id] = False
                 self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)

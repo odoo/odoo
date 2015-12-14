@@ -2238,6 +2238,11 @@ class stock_move(osv.osv):
         else:
             values = self._prepare_picking_assign(cr, uid, move, context=context)
             pick = pick_obj.create(cr, uid, values, context=context)
+            picking = pick_obj.browse(cr, uid, pick, context=context)
+            order_id = self.pool['sale.order'].search(cr, uid, [('name', '=', picking.origin)])
+            if order_id:
+                references = {'res_id': order_id[0], 'model': 'sale.order'}
+                picking.message_post(references=[references])
         return self.write(cr, uid, move_ids, {'picking_id': pick}, context=context)
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):

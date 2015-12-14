@@ -339,6 +339,8 @@ class PurchaseOrder(models.Model):
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves.action_confirm()
                 moves.force_assign()
+                references = {'model': self._model, 'res_id': order.id}
+                picking.message_post(references=[references])
         return True
 
     @api.multi

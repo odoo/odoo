@@ -111,6 +111,9 @@
                     </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
+                <t t-if="message.reference_ids &amp;&amp; message.reference_ids.length &gt; 0">
+                    <t t-call="mail.ChatThread.MessageReference"/>
+                </t>
                 <p t-if="options.display_subject &amp;&amp; message.subject &amp;&amp; message.message_type != 'notification'" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
                     <t t-if="message.body_short">
@@ -154,6 +157,17 @@
                 </li>
             </t>
         </ul>
+    </t>
+
+    <t t-name="mail.ChatThread.MessageReference">
+        <div>This <t t-esc="message.doc_name.name"/> is created from:
+            <t t-foreach='message.reference_ids' t-as='value'>
+                <a class="o_mail_redirect" href="#" t-att-data-oe-model="value.model" t-att-data-oe-id="value.res_id"><t t-esc="value.record_name"/></a>
+                <t t-if='value_size &gt; 1'>
+                    <t t-if='value_index+1 != value_size'>,</t>
+                </t>
+            </t>
+        </div>
     </t>
 
     <t t-name="mail.ChatComposer.Attachments">
