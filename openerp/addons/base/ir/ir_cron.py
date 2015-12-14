@@ -4,22 +4,20 @@ import logging
 import threading
 import time
 import psycopg2
+import pytz
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import pytz
 
-import openerp
-from openerp import SUPERUSER_ID, netsvc, api
-from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
-from openerp.modules import load_information_from_description_file
-from openerp.exceptions import UserError
+import odoo
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
-BASE_VERSION = load_information_from_description_file('base')['version']
+BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
+
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
@@ -33,58 +31,49 @@ _intervalTypes = {
     'minutes': lambda interval: relativedelta(minutes=interval),
 }
 
-class ir_cron(osv.osv):
+
+class ir_cron(models.Model):
     """ Model describing cron jobs (also called actions or tasks).
     """
 
     # TODO: perhaps in the future we could consider a flag on ir.cron jobs
     # that would cause database wake-up even if the database has not been
     # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
-    # See also openerp.cron
+    # See also odoo.cron
 
     _name = "ir.cron"
     _order = 'name'
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'user_id': fields.many2one('res.users', 'User', required=True),
-        'active': fields.boolean('Active'),
-        'interval_number': fields.integer('Interval Number',help="Repeat every x."),
-        'interval_type': fields.selection( [('minutes', 'Minutes'),
-            ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
-        'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
-        'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
-        'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
-        'model': fields.char('Object', help="Model name on which the method to be called is located, e.g. 'res.partner'."),
-        'function': fields.char('Method', help="Name of the method to be called when this job is processed."),
-        'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
-        'priority': fields.integer('Priority', help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
-    }
 
-    _defaults = {
-        'nextcall' : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'priority' : 5,
-        'user_id' : lambda obj,cr,uid,context: uid,
-        'interval_number' : 1,
-        'interval_type' : 'months',
-        'numbercall' : 1,
-        'active' : 1,
-    }
+    name = fields.Char(required=True)
+    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user, required=True)
+    active = fields.Boolean(default=True)
+    interval_number = fields.Integer(default=1, help="Repeat every x.")
+    interval_type = fields.Selection([('minutes', 'Minutes'),
+                                      ('hours', 'Hours'),
+                                      ('work_days', 'Work Days'),
+                                      ('days', 'Days'),
+                                      ('weeks', 'Weeks'),
+                                      ('months', 'Months')], string='Interval Unit', default='months')
+    numbercall = fields.Integer(string='Number of Calls', default=1, help='How many times the method is called,\na negative number indicates no limit.')
+    doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
+    nextcall = fields.Datetime(string='Next Execution Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), help="Next planned execution date for this job.")
+    model = fields.Char(string='Object', help="Model name on which the method to be called is located, e.g. 'res.partner'.")
+    function = fields.Char(string='Method', help="Name of the method to be called when this job is processed.")
+    args = fields.Text(string='Arguments', help="Arguments to be passed to the method, e.g. (uid,).")
+    priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
-    def _check_args(self, cr, uid, ids, context=None):
+    @api.constrains('args')
+    def _check_args(self):
         try:
-            for this in self.browse(cr, uid, ids, context):
+            for this in self:
                 str2tuple(this.args)
         except Exception:
-            return False
+            raise Exception('Invalid arguments')
         return True
-
-    _constraints = [
-        (_check_args, 'Invalid arguments', ['args']),
-    ]
 
     def method_direct_trigger(self, cr, uid, ids, context=None):
         if context is None:
-            context={}
+            context = {}
         cron_obj = self.browse(cr, uid, ids, context=context)
         for cron in cron_obj:
             self._callback(cr, uid, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
@@ -117,20 +106,20 @@ class ir_cron(osv.osv):
         """
         try:
             args = str2tuple(args)
-            openerp.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
-            registry = openerp.registry(cr.dbname)
+            odoo.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
+            registry = odoo.registry(cr.dbname)
             if model_name in registry:
                 model = registry[model_name]
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                    odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname, uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
                     getattr(model, method_name)(cr, uid, *args)
                     if _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
-                    openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+                    odoo.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
                 else:
                     msg = "Method `%s.%s` does not exist." % (model_name, method_name)
                     _logger.warning(msg)
@@ -150,8 +139,8 @@ class ir_cron(osv.osv):
         """
         try:
             with api.Environment.manage():
-                now = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
-                nextcall = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+                now = odoo.osv.fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
+                nextcall = odoo.osv.fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
                 numbercall = job['numbercall']
 
                 ok = False
@@ -167,8 +156,8 @@ class ir_cron(osv.osv):
                 if not numbercall:
                     addsql = ', active=False'
                 cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                           (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
-                self.invalidate_cache(job_cr, SUPERUSER_ID)
+                               (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                self.invalidate_cache(job_cr, odoo.SUPERUSER_ID)
 
         finally:
             job_cr.commit()
@@ -186,7 +175,7 @@ class ir_cron(osv.osv):
 
         If a job was processed, returns True, otherwise returns False.
         """
-        db = openerp.sql_db.db_connect(db_name)
+        db = odoo.sql_db.db_connect(db_name)
         threading.current_thread().dbname = db_name
         cr = db.cursor()
         jobs = []
@@ -237,7 +226,7 @@ class ir_cron(osv.osv):
                 _logger.debug('Starting job `%s`.', job['name'])
                 job_cr = db.cursor()
                 try:
-                    registry = openerp.registry(db_name)
+                    registry = odoo.registry(db_name)
                     registry[cls._name]._process_job(job_cr, job, lock_cr)
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
@@ -256,48 +245,49 @@ class ir_cron(osv.osv):
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
 
-        if hasattr(threading.current_thread(), 'dbname'): # cron job could have removed it as side-effect
+        if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
 
-    def _try_lock(self, cr, uid, ids, context=None):
+    def _try_lock(self):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
            to make sure a following write() or unlink() will not block due
            to a process currently executing those cron tasks"""
         try:
-            cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                       (tuple(ids),), log_exceptions=False)
+            self.env.cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                               (tuple(self.ids),), log_exceptions=False)
         except psycopg2.OperationalError:
-            cr.rollback() # early rollback to allow translations to work for the user feedback
+            self.env.cr.rollback()  # early rollback to allow translations to work for the user feedback
             raise UserError(_("Record cannot be modified right now: "
-                                "This cron task is currently being executed and may not be modified "
-                                "Please try again in a few minutes"))
+                              "This cron task is currently being executed and may not be modified "
+                              "Please try again in a few minutes"))
 
-    def create(self, cr, uid, vals, context=None):
-        res = super(ir_cron, self).create(cr, uid, vals, context=context)
-        return res
+    @api.model
+    def create(self, vals):
+        return super(ir_cron, self).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        self._try_lock(cr, uid, ids, context)
-        res = super(ir_cron, self).write(cr, uid, ids, vals, context=context)
-        return res
+    @api.multi
+    def write(self, vals):
+        self._try_lock()
+        return super(ir_cron, self).write(vals)
 
-    def unlink(self, cr, uid, ids, context=None):
-        self._try_lock(cr, uid, ids, context)
-        res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
-        return res
+    @api.multi
+    def unlink(self):
+        self._try_lock()
+        return super(ir_cron, self).unlink()
 
-    def try_write(self, cr, uid, ids, values, context=None):
+    @api.multi
+    def try_write(self, values):
         try:
-            with cr.savepoint():
-                cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                           (tuple(ids),), log_exceptions=False)
+            with self.env.cr.savepoint():
+                self.env.cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                                   (tuple(self.ids),), log_exceptions=False)
         except psycopg2.OperationalError:
             pass
         else:
-            return super(ir_cron, self).write(cr, uid, ids, values, context=context)
+            return super(ir_cron, self).write(values)
         return False
 
-    def toggle(self, cr, uid, ids, model, domain, context=None):
-        active = bool(self.pool[model].search_count(cr, uid, domain, context=context))
-
-        return self.try_write(cr, uid, ids, {'active': active}, context=context)
+    @api.model
+    def toggle(self, model, domain):
+        active = bool(self.env[model].search_count(domain))
+        return self.try_write({'active': active})

@@ -4,24 +4,77 @@
 import base64
 import operator
 import re
-import threading
 
-import openerp
-from openerp.osv import fields, osv
-from openerp import api, tools
-from openerp.http import request
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
+import odoo
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
+from odoo.http import request
+from odoo.tools.safe_eval import safe_eval as eval
 
 MENU_ITEM_SEPARATOR = "/"
 
 
-class ir_ui_menu(osv.osv):
+class IrUiMenu(models.Model):
     _name = 'ir.ui.menu'
+    _order = "sequence,id"
+    _parent_store = True
 
     def __init__(self, *args, **kwargs):
-        super(ir_ui_menu, self).__init__(*args, **kwargs)
+        super(IrUiMenu, self).__init__(*args, **kwargs)
         self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
+
+    name = fields.Char(string='Menu', required=True, translate=True)
+    sequence = fields.Integer(default=10)
+    child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
+    parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
+    parent_left = fields.Integer(index=True)
+    parent_right = fields.Integer(index=True)
+    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
+                                 'menu_id', 'gid', string='Groups',
+                                 help="If you have groups, the visibility of this menu will be based on these groups. "\
+                                      "If this field is empty, Odoo will compute visibility based on the related object's read access.")
+    complete_name = fields.Char(compute='_get_full_name', string='Full Path')
+    web_icon = fields.Char(string='Web Icon File')
+    action = fields.Reference(selection=[('ir.actions.report.xml', 'ir.actions.report.xml'),
+                                         ('ir.actions.act_window', 'ir.actions.act_window'),
+                                         ('ir.actions.act_url', 'ir.actions.act_url'),
+                                         ('ir.actions.server', 'ir.actions.server'),
+                                         ('ir.actions.client', 'ir.actions.client')])
+
+    web_icon_data = fields.Binary(string='Web Icon Image', compute="_compute_web_icon", store=True, attachment=True)
+
+    @api.depends('web_icon')
+    def _compute_web_icon(self):
+        for menu in self:
+            menu.web_icon_data = self.read_image(menu.web_icon)
+
+    def read_image(self, path):
+        if not path:
+            return False
+        path_info = path.split(',')
+        icon_path = odoo.modules.get_module_resource(path_info[0], path_info[1])
+        icon_image = False
+        if icon_path:
+            try:
+                icon_file = tools.file_open(icon_path, 'rb')
+                icon_image = base64.encodestring(icon_file.read())
+            finally:
+                icon_file.close()
+        return icon_image
+
+    @api.depends('complete_name')
+    def _get_full_name(self):
+        for element in self:
+            element.complete_name = self._get_one_full_name(element)
+
+    def _get_one_full_name(self, elmt, level=6):
+        if level <= 0:
+            return '...'
+        if elmt.parent_id:
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + MENU_ITEM_SEPARATOR
+        else:
+            parent_path = ''
+        return parent_path + elmt.name
 
     @api.model
     @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
@@ -75,7 +128,7 @@ class ir_ui_menu(osv.osv):
         if context is None:
             context = {}
 
-        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
+        ids = super(IrUiMenu, self).search(cr, uid, args, offset=0,
             limit=None, order=order, context=context, count=False)
 
         if not ids:
@@ -98,99 +151,69 @@ class ir_ui_menu(osv.osv):
             return len(result)
         return result
 
-    def name_get(self, cr, uid, ids, context=None):
+    @api.multi
+    def name_get(self):
         res = []
-        for id in ids:
-            elmt = self.browse(cr, uid, id, context=context)
-            res.append((id, self._get_one_full_name(elmt)))
+        for element in self:
+            res.append((element.id, self._get_one_full_name(element)))
         return res
 
-    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        for elmt in self.browse(cr, uid, ids, context=context):
-            res[elmt.id] = self._get_one_full_name(elmt)
-        return res
-
-    def _get_one_full_name(self, elmt, level=6):
-        if level<=0:
-            return '...'
-        if elmt.parent_id:
-            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + MENU_ITEM_SEPARATOR
-        else:
-            parent_path = ''
-        return parent_path + elmt.name
-
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         self.clear_caches()
-        return super(ir_ui_menu, self).create(cr, uid, values, context=context)
+        return super(IrUiMenu, self).create(values)
 
-    def write(self, cr, uid, ids, values, context=None):
+    @api.multi
+    def write(self, values):
         self.clear_caches()
-        return super(ir_ui_menu, self).write(cr, uid, ids, values, context=context)
+        return super(IrUiMenu, self).write(values)
 
-    def unlink(self, cr, uid, ids, context=None):
+    @api.multi
+    def unlink(self):
         # Detach children and promote them to top-level, because it would be unwise to
         # cascade-delete submenus blindly. We also can't use ondelete=set null because
         # that is not supported when _parent_store is used (would silently corrupt it).
         # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        local_context = dict(context or {})
+        local_context = dict(self.env.context or {})
         local_context['ir.ui.menu.full_list'] = True
-        direct_children_ids = self.search(cr, uid, [('parent_id', 'in', ids)], context=local_context)
-        if direct_children_ids:
-            self.write(cr, uid, direct_children_ids, {'parent_id': False})
+        direct_children = self.with_context(local_context).search([('parent_id', 'in', self.ids)])
+        if direct_children:
+            direct_children.write({'parent_id': False})
 
-        result = super(ir_ui_menu, self).unlink(cr, uid, ids, context=context)
+        result = super(IrUiMenu, self).unlink()
         self.clear_caches()
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        res = super(ir_ui_menu, self).copy(cr, uid, id, default=default, context=context)
-        datas=self.read(cr,uid,[res],['name'])[0]
-        rex=re.compile('\([0-9]+\)')
-        concat=rex.findall(datas['name'])
+    @api.multi
+    def copy(self, default=None):
+        res = super(IrUiMenu, self).copy(default=default)
+        rex = re.compile('\([0-9]+\)')
+        concat = rex.findall(res.name)
         if concat:
-            next_num=int(concat[0])+1
-            datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
+            next_num = int(concat[0])+1
+            res.name = rex.sub(('(%d)' % next_num), res.name)
         else:
-            datas['name'] += '(1)'
-        self.write(cr,uid,[res],{'name':datas['name']})
+            res.name += '(1)'
+        res.write({'name': res.name})
         return res
 
-    def read_image(self, path):
-        if not path:
-            return False
-        path_info = path.split(',')
-        icon_path = openerp.modules.get_module_resource(path_info[0],path_info[1])
-        icon_image = False
-        if icon_path:
-            try:
-                icon_file = tools.file_open(icon_path,'rb')
-                icon_image = base64.encodestring(icon_file.read())
-            finally:
-                icon_file.close()
-        return icon_image
-
-    def get_needaction_data(self, cr, uid, ids, context=None):
+    @api.multi
+    def get_needaction_data(self):
         """ Return for each menu entry of ids :
             - if it uses the needaction mechanism (needaction_enabled)
             - the needaction counter of the related action, taking into account
               the action domain
         """
-        if context is None:
-            context = {}
         res = {}
         menu_ids = set()
-        for menu in self.browse(cr, uid, ids, context=context):
+        for menu in self:
             menu_ids.add(menu.id)
             ctx = None
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.context:
                 try:
                     # use magical UnquoteEvalContext to ignore undefined client-side variables such as `active_id`
-                    eval_ctx = tools.UnquoteEvalContext(**context)
+                    ctxt = dict(self.env.context or {})
+                    eval_ctx = tools.UnquoteEvalContext(**ctxt)
                     ctx = eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or None
                 except Exception:
                     # if the eval still fails for some reason, we'll simply skip this menu
@@ -199,43 +222,44 @@ class ir_ui_menu(osv.osv):
             if menu_ref:
                 if not isinstance(menu_ref, list):
                     menu_ref = [menu_ref]
-                model_data_obj = self.pool.get('ir.model.data')
+                model_data_obj = self.env['ir.model.data']
                 for menu_data in menu_ref:
                     try:
-                        model, id = model_data_obj.get_object_reference(cr, uid, menu_data.split('.')[0], menu_data.split('.')[1])
+                        model, model_id = model_data_obj.get_object_reference(menu_data.split('.')[0], menu_data.split('.')[1])
                         if (model == 'ir.ui.menu'):
-                            menu_ids.add(id)
+                            menu_ids.add(model_id)
                     except Exception:
                         pass
 
         menu_ids = list(menu_ids)
 
-        for menu in self.browse(cr, uid, menu_ids, context=context):
+        for menu in self:
             res[menu.id] = {
                 'needaction_enabled': False,
                 'needaction_counter': False,
             }
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
                 if menu.action.res_model in self.pool:
-                    obj = self.pool[menu.action.res_model]
+                    obj = self.env[menu.action.res_model]
                     if obj._needaction:
                         if menu.action.type == 'ir.actions.act_window':
-                            eval_context = self.pool['ir.actions.act_window']._get_eval_context(cr, uid, context=context)
+                            eval_context = self.env['ir.actions.act_window']._get_eval_context()
                             dom = menu.action.domain and eval(menu.action.domain, eval_context) or []
                         else:
-                            dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
+                            dom = eval(menu.action.params_store or '{}', {'uid': self.env.uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = obj._needaction
-                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
+                        res[menu.id]['needaction_counter'] = obj._needaction_count(dom)
         return res
 
-    def get_user_roots(self, cr, uid, context=None):
+    @api.model
+    @api.returns('self')
+    def get_user_roots(self):
         """ Return all root menu ids visible for the user.
 
         :return: the root menu ids
         :rtype: list(int)
         """
-        menu_domain = [('parent_id', '=', False)]
-        return self.search(cr, uid, menu_domain, context=context)
+        return self.search([('parent_id', '=', False)])
 
     @api.cr_uid_context
     @tools.ormcache_context('uid', keys=('lang',))
@@ -300,41 +324,3 @@ class ir_ui_menu(osv.osv):
                 key=operator.itemgetter('sequence'))
 
         return menu_root
-
-    _columns = {
-        'name': fields.char('Menu', required=True, translate=True),
-        'sequence': fields.integer('Sequence'),
-        'child_id': fields.one2many('ir.ui.menu', 'parent_id', 'Child IDs'),
-        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True, ondelete="restrict"),
-        'parent_left': fields.integer('Parent Left', select=True),
-        'parent_right': fields.integer('Parent Right', select=True),
-        'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
-                "If this field is empty, Odoo will compute visibility based on the related object's read access."),
-        'complete_name': fields.function(_get_full_name, string='Full Path', type='char'),
-        'web_icon': fields.char('Web Icon File'),
-        'action': fields.reference('Action', selection=[
-                ('ir.actions.report.xml', 'ir.actions.report.xml'),
-                ('ir.actions.act_window', 'ir.actions.act_window'),
-                ('ir.actions.act_url', 'ir.actions.act_url'),
-                ('ir.actions.server', 'ir.actions.server'),
-                ('ir.actions.client', 'ir.actions.client'),
-        ]),
-    }
-
-    web_icon_data = openerp.fields.Binary('Web Icon Image',
-        compute="_compute_web_icon", store=True, attachment=True)
-
-    @api.depends('web_icon')
-    def _compute_web_icon(self):
-        for menu in self:
-            menu.web_icon_data = self.read_image(menu.web_icon)
-
-    _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
-    ]
-    _defaults = {
-        'sequence': 10,
-    }
-    _order = "sequence,id"
-    _parent_store = True

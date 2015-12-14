@@ -128,7 +128,7 @@ class TestQWeb(common.TransactionCase):
             ctx.update(params)
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
-                qweb.render(template, qwebcontext=ctx).strip(),
+                qweb._model.render(self.cr, self.uid, template, qwebcontext=ctx).strip(),
                 (result or u'').strip().encode('utf-8'),
                 template
             )

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- ir.mail.server -->
         <record model="ir.ui.view" id="ir_mail_server_form">
             <field name="model">ir.mail_server</field>
@@ -58,5 +57,4 @@
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
         <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15" groups="base.group_no_one"/>
-    </data>
-</openerp>
+</odoo>

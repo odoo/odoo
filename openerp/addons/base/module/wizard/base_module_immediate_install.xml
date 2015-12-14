@@ -7,7 +7,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_ir_module_module" />
             <field name="state">code</field>
-            <field name="code">self.button_immediate_install(cr, uid, context.get('active_ids', []), context=context)</field>
+            <field name="code">self._model.button_immediate_install(self._cr, self._uid, self.env.context.get('active_ids', []), context=self.env.context)</field>
         </record>
 
         <record model="ir.values" id="action_module_immediate_install">

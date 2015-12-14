@@ -2,40 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
-from openerp import SUPERUSER_ID
-from openerp import tools
-from openerp.osv import fields, osv, expression
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.misc import unquote as unquote
+import odoo
+from odoo import api, fields, models, _
+from odoo import SUPERUSER_ID
+from odoo import tools
+from odoo.osv import expression
+from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.misc import unquote as unquote
 
-class ir_rule(osv.osv):
+
+class IrRule(models.Model):
     _name = 'ir.rule'
-    _order = 'name'
+    _order = 'name, model_id DESC'
     _MODES = ['read', 'write', 'create', 'unlink']
-
-    def _eval_context_for_combinations(self):
-        """Returns a dictionary to use as evaluation context for
-           ir.rule domains, when the goal is to obtain python lists
-           that are easier to parse and combine, but not to
-           actually execute them."""
-        return {'user': unquote('user'),
-                'time': unquote('time')}
-
-    def _eval_context(self, cr, uid):
-        """Returns a dictionary to use as evaluation context for
-           ir.rule domains."""
-        return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
-                'time':time}
-
-    def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        eval_context = self._eval_context(cr, uid)
-        for rule in self.browse(cr, uid, ids, context):
-            if rule.domain_force:
-                res[rule.id] = expression.normalize_domain(eval(rule.domain_force, eval_context))
-            else:
-                res[rule.id] = []
-        return res
 
     def _get_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -46,44 +25,56 @@ class ir_rule(osv.osv):
                 res[rule.id] = False
         return res
 
-    def _check_model_obj(self, cr, uid, ids, context=None):
-        return not any(self.pool[rule.model_id.model].is_transient() for rule in self.browse(cr, uid, ids, context))
+    _columns = {'global': odoo.osv.fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone")}
 
-    def _check_model_name(self, cr, uid, ids, context=None):
-        # Don't allow rules on rules records (this model).
-        return not any(rule.model_id.model == self._name for rule in self.browse(cr, uid, ids, context))
+    name = fields.Char(index=True)
+    active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
+    model_id = fields.Many2one('ir.model', string='Object', index=True, required=True, ondelete="cascade")
+    groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id')
+    domain_force = fields.Text(string='Domain')
+    domain = fields.Binary(compute='_domain_force_get', string='Domain')
+    perm_read = fields.Boolean(string='Apply for Read', default=True)
+    perm_write = fields.Boolean(string='Apply for Write', default=True)
+    perm_create = fields.Boolean(string='Apply for Create', default=True)
+    perm_unlink = fields.Boolean(string='Apply for Delete', default=True)
 
-    _columns = {
-        'name': fields.char('Name', select=1),
-        'active': fields.boolean('Active', help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module)."),
-        'model_id': fields.many2one('ir.model', 'Object',select=1, required=True, ondelete="cascade"),
-        'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
-        'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
-        'domain_force': fields.text('Domain'),
-        'domain': fields.function(_domain_force_get, string='Domain', type='binary'),
-        'perm_read': fields.boolean('Apply for Read'),
-        'perm_write': fields.boolean('Apply for Write'),
-        'perm_create': fields.boolean('Apply for Create'),
-        'perm_unlink': fields.boolean('Apply for Delete')
-    }
-
-    _order = 'model_id DESC'
-
-    _defaults = {
-        'active': True,
-        'perm_read': True,
-        'perm_write': True,
-        'perm_create': True,
-        'perm_unlink': True,
-        'global': True,
-    }
     _sql_constraints = [
         ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right !'),
     ]
-    _constraints = [
-        (_check_model_obj, 'Rules can not be applied on Transient models.', ['model_id']),
-        (_check_model_name, 'Rules can not be applied on the Record Rules model.', ['model_id']),
-    ]
+
+    def _eval_context_for_combinations(self):
+        """Returns a dictionary to use as evaluation context for
+           ir.rule domains, when the goal is to obtain python lists
+           that are easier to parse and combine, but not to
+           actually execute them."""
+        return {'user': unquote('user'),
+                'time': unquote('time')}
+
+    @api.model
+    def _eval_context(self):
+        """Returns a dictionary to use as evaluation context for
+           ir.rule domains."""
+        return {'user': self.env.user, 'time': time}
+
+    @api.depends('domain')
+    def _domain_force_get(self):
+        eval_context = self._eval_context()
+        for rule in self:
+            if rule.domain_force:
+                rule.domain = expression.normalize_domain(eval(rule.domain_force, eval_context))
+            else:
+                rule.domain = []
+
+    @api.constrains('model_id')
+    def _check_model_obj(self):
+        if any(self.pool[rule.model_id.model].is_transient() for rule in self):
+            raise UserWarning(_('Rules can not be applied on Transient models.'))
+
+    @api.constrains('model_id')
+    def _check_model_name(self):
+        # Don't allow rules on rules records (this model).
+        if any(rule.model_id.model == self._name for rule in self):
+            raise UserWarning(_('Rules can not be applied on the Record Rules model.'))
 
     @tools.ormcache('uid', 'model_name', 'mode')
     def _compute_domain(self, cr, uid, model_name, mode="read"):
@@ -125,32 +116,37 @@ class ir_rule(osv.osv):
             return domain
         return []
 
-    def clear_cache(self, cr, uid):
+    @api.model
+    def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
         self.clear_caches()
 
-    def domain_get(self, cr, uid, model_name, mode='read', context=None):
-        dom = self._compute_domain(cr, uid, model_name, mode)
+    @api.model
+    def domain_get(self, model_name, mode='read'):
+        dom = self._compute_domain(model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
             # involve objects on which the real uid has no acces rights.
             # This means also there is no implicit restriction (e.g. an object
             # references another object the user can't see).
-            query = self.pool[model_name]._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
+            query = self.env[model_name].sudo()._where_calc(dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
-        return [], [], ['"' + self.pool[model_name]._table + '"']
+        return [], [], ['"' + self.env[model_name]._table + '"']
 
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def unlink(self):
+        res = super(IrRule, self).unlink()
         self.clear_caches()
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        res = super(ir_rule, self).create(cr, uid, vals, context=context)
+    @api.model
+    def create(self, vals):
+        res = super(IrRule, self).create(vals)
         self.clear_caches()
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
+    @api.multi
+    def write(self, vals):
+        res = super(IrRule, self).write(vals)
         self.clear_caches()
         return res

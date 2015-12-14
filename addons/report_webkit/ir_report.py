@@ -25,7 +25,7 @@ class ir_actions_report_xml(orm.Model):
             " is printed on a separate HTML but memory and disk usage are wider.")
     }
 
-    def _lookup_report(self, cr, name):
+    def _lookup_report(self, name):
         """
         Look up a report definition.
         """
@@ -41,8 +41,8 @@ class ir_actions_report_xml(orm.Model):
             if not isinstance(new_report, WebKitParser):
                 new_report = None
         else:
-            cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'webkit'))
-            r = cr.dictfetchone()
+            self.env.cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'webkit'))
+            r = self.env.cr.dictfetchone()
             if r:
                 if r['parser']:
                     parser = operator.attrgetter(r['parser'])(openerp.addons)
@@ -59,4 +59,4 @@ class ir_actions_report_xml(orm.Model):
         if new_report:
             return new_report
         else:
-            return super(ir_actions_report_xml, self)._lookup_report(cr, name)
+            return super(ir_actions_report_xml, self)._lookup_report(name)
