@@ -150,19 +150,19 @@
                            <field name="definition_description"/>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
-                                <div class="oe_kanban_content">
+                            <div t-attf-class="oe_kanban_card o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
+                                <div class="o_kanban_content">
                                     <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                     <div class="pull-left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
                                     <field name="user_id" />
-                                    <div class="oe_goal_state_block">
+                                    <div class="o_goal_state_block">
                                         <t t-if="record.definition_display.raw_value == 'boolean'">
-                                            <div class="oe_goal_state">
-                                                <t t-if="record.state.raw_value=='reached'"><i class="oe_green fa fa-check" title="Goal Reached"/></t>
-                                                <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o" title="Goal in Progress"/></t>
-                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-times" title="Goal Failed"/></t>
+                                            <div class="o_goal_state text-center">
+                                                <t t-if="record.state.raw_value=='reached'"><i class="o_green fa fa-check fa-3x" title="Goal Reached"/></t>
+                                                <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o fa-3x" title="Goal in Progress"/></t>
+                                                <t t-if="record.state.raw_value=='failed'"><i class="o_red fa fa-times fa-3x" title="Goal Failed"/></t>
                                             </div>
                                         </t>
                                         <t t-if="record.definition_display.raw_value == 'progress'">
@@ -170,7 +170,7 @@
                                                 <field name="current" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'target_goal', 'label_field': 'definition_suffix'}" />
                                             </t>
                                             <t t-if="record.definition_condition.raw_value != 'higher'">
-                                                <div t-attf-class="oe_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'oe_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'oe_red' : 'oe_green'}">
+                                                <div t-attf-class="o_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'o_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'o_red' : 'o_green'}">
                                                     <t t-esc="record.current.raw_value" />
                                                 </div>
                                                 <em>Target: less than <t t-esc="record.target_goal.raw_value" /></em>

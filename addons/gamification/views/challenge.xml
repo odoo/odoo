@@ -145,8 +145,8 @@
                     <field name="user_ids"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_goal oe_kanban_global_click">
-                                <div class="oe_kanban_content">
+                            <div t-attf-class="oe_kanban_card o_kanban_gamification oe_kanban_global_click">
+                                <div class="o_kanban_content">
                                    <strong>
                                        <h4 class="text-center"><field name="name"/></h4>
                                        <div class="oe_kanban_project_list text-center">
@@ -157,7 +157,7 @@
                                        </div>
                                    </strong>
                                     <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
-                                        <img class="oe_kanban_badge_avatars img-rounded oe_margin_top_8" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                     </t>
                                 </div>
                             </div>
