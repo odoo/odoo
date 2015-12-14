@@ -36,6 +36,18 @@
         </data>
     </field>
 </record>
+<!--add export to Excel and PDF to Payslip 
+<record id="hr_ke_payslip1_inherit" model="ir.ui.view">
+    <field name="model">hr.hr.payslip</field>
+    <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//page[@string = 'type_id']" position="after">
+                <field name="rem_type"/>
+        </xpath>
+        </data>
+    </field>
+</record>-->
     </data>
 </openerp>
 
