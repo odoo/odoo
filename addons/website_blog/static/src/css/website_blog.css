@@ -128,28 +128,34 @@ mark + .popover, .cover_footer {
 }
 
 .o_blog_post_teaser {
-  width: 89%;
   text-align: justify;
 }
 
 /*To display the grid or inline presentation of the blog.post_list*/
 .o_grid {
   margin: 0 6% 6% 0;
+  border: 1px solid #EEEEEE;
+  -webkit-box-shadow: .5px .5px .5px .5px rgba(238,238,238,1);
+  -moz-box-shadow: .5px .5px .5px .5px rgba(238,238,238,1);
+  box-shadow: .5px .5px .5px .5px rgba(238,238,238,1);
+  padding-bottom: 15px;
 }
 
 .o_grid .o_blog_post_teaser {
   width: 100%;
 }
 
-.o_grid .o_author_avatar {
-  position: relative;
-  right: 35%;
-  margin-bottom: 100px;
+#js_blogcover {
+  height: 150px;
+  opacity: 1 !important;
 }
 
-/*Mobile preview: for blog grid layout */
-@media (max-width: 768px) {
-  .o_grid .o_author_avatar {
-    right: 0%;
-  }
+.o_author_avatar_little {
+  width: 40px;
+  display: inline;
+  margin-top: -5px;
+}
+
+.o_grid>.text-muted>.mb0>hr {
+  display: none;
 }

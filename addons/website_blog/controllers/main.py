@@ -143,6 +143,7 @@ class WebsiteBlog(http.Controller):
             'active_tag_ids': active_tag_ids,
             'tags_list' : tags_list,
             'blog_posts': blog_posts,
+            'blog_posts_cover_properties': [json.loads(b.cover_properties) for b in blog_posts],
             'pager': pager,
             'nav_list': self.nav_list(blog),
             'blog_url': blog_url,
