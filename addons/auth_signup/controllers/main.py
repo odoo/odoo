@@ -50,11 +50,16 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
             raise werkzeug.exceptions.NotFound()
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
-            try:
-                self.do_signup(qcontext)
-                return super(AuthSignupHome, self).web_login(*args, **kw)
-            except (SignupError, AssertionError), e:
-                qcontext['error'] = _(e.message)
+            if request.env["res.users"].sudo().search(
+                    [("login", "=", qcontext.get("login"))]):
+                qcontext["error"] = _("Another user is already registered "
+                                      "using this email address.")
+            else:
+                try:
+                    self.do_signup(qcontext)
+                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                except (SignupError, AssertionError) as e:
+                    qcontext['error'] = _(e.message)
 
         return request.render('auth_signup.signup', qcontext)
 

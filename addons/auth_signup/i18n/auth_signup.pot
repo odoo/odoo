@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2015-12-15 15:11+0000\n"
+"PO-Revision-Date: 2015-12-15 15:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -75,7 +75,7 @@ msgid "Allow external users to sign up"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -86,7 +86,13 @@ msgid "An invitation email containing the following subscription link has been s
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:55
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:131
 #, python-format
 msgid "Authentification Failed."
 msgstr ""
@@ -98,7 +104,7 @@ msgid "Back to Login"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:294
+#: code:addons/auth_signup/res_users.py:293
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr ""
@@ -109,7 +115,7 @@ msgid "Confirm Password"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:85
 #, python-format
 msgid "Could not reset your password"
 msgstr ""
@@ -125,7 +131,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:109
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr ""
@@ -158,6 +164,12 @@ msgstr ""
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
 msgid "Reset password"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
 msgstr ""
 
 #. module: auth_signup
