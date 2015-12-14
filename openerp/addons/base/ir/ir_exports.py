@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from odoo import fields, models
 
 
-class ir_exports(osv.osv):
+class IrExports(models.Model):
     _name = "ir.exports"
     _order = 'name'
-    _columns = {
-        'name': fields.char('Export Name'),
-        'resource': fields.char('Resource', select=True),
-        'export_fields': fields.one2many('ir.exports.line', 'export_id',
-                                         'Export ID', copy=True),
-    }
+
+    name = fields.Char(string='Export Name')
+    resource = fields.Char(select=True)
+    export_fields = fields.One2many('ir.exports.line', 'export_id', string='Export ID', copy=True)
 
 
-class ir_exports_line(osv.osv):
+class IrExportsLine(models.Model):
     _name = 'ir.exports.line'
     _order = 'id'
-    _columns = {
-        'name': fields.char('Field Name'),
-        'export_id': fields.many2one('ir.exports', 'Export', select=True, ondelete='cascade'),
-    }
+
+    name = fields.Char(string='Field Name')
+    export_id = fields.Many2one('ir.exports', string='Export', select=True, ondelete='cascade')

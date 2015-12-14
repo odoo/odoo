@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
 from difflib import get_close_matches
-import logging
 
-from openerp import api, tools, SUPERUSER_ID
-import openerp.modules
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import AccessError, UserError, ValidationError
+import odoo
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +23,8 @@ TRANSLATION_TYPE = [
     ('sql_constraint', 'SQL Constraint')
 ]
 
-class ir_translation_import_cursor(object):
+
+class IrTranslationImportCursor(object):
     """Temporary cursor for optimizing mass insert into ir.translation
 
     Open it (attached to a sql cursor), feed it with translation data and
@@ -168,28 +167,48 @@ class ir_translation_import_cursor(object):
         cr.execute("DROP TABLE %s" % self._table_name)
         return True
 
-class ir_translation(osv.osv):
+
+class IrTranslation(models.Model):
     _name = "ir.translation"
     _log_access = False
 
-    def _get_language(self, cr, uid, context):
-        lang_model = self.pool.get('res.lang')
-        lang_ids = lang_model.search(cr, uid, [('translatable', '=', True)], context=context)
-        lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
-        return [(d['code'], d['name']) for d in lang_data]
+    @api.model
+    def _get_language(self):
+        lang_model = self.env['res.lang']
+        lang = lang_model.search([('translatable', '=', True)])
+        return [(data.code, data.name) for data in lang]
 
-    def _get_src(self, cr, uid, ids, name, arg, context=None):
+    name = fields.Char(string='Translated field', required=True)
+    res_id = fields.Integer(string='Record ID', index=True)
+    lang = fields.Selection(selection='_get_language', string='Language')
+    type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
+    src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
+    source = fields.Text(compute='_get_src', inverse='_set_src', search='_search_src', string='Source term')
+    value = fields.Text(string='Translation Value')
+    module = fields.Char(index=True, help="Module this term belongs to")
+
+    state = fields.Selection([('to_translate', 'To Translate'),
+                              ('inprogress', 'Translation in Progress'),
+                              ('translated', 'Translated')],
+                             string="Status", default='to_translate',
+                             help="Automatically set to let administators find new terms that might need to be translated")
+
+    # aka gettext extracted-comments - we use them to flag openerp-web translation
+    # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
+    comments = fields.Text(string='Translation comments', index=True)
+
+    _sql_constraints = [('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
+                        'Language code of translation item must be among known languages')]
+
+    @api.depends('source')
+    def _get_src(self):
         ''' Get source name for the translation. If object type is model then
         return the value store in db. Otherwise return value store in src field
         '''
-        if context is None:
-            context = {}
-        res = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.src
+        for record in self:
             if record.type == 'model':
                 model_name, field_name = record.name.split(',')
-                model = self.pool.get(model_name)
+                model = self.env[model_name]
                 if model is None:
                     continue
                 field = model._fields.get(field_name)
@@ -197,74 +216,41 @@ class ir_translation(osv.osv):
                     continue
                 if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
-                    context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, [record.res_id], [field_name], context=context_no_lang)
-                    res[record.id] = result[0][field_name] if result else False
-        return res
+                    context_no_lang = dict(self.env.context, lang=None)
+                    result = model.with_context(context_no_lang).browse(record.res_id).read([field_name])
+                    record.source = result[0][field_name] if result else False
 
-    def _set_src(self, cr, uid, id, name, value, args, context=None):
+    def _set_src(self):
         ''' When changing source term of a translation, change its value in db for
         the associated object, and the src field
         '''
-        if context is None:
-            context = {}
-        record = self.browse(cr, uid, id, context=context)
-        if record.type == 'model':
-            model_name, field_name = record.name.split(',')
-            model = self.pool.get(model_name)
+        if self.type == 'model':
+            model_name, field_name = self.name.split(',')
+            model = self.env[model_name]
             field = model._fields[field_name]
             if not callable(field.translate):
                 # Make a context without language information, because we want
                 # to write on the value stored in db and not on the one
                 # associated with the current language. Also not removing lang
                 # from context trigger an error when lang is different.
-                context_wo_lang = context.copy()
+                context_wo_lang = self.env.context.copy()
                 context_wo_lang.pop('lang', None)
-                model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
-        return self.write(cr, uid, id, {'src': value}, context=context)
+                model.with_context(context_wo_lang).browse(self.res_id).write({field_name: self.source})
+        return self.write({'src': self.source})
 
-    def _search_src(self, cr, uid, obj, name, args, context):
+    @api.model
+    def _search_src(self, operator, operand):
         ''' the source term is stored on 'src' field '''
         res = []
-        for field, operator, value in args:
+        for field, operator, value in operand:
             res.append(('src', operator, value))
         return res
 
-    _columns = {
-        'name': fields.char('Translated field', required=True),
-        'res_id': fields.integer('Record ID', select=True),
-        'lang': fields.selection(_get_language, string='Language'),
-        'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
-        'src': fields.text('Internal Source'),  # stored in database, kept for backward compatibility
-        'source': fields.function(_get_src, fnct_inv=_set_src, fnct_search=_search_src,
-            type='text', string='Source term'),
-        'value': fields.text('Translation Value'),
-        'module': fields.char('Module', help="Module this term belongs to", select=True),
+    def _auto_init(self):
+        super(IrTranslation, self)._auto_init()
 
-        'state': fields.selection(
-            [('to_translate','To Translate'),
-             ('inprogress','Translation in Progress'),
-             ('translated','Translated')],
-            string="Status",
-            help="Automatically set to let administators find new terms that might need to be translated"),
-
-        # aka gettext extracted-comments - we use them to flag openerp-web translation
-        # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
-        'comments': fields.text('Translation comments', select=True),
-    }
-
-    _defaults = {
-        'state': 'to_translate',
-    }
-
-    _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
-        'Language code of translation item must be among known languages' ), ]
-
-    def _auto_init(self, cr, context=None):
-        super(ir_translation, self)._auto_init(cr, context)
-
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
-        indexes = [row[0] for row in cr.fetchall()]
+        self.env.cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
+        indexes = [row[0] for row in self.env.cr.fetchall()]
 
         # Removed because there is a size limit on btree indexed values (problem with column src):
         # cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
@@ -273,65 +259,65 @@ class ir_translation(osv.osv):
         # Removed because hash indexes are not compatible with postgres streaming replication:
         # cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation USING hash (src)')
         if set(indexes) & set(['ir_translation_ltns', 'ir_translation_lts', 'ir_translation_src_hash_idx']):
-            cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
-            cr.commit()
+            self.env.cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
+            self.env.cr.commit()
 
         # Add separate md5 index on src (no size limit on values, and good performance).
         if 'ir_translation_src_md5' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
-            cr.commit()
+            self.env.cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
+            self.env.cr.commit()
 
         if 'ir_translation_ltn' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
-            cr.commit()
+            self.env.cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
+            self.env.cr.commit()
 
-    def _check_selection_field_value(self, cr, uid, field, value, context=None):
+    @api.model
+    def _check_selection_field_value(self, field, value):
         if field == 'lang':
             return
-        return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
+        return super(IrTranslation, self)._check_selection_field_value(field, value)
 
-    def _get_ids(self, cr, uid, name, tt, lang, ids):
-        translations = dict.fromkeys(ids, False)
-        if ids:
-            cr.execute('select res_id,value '
-                    'from ir_translation '
-                    'where lang=%s '
-                        'and type=%s '
-                        'and name=%s '
-                        'and res_id IN %s',
-                    (lang,tt,name,tuple(ids)))
-            for res_id, value in cr.fetchall():
-                translations[res_id] = value
-        return translations
+    @api.model
+    def _get_ids(self, name, tt, lang, in_ids):
+        if in_ids:
+            self.env.cr.execute('select res_id,value '
+                                'from ir_translation '
+                                'where lang=%s '
+                                'and type=%s '
+                                'and name=%s '
+                                'and res_id IN %s',
+                                (lang, tt, name, tuple(in_ids)))
+            for res_id, value in self.env.cr.fetchall():
+                self.res_id = value
 
-    def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
+    @api.model
+    def _set_ids(self, name, tt, lang, rec_ids, value, src=None):
         self.clear_caches()
-        cr.execute('update ir_translation '
-                  'set value=%s '
-                  '  , src=%s '
-                  '  , state=%s '
-                'where lang=%s '
-                    'and type=%s '
-                    'and name=%s '
-                    'and res_id IN %s '
-                'returning res_id',
-                (value,src,'translated',lang,tt,name,tuple(ids),))
+        self.env.cr.execute('update ir_translation '
+                            'set value=%s '
+                            '  , src=%s '
+                            '  , state=%s '
+                            'where lang=%s '
+                            'and type=%s '
+                            'and name=%s '
+                            'and res_id IN %s '
+                            'returning res_id',
+                            (value, src, 'translated', lang, tt, name, tuple(rec_ids),))
 
-        existing_ids = [x[0] for x in cr.fetchall()]
+        existing_ids = [x[0] for x in self.env.cr.fetchall()]
 
-        for id in list(set(ids) - set(existing_ids)):
-            self.create(cr, uid, {
-                'lang':lang,
-                'type':tt,
-                'name':name,
-                'res_id':id,
-                'value':value,
-                'src':src,
-                'state':'translated'
-                })
-        return len(ids)
+        for id in list(set(rec_ids) - set(existing_ids)):
+            self.create({'lang': lang,
+                         'type': tt,
+                         'name': name,
+                         'res_id': id,
+                         'value': value,
+                         'src': src,
+                         'state': 'translated'}).id
+        return len(rec_ids)
 
-    def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
+    @api.model
+    def _get_source_query(self, name, types, lang, source, res_id):
         if source:
             # Note: the extra test on md5(src) is a hint for postgres to use the
             # index ir_translation_src_md5
@@ -356,21 +342,22 @@ class ir_translation(osv.osv):
                         AND name=%s"""
 
             params = (lang or '', types, tools.ustr(name))
-        
+
         return (query, params)
 
     @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
-    def __get_source(self, cr, uid, name, types, lang, source, res_id):
+    def __get_source(self, name, types, lang, source, res_id):
         # res_id is a tuple or None, otherwise ormcache cannot cache it!
-        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
-        cr.execute(query, params)
-        res = cr.fetchone()
+        query, params = self._get_source_query(name, types, lang, source, res_id)
+        self.env.cr.execute(query, params)
+        res = self.env.cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:
             return tools.ustr(source)
         return trad
 
-    def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
+    @api.model
+    def _get_source(self, name, types, lang, source=None, res_id=None):
         """
         Returns the translation for the given combination of name, type, language
         and source. All values passed to this method should be unicode (not byte strings),
@@ -396,7 +383,7 @@ class ir_translation(osv.osv):
                 res_id = (res_id,)
             else:
                 res_id = tuple(res_id)
-        return self.__get_source(cr, uid, name, types, lang, source, res_id)
+        return self.__get_source(name, types, lang, source, res_id)
 
     @api.model
     def _get_terms_query(self, field, records):
@@ -550,7 +537,7 @@ class ir_translation(osv.osv):
 
     @api.model
     def create(self, vals):
-        record = super(ir_translation, self.sudo()).create(vals).with_env(self.env)
+        record = super(IrTranslation, self.sudo()).create(vals).with_env(self.env)
         record.check('create')
         self.clear_caches()
         return record
@@ -562,7 +549,7 @@ class ir_translation(osv.osv):
         elif vals.get('src') or not vals.get('value', True):
             vals.setdefault('state', 'to_translate')
         self.check('write')
-        result = super(ir_translation, self.sudo()).write(vals)
+        result = super(IrTranslation, self.sudo()).write(vals)
         self.check('write')
         self.clear_caches()
         return result
@@ -571,7 +558,7 @@ class ir_translation(osv.osv):
     def unlink(self):
         self.check('unlink')
         self.clear_caches()
-        return super(ir_translation, self.sudo()).unlink()
+        return super(IrTranslation, self.sudo()).unlink()
 
     @api.model
     def insert_missing(self, field, records):
@@ -675,17 +662,17 @@ class ir_translation(osv.osv):
     def _get_import_cursor(self, cr, uid, context=None):
         """ Return a cursor-like object for fast inserting translations
         """
-        return ir_translation_import_cursor(cr, uid, self, context=context)
+        return IrTranslationImportCursor(cr, uid, self, context=context)
 
     def load_module_terms(self, cr, modules, langs, context=None):
         context_template = dict(context or {}) # local copy
         # make sure the given languages are active
         lang_obj = self.pool['res.lang']
         for lang in langs:
-            lang_obj.load_lang(cr, SUPERUSER_ID, lang)
+            lang_obj.load_lang(cr, odoo.SUPERUSER_ID, lang)
         # load i18n files
         for module_name in modules:
-            modpath = openerp.modules.get_module_path(module_name)
+            modpath = odoo.modules.get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
@@ -697,28 +684,28 @@ class ir_translation(osv.osv):
 
                 # Step 1: for sub-languages, load base language first (e.g. es_CL.po is loaded over es.po)
                 if base_lang_code:
-                    base_trans_file = openerp.modules.get_module_resource(module_name, 'i18n', base_lang_code + '.po')
+                    base_trans_file = odoo.modules.get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
                         tools.trans_load(cr, base_trans_file, lang, verbose=False, module_name=module_name, context=context)
-                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+                        context['overwrite'] = True  # make sure the requested translation will override the base terms later
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
-                    base_trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
+                    base_trans_extra_file = odoo.modules.get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
                         tools.trans_load(cr, base_trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
-                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+                        context['overwrite'] = True  # make sure the requested translation will override the base terms later
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
-                trans_file = openerp.modules.get_module_resource(module_name, 'i18n', lang_code + '.po')
+                trans_file = odoo.modules.get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
                 elif lang_code != 'en_US':
                     _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
-                trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
+                trans_extra_file = odoo.modules.get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)

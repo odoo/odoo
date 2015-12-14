@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, timedelta
 import logging
 import pytz
-import time
 
-from datetime import datetime, timedelta
-from openerp import _, api, fields, models
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +20,7 @@ def _create_sequence(cr, seq_name, number_increment, number_next):
     sql = "CREATE SEQUENCE %s INCREMENT BY %%s START WITH %%s" % seq_name
     cr.execute(sql, (number_increment, number_next))
 
+
 def _drop_sequence(cr, seq_names):
     """ Drop the PostreSQL sequence if it exists.
 
@@ -33,6 +33,7 @@ def _drop_sequence(cr, seq_names):
     # RESTRICT is the default; it prevents dropping the sequence if an
     # object depends on it.
     cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
+
 
 def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     """ Alter a PostreSQL sequence.
@@ -52,9 +53,11 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
         statement += " RESTART WITH %d" % (number_next, )
     cr.execute(statement)
 
+
 def _select_nextval(cr, seq_name):
     cr.execute("SELECT nextval('%s')" % seq_name)
     return cr.fetchone()
+
 
 def _update_nogap(self, number_increment):
     number_next = self.number_next
@@ -64,7 +67,7 @@ def _update_nogap(self, number_increment):
     return number_next
 
 
-class ir_sequence(models.Model):
+class IrSequence(models.Model):
     """ Sequence model.
 
     The sequence model allows to define and use so-called sequence objects.
@@ -97,30 +100,29 @@ class ir_sequence(models.Model):
             record.write({'number_next': record.number_next_actual or 0})
 
     name = fields.Char(required=True)
-    code = fields.Char('Sequence Code')
-    implementation = fields.Selection(
-        [('standard', 'Standard'), ('no_gap', 'No gap')],
-        'Implementation', required=True, default='standard',
-        help="Two sequence object implementations are offered: Standard "
-        "and 'No gap'. The later is slower than the former but forbids any"
-        " gap in the sequence (while they are possible in the former).")
+    code = fields.Char(strring='Sequence Code')
+    implementation = fields.Selection([('standard', 'Standard'), ('no_gap', 'No gap')],
+                                      string='Implementation', required=True, default='standard',
+                                      help="Two sequence object implementations are offered: Standard "
+                                           "and 'No gap'. The later is slower than the former but forbids any"
+                                           "gap in the sequence (while they are possible in the former).")
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence")
     suffix = fields.Char(help="Suffix value of the record for the sequence")
-    number_next = fields.Integer('Next Number', required=True, default=1, help="Next number of this sequence")
+    number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
                                         required=True, string='Next Number', default=1,
                                         help="Next number that will be used. This number can be incremented "
                                         "frequently so the displayed value might already be obsolete")
-    number_increment = fields.Integer('Step', required=True, default=1,
+    number_increment = fields.Integer(string='Step', required=True, default=1,
                                       help="The next number of the sequence will be incremented by this number")
-    padding = fields.Integer('Sequence Size', required=True, default=0,
+    padding = fields.Integer(string='Sequence Size', required=True, default=0,
                              help="Odoo will automatically adds some '0' on the left of the "
-                             "'Next Number' to get the required padding size.")
-    company_id = fields.Many2one('res.company', 'Company',
+                                  "'Next Number' to get the required padding size.")
+    company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda s: s.env['res.company']._company_default_get('ir.sequence'))
-    use_date_range = fields.Boolean('Use subsequences per date_range')
-    date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', 'Subsequences')
+    use_date_range = fields.Boolean(string='Use subsequences per date_range')
+    date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
     def init(self, cr):
         return  # Don't do the following index yet.
@@ -141,7 +143,7 @@ class ir_sequence(models.Model):
     def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
-        seq = super(ir_sequence, self).create(values)
+        seq = super(IrSequence, self).create(values)
         if values.get('implementation', 'standard') == 'standard':
             _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, values.get('number_increment', 1), values.get('number_next', 1))
         return seq
@@ -149,7 +151,7 @@ class ir_sequence(models.Model):
     @api.multi
     def unlink(self):
         _drop_sequence(self.env.cr, ["ir_sequence_%03d" % x.id for x in self])
-        return super(ir_sequence, self).unlink()
+        return super(IrSequence, self).unlink()
 
     @api.multi
     def write(self, values):
@@ -178,7 +180,7 @@ class ir_sequence(models.Model):
                     _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, i, n)
                     for sub_seq in seq.date_range_ids:
                         _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
-        return super(ir_sequence, self).write(values)
+        return super(IrSequence, self).write(values)
 
     def _next_do(self):
         if self.implementation == 'standard':
@@ -308,7 +310,7 @@ class ir_sequence(models.Model):
         return self.get_id(code, 'code')
 
 
-class ir_sequence_date_range(models.Model):
+class IrSequenceDateRange(models.Model):
     _name = 'ir.sequence.date_range'
     _rec_name = "sequence_id"
 
@@ -321,8 +323,7 @@ class ir_sequence_date_range(models.Model):
             else:
                 # get number from postgres sequence. Cannot use currval, because that might give an error when
                 # not having used nextval before.
-                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d_%03d" % (element.sequence_id.id, element.id)
-                self.env.cr.execute(query)
+                self.env.cr.execute("SELECT last_value, increment_by, is_called FROM ir_sequence_%03d_%03d" % (element.sequence_id.id, element.id))
                 (last_value, increment_by, is_called) = self.env.cr.fetchone()
                 if is_called:
                     element.number_next_actual = last_value + increment_by
@@ -333,14 +334,14 @@ class ir_sequence_date_range(models.Model):
         for record in self:
             record.write({'number_next': record.number_next_actual or 0})
 
-    date_from = fields.Date('From', required=True)
-    date_to = fields.Date('To', required=True)
-    sequence_id = fields.Many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade')
-    number_next = fields.Integer('Next Number', required=True, default=1, help="Next number of this sequence")
+    date_from = fields.Date(string='From', required=True)
+    date_to = fields.Date(string='To', required=True)
+    sequence_id = fields.Many2one("ir.sequence", string='Main Sequence', required=True, ondelete='cascade')
+    number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
                                         required=True, string='Next Number', default=1,
                                         help="Next number that will be used. This number can be incremented "
-                                        "frequently so the displayed value might already be obsolete")
+                                             "frequently so the displayed value might already be obsolete")
 
     def _next(self):
         if self.sequence_id.implementation == 'standard':
@@ -358,7 +359,7 @@ class ir_sequence_date_range(models.Model):
     def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
-        seq = super(ir_sequence_date_range, self).create(values)
+        seq = super(IrSequenceDateRange, self).create(values)
         main_seq = seq.sequence_id
         if main_seq.implementation == 'standard':
             _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, values.get('number_next_actual', 1))
@@ -367,11 +368,11 @@ class ir_sequence_date_range(models.Model):
     @api.multi
     def unlink(self):
         _drop_sequence(self.env.cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])
-        return super(ir_sequence_date_range, self).unlink()
+        return super(IrSequenceDateRange, self).unlink()
 
     @api.multi
     def write(self, values):
         if values.get('number_next'):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
             seq_to_alter._alter_sequence(number_next=values.get('number_next'))
-        return super(ir_sequence_date_range, self).write(values)
+        return super(IrSequenceDateRange, self).write(values)

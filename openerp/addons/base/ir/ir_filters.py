@@ -1,33 +1,51 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import exceptions
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
+from odoo import exceptions
+from odoo import api, fields, models, _
 
-class ir_filters(osv.osv):
+
+class IrFilters(models.Model):
     _name = 'ir.filters'
     _description = 'Filters'
+    _order = 'model_id, name, id desc'
 
-    def _list_all_models(self, cr, uid, context=None):
-        cr.execute("SELECT model, name FROM ir_model ORDER BY name")
-        return cr.fetchall()
+    def _list_all_models(self):
+        self.env.cr.execute("SELECT model, name FROM ir_model ORDER BY name")
+        return self.env.cr.fetchall()
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name':_('%s (copy)') % name})
-        return super(ir_filters, self).copy(cr, uid, id, default, context)
+    name = fields.Char(string='Filter Name', translate=True, required=True)
+    user_id = fields.Many2one('res.users', string='User', ondelete='cascade', default=lambda self: self._uid,
+                              help="The user this filter is private to. When left empty the filter is public "
+                                   "and available to all users.")
+    domain = fields.Text(default='[]', required=True)
+    context = fields.Text(default='{}', required=True)
+    sort = fields.Text(default='[]', required=True)
+    model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
+    is_default = fields.Boolean(string='Default filter')
+    action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',
+                                help="The menu action this filter applies to. "
+                                     "When left empty the filter applies to all menus "
+                                     "for this model.")
+    active = fields.Boolean(default=True)
 
-    def _get_action_domain(self, cr, uid, action_id=None):
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        default.update({'name': _('%s (copy)') % self.name})
+        return super(IrFilters, self).copy(default)
+
+    def _get_action_domain(self, action_id=None):
         """Return a domain component for matching filters that are visible in the
            same context (menu/view) as the given action."""
         if action_id:
             # filters specific to this menu + global ones
-            return [('action_id', 'in' , [action_id, False])]
+            return [('action_id', 'in', [action_id, False])]
         # only global ones
         return [('action_id', '=', False)]
 
-    def get_filters(self, cr, uid, model, action_id=None, context=None):
+    @api.model
+    def get_filters(self, model, action_id=None):
         """Obtain the list of filters available for the user on the given model.
 
         :param action_id: optional ID of action to restrict filters to this action
@@ -40,15 +58,12 @@ class ir_filters(osv.osv):
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL),
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
-        context = self.pool['res.users'].context_get(cr, uid)
-        action_domain = self._get_action_domain(cr, uid, action_id)
-        filter_ids = self.search(cr, uid, action_domain +
-            [('model_id','=',model),('user_id','in',[uid, False])])
-        my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'], context=context)
+        action_domain = self._get_action_domain(action_id)
+        filter_ids = self.search(action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])])
+        my_filters = filter_ids.with_context(self.env.user.context_get()).read(['name', 'is_default', 'domain', 'context', 'user_id', 'sort'])
         return my_filters
 
-    def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
+    def _check_global_default(self, vals, matching_filters):
         """ _check_global_default(cursor, UID, dict, list(dict), dict) -> None
 
         Checks if there is a global default for the model_id requested.
@@ -64,96 +79,66 @@ class ir_filters(osv.osv):
         :raises openerp.exceptions.Warning: if there is an existing default and
                                             we're not updating it
         """
-        action_domain = self._get_action_domain(cr, uid, vals.get('action_id'))
-        existing_default = self.search(cr, uid, action_domain + [
+        action_domain = self._get_action_domain(vals.get('action_id'))
+        existing_default = self.search(action_domain + [
             ('model_id', '=', vals['model_id']),
             ('user_id', '=', False),
-            ('is_default', '=', True)], context=context)
+            ('is_default', '=', True)])
 
-        if not existing_default: return
-        if matching_filters and \
-           (matching_filters[0]['id'] == existing_default[0]):
+        if not existing_default:
+            return
+        if matching_filters and (matching_filters[0]['id'] == existing_default.id):
             return
 
-        raise exceptions.Warning(
-            _("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {
-                'model': vals['model_id']
-            })
+        raise exceptions.Warning(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {'model': vals.get('model_id')})
 
-    def create_or_replace(self, cr, uid, vals, context=None):
-        lower_name = vals['name'].lower()
+    @api.model
+    def create_or_replace(self, vals):
         action_id = vals.get('action_id')
-        current_filters = self.get_filters(cr, uid, vals['model_id'], action_id)
+        current_filters = self.get_filters(vals['model_id'], action_id)
         matching_filters = [f for f in current_filters
-                                if f['name'].lower() == lower_name
-                                # next line looks for matching user_ids (specific or global), i.e.
-                                # f.user_id is False and vals.user_id is False or missing,
-                                # or f.user_id.id == vals.user_id
-                                if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
+                            if f['name'].lower() == vals['name'].lower()
+                            # next line looks for matching user_ids (specific or global), i.e.
+                            # f.user_id is False and vals.user_id is False or missing,
+                            # or f.user_id.id == vals.user_id
+                            if (f['user_id'] and f['user_id'][0]) == vals.get('user_id')]
 
         if vals.get('is_default'):
             if vals.get('user_id'):
                 # Setting new default: any other default that belongs to the user
                 # should be turned off
-                action_domain = self._get_action_domain(cr, uid, action_id)
-                act_ids = self.search(cr, uid, action_domain + [
-                        ('model_id', '=', vals['model_id']),
-                        ('user_id', '=', vals['user_id']),
-                        ('is_default', '=', True),
-                    ], context=context)
+                action_domain = self._get_action_domain(action_id)
+                act_ids = self.search(action_domain + [
+                                     ('model_id', '=', vals['model_id']),
+                                     ('user_id', '=', vals['user_id']),
+                                     ('is_default', '=', True),
+                ])
                 if act_ids:
-                    self.write(cr, uid, act_ids, {'is_default': False}, context=context)
+                    act_ids.write({'is_default': False})
             else:
-                self._check_global_default(
-                    cr, uid, vals, matching_filters, context=None)
+                self._check_global_default(vals, matching_filters)
 
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition (considering action_id irrelevant here)
         if matching_filters:
-            self.write(cr, uid, matching_filters[0]['id'], vals, context)
+            self.browse(matching_filters[0]['id']).write(vals)
             return matching_filters[0]['id']
 
-        return self.create(cr, uid, vals, context)
+        return self.create(vals)
 
     _sql_constraints = [
         # Partial constraint, complemented by unique index (see below)
         # Still useful to keep because it provides a proper error message when a violation
-        # occurs, as it shares the same prefix as the unique index. 
+        # occurs, as it shares the same prefix as the unique index.
         ('name_model_uid_unique', 'unique (name, model_id, user_id, action_id)', 'Filter names must be unique'),
     ]
 
-    def _auto_init(self, cr, context=None):
-        result = super(ir_filters, self)._auto_init(cr, context)
+    def _auto_init(self):
+        result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
-        cr.execute("DROP INDEX IF EXISTS ir_filters_name_model_uid_unique_index") # drop old index w/o action
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_action_index'")
-        if not cr.fetchone():
-            cr.execute("""CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_action_index" ON ir_filters
+        self.env.cr.execute("DROP INDEX IF EXISTS ir_filters_name_model_uid_unique_index")  # drop old index w/o action
+        self.env.cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_action_index'")
+        if not self.env.cr.fetchone():
+            self.env.cr.execute("""CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_action_index" ON ir_filters
                             (lower(name), model_id, COALESCE(user_id,-1), COALESCE(action_id,-1))""")
         return result
-
-    _columns = {
-        'name': fields.char('Filter Name', translate=True, required=True),
-        'user_id': fields.many2one('res.users', 'User', ondelete='cascade',
-                                   help="The user this filter is private to. When left empty the filter is public "
-                                        "and available to all users."),
-        'domain': fields.text('Domain', required=True),
-        'context': fields.text('Context', required=True),
-        'sort': fields.text('Sort', required=True),
-        'model_id': fields.selection(_list_all_models, 'Model', required=True),
-        'is_default': fields.boolean('Default filter'),
-        'action_id': fields.many2one('ir.actions.actions', 'Action', ondelete='cascade',
-                                     help="The menu action this filter applies to. "
-                                          "When left empty the filter applies to all menus "
-                                          "for this model."),
-        'active': fields.boolean('Active')
-    }
-    _defaults = {
-        'domain': '[]',
-        'context':'{}',
-        'sort': '[]',
-        'user_id': lambda self,cr,uid,context=None: uid,
-        'is_default': False,
-        'active': True
-    }
-    _order = 'model_id, name, id desc'
