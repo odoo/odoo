@@ -8,7 +8,9 @@
             <field name="inherit_id" ref="gamification.badge_form_view"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button string="Granted Employees" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" />
+                    <button class="oe_stat_button" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" icon="fa-user">
+                        <field name="granted_employees_count" string="Granted" widget="statinfo"/>
+                    </button>
                 </div>
             </field>
         </record>

@@ -111,9 +111,11 @@
                                     <div class="oe_grey" colspan="4">
                                         <p>Depending on the Display mode, reports will be individual or shared.</p>
                                     </div>
-                                    <field name="report_message_frequency" />
-                                    <field name="report_template_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                                    <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                    <group colspan="4">
+                                        <field name="report_message_frequency"/>
+                                        <field name="report_template_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                        <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                    </group>
                                 </group>
                                 <group string="Reminders for Manual Goals">
                                     <label for="remind_update_delay" />
