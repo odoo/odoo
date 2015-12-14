@@ -723,9 +723,12 @@ function openerp_picking_widgets(instance){
                 }).then(function(packages){
                     self.packages = packages;
                 }).then(function(){
-                        return new instance.web.Model('product.ul').call('search_read',[[]])
-                }).then(function(uls){
-                    self.uls = uls;
+                    if (!_.isEmpty(self.uls)){
+                        return $.when();
+                    }
+                    return new instance.web.Model('product.ul').call('search_read',[[]]).then(function(uls){
+                        self.uls = uls;
+                    });
                 });
         },
         start: function(){
