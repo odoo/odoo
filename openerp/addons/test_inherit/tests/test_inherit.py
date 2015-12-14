@@ -99,3 +99,20 @@ class test_override_property(common.TransactionCase):
         # record.property_bar is not a property field
         self.assertEqual(record.property_bar, 42)
         self.assertFalse(type(record).property_bar.company_dependent)
+
+
+class TestInherit(common.TransactionCase):
+    def test_extend_parent(self):
+        """ test whether a model extension is visible in its children models. """
+        parent = self.env['test.inherit.parent']
+        child = self.env['test.inherit.child']
+
+        # check fields
+        self.assertIn('foo', parent.fields_get())
+        self.assertNotIn('bar', parent.fields_get())
+        self.assertIn('foo', child.fields_get())
+        self.assertIn('bar', child.fields_get())
+
+        # check method overriding
+        self.assertEqual(parent.stuff(), 'P1P2')
+        self.assertEqual(child.stuff(), 'P1P2C1')

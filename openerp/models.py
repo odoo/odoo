@@ -48,7 +48,7 @@ from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
-from .tools import frozendict, lazy_property, ormcache, Collector
+from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSet
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -558,31 +558,48 @@ class BaseModel(object):
     #
     @classmethod
     def _build_model(cls, pool, cr):
-        """ Instantiate a given model.
+        """ Instantiate a given model in the registry.
 
-        This class method instantiates the class of some model (i.e. a class
-        deriving from osv or osv_memory). The class might be the class passed
-        in argument or, if it inherits from another class, a class constructed
-        by combining the two classes.
+        This method creates or extends a "registry" class for the given model.
+        This "registry" class carries inferred model metadata, and inherits (in
+        the Python sense) from all classes that define the model, and possibly
+        other registry classes.
 
         """
 
-        # The model's class inherits from cls and the classes of the inherited
-        # models. All those classes are combined in a flat hierarchy:
+        # In the simplest case, the model's registry class inherits from cls and
+        # the other classes that define the model in a flat hierarchy. The
+        # registry contains the instance ``model`` (on the left). Its class,
+        # ``ModelClass``, carries inferred metadata that is shared between all
+        # the model's instances for this registry only.
         #
-        #         Model                 the base class of all models
-        #        /  |  \
-        #      cls  c2  c1              the classes defined in modules
-        #        \  |  /
-        #       ModelClass              the final class of the model
-        #        /  |  \
-        #     model   recordset ...     the class' instances
+        #   class A1(Model):                          Model
+        #       _name = 'a'                           / | \
+        #                                            A3 A2 A1
+        #   class A2(Model):                          \ | /
+        #       _inherit = 'a'                      ModelClass
+        #                                             /   \
+        #   class A3(Model):                      model   recordset
+        #       _inherit = 'a'
         #
-        # The registry contains the instance ``model``. Its class, ``ModelClass``,
-        # carries inferred metadata that is shared between all the model's
-        # instances for this registry only. When we '_inherit' from another
-        # model, we do not inherit its ``ModelClass``, but this class' parents.
-        # This is a limitation of the inheritance mechanism.
+        # When a model is extended by '_inherit', its base classes are modified
+        # to include the current class and the other inherited model classes.
+        # Note that we actually inherit from other ``ModelClass``, so that
+        # extensions to an inherited model are immediately visible in the
+        # current model class, like in the following example:
+        #
+        #   class A1(Model):
+        #       _name = 'a'                           Model
+        #                                            / / \ \
+        #   class B1(Model):                        / A2 A1 \
+        #       _name = 'b'                        /   \ /   \
+        #                                         B2  ModelA  B1
+        #   class B2(Model):                       \    |    /
+        #       _name = 'b'                         \   |   /
+        #       _inherit = ['a', 'b']                \  |  /
+        #                                             ModelB
+        #   class A2(Model):
+        #       _inherit = 'a'
 
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
@@ -596,30 +613,51 @@ class BaseModel(object):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
-        # determine the module that introduced the model
-        original_module = pool[name]._original_module if name in parents else cls._module
+        # create or retrieve the model's class
+        if name in parents:
+            if name not in pool:
+                raise TypeError("Model %r does not exist in registry." % name)
+            ModelClass = type(pool[name])
+        else:
+            ModelClass = type(name, (BaseModel,), {
+                '_name': name,
+                '_register': False,
+                '_original_module': cls._module,
+                '_fields': {},                          # populated in _setup_base()
+                '_defaults': {},                        # populated in _setup_base()
+            })
 
         # determine all the classes the model should inherit from
-        bases = [cls]
-        hierarchy = cls
+        bases = LastOrderedSet([cls])
         for parent in parents:
             if parent not in pool:
-                raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
-                    'You may need to add a dependency on the parent class\' module.' % (name, parent))
+                raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
             parent_class = type(pool[parent])
-            bases += parent_class.__bases__
-            hierarchy = type(name, (hierarchy, parent_class), {'_register': False})
-
-        # order bases following the mro of class hierarchy
-        bases = [base for base in hierarchy.mro() if base in bases]
+            if parent == name:
+                for base in parent_class.__bases__:
+                    bases.add(base)
+            else:
+                bases.add(parent_class)
+        ModelClass.__bases__ = bases = tuple(bases)
 
         # determine the attributes of the model's class
+        description = None
+        table = None
+        sequence = None
+        log_access = ModelClass._auto
         inherits = {}
         depends = {}
         constraints = {}
         sql_constraints = []
 
         for base in reversed(bases):
+            if not getattr(base, 'pool', None):
+                # the following attributes are not taken from model classes
+                description = base._description or description
+                table = base._table or table
+                sequence = base._sequence or sequence
+                log_access = getattr(base, '_log_access', log_access)
+
             inherits.update(base._inherits)
 
             for mname, fnames in base._depends.iteritems():
@@ -631,19 +669,14 @@ class BaseModel(object):
 
             sql_constraints += base._sql_constraints
 
-        # build the actual class of the model
-        ModelClass = type(name, tuple(bases), {
-            '_name': name,
-            '_register': False,
-            '_columns': {},             # recomputed in _setup_fields()
-            '_defaults': {},            # recomputed in _setup_base()
-            '_fields': {},              # idem
-            '_inherits': inherits,
-            '_depends': depends,
-            '_constraints': constraints.values(),
-            '_sql_constraints': sql_constraints,
-            '_original_module': original_module,
-        })
+        ModelClass._description = description or name
+        ModelClass._table = table or name.replace('.', '_')
+        ModelClass._sequence = sequence or (ModelClass._table + '_id_seq')
+        ModelClass._log_access = log_access
+        ModelClass._inherits = inherits
+        ModelClass._depends = depends
+        ModelClass._constraints = constraints.values()
+        ModelClass._sql_constraints = sql_constraints
 
         # instantiate the model, and initialize it
         model = object.__new__(ModelClass)
@@ -806,17 +839,6 @@ class BaseModel(object):
         cls.pool = pool
         cls._model = self              # backward compatibility
         pool.add(cls._name, self)
-
-        # determine description, table, sequence and log_access
-        if not cls._description:
-            cls._description = cls._name
-        if not cls._table:
-            cls._table = cls._name.replace('.', '_')
-        if not cls._sequence:
-            cls._sequence = cls._table + '_id_seq'
-        if not hasattr(cls, '_log_access'):
-            # If _log_access is not specified, it is the same value as _auto.
-            cls._log_access = cls._auto
 
         check_pg_name(cls._table)
 
@@ -2981,7 +3003,10 @@ class BaseModel(object):
     @api.model
     def _prepare_setup(self):
         """ Prepare the setup of the model. """
-        type(self)._setup_done = False
+        cls = type(self)
+        cls._setup_done = False
+        # a model's base structure depends on its mro (without registry classes)
+        cls._model_cache_key = tuple(c for c in cls.mro() if not getattr(c, 'pool', None))
 
     @api.model
     def _setup_base(self, partial):
@@ -2992,8 +3017,8 @@ class BaseModel(object):
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
-        cls0 = cls.pool.model_cache.get(cls.__bases__)
-        if cls0:
+        cls0 = cls.pool.model_cache.get(cls._model_cache_key)
+        if cls0 and cls0._model_cache_key == cls._model_cache_key:
             # cls0 is either a model class from another registry, or cls itself.
             # The point is that it has the same base classes. We retrieve stuff
             # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
@@ -3021,6 +3046,8 @@ class BaseModel(object):
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
             # avoid clashes with inheritance between different models
+            for name in cls._fields:
+                delattr(cls, name)
             cls._fields = {}
             cls._defaults = {}
             for name, field in getmembers(cls, Field.__instancecheck__):
@@ -3028,7 +3055,7 @@ class BaseModel(object):
             self._add_magic_fields()
             cls._proper_fields = set(cls._fields)
 
-            cls.pool.model_cache[cls.__bases__] = cls
+            cls.pool.model_cache[cls._model_cache_key] = cls
 
         # 2. add custom fields
         self._add_manual_fields(partial)
