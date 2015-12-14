@@ -49,6 +49,16 @@ class gamification_badge(osv.Model):
             'domain': [('id', 'in', employee_ids)]
         }
 
+    def _get_granted_employees_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for badge in self.browse(cr, uid, ids, context=context):
+            res[badge.id] = self.pool.get('gamification.badge.user').search_count(cr, uid, [('badge_id', '=', badge.id), ('employee_id', '!=', False)], context=context)
+        return res
+
+    _columns = {
+        'granted_employees_count': fields.function(_get_granted_employees_count, type="integer")
+    }
+
 
 class hr_employee(osv.osv):
     _name = "hr.employee"

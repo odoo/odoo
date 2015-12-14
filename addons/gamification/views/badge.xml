@@ -51,27 +51,29 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="description" nolabel="1" placeholder="Badge Description" />
+                            <field name="description" nolabel="1" placeholder="Badge Description"/>
                         </group>
                         <group string="Granting">
                             <div class="oe_grey" colspan="2">
                                 Security rules to define who is allowed to manually grant badges. Not enforced for administrator.
                             </div>
-                            <field name="rule_auth" widget="radio" />
-                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
-                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
-                            <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                            <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
-                            <label for="stat_my_monthly_sending"/>
-                            <div>
-                                <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                                <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
-                                    You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
+                            <group>
+                                <field name="rule_auth" widget="radio"/>
+                                <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
+                                <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
+                                <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
+                                <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
+                                <label for="stat_my_monthly_sending"/>
+                                <div>
+                                    <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
+                                    <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
+                                        You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
+                                    </div>
+                                    <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
+                                        No monthly sending limit
+                                    </div>
                                 </div>
-                                <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
-                                    No monthly sending limit
-                                </div>
-                            </div>
+                            </group>
                         </group>
                         <group string="Rewards for challenges">
                             <field name="challenge_ids" widget="many2many_kanban" nolabel="1" context="{'default_reward_id': active_id}" />
@@ -110,7 +112,7 @@
                     <field name="rule_max_number" />
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
+                            <div t-attf-class="o_kanban_gamification oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                                 <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value"/>
                                 </div>
@@ -129,12 +131,14 @@
                                         <strong><t t-esc="record.stat_count.raw_value"/></strong> granted,
                                         <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                     </div>
-                                    <div t-if="record.description.value">
+                                    <div t-if="record.description.value" class="o_kanban_badge_description">
                                         <em><field name="description"/></em>
+                                        <div>
+                                            <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                                <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                            </t>
+                                        </div>
                                     </div>
-                                    <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                        <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
-                                    </t>
                                     <div t-if="record.remaining_sending.value != 0" class="o_kanban_button">
                                         <button type="action" name="%(action_grant_wizard)d" class="oe_highlight btn btn-sm btn-primary">Grant</button>
                                     </div>
