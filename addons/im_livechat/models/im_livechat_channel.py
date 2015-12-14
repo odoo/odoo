@@ -144,7 +144,7 @@ class ImLivechatChannel(models.Model):
             :retuns : return the res.users having their im_status online
         """
         self.ensure_one()
-        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
+        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online' or user.im_status == 'away')
 
     @api.model
     def get_mail_channel(self, livechat_channel_id, anonymous_name):
