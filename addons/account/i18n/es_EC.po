@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-11-27 06:09+0000\n"
+"PO-Revision-Date: 2015-12-10 17:36+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -571,7 +571,7 @@ msgstr "<strong>O cree &oacute;rdenes de pago</strong><br/>\nCree una &Oacute;rd
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr "<strong>Asociado:</strong>"
+msgstr "<strong>Empresa:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1781,7 +1781,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
-msgstr "Número de cuenta bancaria con el que se abonará la factura. Una cuenta bancaria de la compañía, si es una factura de cliente o devolución a proveedor; en otro caso, el número de cuenta bancaria de un asociado."
+msgstr "Número de cuenta bancaria con el que se abonará la factura. Una cuenta bancaria de la compañía, si es una factura de cliente o devolución a proveedor; en otro caso, el número de cuenta bancaria de una empresa."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -1967,7 +1967,7 @@ msgstr "Gestión de presupuestos"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_business_intelligence_menu
 msgid "Business Intelligence"
-msgstr "Inteligencia empresarial"
+msgstr "Tableros de Control"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_name
@@ -4937,7 +4937,7 @@ msgstr "Nombre del diario"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr "Diario y asociado"
+msgstr "Diario y Empresa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5218,7 +5218,7 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "Última vez que se conciliaros facturas y pagos de este asociado. Se configura incluso si no hay ningún débito o crédito por conciliar, o si pulsa el botón \"Hecho\"."
+msgstr "Última vez que se conciliaros facturas y pagos de esta Empresa. Se configura incluso si no hay ningún débito o crédito por conciliar, o si pulsa el botón \"Hecho\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6160,19 +6160,19 @@ msgstr "Empresa asociada"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
 msgid "Partner Reference"
-msgstr "Referencia de asociado"
+msgstr "Referencia de la Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
 msgid "Partner name"
-msgstr "Nombre de asociado"
+msgstr "Nombre de Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner type"
-msgstr "Tipo asociado"
+msgstr "Tipo de Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
@@ -7087,7 +7087,7 @@ msgstr "Valor en informe"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "Informando"
+msgstr "Reportes"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
@@ -7296,14 +7296,14 @@ msgstr "Seleccione 'Ventas' para diarios de facturas de cliente. \nSeleccione 'C
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1756
 #, python-format
 msgid "Select Partner"
-msgstr "Seleccione asociado"
+msgstr "Seleccione Empresa"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr "Seleccione un asociado o elija una contrapartida"
+msgstr "Seleccione una Empresa o elija una contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -8030,7 +8030,7 @@ msgstr "El primer paso es introducir la información sobre su compañía. Se uti
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "La posición fiscal determinará los impuestos y cuentas utilizados por el asociado."
+msgstr "La posición fiscal determinará los impuestos y cuentas utilizados por la Empresa."
 
 #. module: account
 #: code:addons/account/models/account.py:272
@@ -8095,14 +8095,14 @@ msgstr "La cantidad opcional expresada en el apunte, por ejemplo: número de pro
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
 msgid "The partner account used for this invoice."
-msgstr "La cuenta de asociado utilizada para esta factura."
+msgstr "La cuenta de la empresa utilizada para esta factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "El asociado tiene al menos un débito o crédito no conciliado desde la última vez que se realizó la conciliación de facturas y pagos."
+msgstr "La empresa tiene al menos un débito o crédito no conciliado desde la última vez que se realizó la conciliación de facturas y pagos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:782
@@ -8110,12 +8110,12 @@ msgstr "El asociado tiene al menos un débito o crédito no conciliado desde la 
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
-msgstr "¡El asociado debe ser el mismo en todos los apuntes de cuentas pendientes de pago y pagables!"
+msgstr "¡La empresa debe ser el mismo en todos los apuntes de cuentas pendientes de pago y pagables!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
 msgid "The partner reference of this invoice."
-msgstr "La referencia de asociado para esta factura."
+msgstr "La referencia de la empresa para esta factura."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:314
@@ -9323,7 +9323,7 @@ msgstr "Tiene que definir una Fecha de inicio"
 #: code:addons/account/models/account_invoice.py:1097
 #, python-format
 msgid "You must first select a partner!"
-msgstr "¡Antes ha de seleccionar un asociado!"
+msgstr "¡Usted debe seleccionar primero una Empresa!"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:26

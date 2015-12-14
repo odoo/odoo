@@ -1,27 +1,26 @@
 // ------------------------------------------------------------------
 // Layout
 // ------------------------------------------------------------------
+@mail-chat-sidebar-width: 250px;
 .o_mail_chat {
     .o-position-absolute(0, 0, 0, 0);
     height: 100%;
 
     @media (max-width: @screen-xs-max) {
         height: auto;
-        flex-direction: column;
-
     }
 
-    .o-flex-display();
-    .o-flex-flow(row, nowrap);
-
     .o_mail_chat_sidebar {
-        .o-flex(0, 0, 220px);
+        width: @mail-chat-sidebar-width;
+        height: 100%;
+        float: left;
         overflow: auto;
         padding: 8px 0;
         font-weight: 300;
 
         @media (max-width: @screen-xs-max) {
-            flex: none;
+            width: 100%;
+            float: none;
             display: none;
         }
 
@@ -70,11 +69,15 @@
     }
 
     .o_mail_chat_content {
-        .o-flex(1, 1, 100%);
         .o-flex-display();
         .o-flex-flow(column, nowrap);
         height: 100%;
+        margin-left: @mail-chat-sidebar-width;
         position: relative;
+
+        @media (max-width: @screen-xs-max) {
+            margin-left: 0;
+        }
 
         .o_mail_thread {
             .o-flex(1, 0, 0);

@@ -3,14 +3,15 @@
 # * account_voucher
 # 
 # Translators:
+# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-11-10 16:20+0000\n"
-"Last-Translator: Mateus Cerqueira Lopes <mateus1@gmail.com>\n"
+"PO-Revision-Date: 2015-12-10 01:10+0000\n"
+"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* O status 'Rascunho' é usado quando um usuário está codificando uma nova Comprovante.\n* O status 'Pro-forma' é usada quando o comprovante não tem um número de comprovante.\n* O status 'Postado' é usado quando o usuário cria um comprovante, um número de comprovante é gerado e comprovantes são criados na conta.\n* O status 'Cancelado' é usado quando o usuário cancela o comprovante."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -36,7 +37,7 @@ msgstr "Conta Contábil"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Data da Conta"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -77,7 +78,7 @@ msgstr "Informação de Cobrança"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Conta de Referência"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -103,12 +104,12 @@ msgstr "Não é possivel excluir comprovante(s) que já foi aberto ou pago."
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Clique para criar um recibo de venda."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Clique para registrar um recibo de compra."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -236,7 +237,7 @@ msgstr "Se marcado novas mensagens solicitarão sua atenção."
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr ""
+msgstr "No caso, temos um problema de arredondamento do imposto, utilize este campo para corrigi-lo"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -355,7 +356,7 @@ msgstr "Pagar Diretamente"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Pagar Depois"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -495,12 +496,12 @@ msgstr "Imposto"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Valor do imposto"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Correção de imposto"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -515,7 +516,7 @@ msgstr "A conta de receita ou despesa relacionada ao produto selecionado."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "A referência do parceiro deste documento."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -569,7 +570,7 @@ msgstr "Fornecedor"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Comprovante do Fornecedor"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:28
@@ -623,14 +624,14 @@ msgstr "Histórico de Comunicação do Site"
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr ""
+msgstr "Quando o recibo de compra for confirmado, você pode gravar o\npagamento de fornecedores relacionados a este recibo de compra."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr ""
+msgstr "Quando o recibo de venda é confirmado, você pode gravar o pagamento\nrelacionado do cliente a este recibo de venda."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:345

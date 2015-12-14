@@ -256,8 +256,8 @@ var DashBoard = form_common.FormWidget.extend({
             var kanban = am.inner_widget.views.kanban;
             if (kanban) {
                 kanban.created.done(function() {
-                    kanban.controller.open_record = function(id, editable) {
-                        new_form_action(id, editable);
+                    kanban.controller.open_record = function(event, editable) {
+                        new_form_action(event.data.id, editable);
                     };
                 });
             }
