@@ -159,47 +159,8 @@ class product_product(osv.osv):
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
-    
-    def _product_available(self, cr, uid, ids, name, arg, context=None):
-        prod_available = {}
-        product_ids = self.browse(cr, uid, ids, context=context)
-        var_ids = []
-        for product in product_ids:
-            var_ids += [p.id for p in product.product_variant_ids]
-        variant_available= self.pool['product.product']._product_available(cr, uid, var_ids, context=context)
-
-        for product in product_ids:
-            qty_available = 0
-            virtual_available = 0
-            incoming_qty = 0
-            outgoing_qty = 0
-            for p in product.product_variant_ids:
-                qty_available += variant_available[p.id]["qty_available"]
-                virtual_available += variant_available[p.id]["virtual_available"]
-                incoming_qty += variant_available[p.id]["incoming_qty"]
-                outgoing_qty += variant_available[p.id]["outgoing_qty"]
-            prod_available[product.id] = {
-                "qty_available": qty_available,
-                "virtual_available": virtual_available,
-                "incoming_qty": incoming_qty,
-                "outgoing_qty": outgoing_qty,
-            }
-        return prod_available
-
-    def _search_product_quantity(self, cr, uid, obj, name, domain, context):
-        prod = self.pool.get("product.product")
-        product_variant_ids = prod.search(cr, uid, domain, context=context)
-        return [('product_variant_ids', 'in', product_variant_ids)]
 
     _columns = {
-        'qty_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
-            fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
-        'virtual_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
-            fnct_search=_search_product_quantity, type='float', string='Forecasted Quantity'),
-        'incoming_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
-            fnct_search=_search_product_quantity, type='float', string='Incoming'),
-        'outgoing_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
-            fnct_search=_search_product_quantity, type='float', string='Outgoing'),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
     }

@@ -217,6 +217,35 @@ class ProductTemplate(models.Model):
             res.append(('product', 'Stockable Product'))
         return res
 
+    @api.multi
+    def _product_available(self):
+        var_ids = []
+        for product in self:
+            var_ids += [p.id for p in product.product_variant_ids]
+        variant_available = self.pool['product.product']._product_available(self.env.cr, self.env.uid, var_ids, context=self.env.context)
+
+        for product in self:
+            for p in product.product_variant_ids:
+                self.qty_available = variant_available[p.id]["qty_available"] or 0.0
+                self.virtual_available = variant_available[p.id]["virtual_available"] or 0.0
+                self.incoming_qty = variant_available[p.id]["incoming_qty"] or 0.0
+                self.outgoing_qty = variant_available[p.id]["outgoing_qty"] or 0.0
+
+    @api.model
+    def _search_product_quantity(self, obj, name, domain):
+        prod = self.env["product.product"]
+        product_variant_ids = prod.search(domain)
+        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+
+    qty_available = fields.Float(compute="_product_available", multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
+        search="_search_product_quantity", string='Quantity On Hand')
+    virtual_available = fields.Float(compute="_product_available", multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
+        search="_search_product_quantity", string='Forecasted Quantity')
+    incoming_qty = fields.Float(compute="_product_available", multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
+        search="_search_product_quantity", string='Incoming')
+    outgoing_qty = fields.Float(compute="_product_available", multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
+        search="_search_product_quantity", string='Outgoing')
+
     property_stock_procurement = fields.Many2one(
         company_dependent=True,
         comodel_name='stock.location',
