@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-<!--<t t-extend="ViewPager">
+<!--<templates id="template" xml:space="preserve">
+<t t-extend="ViewPager">
      <t t-jquery=".oe_pager_value" t-operation="prepend">
         <a t-if="(widget.ViewManager &amp;&amp; widget.ViewManager.active_view) === 'list'" 
                     class="oe_bold oe_list_button_import_pdf"
@@ -12,19 +12,19 @@
                     id="button_export_excel"
                     href="#">Excel</a>
     </t>
-</t>-->
+</t>
 
 <t t-extend="FormRenderingNotebook">
-    <t t-jquery=".oe_clear" t-operation="prepend">
+    <t t-jquery="#Export_Excel" t-operation="prepend">
         <a 
                     class="oe_bold oe_list_button_import_pdf"
                     id="button_export_pdf"
-                    href="#">PDF</a>
-                    <label>or</label>
+                    href="#">Export to PDF</a>
+                    <label>|</label>
         <a  
                     class="oe_bold oe_list_button_import_excel"
                     id="button_export_excel"
-                    href="#">Excel</a>
+                    href="#">Export to Excel</a>
     </t>
 </t>
-</templates>
+</templates> -->

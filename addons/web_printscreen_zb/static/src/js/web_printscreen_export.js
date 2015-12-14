@@ -1,5 +1,4 @@
 openerp.web_printscreen_zb = function(instance, m) {
-    
     var _t = instance.web._t;
 //	alert(_t)
     var QWeb = instance.web.qweb;
@@ -10,6 +9,7 @@ openerp.web_printscreen_zb = function(instance, m) {
 	    //alert('here')
             var self = this;
             this._super.apply(this, arguments);
+    	    $("div#Excel_PDF").prepend('<span class="oe_bold" style="padding-left:15px;">Export to</span> <a class="oe_list_button_import_pdf" id="button_export_pdf" href="#"><span class="oe_bold"> PDF</span></a><label> | </label><a class="oe_list_button_import_excel" id="button_export_excel" href="#"><span class="oe_bold">Excel</span></a>');
             $(".oe_list_button_import_excel").unbind('click').click(function(event){self.export_to_excel("excel")})
             $(".oe_list_button_import_pdf").unbind('click').click(function(event){self.export_to_excel("pdf")})
         },

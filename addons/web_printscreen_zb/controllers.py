@@ -46,7 +46,7 @@ class ZbExcelExport(ExcelExport):
     _cp_path = '/web/export/zb_excel_export'
 
     def from_data(self, fields, rows):
-	_logger.info('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf fields: %s', fields)
+	#_logger.info('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf fields: %s', fields)
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
         style = xlwt.easyxf('align: wrap yes')
@@ -94,7 +94,7 @@ class ZbExcelExport(ExcelExport):
     @openerpweb.httprequest
     def index(self, req, data, token):
         data = json.loads(data)
-	_logger.info('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG data: %s', data)
+	#_logger.info('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG data: %s', data)
         return req.make_response(
             self.from_data(data.get('headers', []), data.get('rows', [])),
                            headers=[
@@ -184,6 +184,6 @@ class ZbPdfExport(ExportPdf):
                                  headers=[('Content-Disposition',
                                            'attachment; filename=PDF Export'),
                                           ('Content-Type', self.content_type)],
-                                 cookies={'fileToken': int(token)})
+                                 cookies={'fileToken': bytes(token)})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
