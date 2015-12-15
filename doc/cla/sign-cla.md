@@ -36,6 +36,8 @@ Signed,
     * `<git_email>`: your git committer email **(use `git config user.email` to see it)**
     * `<login>`: your GitHub login
 
+    You can add multiple e-mails by adding multiple name/email lines.
+
 3. An Odoo R&D Team member will verify and accept your Pull Request. You can
 make other pull requests, but we won't be able to merge them until your CLA
 signature is merged.
