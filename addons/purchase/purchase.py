@@ -75,7 +75,7 @@ class PurchaseOrder(models.Model):
         types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not types:
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
-        return types[0].id if types else False
+        return types[:1]
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking(self):
