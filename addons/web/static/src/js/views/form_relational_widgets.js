@@ -1430,7 +1430,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     get_render_data: function(ids){
         var self = this;
         return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
             return self.dataset.read_ids(ids, fields);
         });
     },

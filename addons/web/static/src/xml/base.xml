@@ -826,7 +826,7 @@
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
         <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="i" t-att-data-id="el['id']">
-            <t t-esc="el['name']"/>
+            <t t-esc="el['display_name']"/>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
         <t t-set="i" t-value="i + 1"/>
