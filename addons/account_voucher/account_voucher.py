@@ -400,7 +400,7 @@ class account_voucher(osv.osv):
 
             tax = [tax_pool.browse(cr, uid, voucher.tax_id.id, context=context)]
             partner = partner_pool.browse(cr, uid, voucher.partner_id.id, context=context) or False
-            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
             tax = tax_pool.browse(cr, uid, taxes, context=context)
 
             total = voucher_amount
@@ -451,7 +451,7 @@ class account_voucher(osv.osv):
                 tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
                 if partner_id:
                     partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
                     tax = tax_pool.browse(cr, uid, taxes, context=context)
 
                 if not tax[0].price_include:
