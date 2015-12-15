@@ -129,7 +129,7 @@ class stock_move(osv.osv):
                             })[pricelist]
                 if price:
                     return price
-        return move_line.product_id.list_price
+        return move_line.product_id.lst_price
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         fp_obj = self.pool.get('account.fiscal.position')
