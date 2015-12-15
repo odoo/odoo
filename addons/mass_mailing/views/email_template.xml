@@ -20,7 +20,7 @@
                             <group>
                                 <field name="name" required="True"/>
                                 <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
-                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
+                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact', 'crm.lead', 'hr.applicant'])]"/>
                                 <field name="model" invisible="True"/>
                                 <field name="use_default_to" invisible="1"/>
                             </group>
