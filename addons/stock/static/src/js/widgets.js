@@ -707,9 +707,7 @@ function openerp_picking_widgets(instance){
                         return new instance.web.Model('stock.picking').call('do_prepare_partial',[[self.picking.id]]);
                     }
                 }).then(function(){
-                        return new instance.web.Model('stock.pack.operation').call('search',[[['picking_id','=',self.picking.id]]])
-                }).then(function(pack_op_ids){
-                        return new instance.web.Model('stock.pack.operation').call('read',[pack_op_ids, [], new instance.web.CompoundContext()])
+                        return new instance.web.Model('stock.pack.operation').call('search_read',[[['picking_id','=',self.picking.id]]])
                 }).then(function(operations){
                     self.packoplines = operations;
                     var package_ids = [];
@@ -725,11 +723,12 @@ function openerp_picking_widgets(instance){
                 }).then(function(packages){
                     self.packages = packages;
                 }).then(function(){
-                        return new instance.web.Model('product.ul').call('search',[[]])
-                }).then(function(uls_ids){
-                        return new instance.web.Model('product.ul').call('read',[uls_ids, []])
-                }).then(function(uls){
-                    self.uls = uls;
+                    if (!_.isEmpty(self.uls)){
+                        return $.when();
+                    }
+                    return new instance.web.Model('product.ul').call('search_read',[[]]).then(function(uls){
+                        self.uls = uls;
+                    });
                 });
         },
         start: function(){
