@@ -32,6 +32,10 @@ class LivechatController(http.Controller):
         info = request.env['im_livechat.channel'].match_rules(request, channel.id, username=username)
         return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}) if info else False
 
+    @http.route('/im_livechat/available', type='json', auth="public")
+    def available(self, channel_id):
+        return len(request.env['im_livechat.channel'].browse(channel_id).get_available_users())
+
     @http.route('/im_livechat/get_session', type="json", auth='public')
     def get_session(self, channel_id, anonymous_name, **kwargs):
         # if geoip, add the country name to the anonymous name
@@ -41,6 +45,10 @@ class LivechatController(http.Controller):
         if request.session.uid:
             anonymous_name = request.env.user.name
         return request.env["im_livechat.channel"].get_mail_channel(channel_id, anonymous_name)
+
+    @http.route('/im_livechat/history', type="json", auth="public")
+    def history(self, channel_id, limit):
+        return request.env["mail.channel"].browse(channel_id).channel_fetch_message(limit=limit)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')
     def feedback(self, uuid, rate, reason=None, **kwargs):

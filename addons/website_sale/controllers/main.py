@@ -804,12 +804,11 @@ class website_sale(http.Controller):
         tx = request.website.sale_get_transaction()
         if tx:
             tx_id = tx.id
-            if tx.reference != order.name:
+            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
                 tx = False
                 tx_id = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
-                    'acquirer_id': acquirer_id,
                     'amount': order.amount_total,
                 })
         if not tx:
