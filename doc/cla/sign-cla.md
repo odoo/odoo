@@ -8,11 +8,11 @@ requirement is explained in the [FAQ](#faq).
 
 1.  Read the [Individual Contributor License Agreement](icla-1.0.md)
 
-2.  Modify your current pull request, or make a new pull request on
-    [odoo/odoo](/odoo/odoo), adding a new file `<github-login>.md` under the
-    [`doc/cla/individual`](individual/) directory. If your GitHub login is
-    `odony`, the file would be `doc/cla/individual/odony.md`. The file should
-    contain:
+2.  Modify your current pull request, or make a new pull request for the
+    default branch on [odoo/odoo](/odoo/odoo), adding a new file
+    `<github-login>.md` under the [`doc/cla/individual`](individual/)
+    directory. If your GitHub login is `odony`, the file would be
+    `doc/cla/individual/odony.md`. The file should contain:
 
     ```
 <country>, <date>
@@ -44,10 +44,10 @@ signature is merged.
 
 1.  Read the [Corporate Contributor License Agreement](ccla-1.0.md)
 
-2.  Modify your current pull request, or make a new pull request on
-    [odoo/odoo](/odoo/odoo), adding a new file `<lowercase-company-name>.md`
-    under the [`doc/cla/corporate`](corporate/) directory.
-    If the name of the company is Odoo, the file would be
+2.  Modify your current pull request, or make a new pull request for the
+    default branch on [odoo/odoo](/odoo/odoo), adding a new file
+    `<lowercase-company-name>.md` under the [`doc/cla/corporate`](corporate/)
+    directory.  If the name of the company is Odoo, the file would be
     `doc/cla/corporate/odoo.md`. The file should contain:
 
     ```
