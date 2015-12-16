@@ -5983,26 +5983,12 @@ class BaseModel(object):
         if not all(name in self._fields for name in names):
             return {}
 
-        # determine subfields for field.convert_to_onchange() below
-        secondary = []
-        subfields = defaultdict(set)
-        for dotname in field_onchange:
-            if '.' in dotname:
-                secondary.append(dotname)
-                name, subname = dotname.split('.')
-                subfields[name].add(subname)
-
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
             values = dict(record._cache)
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
-
-        # load fields on secondary records, to avoid false changes
-        with env.do_in_onchange():
-            for field_seq in secondary:
-                record.mapped(field_seq)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
@@ -6034,9 +6020,9 @@ class BaseModel(object):
                 if field_onchange.get(name):
                     record._onchange_eval(name, field_onchange[name], result)
 
-                # force re-evaluation of function fields on secondary records
-                for field_seq in secondary:
-                    record.mapped(field_seq)
+                # force re-evaluation of function fields
+                for name in field_onchange:
+                    record.mapped(name)
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
@@ -6054,9 +6040,17 @@ class BaseModel(object):
                 self._fields[field_name].type in ('one2many', 'many2many'):
             dirty.discard(field_name)
 
+        # determine subfields for field.convert_to_onchange() below
+        DictOfDict = lambda: defaultdict(DictOfDict)
+        subfields = DictOfDict()                # {field: {subfield: {subsubfield: ...}}}
+        for name_seq in field_onchange:
+            d = subfields
+            for name in name_seq.split("."):
+                d = d[name]
+
         # collect values from dirty fields
         result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], subfields.get(name))
+            name: self._fields[name].convert_to_onchange(record[name], subfields.get(name, {}))
             for name in dirty
         }
 
