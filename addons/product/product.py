@@ -484,7 +484,11 @@ class product_template(osv.osv):
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
         'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True,
-            help="A consumable is a product for which you don't manage stock, a service is a non-material product provided by a company or an individual."),
+            help='A stockable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
+                 'A consumable product, on the other hand, is a product for which stock is not managed.\n'
+                 'A service is a non-material product you provide.\n'
+                 'A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on '
+                 'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.'),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
