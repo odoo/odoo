@@ -170,7 +170,7 @@ var KanbanLabelSelection = AbstractField.extend({
     renderElement: function() {
         this._super.apply(this, arguments);
         var lbl_class = this.classes[this.field.raw_value] || 'primary';
-        this.$el.wrapInner($('<span/>').addClass('label label-' + lbl_class).text(this.field.value));
+        this.$el.addClass('label label-' + lbl_class).text(this.field.value);
     },
 });
 
