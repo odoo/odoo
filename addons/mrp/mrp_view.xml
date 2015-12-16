@@ -788,7 +788,7 @@
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned.value and record.date_planned.value.split(' ')[0] or False"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right">
+                                        <span class="pull-right text-right">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'confirmed': 'warning',
                                             'done': 'success'}}"/>
                                         </span>
