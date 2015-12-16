@@ -509,6 +509,7 @@ function on_mark_as_unread_notification (data) {
 }
 
 function on_chat_session_notification (chat_session) {
+    var channel;
     if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
         if (!chat_session.is_minimized && chat_session.info !== 'creation') {
@@ -517,12 +518,15 @@ function on_chat_session_notification (chat_session) {
     }
     // partner specific change (open a detached window for example)
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-        var channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
+        channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
         if (channel) {
             chat_manager.bus.trigger("open_chat", channel);
         }
     } else if (chat_session.state === "closed") {
-        chat_manager.bus.trigger("close_chat", chat_manager.get_channel(chat_session.id));
+        channel = chat_manager.get_channel(chat_session.id);
+        if (channel) {
+            chat_manager.bus.trigger("close_chat", channel);
+        }
     }
 }
 
