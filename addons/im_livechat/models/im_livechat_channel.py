@@ -207,7 +207,10 @@ class ImLivechatChannel(models.Model):
             if country_ids:
                 country_id = country_ids[0].id
         # extract url
-        url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
+        if self.env.context.get('from_external_page', False):
+            url = request.httprequest.headers.get('Referer')
+        else:
+            url = request.httprequest.base_url
         # find the match rule for the given country and url
         rule = self.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
         if rule:
