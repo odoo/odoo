@@ -74,8 +74,8 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_procurement_jit': fields.selection([
-            (1, 'Reserve sale orders immediately on confirmation'),
-            (0, 'Reserve sale orders manually or by running the schedulers')
+            (1, 'Reserve products immediately after the sale order confirmation'),
+            (0, 'Reserve products manually or based on automatic scheduler')
             ], "Procurements",
             help="""Allows you to automatically reserve the available
             products when confirming a sale order.
