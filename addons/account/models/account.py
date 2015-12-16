@@ -631,16 +631,15 @@ class AccountTax(models.Model):
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
-                base = ret['total_excluded']
+                base = ret['base']
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
-                continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            tax_amount = currency.round(tax_amount)
 
             if tax_amount:
+                tax_amount = currency.round(tax_amount)
                 if tax.price_include:
                     total_excluded -= tax_amount
                     base -= tax_amount
@@ -664,6 +663,7 @@ class AccountTax(models.Model):
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
             'total_excluded': currency.round(total_excluded),
             'total_included': currency.round(total_included),
+            'base': base,
         }
 
     @api.v7
