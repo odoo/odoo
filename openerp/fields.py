@@ -1858,6 +1858,12 @@ class One2many(_RelationalMulti):
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
 
+    def convert_to_onchange(self, value, fnames=None):
+        if fnames:
+            # do not serialize self's inverse field
+            fnames = [name for name in fnames if name != self.inverse_name]
+        return super(One2many, self).convert_to_onchange(value, fnames)
+
 
 class Many2many(_RelationalMulti):
     """ Many2many field; the value of such a field is the recordset.
