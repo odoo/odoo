@@ -290,7 +290,7 @@ class ir_cron(osv.osv):
         :param job: job to be run (as a dictionary).
         """
         try:
-            now = fields.datetime.context_timestamp(cr, job['user_id'], now)
+            now = fields.datetime.context_timestamp(cr, job['user_id'], datetime.now())
             nextcall = fields.datetime.context_timestamp(cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
             numbercall = job['numbercall']
 
