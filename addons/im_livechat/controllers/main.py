@@ -29,7 +29,7 @@ class LivechatController(http.Controller):
     def loader(self, channel_id, **kwargs):
         username = kwargs.get("username", _("Visitor"))
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
-        info = request.env['im_livechat.channel'].match_rules(request, channel.id, username=username)
+        info = request.env['im_livechat.channel'].with_context(from_external_page=True).match_rules(request, channel.id, username=username)
         return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}) if info else False
 
     @http.route('/im_livechat/available', type='json', auth="public")

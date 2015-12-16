@@ -272,6 +272,7 @@ function make_channel (data, options) {
     if ('direct_partner' in data) {
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
+        channel.direct_partner_id = data.direct_partner[0].id;
         channel.status = data.direct_partner[0].im_status;
     }
     return channel;
@@ -399,6 +400,9 @@ function on_notification (notification) {
     } else if (model === 'res.partner') {
         // channel joined/left, message marked as read/(un)starred, chat open/closed
         on_partner_notification(notification[1]);
+    } else if (model === 'bus.presence') {
+        // update presence of users
+        on_presence_notification(notification[1]);
     }
 }
 
@@ -509,6 +513,7 @@ function on_mark_as_unread_notification (data) {
 }
 
 function on_chat_session_notification (chat_session) {
+    var channel;
     if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
         if (!chat_session.is_minimized && chat_session.info !== 'creation') {
@@ -517,12 +522,23 @@ function on_chat_session_notification (chat_session) {
     }
     // partner specific change (open a detached window for example)
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-        var channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
+        channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
         if (channel) {
             chat_manager.bus.trigger("open_chat", channel);
         }
     } else if (chat_session.state === "closed") {
-        chat_manager.bus.trigger("close_chat", chat_manager.get_channel(chat_session.id));
+        channel = chat_manager.get_channel(chat_session.id);
+        if (channel) {
+            chat_manager.bus.trigger("close_chat", channel);
+        }
+    }
+}
+
+function on_presence_notification (data) {
+    var dm = _.findWhere(channels, {direct_partner_id: data.id});
+    if (dm) {
+        dm.status = data.im_status;
+        chat_manager.bus.trigger('update_dm_presence', dm);
     }
 }
 

@@ -20,16 +20,15 @@ var LivechatButton = Widget.extend({
         "click": "open_chat"
     },
 
-    init: function (parent, server_url, options) {
+    init: function (parent, server_url, options, rule) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
             placeholder: _t('Ask something ...'),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
-            auto_popup: true,
-            auto_popup_timer: 10,  // auto popup after 10 seconds
         });
+        this.rule = rule || {};
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
@@ -62,10 +61,10 @@ var LivechatButton = Widget.extend({
             if (this.history) {
                 _.each(this.history.reverse(), this.add_message.bind(this));
                 this.open_chat();
-            } else if (this.options.auto_popup) {
+            } else if (this.rule.action === 'auto_popup') {
                 var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
-                if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)){
-                    setTimeout(this.open_chat.bind(this), this.options.auto_popup_timer*1000);
+                if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
+                    this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
                 }
             }
             bus.on('notification', this, function (notification) {
@@ -97,6 +96,7 @@ var LivechatButton = Widget.extend({
         var self = this;
         var cookie = utils.get_cookie('im_livechat_session');
         var def;
+        clearTimeout(this.auto_popup_timeout);
         if (cookie) {
             def = $.when(JSON.parse(cookie));
         } else {
@@ -261,9 +261,7 @@ var Feedback = Widget.extend({
         this._send_feedback({close: close_chat});
     },
 
-    on_click_no_feedback: function (ev) {
-        var content = _t("I did not rate this conversation. Bye.");
-        this.trigger("send_message", {content: content});
+    on_click_no_feedback: function () {
         this.trigger("feedback_sent"); // will close the chat
     },
 

@@ -90,7 +90,7 @@ var Thread = Widget.extend({
         if (id) {
             event.preventDefault();
             var model = $(event.target).data('oe-model');
-            var options = model ? {model: model, id: id} : {channel_id: id};
+            var options = model && (model !== 'mail.channel') ? {model: model, id: id} : {channel_id: id};
             this._redirect(options);
         }
     },
