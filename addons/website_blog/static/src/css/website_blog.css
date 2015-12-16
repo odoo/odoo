@@ -159,3 +159,73 @@ mark + .popover, .cover_footer {
 .o_grid>.text-muted>.mb0>hr {
   display: none;
 }
+
+hr {
+  margin-top: 10px;
+}
+/*Sharing links style*/
+.o_sharing_links {
+  margin-top: 20px;
+}
+
+.o_sharing_links>p {
+  display: inline;
+  font-size: 12px;
+}
+
+.o_sharing_links>a {
+  color: #b3b3b3;
+  font: normal normal normal 22px/1 FontAwesome;
+  margin: 0 4px 0 4px;
+  cursor: pointer;
+}
+
+.o_sharing_links>a:hover{
+  text-decoration: none;
+}
+
+.o_blog_post_complete.o_sharing_links{
+  max-width: 700px;
+  margin: auto;
+  margin: 20px auto 20px auto;
+}
+
+.o_blog_post_complete.o_sharing_links>p {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.o_blog_post_complete.o_sharing_links>a {
+  font: normal normal normal 30px/1 FontAwesome;
+}
+
+a.o_twitter_complete, a.o_twitter:hover {
+  color: #4099FF;
+}
+
+a.o_google_complete, a.o_google:hover {
+  color: #DD4B39;
+}
+
+a.o_facebook_complete, a.o_facebook:hover {
+  color: #3b5998;
+}
+
+a.o_linkedin_complete, a.o_linkedin:hover {
+  color: #0E76A8;
+}
+
+div[name="blog_post_data"] {
+  margin-top: 20px !important;
+  font-size: 13px;
+}
+div[name="blog_post"] {
+  position: relative;
+}
+
+/*Button "unpublished"/"published" on each article*/
+.container.blog_publish_btn {
+  position:  absolute;
+  right: 20px;
+  z-index: 1000;
+}
