@@ -116,7 +116,7 @@
                 </div>
             </div>
             
-            <div class="row" t-if="o.tax_line">
+            <div class="row" t-if="o.tax_line_ids">
                 <div class="col-xs-6">
                     <table class="table table-condensed">
                         <thead>
@@ -127,7 +127,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.tax_line" t-as="t">
+                            <tr t-foreach="o.tax_line_ids" t-as="t">
                                 <td><span t-field="t.name"/></td>
                                 <td class="text-right">
                                     <span t-field="t.base"
