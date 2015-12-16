@@ -603,10 +603,10 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""", re.VERBOSE)
 
 # matches a string containing only one email
-single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
+single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
