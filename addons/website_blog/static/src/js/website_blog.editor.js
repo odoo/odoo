@@ -45,6 +45,12 @@ odoo.define('website_blog.editor', function (require) {
     }
 
     rte.Class.include({
+        // Destroy popOver and stop listening mouseup event on edit mode
+        start: function () {
+            var self = this;
+            $(".js_tweet, .js_comment").off('mouseup').trigger('mousedown');
+            return this._super.apply(this, arguments);
+        },
         saveElement: function ($el, context) {
             if ($el.is('.website_blog #title')) {
                 return ajax.jsonRpc("/blog/post_change_background", 'call', {
@@ -60,7 +66,6 @@ odoo.define('website_blog.editor', function (require) {
             return this._super($el, context);
         },
     });
-
 
     options.registry.many2one.include({
         select_record: function (li) {
