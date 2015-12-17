@@ -88,7 +88,7 @@ class Report(osv.Model):
 
         view_obj = self.pool['ir.ui.view']
 
-        user = self.pool['res.users'].browse(cr, uid, uid)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
