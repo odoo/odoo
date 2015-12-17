@@ -405,16 +405,19 @@
         <section class="mt32">
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
-            <t t-foreach="nav_list" t-as="months">
-                <t t-if="months['date_begin'] == date">
-                    <li class="active">
-                        <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
-                    </li>
-                </t>
-                <t t-if="months['date_begin'] != date">
-                    <li>
-                        <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
-                    </li>
+            <t t-foreach="nav_list" t-as="year">
+                <li t-esc="year"/>
+                <t t-foreach="nav_list[year]" t-as="months">
+                    <t t-if="months['date_begin'] == date">
+                        <li class="active">
+                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                        </li>
+                    </t>
+                    <t t-if="months['date_begin'] != date">
+                        <li>
+                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                        </li>
+                    </t>
                 </t>
             </t>
         </ul>

@@ -3,12 +3,15 @@
 
 import json
 import werkzeug
+import itertools
+from datetime import datetime
 
 from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.website.models.website import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import html2plaintext
 
 
@@ -27,7 +30,9 @@ class WebsiteBlog(http.Controller):
             group['create_date'] = label
             group['date_begin'] = self._to_date(start)
             group['date_end'] = self._to_date(end)
-        return groups
+            group['month'] = group['date_begin'].strftime("%B")
+            group['year'] = group['date_begin'].strftime("%Y")
+        return {year: [m for m in months] for year, months in itertools.groupby(groups, lambda g: g['year'])}
 
     def _to_date(self, dt):
         """ create_date is a datetime so start and end are datetime strings,
