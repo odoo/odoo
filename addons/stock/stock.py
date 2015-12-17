@@ -1793,17 +1793,15 @@ class StockMove(models.Model):
             if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
                 raise UserError('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
 
-    @api.onchange('product_id', 'product_uom_qty', 'product_uom')
+    @api.onchange('product_uom_qty')
     def onchange_quantity(self):  # cr, uid, ids, product_id, product_qty, product_uom):
         """ On change of product quantity finds UoM
         @return: Dictionary of values
         """
         warning = {}
-        result = {}
 
         if (not self.product_id) or (self.product_uom_qty <= 0.0):
-            result['product_qty'] = 0.0
-            return {'value': result}
+            self.product_qty = 0.0
 
         # Warn if the quantity was decreased
         if self.ids:
