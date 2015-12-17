@@ -227,6 +227,12 @@
                 <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                 <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
                 <p class="post-meta text-muted text-center" name="blog_post_data"/>
+                <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+                    <span class="fa fa-tags"/>
+                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                        <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                    </t>
+                </p>
                 <div t-if="blog_post_cover_properties.get('resize_class') == 'cover cover_full'" id="blog_angle_down">
                     <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
                 </div>
@@ -339,19 +345,6 @@
     </xpath>
     <xpath expr="//div[@id='title']//div[contains(@class, 'blog_title')]" position="attributes">
         <attribute name="class" add="js_comment" separator=" "/>
-    </xpath>
-</template>
-
-<!-- Options: Blog Post: show tags -->
-<template id="opt_blog_post_complete_tags" name="Tags"
-        customize_show="True" inherit_id="website_blog.blog_post_complete">
-    <xpath expr="//p[@name='blog_post_data']" position="after">
-        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
-            <span class="fa fa-tags"/>
-            <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
-            </t>
-        </p>
     </xpath>
 </template>
 
