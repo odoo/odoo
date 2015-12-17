@@ -5,11 +5,14 @@
     .o-flex-flow(column, nowrap);
     position: fixed;
     width: 300px;
+    max-width: 100%;
     height: 400px;
+    max-height: 100%;
     font-size: 12px;
     background-color: @o-chat-window-bg;
     border: 1px solid gray;
     border-radius: 3px;
+    z-index: 2;
 
     @media (max-width: @screen-xs-max) {
         display:none;
@@ -56,8 +59,11 @@
         }
     }
 
-    .o_chat_input > input {
-        padding: 5px;
-        width: 100%;
+    .o_chat_input {
+        .o-flex(0, 0, auto);
+        > input {
+            padding: 5px;
+            width: 100%;
+        }
     }
 }

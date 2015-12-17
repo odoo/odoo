@@ -52,8 +52,8 @@ var PartnerInviteDialog = Dialog.extend({
             width: '100%',
             allowClear: true,
             multiple: true,
-            formatResult: function(item){
-                var css_class = "fa-circle" + (item.im_status === 'online' ? "" : "-o");
+            formatResult: function(item) {
+                var css_class = (item.im_status === 'away' ? "fa-clock-o" : "fa-circle" + (item.im_status === 'online' ? "" : "-o"));
                 return $('<span class="fa">').addClass(css_class).text(item.text);
             },
             query: function (query) {
@@ -135,6 +135,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.action = action;
         this.options = options || {};
         this.channels_scrolltop = {};
+        this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
     },
 
     willStart: function () {
@@ -213,9 +214,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
-                chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
-                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
+                chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
             });
     },
 
@@ -382,6 +384,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.thread.scroll_to({offset: new_channel_scrolltop});
             }
 
+            // Update control panel before focusing the composer, otherwise focus is on the searchview
+            self.update_cp();
             if (!config.device.touch) {
                 self.composer.focus();
             }
@@ -389,7 +393,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.$('.o_mail_chat_sidebar').hide();
             }
 
-            self.update_cp();
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,

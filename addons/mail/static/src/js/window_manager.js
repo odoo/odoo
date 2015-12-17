@@ -38,6 +38,7 @@ function open_chat (session) {
         });
 
         chat_session.window.on("post_message", null, function (message, channel_id) {
+            message.content = _.escape(message.content);
             chat_manager.post_message(message, {channel_id: channel_id});
         });
         chat_session.window.on("messages_read", null, function () {

@@ -94,8 +94,8 @@ class wizard_user(osv.osv_memory):
         error_emails = []
         error_user = []
         ctx = dict(context or {}, active_test=False)
-        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
-            if wizard_user.in_portal and not wizard_user.user_id:
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, ctx):
+            if wizard_user.in_portal and not wizard_user.partner_id.user_ids:
                 email = extract_email(wizard_user.email)
                 if not email:
                     error_empty.append(wizard_user.partner_id)
@@ -127,15 +127,19 @@ class wizard_user(osv.osv_memory):
         if error_msg:
             raise UserError( "\n\n".join(error_msg))
 
-        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, dict(context, active_test=False)):
             portal = wizard_user.wizard_id.portal_id
+            user = wizard_user.partner_id.user_ids and wizard_user.partner_id.user_ids[0] or False
             if wizard_user.partner_id.email != wizard_user.email:
                 wizard_user.partner_id.write({'email': wizard_user.email})
             if wizard_user.in_portal:
+                user_id = False
                 # create a user if necessary, and make sure it is in the portal group
-                if not wizard_user.user_id:
-                    user = self._create_user(cr, SUPERUSER_ID, wizard_user.id, context)
-                    wizard_user.write({'user_id': user})
+                if not user:
+                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, context)
+                else:
+                    user_id = user.id
+                wizard_user.write({'user_id': user_id})
                 if (not wizard_user.user_id.active) or (portal not in wizard_user.user_id.groups_id):
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, portal.id)]})
                     # prepare for the signup process
@@ -144,12 +148,12 @@ class wizard_user(osv.osv_memory):
                 wizard_user.refresh()
             else:
                 # remove the user (if it exists) from the portal group
-                if wizard_user.user_id and (portal in wizard_user.user_id.groups_id):
+                if user and (portal in user.groups_id):
                     # if user belongs to portal only, deactivate it
-                    if len(wizard_user.user_id.groups_id) <= 1:
-                        wizard_user.user_id.write({'groups_id': [(3, portal.id)], 'active': False})
+                    if len(user.groups_id) <= 1:
+                        user.write({'groups_id': [(3, portal.id)], 'active': False})
                     else:
-                        wizard_user.user_id.write({'groups_id': [(3, portal.id)]})
+                        user.write({'groups_id': [(3, portal.id)]})
 
     def _create_user(self, cr, uid, ids, context=None):
         """ create a new user for wizard_user.partner_id
