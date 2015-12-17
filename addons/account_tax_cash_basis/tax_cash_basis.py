@@ -18,20 +18,6 @@ class AccountMoveCashBasis(models.Model):
     tax_cash_basis_rec_id = fields.Many2one('account.partial.reconcile', string='Tax Cash Basis Entry of', help="Technical field used to keep track of the tax cash basis reconciliation. This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
 
 
-class AccountConfigSettings(models.TransientModel):
-    _inherit = 'account.config.settings'
-
-    tax_cash_basis_journal_id = fields.Many2one('account.journal',
-        related='company_id.tax_cash_basis_journal_id',
-        string="Tax Cash Basis Journal",)
-
-
-class ResCompany(models.Model):
-    _inherit = 'res.company'
-
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Tax Cash Basis Journal")
-
-
 class AccountPartialReconcileCashBasis(models.Model):
     _inherit = 'account.partial.reconcile'
 

@@ -135,9 +135,16 @@
                                 <field name="module_account_budget" class="oe_inline"/>
                                 <label for="module_account_budget"/>
                             </div>
-                            <div>
+                            <div name="module_account_tax_cash_basis">
                                 <field name="module_account_tax_cash_basis" class="oe_inline"/>
-                                <label for="module_account_tax_cash_basis" />
+                                <label for="module_account_tax_cash_basis"/>
+                                <group attrs="{'invisible': [('module_account_tax_cash_basis', '&lt;&gt;', True)]}" col="2">
+                                    <group>
+                                        <field name="tax_cash_basis_journal_id"/>
+                                    </group>
+                                    <group>
+                                    </group>    
+                                </group>
                             </div>
                         </div>
                     </group>
