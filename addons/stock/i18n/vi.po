@@ -175,9 +175,9 @@ msgstr "* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho 
 "                       \n"
 "* Địa điểm khách hàng: Địa điểm ảo đại diện cho một địa điểm đích mà bạn giao hàng cho khách hàng\n"
 "                       \n"
-"* Tồn kho: Địa điểm ảo phục vụ để đối ứng các hoạt động tồn kho được sử dụng để hiệu chỉnh mức tồn kho (Tồn kho vật lý)\n"
+"* Kiểm kê: Địa điểm ảo phục vụ để đối ứng các hoạt động tồn kho được sử dụng để hiệu chỉnh mức tồn kho (Tồn kho vật lý)\n"
 "                       \n"
-"* Mua sắm: Địa điểm ảo phục vụ như một đối ứng tạm cho hoạt động mua sắm khi địa điểm nguồn (nhà cung cấp hoặc sản xuất) chưa được xác định. Địa điểm này nên để trống kho kế hoạch mua sắm chạy xong.\n"
+"* Mua sắm / Cung ứng: Địa điểm ảo phục vụ như một đối ứng tạm cho hoạt động Mua sắm / Cung ứng khi địa điểm nguồn (nhà cung cấp hoặc sản xuất) chưa được xác định. Địa điểm này nên để trống kho kế hoạch mua sắm chạy xong.\n"
 "                       \n"
 "* Sản xuất: Địa điểm đối ứng cho các hoạt động sản xuất: địa điểm này tiêu thụ nguyên liệu thô và sản xuất thành phẩm\n"
 "                       \n"
@@ -528,7 +528,7 @@ msgstr "All returned moves"
 #: code:addons/stock/procurement.py:241
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr "Tất cả dịch chuyển kho đã bị hủy cho việc mua sắm này."
+msgstr "Tất cả dịch chuyển kho đã bị hủy cho việc Mua sắm / Cung ứng này."
 
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
@@ -616,7 +616,7 @@ msgstr "Không có bước nào được thêm tự động"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr "Mua sắm tự động"
+msgstr "Mua sắm / Cung ứng tự động"
 
 #. module: stock
 #: field:stock.move,string_availability_info:0
@@ -984,7 +984,7 @@ msgstr "Tạo lô hàng"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr "Tạo mua sắm"
+msgstr "Tạo Mua sắm / Cung ứng"
 
 #. module: stock
 #. openerp-web
@@ -1001,7 +1001,7 @@ msgstr "Tạo dịch chuyển"
 #. module: stock
 #: field:stock.warehouse.orderpoint,procurement_ids:0
 msgid "Created Procurements"
-msgstr "Tạo mua sắm"
+msgstr "Tạo Mua sắm / Cung ứng"
 
 #. module: stock
 #: field:make.procurement,create_uid:0
@@ -1384,7 +1384,7 @@ msgstr "Destination route"
 #. module: stock
 #: help:procurement.rule,procure_method:0
 msgid "Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there."
-msgstr "Xác định phương pháp mua sắm của dịch chuyển kho mà sẽ được tạo: nó sẽ cần 'lấy từ kho có sẵn' của địa điểm nguồn hay là bỏ qua số lượng trong kho và tạo một mua sắm."
+msgstr "Xác định phương pháp Mua sắm / Cung ứng của dịch chuyển kho mà sẽ được tạo: nó sẽ cần 'lấy từ kho có sẵn' của địa điểm nguồn hay là bỏ qua số lượng trong kho và tạo một mua sắm."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -1975,7 +1975,7 @@ msgstr "Tháng kiểm kho"
 #: field:stock.move,inventory_id:0
 #: view:website:stock.report_inventory
 msgid "Inventory"
-msgstr "Tồn kho"
+msgstr "Kiểm kê"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2595,7 +2595,7 @@ msgstr "Dịch chuyển"
 #. module: stock
 #: help:procurement.order,move_ids:0
 msgid "Moves created by the procurement"
-msgstr "Dịch chuyển kho được tạo bởi mua sắm"
+msgstr "Dịch chuyển kho được tạo bởi Mua sắm / Cung ứng"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,group_id:0
@@ -3334,7 +3334,7 @@ msgstr "Địa điểm Cung ứng"
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Procurement Orders to Process"
-msgstr "Lệnh mua sắm cần xử lý"
+msgstr "Lệnh Mua sắm / Cung ứng cần xử lý"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
@@ -4536,7 +4536,7 @@ msgstr "Technical field containing the quant that created this link between an o
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid "Technical field depicting the warehouse to consider for the route selection on the next procurement (if any)."
-msgstr "Trường kỹ thuật miêu tả một nhà kho để xem xét việc lựa chọn tuyến đường cho việc mua sắm tiếp theo (nếu có)."
+msgstr "Trường kỹ thuật miêu tả một nhà kho để xem xét việc lựa chọn tuyến đường cho việc Mua sắm / Cung ứng tiếp theo (nếu có)."
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
@@ -4664,7 +4664,7 @@ msgstr "The picking type determines the picking view"
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "
-msgstr "Số lượng mua sắm sẽ được làm tròn lên bội số này. Nếu thiết lập là 0, số lượng chính xác sẽ được sử dụng."
+msgstr "Số lượng Mua sắm / Cung ứng sẽ được làm tròn lên bội số này. Nếu thiết lập là 0, số lượng chính xác sẽ được sử dụng."
 
 #. module: stock
 #: help:stock.move,rule_id:0
@@ -4825,7 +4825,7 @@ msgstr "Địa điểm kho này sẽ được sử dụng, thay cho địa đi�
 #. module: stock
 #: help:product.template,property_stock_procurement:0
 msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by procurements."
-msgstr "Địa điểm kho này sẽ được sử dụng, thay cho địa điểm mặc định, như là địa điểm nguồn của các dịch chuyển kho được tạo bởi mua sắm."
+msgstr "Địa điểm kho này sẽ được sử dụng, thay cho địa điểm mặc định, như là địa điểm nguồn của các dịch chuyển kho được tạo bởi Mua sắm / Cung ứng."
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -5082,7 +5082,7 @@ msgid "Use this assistant to generate a procurement request for this\n"
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr "Sử dụng công cụ này để tạo một yêu cầu mua sắm cho sản phẩm này\n"
+msgstr "Sử dụng công cụ này để tạo một yêu cầu Mua sắm / Cung ứng cho sản phẩm này\n"
 "                        Tùy thuộc vào cấu hình sản phẩm mà việc này có thể kích hoạt\n"
 "                        một hợp đồng mua hàng, một lệnh sản xuất hoặc một tác vụ mới."
 
@@ -5310,7 +5310,7 @@ msgstr "Đồ thuật"
 #. module: stock
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr "Đồ thuật kiểm tra tất cả quy tắc tồn kho tối thiểu và tạo lệnh mua sắm."
+msgstr "Đồ thuật kiểm tra tất cả quy tắc tồn kho tối thiểu và tạo lệnh Mua sắm / Cung ứng."
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
