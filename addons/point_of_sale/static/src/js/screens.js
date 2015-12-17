@@ -1482,7 +1482,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 } else if ( event.keyCode === 190 || // Dot
                             event.keyCode === 110 ||  // Decimal point (numpad)
                             event.keyCode === 188 ) { // Comma
-                    key = '.';
+                    key = self.decimal_point;
                 } else if ( event.keyCode === 46 ) {  // Delete
                     key = 'CLEAR';
                 } else if ( event.keyCode === 8 ) {   // Backspace 
