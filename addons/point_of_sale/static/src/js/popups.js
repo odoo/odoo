@@ -188,6 +188,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             this._super(options);
 
             this.inputbuffer = '' + (options.value   || '');
+            this.decimal_separator = instance.web._t.database.parameters.decimal_point;
             this.renderElement();
             this.firstinput = true;
         },
