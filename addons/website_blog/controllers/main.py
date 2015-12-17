@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import json
 import werkzeug
+import itertools
+from datetime import datetime
 
 from odoo import fields, models, _
 from odoo.addons.web import http
 from odoo.addons.web.http import request
 from odoo.addons.website.models.website import slug, unslug
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import html2plaintext
 
 
@@ -53,7 +56,8 @@ class WebsiteBlog(http.Controller):
             end_date = fields.Datetime.from_string(group['__domain'][1][2]).date()
             group['date_begin'] = '%s' % fields.Date.to_string(begin_date)
             group['date_end'] = '%s' % fields.Date.to_string(end_date)
-        return groups
+            group['month'], group['year'] = group['create_date'].rsplit(' ', 1)
+        return {year: [m for m in months] for year, months in itertools.groupby(groups, lambda g: g['year'])}
 
     @http.route([
         '/blog',
