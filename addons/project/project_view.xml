@@ -157,6 +157,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="name" string="Project Name"/>
+                    <filter string="My Projects" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Open" name="Current" domain="[('state', '=','open')]"/>
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <separator/>
@@ -198,7 +199,7 @@
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{'search_default_Current': 1}</field>
+            <field name="context">{'search_default_my_projects': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Create a new project.

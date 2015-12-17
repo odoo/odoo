@@ -157,6 +157,19 @@ class project(osv.osv):
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
 
+    def _get_favorite(self, cr, uid, ids, name, args, context=None):
+        return dict((project.id, uid in project.favorite_user_ids.ids) for project in self.browse(cr, uid, ids, context=context))
+
+    def _set_favorite(self, cr, uid, ids, field_name, field_value, args, context=None):
+        if field_value:
+            self.write(cr, uid, ids, {'favorite_user_ids': [(4, uid)]}, context=context)
+        else:
+            self.write(cr, uid, ids, {'favorite_user_ids': [(3, uid)]}, context=context)
+        return True
+
+    def _get_default_favorite_user_ids(self, cr, uid, context=None):
+        return [(6, 0, [uid])]
+
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
@@ -169,6 +182,13 @@ class project(osv.osv):
             help="Link this project to an analytic account if you need financial management on projects. "
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
+        'favorite_user_ids': fields.many2many(
+            'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
+            string='Members'),
+        'is_favorite': fields.function(
+            _get_favorite, fnct_inv=_set_favorite, type="boolean",
+            string='Show Project on dashboard',
+            help="Whether this project should be displayed on the dashboard or not"),
         'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
@@ -208,6 +228,7 @@ class project(osv.osv):
     _order = "sequence, name, id"
     _defaults = {
         'active': True,
+        'favorite_user_ids': _get_default_favorite_user_ids,
         'type': 'contract',
         'label_tasks': 'Tasks',
         'state': 'open',
@@ -330,6 +351,17 @@ class project(osv.osv):
             tasks = projects.with_context(active_test=False).mapped('tasks')
             tasks.write({'active': vals['active']})
         return res
+
+    def toggle_favorite(self, cr, uid, ids, context=None):
+        favorite_project_ids = []
+        not_fav_project_ids = []
+        for project in self.browse(cr, uid, ids, context=context):
+            if uid in project.favorite_user_ids.ids:
+                favorite_project_ids.append(project.id)
+            else:
+                not_fav_project_ids.append(project.id)
+        self.write(cr, uid, favorite_project_ids, {'is_favorite': False}, context=context)
+        self.write(cr, uid, not_fav_project_ids, {'is_favorite': True}, context=context)
 
 
 class task(osv.osv):
