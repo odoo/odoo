@@ -134,8 +134,6 @@ odoo.define('website_blog.editor', function (require) {
                 this.$el.find('[data-cover_class*=cover_narrow]').addClass("active");
             } else if ((this.class || '').indexOf('cover_midscreen') != -1) {
                 this.$el.find('[data-cover_class*=cover_midscreen]').addClass("active");
-            } else if ((this.class || '').indexOf('cover_mid_narrow') != -1) {
-                this.$el.find('[data-cover_class*=cover_mid_narrow]').addClass("active");
             } else {
                 this.$el.find('[data-cover_class*=cover_full]').addClass("active");
             }
