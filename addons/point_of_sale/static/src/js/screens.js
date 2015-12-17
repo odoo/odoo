@@ -1654,9 +1654,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.gui.show_popup('number',{
                 'title': tip ? _t('Change Tip') : _t('Add Tip'),
-                'value': value,
+                'value': self.format_currency_no_symbol(value),
                 'confirm': function(value) {
-                    order.set_tip(Number(value));
+                    order.set_tip(instance.web.parse_value(value, {type: "float"}, 0));
                     self.order_changes();
                     self.render_paymentlines();
                 }

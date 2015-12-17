@@ -1023,7 +1023,7 @@
                     <br />
                     <button class="input-button numpad-char" data-action='CLEAR' >C</button>
                     <button class="input-button number-char" data-action='0'>0</button>
-                    <button class="input-button number-char dot" data-action='.'>.</button>
+                    <button class="input-button number-char dot" t-att-data-action='widget.decimal_separator'><t t-esc='widget.decimal_separator'/></button>
                     <button class="input-button numpad-backspace" data-action='BACKSPACE' >
                         <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
                     </button>
