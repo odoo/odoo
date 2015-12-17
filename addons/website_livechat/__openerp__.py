@@ -13,11 +13,11 @@ It also will include the feedback tool for the livechat, and web pages to displa
     'depends': ['website', 'im_livechat'],
     'installable': True,
     'data': [
-        'views/website_livechat.xml',
-        'views/res_config.xml',
-        'views/website_livechat_view.xml',
+        'views/website_livechat_templates.xml',
+        'views/res_config_views.xml',
+        'views/website_livechat_views.xml',
         'security/ir.model.access.csv',
-        'security/website_livechat.xml',
-        'website_livechat_data.xml',
+        'security/website_livechat_security.xml',
+        'data/website_livechat_data.xml',
     ],
 }
