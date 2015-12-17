@@ -10,6 +10,23 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class AccountBankStatementExtension(models.Model):
+    _name = "account.bank.statement.extension"
+    _description = "Allowed file extensions of bank statement"
+
+    name = fields.Char(string="Option Name", required=True)
+    allowed_extensions = fields.Char(string="Allowed extensions", required=True, help="Comma-separated extensions allowed for the bank statement")
+    option_key = fields.Char(string="Option Key", required=True, help="Key name of selection option")
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for record in self:
+            name = "%s ( %s File)" % (record.name, ', '.join(map(lambda ext: ext.upper(), record.allowed_extensions.split(','))))
+            res.append((record.id, name))
+        return res
+
+
 class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
@@ -25,7 +42,33 @@ class AccountBankStatementImport(models.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
 
-    data_file = fields.Binary(string='Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
+    data_file = fields.Binary(string='Bank Statement File', required=True,
+                              help='Get you bank statements in electronic format from your bank and select them here.')
+    filename = fields.Char(String='File Name')
+    import_statement = fields.Many2one('account.bank.statement.extension', string="Bank Statement", required=True,
+                                       help='Select bank statement to import.')
+    import_statement_show = fields.Boolean('Show Bank Statement Options')
+
+    @api.onchange('data_file')
+    def onchange_data_file(self):
+        if self.data_file:
+            BankStatementExtension = self.env['account.bank.statement.extension']
+            bank_statement_extensions = BankStatementExtension.search([('allowed_extensions', 'like', self.filename.split('.')[-1])])
+            extension_count = len(bank_statement_extensions)
+            if extension_count == 1:
+                self.import_statement = bank_statement_extensions.id
+                self.import_statement_show = False
+            elif extension_count > 1:
+                self.import_statement_show = True
+            else:
+                self.import_statement_show = True
+                bank_statement_extensions = BankStatementExtension.search([])
+            return {
+                'domain': {'import_statement': [('id', 'in', bank_statement_extensions.ids)]},
+            }
+        else:
+            self.import_statement_show = False
+            self.import_statement = False
 
     @api.multi
     def import_file(self):
@@ -33,7 +76,7 @@ class AccountBankStatementImport(models.TransientModel):
         self.ensure_one()
         # Let the appropriate implementation module parse the file and return the required data
         # The active_id is passed in context in case an implementation module requires information about the wizard state (see QIF)
-        currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(self.data_file))
+        currency_code, account_number, stmts_vals = getattr(self.with_context(active_id=self.id), self.import_statement.option_key + '_parse_file')(base64.b64decode(self.data_file))
         # Check raw data
         self._check_parsed_data(stmts_vals)
         # Try to find the currency and journal in odoo

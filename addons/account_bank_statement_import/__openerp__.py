@@ -6,6 +6,7 @@
     'depends': ['account'],
     'description': """Generic Wizard to Import Bank Statements. Includes the import of files in .OFX format""",
     'data': [
+        'security/ir.model.access.csv',
         'account_bank_statement_import_view.xml',
         'account_import_tip_data.xml',
         'wizard/journal_creation.xml',

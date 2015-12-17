@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <odoo>
-
         <record id="account_bank_statement_import_view" model="ir.ui.view">
             <field name="name">Import Bank Statements</field>
             <field name="model">account.bank.statement.import</field>
@@ -8,11 +7,13 @@
             <field name="arch" type="xml">
                 <form string="Import Bank Statements">
                     <h2>Select a bank statement file to import</h2>
-                    <p>Download a bank statement from your bank and import it here. Supported formats:</p>
-                    <ul id="statement_format">
-
-                    </ul>
-                    <field name="data_file" placeholder="Choose a file to import..."/>
+                    <p>Download a bank statement from your bank and import it here.</p>
+                    <field name="data_file" filename="filename" placeholder="Choose a file to import..."/>
+                    <field name="filename" invisible="1"/>
+                    <field name="import_statement_show" invisible="1"/>
+                    <div attrs="{'invisible': [('import_statement_show','=',False)]}">
+                        <field name="import_statement" widget="radio" placeholder="Select bank statement"/>
+                    </div>
                     <footer>
                         <button name="import_file" string="_Import" type="object" class="btn-primary" />
                         <button string="Cancel" class="btn-default" special="cancel"/>
