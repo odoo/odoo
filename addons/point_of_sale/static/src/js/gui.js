@@ -314,14 +314,15 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         numpad_input: function(buffer, input, options) { 
             var options = options || {};
             var newbuf  = buffer.slice(0);
+            var decimal_point = instance.web._t.database.parameters.decimal_point;
 
-            if (input === '.') {
+            if (input === decimal_point) {
                 if (options.firstinput) {
                     newbuf = "0.";
                 }else if (!newbuf.length || newbuf === '-') {
                     newbuf += "0.";
-                } else if (newbuf.indexOf('.') < 0){
-                    newbuf = newbuf + '.';
+                } else if (newbuf.indexOf(decimal_point) < 0){
+                    newbuf = newbuf + decimal_point;
                 }
             } else if (input === 'CLEAR') {
                 newbuf = ""; 
