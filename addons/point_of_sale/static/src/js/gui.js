@@ -314,6 +314,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         numpad_input: function(buffer, input, options) { 
             var options = options || {};
             var newbuf  = buffer.slice(0);
+            var newbuf_float  = instance.web.parse_value(newbuf, {type: "float"}, 0);
             var decimal_point = instance.web._t.database.parameters.decimal_point;
 
             if (input === decimal_point) {
@@ -339,7 +340,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
                     newbuf = '-' + newbuf;
                 }
             } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
-                newbuf = '' + ((parseFloat(newbuf) || 0) + parseFloat(input));
+                newbuf = this.chrome.format_currency_no_symbol(newbuf_float + parseFloat(input));
             } else if (!isNaN(parseInt(input))) {
                 if (options.firstinput) {
                     newbuf = '' + input;
