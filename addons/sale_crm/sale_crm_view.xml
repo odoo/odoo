@@ -2,6 +2,17 @@
 <openerp>
     <data>
 
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to rename it into 'Sales' in the 
+            case that CRM was installed after Sales
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            groups="base.group_sale_manager,base.group_sale_salesman"
+            web_icon="sale,static/description/icon.png"
+            sequence="6"/>
+
         <record id="sale_action_quotations_new" model="ir.actions.act_window">
             <field name="name">Quotation</field>
             <field name="res_model">sale.order</field>
