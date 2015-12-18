@@ -27,7 +27,6 @@ This is the base module to manage the accounting chart for Dominican Republic.
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/ir.sequence.csv',
-        'data/account.journal.csv',
         # configuration wizard, views, reports...
         'data/account_chart_template.yml',
     ],
