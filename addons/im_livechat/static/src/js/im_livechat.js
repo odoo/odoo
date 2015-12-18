@@ -20,7 +20,7 @@ var LivechatButton = Widget.extend({
         "click": "open_chat"
     },
 
-    init: function (parent, server_url, options, rule) {
+    init: function (parent, server_url, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
             placeholder: _t('Ask something ...'),
@@ -28,7 +28,6 @@ var LivechatButton = Widget.extend({
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
         });
-        this.rule = rule || {};
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
@@ -39,44 +38,41 @@ var LivechatButton = Widget.extend({
         var cookie = utils.get_cookie('im_livechat_session');
         var ready;
         if (!cookie) {
-            ready = session.rpc("/im_livechat/available", {channel_id: this.options.channel_id});
+            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id}).then(function (result) {
+                if (!result.available_for_me) {
+                    return $.Deferred().reject();
+                }
+                self.rule = result.rule;
+            });
         } else {
             var channel = JSON.parse(cookie);
-            ready = $.when(true, session.rpc("/im_livechat/history", {channel_id: channel.id, limit: 100}));
+            ready = session.rpc("/im_livechat/history", {channel_id: channel.id, limit: 100}).then(function (history) {
+                self.history = history;
+            });
         }
-        return ready.then(function (available, history) {
-            self.available = available;
-            self.history = history;
-            if (available) {
-                return self.load_qweb_template();
-            }
-        });
+        return ready.then(this.load_qweb_template.bind(this));
     },
 
     start: function () {
-        if (!this.available) {
-            this.do_hide();
-        } else {
-            this.$el.text(this.options.button_text);
-            if (this.history) {
-                _.each(this.history.reverse(), this.add_message.bind(this));
-                this.open_chat();
-            } else if (this.rule.action === 'auto_popup') {
-                var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
-                if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
-                    this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+        this.$el.text(this.options.button_text);
+        if (this.history) {
+            _.each(this.history.reverse(), this.add_message.bind(this));
+            this.open_chat();
+        } else if (this.rule.action === 'auto_popup') {
+            var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
+            if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
+                this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+            }
+        }
+        bus.on('notification', this, function (notification) {
+            if (this.channel && (notification[0] === this.channel.uuid)) {
+                this.add_message(notification[1]);
+                this.render_messages();
+                if (this.chat_window.folded) {
+                    this.chat_window.update_unread(this.chat_window.unread_msgs+1);
                 }
             }
-            bus.on('notification', this, function (notification) {
-                if (this.channel && (notification[0] === this.channel.uuid)) {
-                    this.add_message(notification[1]);
-                    this.render_messages();
-                    if (this.chat_window.folded) {
-                        this.chat_window.update_unread(this.chat_window.unread_msgs+1);
-                    }
-                }
-            });
-        }
+        });
         return this._super();
     },
 
