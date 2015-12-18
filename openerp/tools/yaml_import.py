@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import threading
-import types
-import time # used to eval time.strftime expressions
+from collections import OrderedDict
 from datetime import datetime, timedelta
 import logging
+import time # used to eval time.strftime expressions
+import types
 
 import openerp
 import openerp.sql_db as sql_db
@@ -24,6 +24,9 @@ from safe_eval import safe_eval as eval
 import assertion_report
 
 _logger = logging.getLogger(__name__)
+
+def encode(s):
+    return s.encode('utf8') if isinstance(s, unicode) else s
 
 class YamlImportException(Exception):
     pass
@@ -348,155 +351,152 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
-        class dotdict(dict):
-            """ Dictionary class that allow to access a dictionary value by using '.'. This is needed to eval correctly
-                statements like 'parent.fieldname' in context.
+        readonly_re = re.compile(r"""("readonly"|'readonly'): *true""")
+
+        class dotdict(object):
+            """ Dictionary class that allow to access a dictionary value by using '.'.
+                This is needed to eval correctly statements like 'parent.fieldname' in context.
             """
+            def __init__(self, d):
+                self._dict = d
             def __getattr__(self, attr):
-                return self.get(attr)
+                return self._dict.get(attr, False)
 
-        def _get_right_one2many_view(fg, field_name, view_type):
-            one2many_view = fg[field_name]['views'].get(view_type)
-            # if the view is not defined inline, we call fields_view_get()
-            if not one2many_view:
-                one2many_view = self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
-            return one2many_view
-
-        def process_val(key, val):
-            if fg[key]['type'] == 'many2one':
-                if type(val) in (tuple,list):
-                    val = val[0]
-            elif fg[key]['type'] == 'one2many':
-                if val and isinstance(val, (list,tuple)) and isinstance(val[0], dict):
-                    # we want to return only the fields that aren't readonly
-                    # For that, we need to first get the right tree view to consider for the field `key´
-                    one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
-                    arch = etree.fromstring(one2many_tree_view['arch'].encode('utf-8'))
-                    for rec in val:
-                        # make a copy for the iteration, as we will alter `rec´
-                        rec_copy = rec.copy()
-                        for field_key in rec_copy:
-                            # if field is missing in view or has a readonly modifier, drop it
-                            field_elem = arch.xpath("//field[@name='%s']" % field_key)
-                            if field_elem and (field_elem[0].get('modifiers', '{}').find('"readonly": true') >= 0):
-                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                                del rec[field_key]
-                    # now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
-                    val = map(lambda x: (0,0,x), val)
-            elif fg[key]['type'] == 'many2many':
-                if val and isinstance(val,(list,tuple)) and isinstance(val[0], (int,long)):
-                    val = [(6,0,val)]
-
-            # we want to return only the fields that aren't readonly
-            if el.get('modifiers', '{}').find('"readonly": true') >= 0:
-                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                return False
-
-            return val
-
-        if context is None:
-            context = {}
-        if view_info:
-            arch = etree.fromstring(view_info['arch'].decode('utf-8'))
-            view = arch if len(arch) else False
-        else:
-            view = False
-        fields = fields or {}
-        if view is not False:
-            fg = view_info['fields']
-            onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
-            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
-            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            missing_default_ctx = self.context.copy()
-            missing_default_ctx.update(context)
-            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx) or {}
-
-            # copy the default values in record_dict, only if they are in the view (because that's what the client does)
-            # the other default values will be added later on by the create(). The other fields in the view that haven't any
-            # default value are set to False because we may have references to them in other field's context
-            record_dict = default and {key: defaults.get(key, False) for key in fg} or {}
-
-            # Process all on_change calls
-            nodes = [view]
-            while nodes:
-                el = nodes.pop(0)
-                if el.tag=='field':
-                    field_name = el.attrib['name']
-                    assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
-                    if field_name in fields:
-                        one2many_form_view = None
-                        if (view is not False) and (fg[field_name]['type']=='one2many'):
-                            # for one2many fields, we want to eval them using the inline form view defined on the parent
-                            one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
-                        ctx = context.copy()
-                        if default and el.get('context'):
-                            browsable_parent = dotdict(parent)
-                            ctx_env = dict(parent=browsable_parent)
-                            evaluated_ctx = eval(el.get('context'), globals_dict=ctx_env, locals_dict=record_dict)
-                            ctx.update(evaluated_ctx)
-
-                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default, context=ctx)
-
-                        #call process_val to not update record_dict if values were given for readonly fields
-                        val = process_val(field_name, field_value)
-                        if val:
-                            record_dict[field_name] = val
-                        #if (field_name in defaults) and defaults[field_name] == field_value:
-                        #    print '*** You can remove these lines:', field_name, field_value
-
-                    #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
-                    elif field_name not in defaults:
-                        continue
-
-                    if not el.attrib.get('on_change', False):
-                        continue
-
-                    if el.attrib['on_change'] in ('1', 'true'):
-                        # New-style on_change
-                        recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
-                        result = recs.onchange(record_dict, field_name, onchange_spec)
-
-                    else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
-                        assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
-
-                        # creating the context
-                        class parent2(object):
-                            def __init__(self, d):
-                                self.d = d
-                            def __getattr__(self, name):
-                                return self.d.get(name, False)
-
-                        ctx = record_dict.copy()
-                        ctx['context'] = self.context
-                        ctx['uid'] = SUPERUSER_ID
-                        ctx['parent'] = parent2(parent)
-                        for a in fg:
-                            if a not in ctx:
-                                ctx[a] = process_val(a, defaults.get(a, False))
-
-                        # Evaluation args
-                        args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                        result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
-
-                    for key, val in (result or {}).get('value', {}).items():
-                        if key in fg:
-                            if key not in fields:
-                                # do not shadow values explicitly set in yaml.
-                                record_dict[key] = process_val(key, val)
-                        else:
-                            _logger.debug("The returning field '%s' from your on_change call '%s'"
-                                            " does not exist either on the object '%s', either in"
-                                            " the view '%s'",
-                                            key, match.group(1), model._name, view_info['name'])
+        def get_field_elems(view):
+            """ return the field elements from a view as an OrderedDict """
+            def traverse(node, elems):
+                if node.tag == 'field':
+                    elems[node.get('name')] = node
                 else:
-                    nodes = list(el) + nodes
+                    for child in node:
+                        traverse(child, elems)
+
+            elems = OrderedDict()
+            traverse(etree.fromstring(encode(view['arch'])), elems)
+            return elems
+
+        def is_readonly(field_elem):
+            """ return whether a given field is readonly """
+            # TODO: currently we only support if readonly is True in modifiers.
+            # Some improvement may be done in order to support modifiers like
+            # {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+            return readonly_re.search(field_elem.get('modifiers', '{}'))
+
+        def get_2many_view(fg, field_name, view_type):
+            """ return a view of the given type for the given field's comodel """
+            return fg[field_name]['views'].get(view_type) or \
+                   self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+
+        def process_vals(fg, vals):
+            """ sanitize the given field values """
+            result = {}
+            for field_name, field_value in vals.iteritems():
+                if field_name not in fg:
+                    continue
+                if fg[field_name]['type'] == 'many2one' and isinstance(field_value, (tuple, list)):
+                    field_value = field_value[0]
+                elif fg[field_name]['type'] in ('one2many', 'many2many'):
+                    # 2many fields: sanitize field values of sub-records
+                    sub_fg = get_2many_view(fg, field_name, 'form')['fields']
+                    def process(command):
+                        if isinstance(command, (tuple, list)) and command[0] in (0, 1):
+                            return (command[0], command[1], process_vals(sub_fg, command[2]))
+                        elif isinstance(command, dict):
+                            return process_vals(sub_fg, command)
+                        return command
+                    field_value = map(process, field_value or [])
+                result[field_name] = field_value
+            return result
+
+        def post_process(fg, elems, vals):
+            """ filter out readonly fields from vals """
+            result = {}
+            for field_name, field_value in vals.iteritems():
+                if is_readonly(elems[field_name]):
+                    continue
+                if fg[field_name]['type'] in ('one2many', 'many2many'):
+                    # 2many fields: filter field values of sub-records
+                    sub_view = get_2many_view(fg, field_name, 'form')
+                    sub_fg = sub_view['fields']
+                    sub_elems = get_field_elems(sub_view)
+                    def process(command):
+                        if isinstance(command, (tuple, list)) and command[0] in (0, 1):
+                            return (command[0], command[1], post_process(sub_fg, sub_elems, command[2]))
+                        elif isinstance(command, dict):
+                            return (0, 0, post_process(sub_fg, sub_elems, command))
+                        return command
+                    field_value = map(process, field_value or [])
+                result[field_name] = field_value
+            return result
+
+        context = context or {}
+        fields = fields or {}
+        parent_values = {context['field_parent']: parent} if context.get('field_parent') else {}
+
+        if view_info:
+            fg = view_info['fields']
+            elems = get_field_elems(view_info)
+            recs = model.browse(self.cr, SUPERUSER_ID, [], dict(self.context, **context))
+            onchange_spec = recs._onchange_spec(view_info)
+            record_dict = {}
+
+            if default:
+                # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+                # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+                defaults = recs.sudo(self.uid)._add_missing_default_values({})
+
+                # copy the default values in record_dict, only if they are in the view (because that's what the client does)
+                # the other default values will be added later on by the create(). The other fields in the view that haven't any
+                # default value are set to False because we may have references to them in other field's context
+                record_dict = dict.fromkeys(fg, False)
+                record_dict.update(process_vals(fg, defaults))
+
+                # execute onchange on default values first
+                default_names = [name for name in elems if name in record_dict]
+                result = recs.onchange(dict(record_dict, **parent_values), default_names, onchange_spec)
+                record_dict.update(process_vals(fg, result.get('value', {})))
+
+            # fill in fields, and execute onchange where necessary
+            for field_name, field_elem in elems.iteritems():
+                assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
+                if is_readonly(field_elem):
+                    # skip readonly fields
+                    continue
+
+                if field_name not in fields:
+                    continue
+
+                ctx = dict(context)
+                form_view = view_info
+                if fg[field_name]['type'] == 'one2many':
+                    # evaluate one2many fields using the inline form view defined in the parent
+                    form_view = get_2many_view(fg, field_name, 'form')
+                    ctx['field_parent'] = fg[field_name]['relation_field']
+                if default and field_elem.get('context'):
+                    ctx.update(eval(field_elem.get('context'),
+                                    globals_dict={'parent': dotdict(parent)},
+                                    locals_dict=record_dict))
+
+                field_value = self._eval_field(model, field_name, fields[field_name], form_view, parent=record_dict, default=default, context=ctx)
+                record_dict.update(process_vals(fg, {field_name: field_value}))
+
+                # if field_name is given or has a default value, we evaluate its onchanges
+                if not field_elem.attrib.get('on_change', False):
+                    continue
+
+                result = recs.onchange(dict(record_dict, **parent_values), field_name, onchange_spec)
+                record_dict.update(process_vals(fg, {
+                    key: val
+                    for key, val in result.get('value', {}).iteritems()
+                    if key not in fields        # do not shadow values explicitly set in yaml
+                }))
+
+            record_dict = post_process(fg, elems, record_dict)
+
         else:
             record_dict = {}
 
-        for field_name, expression in fields.items():
+        for field_name, expression in fields.iteritems():
             if record_dict.get(field_name):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
@@ -505,8 +505,11 @@ class YamlInterpreter(object):
         # filter returned values; indeed the last modification in the import process have added a default
         # value for all fields in the view; however some fields present in the view are not stored and
         # should not be sent to create. This bug appears with not stored function fields in the new API.
-        record_dict = dict((key, record_dict.get(key)) for key in record_dict if (key in model._columns or key in model._inherit_fields))
-        return record_dict
+        return {
+            key: val
+            for key, val in record_dict.iteritems()
+            if (key in model._columns or key in model._inherit_fields)
+        }
 
     def process_ref(self, node, field=None):
         assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
