@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-23 17:03+0000\n"
+"POT-Creation-Date: 2015-12-10 13:38+0000\n"
+"PO-Revision-Date: 2015-12-12 22:37+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -30,10 +30,10 @@ msgid ""
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
-"<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\" data-snippet-theme=\"basic_theme\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"270\" style=\"padding:10px 10px 10px 5px;font-size: 30px\">\n"
+"            <td valign=\"center\" width=\"270\" style=\"padding:5px 10px 5px 5px;font-size: 30px\">\n"
 "                % if ctx.get('button_access'):\n"
 "                <a href=\"${ctx['button_access']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_access']['title']}</a>\n"
 "                % endif\n"
@@ -55,7 +55,7 @@ msgid ""
 "                </p>\n"
 "                % endif\n"
 "            </td>\n"
-"            <td valign=\"center\" align=\"right\" width=\"270\" style=\"padding:10px 15px 10px 10px; font-size: 12px;\">\n"
+"            <td valign=\"center\" align=\"right\" width=\"270\" style=\"padding:5px 15px 5px 10px; font-size: 12px;\">\n"
 "                <p>\n"
 "                % if ctx.get('actions'):\n"
 "                % for action in ctx['actions']:\n"
@@ -80,50 +80,45 @@ msgid ""
 "        </tr>\n"
 "    </tbody></table>\n"
 "</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF\" class=\"\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td valign=\"top\" style=\"width:600px\">\n"
-"                    <div>\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
-"                    </div>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
+"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:5px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div class=\"snippet_row bg-color\" style=\"padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777\">\n"
-"    <table style=\"width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td style=\"padding:10px 30px; font-size:14px\">\n"
+"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px;\">\n"
 "                ${object.body | safe}\n"
 "                % if ctx.get('tracking'):\n"
+"                    <ul>\n"
 "                    % for tracking in ctx['tracking']\n"
-"                        ${tracking[0]} : ${tracking[1]} -> ${tracking[2]}\n"
+"                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>\n"
 "                    % endfor\n"
+"                    </ul>\n"
 "                % endif\n"
 "            </td>\n"
-"        </tr>\n"
-"    </tbody></table>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
 "</div>\n"
 "% if ctx.get('signature'):\n"
-"<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777\">\n"
-"    <center>\n"
-"        <table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse;background:inherit;color:inherit\">\n"
-"            <tbody><tr>\n"
-"                <td style=\"font-size:12px; padding: 5px 30px; text-align: left;\">\n"
-"                    &nbsp;\n"
-"                    ${ctx['signature'] | safe}\n"
-"                    &nbsp;\n"
-"                </td>\n"
-"                </tr>\n"
-"            </tbody>\n"
-"        </table>\n"
-"    </center>\n"
+"<div style=\"padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px; text-align: left;\">\n"
+"                ${ctx['signature'] | safe}\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
 "</div>\n"
-"% endif\n"
-msgstr "\n<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n    </div>\n</div>\n<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\" data-snippet-theme=\"basic_theme\">\n    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n        <tbody><tr>\n            <td valign=\"center\" width=\"270\" style=\"padding:10px 10px 10px 5px;font-size: 30px\">\n                % if ctx.get('button_access'):\n                <a href=\"${ctx['button_access']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_access']['title']}</a>\n                % endif\n\n                % if ctx.get('button_follow'):\n                <a href=\"${ctx['button_follow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_follow']['title']}</a>\n                \n                % elif ctx.get('button_unfollow'):\n                <a href=\"${ctx['button_unfollow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_unfollow']['title']}</a>\n                % endif\n\n                % if not ctx.get('button_access') and not ctx.get('button_follow') and not ctx.get('button_unfollow') and ctx.get('model_name'):\n                <p style=\"padding: 5px 10px; font-size: 12px;\"\">\n                About <strong>${ctx['model_name']}\n                % if ctx.get('record_name'):\n                : ${ctx['record_name']}\n                % endif\n                </strong>\n                </p>\n                % endif\n            </td>\n            <td valign=\"center\" align=\"right\" width=\"270\" style=\"padding:10px 15px 10px 10px; font-size: 12px;\">\n                <p>\n                % if ctx.get('actions'):\n                % for action in ctx['actions']:\n                <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689;\"><strong>${action['title']}</strong></a>\n                %if len(ctx['actions']) > 1 and loop.index < len(ctx['actions']):\n                    |\n                % endif\n                % endfor\n                % else:\n                <strong>Innen küldve</strong>\n                % if ctx.get('website_url'):\n                <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n                % endif\n                <strong>${ctx.get('company_name')}</strong>\n                % if ctx.get('website_url'):\n                </a>\n                % endif\n                <strong>using</strong>\n                <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #a24689;\"><strong>Odoo</strong></a>\n                % endif\n            </td>\n        </tr>\n    </tbody></table>\n</div>\n<div style=\"padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF\" class=\"\">\n    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit\">\n        <tbody>\n            <tr>\n                <td valign=\"top\" style=\"width:600px\">\n                    <div>\n                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n                    </div>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n</div>\n<div class=\"snippet_row bg-color\" style=\"padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777\">\n    <table style=\"width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit\">\n        <tbody><tr>\n            <td style=\"padding:10px 30px; font-size:14px\">\n                ${object.body | safe}\n                % if ctx.get('tracking'):\n                    % for tracking in ctx['tracking']\n                        ${tracking[0]} : ${tracking[1]} -> ${tracking[2]}\n                    % endfor\n                % endif\n            </td>\n        </tr>\n    </tbody></table>\n</div>\n% if ctx.get('signature'):\n<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777\">\n    <center>\n        <table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse;background:inherit;color:inherit\">\n            <tbody><tr>\n                <td style=\"font-size:12px; padding: 5px 30px; text-align: left;\">\n                    &nbsp;\n                    ${ctx['signature'] | safe}\n                    &nbsp;\n                </td>\n                </tr>\n            </tbody>\n        </table>\n    </center>\n</div>\n% endif\n"
+"% endif"
+msgstr "\n<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n    </div>\n</div>\n<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n        <tbody><tr>\n            <td valign=\"center\" width=\"270\" style=\"padding:5px 10px 5px 5px;font-size: 30px\">\n                % if ctx.get('button_access'):\n                <a href=\"${ctx['button_access']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_access']['title']}</a>\n                % endif\n\n                % if ctx.get('button_follow'):\n                <a href=\"${ctx['button_follow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_follow']['title']}</a>\n                \n                % elif ctx.get('button_unfollow'):\n                <a href=\"${ctx['button_unfollow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_unfollow']['title']}</a>\n                % endif\n\n                % if not ctx.get('button_access') and not ctx.get('button_follow') and not ctx.get('button_unfollow') and ctx.get('model_name'):\n                <p style=\"padding: 5px 10px; font-size: 12px;\"\">\n                About <strong>${ctx['model_name']}\n                % if ctx.get('record_name'):\n                : ${ctx['record_name']}\n                % endif\n                </strong>\n                </p>\n                % endif\n            </td>\n            <td valign=\"center\" align=\"right\" width=\"270\" style=\"padding:5px 15px 5px 10px; font-size: 12px;\">\n                <p>\n                % if ctx.get('actions'):\n                % for action in ctx['actions']:\n                <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689;\"><strong>${action['title']}</strong></a>\n                %if len(ctx['actions']) > 1 and loop.index < len(ctx['actions']):\n                    |\n                % endif\n                % endfor\n                % else:\n                <strong>Feladó</strong>\n                % if ctx.get('website_url'):\n                <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n                % endif\n                <strong>${ctx.get('company_name')}</strong>\n                % if ctx.get('website_url'):\n                </a>\n                % endif\n                <strong>felhasználva az</strong>\n                <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #a24689;\"><strong>Odoo rendszert</strong></a>\n                % endif\n            </td>\n        </tr>\n    </tbody></table>\n</div>\n<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n        <tbody><tr>\n            <td valign=\"top\" style=\"width:600px; padding:5px 10px 5px 5px;\">\n                <div>\n                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n                </div>\n            </td>\n        </tr></tbody>\n    </table>\n</div>\n<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n        <tbody><tr>\n            <td style=\"padding:5px 10px 5px 5px;font-size: 14px;\">\n                ${object.body | safe}\n                % if ctx.get('tracking'):\n                    <ul>\n                    % for tracking in ctx['tracking']\n                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>\n                    % endfor\n                    </ul>\n                % endif\n            </td>\n        </tr></tbody>\n    </table>\n</div>\n% if ctx.get('signature'):\n<div style=\"padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n        <tbody><tr>\n            <td style=\"padding:5px 10px 5px 5px;font-size: 14px; text-align: left;\">\n                ${ctx['signature'] | safe}\n            </td>\n        </tr></tbody>\n    </table>\n</div>\n% endif"
 
 #. module: mail
 #. openerp-web
@@ -142,13 +137,20 @@ msgid ""
 msgstr "${object.subject or (object.record_name and 'Re: %s' % object.record_name) or (object.parent_id and object.parent_id.subject and 'Re: %s' % object.parent_id.subject) or (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chat_manager.js:59
+#, python-format
+msgid "%d Messages"
+msgstr "%d Üzenetek"
+
+#. module: mail
 #: code:addons/mail/models/mail_template.py:216
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:202
+#: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
 msgstr "%s létrehozva"
@@ -158,6 +160,13 @@ msgstr "%s létrehozva"
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s csatlakozott a %s hálózathoz."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:96
+#, python-format
+msgid "(from"
+msgstr "(feladó"
 
 #. module: mail
 #. openerp-web
@@ -175,10 +184,34 @@ msgstr "* Smiley-iket csak a HTML kódhoz használható a kép megjelenítéséh
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:122
+#: code:addons/mail/static/src/xml/thread.xml:147
 #, python-format
-msgid "-------- Show more messages --------"
-msgstr "-------- Mutassa a többi üzenetet --------"
+msgid "-------- Show older messages --------"
+msgstr "-------- Régebbi üzenetek mutatása --------"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:513
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">created <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr "<div class=\"o_mail_notification\">létrehozta <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:489
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">joined <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr "<div class=\"o_mail_notification\">csatlakozott <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:151
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">left <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr "<div class=\"o_mail_notification\">lecsatlakozott <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:22
@@ -267,13 +300,6 @@ msgstr "Egy gyorsbillentyű kombináció egy billentyűzeti kiosztás. Például
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
 msgstr "Csoportok hozzáférése"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:154
-#, python-format
-msgid "Action"
-msgstr "Művelet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction
@@ -419,7 +445,7 @@ msgstr "Összes üzenet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:38
+#: code:addons/mail/static/src/js/chat_manager.js:190
 #, python-format
 msgid "Anonymous"
 msgstr "Névtelenül"
@@ -544,16 +570,6 @@ msgid "Available for mass mailing"
 msgstr "Elérhető tömeges levelezéshez"
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_1
-msgid "Best Sales Practices"
-msgstr "Legjobb Értékesítési Praktikák"
-
-#. module: mail
-#: model:mail.channel,name:mail.channel_2
-msgid "Board meetings"
-msgstr "Tanácskozás"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_body_html
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_body_html
 #: model:ir.model.fields,field_description:mail.field_mail_template_body_html
@@ -640,6 +656,7 @@ msgstr "Csatorna üzenet azonosítók, id-k"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:23
+#: code:addons/mail/static/src/xml/client_action.xml:89
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_channel_ids
@@ -771,6 +788,13 @@ msgstr "Új üzenet létrehozása"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
 msgid "Composition mode"
 msgstr "Összeállítási mód"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:24
+#, python-format
+msgid "Congratulations, your inbox is empty"
+msgstr "Gratulálok, a postaládája üres"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_contacts
@@ -939,21 +963,14 @@ msgstr "Leírás ami hozzá lesz adva az altípusnak elküldendő üzenethez. Ha
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:76
+#: code:addons/mail/static/src/xml/client_action.xml:107
 #, python-format
 msgid "Detach"
 msgstr "Leválaszt"
 
 #. module: mail
-#: model:ir.actions.client,help:mail.mail_channel_action_client_chat
-msgid ""
-"Did you know ? Type '@someone' in the composer to cite someone in your "
-"message, and make it appear in his own inbox."
-msgstr "Tudtad? Valakinek az oldalán írja be ezt: '@valaki' az összeállítóba az üzenetébe, és hagyja, hogy megjelenjen a saját bejövő levelei között."
-
-#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:31
+#: code:addons/mail/static/src/xml/client_action.xml:35
 #, python-format
 msgid "Direct Messages"
 msgstr "Közvetlen üzenet"
@@ -1441,14 +1458,6 @@ msgid "Important messages"
 msgstr "Fontos üzenet"
 
 #. module: mail
-#: model:ir.actions.client,help:mail.mail_channel_action_client_chat
-msgid ""
-"In the \"Channels\" section, you will find the public and restricted channel.<br/>\n"
-"                    The \"Direct Message\" section allows you to talk directly to one person.<br/>\n"
-"                    The \"Private Group\" section contains your private conversations. You can join a private channel either by creating a channel yourself, or by being invited to another one.<br/>"
-msgstr "A \"Csatornák\" szakaszon, megtalálhatja a nyilvános és a tiltott csatornákat.<br/>\n                    A \"Közvetlen üzenet\" szakaszon lehetősége van közvetlenül egy emberrel beszélnie.<br/>\n                    A \"Privát csoport\" szakaszon a privát beszélgetései vannak. Csatlakozhat privát csatornához is, úgy hogy létrehoz egy újat, vagy meghívást kap egy másikhoz.<br/>"
-
-#. module: mail
 #: code:addons/mail/models/mail_alias.py:141
 #, python-format
 msgid "Inactive Alias"
@@ -1482,7 +1491,7 @@ msgid ""
 msgstr "Nem érvényes kifejezés, ennek python szótár kifejezésnek kell lennie pl.: \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1549
+#: code:addons/mail/models/mail_thread.py:1607
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
@@ -1490,7 +1499,14 @@ msgid ""
 msgstr "Nem érvényes feljegyzés beállítás: modellnek kell hívni (feljegyzések nélkül) vagy egyedi-feljegyzés feljegyzésbeállító"
 
 #. module: mail
-#: code:addons/mail/wizard/invite.py:52
+#. openerp-web
+#: code:addons/mail/static/src/js/chat_manager.js:514
+#, python-format
+msgid "Invitation"
+msgstr "Meghívó"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:53
 #, python-format
 msgid "Invitation to follow %s: %s"
 msgstr "Meghívás a követésre %s: %s"
@@ -1546,6 +1562,11 @@ msgstr "Ez egy követő"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
 msgid "Is Notification"
 msgstr "Ez egy üzenet"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
+msgid "Is a member"
+msgstr "Ő tagja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
@@ -1604,7 +1625,7 @@ msgstr "Utolsó jelenlét"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Last Seen Many2many"
-msgstr "Utolsó jelenlét Many2many"
+msgstr "Utoljára látott Many2many"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_uid
@@ -1720,6 +1741,13 @@ msgid "Mailing Opt-Out"
 msgstr "Levelezésből kilépés"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/client_action.xml:108
+#, python-format
+msgid "Mark all read"
+msgstr "Összeset elolvasottnak jelöl"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
 msgid "Medium-sized photo"
 msgstr "Közepes méretű fotó"
@@ -1743,13 +1771,6 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr "Ezeknek a csoportoknak a tagjai automatikusan hozzá lesznek adva a követőkhöz. Megjegyezve, hogy ha szükséges szerkeszteni tudják a feliratkozásukat."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:51
-#, python-format
-msgid "Mention(s):"
-msgstr "Megemlítés(ek):"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1916,11 +1937,8 @@ msgstr "Név, amit a létrehozott jelentés fájlhoz használ (üres mezőket is
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,help:mail.field_mail_compose_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_mail_needaction
 #: model:ir.model.fields,help:mail.field_mail_message_needaction
@@ -1965,11 +1983,25 @@ msgstr "Szöveg új értéke"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:48
-#: code:addons/mail/static/src/xml/chatter.xml:72
+#: code:addons/mail/static/src/js/chat_manager.js:99
+#: code:addons/mail/static/src/xml/chatter.xml:67
 #, python-format
 msgid "New message"
 msgstr "Új üzenet"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:140
+#, python-format
+msgid "New messages"
+msgstr "Új üzenetek"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:25
+#, python-format
+msgid "New messages appear here."
+msgstr "Új üzenetek itt láthatóak."
 
 #. module: mail
 #. openerp-web
@@ -1980,10 +2012,31 @@ msgstr "Új személy"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:228
+#: code:addons/mail/static/src/js/chatter.js:216
 #, python-format
 msgid "No follower"
 msgstr "Nincs követő"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:16
+#, python-format
+msgid "No matches found"
+msgstr "Nem talált egyezőt"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:17
+#, python-format
+msgid "No message matches your search. Try to change your search filters."
+msgstr "Kereséséhez nem talált megegyezőt. Próbálja megváltoztatni a keresési szűrőket."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:28
+#, python-format
+msgid "No starred message"
+msgstr "Nincs kedvenc üzenete"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -2252,6 +2305,13 @@ msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr "Partnerek akik nem lettek megkérdezve, hogy ne legyenek bevéve a tömeges levelezés kampányba"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
+msgid "Partners with Need Action"
+msgstr "Műveletet igénylő partnerek"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_mail_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
@@ -2303,8 +2363,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n- mindenki: mindenki tud üzenni\n- ügyfelek: csak a hitelesített partnerek\n- követők: csak az idevonatkozó dokumentum követői\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n- mindenki: mindenki tud üzenni\n- ügyfelek: csak a hitelesített partnerek\n- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -2344,22 +2404,10 @@ msgstr "Adatvédelem"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:478
-#, python-format
-msgid "Private Channel"
-msgstr "Privát csatorna"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:41
+#: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Private Channels"
 msgstr "Privát csatornák"
-
-#. module: mail
-#: model:mail.channel,name:mail.channel_3
-msgid "R&D"
-msgstr "R&D"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:176
@@ -2847,11 +2895,6 @@ msgid ""
 msgstr "Az it feltüntetett értékek csak információként szolgálnak. Ha emailt küld, az értékek\n                                az email sablonból lesznek kiküldve."
 
 #. module: mail
-#: model:ir.actions.client,help:mail.mail_channel_action_client_chat
-msgid "There are no messages to display.<br/>"
-msgstr "Nincsenek megjelenítendő üzenetek.<br/>"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
@@ -2896,6 +2939,13 @@ msgstr "Részére (Partnereknek)"
 #, python-format
 msgid "To: Followers of"
 msgstr "Címzett: Követők ehhez"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/thread.js:119
+#, python-format
+msgid "Today"
+msgstr "Ma"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2956,8 +3006,15 @@ msgstr "Nem tud e-mailt küldeni, kérem állítsa be a küldő e-mail címét v
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:606
-#: code:addons/mail/static/src/xml/chatter.xml:101
+#: code:addons/mail/static/src/xml/client_action.xml:98
+#, python-format
+msgid "Undo"
+msgstr "Visszavon"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/models/mail_thread.py:638
+#: code:addons/mail/static/src/xml/chatter.xml:96
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 #, python-format
 msgid "Unfollow"
@@ -2987,28 +3044,35 @@ msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:158
+#: code:addons/mail/static/src/xml/client_action.xml:109
+#, python-format
+msgid "Unstar all"
+msgstr "Összes eltávolítása a kedvencekből"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/client_action.xml:110
 #, python-format
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:470
+#: code:addons/mail/static/src/js/client_action.js:402
 #, python-format
 msgid "Unsubscribed"
 msgstr "Leiratkozva"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:113
+#: code:addons/mail/static/src/xml/thread.xml:178
 #, python-format
 msgid "Uploading"
 msgstr "Feltöltés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:252
+#: code:addons/mail/static/src/js/composer.js:583
 #, python-format
 msgid "Uploading error"
 msgstr "Feltöltési hiba"
@@ -3083,17 +3147,18 @@ msgid "Who can follow the group's activities?"
 msgstr "Ki követheti a csoport tevékenységét?"
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_all_employees
-msgid "Whole Company"
-msgstr "Teljes vállalat"
+#. openerp-web
+#: code:addons/mail/static/src/xml/composer.xml:7
+#, python-format
+msgid "Write something..."
+msgstr "Írj valamit..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:57
-#: code:addons/mail/static/src/xml/composer.xml:7
+#: code:addons/mail/static/src/js/thread.js:122
 #, python-format
-msgid "Write something"
-msgstr "Írj valamit"
+msgid "Yesterday"
+msgstr "Tegnap"
 
 #. module: mail
 #. openerp-web
@@ -3101,6 +3166,14 @@ msgstr "Írj valamit"
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
 msgstr "Hozzáadta a <b>%s</b> ehhez a beszélgetéshez."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:29
+#, python-format
+msgid ""
+"You can mark any message as 'starred', and it shows up in this channel."
+msgstr "Bármely üzenetet 'csillaggal' kedvencnek jelölheti, és ez feltűnik ebben a csatornában."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:47
@@ -3143,17 +3216,10 @@ msgstr "Hozzáadhat fájl mellékletet ehez a sablonhoz, ami minden ezzel a sabl
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:469
+#: code:addons/mail/static/src/js/client_action.js:401
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Leiratkozott erről <b>%s</b>."
-
-#. module: mail
-#: model:ir.actions.client,help:mail.mail_channel_action_client_chat
-msgid ""
-"Your \"Inbox\" contains all the messages in which you've been mentioned, and the messages you receive as a follower of a document.<br/>\n"
-"                    The \"Starred\" section contains all your favorite messages."
-msgstr "A \"Beérkezett üzenetek\" tartalmazzák az összes üzenetet, melyben szerepel, és azokat, melyeket mint egy dokumentum követő kap.<br/>\n                    A \"Csillagozott\" szakasz tartalmazza az összes kedvenc üzenetét."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3174,29 +3240,39 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "igazgatósági-ülés"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
 msgstr "által"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:29
+#: code:addons/mail/static/src/xml/client_action.xml:33
 #, python-format
 msgid "dm"
 msgstr "dm"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:281
+#: code:addons/mail/models/mail_thread.py:313
 #, python-format
 msgid "document"
 msgstr "dokumentum"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:232
+#: code:addons/mail/static/src/js/chatter.js:220
 #, python-format
 msgid "followers"
 msgstr "követők"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_all_employees
+msgid "general"
+msgstr "általános"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -3214,13 +3290,20 @@ msgid "members"
 msgstr "tagok"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/client_action.xml:97
+#, python-format
+msgid "mention(s) marked as read."
+msgstr "megemlítés(ek) elolvasottként jelölve."
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
 msgid "mycompany.odoo.com"
 msgstr "envallalatom.odoo.com"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:61
+#: code:addons/mail/static/src/xml/thread.xml:93
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
@@ -3246,9 +3329,19 @@ msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "olvasott"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "record:"
 msgstr "feljegyzés:"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "értékesítés"
 
 #. module: mail
 #. openerp-web

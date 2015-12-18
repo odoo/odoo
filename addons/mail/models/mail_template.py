@@ -77,6 +77,7 @@ try:
         'reduce': reduce,
         'map': map,
         'round': round,
+        'cmp': cmp,
 
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is

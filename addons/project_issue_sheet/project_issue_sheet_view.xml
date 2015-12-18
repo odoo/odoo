@@ -16,7 +16,7 @@
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
                         <group>
-                            <field name="analytic_account_id" domain="[('partner_id', '=', partner_id)]"/>
+                            <field name="analytic_account_id" domain="[('partner_id', '=', partner_id), ('account_type', '=', 'normal')]"/>
                         </group>
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'default_is_timesheet':1}"
                                 groups="base.group_user">
@@ -24,7 +24,7 @@
                                 <field name="date"/>
                                 <field name="user_id" required="1"/>
                                 <field name="name"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
+                                <field name="account_id" invisible="0" domain="[('account_type, '=', 'normal'), ('partner_id', '=', parent.partner_id)]" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
                                 <field name="unit_amount" string="Duration" widget="float_time"/>
                                 <field name="is_timesheet" invisible="1"/>
                             </tree>

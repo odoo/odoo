@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     def _compute_analytic(self, domain=None):
         lines = {}
         if not domain:
-            domain = [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
+            domain = [('so_line', 'in', self.ids), ('unit_amount', '<=', 0.0)]
         data = self.env['account.analytic.line'].read_group(
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
@@ -84,10 +84,11 @@ class AccountAnalyticLine(models.Model):
             # Use the existing SO line only if the unit prices are the same, otherwise we create
             # a new line
             for line in so_lines:
-                if line.price_unit == self._get_invoice_price(line.order_id):
+                if line.product_id.invoice_policy != 'cost' or (line.product_id.invoice_policy == 'cost' and line.price_unit == self._get_invoice_price(line.order_id)):
                     result.update({'so_line': line.id})
                     so_line = line
                     break
+
             else:
                 # This will trigger the creation of a new SO line
                 so_line = False
@@ -108,16 +109,16 @@ class AccountAnalyticLine(models.Model):
 
         lines = super(AccountAnalyticLine, self).write(values)
         for line in self:
-            res = line._get_sale_order_line(vals=values)
+            res = line.sudo()._get_sale_order_line(vals=values)
             super(AccountAnalyticLine, line).write(res)
 
-        self.mapped('so_line')._compute_analytic()
+        self.mapped('so_line').sudo()._compute_analytic()
         return lines
 
     @api.model
     def create(self, values):
         line = super(AccountAnalyticLine, self).create(values)
-        res = line._get_sale_order_line(vals=values)
+        res = line.sudo()._get_sale_order_line(vals=values)
         line.with_context(create=True).write(res)
-        line.mapped('so_line')._compute_analytic()
+        line.mapped('so_line').sudo()._compute_analytic()
         return line

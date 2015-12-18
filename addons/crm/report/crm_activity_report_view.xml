@@ -6,7 +6,7 @@
             <field name="name">crm.activity.report.graph</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <graph string="Activities Analysis" type="pivot" stacked="True">
+                <graph string="Activities Analysis" stacked="True">
                     <field name="subtype_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </graph>

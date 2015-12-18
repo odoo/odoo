@@ -17,8 +17,7 @@ class TemplatePreview(models.TransientModel):
             return []
         template = self.env['mail.template'].browse(int(template_id))
         records = self.env[template.model_id.model].search([], limit=10)
-        if default_res_id and default_res_id not in records:
-            records |= self.env[template.model_id.model].browse(default_res_id)
+        records |= records.browse(default_res_id)
         return records.name_get()
 
     @api.model
