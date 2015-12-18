@@ -280,10 +280,10 @@
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
                             <div class="col-md-1 text-center">
-                                <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                                <img t-att-src="'data:image/png;base64,%s' % ol.product_id.sudo().image_small"/>
                             </div>
                             <div id='product_name' class="col-md-5">
-                              <span t-esc="ol.product_id.name"/>
+                              <span t-esc="ol.name"/>
                             </div>
                           <div class="col-md-2 text-right">
                             <span t-field="ol.price_unit" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
