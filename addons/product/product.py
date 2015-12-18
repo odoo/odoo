@@ -1088,7 +1088,9 @@ class product_product(osv.osv):
                               'name': seller_variant or name,
                               'default_code': s.product_code or product.default_code,
                               }
-                    result.append(_name_get(mydict))
+                    temp = _name_get(mydict)
+                    if temp not in result:
+                        result.append(temp)
             else:
                 mydict = {
                           'id': product.id,
