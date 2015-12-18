@@ -32,7 +32,7 @@
   Create delivery order with product A
 - 
   !record {model: stock.picking, id: pick_out_calendar}:
-    name: Delivery order for procurement
+    name: Delivery order for procurement (calendar)
     partner_id: res_partner_cal
     picking_type_id: stock.picking_type_out
     move_lines:
@@ -45,7 +45,7 @@
   Create other delivery order with product A that we will give a later date afterwards (date between the two) 
 - 
   !record {model: stock.picking, id: pick_out_calendar2}:
-    name: Delivery order for procurement
+    name: Delivery order for procurement (calendar2)
     partner_id: res_partner_cal
     picking_type_id: stock.picking_type_out
     move_lines:
@@ -58,7 +58,7 @@
   Create other delivery order with product A that we will give an even later date, so it should not be taken into account
 - 
   !record {model: stock.picking, id: pick_out_calendar3}:
-    name: Delivery order for procurement
+    name: Delivery order for procurement (calendar3)
     partner_id: res_partner_cal
     picking_type_id: stock.picking_type_out
     move_lines:
