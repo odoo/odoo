@@ -12,6 +12,10 @@
                     <field name="website_form_default_field_id"/>
                 </group>
             </xpath>
+
+            <xpath expr="//page[@name='base']/group/field[@name='translate']" position="after">
+                <field name="website_form_blacklisted"/>
+            </xpath>
         </field>
     </record>
 
@@ -25,5 +29,6 @@
             </xpath>
         </field>
     </record>
+
 
 </odoo>
