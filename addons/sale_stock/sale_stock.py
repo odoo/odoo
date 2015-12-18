@@ -203,7 +203,7 @@ class SaleOrderLine(models.Model):
             mto_route_id = False
             try:
                 mto_route_id = self.env['stock.warehouse']._get_mto_route()
-            except models.except_orm:
+            except:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
             if mto_route_id and mto_route_id in product_routes.ids:
