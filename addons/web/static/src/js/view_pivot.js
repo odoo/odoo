@@ -65,8 +65,9 @@ instance.web.PivotView = instance.web.View.extend({
 
         var load_fields = this.model.call('fields_get', [], {context: this.dataset.get_context()})
                 .then(this.prepare_fields.bind(this));
+        var _super = this._super.bind(this);
 
-        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this)).then(function(){
+        return load_fields.then(function(){return _super();}).then(this.render_buttons.bind(this)).then(function(){
             if (self.$sidebar) {
                 return openerp.session.rpc('/web/pivot/check_xlwt').then(function (result) {
                     if (result) {
