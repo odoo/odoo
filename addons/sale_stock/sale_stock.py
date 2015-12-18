@@ -290,7 +290,7 @@ class sale_order_line(osv.osv):
         else:
             try:
                 mto_route_id = self.pool['stock.warehouse']._get_mto_route(cr, uid, context=context)
-            except osv.except_osv:
+            except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 mto_route_id = False
             if mto_route_id:
