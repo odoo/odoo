@@ -604,9 +604,11 @@ function openerp_picking_widgets(instance){
 
             return loaded_picking.then(function(){
                     return new instance.web.Model('stock.location').call('search',[[['usage','=','internal']]]).then(function(locations_ids){
-                        return new instance.web.Model('stock.location').call('read',[locations_ids, []]).then(function(locations){
-                            self.locations = locations;
-                        });
+                       if (!self.locations.length) {
+                           return new instance.web.Model('stock.location').call('read',[locations_ids, ['complete_name']]).then(function(locations){
+                               self.locations = locations;
+                           });
+                       }
                     });
                 }).then(function(){
                     if (self.picking.pack_operation_exist === false){
