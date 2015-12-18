@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="product_product_ext_form_view2">
-            <field name="name">product_extended.product.form.view</field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_product_form_view_product_extended" model="ir.ui.view">
+            <field name="name">product_extended.product.form.inherit</field>
             <field name="model">product.template</field>
             <field name="priority">3</field>
             <field name="inherit_id" ref="product.product_template_only_form_view" />
@@ -17,6 +16,5 @@
                 </div>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
 
