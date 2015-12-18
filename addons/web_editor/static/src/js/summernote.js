@@ -1115,7 +1115,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         $(node).html(br);
         node = br;
     } else {
-        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so});
+        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so}) || r.sc;
         if (!contentBefore) {
             var cur = dom.node(dom.lastChild(node.previousSibling));
             if (!dom.isBR(cur)) {
@@ -2298,7 +2298,7 @@ function summernote_paste (event) {
 
     // keep norma feature if copy a picture
     var clipboardData = event.originalEvent.clipboardData;
-    if (clipboardData.items) {
+    if (!_.isEmpty(clipboardData.items)) {
         var item = list.last(clipboardData.items);
         var isClipboardImage = item.kind === 'file' && item.type.indexOf('image/') !== -1;
         if (isClipboardImage) {
@@ -2336,8 +2336,8 @@ function summernote_paste (event) {
     $node.find('*').each(function() {
         var $node = $(this);
 
-        if ($(this).attr('style')) {
-            var style = _.filter($(this).attr('style').split(/\s*;\s*/), function (style) {
+        if ($node.attr('style')) {
+            var style = _.filter($node.attr('style').split(/\s*;\s*/), function (style) {
                     return /width|height|color|background-color|font-weight|text-align|font-style|text-decoration/i.test(style) && $node.css(style.split(':')[0]) !== $('body').css(style.split(':')[0]);
                 }).join(';');
             if (style.length) {
@@ -2347,8 +2347,8 @@ function summernote_paste (event) {
             }
         }
 
-        if ($(this).attr('class')) {
-            var classes = _.filter($(this).attr('class').split(/\s+/), function (style) {
+        if ($node.attr('class')) {
+            var classes = _.filter($node.attr('class').split(/\s+/), function (style) {
                     return /(^|\s)(fa|pull|text|bg)(\s|-|$)/.test(style);
                 }).join(' ');
             if (classes.length) {
@@ -2364,6 +2364,12 @@ function summernote_paste (event) {
     */
     $node.find('span:not([class]):not([style])').each(function () {
         $(this).replaceWith($(this).contents());
+    });
+    $node.find('span + span').each(function () {
+        if ($(this).attr('class') === $(this).prev().attr('class') && $(this).attr('style') === $(this).prev().attr('style')) {
+            $(this).prev().append($(this).contents());
+            $(this).remove();
+        }
     });
 
     /*

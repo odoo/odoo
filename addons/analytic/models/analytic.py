@@ -43,10 +43,11 @@ class account_analytic_account(models.Model):
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
-    # FIXME: account_type is probably not necessary anymore, could be removed in v10
+    # FIXME: we reused account_type to implement the closed accounts (feature removed by mistake on release of v9) without modifying the schemas on already released v9, but it would be more clean to rename it
     account_type = fields.Selection([
-        ('normal', 'Analytic View')
-        ], string='Type of Account', required=True, default='normal')
+        ('normal', 'Active'),
+        ('closed', 'Archived')
+        ], string='State', required=True, default='normal')
 
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_account_tag_rel', 'account_id', 'tag_id', string='Tags', copy=True)
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
@@ -92,7 +93,7 @@ class account_analytic_line(models.Model):
 
     @api.model
     def _default_user(self):
-        return self.env.user.id
+        return self.env.context.get('user_id', self.env.user.id)
 
     name = fields.Char('Description', required=True)
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)

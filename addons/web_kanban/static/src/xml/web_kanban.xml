@@ -23,7 +23,7 @@
                         <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
                     </t>
-                    <t t-if="widget.has_active_field and widget.data_records.length">
+                    <t t-if="widget.has_active_field">
                         <li><a class="o_column_archive" href="#">Archive Records</a></li>
                         <li><a class="o_column_unarchive" href="#">Unarchive Records</a></li>
                     </t>

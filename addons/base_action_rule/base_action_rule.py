@@ -396,6 +396,8 @@ class base_action_rule(osv.osv):
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
+        if '__action_done' not in context:
+            context = dict(context, __action_done={})
         # retrieve all the action rules to run based on a timed condition
         action_dom = [('kind', '=', 'on_time')]
         action_ids = self.search(cr, uid, action_dom, context=dict(context, active_test=True))
@@ -439,8 +441,7 @@ class base_action_rule(osv.osv):
                 action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
                 if last_run <= action_dt < now:
                     try:
-                        context = dict(context or {}, action=True)
-                        self._process(cr, uid, action, [record.id], context=context)
+                        action._process(record)
                     except Exception:
                         import traceback
                         _logger.error(traceback.format_exc())

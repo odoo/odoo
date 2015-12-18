@@ -508,6 +508,16 @@ var RTE = Widget.extend({
         var $target = $(event.target);
         var $editable = $target.closest('.o_editable');
 
+        if ($target.is('a')) {
+            $target.attr('contenteditable', true);
+            setTimeout(function () {
+                $editable.attr('contenteditable', false);
+            });
+        } else if ($editable.attr('contenteditable') === 'false') {
+            $target.removeAttr('contenteditable');
+            $editable.attr('contenteditable', true);
+        }
+
         if (!$editable.size()) {
             return;
         }

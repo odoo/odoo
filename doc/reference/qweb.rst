@@ -610,7 +610,7 @@ API
 
 .. [#othertemplates] although it uses a few others, either for historical
                      reasons or because they remain better fits for the
-                     use case. Odoo 8.0 still depends on Jinja_ and Mako_.
+                     use case. Odoo 9.0 still depends on Jinja_ and Mako_.
 
 .. _templating:
     http://en.wikipedia.org/wiki/Template_processor

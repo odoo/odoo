@@ -102,7 +102,7 @@ class TestSanitizer(unittest.TestCase):
 
     def test_edi_source(self):
         html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
-        self.assertIn('div style="font-family: \'Lucica Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
+        self.assertIn('div style="font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
             'html_sanitize removed valid style attribute')
         self.assertIn('<span style="color: #222; margin-bottom: 5px; display: block; ">', html,
             'html_sanitize removed valid style attribute')
@@ -329,6 +329,13 @@ class TestCleaner(unittest.TestCase):
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
         for ext in test_mail_examples.BUG_3_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
+
+    def test_80_remove_classes(self):
+        new_html = html_email_clean(test_mail_examples.REMOVE_CLASS, remove=True)
+        for ext in test_mail_examples.REMOVE_CLASS_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed classes')
+        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed correctly unwanted classes')
 
     def test_90_misc(self):
         # False boolean for text must return empty string

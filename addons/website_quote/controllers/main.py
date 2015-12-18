@@ -53,7 +53,7 @@ class sale_quote(http.Controller):
             'tx_id': tx_id,
             'tx_state': tx.state if tx else False,
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
-            'need_payment': not tx_id and order.state == 'manual',
+            'need_payment': order.invoice_status == 'to invoice' and (not tx or tx.state in ['draft', 'cancel', 'error']),
             'token': token,
         }
 

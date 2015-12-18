@@ -41,7 +41,7 @@ class purchase_requisition(osv.osv):
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
 
@@ -314,7 +314,7 @@ class purchase_requisition_line(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'schedule_date': fields.date('Scheduled Date'),
     }
 

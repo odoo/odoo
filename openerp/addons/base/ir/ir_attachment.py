@@ -34,21 +34,21 @@ except ImportError:
 def guess_mimetype(bin_data):
     # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
     # see http://www.filesignatures.net/ for file signatures
-    mapping = {
+    mapping = (
         # pdf
-        'application/pdf' : ['%PDF'],
-         # jpg, jpeg, png, gif
-        'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
-        'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
-        'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
+        ('application/pdf', ['%PDF']),
+        # jpg, jpeg, png, gif
+        ('image/jpeg', ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1']),
+        ('image/png', ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A']),
+        ('image/gif', ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61']),
+        # docx, odt, doc, xls
+        ('application/msword', ['PK\x03\x04', '\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43']),
         # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-        'application/zip' : ['PK'],
-        # doc, xls
-        'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
-        'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
-    }
-    for mimetype in mapping.keys():
-        for signature in mapping[mimetype]:
+        ('application/zip', ['PK']),
+        ('application/vnd.ms-excel', ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x09\x08\x10\x00\x00\x06\x05\x00', '\xFD\xFF\xFF\xFF\x10', '\xFD\xFF\xFF\xFF\x1F', '\xFD\xFF\xFF\xFF\x23', '\xFD\xFF\xFF\xFF\x28', '\xFD\xFF\xFF\xFF\x29']),
+    )
+    for mimetype, signatures in mapping:
+        for signature in signatures:
             if bin_data.startswith(signature):
                 return mimetype
     return 'application/octet-stream'

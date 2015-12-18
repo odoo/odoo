@@ -330,6 +330,7 @@ var Composer = Widget.extend({
             input_max_height: 150,
             input_min_height: 28,
             mention_fetch_limit: 8,
+            send_text: _('Send'),
         });
         this.context = this.options.context;
 
@@ -397,7 +398,7 @@ var Composer = Widget.extend({
     preprocess_message: function () {
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
-        var value = this.$input.val().replace(/\n|\r/g, '<br/>');
+        var value = _.escape(this.$input.val()).replace(/\n|\r/g, '<br/>');
         return $.when({
             content: this.mention_manager.generate_links(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
