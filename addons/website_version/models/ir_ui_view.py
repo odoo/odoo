@@ -33,10 +33,10 @@ class view(models.Model):
                     else:
                         copy_v = current.copy({'version_id': version_id, 'website_id': website_id})
                         version_view_ids += copy_v
-            super(view, version_view_ids).write(vals)
+            return super(view, version_view_ids).write(vals)
         else:
             self.env.context = dict(self.env.context, write_on_view=True)
-            super(view, self).write(vals)
+            return super(view, self).write(vals)
 
     @api.one
     def publish(self):
