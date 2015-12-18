@@ -4,6 +4,7 @@
 import account_bank_statement
 import controllers
 import point_of_sale
+import pos_order
 import report
 import res_users
 import res_partner
