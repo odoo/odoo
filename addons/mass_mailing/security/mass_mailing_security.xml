@@ -5,6 +5,7 @@
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_mass_mailing"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="base.default_user" model="res.users">
