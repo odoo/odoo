@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-05 09:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-27 16:07+0000\n"
+"Last-Translator: Lionel Sausin <ls@numerigraphe.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
 "* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
+msgstr " * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n* The 'Done' status is set automatically when repair order is completed.                        \n* The 'Cancelled' status is set automatically when user cancel repair order."
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -72,7 +72,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour cr�
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Id. actif inexistant"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -150,7 +150,7 @@ msgstr "Confirmée"
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
+msgstr "Impossible de trouver une liste de prix correspondant à cet article dans cette quantité.\nVous devez changer soit l'article, soit la quantité, soit la liste de prix."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -276,7 +276,7 @@ msgstr "Limite de Garantie:"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit Month"
-msgstr ""
+msgstr "Limite de garantie par mois"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -427,7 +427,7 @@ msgstr "Mouvement"
 #. module: mrp_repair
 #: help:mrp.repair,move_id:0
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Mouvement de stock généré par l'ordre de réparation"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -469,7 +469,7 @@ msgstr "Aucun article défini avec des frais !"
 #: code:addons/mrp_repair/mrp_repair.py:539
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "Pas de liste de prix correcte trouvée !"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -552,7 +552,7 @@ msgstr "Article à réparer:"
 #. module: mrp_repair
 #: help:mrp.repair,lot_id:0
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "Les produits réparés appartiennent tous à ce lot. "
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -628,7 +628,7 @@ msgstr "Ordre de réparation"
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
 msgid "Repair Order N°:"
-msgstr ""
+msgstr "N° de l'ordre de réparation:"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
@@ -758,7 +758,7 @@ msgstr "L'unité de mesure choisie est d'une autre catégorie que celle du formu
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "Le nom de l'ordre de réparation doit être unique!"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -882,7 +882,7 @@ msgstr "Oui"
 #: code:addons/mrp_repair/mrp_repair.py:325
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "Vous devez sélectionner un adresse de facturation de partenaire dans le formulaire de réparation. "
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:530
@@ -890,7 +890,7 @@ msgstr ""
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "Vous devez sélectionner une liste de prix dans le formulaire d'ordre de réparation !\nVeuillez en choisir une avant de choisir un article"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:mrp_repair.view_cancel_repair

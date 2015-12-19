@@ -353,7 +353,7 @@ hr.divider {
   margin-left: -13px;
 }
 
-main .alert {
+main .alert, main .deprecated {
   padding: 15px;
   border-radius: 0;
   border-width: 0 0 0 3px;
@@ -368,8 +368,7 @@ main .alert {
   }
   .alert-info; // 'INFO' is the default style
 
-  > h3, > .alert-title {
-    font-size: 1.642857143em;
+  > h3, > .alert-title, > p > .versionmodified {
     line-height: 1em;
     margin: 0 0 10px 0;
     font-size: 14px;
@@ -381,7 +380,6 @@ main .alert {
       content: "\e639";
       display: inline-block;
       text-rendering: geometricPrecision;
-      font-size: 1.6em;
       transform: translate(0, -0.15em);
       position: absolute;
       top: 50%;
@@ -412,22 +410,22 @@ main .alert {
     color: darken(@doc_info, 35%);
 
     > .alert-title, > h3 {
-      color: @doc_info
-    }
-    > .alert-title:before, > h3:before {
-      content: "\e639";
+      color: @doc_info;
+      &:before {
+        content: "\e639";
+      }
     }
   }
-  &.alert-warning, &.warning {
+  &.alert-warning, &.warning, &.deprecated {
     border-color: lighten(@doc_warning, 30%);
     background-color: lighten(@doc_warning, 35%);
     color: darken(@doc_warning, 35%);
 
-    > .alert-title, > h3 {
-      color: @doc_warning
-    }
-    > .alert-title:before, > h3:before {
-      content: "\e6a4";
+    > .alert-title, > h3, > p > .versionmodified {
+      color: @doc_warning;
+      &:before {
+        content: "\e6a4";
+      }
     }
   }
   &.alert-danger {
@@ -436,10 +434,10 @@ main .alert {
     color: darken(@doc_danger, 35%);
 
     > .alert-title, > h3 {
-      color: @doc_danger
-    }
-    > .alert-title:before, > h3:before {
-      content: "\e6a4";
+      color: @doc_danger;
+      &:before {
+        content: "\e6a4";
+      }
     }
   }
   &.alert-exercise {
@@ -449,11 +447,11 @@ main .alert {
 
       > .alert-title, > h3 {
           color: @doc_exercise;
-      }
-      > .alert-title:before, > h3:before {
-        .translate(0;0);
-        top: 28px;
-        content: "\e709";
+        &:before {
+          .translate(0;0);
+          top: 28px;
+          content: "\e709";
+        }
       }
   }
 
@@ -462,6 +460,9 @@ main .alert {
       max-width: 55%;
     }
   }
+}
+main .deprecated .versionmodified {
+  display: block;
 }
 
 .pq-patch{
@@ -688,7 +689,7 @@ aside{
     li {
       padding: 0;
       position:relative;
-      border-radius: none;
+      border-radius: 0;
       border-bottom: 1px solid fadeout(@doc_text, 90%);
       > a {
         font-size: 0.7em;
@@ -698,15 +699,14 @@ aside{
         color: @doc_heading;
         font-weight: bold;
         display: block;
-        border-radius: none;
+        border-radius: 0;
         line-height: 1.2;
         background: darken(@doc_paper_dark, 10%);
         border-bottom: none;
 
         &:hover, &:active, &:focus {
-          background-color: transparent;
           text-decoration: none;
-          border-radius: none;
+          border-radius: 0;
           background: darken(@doc_paper_dark, 15%);
           border-left: 5px solid fadeout(@doc_accent, 50%);
         }
@@ -788,7 +788,6 @@ aside{
   height: 56px;
   display: inline-block;
   z-index: 0;
-  background-color: transparent;
   border-radius: 50%;
   padding: 16px;
   box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
@@ -806,7 +805,7 @@ aside{
   position: absolute;
   z-index: 1;
   overflow: hidden;
-  right: 0%;
+  right: 0;
   width: 380px;
   bottom: 0;
   padding: 0;
@@ -817,7 +816,6 @@ aside{
   .box-shadow(0 0 0 transparent);
 
   .content {
-    margin-bottom: 0;
     margin:0;
     li {
       border: none;

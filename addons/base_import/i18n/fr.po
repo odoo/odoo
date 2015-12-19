@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-20 08:52+0000\n"
+"PO-Revision-Date: 2015-10-31 17:42+0000\n"
 "Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -476,7 +476,7 @@ msgid ""
 "                        (\"Misc. Products/Sellable\"). We recommend you modify \n"
 "                        one of the duplicates' values or your product category \n"
 "                        hierarchy."
-msgstr ""
+msgstr "Par exemple, si vous avec deux catégories de produits dont le nom est \"Vendable\" \n(ex: \"Catégorie A/Vendable\" et \"Catégorie B/Vendable\", la validation s'arrêtera mais\nl'importation sera possible malgré tout.\nCependant il est préférable de ne pas forcer l'importation, car le système choisira\nsystématiquement la première catégorie dont le nom correspond, et ce ne sera pas\nforcément la bonne. Le mieux serait de modifier le nom de vos catégories de produits\npour éviter cette ambiguïté."
 
 #. module: base_import
 #. openerp-web
@@ -497,7 +497,7 @@ msgid ""
 "If the model uses openchatter, history tracking                             "
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
-msgstr ""
+msgstr "Si le modèle est pourvu d'un historique de conversation, celui-ci portera la trace des modifications effectuées au cours de l'importation, prendra en compte les souscriptions automatiques, et enverra les notifications correspondantes. Ceci pourra ralentir l'importation."
 
 #. module: base_import
 #. openerp-web
@@ -539,7 +539,7 @@ msgid ""
 "                        made some changes in between two imports. Odoo will \n"
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
-msgstr ""
+msgstr "Si vous importez un fichier qui contient l'une des colonnes \"Id. externe\" ou \"Id. base de données\",\nles enregistrements préalablement importés qui ont ces identifiants seront mis à jour, plutôt que\nd'en importer une copie.\nCeci permet d'importer le même fichier plusieurs fois en effectuant quelques ajustements dans \nle fichier, sans craindre une duplication des données. Le système créera ou mettra à jour les\nenregistrement automatiquement en fonction de leur existence."
 
 #. module: base_import
 #. openerp-web
@@ -552,7 +552,7 @@ msgid ""
 "                        companies and persons, you will have to recreate the \n"
 "                        link between each person and the company they work \n"
 "                        for)."
-msgstr ""
+msgstr "Si vous souhaitez importer des données provenant de plusieurs tables, il vous faudra rétablir\nles relations entre les enregistrements des ces différentes tables (ex: si vous importer des sociétés\net des personnes, vous devrez rétablie le lien entre chaque personne et sa socitété)."
 
 #. module: base_import
 #. openerp-web
@@ -566,7 +566,7 @@ msgid ""
 "                        relative to order. Any additional lines will need an \n"
 "                        addtional row that does not have any information in \n"
 "                        the fields relative to the order."
-msgstr ""
+msgstr "Si vous souhaitez importer un bon de commande contenant plusieurs lignes,\nvous devez placer une ligne dédiée dans le CSV pour chaque ligne de commande.\nLes données de la première ligne de commande figureront sur la même ligne que\nla commande elle-même, et les suivantes seront sur des lignes ne contenant que\ndes cellules vides pour tout ce qui concerne la commande."
 
 #. module: base_import
 #. openerp-web
@@ -599,7 +599,7 @@ msgid ""
 "                        different records, you should use the unique\n"
 "                        identifier from the original application and\n"
 "                        map it to the"
-msgstr ""
+msgstr "Pour créer des relations entre\ndifférents enregistrements, veuillez utiliser l'identifiant\nunique de l'application originale et mappez le à"
 
 #. module: base_import
 #. openerp-web
@@ -770,7 +770,7 @@ msgid ""
 "                        To help you import such fields, Odoo provides 3 \n"
 "                        mechanisms. You must use one and only one mechanism \n"
 "                        per field you want to import."
-msgstr ""
+msgstr "Certains champs définissent une relation avec un autre object. Par exemple, le pays d'un contact est un lien vers un enregistrement de l'object \"Pays\". Lorsque vous désirez importer ce genre de champs, Odoo doit recréer les liens entre les différents enregistrements. Pour vous aider à importer ces champs, Odoo propose 3 mécanismes. Vous devez utiliser un et un seul de ces mécanismes par import."
 
 #. module: base_import
 #. openerp-web
@@ -830,7 +830,7 @@ msgid ""
 "                        lined to both tags 'Manufacturer' and 'Retailer' \n"
 "                        then you will encode it as follow \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
-msgstr ""
+msgstr "Les étiquettes doivent être séparées par une virgule, sans autre espacement. Par exemple, si vous voulez lier un de vos clients à deux étiquetes \"Fabricant\" et \"Revendeur\", alors vous devrez les encoder comme suit: \"Fabricant,Revendeur\" dans la même colonne de votre fichier CSV."
 
 #. module: base_import
 #. openerp-web
@@ -843,7 +843,7 @@ msgid ""
 "                        and 3 companies. (the firsts two contacts are linked \n"
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
-msgstr ""
+msgstr "Les deux fichiers produits sont prêts à être importés dans Odoo sans autre modification. Après avoir importé ces deux fichiers CSV, vous aurez 4 contacts et 3 sociétés. (Les deux premiers contacts sont liés à la première société.) Vous devez d'abord importer les sociétés et puis les personnes"
 
 #. module: base_import
 #. openerp-web
@@ -861,7 +861,7 @@ msgid ""
 "                        allows you to use the Import/Export tool of Odoo to \n"
 "                        modify a batch of records in your favorite spreadsheet \n"
 "                        application."
-msgstr ""
+msgstr "Cette fonctionnalité vous permet d'utiliser l'outil \nd'import/export d'Odoo pour modifier un lot \nd'enregistrements dans votre tableur préféré"
 
 #. module: base_import
 #. openerp-web
@@ -886,7 +886,7 @@ msgid ""
 "                        objects, so it's a good practice to prefix this \n"
 "                        \"External ID\" with the name of the application or \n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
-msgstr ""
+msgstr "Pour gérer les liens entre les tables, vous pouvez utiliser les \"ID externes\" d'Odoo.\nL'\"ID externe\" d'un enregistrement est l'identifiant unique de cet enregistrement dans une autre application. Cet \"ID externe\" doit être unique parmi tous les enregistrements de la base de données, donc c'est une bonne pratique de les préfixer avec le nom de l'application ou de la table (comme 'societe_1' ou 'personne_1' à la place de '1'). "
 
 #. module: base_import
 #. openerp-web
@@ -958,7 +958,7 @@ msgstr "Que puis-je faire si j'ai plusieurs correspondances pour un champ ?"
 msgid ""
 "What can I do when the Import preview table isn't \n"
 "                        displayed correctly?"
-msgstr ""
+msgstr "Que puis-je faire si la prévisualisation de l'import ne s'affiche\npas correctement ?"
 
 #. module: base_import
 #. openerp-web
@@ -1163,4 +1163,4 @@ msgid ""
 "                        import if you need to re-import modified data\n"
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
-msgstr ""
+msgstr "sera aussi utilisé pour mettre à jour l'import original si vous avez besoin de réimporter des données modifiées par après, c'est donc une bonne pratique de le spécifier dès que possible"

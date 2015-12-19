@@ -902,7 +902,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     unlink: function(ids, callback, error_callback) {
         var self = this;
         _.each(ids, function(id) {
-            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
+            if (! _.detect(self.to_create, function(x) { return x.id === id; }) &&  _.detect(self.cache, function(x) { return x.id === id; })) {
                 self.to_delete.push({id: id});
             }
         });
@@ -1047,8 +1047,11 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         return this._super(id, signal);
     },
     alter_ids: function(n_ids) {
+        var dirty = !_.isEqual(this.ids, n_ids);
         this._super(n_ids);
-        this.trigger("dataset_changed", n_ids);
+        if(dirty) {
+            this.trigger("dataset_changed", n_ids);
+        }
     },
 });
 instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;

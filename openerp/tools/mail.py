@@ -29,7 +29,7 @@ import re
 import socket
 import threading
 import time
-from email.utils import getaddresses
+from email.utils import getaddresses, formataddr
 
 import openerp
 from openerp.loglevels import ustr
@@ -53,6 +53,12 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
      ])
 
+
+class _Cleaner(clean.Cleaner):
+    def allow_element(self, el):
+        if el.tag == 'object' and el.get('type') == "image/svg+xml":
+            return True
+        return super(_Cleaner, self).allow_element(el)
 
 def html_sanitize(src, silent=True, strict=False, strip_style=False):
     if not src:
@@ -99,7 +105,7 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False):
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
-        cleaner = clean.Cleaner(**kwargs)
+        cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')
@@ -324,7 +330,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         root = lxml.html.fromstring(html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for node in root.iter():
         # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
         if node.tail:
@@ -597,10 +603,10 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""", re.VERBOSE)
 
 # matches a string containing only one email
-single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
+single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
@@ -669,6 +675,18 @@ def email_split(text):
     if not text:
         return []
     return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]
+
+def email_split_and_format(text):
+    """ Return a list of email addresses found in ``text``, formatted using
+    formataddr. """
+    if not text:
+        return []
+    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.

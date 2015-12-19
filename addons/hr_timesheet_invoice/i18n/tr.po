@@ -5,13 +5,14 @@
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-01 15:15+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2015-12-11 13:24+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,23 +61,23 @@ msgstr "Tutar"
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"
-msgstr "Analiz Hesap"
+msgstr "Analitik Hesap"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
 msgid "Analytic Account Incomplete!"
-msgstr "Analiz Hesap Eksik!"
+msgstr "Analitik Hesap Eksik!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analiz Satırlar"
+msgstr "Analitik Satırı"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
 msgid "Analytic Lines"
-msgstr "Analiz Satırları"
+msgstr "Analitik Satırları"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
@@ -85,23 +86,23 @@ msgstr "Analiz Satırları"
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_graph
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_tree
 msgid "Analytic Lines to Invoice"
-msgstr "Fatura Analiz Satırlar"
+msgstr "Faturalanacak Analitik Satırları"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
-msgstr "Analiz Hesap"
+msgstr "Analitik Hesap"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
-msgstr "Analiz hesabı kapatmak için"
+msgstr "Kapatılacak Analitik Hesap"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
-msgstr "Fatura Raporu Analiz Satırları"
+msgstr "Fatura Raporu Analitik Satırları"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -191,12 +192,12 @@ msgstr "Faturaları Oluştur"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
 msgid "Create invoice from timesheet"
-msgstr "Mesai kartın'da fatura oluştur"
+msgstr "Zaman Çizelgelerinden fatura oluştur"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
 msgid "Create invoice from timesheet final"
-msgstr "Mesai kartında son faturayı oluşturma"
+msgstr "Son zaman çizelgesine göre faturayı oluştur"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,create_uid:0
@@ -222,13 +223,13 @@ msgstr "Para Birimi:"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
 msgid "Daily Timesheet by Account"
-msgstr "Hesap Günlük Mesai Kartı"
+msgstr "Hesap bazında Günlük Zaman Çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_form
 #: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
 msgid "Daily timesheet by account"
-msgstr "Hesap günlük mesai kartı"
+msgstr "Hesap bazında Günlük Zaman Çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
@@ -236,7 +237,7 @@ msgstr "Hesap günlük mesai kartı"
 #: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph_account
 #: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_tree
 msgid "Daily timesheet per account"
-msgstr "Hesap başına günlük mesai kartı"
+msgstr "Hesap başına Günlük Zaman Çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,date:0
@@ -332,7 +333,7 @@ msgstr "Hata!"
 #: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_tree
 #: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_graph
 msgid "Expired analytic accounts"
-msgstr "Süresi geçmiş analiz hesapları"
+msgstr "Süresi geçmiş analitik hesapları"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -446,7 +447,7 @@ msgstr "Fatura zaten analiz satırı(lar) 'ın bazı ile bağlantılıdır!"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Invoice on Timesheets Options"
-msgstr "Mesai Kartı Seçeneklerinde Fatura"
+msgstr "Zaman Çizelgesi seçeneğinde Faturala"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -667,7 +668,7 @@ msgstr "Yazdır"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
 msgid "Print Timesheet Profit"
-msgstr "Mesai Kart Karlılığını Yazdır"
+msgstr "Zaman Çizelgesi Karlılığını Yazdır"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,product:0
@@ -778,7 +779,7 @@ msgstr "Harcanan Süre"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Timesheet Invoicing Ratio"
-msgstr "Mesai Kart Faturalama Oranı"
+msgstr "Zaman Çizelgesi Faturalama Oranı"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -787,7 +788,7 @@ msgstr "Mesai Kart Faturalama Oranı"
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_graph
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
 msgid "Timesheet Line"
-msgstr "Mesai Kart Satırı"
+msgstr "Zaman Çizelgesi Satırı"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
@@ -795,36 +796,36 @@ msgstr "Mesai Kart Satırı"
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.action_report_analytic_profit
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
 msgid "Timesheet Profit"
-msgstr "Mesai Kart Karı"
+msgstr "Zaman Çizelgesi Karı"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
 msgid "Timesheet by Account"
-msgstr "Hesap tarafından Mesai Kart"
+msgstr "Hesap tarafından Zaman Çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
 msgid "Timesheet by Invoice"
-msgstr "Mesai Kartı Faturaya Göre"
+msgstr "Zaman Çizelgesi Faturaya Göre"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
 msgid "Timesheet by User"
-msgstr "Kullanıcı Mesai Kartı"
+msgstr "Kullanıcı Zaman Çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_form
 #: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_search
 #: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
 msgid "Timesheet by account"
-msgstr "Hesap tarafında mesai kartı"
+msgstr "Hesap tarafında zaman çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_form
 #: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_graph
 #: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_search
 msgid "Timesheet by invoice"
-msgstr "Faturalara göre mesai kartı"
+msgstr "Faturalara göre zaman çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -833,39 +834,39 @@ msgstr "Faturalara göre mesai kartı"
 #: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
 #: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_tree
 msgid "Timesheet by user"
-msgstr "Kullanıcıya göre mesai kartı"
+msgstr "Kullanıcıya göre zaman çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
 msgid "Timesheet by users"
-msgstr "Mesai Kart kullanıcılara göre"
+msgstr "Zaman Çizelgesi kullanıcılara göre"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
 #: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_graph
 #: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_tree
 msgid "Timesheet per account"
-msgstr "Hesap başına mesai kart"
+msgstr "Hesap başına zaman çizelgesi"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
 msgid "Timesheet per day"
-msgstr "Günlük mesai kartları"
+msgstr "Günlük zaman çizelgeleri"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
 msgid "Timesheets per account"
-msgstr "Hesap başına mesai kartları"
+msgstr "Hesap başına zaman çizelgeleri"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
-msgstr "Günlük mesai kartları"
+msgstr "Günlük zaman çizelgeleri"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_tree
 msgid "Timesheets to invoice"
-msgstr "Mesai kartlarını faturala"
+msgstr "Zaman çizelgelerini faturala"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_to:0
@@ -976,7 +977,7 @@ msgstr "Evet (100%)"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
-msgstr "Bir fatura analiz satırını değiştiremezsiniz!"
+msgstr "Bir fatura analitik satırını değiştiremezsiniz!"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0

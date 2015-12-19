@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-10 22:11+0000\n"
+"PO-Revision-Date: 2015-10-19 10:28+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,7 @@ msgid ""
 "                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Clique aqui para criar um novo emprego ou remover o filtro em \"No recrutamento\" para recrutar para um trabalho em espera.\n              </p>\n              <p>\n                Definir trabalho de perfil de posição e gerenciar o recrutamento em um contexto de um determinado trabalho: inquérito por entrevista de impressão, definir o número de esperados novos funcionários, e gerenciar seu tubo de recrutamento\n              </p>\n            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -155,7 +155,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Estimado ${object.partner_name or 'applicant'},</p>\n        <p>Felicitações! Seu currículo é de nosso interesse!\n       Vou chamá-lo o mais rapidamente possível para fazer uma entrevista de 10 minutos de telefone e planejar um primeiro encontro.</p>\n        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030\n        If I do not answer, please let me a message with some schedules to call you back.</p>\n        <p>Kind regards,</p>\n        <br/>\n         ${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -168,7 +168,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Dear ${object.partner_name or 'applicant'},</p>\n        <p>Agradecemos por seu interesse em nossa empresa e para a sua aplicação.\n         Infelizmente, o seu perfil não corresponde com as nossas necessidades ou o nosso recrutamento\n         campanha atingiu o seu termo.</p>\n        <p>Se você quiser mais detalhes, não hesite em contactar-nos por telefone.</p>\n        <p>Kind regards,</p>\n        <br/>\n         ${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:survey.survey,description:hr_recruitment.recruitment_form
@@ -857,7 +857,7 @@ msgstr "Se outro, descreva:"
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
-msgstr ""
+msgstr "Se definido, uma mensagem é postada à recorrente usando o modelo quando o requerente está definido para o palco."
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -989,7 +989,7 @@ msgstr "Masculino"
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
 "-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
+msgstr "Gerenciar sua carta de CV e motivação relacionada a todos os candidatos.\n-Este Instala o document_ftp módulo. Isto irá instalar o módulo de gestão do conhecimento, a fim de permitir que você pesquisar usando palavras-chave específicas através do conteúdo de todos os documentos (PDF, .docx ...)"
 
 #. module: hr_recruitment
 #: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
@@ -1396,7 +1396,7 @@ msgstr "Estágio de Recrutamento"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr ""
+msgstr "Stage do requerente antes de estar no estágio atual. Utilizado para análise de perda de casos."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree

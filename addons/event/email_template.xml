@@ -6,10 +6,11 @@
         <field name="model_id" ref="event.model_event_registration"/>
         <field name="email_from" >${(object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com')|safe}</field>
         <field name="email_to" >${object.email|safe}</field>
+        <field name="lang">${object.partner_id.lang}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_html"><![CDATA[
         <p>Hello ${object.name},</p>
-        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.
+        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.
         For any further information please contact our event department.</p>
         <p>Thank you for your participation!</p>
         <p>Best regards</p>]]></field>
@@ -20,6 +21,7 @@
         <field name="model_id" ref="event.model_event_registration"/>
         <field name="email_from" >${(object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com')|safe}</field>
         <field name="email_to" >${object.email|safe}</field>
+        <field name="lang">${object.partner_id.lang}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_html"><![CDATA[
         <p>Hello ${object.name},</p>

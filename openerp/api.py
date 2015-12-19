@@ -171,6 +171,15 @@ def onchange(*args):
         when one of the given fields is modified. The method is invoked on a
         pseudo-record that contains the values present in the form. Field
         assignments on that record are automatically sent back to the client.
+
+        The method may return a dictionary for changing field domains and pop up
+        a warning message, like in the old API::
+
+            return {
+                'domain': {'other_id': [('partner_id', '=', partner_id)]},
+                'warning': {'title': "Warning", 'message': "What is this?"},
+            }
+
     """
     return lambda method: decorate(method, '_onchange', args)
 
@@ -200,13 +209,19 @@ def depends(*args):
     return lambda method: decorate(method, '_depends', args)
 
 
-def returns(model, downgrade=None):
+def returns(model, downgrade=None, upgrade=None):
     """ Return a decorator for methods that return instances of ``model``.
 
         :param model: a model name, or ``'self'`` for the current model
 
-        :param downgrade: a function ``downgrade(value)`` to convert the
-            record-style ``value`` to a traditional-style output
+        :param downgrade: a function ``downgrade(self, value, *args, **kwargs)``
+            to convert the record-style ``value`` to a traditional-style output
+
+        :param upgrade: a function ``upgrade(self, value, *args, **kwargs)``
+            to convert the traditional-style ``value`` to a record-style output
+
+        The arguments ``self``, ``*args`` and ``**kwargs`` are the ones passed
+        to the method in the record-style.
 
         The decorator adapts the method output to the api style: ``id``, ``ids`` or
         ``False`` for the traditional style, and recordset for the record style::
@@ -228,7 +243,7 @@ def returns(model, downgrade=None):
         a decorated existing method will be decorated with the same
         ``@returns(model)``.
     """
-    return lambda method: decorate(method, '_returns', (model, downgrade))
+    return lambda method: decorate(method, '_returns', (model, downgrade, upgrade))
 
 
 def make_wrapper(decorator, method, old_api, new_api):
@@ -251,30 +266,39 @@ def make_wrapper(decorator, method, old_api, new_api):
 
 
 def get_downgrade(method):
-    """ Return a function `downgrade(value)` that adapts ``value`` from
-        record-style to traditional-style, following the convention of ``method``.
+    """ Return a function `downgrade(self, value, *args, **kwargs)` that adapts
+        ``value`` from record-style to traditional-style, following the
+        convention of ``method``.
     """
     spec = getattr(method, '_returns', None)
     if spec:
-        model, downgrade = spec
-        return downgrade or (lambda value: value.ids)
+        _, downgrade, _ = spec
+        if downgrade and len(getargspec(downgrade).args) > 1:
+            return downgrade
+        elif downgrade:
+            return lambda self, *args, **kwargs: downgrade(args[0])
+        else:
+            return lambda self, *args, **kwargs: args[0].ids
     else:
-        return lambda value: value
+        return lambda self, *args, **kwargs: args[0]
 
 
 def get_upgrade(method):
-    """ Return a function `upgrade(self, value)` that adapts ``value`` from
-        traditional-style to record-style, following the convention of ``method``.
+    """ Return a function `upgrade(self, value, *args, **kwargs)` that adapts
+        ``value`` from traditional-style to record-style, following the
+        convention of ``method``.
     """
     spec = getattr(method, '_returns', None)
     if spec:
-        model, downgrade = spec
-        if model == 'self':
-            return lambda self, value: self.browse(value)
+        model, _, upgrade = spec
+        if upgrade:
+            return upgrade
+        elif model == 'self':
+            return lambda self, *args, **kwargs: self.browse(args[0])
         else:
-            return lambda self, value: self.env[model].browse(value)
+            return lambda self, *args, **kwargs: self.env[model].browse(args[0])
     else:
-        return lambda self, value: value
+        return lambda self, *args, **kwargs: args[0]
 
 
 def get_aggregate(method):
@@ -284,7 +308,7 @@ def get_aggregate(method):
     spec = getattr(method, '_returns', None)
     if spec:
         # value is a list of instances, concatenate them
-        model, downgrade = spec
+        model, _, _ = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
         else:
@@ -334,7 +358,7 @@ def model(method):
         context, args, kwargs = split(args, kwargs)
         recs = self.browse(cr, uid, [], context)
         result = method(recs, *args, **kwargs)
-        return downgrade(result)
+        return downgrade(recs, result, *args, **kwargs)
 
     return make_wrapper(model, method, old_api, method)
 
@@ -361,7 +385,7 @@ def multi(method):
         context, args, kwargs = split(args, kwargs)
         recs = self.browse(cr, uid, ids, context)
         result = method(recs, *args, **kwargs)
-        return downgrade(result)
+        return downgrade(recs, result, *args, **kwargs)
 
     return make_wrapper(multi, method, old_api, method)
 
@@ -383,6 +407,15 @@ def one(method):
             names = recs.method(args)
 
             names = model.method(cr, uid, ids, args, context=context)
+
+        .. deprecated:: 9.0
+
+            :func:`~.one` often makes the code less clear and behaves in ways
+            developers and readers may not expect.
+
+            It is strongly recommended to use :func:`~.multi` and either
+            iterate on the ``self`` recordset or ensure that the recordset
+            is a single record with :meth:`~openerp.models.Model.ensure_one`.
     """
     split = get_context_split(method)
     downgrade = get_downgrade(method)
@@ -392,7 +425,7 @@ def one(method):
         context, args, kwargs = split(args, kwargs)
         recs = self.browse(cr, uid, ids, context)
         result = new_api(recs, *args, **kwargs)
-        return downgrade(result)
+        return downgrade(recs, result, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         result = [method(rec, *args, **kwargs) for rec in self]
@@ -415,7 +448,7 @@ def cr(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         result = method(self._model, cr, *args, **kwargs)
-        return upgrade(self, result)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr, method, method, new_api)
 
@@ -426,9 +459,9 @@ def cr_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        kwargs['context'] = context
-        result = method(self._model, cr, *args, **kwargs)
-        return upgrade(self, result)
+        old_kwargs = dict(kwargs, context=context)
+        result = method(self._model, cr, *args, **old_kwargs)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_context, method, method, new_api)
 
@@ -440,7 +473,7 @@ def cr_uid(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         result = method(self._model, cr, uid, *args, **kwargs)
-        return upgrade(self, result)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid, method, method, new_api)
 
@@ -459,9 +492,9 @@ def cr_uid_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        kwargs['context'] = context
-        result = method(self._model, cr, uid, *args, **kwargs)
-        return upgrade(self, result)
+        old_kwargs = dict(kwargs, context=context)
+        result = method(self._model, cr, uid, *args, **old_kwargs)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_context, method, method, new_api)
 
@@ -476,7 +509,7 @@ def cr_uid_id(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
-        return upgrade(self, result)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_id, method, method, new_api)
 
@@ -500,9 +533,9 @@ def cr_uid_id_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        kwargs['context'] = context
-        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
-        return upgrade(self, result)
+        old_kwargs = dict(kwargs, context=context)
+        result = [method(self._model, cr, uid, id, *args, **old_kwargs) for id in self.ids]
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_id_context, method, method, new_api)
 
@@ -517,7 +550,7 @@ def cr_uid_ids(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         result = method(self._model, cr, uid, self.ids, *args, **kwargs)
-        return upgrade(self, result)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_ids, method, method, new_api)
 
@@ -543,9 +576,9 @@ def cr_uid_ids_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        kwargs['context'] = context
-        result = method(self._model, cr, uid, self.ids, *args, **kwargs)
-        return upgrade(self, result)
+        old_kwargs = dict(kwargs, context=context)
+        result = method(self._model, cr, uid, self.ids, *args, **old_kwargs)
+        return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_ids_context, method, method, new_api)
 

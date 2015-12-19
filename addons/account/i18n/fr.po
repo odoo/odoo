@@ -4,16 +4,19 @@
 # 
 # Translators:
 # Bruno JOLIVEAU, 2015
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Florian Hatat, 2015
+# Henri Cornuau <hcornuau@gmail.com>, 2015
+# Lionel Sausin <ls@numerigraphe.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 10:17+0000\n"
-"Last-Translator: Florian Hatat\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-12-04 14:32+0000\n"
+"Last-Translator: Henri Cornuau <hcornuau@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +51,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -90,7 +93,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Bonjour ${object.partner_id.name},</p>\n\n    <p>Une nouvelle facture est disponible pour vous: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Numéro de facture: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Total de la facture: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Date de la facture: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Référence de la commande: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Votre contact : <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Il est également possible de payer directement avec Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Si vous avez des questions, n'hésitez pas à nous contacter</p>\n    <p>Merci d'avoir choisi ${object.company_id.name or 'notre compagnie'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Téléphone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Site Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Bonjour ${object.partner_id.name},</p>\n    <p>Une nouvelle facture est disponible pour vous : </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>RÉFÉRENCES</strong><br />\n       &nbsp;&nbsp;Numéro de facture : <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Total de la facture : <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Date de la facture : ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Référence de la commande : ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Votre contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Facture%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Il est aussi possible de payer directement avec Paypal :</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>\n   % if object.company_id.name:\n    <p>Merci d'avoir choisi ${object.company_id.name}!</p>\n   % else:\n     <p>Merci de nous avoir choisi!</p>\n    % endif\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Téléphone&nbsp;:&nbsp;${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Site web&nbsp;:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -103,10 +106,17 @@ msgid ""
 msgstr " * Le statut \"Brouillon\" est utilisé quand un utilisateur est en train d'enregistrer une nouvelle facture non confirmée.\n * Le statut \"Pro-forma\" est utilisé quand une facture est en Pro-forma, la facture n'a pas de numéro.\n * Le statut \"Ouvert\" est utilisé quand un utilisateur crée une facture, un numéro de facture est généré. Elle reste en statut \"Ouvert\" tant que la facture n'est pas payée.\n * Le statut \"Payée\" est mis automatiquement quand la facture est payée. Les pièces comptables associées  peuvent être déjà rapprochées ou non.\n * Le statut \"Annulé\" est utilisé quand un utilisateur annule la facture."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Centralisation"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "secondes"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -1602,23 +1612,27 @@ msgstr "Appliquer"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr "Appliquer automatiquement cette position fiscale"
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr "Appliquer seulement si le pays de livraison ou de facturation corresponds au groupe"
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
-msgstr "Appliquer seulement si le pays de livraison ou de facturation corresponds"
+msgid "Apply automatically this fiscal position if the conditions match."
+msgstr "Appliquer automatiquement cette situation fiscale si les conditions sont remplies."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
 msgstr "S'applique seulement si le partenaire a un numéro de TVA intracommunautaire"
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr "S'applique lorsque le pays d'expédition ou de facturation est dans ce groupe de pays, et qu'aucune situation ne correspond directement au pays."
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
+msgstr "S'applique lorsque le pays d'expédition ou de facturation correspondent. Est prioritaire sur les situations qui correspondent à un groupe de pays."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -2572,6 +2586,13 @@ msgid "Choose Fiscal Year"
 msgstr "Choisissez l'exercice"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr "Choisissez la contrepartie"
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2701,7 +2722,7 @@ msgstr "Rapport"
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "Communication"
-msgstr "Communication"
+msgstr "Libellé"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -2978,7 +2999,7 @@ msgstr "Contrepartie"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
+msgid "Country"
 msgstr "Pays"
 
 #. module: account
@@ -3031,6 +3052,13 @@ msgstr "Créer des périodes mensuelles"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Créer avoir"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr "Créer une perte sèche"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -5934,9 +5962,16 @@ msgstr "Laisser vide pour utiliser la période de la date de validation (facture
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr "Laisser ouvert"
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -7087,12 +7122,12 @@ msgstr "Lignes d'Entrée Partielle"
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
 msgid "Partial Reconcile"
-msgstr "Let.P"
+msgstr "Lettrage partiel"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 msgid "Partial Reconcile Entries"
-msgstr "Lettrage partiel d'écriture"
+msgstr "Écritures du lettrage partiel"
 
 #. module: account
 #. openerp-web
@@ -7952,14 +7987,14 @@ msgstr "Procédure de lettrage partenaire par partenaire"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "Let."
+msgstr "Lettrer"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Lettrer les écritures"
+msgstr "Écritures du lettrage"
 
 #. module: account
 #: field:account.move.line,reconcile_ref:0
@@ -8329,6 +8364,12 @@ msgstr "Arrondir à la ligne"
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
 msgstr "Arrondir par ligne"
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr "Erreur d'arrondi due à la conversion de devises"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9150,7 +9191,7 @@ msgstr "Fournisseurs"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "Numéro TVA :"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9622,6 +9663,20 @@ msgid ""
 msgstr "L'entité légale qui sera utilisée dans les écritures comptables relatives à cette facture."
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr "La société du compte de gain de change doit être la même que la société sélectionnée."
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr "La société du comte de perte de change doit être la même que la société sélectionnées."
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "Méthode de calcul du montant"
@@ -9649,6 +9704,11 @@ msgstr "Les entrées à lettrer doivent appartenir à la même société"
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr "La position fiscale déterminera les taxes et les comptes comptables utilisés par le partneraire"
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
+msgstr "L'exercice comptable est créé lors de l'installation d'un plan comptable."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -9962,6 +10022,30 @@ msgid "This Year"
 msgstr "Cette année"
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "Ce compte sera utilisé pour les factures au lieu de celui par défaut pour valoriser les dépenses pour l'article actuel."
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "Ce compte sera utilisé pour les factures au lieu de celui par défaut pour valoriser les ventes pour l'article actuel."
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr "Ce compte sera utilisé dans les factures pour valoriser les dépenses."
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr "Ce compte sera utilisé dans les factures pour valoriser les ventes."
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9974,18 +10058,6 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr "Ce compte remplacera le compte de tiers par défaut pour ce client."
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr "Ce compte sera utilisé pour valoriser le stock sortant sur base du prix de revient."
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr "Ce compte sera utilisé pour valoriser le stock sortant au prix de vente."
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10301,8 +10373,8 @@ msgstr "Cet assistant validera toutes les pièces comptables pour un journal par
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
-msgstr "Astuce : Utilisez CTRL+Entrée pour valider tout la page"
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
+msgstr "Astuce : utilisez Ctrl+Entrée pour lettrer toutes les entrées équilibrées."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -11056,6 +11128,13 @@ msgid ""
 msgstr "Vous avez sélectionné des écritures sur des comptes client et fournisseur confondus\n\nAfin de poursuivre, vous devez d'abord désélectionner la ligne %s ."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr "dernier"
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11063,13 +11142,21 @@ msgid ""
 msgstr "Cocher cette case pour signaler que cette ligne de journal est en litige avec le partenaire correspondant"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr "Impossible d'ajouter/modifier des écritures dans une période fermée %s du journal %s."
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr "Vous ne pouvez pas annuler les écritures de clôture si le \"Journal des écritures de fin d'année\" est clôturé."
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr "Vous ne pouvez pas rouvrir une période quand son exercice fiscale est clos."
@@ -11115,7 +11202,7 @@ msgid ""
 msgstr "Vous pouvez indiquer ici le coefficient qui sera utilisé pour consolider les montants de cas à son parent. Par exemple, mettez 1/-1 si vous voulez l'ajouter/le soustraire."
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"

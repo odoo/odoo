@@ -461,6 +461,7 @@ class MassMailing(osv.Model):
         'reply_to': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
+        'mailing_domain': [],
     }
 
     #------------------------------------------------------
@@ -516,8 +517,10 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
+        elif mailing_model in ['res.partner']:
+            value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
-            value['mailing_domain'] = False
+            value['mailing_domain'] = []
         return {'value': value}
 
     def action_duplicate(self, cr, uid, ids, context=None):

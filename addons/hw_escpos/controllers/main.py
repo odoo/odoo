@@ -76,6 +76,15 @@ class EscposDriver(Thread):
 
         printers = usb.core.find(find_all=True, custom_match=FindUsbClass(7))
 
+        # if no printers are found after this step we will take the
+        # first epson or star device we can find.
+        # epson
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x04b8)
+        # star
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x0519)
+
         for printer in printers:
             connected.append({
                 'vendor': printer.idVendor,
@@ -184,6 +193,8 @@ class EscposDriver(Thread):
 
     def print_status(self,eprint):
         localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
+        hosting_ap = os.system('pgrep hostapd') == 0
+        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
         ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
         ips =  [ ip for ip in ips if ip not in localips ] 
         eprint.text('\n\n')
@@ -191,6 +202,11 @@ class EscposDriver(Thread):
         eprint.text('PosBox Status\n')
         eprint.text('\n')
         eprint.set(align='center')
+
+        if hosting_ap:
+            eprint.text('Wireless network:\nPosbox\n\n')
+        elif ssid:
+            eprint.text('Wireless network:\n' + ssid + '\n\n')
 
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')

@@ -371,9 +371,15 @@ class account_move_line(osv.osv):
             context = {}
         if not args:
             return []
-        where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
+
+        where = ' AND '.join(
+            '(abs(sum(debit-credit)) %s %%s)' % operator
+            for field, operator, value in args
+        )
+        params = tuple(value for field, operator, value in args)
+
         cursor.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
-                     GROUP BY id, debit, credit having '+where)
+                     GROUP BY id, debit, credit having '+where, params)
         res = cursor.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -741,7 +747,7 @@ class account_move_line(osv.osv):
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
                 part = partner_obj.browse(cr, uid, partner_id, context=context)
-                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
+                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids, context=context)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
             val['account_tax_id'] = tax_id
@@ -836,9 +842,9 @@ class account_move_line(osv.osv):
                 ret_line['credit_currency'] = actual_credit
                 ret_line['debit_currency'] = actual_debit
                 if target_currency == company_currency:
-                    actual_debit = debit
-                    actual_credit = credit
-                    total_amount = debit or credit
+                    actual_debit = debit > 0 and amount or 0.0
+                    actual_credit = credit > 0 and amount or 0.0
+                    total_amount = abs(debit - credit)
                 else:
                     ctx = context.copy()
                     ctx.update({'date': line.date})

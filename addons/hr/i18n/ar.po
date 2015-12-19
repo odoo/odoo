@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-31 08:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-09-08 11:09+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgid ""
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإضافة موظف جديد.\n</p><p>\nبنظرة واحدة سريعة على واجهة الموظفين في أودو، سيمكنك\nمراجعة كافة البيانات التي تحتاجها عن كل منهم، مثل\nبيانات الاتصال، المنصب الوظيفي، الإجازة السارية، وغيرها.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -50,7 +50,7 @@ msgid ""
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء إدارة جديدة.\n</p><p>\nهيكل الإدارات في أودو يستخدم لإدارة كافة المستندات\nالمقترنة بالموظفين، مثل: نفقاتهم، سجلات الأنشطة،\nالإجازات، التعيينات وغيرها.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -63,7 +63,7 @@ msgid ""
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتعريف إدارة جديدة.\n</p><p>\nيستخدم هيكل الإدارات في إدارة كافة المستندات المقترنة بالموظفين،\nمثل: نفقات الموظفين، سجلات أنشطتهم، إجازاتهم وحضورهم،\nالتعيينات وغيرها من الأمور.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -129,7 +129,7 @@ msgstr "الميلاد"
 msgid ""
 "By default 'Closed', set it to 'In Recruitment' if recruitment process is "
 "going on for this job position."
-msgstr ""
+msgstr "الحالة 'مقفل' بشكل افتراضي. اضبطها إلى قيد التوظيف إذا كانت لديك عمليات تعيينات جديدة لهذا المنصب الوظيفي."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -264,7 +264,7 @@ msgstr "مطلّق"
 #. module: hr
 #: field:hr.config.settings,module_hr_gamification:0
 msgid "Drive engagement with challenges and badges"
-msgstr ""
+msgstr "زيادة التفاعل بالشارات والتحديات"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -335,7 +335,7 @@ msgstr "خطأ! لا يمكنك إنشاء التسلسل الهرمي العو�
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected New Employees"
-msgstr ""
+msgstr "الموظفين الجدد المتوقعين"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -441,7 +441,7 @@ msgstr "في التوظيف"
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr ""
+msgstr "تثبيت ميزة الحضور"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -516,7 +516,7 @@ msgstr "الاتصال الأخير"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "إطلاق التوظيف"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -541,7 +541,7 @@ msgstr "ادارة مصاريف الموظفين"
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
+msgstr "إدارة العطلات, الأجازات وأرصدتها"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
@@ -633,13 +633,13 @@ msgstr "عدد الموظفين الذين يحملون هذا المنصب"
 msgid ""
 "Number of hired employee must be less than expected number of employee in "
 "recruitment."
-msgstr ""
+msgstr "عدد الموظفين الذين تم تعيينهم يجب أن يكون أقل من العدد المتوقع تعيينهم."
 
 #. module: hr
 #: help:hr.job,no_of_hired_employee:0
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "عدد الموظفين الذين تم تعيينهم لمنصب هذه الوظيفة  خلال مرحلة التوظيف."
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
@@ -679,7 +679,7 @@ msgstr "قسم رئيسي"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Employee Tag"
-msgstr ""
+msgstr "أصل وسم الموظف"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -719,7 +719,7 @@ msgstr "سجل العقود لكل موظف"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment Closed"
-msgstr ""
+msgstr "التوظيف مغلق"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -803,7 +803,7 @@ msgstr "وقف التوظيف"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr ""
+msgstr "هيكل المرؤوسين"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -869,12 +869,12 @@ msgstr "يتم تثبيت وحدة hr_evaluation."
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "سيثبت هذا الموديول hr_expense."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_gamification:0
 msgid "This installs the module hr_gamification."
-msgstr ""
+msgstr "سيثبت هذا الموديول hr_gamification."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -884,7 +884,7 @@ msgstr "يتم تثبيت وحدة hr_holidays."
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "سيثبت هذا الموديول hr_payroll."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
@@ -894,7 +894,7 @@ msgstr "يتم تثبيت وحدة hr_recruitment."
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "سيثبت هذا الموديول hr_timesheet."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
@@ -935,7 +935,7 @@ msgstr "المستخدمون"
 #: code:addons/hr/hr.py:273
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
-msgstr ""
+msgstr "مرحباً بك %s! الرجاء مساعدته ليأخذ أولى خطواته في أودو!"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -975,7 +975,7 @@ msgstr "على سبيل المثال دوام جزئي"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "new employee(s) expected"
-msgstr ""
+msgstr "موظفـ(ـين) جدد متوقعين"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration

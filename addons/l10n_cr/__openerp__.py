@@ -35,7 +35,7 @@
 {
     'name': 'Costa Rica - Accounting',
     'version': '0.1',
-    'url': 'http://launchpad.net/openerp-costa-rica',
+    'url': 'https://github.com/CLEARCORP/odoo-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
     'category': 'Localization/Account Charts',

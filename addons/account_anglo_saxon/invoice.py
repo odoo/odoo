@@ -92,12 +92,12 @@ class account_invoice_line(osv.osv):
                 cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
             if dacc and cacc:
                 if i_line.move_id:
-                    price = i_line.move_id.product_id.standard_price
-                    from_unit = i_line.move_id.product_tmpl_id.uom_id.id
-                    to_unit = i_line.move_id.product_uom.id
-                    price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price, to_uom_id=to_unit)
+                    price_unit = i_line.move_id.price_unit
                 else:
                     price_unit = i_line.product_id.standard_price
+                from_unit = i_line.product_id.uom_id.id
+                to_unit = i_line.uos_id.id
+                price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price_unit, to_uom_id=to_unit)
                 return [
                     {
                         'type':'src',
@@ -122,7 +122,7 @@ class account_invoice_line(osv.osv):
                         'account_id':fiscal_pool.map_account(cr, uid, fpos, cacc),
                         'product_id':i_line.product_id.id,
                         'uos_id':i_line.uos_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
                         'taxes':i_line.invoice_line_tax_id,
                         'invl_id': i_line.id,
                     },

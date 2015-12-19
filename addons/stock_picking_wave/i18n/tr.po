@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 # Saban Yildiz <sabany@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-01 15:13+0000\n"
+"PO-Revision-Date: 2015-11-27 22:29+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -31,17 +32,17 @@ msgid ""
 "                help the timing management of operations (tasks to be done at 1pm).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nToplama listesi grubu oluşturmak için tıklayın.\n</p><p>\nToplama listesi gruplarının amacı, birden fazla toplama listesini birleştirip tek bir operasyon altında daha hızlı işlem yapabilmektir.\nToplama listelerini bir grupta toplayıp paket olarak bu işi bir personele verebilir, gün içinde belli bir saatte (örn. saat 15:00'de) bitmesi gerekenleri gruplayıp zaman planlaması ve iş dağılımı yapabilirsiniz.\nİşlem sayısı, lokasyonu ve personeli yoğun olan ve depolar için kaynak ve zaman planlaması yapmanızı, bu sayede depo operasyon verimliliğinizi arttırmanızı sağlar.\n</p>"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
 msgid "Add pickings to a picking wave"
-msgstr ""
+msgstr "Toplama listelerini bir toplama grubuna ekle"
 
 #. module: stock_picking_wave
 #: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
 msgid "Add pickings to wave"
-msgstr "Toplamayı dalgaya ekle"
+msgstr "Toplama listesini gruba ekle"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
@@ -117,7 +118,7 @@ msgstr "Hata!"
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
 msgid "Force availability"
-msgstr "Kullanılabilirliği zorla"
+msgstr "Kullanılabilirliği Zorla"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
@@ -170,12 +171,12 @@ msgstr "Son Güncellenen"
 #. module: stock_picking_wave
 #: help:stock.picking.wave,picking_ids:0
 msgid "List of picking associated to this wave"
-msgstr "Bu dalgayla ilişkili toplama Listesi"
+msgstr "Bu gruptaki toplama listeleri"
 
 #. module: stock_picking_wave
 #: help:stock.picking.wave,name:0
 msgid "Name of the picking wave"
-msgstr "Toplama dalga adı"
+msgstr "Toplama listesi grubunun tanımı"
 
 #. module: stock_picking_wave
 #: code:addons/stock_picking_wave/stock_picking_wave.py:40
@@ -198,28 +199,28 @@ msgstr "Tolama Listesi"
 #: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Wave"
-msgstr "Toplama Dalgası"
+msgstr "Toplama Listesi"
 
 #. module: stock_picking_wave
 #: field:stock.picking.wave,name:0
 msgid "Picking Wave Name"
-msgstr "Toplama Dalgasal Adı"
+msgstr "Toplama Listesi Grubu Tanımı"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
 #: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
 msgid "Picking Waves"
-msgstr "Dalgasal Toplamalar"
+msgstr "Toplama Listesi Grupları"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Waves not finished"
-msgstr "Toplama Dalgaları bitmiş değil"
+msgstr "Bitmemiş Toplama Listesi Grupları"
 
 #. module: stock_picking_wave
 #: help:stock.picking,wave_id:0
 msgid "Picking wave associated to this picking"
-msgstr "Bu toplamayla ilişkili toplama dalgasalı"
+msgstr "Bu Toplama Listesinin Kullanıldığı Toplama Listesi Grubu"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
@@ -245,7 +246,7 @@ msgstr "Çalışan"
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Search Picking Waves"
-msgstr "Toplama Dalgalarını Arama"
+msgstr "Toplama Listesi Gruplarını Arama"
 
 #. module: stock_picking_wave
 #: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
@@ -258,7 +259,7 @@ msgstr "Bir dalga seç"
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr ""
+msgstr "Bazı toplama listeleri henüz malzeme bekliyor. Lütfen bu işlemi tamamlandı yapmadan önce bu malzemelerin uygunluğunu kontrol edin."
 
 #. module: stock_picking_wave
 #: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
@@ -280,7 +281,7 @@ msgstr "Durum"
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_tree
 msgid "Stock Picking Waves"
-msgstr "Stok Toplama Dalgaları"
+msgstr "Stok Toplama Listesi Grupları"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter

@@ -172,7 +172,7 @@ class website(osv.osv):
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.main_company'),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -535,8 +535,10 @@ class website(osv.osv):
         Model = self.pool[model]
         id = int(id)
 
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
+        ids = None
+        if Model.check_access_rights(cr, uid, 'read', raise_exception=False):
+            ids = Model.search(cr, uid,
+                               [('id', '=', id)], context=context)
         if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
@@ -783,11 +785,11 @@ class res_partner(osv.osv):
         }
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+    def google_map_link(self, cr, uid, ids, zoom=10, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
             'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': 10
+            'z': zoom,
         }
         return urlplus('https://maps.google.com/maps' , params)
 
