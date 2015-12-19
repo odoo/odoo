@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_fr.report_layout" inherit_id="report.external_layout_footer">
+        <xpath expr="//li[@name='vat']" position="after">
+            <li t-if="company.vat and company.partner_id.siret">&amp;bull;</li>
+            <li t-if="company.partner_id.siret">SIRET: <span t-field="company.partner_id.siret"/></li>
+        </xpath>
+        <xpath expr="//li[@name='vat_bull']" position="replace">
+            <li t-if="(is_first and company.partner_id.siret) or (not is_first)">&amp;bull;</li>
+        </xpath>
+    </template>
+</odoo>
