@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-12-09 13:01+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2015-12-17 14:09+0000\n"
+"PO-Revision-Date: 2015-12-19 08:46+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    <p>A new invoice is available for you: </p>\n"
 "    \n"
@@ -1212,7 +1212,7 @@ msgstr "Ενεργό"
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "Add"
-msgstr "Πρόσθηκη"
+msgstr "Προσθήκη"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_has_second_line
@@ -1365,7 +1365,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Όλες οι νέες ημερολογιακές καταχωρίσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη καταχωριμένες', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωριμένες'."
+msgstr "Όλες οι νέες ημερολογιακές καταχωρήσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη Καταχωρημένο', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωρημένο'."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -2194,18 +2194,8 @@ msgid "Cashbox Lines"
 msgstr "Γραμμές Ταμείων Μετρητών"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
-msgid "Cashbox end id"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
-msgid "Cashbox id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
-msgid "Cashbox start id"
+msgid "Cashbox"
 msgstr ""
 
 #. module: account
@@ -2916,7 +2906,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_currency_id
@@ -2925,6 +2917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_currency_id
@@ -2932,6 +2925,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_currency_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_currency_id
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -2950,18 +2944,10 @@ msgid "Currency as per company's country."
 msgstr "Νόμισμα ως προς την χώρα της εταιρίας."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1168
-#: code:addons/account/models/account_move.py:1176
+#: code:addons/account/models/account_move.py:1180
+#: code:addons/account/models/account_move.py:1188
 #, python-format
 msgid "Currency exchange rate difference"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
-#: model:ir.model.fields,field_description:account.field_account_move_currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
-msgid "Currency id"
 msgstr ""
 
 #. module: account
@@ -3580,6 +3566,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
 msgid "Ending Balance"
 msgstr "Ισοζύγιο Τέλους"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
+msgid "Ending Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4268,7 +4259,7 @@ msgstr "Εάν το ενεργό πεδίο είναι Ψευδές, σας επ
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Αν αυτό το κουτί είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογισιτικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
+msgstr "Αν αυτό το πλαίσιο είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογιστικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_sepa
@@ -5133,7 +5124,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_date
@@ -5190,7 +5181,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -5459,12 +5450,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_ids
 msgid "Messages"
 msgstr "Μυνήματα"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_message_ids
-#: model:ir.model.fields,help:account.field_account_invoice_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικότητα επικοινωνίας"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5921,7 +5906,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Ανοικτά"
+msgstr "Ανοιχτό"
 
 #. module: account
 #. openerp-web
@@ -6094,7 +6079,7 @@ msgstr "Εξόφληση στις"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reconciled
 msgid "Paid/Reconciled"
-msgstr "Πληρωμένο/Συμφωνημένο"
+msgstr "Εξοφλημένο/Συμφωνημένο"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
@@ -6542,17 +6527,17 @@ msgstr "Καταχώριση Ημερολογιακών Εγγραφών"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Αποθηεκευμένη"
+msgstr "Καταχωρημένο"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Καταχωρημένες Ημερολογιακές Καταχωρήσεις"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Καταχωριμένα Ημερολογιακά Στοιχεία"
+msgstr "Καταχωρημένα Ημερολογιακά Στοιχεία"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -6672,7 +6657,7 @@ msgstr "Λογαριασμός Κερδών"
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Κέρδη και Ζημίες"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7402,7 +7387,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Short Name"
-msgstr ""
+msgstr "Σύντομο Όνομα"
 
 #. module: account
 #. openerp-web
@@ -7472,6 +7457,11 @@ msgstr "Ημερομηνία Έναρξης"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
 msgid "Starting Balance"
 msgstr "Ισοζύγιο Έναρξης"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
+msgid "Starting Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -7920,7 +7910,7 @@ msgstr ""
 msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
-msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγαρφή πολλαπλών νομισμάτων."
+msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγραφή πολλαπλών νομισμάτων."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
@@ -8105,7 +8095,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
 msgid "The partner reference of this invoice."
-msgstr "Παραπομπή συνεργατη για το τιμολόγιο"
+msgstr "Παραπομπή συνεργάτη για το τιμολόγιο"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:314
@@ -8331,7 +8321,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωριθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
+msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωρηθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8539,12 +8529,12 @@ msgstr "Σύνολο Τιμολογημένων"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit
 msgid "Total Payable"
-msgstr "Πληρωτέο Σύνολο"
+msgstr "Υπόλοιπο ως Προμηθευτής"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_credit
 msgid "Total Receivable"
-msgstr "Σύνολο Εισπρακτέων"
+msgstr "Υπόλοιπο ως Πελάτης"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_residual
@@ -8579,7 +8569,7 @@ msgstr "Συνολικό οφειλόμενο ποσό πελάτη"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Το συνολικό ποσό που θα πρέπει να πληρώσετε σε αυτόν τον προμηθευτή."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -8701,17 +8691,17 @@ msgstr "Μη Εξοφλημένα Τιμολόγια"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Μη καταχωριμένα"
+msgstr "Μη Καταχωρημένο"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Μη Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Μη Καταχωρημένες Ημερολογιακές Εγγραφές"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Μη Καταχωριμένα Ημερολογιακά Αντικείμενα"
+msgstr "Μη Καταχωρημένα Ημερολογιακά Στοιχεία"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
@@ -9146,7 +9136,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:297
 #, python-format
 msgid "You can not delete a payment that is already posted"
-msgstr "Δεν μπορείτε να διαγράψετε μια πληρωμή που έχει ήδη αποσταλεί"
+msgstr "Δεν μπορείτε να διαγράψετε μια πληρωμή που έχει ήδη επικυρωθεί"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:122
@@ -9266,7 +9256,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωριμένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης καταχωρίσεων."
+msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωρημένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης εγγραφών."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
