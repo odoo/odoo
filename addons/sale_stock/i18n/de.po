@@ -3,13 +3,14 @@
 # * sale_stock
 # 
 # Translators:
+# Renko Spiekermann <renkosp@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-11-13 15:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-17 12:13+0000\n"
+"Last-Translator: Renko Spiekermann <renkosp@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -31,7 +32,7 @@ msgstr "Ermögliche hinzufügen von Versandkosten"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr ""
+msgstr "Erlaube das Einstellen der Einstellungen eines Arbeitsauftrags pro Bestellzeile (erweitert)."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -51,7 +52,7 @@ msgstr "Unternehmen"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "Standard Auslieferungsbedingung"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -117,7 +118,7 @@ msgstr "Rechnung"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Rechungsposition"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -135,13 +136,13 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "Keine Liefergebühren auf Verkaufsaufträgen"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Nicht genug Bestand!"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:42
@@ -158,7 +159,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Bestellte Menge verringert!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -183,7 +184,7 @@ msgstr "Produktvorlage"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr ""
+msgstr "Eigenschaften auf Auftragszeilen"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -193,7 +194,7 @@ msgstr "Route"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Verkaufsauftrag"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
@@ -218,7 +219,7 @@ msgstr "Statistik Verkaufsauftrag"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Verkaufstoleranztage"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -228,12 +229,12 @@ msgstr "Selektierbar in Auftragszeilen"
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr ""
+msgstr "Liefere alle Produkte auf einmal, kein Lieferrückstand"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr ""
+msgstr "Liefere alle Produkte wenn verfügbar und erlaube Lieferrückstand"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -285,7 +286,7 @@ msgstr "Warnung"
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "Sie verringern die bestellte Menge! Vergessen Sie nicht, den Lieferauftrag manuell zu aktualisieren falls notwendig."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:142
@@ -293,7 +294,7 @@ msgstr ""
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr ""
+msgstr "Sie möchten %.2f %s verkaufen, aber Sie haben nur %.2f %s verfügbar! Der Bestand beträgt %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

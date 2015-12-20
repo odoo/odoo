@@ -3,12 +3,13 @@
 # * project_timesheet
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-22 01:15+0000\n"
+"PO-Revision-Date: 2015-12-19 13:02+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -23,17 +24,17 @@ msgstr ""
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
 " '%s'.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Nahrajte svoje časové rozvrhy pre projekt '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_project_config_settings_group_tasks_work_on_tasks
 msgid "Activity Log"
-msgstr ""
+msgstr "Zápis aktivity"
 
 #. module: project_timesheet
 #: model:ir.model.fields,help:project_timesheet.field_project_config_settings_group_tasks_work_on_tasks
 msgid "Allows you to compute work on tasks."
-msgstr ""
+msgstr "Umožňuje vypočítať prácu na úlohách."
 
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_project_task_analytic_account_id
@@ -43,7 +44,7 @@ msgstr "Analytický účet"
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Analytický účet / Projekt"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -54,39 +55,39 @@ msgstr "Analytický riadok"
 #: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_search_account_inherit
 #: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
-msgstr ""
+msgstr "Analytický účet / projekt"
 
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Priem. Plán.-Efek"
 
 #. module: project_timesheet
 #: model:ir.model.fields,help:project_timesheet.field_project_task_delay_hours
 msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
-msgstr ""
+msgstr "Vypočítané ako rozdiel medzi plánovanými hodinami manažéra projektu a celkovými hodinami úlohy."
 
 #. module: project_timesheet
 #: model:ir.model.fields,help:project_timesheet.field_project_task_total_hours
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Vypočíta ako: Čas strávený + Zostávajúci čas."
 
 #. module: project_timesheet
 #: model:ir.model.fields,help:project_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Vypočítané použitím súčtu na úlohe vykonanej práce."
 
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_project_task_delay_hours
 msgid "Delay Hours"
-msgstr ""
+msgstr "Hodiny onskorenia"
 
 #. module: project_timesheet
 #: selection:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Do not log work activities on task"
-msgstr ""
+msgstr "Nezapisovať pracovné aktivity na úlohe"
 
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
@@ -96,24 +97,24 @@ msgstr "Trvanie"
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
-msgstr ""
+msgstr "Efektívne hodiny"
 
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
-msgstr ""
+msgstr "Hodiny strávené"
 
 #. module: project_timesheet
 #: model:ir.model.fields,help:project_timesheet.field_project_task_progress
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
-msgstr ""
+msgstr "Ak má úloha progres 99,99%, mali by ste zavrieť úlohu pokiaľ je hotová, alebo prehodnotiť čas"
 
 #. module: project_timesheet
 #: selection:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Log work activities on tasks"
-msgstr ""
+msgstr "Zapisovať pracovné aktivity na úlohách"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -139,12 +140,12 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_remaining_hours
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_tree2_inherited
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Zostávajúce hodiny"
 
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
-msgstr ""
+msgstr "Strávené hodiny"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -155,12 +156,12 @@ msgstr "Úloha"
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_project_user_graph_inherited
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Analýza úloh"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Úlohy podľa používateľa a projektu"
 
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
@@ -185,7 +186,7 @@ msgstr "Celkom"
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
-msgstr ""
+msgstr "Celkovo hodín"
 
 #. module: project_timesheet
 #: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
@@ -195,7 +196,7 @@ msgstr "Celkový čas"
 #. module: project_timesheet
 #: model:ir.model.fields,field_description:project_timesheet.field_project_task_progress
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "Progres pracovného času (%)"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:133
@@ -203,9 +204,9 @@ msgstr ""
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
+msgstr "Nemožno odstrániť partnera, ktorý je priradený k projektu, ale môžete odškrtnúť aktívne políčko."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings "
