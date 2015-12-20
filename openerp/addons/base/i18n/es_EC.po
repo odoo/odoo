@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-12-10 17:07+0000\n"
+"PO-Revision-Date: 2015-12-18 15:05+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-8/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgid ""
 " - Hungarian Bank information\n"
 " \n"
 " "
-msgstr ""
+msgstr "\n\nMódulo base para la localización de Hungría\n==========================================\n\nEste módulo consiste en:\n\n  - Catálogo contable genérico\n  - Impuestos húngaros\n  - Información bancaria húngara\n "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_claim
@@ -108,7 +108,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nDescripción general:\n---------\n\n* Plan General de Contabilidad e Impuestos plantilla para empresas en Japón.\n* Esto probablemente no cubre todas las cuentas necesarias para una empresa. Se espera que añadir / eliminar / modificar las cuentas basadas en esta plantilla.\n\nNota:\n-----\n\n* Posiciones fiscales se han añadido para manejar los requerimientos especiales que puedan surgir de la aplicación POS. [1] Es posible que no tenga que utilizar éstos en absoluto en circunstancias normales.\n\n[1] Véase https://github.com/odoo/odoo/pull/6470 para mayores detalles.\n\n    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -152,7 +152,7 @@ msgid ""
 "generated if no algorithm is specified on the Partner record. \n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nLocalización belga para las facturas entrantes y salientes (pre-requisito para account_coda):\n================================================== ==========================\n    - Cambiar el nombre de las etiquetas de campo 'Referencia' a 'Comunicación'\n    - Añadido soporte para la Comunicación Estructurada belga\n\nUna comunicación estructurada se puede generar automáticamente las facturas salientes de acuerdo con los siguientes algoritmos:\n---------------------------------------------------------------------------------------------------------------------\n    1) aleatoria: +++ RRR / RRRR / RRRDD +++\n        ** R..R = ** Random dígitos, ** DD = ** Verificar dígitos\n    2) Fecha: +++ DOY / AÑO / SSSDD +++\n        ** DOY = ** Día del Año, ** SSS = ** Número de secuencia, ** DD = ** Comprobador de Dígitos\n    3) Referencia del cliente +++ RRR / RRRR / SSSDDD +++\n        ** R..R = ** Referencia del cliente sin caracteres no numéricos, ** SSS = ** Número de secuencia, ** DD = ** Comprobador de Dígitos\n        \nEl tipo preferido de comunicación estructurado y Algoritmo asociado puede ser\nespecificado en los registros de socios. Una Comunicación Estructurado 'al azar'  puede ser\ngenerado si no se especifica ningún algoritmo en el registro de la empresa."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -164,7 +164,7 @@ msgid ""
 "        - Copy translations for COA, Tax, Tax Code and Fiscal Position from\n"
 "          templates to target objects.\n"
 "    "
-msgstr ""
+msgstr "\n* Soporte multilenguaje para los Planes de Cuentas, Impuestos, Códigos de Impuesto,\nDiarios Contables, Plantillas de Contabilidad, Planes de Cuentas Analíticas y Diarios\nAnalíticos. \n* Cambios en el asistente de configuración \n- Copiar traducciones para el PUC, los Impuestos, los Códigos de Impuesto y la Posición\nFiscal desde las plantillas a los objetos deseados."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -226,7 +226,7 @@ msgid ""
 "Accounting Data for Belgian Payroll Rules.\n"
 "==========================================\n"
 "    "
-msgstr ""
+msgstr "\nDatos contables para reglas de nómina de Bélgica\n=============================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -669,7 +669,7 @@ msgid ""
 "=================================================================================================\n"
 "\n"
 "The decimal precision is configured per company.\n"
-msgstr ""
+msgstr "\nConfigura al precisión del precio que necesita para los diferentes modulos: contabilidad, \nventas, compras.\n=================================================================================================\n\nLa precisión decimal es configurada por cada compañía.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_claim_from_delivery
@@ -3997,7 +3997,7 @@ msgstr "%s (copia)"
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
 "an o2m."
-msgstr ""
+msgstr "%s Esto podría ser '%s' en el modelo actual, o un campo del mismo nombre en un O2M."
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4026,7 +4026,7 @@ msgstr "'%s' contiene demasiados puntos. ¡Los ids del XML no deberían contener
 #: code:addons/base/ir/ir_fields.py:189
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
-msgstr ""
+msgstr "'% s' no parece ser un número para el campo '%% (field)s'"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:207
@@ -4038,7 +4038,7 @@ msgstr "'%s' no parece ser una fecha valida para el campo '%%(field)s'"
 #: code:addons/base/ir/ir_fields.py:240
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr ""
+msgstr "'% s' no parece ser un formato de tiempo para el campo '%% (field)s'"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:178
@@ -4054,7 +4054,7 @@ msgstr ""
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "(reload fonts)"
-msgstr ""
+msgstr "(recargar fuentes)"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -4071,22 +4071,22 @@ msgstr "-Acción: Una acción asociada a un lugar.\n-Default: Un valor por defec
 #. module: base
 #: view:ir.module.module:base.module_form
 msgid "-This module does not create menu."
-msgstr ""
+msgstr "- Este módulo no crea ningún menú."
 
 #. module: base
 #: view:ir.module.module:base.module_form
 msgid "-This module does not create report."
-msgstr ""
+msgstr "- Este módulo no crea ningún reporte."
 
 #. module: base
 #: view:ir.module.module:base.module_form
 msgid "-This module does not create views."
-msgstr ""
+msgstr "- Este módulo no crea ninguna vista."
 
 #. module: base
 #: view:ir.module.module:base.module_form
 msgid "-This module does not depends on any other module."
-msgstr ""
+msgstr "- Este módulo no depende de ningún otro módulo."
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4129,7 +4129,7 @@ msgstr "2. %a ,%A ==> Vie, Viernes"
 #: view:ir.rule:base.view_rule_form
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
-msgstr ""
+msgstr "2. Las normas específicas de grupo se combinan con un operador lógico OR"
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4493,7 +4493,7 @@ msgstr "Acciones Relacionadas"
 #. module: base
 #: view:ir.values:base.values_view_tree_action
 msgid "Action Bindings/Defaults"
-msgstr ""
+msgstr "Acciones fijadas/predeterminadas"
 
 #. module: base
 #: field:ir.actions.act_url,name:0 field:ir.actions.act_window,name:0
@@ -4760,7 +4760,7 @@ msgstr "Búsqueda avanzada (obsoleto)"
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Procesador de Pago Adyen"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -4807,12 +4807,12 @@ msgstr "Todos los asistentes de configuración pendientes han sido ejecutados. U
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Allowed Companies"
-msgstr ""
+msgstr "Compañías permitidas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
 msgid "Allows to remotely upgrade the PosBox software"
-msgstr ""
+msgstr "Permite actualizar remotamente el software PosBox"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
@@ -4832,7 +4832,7 @@ msgstr "Siempre puede ser buscado"
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
-msgstr ""
+msgstr "Especificación ambigua para el campo '% (field)s', sólo proporcionan un nombre, id externo o el id de base de datos"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -5488,12 +5488,12 @@ msgstr "Brasil"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr ""
+msgstr "Contabilidad de Brasil"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
 msgid "Bridge module for acquirers and website."
-msgstr ""
+msgstr "Módulo puente para compradores y sitio web."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -5503,7 +5503,7 @@ msgstr "Territorio Británico del Océano Índico"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_6
 msgid "Bronze"
-msgstr ""
+msgstr "Bronce"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -5514,7 +5514,7 @@ msgstr "Brunei Darussalam"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr ""
+msgstr "Procesador de Pagos BUckaroo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -5524,7 +5524,7 @@ msgstr "Gestión de Presupuestos"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Build Your Enterprise Website"
-msgstr ""
+msgstr "Construye su sitio web empresaria"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -5549,12 +5549,12 @@ msgstr "Burundi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
 msgid "CRM Gamification"
-msgstr ""
+msgstr "Gamificación CRM "
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -5913,7 +5913,7 @@ msgstr "Chinese (TW) / 正體字"
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Choose and Update a record in the database"
-msgstr ""
+msgstr "Selecciona y actualiza un registro en la base de datos"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
@@ -7811,7 +7811,7 @@ msgstr "Tipo de campo"
 #: code:addons/base/ir/ir_ui_view.py:830
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
-msgstr ""
+msgstr "Campo '%(field_name)s' no existe"
 
 #. module: base
 #: code:addons/models.py:1268
@@ -7878,7 +7878,7 @@ msgstr "Filtro"
 #. module: base
 #: sql_constraint:ir.filters:0
 msgid "Filter names must be unique"
-msgstr ""
+msgstr "Los nombres de los filtros deben ser únicos"
 
 #. module: base
 #: view:ir.attachment:base.view_attachment_search
@@ -7968,22 +7968,22 @@ msgstr "Los siguientes módulos no están instalados o son desconocidos: %s"
 #. module: base
 #: field:res.company,font:0
 msgid "Font"
-msgstr ""
+msgstr "Fuente"
 
 #. module: base
 #: field:res.font,name:0
 msgid "Font Name"
-msgstr ""
+msgstr "Nombre de la fuente"
 
 #. module: base
 #: field:res.font,family:0
 msgid "Font family"
-msgstr ""
+msgstr "Familia de la fuente"
 
 #. module: base
 #: model:ir.model,name:base.model_res_font
 msgid "Fonts available"
-msgstr ""
+msgstr "Fuentes disponibles"
 
 #. module: base
 #: help:res.company,rml_footer:0
@@ -8623,7 +8623,7 @@ msgstr "Historial"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Holidays, Allocation and Leave Requests"
-msgstr ""
+msgstr "Vacaciones, reubicaciones y requerimiento de salida"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -8685,7 +8685,7 @@ msgstr "Recursos Humanos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungarian - Accounting"
-msgstr ""
+msgstr "Contabilidad - Hungría"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8768,17 +8768,17 @@ msgstr "ID de la vista definida en el archivo xml"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
-msgstr ""
+msgstr "Bus IM"
 
 #. module: base
 #: field:base.language.import,code:0
 msgid "ISO Code"
-msgstr ""
+msgstr "Código ISo"
 
 #. module: base
 #: help:base.language.import,code:0
 msgid "ISO Language and Country code, e.g. en_US"
-msgstr ""
+msgstr "Lenguaje y código de País ISO, ejemplo: en_US"
 
 #. module: base
 #: field:res.lang,iso_code:0
@@ -10531,7 +10531,7 @@ msgstr "Revisión de Modelo"
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr ""
+msgstr "Módelo para creación o actualización. Configure un campo solo para especificar un modelo diferente que el modelo base."
 
 #. module: base
 #: help:ir.actions.act_window,res_model:0
@@ -10604,7 +10604,7 @@ msgstr "Actualización del módulo"
 #. module: base
 #: view:base.module.update:base.view_base_module_update
 msgid "Module Update Result"
-msgstr ""
+msgstr "Resultado de la actualización de módulo"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -11602,7 +11602,7 @@ msgstr "Títulos de empresa"
 #. module: base
 #: help:res.users,partner_id:0
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Datos de Empresa relacionada del usuario"
 
 #. module: base
 #: view:res.partner:base.view_partner_form
@@ -12390,7 +12390,7 @@ msgstr "Compañía Relacionada"
 #. module: base
 #: field:res.users,partner_id:0
 msgid "Related Partner"
-msgstr ""
+msgstr "Empresa relacionada"
 
 #. module: base
 #: field:ir.server.object.lines,server_id:0
@@ -14207,7 +14207,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr ""
+msgstr "La operación no puede ser completada, probablemente por lo siguiente:\n- borrado: puede estar intentando borrar un registro cuando otros registros están vinculados.\n- creación/actualización: un campo requerido no ha sido llenado correctamente."
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -14458,7 +14458,7 @@ msgstr "Seguimiento de tiempo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr ""
+msgstr "Registro de horas en novedades"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
@@ -14468,7 +14468,7 @@ msgstr "Hojas de trabajo"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Attendances, Activities"
-msgstr ""
+msgstr "Hojas de tiempo, reuniones, actividades"
 
 #. module: base
 #: field:res.partner,tz:0
@@ -14500,7 +14500,7 @@ msgstr "Hacer"
 #. module: base
 #: selection:ir.translation,state:0
 msgid "To Translate"
-msgstr ""
+msgstr "A traducir"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -14951,7 +14951,7 @@ msgstr "Actualizar lista de módulos"
 #. module: base
 #: field:ir.actions.server,use_write:0
 msgid "Update Policy"
-msgstr ""
+msgstr "Actualizar Política"
 
 #. module: base
 #: view:res.lang:base.res_lang_tree
@@ -14961,7 +14961,7 @@ msgstr "Términos de actualización"
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Update a record linked to the current record using python"
-msgstr ""
+msgstr "Actualizar un registro vinculado al actual registro usando Python"
 
 #. module: base
 #: selection:ir.actions.server,use_write:0
@@ -15405,12 +15405,12 @@ msgstr "Imagen icono web (inmóvil)"
 #. module: base
 #: view:ir.translation:base.view_translation_search
 msgid "Web-only translations"
-msgstr ""
+msgstr "Solo traducciones web"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "Webkit (deprecated)"
-msgstr ""
+msgstr "Webkit (obsoleto)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
@@ -15429,7 +15429,7 @@ msgstr "Sitio web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website
 msgid "Website Builder"
-msgstr ""
+msgstr "Constructor de Sitios Web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_report
@@ -15439,12 +15439,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
 msgid "Website Gengo Translator"
-msgstr ""
+msgstr "Traductor de Sitios web Gengo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
 msgid "Website Google Map"
-msgstr ""
+msgstr "Web Google Map"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_instantclick
@@ -15671,7 +15671,7 @@ msgstr "Acceso de escritura"
 #. module: base
 #: view:ir.rule:base.view_rule_search
 msgid "Write Access Right"
-msgstr ""
+msgstr "Escribir Derechos de Acceso"
 
 #. module: base
 #: help:ir.actions.server,code:0
@@ -15741,7 +15741,7 @@ msgstr "No se puede tener dos usuarios con el mismo nombre"
 #. module: base
 #: sql_constraint:res.font:0
 msgid "You can not register two fonts with the same name"
-msgstr ""
+msgstr "No puede registrar dos fuentes con el mismo nombre"
 
 #. module: base
 #: code:addons/base/res/res_users.py:374
@@ -15765,12 +15765,12 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "            \n"
 "%(country_code)s: the code of the country"
-msgstr ""
+msgstr "Puede indicar aquí el formato habitual de utilizar para las direcciones que pertenecen a este país.\nPuede utilizar el patrón de cadenas python con todo el campo de la dirección (por ejemplo, el uso '%(street)s' para mostrar el campo 'Calle') más\n% (state_name)s: el nombre del estado, provincia o departamento\n% (state_name)s: el código del estado, provincia o departamento\n% (country_name)s: el nombre del país\n% (country_code)s: el código del país"
 
 #. module: base
 #: constraint:res.partner:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr ""
+msgstr "No se puede crear Empresas recursivas."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:207
@@ -15778,13 +15778,13 @@ msgstr ""
 msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
-msgstr ""
+msgstr "¡No se puede eliminar el idioma que está activo!\nPor favor, desactive primero el lenguaje."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:205
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
-msgstr ""
+msgstr "¡No se puede eliminar el idioma que es el  Idioma predeterminado del usuario!"
 
 #. module: base
 #: sql_constraint:ir.model.data:0
@@ -15820,7 +15820,7 @@ msgstr "Intenta actualizar un módulo que depende del módulo: % s. \nPero este 
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "Usted será capaz de definir los derechos de acceso adicionales  del nuevo usuario editándolo en el / menú Usuarios Configuración."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-25 13:28+0000\n"
-"PO-Revision-Date: 2015-11-27 08:31+0000\n"
+"PO-Revision-Date: 2015-12-19 11:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -416,13 +416,13 @@ msgstr "${object.event_id.name} - Recordatori"
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
-msgstr ""
+msgstr "%s a %s Per a\n %s a %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:800
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s a (%s Per a %s) (%s)"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -441,7 +441,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Un correu electrònic s'ha enviat per especificar que la data s'ha canviat !"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -464,7 +464,7 @@ msgstr "Actiu"
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "Afegir Favorit al Calendari "
 
 #. module: calendar
 #: field:calendar.event,allday:0
@@ -475,7 +475,7 @@ msgstr "Tot el dia"
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "CadaDia , %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -486,13 +486,13 @@ msgstr "Import"
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "Un correu electrònic d'invitació ha estat enviat als assistents %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "Un correu electrònic d'invitació ha estat enviat als assistents"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
@@ -502,7 +502,7 @@ msgstr "Assistent"
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "Estat dels Assistents"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -567,7 +567,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Feu clic aquí per actualitzar només aquesta instància i no pas totes les recurrències."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
@@ -667,7 +667,7 @@ msgstr "Detalls"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "Esteu segurs d'esborrar aquest filtre dels favorits?"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
@@ -689,7 +689,7 @@ msgstr "Correu electrònic"
 #: code:addons/calendar/calendar.py:1402
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Correu electrònic no trobat "
 
 #. module: calendar
 #: help:calendar.attendee,email:0
@@ -709,7 +709,7 @@ msgstr "Data final"
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "Data i hora de fi"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -719,12 +719,12 @@ msgstr "Data de finalització"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Es finalitza a"
 
 #. module: calendar
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Error! La data de fi no pot ser anterior a la data d'inici."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1260
@@ -740,7 +740,7 @@ msgstr "Esdeveniment"
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "Hora del esdeveniment"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
@@ -752,7 +752,7 @@ msgstr "Alarma d'esdeveniment"
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Calendaris de tothom"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -773,7 +773,7 @@ msgstr "Primer"
 #: code:addons/calendar/calendar.py:141
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Primer heu d'especificar la data d'invitació. "
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
@@ -815,7 +815,7 @@ msgstr "Agrupa per"
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "L'agrupació per data no està suportada, utilitzeu la vista de calendari al seu lloc."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -851,7 +851,7 @@ msgstr "Si està marcat hi ha missatges nous pendents."
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Si el camp actiu és fals,  li permetrà ocultar la notificació d'avís de l'esdeveniment sense esborrar-lo."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
@@ -866,7 +866,7 @@ msgstr "Invitació"
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "Invitació d'emergència"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -876,12 +876,12 @@ msgstr "Detalls de la invitació"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Invitacions "
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Convida assistent "
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
@@ -915,7 +915,7 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Última notificació marcada com a llegida del calendari base"
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
@@ -945,29 +945,29 @@ msgstr "Reunió"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Detalls de la reunió"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Tema de la reunió "
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Tipus de reunió"
 
 #. module: calendar
 #: view:calendar.event.type:calendar.view_calendar_event_type_tree
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tipus de reunions "
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Reunió vinculada "
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -1033,7 +1033,7 @@ msgstr "Els meus esdeveniments"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Les meves reunions "
 
 #. module: calendar
 #: field:calendar.alarm,name:0 field:calendar.event.type,name:0
@@ -1056,12 +1056,12 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "Notificació "
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Nombre de repeticions "
 
 #. module: calendar
 #. openerp-web
@@ -1125,7 +1125,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Finalització de recurrència"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
@@ -1160,14 +1160,14 @@ msgstr "Regla recurrent"
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "Recordatoris "
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:80
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "Esborra aquest favorit de la llista "
 
 #. module: calendar
 #: field:calendar.event,count:0
@@ -1177,7 +1177,7 @@ msgstr "Repeteix"
 #. module: calendar
 #: field:calendar.event,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Repetir Cada "
 
 #. module: calendar
 #: field:calendar.event,final_date:0
@@ -1213,7 +1213,7 @@ msgstr "Dissabte"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Cercar reunions "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1240,7 +1240,7 @@ msgstr "Mostra temps com"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Migdiada "
 
 #. module: calendar
 #: field:calendar.event,start_date:0
@@ -1250,7 +1250,7 @@ msgstr "Data d'inici"
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "Data i Hora inicial"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1302,7 +1302,7 @@ msgstr "El/La"
 #: code:addons/calendar/calendar.py:1377
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Els següents contactes no tenen adreça de correu electrònic: "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1370,7 +1370,7 @@ msgstr "Fins"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Actualitzeu només aquesta instància "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104 code:addons/calendar/calendar.py:141
@@ -1384,7 +1384,7 @@ msgstr "Avís!"
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this "
 "event"
-msgstr ""
+msgstr "Atenció, un camp obligatori ha estat modificat des de la creació d'aquest esdeveniment"
 
 #. module: calendar
 #: field:calendar.event,we:0
