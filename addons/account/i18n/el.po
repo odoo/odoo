@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-11 22:37+0000\n"
+"PO-Revision-Date: 2015-12-17 11:04+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * Η κατάσταση 'Πρόχειρο' χρησιμοποιείται όταν ο χρήστης κωδικοποιεί ένα νέο και μη επιβεβαιωμένο Τιμολόγιο.\n * Η κατάσταση 'Προσωρινό' όταν το τιμολόγιο είναι σε Προσωρινή κατάσταση, το τιμολόγιο δεν έχει αριθμό τιμολογίου.\n * Η κατάσταση 'Ανοικτό' χρησιμοποιείται όταν ο χρήστης δημιουργεί ένα τιμολόγιο, παράγεται ένας αριθμός τιμολογίου. Παραμένει σε κατάσταση ανοικτό μέχρι ο χρήστης να πληρώσει το τιμολόγιο.\n * Η κατάσταση 'Πληρωμένο' ορίζεται αυτοματοποιημένα όταν πληρωθεί το τιμολόγιο. Οι σχετιζόμενες ημερολογιακές εγγραφές είτε μπορεί να έχουν συμφωνηθεί είτε όχι.\n * Η κατάσταση 'Ακυρωμένο' χρησιμοποιείται όταν ο χρήστης ακυρώσει το τιμολόγιο."
+msgstr " * Η κατάσταση 'Πρόχειρο' χρησιμοποιείται όταν ο χρήστης κωδικοποιεί ένα νέο και μη επιβεβαιωμένο Τιμολόγιο.\n * Η κατάσταση 'Προσωρινό' όταν το τιμολόγιο είναι σε Προσωρινή κατάσταση, το τιμολόγιο δεν έχει αριθμό τιμολογίου.\n * Η κατάσταση 'Ανοικτό' χρησιμοποιείται όταν ο χρήστης δημιουργεί ένα τιμολόγιο, παράγεται ένας αριθμός τιμολογίου. Παραμένει σε κατάσταση ανοικτό μέχρι ο χρήστης να πληρώσει το τιμολόγιο.\n * Η κατάσταση 'Εξοφλημένο' ορίζεται αυτοματοποιημένα όταν πληρωθεί το τιμολόγιο. Οι σχετιζόμενες ημερολογιακές εγγραφές είτε μπορεί να έχουν συμφωνηθεί είτε όχι.\n * Η κατάσταση 'Ακυρωμένο' χρησιμοποιείται όταν ο χρήστης ακυρώσει το τιμολόγιο."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -207,7 +207,7 @@ msgstr "(αλλαγή)"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr "(αναβάθμιση)"
+msgstr "(ενημέρωση)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -1262,7 +1262,7 @@ msgstr "Όλοι οι έταιροι"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Όλες οι Αποθηκευμένες Εγγραφές"
+msgstr "Όλες οι Καταχωρημένες Εγγραφές"
 
 #. module: account
 #: view:website:account.report_trialbalance
@@ -1287,14 +1287,14 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Όλες οι νέες ημερολογιακές καταχωρίσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη καταχωριμένες', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωριμένες'."
+msgstr "Όλες οι νέες ημερολογιακές καταχωρήσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη Καταχωρημένο', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωρημένο'."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
-msgstr "Όλες οι επιλεγμένες ημερολογιακές εγγραφές θα επικυρωθούν και θα καταχωριθούν. Αυτό σημαίνει ότι δεν θα μπορείτε να τροποποιήσετε τα λογιστικά πεδία τους στο εξής."
+msgstr "Όλες οι επιλεγμένες ημερολογιακές εγγραφές θα επικυρωθούν και θα καταχωρηθούν. Αυτό σημαίνει ότι δεν θα μπορείτε να τροποποιήσετε τα λογιστικά πεδία τους στο εξής."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:348
@@ -2525,7 +2525,7 @@ msgid ""
 "Check this box to automatically post entries of this journal. Note that "
 "legally, some entries may be automatically posted when the source document "
 "is validated (Invoices), whatever the status of this field."
-msgstr "Ενεργοποιήστε για να κοινοποιείτε αυτόματα τις καταχωρίσεις αυτού του ημερολογίου. Σημειώστε ότι η νομοθεσία ορίζει ότι μερικές καταχωρίσεις κοινοποιούνται αυτόματα όταν το έγγραφο είναι επικυρωμένο (Τιμολόγια), ασχέτως της κατάστασης αυτού του πεδίου."
+msgstr "Ενεργοποιήστε για να κοινοποιείτε αυτόματα τις καταχωρήσεις αυτού του ημερολογίου. Σημειώστε ότι η νομοθεσία ορίζει ότι μερικές καταχωρήσεις κοινοποιούνται αυτόματα όταν το έγγραφο είναι επικυρωμένο (Τιμολόγια), ασχέτως της κατάστασης αυτού του πεδίου."
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -5083,7 +5083,7 @@ msgstr "Εάν το ενεργό πεδίο έχει την τιμή Ψευδέ�
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Αν αυτό το κουτί είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογισιτικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
+msgstr "Αν αυτό το κουτί είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογιστικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -6850,7 +6850,7 @@ msgstr "Χρησιμοποιήστε την συντόμευση ctrl-enter μό
 #: selection:account.invoice.report,state:0 selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "Ανοικτά"
+msgstr "Ανοιχτό"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -6862,7 +6862,7 @@ msgstr "Άνοιγμα Ταμείου"
 #: view:account.chart:account.view_account_chart
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Open Charts"
-msgstr "Ανοικτά Σχέδια"
+msgstr "Ανοιχτά Σχέδια"
 
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
@@ -7052,7 +7052,7 @@ msgstr "Εξοφλημένο"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Πληρωμένο/Συμφωνημένο"
+msgstr "Εξοφλημένο/Συμφωνημένο"
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -7570,22 +7570,22 @@ msgstr "Καταχώριση Ημερολογιακών Εγγραφών"
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted"
-msgstr "Αποθηεκευμένη"
+msgstr "Καταχωρημένο"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Καταχωρημένες Ημερολογιακές Εγγραφές"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Καταχωριμένα Ημερολογιακά Στοιχεία"
+msgstr "Καταχωρημένα Ημερολογιακά Στοιχεία"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Posted entries"
-msgstr "Καταχωριμένες εγγραφές"
+msgstr "Καταχωρημένες εγγραφές"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -7759,7 +7759,7 @@ msgstr ""
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Κέρδη και Ζημίες"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -8701,7 +8701,7 @@ msgstr "Το επιλεγμένο τιμολόγιο (ή τιμολόγια) δ�
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Send by Email"
-msgstr "Στάλθηκε με Email"
+msgstr "Αποστολή με Email"
 
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
@@ -9418,7 +9418,7 @@ msgstr "Χρησιμοποίηση Φόρου στο"
 msgid ""
 "Tax base different!\n"
 "Click on compute to update the tax base."
-msgstr "Διαφορετική βάση φόρου!\nΚάντε κλικ στο Υπολογισμός για να αναβαθμίσετε την βάση των φόρων."
+msgstr "Διαφορετική βάση φόρου!\nΚάντε κλικ για ενημέρωση της βάσης των φόρων."
 
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
@@ -9588,7 +9588,7 @@ msgstr "Η κίνηση του λογαριασμού (%s) για συγκέντ
 msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
-msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγαρφή πολλαπλών νομισμάτων."
+msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγραφή πολλαπλών νομισμάτων."
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -9794,7 +9794,7 @@ msgstr "Ο λογαριασμός συνεργάτη που χρησιμοποι
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "Παραπομπή συνεργατη για το τιμολόγιο"
+msgstr "Παραπομπή συνεργάτη για το τιμολόγιο"
 
 #. module: account
 #: code:addons/account/account_invoice.py:513
@@ -10120,7 +10120,7 @@ msgid ""
 "invoice has been dereconciled and it does not fit anymore the 'paid' state. "
 "You should press this button to re-open it and let it continue its normal "
 "process after having resolved the eventual exceptions it may have created."
-msgstr "Αυτό το κουμπί εμφανίζεται μόνο όταν η κατάσταση του τιμολογίου είναι 'πληρωμένο' (υποδεικνύοντας ότι έχει πλήρως συμφωνηθεί) και η ένδειξη της επιλογής του αυτόματου υπολογισμού 'συμφωνήθηκε' είναι Ψευδές (υποδεικνύοντας ότι δεν ισχύει πλέον). Με άλλα λόγια, το τιμολόγιο είναι μη συμφωνημένο και δεν χαρακτηρίζεται ως 'πληρωμένο'. Πρέπει να πατήσετε αυτό το κουμπί ώστε να το ξανα-ανοίξετε και να επιτρέψετε να συνεχίσει την φυσιολογική διαδικασία μετά την επίλυση των εξαιρέσεων που μπορεί να έχει δημιουργήσει."
+msgstr "Αυτό το κουμπί εμφανίζεται μόνο όταν η κατάσταση του τιμολογίου είναι 'Εξοφλημένο' (υποδεικνύοντας ότι έχει πλήρως συμφωνηθεί) και η ένδειξη της επιλογής του αυτόματου υπολογισμού 'Συμφωνήθηκε' είναι Ψευδές (υποδεικνύοντας ότι δεν ισχύει πλέον). Με άλλα λόγια, το τιμολόγιο είναι μη συμφωνημένο και δεν χαρακτηρίζεται ως 'Εξοφλημένο'. Πρέπει να πατήσετε αυτό το κουμπί ώστε να το ξανα-ανοίξετε και να επιτρέψετε να συνεχίσει την φυσιολογική διαδικασία μετά την επίλυση των εξαιρέσεων που μπορεί να έχει δημιουργήσει."
 
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
@@ -10168,7 +10168,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωριθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
+msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωρηθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10458,7 +10458,7 @@ msgstr "Σύνολο Τιμολογημένων"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr "Πληρωτέο Σύνολο"
+msgstr "Υπόλοιπο ως Προμηθευτής"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
@@ -10468,7 +10468,7 @@ msgstr "Συνολική Ποσότητα"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Σύνολο Εισπρακτέων"
+msgstr "Υπόλοιπο ως Πελάτης"
 
 #. module: account
 #: field:account.invoice.report,residual:0
@@ -10519,7 +10519,7 @@ msgstr "Συνολικό οφειλόμενο ποσό πελάτη"
 #. module: account
 #: help:res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr "Το συνολικό ποσό που πρέπει να πληρώσετε σε αυτον τον προμηθευτή."
+msgstr "Το συνολικό ποσό που θα πρέπει να πληρώσετε σε αυτόν τον προμηθευτή."
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
@@ -10698,17 +10698,17 @@ msgstr "Μη Εξοφλημένα Τιμολόγια"
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Μη καταχωριμένα"
+msgstr "Μη Καταχωρημένο"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Μη Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Μη Καταχωρημένες Ημερολογιακές Εγγραφές"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Μη Καταχωριμένα Ημερολογιακά Αντικείμενα"
+msgstr "Μη Καταχωρημένα Ημερολογιακά Αντικείμενα"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -10894,7 +10894,7 @@ msgstr "Επικύρωση Γραμμών Κίνησης Λογαριασμού"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr "Επικυρωμένη"
+msgstr "Επικυρωμένο"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -11302,7 +11302,7 @@ msgstr "Δεν μπορείτε να απενεργοποιήσετε ένα λ�
 #: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr "Δεν μπορείτε να διαγράψετε μία καταχωριμένη ημερολογιακή εγγραφή \"%s\"."
+msgstr "Δεν μπορείτε να διαγράψετε μία καταχωρημένη ημερολογιακή εγγραφή \"%s\"."
 
 #. module: account
 #: code:addons/account/account_invoice.py:423
@@ -11343,7 +11343,7 @@ msgstr "Δεν μπορείτε να εφαρμόσετε αυτή την τρο
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωριμένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης καταχωρίσεων."
+msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωρημένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης εγγραφών."
 
 #. module: account
 #: code:addons/account/account.py:1124
