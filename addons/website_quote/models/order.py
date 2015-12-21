@@ -350,6 +350,7 @@ class sale_quote_option(osv.osv):
 class sale_order_option(osv.osv):
     _name = "sale.order.option"
     _description = "Sale Options"
+    _order = 'sequence, id'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
@@ -361,6 +362,7 @@ class sale_order_option(osv.osv):
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
         'quantity': fields.float('Quantity', required=True,
             digits_compute= dp.get_precision('Product UoS')),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of suggested product."),
     }
 
     _defaults = {
