@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Top menu item -->
         <menuitem name="Project"
@@ -19,7 +18,7 @@
             sequence="100" groups="base.group_configuration"/>
 
         <record id="view_task_search_form" model="ir.ui.view">
-            <field name="name">project.task.search.form</field>
+            <field name="name">project.task.search</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                <search string="Tasks">
@@ -99,11 +98,11 @@
                             <field name="name" placeholder="Project Name"/>
                         </h1>
                         <div name="options_active" class="oe_edit_only">
-                            <div>
-                                <field name="use_tasks" class="oe_inline" string="Use Tasks"/>
-                                <label for="use_tasks" class="oe_inline"/>
+                            <div class="o_row">
+                                <field name="use_tasks" string="Use Tasks"/>
+                                <label for="use_tasks"/>
                                 <span attrs="{'invisible':[('use_tasks', '=', False)]}">as </span>
-                                <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
+                                <field name="label_tasks" class="oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
                     </div>
@@ -111,7 +110,7 @@
                         <page string="Settings">
                             <group>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                                <field name="partner_id" string="Customer"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                         groups="base.group_no_one"/>
@@ -129,15 +128,15 @@
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
-                                    <field name="alias_id" class="oe_read_only oe_inline"
+                                    <field name="alias_id" class="oe_read_only o_row"
                                             string="Email Alias" required="0"/>
-                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    <div class="oe_edit_only o_row" name="edit_alias" style="display: inline;" >
+                                        <field name="alias_name" />@<field name="alias_domain" readonly="1"/>
                                     </div>
                                 </div>
                                 <label for="alias_model" string="Incoming Emails create"/>
-                                <field name="alias_model" class="oe_inline" nolabel="1"/>
-                                <field name="alias_contact" class="oe_inline"
+                                <field name="alias_model" class="o_row" nolabel="1"/>
+                                <field name="alias_contact" class="o_row"
                                         string="Accept Emails From"/>
                             </group>
                         </page>
@@ -152,7 +151,7 @@
         </record>
 
         <record id="view_project_project_filter" model="ir.ui.view">
-            <field name="name">project.project.select</field>
+            <field name="name">project.project.search</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
@@ -264,10 +263,8 @@
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 options='{"no_open": True}'/>
-                                on_change="onchange_user_id(user_id, context)"
                             <field name="planned_hours" widget="float_time"
-                                    groups="project.group_time_work_estimation_tasks"
-                                    on_change="onchange_planned(planned_hours)"/>
+                                    groups="project.group_time_work_estimation_tasks"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -307,7 +304,7 @@
         </record>
 
         <!-- Project Task Kanban View -->
-        <record model="ir.ui.view" id="view_task_kanban">
+        <record id="view_task_kanban" model="ir.ui.view">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
@@ -429,19 +426,6 @@
                     <field name="project_id"/>
                     <field name="stage_id"/>
                 </graph>
-            </field>
-        </record>
-
-        <record id="analytic_account_inherited_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.form.inherit</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-            <field eval="18" name="priority"/>
-            <field name="arch" type="xml">
-                <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks"/>
-                    <label for="use_tasks"/>
-                </xpath>
             </field>
         </record>
 
@@ -607,8 +591,8 @@
                     res_model="project.task" src_model="res.users" view_mode="tree,form,calendar,graph" view_type="form"/>
 
         <!-- Tags -->
-        <record model="ir.ui.view" id="project_tags_search_view">
-            <field name="name">Tags</field>
+        <record id="project_tags_search_view" model="ir.ui.view">
+            <field name="name">project.tags.search</field>
             <field name="model">project.tags</field>
             <field name="arch" type="xml">
                 <search string="Issue Version">
@@ -617,7 +601,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="project_tags_form_view">
-            <field name="name">Tags</field>
+            <field name="name">project.tags.form</field>
             <field name="model">project.tags</field>
             <field name="arch" type="xml">
                 <form string="Tags">
@@ -643,5 +627,4 @@
         <menuitem name="Projects" id="portal_services_projects" parent="portal.portal_projects"     
                   action="open_view_project_all" sequence="10"/>
 
-    </data>
-</openerp>
+</odoo>

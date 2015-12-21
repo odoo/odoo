@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .test_project_base import TestProjectBase
-from openerp.exceptions import AccessError
-from openerp.tools import mute_logger
+from odoo.exceptions import AccessError
+from odoo.tools import mute_logger
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
