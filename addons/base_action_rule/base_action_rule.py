@@ -218,12 +218,12 @@ class base_action_rule(osv.osv):
         def make_create():
             """ Instanciate a create method that processes action rules. """
             @openerp.api.model
-            def create(self, vals):
+            def create(self, vals, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.action.rule']._get_actions(self, ['on_create', 'on_create_or_write'])
 
                 # call original method
-                record = create.origin(self.with_env(actions.env), vals)
+                record = create.origin(self.with_env(actions.env), vals, **kw)
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=None):
@@ -240,7 +240,7 @@ class base_action_rule(osv.osv):
             # catch updates made by field recomputations.
             #
             @openerp.api.multi
-            def _write(self, vals):
+            def _write(self, vals, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.action.rule']._get_actions(self, ['on_write', 'on_create_or_write'])
                 records = self.with_env(actions.env)
@@ -255,7 +255,7 @@ class base_action_rule(osv.osv):
                 }
 
                 # call original method
-                _write.origin(records, vals)
+                _write.origin(records, vals, **kw)
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
@@ -396,6 +396,8 @@ class base_action_rule(osv.osv):
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
+        if '__action_done' not in context:
+            context = dict(context, __action_done={})
         # retrieve all the action rules to run based on a timed condition
         action_dom = [('kind', '=', 'on_time')]
         action_ids = self.search(cr, uid, action_dom, context=dict(context, active_test=True))
@@ -439,8 +441,7 @@ class base_action_rule(osv.osv):
                 action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
                 if last_run <= action_dt < now:
                     try:
-                        context = dict(context or {}, action=True)
-                        self._process(cr, uid, action, [record.id], context=context)
+                        action._process(record)
                     except Exception:
                         import traceback
                         _logger.error(traceback.format_exc())

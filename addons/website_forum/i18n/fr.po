@@ -11,13 +11,15 @@
 # Martin Trigaux, 2015
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
+# Nicolas Lempereur <nle@odoo.com>, 2015
+# Saad Thaifa <saad.thaifa@gmail.com>, 2015
 # Tahina RABEHARIVONY <tahrabe@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-11-24 23:04+0000\n"
+"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"PO-Revision-Date: 2015-12-07 19:44+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -257,7 +259,7 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr "<i class=\"text-muted\">utilisateurs récompensés</i>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:419
+#: code:addons/website_forum/models/forum.py:483
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -265,7 +267,16 @@ msgid ""
 msgstr "<p>Une nouvelle réponse pour <i>%s</i> à été postée. <a href=\"%s/forum/%s/question/%s\">Cliquez ici y pour accéder</a></p>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:425
+#: code:addons/website_forum/models/forum.py:499
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s and require your "
+"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
+"question.</a></p>"
+msgstr "<p>Une nouvelle question <i>%s</i> a été posée à propos de %s. <a href=\"%s/forum/%s/question/%s\">Cliquez ici pour y accéder.</a></p>"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -283,14 +294,14 @@ msgstr "<small class=\"text-muted\">\n                    Signalé\n            
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<small>profile</small>"
-msgstr "<small>profile</small>"
+msgstr "<small>profil</small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid ""
 "<span class=\"caret\"/>\n"
 "                                <span class=\"sr-only\">Select Post</span>"
-msgstr "<span class=\"caret\"/>\n                                <span class=\"sr-only\">Sélectionner le poste</span>"
+msgstr "<span class=\"caret\"/>\n                                <span class=\"sr-only\">Sélectionner le message</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -298,13 +309,13 @@ msgid ""
 "<span class=\"sr-only\">Toggle navigation</span>\n"
 "                        <span class=\"icon-bar\"/>\n"
 "                        <span class=\"icon-bar\"/>"
-msgstr "<span class=\"sr-only\">Toggle navigation</span>\n                        <span class=\"icon-bar\"/>\n                        <span class=\"icon-bar\"/>"
+msgstr "<span class=\"sr-only\">Basculer la navigation</span>\n                        <span class=\"icon-bar\"/>\n                        <span class=\"icon-bar\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<span class=\"text-muted\">(only one answer per question is allowed)</span>"
-msgstr "<span class=\"text-muted\">(une seule réponse par question est autorisé)</span>"
+msgstr "<span class=\"text-muted\">(une seule réponse par question est autorisée)</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -1683,11 +1694,6 @@ msgid "Last activity date"
 msgstr "Dernière activié"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr "Dernière notification marquée comme lue sur base du Calendrier"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
 msgstr "Dernière mise à jour:"
@@ -2122,8 +2128,8 @@ msgstr "Mettez votre question ici."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
-msgid "Q&amp;A"
-msgstr "Q&A"
+msgid "Q&amp;amp;A"
+msgstr "Q&amp;amp;R"
 
 #. module: website_forum
 #. openerp-web

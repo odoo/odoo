@@ -122,31 +122,36 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
-        domains = [[('auto_apply', '=', True), ('vat_required', '=', vat_required)]]
-        if vat_required:
-            # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
-            domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
+        base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
+        null_state_dom = state_domain = [('state_ids', '=', False)]
+        null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
+
         if zipcode and zipcode.isdigit():
             zipcode = int(zipcode)
-            domain_zip = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
+            zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
         else:
-            zipcode, domain_zip = 0, [('zip_from', '=', 0), ('zip_to', '=', 0)]
-        state_domain = [('state_ids', '=', False)]
+            zipcode = 0
+
         if state_id:
             state_domain = [('state_ids', '=', state_id)]
-        for domain in domains:
-            # Build domain to search records with exact matching criteria
-            fpos_id = self.search(domain + [('country_id', '=', country_id)] + state_domain + domain_zip, limit=1).id
-            # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
-            if not fpos_id and zipcode:
-                fpos_id = self.search(domain + [('country_id', '=', country_id)] + state_domain + [('zip_from', '=', 0), ('zip_to', '=', 0)], limit=1).id
-            if not fpos_id and state_id:
-                fpos_id = self.search(domain + [('country_id', '=', country_id)] + [('state_ids', '=', False)] + domain_zip, limit=1).id
-            if not fpos_id and state_id and zipcode:
-                fpos_id = self.search(domain + [('country_id', '=', country_id)] + [('state_ids', '=', False)] + [('zip_from', '=', 0), ('zip_to', '=', 0)], limit=1).id
-            if fpos_id:
-                return fpos_id
-        return False
+
+        domain_country = base_domain + [('country_id', '=', country_id)]
+        domain_group = base_domain + [('country_group_id.country_ids', '=', country_id)]
+
+        # Build domain to search records with exact matching criteria
+        fpos = self.search(domain_country + state_domain + zip_domain, limit=1)
+        # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
+        if not fpos and state_id:
+            fpos = self.search(domain_country + null_state_dom + zip_domain, limit=1)
+        if not fpos and zipcode:
+            fpos = self.search(domain_country + state_domain + null_zip_dom, limit=1)
+        if not fpos and state_id and zipcode:
+            fpos = self.search(domain_country + null_state_dom + null_zip_dom, limit=1)
+
+        # fallback: country group with no state/zip range
+        if not fpos:
+            fpos = self.search(domain_group + null_state_dom + null_zip_dom, limit=1)
+        return fpos or False
 
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
@@ -156,7 +161,7 @@ class AccountFiscalPosition(models.Model):
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
 
-        # if no delivery use invocing
+        # if no delivery use invoicing
         if delivery_id:
             delivery = PartnerObj.browse(delivery_id)
         else:
@@ -166,25 +171,23 @@ class AccountFiscalPosition(models.Model):
         if delivery.property_account_position_id or partner.property_account_position_id:
             return delivery.property_account_position_id.id or partner.property_account_position_id.id
 
-        fiscal_position_id = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, bool(partner.vat))
-        if fiscal_position_id:
-            return fiscal_position_id
+        def fallback_search(vat_required):
+            fpos = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
+            if not fpos:
+                # Fallback on catchall (no country, no group)
+                fpos = self.search([('auto_apply', '=', True), ('vat_required', '=', vat_required),
+                                    ('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
+            return fpos
 
-        domains = [[('auto_apply', '=', True), ('vat_required', '=', bool(partner.vat))]]
-        if partner.vat:
-            # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
-            domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
+        # First search only matching VAT positions
+        vat_required = bool(partner.vat)
+        fp = fallback_search(vat_required)
 
-        for domain in domains:
-            if delivery.country_id.id:
-                fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
-                if fiscal_position:
-                    return fiscal_position.id
+        # Then if VAT required found no match, try positions that do not require it
+        if not fp and vat_required:
+            fp = fallback_search(False)
 
-            fiscal_position = self.search(domain + [('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
-            if fiscal_position:
-                return fiscal_position.id
-        return False
+        return fp.id if fp else False
 
 
 class AccountFiscalPositionTax(models.Model):
@@ -325,7 +328,7 @@ class ResPartner(models.Model):
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
@@ -405,7 +408,7 @@ class ResPartner(models.Model):
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
-        help='Utility field to express amount currency')
+        string="Currency", help='Utility field to express amount currency')
 
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")

@@ -9,6 +9,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.tools.translate import html_translate
 
 
 class Blog(osv.Model):
@@ -103,7 +104,7 @@ class BlogPost(osv.Model):
         'tag_ids': fields.many2many(
             'blog.tag', string='Tags',
         ),
-        'content': fields.html('Content', translate=True, sanitize=False),
+        'content': fields.html('Content', translate=html_translate, sanitize=False),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [

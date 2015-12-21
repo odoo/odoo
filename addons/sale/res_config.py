@@ -25,8 +25,8 @@ class sale_configuration(osv.TransientModel):
         'group_product_pricelist':fields.boolean("Show pricelists On Products", implied_group='product.group_product_pricelist'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/purchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_discount_per_so_line': fields.selection([

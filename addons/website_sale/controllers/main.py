@@ -634,7 +634,8 @@ class website_sale(http.Controller):
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
             order.write({'partner_shipping_id': checkout.get('shipping_id')})
-            order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
+
+        order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         order_info = {
             'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
@@ -803,12 +804,11 @@ class website_sale(http.Controller):
         tx = request.website.sale_get_transaction()
         if tx:
             tx_id = tx.id
-            if tx.reference != order.name:
+            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
                 tx = False
                 tx_id = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
-                    'acquirer_id': acquirer_id,
                     'amount': order.amount_total,
                 })
         if not tx:

@@ -1,14 +1,22 @@
-@o-chat-window-bg: lighten(lightgray, 13%);
+@o-chat-window-bg: white;
 
 .o_chat_window {
     .o-flex-display();
     .o-flex-flow(column, nowrap);
     position: fixed;
-    width: 260px;
-    height: 333px;
+    width: 300px;
+    max-width: 100%;
+    height: 400px;
+    max-height: 100%;
+    font-size: 12px;
     background-color: @o-chat-window-bg;
     border: 1px solid gray;
     border-radius: 3px;
+    z-index: 2;
+
+    @media (max-width: @screen-xs-max) {
+        display:none;
+    }
 
     .o_chat_header {
         .o-flex-display();
@@ -37,15 +45,25 @@
         padding: 5px;
 
         .o_mail_thread .o_thread_date_separator {
+            margin-top: 0px;
+            margin-bottom: 15px;
             border-color: lightgray;
             .o_thread_date {
                 background-color: @o-chat-window-bg;
             }
         }
+        .o_thread_message {
+            .o_thread_message_sidebar {
+                margin-right: 5px;
+            }
+        }
     }
 
-    .o_chat_input > input {
-        padding: 5px;
-        width: 100%;
+    .o_chat_input {
+        .o-flex(0, 0, auto);
+        > input {
+            padding: 5px;
+            width: 100%;
+        }
     }
 }

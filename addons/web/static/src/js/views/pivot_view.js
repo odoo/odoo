@@ -574,7 +574,7 @@ var PivotView = View.extend({
             i, j, cell, $row, $cell;
 
         var groupby_labels = _.map(this.main_col.groupbys, function (gb) {
-            return self.groupable_fields[gb.split(':')[0]].string;
+            return self.fields[gb.split(':')[0]].string;
         });
 
         for (i = 0; i < headers.length; i++) {

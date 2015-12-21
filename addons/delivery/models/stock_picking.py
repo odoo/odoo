@@ -75,9 +75,9 @@ class StockPicking(models.Model):
 
         if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.shipping_enabled:
             self.send_to_shipper()
+
+        if self.carrier_id:
             self._add_delivery_cost_to_so()
-        elif self.carrier_id and self.carrier_id.delivery_type in ['fixed', 'base_on_rule'] and self.carrier_id.shipping_enabled:
-            self.carrier_price = sum(self.sale_id.order_line.filtered(lambda r: r.is_delivery).mapped('price_unit'))
 
         return res
 

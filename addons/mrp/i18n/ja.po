@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-09 12:37+0000\n"
+"PO-Revision-Date: 2015-12-10 10:55+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid ""
 "'Consume only' mode will only consume the products with the quantity selected.\n"
 "'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
-msgstr "消費のみモードでは、製品は選択した量だけを消費します。\n消費と生産モードでは、製品を選択した数量製造すると同様に消費もされます。そして合計注文量が製造された時に製造オーダーが終わります。"
+msgstr "「消費のみ」モードでは、指定した数量で構成品の消費のみを行います。\n「消費と生産」モードでは、構成品の消費のみでなく、完成品/半製品の在庫計上が行われます。オーダ数量分の生産をもち、製造オーダが完了します。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -223,7 +223,7 @@ msgstr "承認"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr "この製品を生産するための平均遅延日数です。マルチレベルBOMの場合、部品の製造リードタイムが加算されます。"
+msgstr "この製品を生産するための平均遅延日数です。多階層BOMの場合、構成品の製造リードタイムが加算されます。"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -295,14 +295,14 @@ msgstr "部品表"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr "構造の部品表"
+msgstr "部品表構造"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr "部品表には完成品の製造に必要な原材料のリストを定義することができます。"
+msgstr "部品表には完成品の生産に必要な原材料のリストを定義できます。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -405,12 +405,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Capacity Information"
-msgstr "容量情報"
+msgstr "能力情報"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
 msgid "Capacity per Cycle"
-msgstr "サイクル当りの容量"
+msgstr "サイクル毎の能力"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
@@ -426,7 +426,7 @@ msgstr "数量変更"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "製品の数量変更"
+msgstr "製品数量変更"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -491,7 +491,7 @@ msgstr "会社"
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Components"
-msgstr "部材"
+msgstr "構成品"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view

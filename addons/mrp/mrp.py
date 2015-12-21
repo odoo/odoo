@@ -58,10 +58,10 @@ class mrp_workcenter(osv.osv):
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
         'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account',
-            help="Fill this only if you want automatic analytic accounting entries on production orders."),
+            help="Fill this only if you want automatic analytic accounting entries on production orders.", domain=[('account_type', '=', 'normal')]),
         'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account',
-            help="Fill this only if you want automatic analytic accounting entries on production orders."),
+            help="Fill this only if you want automatic analytic accounting entries on production orders.", domain=[('account_type', '=', 'normal')]),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('deprecated', '=', False)]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
         'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
@@ -800,12 +800,39 @@ class mrp_production(osv.osv):
                         {'location_id': production.location_dest_id.id})
         return True
 
+    def _compute_costs_from_production(self, cr, uid, ids, context=None):
+        """ Generate workcenter costs and rectify the value of the quant
+
+        Must be called at the end of the production.
+        The value of the quant was not possible to compute before the end of
+        the manufacturing order due to the cost of raw manterial and production
+        costs. The price of the quant was not set in get_price_unit.
+        """
+        for production in self.browse(cr, uid, ids):
+            total_cost = self._costs_generate(cr, uid, production)
+            if production.product_id.cost_method == 'real':
+                for consumed_move in production.move_lines2:
+                    for consumed_quant in consumed_move.quant_ids:
+                        total_cost += consumed_quant.inventory_value
+
+                from_uom = production.product_uom
+                to_uom = production.product_id.uom_id
+                quant_cost = total_cost / self.pool['product.uom']._compute_qty_obj(cr, uid, from_uom, production.product_qty, to_uom)
+                self._apply_cost_from_production(cr, uid, production, quant_cost, context=context)
+
+    def _apply_cost_from_production(self, cr, uid, production, quant_cost, context=None):
+        """Update the quant value based on computed production cost"""
+        for produced_product in production.move_created_ids2:
+            if produced_product.product_id == production.product_id:
+                # only the produced product
+                # should only have one quant at the end of the production
+                self.pool['stock.quant'].write(cr, SUPERUSER_ID, produced_product.quant_ids.ids, {'cost': quant_cost}, context=context)
+
     def action_production_end(self, cr, uid, ids, context=None):
         """ Changes production state to Finish and writes finished date.
         @return: True
         """
-        for production in self.browse(cr, uid, ids):
-            self._costs_generate(cr, uid, production)
+        self._compute_costs_from_production(cr, uid, ids, context)
         write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
         # Check related procurements
         proc_obj = self.pool.get("procurement.order")

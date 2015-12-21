@@ -61,7 +61,7 @@ class StockMove(osv.osv):
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
-                    if prod_obj.type in ('consu','product'):
+                    if product.type in ('consu','product'):
                         valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,

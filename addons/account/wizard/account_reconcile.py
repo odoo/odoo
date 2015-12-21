@@ -38,7 +38,7 @@ class AccountMoveLineReconcile(models.TransientModel):
             if not line.reconciled:
                 credit += line.credit
                 debit += line.debit
-        precision = self.company_id.currency_id.decimal_places
+        precision = self.env.user.company_id.currency_id.decimal_places
         writeoff = float_round(debit - credit, precision_digits=precision)
         credit = float_round(credit, precision_digits=precision)
         debit = float_round(debit, precision_digits=precision)
@@ -70,7 +70,7 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
     writeoff_acc_id = fields.Many2one('account.account', string='Write-Off account', required=True, domain=[('deprecated', '=', False)])
     date_p = fields.Date(string='Date', default=fields.Date.context_today)
     comment = fields.Char(required=True, default='Write-off')
-    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
 
     @api.multi
     def trans_rec_addendum(self):

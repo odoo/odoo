@@ -18,7 +18,7 @@ class MailController(http.Controller):
 
     def _redirect_to_messaging(self):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web?%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/receive', type='json', auth='none')

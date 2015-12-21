@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:22+0000\n"
+"POT-Creation-Date: 2015-11-26 09:05+0000\n"
+"PO-Revision-Date: 2015-11-27 08:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -386,13 +386,27 @@ msgid "${object.event_id.name} - Reminder"
 msgstr ""
 
 #. module: calendar
+#: code:addons/calendar/calendar.py:775
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:773
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr ""
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1628
+#: code:addons/calendar/calendar.py:1620
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr ""
@@ -718,7 +732,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Everyone"
-msgstr ""
+msgstr "ทุกคน"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -791,7 +805,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -1057,7 +1071,7 @@ msgstr ""
 #: code:addons/calendar/static/src/xml/base_calendar.xml:17
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "ตกลง"
 
 #. module: calendar
 #: selection:calendar.event,class:0
@@ -1363,7 +1377,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
 msgid "Unit"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_unread

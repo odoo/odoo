@@ -57,6 +57,21 @@
             </field>
         </record>
 
+        <record id="invoice_form_portal" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="groups_id" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//div[contains(@attrs, "has_outstanding")]' position="replace"/>
+                    <field name="has_outstanding" position="replace"/>
+                    <field name="payments_widget" position="replace"/>
+                    <field name="outstanding_credits_debits_widget" position="replace"/>
+                </data>
+            </field>
+        </record>
+
         <!--
             Override the original action to set another help field and/or
             another context field, more suited for portal members

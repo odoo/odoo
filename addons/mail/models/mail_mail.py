@@ -6,7 +6,6 @@ import logging
 import threading
 
 from email.utils import formataddr
-from urlparse import urljoin
 
 import psycopg2
 

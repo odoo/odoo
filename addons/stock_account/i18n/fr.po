@@ -3,6 +3,7 @@
 # * stock_account
 # 
 # Translators:
+# Fabien Pinckaers <fp@openerp.com>, 2015
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
 msgid ""
@@ -10,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-11-20 21:29+0000\n"
+"PO-Revision-Date: 2015-12-07 19:03+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +96,7 @@ msgstr "Choisissez une date dans le passé pour obtenir l'inventaire à cette da
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
+msgstr "Sélectionnez la date de valorisation comptable à laquelle vous souhaitez valoriser le mouvement de stock (date de fin d'inventaire)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -164,7 +165,7 @@ msgstr "Nom affiché"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Forcer la date comptable"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -211,14 +212,14 @@ msgstr "Si l'évaluation permanente est activée pour un produit, le système cr
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Inclure les frais de douane dans le calcul du coût produit"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr ""
+msgstr "Installer le module qui permet d'imputer les frais de douane sur les réceptions et les répartir sur les différents produits."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -249,7 +250,7 @@ msgstr "Valeur d'inventaire"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr "Date d'inventaire"
+msgstr "Inventaire à la date"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -310,7 +311,7 @@ msgstr "Aucune différence entre le prix standard et le nouveau prix!"
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Pas de frais de douane."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
@@ -326,19 +327,19 @@ msgstr "Périodique (manuel)"
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Valorisation d'inventaire périodique (recommandé)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Perpétuel (automatisé)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
-msgstr ""
+msgstr "Valorisation d'inventaire perpéturl (chaque mouvement de stock produit des écritures comptables)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -410,7 +411,7 @@ msgstr "Valoriser le stock "
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the curent stock valuation."
-msgstr ""
+msgstr "Obtenir la valorisation de stock actuelle."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
@@ -655,7 +656,7 @@ msgstr "Assistant qui ouvre le tableau de l'historique de la valorisation"
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr ""
+msgstr "Vous n'avez pas de journal de stock défini sur la catégorie du produit, vérifiez si vous avez bien installé un plan de comptes"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -670,7 +671,7 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method

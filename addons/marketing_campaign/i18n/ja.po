@@ -3,12 +3,13 @@
 # * marketing_campaign
 # 
 # Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
+"PO-Revision-Date: 2015-12-10 10:56+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +81,7 @@ msgstr "全レコード（重複なし）"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr "シグナルのアクティビティはプログラム化と呼ばれます。シグナルが送信された時に、作業項目はいつも作成されることに注意して下さい。"
+msgstr "シグナル付の活動はプログラムから呼び出すことが可能です。作業項目はシグナル送信により作成されるので注意してください。"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -108,7 +109,7 @@ msgstr "自動翻訳"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "このオプションを有効にすることで、作業項目は実行されません。なぜなら、削除の代りにキャンセルされたとしてマークされた条件となるためです。"
+msgstr "このオプションを有効にすると、条件を満たさなかったために実行されなかった作業項目は、削除される代わりに取消済として認識されます。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -127,14 +128,14 @@ msgstr "キャンペーン"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr "キャンペーンアクティビティ"
+msgstr "キャンペーン活動"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Campaign Analysis"
-msgstr "キャンペーンの分析"
+msgstr "キャンペーン分析"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
@@ -154,7 +155,7 @@ msgstr "キャンペーンセグメント"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr "キャンペーン遷移"
+msgstr "キャンペーン推移"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
@@ -195,7 +196,7 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
-msgstr "キャンセル済"
+msgstr "取消済"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
@@ -238,7 +239,7 @@ msgstr "化粧"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 msgid "Cost"
-msgstr "経費"
+msgstr "費用"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_country_id
@@ -278,7 +279,7 @@ msgstr "このセグメントが最後に同期された（自動または手動
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "Date this segment was last closed or cancelled."
-msgstr "このセグメントが最後に閉じたあるいはキャンセルされた日付"
+msgstr "このセグメントが最後にクローズあるいは取り消された日付"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -299,7 +300,7 @@ msgid ""
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
-msgstr "キャンペーンに入れる新しいレコードの選択時に、フィルタに追加する追加基準を決定します。重複なしは既に以前のキャンペーンに入れたレコードを選択するのを避けます。キャンペーンが固有項目セットと重複なしである場合、固有項目であるために同じ値を持つれレコードや既にキャンペーンで入力されたレコードを選択するのを避けます。"
+msgstr "キャンペーンに入れる新しいレコードの選択時に、フィルタに足す追加基準を決定します。「重複なし」は既に以前のキャンペーンに入れたレコードの選択を避けます。キャンペーンが「ユニーク項目」セットを持つ場合、「重複なし」を指定すると、キャンペーンに既に入ったレコードと同じ値をユニーク項目に持つレコードの選択を避けます。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -422,7 +423,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "このセグメントに沿った一致したりソースレコードを選択するためのフィルタです。新しいフィルタを作成、保存することでリソースのリストビューで高度な検索に使うことができます。フィルタが設定されない場合、フィルタされることなく全レコードが選択されます。同期モードはまた、フィルタに対して基準を追加します。"
+msgstr "このセグメントに属するリソースレコードを選択するためのフィルタです。リソースのリストビューで高度な検索から新しいフィルタを作成・保存することができます。フィルタを適用しないと、全レコードが選択されます。同期モードもフィルタに基準を追加することがあります。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -435,7 +436,7 @@ msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and"
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
-msgstr "実行中のこのキャンペーンのための固定経費。各キャンペーンアクティビティに変動経費と売上を定義することができます。経費と売上統計はキャンペーンレポートに含まれます。"
+msgstr "このキャンペーン実行のための固定経費。各キャンペーンアクティビティに変動経費と売上を定義することもできます。経費と売上統計はキャンペーンレポートに含まれます。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -477,12 +478,12 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
-msgstr "時"
+msgstr "時間"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_transition_trigger
 msgid "How is the destination workitem triggered"
-msgstr "引き金となる宛先の作業項目の状態"
+msgstr "次の作業項目がどのようにトリガされるかを指定"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_id
@@ -510,7 +511,7 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "設定した場合、この項目は類似レコードが２回選択されることを避ける重複なしモードをセグメントに適用するのに役立ちます。類似レコードはこの固有項目に同じ値を持つレコードのことです。例えば、CRMのリードのEメール送信者項目を選択すると、同じキャンペーンを同じEメールアドレスに再度送信することを防止します。設定しない場合、重複なしセグメントは以前のキャンペーンで入れられた同じレコードが再び選択されるのを防ぐのみとなります。テキスト、整数といった項目のみと簡単に比較可能で、選択または単一の関連を持つもので使用できます。"
+msgstr "設定した場合、「重複なし」モードのセグメントが類似レコードを２回選択するのを防ぎます。類似レコードはこの固有項目に同じ値を持つレコードのことです。例えば、CRMのリードの「Eメール送信者」項目を選択すると、同じキャンペーンを同じEメールアドレスに再度送信することが防止できます。設定しない場合、「重複なし」セグメントは以前のキャンペーンで入れられた同じレコードが再び選択されるのを防ぐのみとなります。テキスト、整数、選択、単一リレーションといった、簡単に比較可能な項目のみ使用できます。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form

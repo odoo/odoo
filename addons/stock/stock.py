@@ -1936,7 +1936,7 @@ class stock_move(osv.osv):
                                    ], 'Status', readonly=True, select=True, copy=False,
                  help= "* New: When the stock move is created and not yet confirmed.\n"\
                        "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"\
-                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
+                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
         'partially_available': fields.boolean('Partially Available', readonly=True, help="Checks if the move has some stock reserved", copy=False),
@@ -2649,7 +2649,7 @@ class stock_move(osv.osv):
                     lot_move_qty[move.id] = qty_on_link
 
                 if not move_qty.get(move.id):
-                    raise UserError(_("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
+                    raise UserError(_("The roundings of your unit of measure %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
                 move_qty[move.id] -= move_qty_ops[move]
 
             #Handle lots separately

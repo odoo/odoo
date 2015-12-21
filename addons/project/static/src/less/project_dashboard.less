@@ -48,8 +48,24 @@
         .o_label {
             color: white;
         }
+        .o_needaction{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: white;
+            font-size: small;
+            opacity: 0.5;
+            &:hover{
+                opacity:1;
+            }
+            &::before {
+                content: "\f086";
+                font: normal normal normal 14px/1 FontAwesome;
+            }
+        }
 
         .o_project_kanban_box {
+            position: relative;
             text-align: center;
             padding: 15px 0 15px 0;
             .o-flex(1, 1, auto);

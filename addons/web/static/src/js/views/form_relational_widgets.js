@@ -759,6 +759,7 @@ var FieldX2Many = AbstractManyField.extend({
             }
             if(view.view_type === "list") {
                 _.extend(view.options, {
+                    action_buttons: false, // to avoid 'Save' and 'Discard' buttons to appear in X2M fields
                     addable: null,
                     selectable: self.multi_selection,
                     sortable: true,
@@ -1430,7 +1431,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     get_render_data: function(ids){
         var self = this;
         return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
             return self.dataset.read_ids(ids, fields);
         });
     },

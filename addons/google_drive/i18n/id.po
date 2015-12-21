@@ -3,13 +3,14 @@
 # * google_drive
 # 
 # Translators:
+# Lorenz Adam Damara <lorenzrenz@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-17 12:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-12 22:06+0000\n"
+"Last-Translator: Lorenz Adam Damara <lorenzrenz@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "Aktif"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Setidaknya satu kunci tidak dapat ditemukan dalam pola nama Google Drive Anda"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -49,17 +50,17 @@ msgstr "Kode Otorisasi"
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Pilih bagaimana google drive baru diberi nama, pada sisi google. Mis. gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Klik untuk menambah template baru"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "Configure your templates"
-msgstr ""
+msgstr "Konfigurasu template Anda"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
@@ -75,7 +76,7 @@ msgstr "Dibuat pada"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Membuat google drive mungkin hanya dapat dilakukan sekali dalam satu waktu"
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -113,24 +114,24 @@ msgstr "Google Drive"
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Konfigurasi Google Drive"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Pola Nama Google Drive"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:55
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google Drive belum dikonfigurasi. Mohon hubungi administrator Anda."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Google Drive templates config"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
@@ -172,18 +173,18 @@ msgstr "Contoh"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr ""
+msgstr "Model filter yang dipilih tidak cocok dengan model template saat."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:173
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Mohon masukan URL Google Dokumen yang valid"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "Sumber daya Id"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:72
@@ -191,7 +192,7 @@ msgstr ""
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "Sesuatu yang salah selama generasi tanda. Silakan meminta lagi kode otorisasi."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -201,7 +202,7 @@ msgstr "Nama Template"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "Template URL"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
@@ -213,12 +214,12 @@ msgstr "Template"
 #: code:addons/google_drive/google_drive.py:90
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Template Google tidak dapat ditemukan. Mungkin telah dihapus"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "URL untuk menghasilkan kode otorisasi dari Google"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -227,7 +228,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Nama dokumen yang dilampirkan dapat menggunakan data tetap atau variabel. Untuk membedakan antara dokumen di Google Drive, menggunakan kata-kata tetap dan bidang. Misalnya, dalam contoh di atas, jika Anda menulis Agrolait _% (nama) s_Sales di bidang nama Google Drive, dokumen di Google Drive Anda dan dalam lampiran Odoo akan diberi nama 'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -235,7 +236,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Izin 'pembaca' untuk 'siapa pun dengan link' belum ditulis pada dokumen"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -248,7 +249,7 @@ msgstr "URI"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Anda belum dikonfigurasi 'Kode Otorisasi' dihasilkan dari google, silahkan menghasilkan dan mengkonfigurasinya."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration

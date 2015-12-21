@@ -81,7 +81,26 @@
 
                 <dl>
                     <dt><a href="#" class="oe_import_toggle">
-                        What can I do when the Import preview table isn't 
+                        Why don't CSV file use my date format?
+                    </a></dt>
+                    <dd>
+                        <p>Because CSV files are used internally and in
+                        multiple external processes, interoperability is a
+                        significant issue. To limit incorrect
+                        interpretation of data, they are strictly limited
+                        to dates following <a
+                        href="https://en.wikipedia.org/wiki/ISO_8601">the
+                        ISO 8601 format</a></p>.<p>For more familiar or
+                        flexible formatting, use Excel files, date cells
+                        are stored as genuine dates and the familiar and
+                        locale-aware display of dates is independent from
+                        the way it is stored.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What can I do when the Import preview table isn't
                         displayed correctly?</a></dt>
                     <dd>
                         <p>By default the Import preview is set on commas as 

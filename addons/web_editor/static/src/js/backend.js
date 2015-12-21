@@ -25,7 +25,7 @@ var FieldTextHtmlSimple = widget.extend({
     template: 'web_editor.FieldTextHtmlSimple',
     _config: function () {
         var self = this;
-        return {
+        var config = {
             'focus': false,
             'height': 180,
             'toolbar': [
@@ -46,6 +46,10 @@ var FieldTextHtmlSimple = widget.extend({
                 self.trigger('changed_value');
             }
         };
+        if (session.debug) {
+            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
     },
     start: function() {
         var def = this._super.apply(this, arguments);
@@ -93,8 +97,8 @@ var FieldTextHtmlSimple = widget.extend({
         if (value.match(/^\s*$/)) {
             value = '<p><br/></p>';
         } else {
-            value = "<p>"+value.split(/<br\/?>/).join("</p><p>")+"</p>";
-            value = value.replace('<p><p>', '<p>').replace('</p></p>', '</p>');
+            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('</p></p>', '</p>');
         }
         return value;
     },

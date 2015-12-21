@@ -384,6 +384,7 @@ class RegistryManager(object):
                     # This should be a method on Registry
                     openerp.modules.load_modules(registry._db, force_demo, status, update_module)
                 except Exception:
+                    _logger.exception('Failed to load registry')
                     del cls.registries[db_name]
                     raise
 
