@@ -82,6 +82,11 @@ class AccountConfigSettings(models.TransientModel):
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
              '-This installs the module account_asset.')
+    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition", 
+        help='This allows you to manage the revenue recognition on selling products. '
+             'It keeps track of the installments occurred on those revenue recognitions, '
+             'and creates account moves for those installment lines\n'
+             '-This installs the module account_deferred_revenue.')
     module_account_budget = fields.Boolean(string='Budget management',
         help='This allows accountants to manage analytic and crossovered budgets. '
              'Once the master budgets and the budgets are defined, '
