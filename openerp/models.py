@@ -1372,7 +1372,7 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id.strip())
                    for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
