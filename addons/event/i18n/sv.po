@@ -1,47 +1,43 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-12-10 11:58+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:06+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_event
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from "
-"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
-"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>Hej ${object.name},</p>\n        <p>Evenemanget ${object.event_id.name} som du registrerade dig till är bekräftat och kommer hållas ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} till ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n        För ytterligare information vänligen kontakta evenemangsavdelningen.</p>\n        <p>Tack för ditt deltagande!</p>\n        <p>Vänliga hälsningar</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
@@ -62,25 +58,24 @@ msgid "(confirmed:"
 msgstr "(bekräftad:"
 
 #. module: event
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0
 msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
-"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
-"<div class=\"carousel-inner\">\n"
-"<div class=\"item active image_text\"><img height=\"100%\" "
-"src=\"/website/static/src/img/banner/orange_red.jpg\" width=\"100%\"><div "
-"class=\"container\">\n"
-"<div class=\"carousel-caption content\">\n"
-"<h2>5 Intensive Days</h2>\n"
-"\n"
-"<h4>to learn .JS development</h4>\n"
-"</div>\n"
-"\n"
-"<img class=\"carousel-image hidden-xs\" alt=\"Banner Odoo Image\" "
-"src=\"/website/static/src/img/banner/banner_picture.png\">\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn .JS development</h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
 "</div>\n"
 "\n"
 "<div class=\"container\">\n"
@@ -90,11 +85,7 @@ msgid ""
 "</div>\n"
 "\n"
 "<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical "
-"aspects.</span></p>\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -120,8 +111,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Loops</li>\n"
 "\t<li class=\"list-group-item\">Arrays</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
-"compenents in HTML pages.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -134,8 +124,7 @@ msgid ""
 "<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
 "</div>\n"
 "\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
-"JQuery</li>\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
 "\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
 "\t<li class=\"list-group-item\">Underscore</li>\n"
 "\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
@@ -143,8 +132,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
 "\t<li class=\"list-group-item\">Calling the ORM</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page "
-"interacting with the ORM.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -165,8 +153,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Integrated Help</li>\n"
 "\t<li class=\"list-group-item\">How to Debug</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application "
-"with backend and user interface.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -182,8 +169,7 @@ msgid ""
 "<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
 "<p><strong>Objectives:</strong></p>\n"
 "\n"
-"<p><strong>Having attended this course, participants should be able "
-"to:</strong></p>\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
 "\n"
 "<ul><li>Understand the development concepts and architecture;</li>\n"
 "\t<li>Install and administer your own server;</li>\n"
@@ -199,14 +185,11 @@ msgid ""
 "<p><strong>Requirements:</strong></p>\n"
 "\n"
 "<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A "
-"basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software "
-"(see Functional Training).</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
 "</ul><p></p>\n"
 "\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
-"Official Website</a>.</p>\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -218,21 +201,18 @@ msgid ""
 "<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
 "<h1 class=\"text-center\">Read Great Contents</h1>\n"
 "\n"
-"<h3 class=\"text-muted text-center\">What do people say about this "
-"course?</h3>\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can "
-"develop anything now.</p>\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly "
-"worth its price.</p>\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "</div>\n"
@@ -240,25 +220,24 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
-"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
-"<div class=\"carousel-inner\">\n"
-"<div class=\"item active image_text\"><img height=\"100%\" "
-"src=\"/website/static/src/img/banner/orange_red.jpg\" width=\"100%\"><div "
-"class=\"container\">\n"
-"<div class=\"carousel-caption content\">\n"
-"<h2>5 Intensive Days</h2>\n"
-"\n"
-"<h4>to learn .JS development</h4>\n"
-"</div>\n"
-"<img class=\"carousel-image hidden-xs\" alt=\"Banner Odoo Image\" "
-"src=\"/website/static/src/img/banner/banner_picture.png\">\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn <i>business applications development</i></h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
 "</div>\n"
 "\n"
 "<div class=\"container\">\n"
@@ -268,11 +247,7 @@ msgid ""
 "</div>\n"
 "\n"
 "<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical "
-"aspects.</span></p>\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -298,8 +273,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Loops</li>\n"
 "\t<li class=\"list-group-item\">Arrays</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
-"compenents in HTML pages.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -312,8 +286,7 @@ msgid ""
 "<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
 "</div>\n"
 "\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
-"JQuery</li>\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
 "\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
 "\t<li class=\"list-group-item\">Underscore</li>\n"
 "\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
@@ -321,8 +294,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
 "\t<li class=\"list-group-item\">Calling the ORM</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page "
-"interacting with the ORM.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -343,8 +315,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Integrated Help</li>\n"
 "\t<li class=\"list-group-item\">How to Debug</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application "
-"with backend and user interface.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -360,8 +331,7 @@ msgid ""
 "<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
 "<p><strong>Objectives:</strong></p>\n"
 "\n"
-"<p><strong>Having attended this course, participants should be able "
-"to:</strong></p>\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
 "\n"
 "<ul><li>Understand the development concepts and architecture;</li>\n"
 "\t<li>Install and administer your own server;</li>\n"
@@ -377,14 +347,11 @@ msgid ""
 "<p><strong>Requirements:</strong></p>\n"
 "\n"
 "<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A "
-"basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software "
-"(see Functional Training).</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
 "</ul><p></p>\n"
 "\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
-"Official Website</a>.</p>\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -396,21 +363,180 @@ msgid ""
 "<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
 "<h1 class=\"text-center\">Read Great Contents</h1>\n"
 "\n"
-"<h3 class=\"text-muted text-center\">What do people say about this "
-"course?</h3>\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can "
-"develop anything now.</p>\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly "
-"worth its price.</p>\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_1
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn technical aspects</h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "</div>\n"
@@ -423,8 +549,7 @@ msgid ""
 "<div class=\"oe_structure\">\n"
 "    <center><strong>Conference on Business Applications</strong></center>\n"
 "    <p> </p>\n"
-"    <p> During this conference, our team will give a detailed overview of "
-"our business applications. You’ll know all the benefits of using it.</p>\n"
+"    <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>\n"
 "    <p> </p>\n"
 "    <p><strong>Objectives:</strong></p>\n"
 "    <p>Having attended this conference, participants should be able to:</p>\n"
@@ -436,26 +561,20 @@ msgid ""
 "    <p><strong>Program:</strong></p>\n"
 "    <ul>\n"
 "    <li>Introduction, CRM, Sales Management</li>\n"
-"    <li>Purchase, Sales &amp; Purchase management, Financial "
-"accounting.</li>\n"
+"    <li>Purchase, Sales &amp; Purchase management, Financial accounting.</li>\n"
 "    <li>Project management, Human resources, Contract management.</li>\n"
-"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, "
-"Import/Export.</li>\n"
+"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export.</li>\n"
 "    <li>Point of Sale (POS), Introduction to report customization.</li>\n"
 "    </ul>\n"
 "    <p> </p>\n"
 "    <p><strong>Where to find us:</strong></p>\n"
-"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United "
-"States)</p>\n"
-"    <p>For any additional information, please contact us at <a "
-"href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
+"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n"
+"    <p>For any additional information, please contact us at <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
 "    <p> </p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Luigi Roni, Senior Event Manager</p>\n"
 "    <p> </p>\n"
-"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-"
-"name or re-locate<br>the event or change the dates on which it is "
-"held.)</em></p>\n"
+"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the event or change the dates on which it is held.)</em></p>\n"
 "</div>\n"
 msgstr ""
 
@@ -478,21 +597,11 @@ msgid ""
 "            <table class=\"text-center\">\n"
 "                <tr>\n"
 "                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> "
-"Dinner</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> Dinner</div></td>\n"
 "                    <td width=\"10%\"></td>\n"
 "                </tr>\n"
 "                <tr style=\"background:lightgrey; height: 15px;\">\n"
@@ -511,16 +620,9 @@ msgid ""
 "            <table class=\"text-center\">\n"
 "                <tr>\n"
 "                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Drinks</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Drinks</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: "
-"10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
 "                    <td width=\"25%\"></td>\n"
 "                </tr>\n"
 "                <tr style=\"background:lightgrey; height: 15px;\">\n"
@@ -541,19 +643,15 @@ msgstr ""
 #: model:event.event,badge_back:event.event_1
 msgid ""
 "<h2>Program</h2>\n"
-"            <div><strong>Registrations</strong><small> are from 8:30 am, "
-"except on Friday from 9:00 am</small></div>\n"
+"            <div><strong>Registrations</strong><small> are from 8:30 am, except on Friday from 9:00 am</small></div>\n"
 "            <div>\n"
-"                <strong>Lunch</strong><small> is served between 1:00 pm and "
-"2:00 pm.</small>\n"
+"                <strong>Lunch</strong><small> is served between 1:00 pm and 2:00 pm.</small>\n"
 "            </div>\n"
 "            <h2>Special Events</h2>\n"
 "            <table style=\"border: 1px solid black;\">\n"
 "                <tr style=\"border: 1px solid black;\">\n"
-"                    <td class=\"text-center\" "
-"width=\"15%\"><strong>4/6</strong></td>\n"
-"                    <td class=\"text-center\" "
-"width=\"25%\"><strong>19h00</strong></td>\n"
+"                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n"
+"                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n"
 "                    <td><small>Barbecue Beer Event</small></td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -575,13 +673,10 @@ msgid ""
 "                </div>\n"
 "            </div>\n"
 "            <div class=\"row\">\n"
-"                <small class=\"col-xs-3\" style=\"float: left; padding-"
-"right: 0px; padding-left: 0px;\">sponsored by</small>\n"
-"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-"
-"left: 0px;\">\n"
+"                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">sponsored by</small>\n"
+"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n"
 "                <span>\n"
-"                    <img class=\"img img-responsive\" "
-"src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
+"                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
 "                </span>\n"
 "                </div>\n"
 "            </div>\n"
@@ -594,10 +689,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               Odoo helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               Odoo helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
@@ -613,7 +706,7 @@ msgstr "Deltog"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr ""
+msgstr "Datum för deltagande"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -624,7 +717,7 @@ msgstr "Deltog på evenemanget"
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Tilgängliga platser"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -644,8 +737,7 @@ msgid "Cancel Registration"
 msgstr "Avbryt registrering"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -657,14 +749,13 @@ msgid "Check this box if this contact is a speaker."
 msgstr "Om markerad så är den här kontakten en talare."
 
 #. module: event
-#: code:addons/event/event.py:212
+#: code:addons/event/event.py:219
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Stängningsdatum kan inte ställas in att vara före startdatumet."
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -673,7 +764,7 @@ msgstr "Företag"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Konferens för affärstillämpning"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -698,8 +789,7 @@ msgid "Confirm Registration"
 msgstr "Bekräfta anmälan"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: selection:event.event,state:0
+#: view:event.event:event.view_event_search selection:event.event,state:0
 #: view:event.registration:event.view_registration_search
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
@@ -723,20 +813,16 @@ msgid "Country"
 msgstr "Land"
 
 #. module: event
-#: field:event.confirm,create_uid:0
-#: field:event.event,create_uid:0
-#: field:event.registration,create_uid:0
-#: field:event.type,create_uid:0
+#: field:event.confirm,create_uid:0 field:event.event,create_uid:0
+#: field:event.registration,create_uid:0 field:event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Skapad av"
 
 #. module: event
-#: field:event.confirm,create_date:0
-#: field:event.event,create_date:0
-#: field:event.registration,create_date:0
-#: field:event.type,create_date:0
+#: field:event.confirm,create_date:0 field:event.event,create_date:0
+#: field:event.registration,create_date:0 field:event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Skapad den"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -747,7 +833,7 @@ msgstr "Nuvarande registreringar"
 #: help:event.event,message_last_post:0
 #: help:event.registration,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum för senast publicerade meddelandet i loggen."
 
 #. module: event
 #: field:event.type,default_registration_max:0
@@ -757,16 +843,15 @@ msgstr "Största antal registrerade som standard"
 #. module: event
 #: field:event.type,default_registration_min:0
 msgid "Default Minimum Registration"
-msgstr ""
+msgstr "Minsta registrering som standard"
 
 #. module: event
 #: field:event.type,default_reply_to:0
 msgid "Default Reply-To"
-msgstr ""
+msgstr "Svara till som standard"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: field:event.event,description:0
+#: view:event.event:event.view_event_form field:event.event,description:0
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -793,11 +878,6 @@ msgid "Email"
 msgstr "Epost"
 
 #. module: event
-#: model:ir.model,name:event.model_event_event
-msgid "Email Thread"
-msgstr ""
-
-#. module: event
 #: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Slutdatum"
@@ -805,6 +885,7 @@ msgstr "Slutdatum"
 #. module: event
 #: view:event.registration:event.view_registration_search
 #: field:event.registration,event_id:0
+#: model:ir.model,name:event.model_event_event
 #: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,event_id:0
 msgid "Event"
@@ -830,17 +911,17 @@ msgstr "Evenemangsbekräftelse"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr ""
+msgstr "Bekräftelse e-post för evenemang"
 
 #. module: event
 #: field:report.event.registration,event_date:0
 msgid "Event Date"
-msgstr ""
+msgstr "Evenemangsdatum"
 
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "Beskrivning av evenemanget..."
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -850,12 +931,12 @@ msgstr "Evenemangsdetaljer"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr ""
+msgstr "Månad för evenemanget"
 
 #. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "Namn för evenemanget"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -871,10 +952,10 @@ msgid "Event Registration"
 msgstr "Evenemangsregistrering"
 
 #. module: event
-#: code:addons/event/event.py:341
+#: code:addons/event/event.py:348
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "Evenemangsregistreringen bekräftad."
 
 #. module: event
 #: field:report.event.registration,user_id:0
@@ -890,8 +971,8 @@ msgstr ""
 #. module: event
 #: view:event.event:event.view_event_search
 #: view:event.type:event.view_event_type_form
-#: view:event.type:event.view_event_type_tree
-#: field:event.type,name:0
+#: view:event.type:event.view_event_type_tree field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
 #: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,event_type:0
 msgid "Event Type"
@@ -963,7 +1044,7 @@ msgstr ""
 #: view:event.registration:event.view_registration_search
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppera efter"
 
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
@@ -976,22 +1057,17 @@ msgstr "Hjälper dig att hantera dina evenemang."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning "
-"presenteras i html-format för att kunna sättas in i kanban vyer."
+msgstr "Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning presenteras i html-format för att kunna sättas in i kanban vyer."
 
 #. module: event
-#: field:event.confirm,id:0
-#: field:event.event,id:0
-#: field:event.registration,id:0
-#: field:event.type,id:0
+#: field:event.confirm,id:0 field:event.event,id:0
+#: field:event.registration,id:0 field:event.type,id:0
 #: field:report.event.registration,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 
@@ -999,8 +1075,8 @@ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
 
@@ -1045,23 +1121,19 @@ msgstr ""
 #: field:event.event,message_last_post:0
 #: field:event.registration,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Senast meddelandedatum"
 
 #. module: event
-#: field:event.confirm,write_uid:0
-#: field:event.event,write_uid:0
-#: field:event.registration,write_uid:0
-#: field:event.type,write_uid:0
+#: field:event.confirm,write_uid:0 field:event.event,write_uid:0
+#: field:event.registration,write_uid:0 field:event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Senast uppdaterad av"
 
 #. module: event
-#: field:event.confirm,write_date:0
-#: field:event.event,write_date:0
-#: field:event.registration,write_date:0
-#: field:event.type,write_date:0
+#: field:event.confirm,write_date:0 field:event.event,write_date:0
+#: field:event.registration,write_date:0 field:event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Senast uppdaterad"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -1076,27 +1148,25 @@ msgstr "Loggar"
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr ""
+msgstr "Chef"
 
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "Max antal platser"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Maximalt antal platser"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Meddelanden"
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Meddelande- och kommunikationshistorik"
 
@@ -1117,8 +1187,7 @@ msgid "My Registrations"
 msgstr "Mina anmälningar"
 
 #. module: event
-#: view:event.event:event.view_event_tree
-#: field:event.registration,name:0
+#: view:event.event:event.view_event_tree field:event.registration,name:0
 msgid "Name"
 msgstr "Namn"
 
@@ -1134,14 +1203,13 @@ msgid "New Registration"
 msgstr "Ny registrering"
 
 #. module: event
-#: code:addons/event/event.py:339
+#: code:addons/event/event.py:346
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr "Nya registreringar bekräftade %s."
 
 #. module: event
-#: code:addons/event/event.py:206
-#: code:addons/event/event.py:330
+#: code:addons/event/event.py:213 code:addons/event/event.py:337
 #, python-format
 msgid "No more available seats."
 msgstr ""
@@ -1164,7 +1232,7 @@ msgstr "Antal deltagare"
 #. module: event
 #: field:event.event,seats_used:0
 msgid "Number of Participations"
-msgstr ""
+msgstr "Antal deltagare"
 
 #. module: event
 #: field:report.event.registration,nbregistration:0
@@ -1194,7 +1262,7 @@ msgstr "Organiserad av"
 #. module: event
 #: field:event.event,organizer_id:0
 msgid "Organizer"
-msgstr ""
+msgstr "Organisatör"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
@@ -1274,8 +1342,7 @@ msgid "Registration contact"
 msgstr "Registreringskontakt"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: field:event.event,registration_ids:0
+#: view:event.event:event.view_event_form field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
@@ -1300,7 +1367,7 @@ msgstr ""
 #. module: event
 #: field:event.event,seats_reserved:0
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Reserverade platser"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1351,15 +1418,14 @@ msgstr "Startdatum"
 #. module: event
 #: view:event.event:event.view_event_search
 msgid "Start Month"
-msgstr ""
+msgstr "Startmånad"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: field:event.event,state:0
+#: view:event.event:event.view_event_search field:event.event,state:0
 #: view:event.registration:event.view_registration_search
 #: field:event.registration,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1370,7 +1436,7 @@ msgstr "Prenumerera"
 #. module: event
 #: view:event.event:event.view_event_kanban
 msgid "Subscribed"
-msgstr ""
+msgstr "Prenumererad"
 
 #. module: event
 #: field:event.event,message_summary:0
@@ -1386,8 +1452,8 @@ msgstr ""
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
@@ -1404,21 +1470,21 @@ msgstr ""
 #: help:event.event,seats_max:0
 msgid ""
 "The maximum registration level is equal to the sum of the maximum "
-"registration of event ticket. If you have too much registrations you are not "
-"able to confirm your event. (0 to ignore this rule )"
+"registration of event ticket. If you have too much registrations you are not"
+" able to confirm your event. (0 to ignore this rule )"
 msgstr ""
 
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
 msgstr ""
 
 #. module: event
 #: field:event.event,date_tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "Tidzon"
 
 #. module: event
 #: field:event.event,type:0
@@ -1432,8 +1498,7 @@ msgid "Types of Events"
 msgstr "Evenemangstyp"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: selection:event.event,state:0
+#: view:event.event:event.view_event_search selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Obekräftad"
@@ -1441,11 +1506,10 @@ msgstr "Obekräftad"
 #. module: event
 #: field:event.event,seats_unconfirmed:0
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Obekräftade platsreservationer"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: field:event.event,message_unread:0
+#: view:event.event:event.view_event_search field:event.event,message_unread:0
 #: view:event.registration:event.view_registration_search
 #: field:event.registration,message_unread:0
 msgid "Unread Messages"
@@ -1477,9 +1541,7 @@ msgstr "Användare"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Varning: Denna evenemang har inte nått sin lägsta anmälninggrad. Är du säker "
-"på att du vill bekräfta det?"
+msgstr "Varning: Denna evenemang har inte nått sin lägsta anmälninggrad. Är du säker på att du vill bekräfta det?"
 
 #. module: event
 #: help:event.event,seats_min:0
@@ -1487,13 +1549,10 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Du kan för varje händelse definierar en lägsta registreringsnivå. Om du inte "
-"tillräckligt med registreringar du inte kunna bekräfta ditt evenemang. "
-"(sätta 0 för att ignorera denna regel)"
+msgstr "Du kan för varje händelse definierar en lägsta registreringsnivå. Om du inte tillräckligt med registreringar du inte kunna bekräfta ditt evenemang. (sätta 0 för att ignorera denna regel)"
 
 #. module: event
-#: code:addons/event/event.py:222
+#: code:addons/event/event.py:229
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -1501,7 +1560,7 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:357
+#: code:addons/event/event.py:364
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
@@ -1518,6 +1577,11 @@ msgid "available."
 msgstr "tillgänglig."
 
 #. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "or"
+msgstr "eller"
+
+#. module: event
 #: view:event.event:event.view_event_kanban
 msgid "ticket"
 msgstr "biljett"
@@ -1526,6 +1590,3 @@ msgstr "biljett"
 #: view:event.event:event.view_event_kanban
 msgid "tickets"
 msgstr "biljetter"
-
-#~ msgid "Participant / Contact"
-#~ msgstr "Deltagare/kontakt"
