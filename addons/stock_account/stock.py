@@ -129,7 +129,7 @@ class stock_move(osv.osv):
                             })[pricelist]
                 if price:
                     return price
-        return move_line.product_id.list_price
+        return move_line.product_id.lst_price
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         fp_obj = self.pool.get('account.fiscal.position')
@@ -252,7 +252,7 @@ class stock_picking(osv.osv):
         context = context or {}
         todo = {}
         for picking in self.browse(cr, uid, ids, context=context):
-            partner = self._get_partner_to_invoice(cr, uid, picking, context)
+            partner = self._get_partner_to_invoice(cr, uid, picking, dict(context, type=type))
             #grouping is based on the invoiced partner
             if group:
                 key = partner

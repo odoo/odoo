@@ -2637,6 +2637,20 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
 
 
 instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    start: function() {
+        var self = this;
+        var tmp = this._super();
+        if (this.options.model_field){
+            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
+                if (self.view && self.view.onchanges_mutex){
+                    self.view.onchanges_mutex.def.then(function(){
+                        self.render_value();
+                    });
+                }
+            });
+        }
+        return tmp;
+    },
     render_value: function() {
         var self = this;
         this.$el.html(instance.web.qweb.render("FieldCharDomain", {widget: this}));
@@ -2645,7 +2659,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var domain = instance.web.pyeval.eval('domain', this.get('value'));
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain, self.build_context()]).then(function (results) {
-                $('.oe_domain_count', self.$el).text(results + ' records selected');
+                $('.oe_domain_count', self.$el).text(results + _t(' records selected'));
                 if (self.get('effective_readonly')) {
                     $('button span', self.$el).text(' See selection');
                 }

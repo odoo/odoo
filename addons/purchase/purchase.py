@@ -1246,9 +1246,13 @@ class purchase_order_line(osv.osv):
             else:
                 price = product.standard_price
 
-        taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
+        if uid == SUPERUSER_ID:
+            company_id = self.pool['res.users'].browse(cr, uid, [uid]).company_id.id
+            taxes = product.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id)
+        else:
+            taxes = product.supplier_taxes_id
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
-        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes, context=context)
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
@@ -1449,7 +1453,7 @@ class procurement_order(osv.osv):
             fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)
             if fp:
                 fp = acc_pos_obj.browse(cr, uid, fp, context=context)
-            taxes = acc_pos_obj.map_tax(cr, uid, fp, taxes_ids)
+            taxes = acc_pos_obj.map_tax(cr, uid, fp, taxes_ids, context=context)
             name = names_dict[procurement.product_id.id]
             if procurement.product_id.description_purchase:
                 name += '\n' + procurement.product_id.description_purchase

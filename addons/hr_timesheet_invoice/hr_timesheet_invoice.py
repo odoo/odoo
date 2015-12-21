@@ -225,7 +225,7 @@ class account_analytic_line(osv.osv):
             if not general_account:
                 raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
             taxes = product.taxes_id or general_account.tax_ids
-            tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+            tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position, taxes, context=context)
             curr_invoice_line.update({
                 'invoice_line_tax_id': [(6, 0, tax)],
                 'name': factor_name,
