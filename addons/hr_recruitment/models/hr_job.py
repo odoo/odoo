@@ -4,9 +4,8 @@ from openerp import _, api, fields, models
 
 
 class Job(models.Model):
-    _inherit = "hr.job"
     _name = "hr.job"
-    _inherits = {'mail.alias': 'alias_id'}
+    _inherit = ["mail.alias.mixin", "hr.job"]
 
     @api.model
     def _default_address_id(self):
@@ -56,28 +55,17 @@ class Job(models.Model):
         for job in self:
             job.application_count = result.get(job.id, 0)
 
+    def get_alias_model_name(self, vals):
+        return 'hr.applicant'
+
+    def get_alias_values(self):
+        values = super(Job, self).get_alias_values()
+        values['alias_defaults'] = {'job_id': self.id}
+        return values
+
     @api.model
     def create(self, vals):
-        job = super(Job, self.with_context(alias_model_name='hr.applicant',
-                                           mail_create_nolog=True,
-                                           alias_parent_model_name=self._name)).create(vals)
-        job.alias_id.write({'alias_parent_thread_id': job.id, "alias_defaults": {'job_id': job.id}})
-        return job
-
-    @api.multi
-    def unlink(self):
-        # Cascade-delete mail aliases as well, as they should not exist without the job position.
-        aliases = self.mapped('alias_id')
-        res = super(Job, self).unlink()
-        aliases.unlink()
-        return res
-
-    def _auto_init(self, cr, context=None):
-        """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        return self.pool.get('mail.alias').migrate_to_alias(
-            cr, self._name, self._table, super(Job, self)._auto_init,
-            'hr.applicant', self._columns['alias_id'], 'name',
-            alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
+        return super(Job, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.multi
     def _track_subtype(self, init_values):
