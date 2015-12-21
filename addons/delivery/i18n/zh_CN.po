@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-21 10:08+0000\n"
+"PO-Revision-Date: 2015-12-11 06:48+0000\n"
 "Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgstr "<strong>重量</strong>"
 msgid ""
 "A consumable is a product for which you don't manage stock, a service is a "
 "non-material product provided by a company or an individual."
-msgstr ""
+msgstr "消费品是一种你不用管理库存的产品，服务是由个公司或个人提供的非物质产品。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -260,7 +260,7 @@ msgstr "点击创建一个新的运输方式"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "系数转换默认测量单位销售UOS =单位×系数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -280,7 +280,7 @@ msgstr "条件"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr "控制采购订单"
+msgstr "控制采购账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -298,7 +298,7 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "用于标准库存估值科目中和采购订单中的基础价格的产品模板成本。以产品的默认计量单位表示。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -429,7 +429,7 @@ msgstr "说明"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr "拣货描述"
+msgstr "分拣说明"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -610,7 +610,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "如果一个产品能够被不断的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -674,7 +674,7 @@ msgstr "内部分类"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
 msgid "Internal Reference"
-msgstr "位置"
+msgstr "内部参考"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
@@ -704,7 +704,7 @@ msgstr "发票状态"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "开票策略"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -719,7 +719,7 @@ msgstr "是送货"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "是一个多规格产品"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
@@ -1167,7 +1167,7 @@ msgstr "如果产品能在销售单明细在被选择，则指定。"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "标明产品是否能够被在人资费用中选择"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1175,7 +1175,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "标准价格：在特定时期（通常是一年一次）在一个特定时期内，手动更新成本价。平均价格：成本价格在每次仓库进货时候重新计算，被用来产品的估值实际价格：显示的成本价格是最后出货产品的价格（例如，在仓库盘亏的时候使用）"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1288,14 +1288,14 @@ msgstr "这些方法能根据你的设定自动的计算运输价格；\n在销�
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "这个科目将代替当前产品的默认费用科目用来开票"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "这个科目将被用来代替当前产品的默认销售科目用来开票"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1365,7 +1365,7 @@ msgstr "总利润 * 100 / 营业额"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "跟踪服务"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
@@ -1376,7 +1376,7 @@ msgstr "跟踪"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
@@ -1499,7 +1499,7 @@ msgstr "质保"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
-msgstr "重要性"
+msgstr "重量"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0

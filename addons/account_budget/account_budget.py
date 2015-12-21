@@ -168,7 +168,7 @@ class crossovered_budget_lines(osv.osv):
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),

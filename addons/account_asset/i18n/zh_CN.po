@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-12-02 04:42+0000\n"
+"PO-Revision-Date: 2015-12-10 01:22+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr " (副本)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr "# 资产条目"
+msgstr "# 资产分录"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -51,12 +51,12 @@ msgstr "会计日期"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
 msgid "Account Entry"
-msgstr "科目条目"
+msgstr "科目分录"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
 msgid "Action Needed"
-msgstr "所需行动"
+msgstr "所需动作"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -318,7 +318,7 @@ msgstr "新建固定资产会计凭证"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "创建收入变动"
+msgstr "创建收入凭证"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -327,7 +327,7 @@ msgstr "创建收入变动"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_create_uid
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建人"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_date
@@ -336,7 +336,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_create_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
@@ -443,7 +443,7 @@ msgstr "折旧日期"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
-msgstr "折旧条目"
+msgstr "折旧分录"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -668,7 +668,7 @@ msgstr "折旧后资产的剩余价值金额"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr "翻译项"
+msgstr "项目"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
@@ -704,7 +704,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_uid
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_date
@@ -713,7 +713,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -1066,7 +1066,7 @@ msgstr "在 %s 状态, 你不能删除文档."
 #: code:addons/account_asset/account_asset.py:102
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr "您不能删除包含过期条目的文档"
+msgstr "您不能删除包含已过账分录的文档"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:497

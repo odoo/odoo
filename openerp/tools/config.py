@@ -538,6 +538,9 @@ class configmanager(object):
     def get(self, key, default=None):
         return self.options.get(key, default)
 
+    def pop(self, key, default=None):
+        return self.options.pop(key, default)
+
     def get_misc(self, sect, key, default=None):
         return self.misc.get(sect,{}).get(key, default)
 

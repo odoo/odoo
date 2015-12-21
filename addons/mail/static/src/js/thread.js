@@ -16,8 +16,9 @@ var Thread = Widget.extend({
     className: 'o_mail_thread',
 
     events: {
-        "click .o_mail_redirect": "on_click_redirect",
-        "click .o_channel_redirect": "on_channel_redirect",
+        "click a": "on_click_redirect",
+        "click img": "on_click_redirect",
+        "click strong": "on_click_redirect",
         "click .o_thread_show_more": "on_click_show_more",
         "click .o_thread_message_needaction": function (event) {
             event.stopPropagation();
@@ -51,6 +52,7 @@ var Thread = Widget.extend({
             display_stars: true,
             display_document_link: true,
             display_avatar: true,
+            shorten_messages: true,
             squash_close_messages: true,
         });
     },
@@ -84,16 +86,13 @@ var Thread = Widget.extend({
     },
 
     on_click_redirect: function (event) {
-        event.preventDefault();
-        var res_id = $(event.target).data('oe-id');
-        var res_model = $(event.target).data('oe-model');
-        this._redirect({model:res_model, id: res_id});
-    },
-
-    on_channel_redirect: function (event) {
-        event.preventDefault();
-        var channel_id = $(event.target).data('oe-id');
-        this._redirect({channel_id: channel_id});
+        var id = $(event.target).data('oe-id');
+        if (id) {
+            event.preventDefault();
+            var model = $(event.target).data('oe-model');
+            var options = model && (model !== 'mail.channel') ? {model: model, id: id} : {channel_id: id};
+            this._redirect(options);
+        }
     },
 
     _redirect: _.debounce(function (options) {

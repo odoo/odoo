@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-12-03 09:32+0000\n"
+"PO-Revision-Date: 2015-12-11 13:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -5856,7 +5856,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "Taslak faturalar onaylandığında artık faturaları değiştiremeyeceksiniz.\n                        Faturalar özgün numara alacak ve yevmiye kalemleri\n                        hesap planınızda oluşturulacaktır."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6487,7 +6487,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:660
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "Bu faturayla ilgili yevmiyeye lütfen bir sıra tanımlayın."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6533,7 +6533,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Yevmiye Girişleri İşle"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6546,12 +6546,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "İşlenmiş Yevmiye Kayıtları"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "İşlenmiş Yevmiye Öğeleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -7200,7 +7200,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Sales Team"
-msgstr ""
+msgstr "Satış Ekibi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_rate
@@ -7248,7 +7248,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Yevmiye Öğelerini Ara"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -7487,7 +7487,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:250
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "Hesap özeti %s onaylandı, yevmiye kalemleri oluşturuldu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_form
@@ -7986,7 +7986,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "Bu faturaya ait Yevmiye Girişlerinde kullanılacak ticari varlık"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_currency_id
@@ -8132,7 +8132,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr ""
+msgstr "yevmiye kaydınızın seçili hesabı farklı bir para biriminde işlemi zorluyor.Bu şekilde giriş yapmak için ya hesaptan para birimini kaldırın ya da yevmiye görünüm türünü çoklu-para birimi olarak seçin."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1162
@@ -8251,7 +8251,7 @@ msgstr ""
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Bu modül muhasebecinin analiz bütçe ve aşılmış bütçeleri yönetmenizi sağlar. Ana bütçe ve bütçeler tanımlandıktan sonra proje yöneticisi her analiz hesabına planlanan tutarları yerleştirebilir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_reports_followup
@@ -8322,7 +8322,7 @@ msgstr ""
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr ""
+msgstr "Bu alan borç ve alacak yevmiye kayıtları için kullanılır. Bu satıra ait ödemeye ödeme sınırlama tarihi koyabilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -8710,7 +8710,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "İşlenmemiş Yevmiye Kalemleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
@@ -8755,7 +8755,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled Journal Items"
-msgstr ""
+msgstr "Uzlaştırılmamış Yevmiye Öğeleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
@@ -9183,7 +9183,7 @@ msgstr ""
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "Hali hazırda yevmiye kalemleri içeren bir hesabın sahibi şirketi değiştiremezsiniz."
 
 #. module: account
 #: code:addons/account/models/account_move.py:997
@@ -9294,7 +9294,7 @@ msgstr ""
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "Bu günlükte bu genel hesabı kullanamazsınız, ilgili yevmiye 'Giriş Denetimleri' sekmesini denetleyin."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

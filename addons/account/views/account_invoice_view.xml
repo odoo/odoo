@@ -74,7 +74,7 @@
                         <group>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_ids" context="{'type':parent.get('type')}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field domain="[('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -108,7 +108,7 @@
                         <field name="name"/>
                         <field name="sequence"/>
                         <field name="account_id" groups="account.group_account_user"/>
-                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
                         <field name="currency_id" invisible="1"/>
@@ -262,7 +262,7 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('company_id', '=', parent.company_id)]"/>
+                                        domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
@@ -285,7 +285,7 @@
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
-                                                <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                                <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]" groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
@@ -399,7 +399,7 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('company_id', '=', parent.company_id)]"/>
+                                        domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
@@ -521,7 +521,7 @@
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Invoice Date" context="{'group_by':'date'}"/>
+                        <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
                         <filter string="Due Date" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
