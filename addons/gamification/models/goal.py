@@ -64,10 +64,6 @@ class gamification_goal_definition(osv.Model):
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
-        # model_inherited_model_ids can be removed in master.
-        # It was only used to force a domain in the form view which is now set by `on_change_model_id`
-        'model_inherited_model_ids': fields.related('model_id', 'inherited_model_ids', type="many2many", obj="ir.model",
-            string="Inherited models", readonly="True"),
         'field_id': fields.many2one('ir.model.fields',
             string='Field to Sum',
             help='The field containing the value to evaluate'),
