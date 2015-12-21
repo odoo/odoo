@@ -510,6 +510,9 @@ openerp.web_calendar = function(instance) {
                             throw new Error("Incomplete data received from dataset for record " + evt.id);
                         }
                     }
+                    else if (_.contains(["date", "datetime"], self.fields[fieldname].type)) {
+                        temp_ret[fieldname] = instance.web.format_value(value, self.fields[fieldname]);
+                    }
                     else {
                         temp_ret[fieldname] = value;
                     }
@@ -803,7 +806,7 @@ openerp.web_calendar = function(instance) {
             var index = this.dataset.get_id_index(id);
             if (index !== null) {
                 event_id = this.dataset.ids[index];
-                this.dataset.write(event_id, data, {}).done(function() {
+                this.dataset.write(event_id, data, {}).always(function() {
                     if (is_virtual_id(event_id)) {
                         // this is a virtual ID and so this will create a new event
                         // with an unknown id for us.

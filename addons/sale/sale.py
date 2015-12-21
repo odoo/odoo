@@ -391,10 +391,8 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
-        journal_ids = self.pool.get('account.journal').search(cr, uid,
-            [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
-            limit=1)
-        if not journal_ids:
+        journal_id = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        if not journal_id:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         invoice_vals = {
@@ -404,7 +402,7 @@ class sale_order(osv.osv):
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_invoice_id.property_account_receivable.id,
             'partner_id': order.partner_invoice_id.id,
-            'journal_id': journal_ids[0],
+            'journal_id': journal_id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
@@ -807,7 +805,7 @@ class sale_order(osv.osv):
                 elif line[1]:
                     prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
                 if prod and prod.taxes_id:
-                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]
                 order_line.append(line)
 
             # link      (4, ID)
@@ -817,7 +815,7 @@ class sale_order(osv.osv):
                 for line_id in line_ids:
                     prod = line_obj.browse(cr, uid, line_id, context=context).product_id
                     if prod and prod.taxes_id:
-                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]}])
+                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]}])
                     else:
                         order_line.append([4, line_id])
             else:
@@ -930,7 +928,7 @@ class sale_order_line(osv.osv):
         'product_uos_qty': fields.float('Quantity (UoS)' ,digits_compute= dp.get_precision('Product UoS'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
-        'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}, digits_compute=dp.get_precision('Stock Weight')),
         'state': fields.selection(
                 [('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')],
                 'Status', required=True, readonly=True, copy=False,
@@ -1080,7 +1078,7 @@ class sale_order_line(osv.osv):
         return {'value': value}
 
     def create(self, cr, uid, values, context=None):
-        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
+        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'product_uom_qty', 'product_uom']):
             order = self.pool['sale.order'].read(cr, uid, values['order_id'], ['pricelist_id', 'partner_id', 'date_order', 'fiscal_position'], context=context)
             defaults = self.product_id_change(cr, uid, [], order['pricelist_id'][0], values['product_id'],
                 qty=float(values.get('product_uom_qty', False)),
@@ -1144,15 +1142,12 @@ class sale_order_line(osv.osv):
             fpos = partner.property_account_position or False
         else:
             fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
-        if update_tax: #The quantity only have changed
-            # The superuser is used by website_sale in order to create a sale order. We need to make
-            # sure we only select the taxes related to the company of the partner. This should only
-            # apply if the partner is linked to a company.
-            if uid == SUPERUSER_ID and context.get('company_id'):
-                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
-            else:
-                taxes = product_obj.taxes_id
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+
+        if uid == SUPERUSER_ID and context.get('company_id'):
+            taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
+        else:
+            taxes = product_obj.taxes_id
+        result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
@@ -1211,8 +1206,7 @@ class sale_order_line(osv.osv):
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
-                if update_tax:
-                    price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product_obj.taxes_id, result['tax_id'])
+                price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
                     values = {'price_unit': price}
@@ -1236,7 +1230,16 @@ class sale_order_line(osv.osv):
         return self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
-                date_order=date_order, context=context)
+                date_order=date_order, fiscal_position=context.get('fiscal_position', False), context=context)
+
+    def onchange_product_uom(self, cursor, user, ids, pricelist, product, qty=0,
+                             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+                             lang=False, update_tax=True, date_order=False, fiscal_position=False, context=None):
+        ctx = dict(context or {}, fiscal_position=fiscal_position)
+        return self.product_uom_change(cursor, user, ids, pricelist, product,
+                                      qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
+                                      partner_id=partner_id, lang=lang, update_tax=update_tax,
+                                      date_order=date_order, context=ctx)
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:

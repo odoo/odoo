@@ -63,7 +63,10 @@ _logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase, etree._Entity)
+
+# Configure default global parser
+etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 #----------------------------------------------------------
 # Subprocesses
@@ -505,6 +508,7 @@ ALL_LANGUAGES = {
         'es_UY': u'Spanish (UY) / Español (UY)',
         'es_VE': u'Spanish (VE) / Español (VE)',
         'et_EE': u'Estonian / Eesti keel',
+        'eu_ES': u'Basque / Euskara',
         'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',

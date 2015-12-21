@@ -118,11 +118,6 @@ class view(osv.osv):
         result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
 
-    def _views_from_model_data(self, cr, uid, ids, context=None):
-        IMD = self.pool['ir.model.data']
-        data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
-        return map(itemgetter('res_id'), data_ids)
-
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', select=True),
@@ -141,11 +136,7 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
-        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
-                                         store={
-                                             _name: (lambda s, c, u, i, ctx=None: i, None, 10),
-                                             'ir.model.data': (_views_from_model_data, ['model', 'res_id'], 10),
-                                         }),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -1105,6 +1096,7 @@ class view(osv.osv):
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE md.module IS NULL
                          AND v.model = %s
+                         AND v.active = true
                     GROUP BY coalesce(v.inherit_id, v.id)
                    """, (model,))
 

@@ -378,8 +378,8 @@ def route(route=None, **kw):
 
                  * ``user``: The user must be authenticated and the current request
                    will perform using the rights of the user.
-                 * ``admin``: The user may not be authenticated and the current request
-                   will perform using the admin user.
+                 * ``public``: The user may or may not be authenticated. If she isn't,
+                   the current request will perform using the shared Public user.
                  * ``none``: The method is always active, even if there is no
                    database. Mainly used by the framework and authentication
                    modules. There request code will not have any facilities to access
@@ -1302,6 +1302,8 @@ class Root(object):
                     path_static = os.path.join(addons_path, module, 'static')
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
+                        if not manifest.get('installable', True):
+                            continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:

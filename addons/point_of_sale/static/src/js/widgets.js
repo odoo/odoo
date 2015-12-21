@@ -539,6 +539,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.product_list_widget.set_product_list(products);
 
             this.el.querySelector('.searchbox input').addEventListener('keyup',this.search_handler);
+            $('.searchbox input', this.el).keypress(function(e){
+                e.stopPropagation();
+            });
 
             this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 08:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-24 08:21+0000\n"
+"Last-Translator: Oihane Crucelaegui <oihanecruce@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-8/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +101,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "Salmenta kopurua"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -110,19 +111,19 @@ msgstr "Lerro kop."
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Kop."
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "Salmeta eskaeren kop."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -227,17 +228,17 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Helbideak salmenta eskarietan"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr ""
+msgstr "Aurreratua"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr ""
+msgstr "Aurreratutako kopurua"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:207
@@ -248,7 +249,7 @@ msgstr "Faktura aurreratua"
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr ""
+msgstr "Aurreratutako produktua"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
@@ -410,17 +411,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Produktuko"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Saltzaileko"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Salmenta taldeko"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -442,7 +443,7 @@ msgstr "Ezeztatu eskaria"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Aurrekontua ezeztatu"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -509,7 +510,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Enpresak"
 
 #. module: sale
 #: field:sale.order,company_id:0 field:sale.order.line,company_id:0
@@ -529,7 +530,7 @@ msgstr "Konfigurazio errorea!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Salmenta baieztatu"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -559,7 +560,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr ""
+msgstr "Kontratuen kudeaketa"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
@@ -572,7 +573,7 @@ msgstr "Sortu & Ikusi faktura"
 #: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Create Invoice"
-msgstr ""
+msgstr "Sortu faktura"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -597,14 +598,14 @@ msgstr "Sortu fakturak"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Nork sortua"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
 #: field:sale.make.invoice,create_date:0 field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Noiz sortua"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -642,12 +643,12 @@ msgstr "Baieztapen data"
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Eskaera data"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Eskatutako data:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -672,12 +673,12 @@ msgstr "Aukera lehenetsiak"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Default Terms and Conditions"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Default terms & conditions..."
 
 #. module: sale
 #: help:res.company,sale_note:0
@@ -699,7 +700,7 @@ msgstr "Banaketa helbidea"
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Delivery Lead Time"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -724,7 +725,7 @@ msgstr "Deskontua (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Discount on lines"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -742,7 +743,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Egina"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -786,12 +787,12 @@ msgstr "Errorea!"
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Exception"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Extended Filters"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -817,7 +818,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Jarraitzaileak"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -829,7 +830,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Aurreikuspena"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -871,7 +872,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "Taldekatu"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -896,7 +897,7 @@ msgstr "Ordua"
 #: field:sale.order,id:0 field:sale.order.line,id:0
 #: field:sale.order.line.make.invoice,id:0 field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -946,7 +947,7 @@ msgstr "Ekintza okerra!"
 #: view:sale.order:sale.view_order_form
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -1065,7 +1066,7 @@ msgstr "Fakturazio prozesua"
 #. module: sale
 #: field:sale.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jarraitzailea da"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1080,7 +1081,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Azken mezuaren data"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1088,7 +1089,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Nork eguneratua"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1096,7 +1097,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Noiz eguneratua"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1116,7 +1117,7 @@ msgstr "Mezuak"
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Komunikazio eta mezu erregistroa"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1132,7 +1133,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "New Copy of Quotation"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1143,7 +1144,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "No Customer Defined!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1132
@@ -1167,7 +1168,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "Aurrekontu zaharra"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1177,7 +1178,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "On Demand"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1190,7 +1191,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
 msgid "One employee can have different roles per contract"
-msgstr ""
+msgstr "One employee can have different roles per contract"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1227,7 +1228,7 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Order N°"
-msgstr ""
+msgstr "Eskari zkia"
 
 #. module: sale
 #: field:sale.order,name:0 field:sale.order.line,order_id:0
@@ -1267,7 +1268,7 @@ msgstr "Ordainduta"
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
 msgid "Partner"
-msgstr "Enpresa"
+msgstr "Kidea"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1282,7 +1283,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal URL"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1309,7 +1310,7 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Price"
-msgstr ""
+msgstr "Prezioa"
 
 #. module: sale
 #: field:sale.order.line,price_reduce:0
@@ -1369,7 +1370,7 @@ msgstr "Produktuaren ezaugarriak"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Txantiloi produktua"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1427,7 +1428,7 @@ msgstr "Aurrekontu zenbakia"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr ""
+msgstr "Aurrekontu zkia"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
@@ -1464,7 +1465,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr ""
+msgstr "Aurrekontuak"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1545,7 +1546,7 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales"
-msgstr ""
+msgstr "Salmentak"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1781,7 +1782,7 @@ msgstr "Batura partziala"
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Laburpena"
 
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
@@ -1952,7 +1953,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_order_line_tree
 #: view:website:sale.report_saleorder_document
 msgid "Total"
-msgstr ""
+msgstr "Guztira"
 
 #. module: sale
 #: field:sale.report,price_total:0
@@ -2037,7 +2038,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Erabili kontratu kudeaketa"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
@@ -2146,7 +2147,7 @@ msgstr ""
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "or"
-msgstr ""
+msgstr "edo"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type

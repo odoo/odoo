@@ -49,7 +49,10 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             values = {}
         else:
             stage = 'stage_portal_lead_recycle'
-            message = _('<p>I am not interested by this lead. I %scontacted the lead.</p>') % (not wizard.contacted and 'have not ' or '')
+            if wizard.contacted:
+                message = _('<p>I am not interested by this lead. I %scontacted the lead.</p>') % ''
+            else:
+                message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
             values = {'partner_assigned_id': False}
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             partner_ids = self.pool.get('res.partner').search(cr, SUPERUSER_ID, [('id', 'child_of', user.partner_id.commercial_partner_id.id)], context=context)

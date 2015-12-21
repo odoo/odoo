@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
+# Daniel Jovic <daniel.jovic@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
 # lasch a <bmail440@gmail.com>, 2015
@@ -11,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-20 00:56+0000\n"
-"Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-11-28 08:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -90,7 +91,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hej ${object.partner_id.name},</p>\n\n    <p>En ny faktura finns för Er: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>UPPGIFTER</strong><br />\n       &nbsp;&nbsp;Fakturanummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Fakturatotal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fakturadatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferens: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Er kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Det är även möjligt att betala via Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Har du frågor, tveka inte att kontakta oss.</p>\n    <p>Tack för att ni väljer ${object.company_id.name or 'oss'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Webb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hej ${object.partner_id.name},</p>\n\n    <p>En ny faktura finns tillgänglig för dig:: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENSER</strong><br />\n       &nbsp;&nbsp;Fakturanummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Fakturatotal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fakturadatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferens: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Er kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Det är även möjligt att betala direkt med Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Tveka inte att kontakta oss om det finns några frågor..</p>\n    <p>Tack för att ni väljer ${object.company_id.name or 'oss'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -103,10 +104,17 @@ msgid ""
 msgstr " * Status \"Utkast\" används när en användare skapar en ny och obekräftad faktura. \n * Den \"Pro-forma\" när faktura är i Pro-forma status, faktura har inget fakturanummer. \n * Status \"Öppna\" används när användaren skapat faktura, ett fakturanummer generat. Den är i öppen status tills kunden betalar fakturan. \n * Status \"Betald\" ställs in automatiskt när fakturan är betald. Dess relaterade journalposter kan eller inte förenas. \n * Status \"Inställd\" används när användaren avbryter fakturan."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Centralisering"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "sekunder"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -355,7 +363,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att skapa en ny verifikation.\n</p><p>\nEn verifikation består av flera fältrader, där varje rad antingen är en debet- eller kredittransaktion.\n</p><p>\nOdoo skapar automatiskt en verifikation per bokföringsdokument: faktura, återbetalning, leverantörsbetalning, kontoutdrag etc. Så du bör endast/huvudsakligen skapa manuella verifikationer för diverse transaktioner.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -370,7 +378,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att skapa en ny kassalogg.\n              </p><p>\nEn kassaapparat tillåter dig att hantera rader i din kontantjournal.\nDenna funktion tillför en enkel metod att följa upp kontantbetalningar på en daglig basis. Du kan mata in mynt som finns i kassalådan och sedan skapa verifikat för ingående och utgående kassa.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -382,7 +390,7 @@ msgid ""
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att skapa en funktionsmall för bankavstämning.\n</p><p>\nDessa kan användas för att snabbt skapa en rad när du stämmer av dina kontoudrag.\n</p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -397,7 +405,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att definiera en ny kontotyp.\n</p><p>\nEn kontotyp används för att bestämma hur ett konto används i varje verifikation. En kontotyps Carry forward-metod bestämmer processen för årsbokslutet. Rapporter såsom balans- och resultaträkningen använder kategorin (resultaträkning intäkter/utgifter eller balansräkning tillgångar/skulder).\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -411,7 +419,7 @@ msgid ""
 "                entries to automate the postings in the system.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att definiera en återkommande verifikation.\n</p><p>\nEn återkommande verifikation inträffar på återkommande basis från ett specifikt datum, t. ex. motsvarande undertecknandet av ett kontrakt eller ett avtal med en kund eller leverantör. Du kan skapa sådana verifikationer för att automatisera processen i systemet.\n</p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -425,7 +433,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att skapa en ny skattekod.\n              </p><p>\n                Beroende på land, så är ett skattekonto en ruta för skattedeklarationen. Odoo tillåter dig att skapa den struktur du vill. Varje transaktion kommer att registreras i ett eller flera skattekonton.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -438,7 +446,7 @@ msgid ""
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att registrera en ny leverantörsfaktura.\n</p><p>\nDu kan kontrollera fakturan från din leverantör beroende på vad du köpt eller tagit emot. Odoo kan även automatiskt generera utkast till fakturor från inköpsordrar eller kvitton.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -466,7 +474,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att registrera en återbetalning (leverantörskreditfaktura) från en leverantör.\n              </p><p>\nIstället för att skapa kreditfakturan manuellt, kan du generera dokumentet och stämma av det direkt på leverantörsfakturan.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -563,13 +571,13 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr "En period är en räkenskapsperiod under vilken bokföringsposter bör registreras för redovisning verksamhet. Månatliga perioder är normen men beroende på dina behov, kan du också ha kvartalsperioder. Stänga en period kommer att göra det omöjligt att registrera nya bokföringsposter, alla nya transaktioner bör göras på följande öppna period. Stäng en period först när du inte vill registrera några nya affärshändelser och vill låsa perioden för att kunna göra bokslut och göra myndighetsrapportering."
+msgstr "En period är en räkenskapsperiod under vilken bokföringsposter registreras för redovisningen. Månatliga perioder är normen men beroende på dina behov, kan du också ha kvartalsperioder. Efter att en period är stängd är det inte längre möjligt att registrera nya verifikat på den perioden., alla nya transaktioner bör göras på följande öppna period. Stäng en period först när du inte vill registrera några nya affärshändelser och vill låsa perioden för att kunna göra bokslut och göra myndighetsrapportering."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Vald transaktionsrad var redan avstämd."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -899,7 +907,7 @@ msgstr "Kontomallar"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "Summa på kontot"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -997,7 +1005,7 @@ msgstr "Account period"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Skatt för konto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1058,7 +1066,7 @@ msgstr "Redovisningspaket"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Accounting Period"
-msgstr ""
+msgstr "Bokföringsperiod"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -1153,7 +1161,7 @@ msgstr "Ytterligare information"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Extra noteringar"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -1318,7 +1326,7 @@ msgstr "Tillåt flera valutor"
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr ""
+msgstr "Tillåt pro-forma-fakturor"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
@@ -1390,7 +1398,7 @@ msgstr "Summa att betala"
 #. module: account
 #: field:account.statement.operation.template,amount_type:0
 msgid "Amount type"
-msgstr ""
+msgstr "Beloppstyp"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
@@ -1406,7 +1414,7 @@ msgstr "Analysis Direction"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Analysis Direction:"
-msgstr ""
+msgstr "Riktning för analys:"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -1422,7 +1430,7 @@ msgstr "Objekt"
 #: code:addons/account/static/src/js/account_widgets.js:123
 #, python-format
 msgid "Analytic Acc."
-msgstr ""
+msgstr "Objektkonto"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -1582,7 +1590,7 @@ msgstr "Tillämplighet alternativ"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr ""
+msgstr "Tillämplig kod"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1602,23 +1610,27 @@ msgstr "Verkställ"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
 msgstr "Godkänn endast om företaget har momsregistreringsnummer"
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
+msgstr ""
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -1673,7 +1685,7 @@ msgstr "Tillgång"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "Tillgångsvy"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1729,7 +1741,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Available Coins"
-msgstr ""
+msgstr "Tillgängliga mynt"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -2001,7 +2013,7 @@ msgstr "Budgetar"
 #. module: account
 #: field:account.statement.operation.template,name:0
 msgid "Button Label"
-msgstr ""
+msgstr "Knappettikett"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
@@ -2084,7 +2096,7 @@ msgstr "Avbryt"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Cancel CashBox"
-msgstr ""
+msgstr "Avbryt kassalåda"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
@@ -2123,7 +2135,7 @@ msgstr "Avbryt valda fakturor"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Cancel Statement"
-msgstr ""
+msgstr "Avbryt transaktion"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -2277,7 +2289,7 @@ msgstr "Kassarad"
 #: field:account.bank.statement,details_ids:0
 #: view:account.journal:account.view_account_journal_form
 msgid "CashBox Lines"
-msgstr ""
+msgstr "Kassatransaktioner"
 
 #. module: account
 #: view:product.template:account.product_template_search_view
@@ -2303,7 +2315,7 @@ msgstr "Centralisering"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Centraliserad motpart"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -2343,7 +2355,7 @@ msgstr "Mall för kontoplan"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "Mall för kontoplan"
 
 #. module: account
 #: field:account.aged.trial.balance,chart_account_id:0
@@ -2397,7 +2409,7 @@ msgstr "Förlaga för kontoplan"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance
 msgid "Chart of Accounts:"
-msgstr ""
+msgstr "Kontoplan:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -2414,7 +2426,7 @@ msgstr "Skattetabell"
 #. module: account
 #: view:website:account.report_vat
 msgid "Chart of Tax:"
-msgstr ""
+msgstr "Momskontoplan:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
@@ -2458,7 +2470,7 @@ msgstr "Kryssa om du vill lista konton med nollbalans också."
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "Kontrollera totalen för leverantörsfakturor"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2570,6 +2582,13 @@ msgstr ""
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
 msgid "Choose Fiscal Year"
 msgstr "Välj verksamhetsår"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -2900,7 +2919,7 @@ msgstr ""
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr "Godkänna preliminära fakturor"
+msgstr "Bekräfta preliminära fakturor"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
@@ -2923,7 +2942,7 @@ msgstr "Bekräftad"
 #: code:addons/account/static/src/js/account_widgets.js:534
 #, python-format
 msgid "Congrats, you're all done !"
-msgstr ""
+msgstr "Grattis, du är nu färdig !"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -2969,7 +2988,7 @@ msgstr "Cost Ledger (Only quantities)"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:account.account_analytic_cost_ledger_journal_view
 msgid "Cost Ledger for Period"
-msgstr ""
+msgstr "Huvudbok (kostnadskonton) för perioden"
 
 #. module: account
 #: view:website:account.report_generalledger
@@ -2978,13 +2997,13 @@ msgstr "Motpart"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Länder"
+msgid "Country"
+msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "Landsgrupp"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
@@ -3031,6 +3050,13 @@ msgstr "Skapa månatliga perioder"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Skapa återbetalning"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3366,7 +3392,7 @@ msgstr "Kund"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Customer Code:"
-msgstr ""
+msgstr "Kundkod:"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3405,7 +3431,7 @@ msgstr "Skatt knuten till kunder"
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "Kundref:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -3652,7 +3678,7 @@ msgstr "Skapa återkommande händelser"
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Beskriv varför du tar pengar från kassa-apparaten:"
 
 #. module: account
 #. openerp-web
@@ -3857,12 +3883,12 @@ msgstr "Förfallodatumberäkning"
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Förfallomånad"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Sena betalningar"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -5306,7 +5332,7 @@ msgstr "Intern typ"
 #. module: account
 #: view:product.template:account.product_template_form_view
 msgid "Internal Category"
-msgstr ""
+msgstr "Intern kategori"
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -5934,9 +5960,16 @@ msgstr "Om värde saknas används perioden från (faktura)datum."
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -6136,7 +6169,7 @@ msgstr "Senast uppdaterad"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Senaste datum för fullständig avstämning"
 
 #. module: account
 #. openerp-web
@@ -6255,7 +6288,7 @@ msgstr "Hantera kundbetalningar"
 #. module: account
 #: field:account.config.settings,module_account_payment:0
 msgid "Manage payment orders"
-msgstr ""
+msgstr "Hantera betalorder"
 
 #. module: account
 #: field:account.invoice.tax,manual:0
@@ -6537,12 +6570,12 @@ msgstr "Nästa fakturanummer"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr ""
+msgstr "Nästa leverantörskreditfakturanummer"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr ""
+msgstr "Nästa leverantörsfakturanummer"
 
 #. module: account
 #: code:addons/account/account.py:2316
@@ -6712,7 +6745,7 @@ msgstr "Anteckningar"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Inget mer att stämma av."
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -7268,7 +7301,7 @@ msgstr "Payment Term Line"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Betalningsvillkor:"
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -7280,7 +7313,7 @@ msgstr "Betalningsvillkor"
 #. module: account
 #: view:account.payment.term:account.view_payment_term_form
 msgid "Payment term explanation for the customer..."
-msgstr ""
+msgstr "Förklaring av kundens betalningsvillkor"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -7964,7 +7997,7 @@ msgstr "Avstäm verifikat"
 #. module: account
 #: field:account.move.line,reconcile_ref:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Avstämningsreferens"
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
@@ -8027,7 +8060,7 @@ msgstr "Reconciliation Transactions"
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr ""
+msgstr "Avstämningsnummer"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
@@ -8100,7 +8133,7 @@ msgstr "Referens till dokumentet som genererade denna faktura."
 #. module: account
 #: field:account.invoice,name:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Referens/beskrivning"
 
 #. module: account
 #: view:website:account.report_invoice_document
@@ -8328,6 +8361,12 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
 msgstr ""
 
 #. module: account
@@ -9109,7 +9148,7 @@ msgstr "Leverantörsfakturor"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Leverantörsbetalningsvillkor"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -9150,7 +9189,7 @@ msgstr "Leverantörer"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "Skatteregistreringsnummer"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9622,6 +9661,20 @@ msgid ""
 msgstr "Den kommersiella entiteten som kommer användas för journalrader på denna faktura"
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "Beräkningsmetod för moms."
@@ -9648,6 +9701,11 @@ msgstr ""
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
 msgstr ""
 
 #. module: account
@@ -9756,7 +9814,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr ""
+msgstr "Referensen till denna faktura kommer från leverantören"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -9854,13 +9912,13 @@ msgstr ""
 #: code:addons/account/account_cash_statement.py:315
 #, python-format
 msgid "There is no Loss Account on the journal %s."
-msgstr ""
+msgstr "Kostnadskonto saknas för denna journal %s."
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:320
 #, python-format
 msgid "There is no Profit Account on the journal %s."
-msgstr ""
+msgstr "Intäktskonto saknas för denna journal %s."
 
 #. module: account
 #: code:addons/account/account.py:1456
@@ -9923,7 +9981,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "There is nothing due with this customer."
-msgstr ""
+msgstr "Inga utestående fordringar för denna kund."
 
 #. module: account
 #. openerp-web
@@ -9962,6 +10020,30 @@ msgid "This Year"
 msgstr "Innevarande år"
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9976,23 +10058,11 @@ msgid ""
 msgstr "This account will be used instead of the default one as the receivable account for the current partner"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr ""
-
-#. module: account
 #: help:account.config.settings,module_account_budget:0
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Detta möjliggör för bokförare att administrera objekt och flera oberoende budgetar. Så snart huvudbudgeten och övriga budgetar är definierade, kan projektadministratörer planera belopp på alla objektkonton.\n- Detta installerar modulen account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10159,7 +10229,7 @@ msgstr ""
 msgid ""
 "This journal already contains items, therefore you cannot modify its company"
 " field."
-msgstr ""
+msgstr "Denna journal innehåller transaktioner, därför är det inte möjligt att skifta bolag."
 
 #. module: account
 #: help:res.partner.bank,journal_id:0
@@ -10240,7 +10310,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,default_sale_tax:0
 msgid "This sale tax will be assigned by default on new products."
-msgstr ""
+msgstr "Denna försäljningsmoms blir standard på nya produkter."
 
 #. module: account
 #: help:account.bank.statement.line,account_id:0
@@ -10288,7 +10358,7 @@ msgstr "Den här assistenten kommer att generera bokslutsjournalposter för valt
 msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
-msgstr ""
+msgstr "Denna guide tar bort bokslutsposter från valt räkenskapsår. Notera att denna guide kan köras många gånger på samma år."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
@@ -10301,7 +10371,7 @@ msgstr "Denna assistent kommer att bokföra alla verifikat för en specifik jour
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -10423,7 +10493,7 @@ msgstr "Summa exkl moms"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Summa exkl moms"
 
 #. module: account
 #: help:account.account,adjusted_balance:0
@@ -10678,7 +10748,7 @@ msgstr "Oavstämda poster"
 #: view:account.unreconcile:account.account_unreconcile_view
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "Oavstämda transaktioner"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -10801,7 +10871,7 @@ msgstr "Momspliktig"
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "Moms nödvändigt"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -10812,7 +10882,7 @@ msgstr "Giltig"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Validate"
-msgstr "Godkänna"
+msgstr "Godkänn"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -10930,7 +11000,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
-msgstr ""
+msgstr "Oj, det var snabbt !"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -10968,7 +11038,7 @@ msgstr "Med affärshändelser"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr ""
+msgstr "Med moms"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11009,13 +11079,13 @@ msgstr "Avskrivning belopp"
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr ""
+msgstr "Avskriv"
 
 #. module: account
 #: code:addons/account/account.py:2304
 #, python-format
 msgid "Wrong Model!"
-msgstr ""
+msgstr "Fel klass!"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11056,6 +11126,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11063,13 +11140,21 @@ msgid ""
 msgstr "Du kan kryssa denna ruta för att märka denna transaktion som tvistig med det relaterade företaget"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
@@ -11083,7 +11168,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr ""
+msgstr "Du kan endast ändra valuta för en preliminär faktura."
 
 #. module: account
 #: constraint:account.move.reconcile:0
@@ -11115,7 +11200,7 @@ msgid ""
 msgstr "Du kan här ange koefficienten som skall användas vid konsolidering av beloppen till överliggande nivå. Till exempel anger 1/-1 om du vill lägga till / subtrahera den."
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11220,7 +11305,7 @@ msgstr ""
 #: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr ""
+msgstr "Du kan inte radera ett bokfört verifikat \"%s\"."
 
 #. module: account
 #: code:addons/account/account_invoice.py:423
@@ -11321,7 +11406,7 @@ msgid ""
 "You cannot validate a non-balanced entry.\n"
 "Make sure you have configured payment terms properly.\n"
 "The latest payment term line should be of the \"Balance\" type."
-msgstr ""
+msgstr "Du kan inte bekräfta en obalanserad transaktion.\nSäkerställ att betalningsvillkor är korrekt konfigurerade.\nDen sista betalningsvillkorsraden måste vara av balans-typ."
 
 #. module: account
 #: code:addons/account/account.py:1346
@@ -11335,7 +11420,7 @@ msgstr ""
 #: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
-msgstr ""
+msgstr "Du saknar rättigheter att öppna %s journal!"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11396,7 +11481,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr ""
+msgstr "Avstämningen måste balansera"
 
 #. module: account
 #. openerp-web
@@ -11415,13 +11500,13 @@ msgstr "Du måste definiera objektjournal för '%s' journalen!"
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Du måste först välja företag!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "Välj konton att stämma av."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
@@ -11447,7 +11532,7 @@ msgstr ""
 #: code:addons/account/account.py:1080
 #, python-format
 msgid "You should choose the periods that belong to the same company."
-msgstr ""
+msgstr "Du måste använda perioder som tillhör aktuellt företag."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:690
@@ -11634,7 +11719,7 @@ msgstr "titel"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
-msgstr ""
+msgstr "att stämma av"
 
 #. module: account
 #. openerp-web
@@ -11673,4 +11758,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Hej,\n\nEnligt våra noteringar finns det fortfarande utestående fordringar, se nedan. Vänligen bortse från detta meddelande om ni redan har betalat. Annars ber vi er skicka betalningen snarast. Tveka inte att kontakta oss om det finns några frågor."

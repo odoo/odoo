@@ -48,6 +48,7 @@ from openerp.modules.db import create_categories
 from openerp.modules import get_module_resource
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
+from openerp.tools import html_sanitize
 from openerp.osv import osv, orm, fields
 from openerp import api, fields as fields2
 
@@ -175,7 +176,7 @@ class module(osv.osv):
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
-                    res[module.id] = lxml.html.tostring(html)
+                    res[module.id] = html_sanitize(lxml.html.tostring(html))
             else:
                 overrides = {
                     'embed_stylesheet': False,
@@ -184,7 +185,7 @@ class module(osv.osv):
                     'xml_declaration': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
-                res[module.id] = output
+                res[module.id] = html_sanitize(output)
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):

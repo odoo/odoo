@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# LoganDowns <k0mna80@gmail.com>, 2015
 # ТАрас <tratatuta@i.ua>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 14:37+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-12-02 13:44+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +47,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -88,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Вітаємо ${object.partner_id.name},</p>\n\n    <p>Для вас є новий рахунок: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>ДЕТАЛІ</strong><br />\n       &nbsp;&nbsp;Номер рахунку: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Загальна сума: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Дата рахунку: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Номер замовлення: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or ''}?subject=Рахунок%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Також є можливість оплатити напряму через Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Якщо у вас виникли запитання, звертайтеся до нас.</p>\n    <p>Дякуємо, що обрали ${object.company_id.name or 'нас'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Телефон:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Веб :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: account
 #: help:account.invoice,state:0
@@ -101,10 +102,17 @@ msgid ""
 msgstr " * Статус 'Чернетка' використовується тоді, коли користувач отримує новий непідтверджений рахунок.\n * Статус 'Попередній' використовується тоді, коли рахунок ще не є остаточним і йому не присвоєно номер.\n * Статус 'Відкритий' використовується тоді, коли рахунок є остаточним і йому присвоєно номер. Рахунок залишається відкритим поки користувач не оплатить його.\n * Статус 'Оплачений' встановлюється автоматично після оплати рахунку. Пов’язані з ним записи в журналі можуть або не можуть бути уточненими.\n * Статус 'Скасований' використовується тоді, коли користувач скасував рахунок."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Централізація"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "секунд"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -561,7 +569,7 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr ""
+msgstr "Період Фінансовий період часу , протягом якого бухгалтерські записи повинні бути записані для обліку діяльності . Щомісячний період нормою , але залежно від ваших потреб країн або компаній , можна також щоквартальні періоди . Закриття періоду буде неможливо записати нові бухгалтерські, всі нові записи , то повинні бути зроблені на наступний період відкритою. Закрити період, коли ви не хочете, щоб записати нові дані і хочете, щоб заблокувати цей період для податкового розрахунку , пов'язаних с.\nPeriod Finansovyy period chasu , protyahom yakoho bukhhaltersʹki zapysy povynni buty zapysani dlya obliku diyalʹnosti . Shchomisyachnyy period normoyu , ale zalezhno vid vashykh potreb krayin abo kompaniy , mozhna takozh shchokvartalʹni periody . Zakryttya periodu bude nemozhlyvo zapysaty novi bukhhaltersʹki, vsi novi zapysy , to povynni buty zrobleni na nastupnyy period vidkrytoyu. Zakryty period, koly vy ne khochete, shchob zapysaty novi dani i khochete, shchob zablokuvaty tsey period dlya podatkovoho rozrakhunku , pov'yazanykh s."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:736
@@ -675,12 +683,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Рахунок Загальні Повідомити аккаунт"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Загальний звіт аккаунта журнал"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -695,7 +703,7 @@ msgstr ""
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Валюта Рахунку"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -955,7 +963,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart
 msgid "Account chart"
-msgstr ""
+msgstr "План рахунку"
 
 #. module: account
 #: view:account.chart:account.view_account_chart
@@ -965,7 +973,7 @@ msgstr "Плани Рахунків"
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account code"
-msgstr ""
+msgstr "Код рахунку"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
@@ -980,7 +988,7 @@ msgstr ""
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account name"
-msgstr ""
+msgstr "Назва рахунку"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -1015,7 +1023,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "Бухгалтер"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -1056,7 +1064,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Accounting Period"
-msgstr ""
+msgstr "Звітний Період"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -1135,7 +1143,7 @@ msgstr "Діючий"
 #. module: account
 #: view:account.addtmpl.wizard:account.view_account_addtmpl_wizard_form
 msgid "Add"
-msgstr ""
+msgstr "Додати"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -1161,7 +1169,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Додаткові Налаштування"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -1206,7 +1214,7 @@ msgstr "Пробний баланс за період"
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "All"
-msgstr ""
+msgstr "Всі"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1600,22 +1608,26 @@ msgstr "Застосувати"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
 msgstr ""
 
 #. module: account
@@ -1628,7 +1640,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model_create_entry
@@ -1671,7 +1683,7 @@ msgstr "Активи"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "Asset View"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1697,7 +1709,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: account
 #: field:account.fiscal.position,auto_apply:0
@@ -1984,7 +1996,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr ""
+msgstr "Оплата"
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
@@ -2014,7 +2026,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
 msgid "By Product Category"
-msgstr ""
+msgstr "За категорією товару"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
@@ -2570,6 +2582,13 @@ msgid "Choose Fiscal Year"
 msgstr "Вибрати Фіскальний Рік"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2898,7 +2917,7 @@ msgstr ""
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr ""
+msgstr "Підтвердити чорнові рахунки"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
@@ -2976,8 +2995,8 @@ msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Країни"
+msgid "Country"
+msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3008,7 +3027,7 @@ msgstr ""
 #. module: account
 #: field:report.invoice.created,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Дата створення"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model
@@ -3028,6 +3047,13 @@ msgstr "Створити щомісячні періоди"
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
 msgstr ""
 
 #. module: account
@@ -3585,7 +3611,7 @@ msgstr "Сума (дебет)"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: account
 #: field:account.config.settings,decimal_precision:0
@@ -3702,7 +3728,7 @@ msgstr ""
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
 msgid "Discard"
-msgstr ""
+msgstr "Скинути"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -3807,13 +3833,13 @@ msgstr ""
 #: view:account.invoice:account.invoice_supplier_form
 #: view:website:account.report_invoice_document
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Чорновий рахунок"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Чорнові рахунки"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -3870,7 +3896,7 @@ msgstr ""
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Duration"
-msgstr ""
+msgstr "Тривалість"
 
 #. module: account
 #: code:addons/account/account.py:3197
@@ -4219,7 +4245,7 @@ msgstr ""
 msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
-msgstr ""
+msgstr "Error!\nYou cannot create recursive Tax Codes."
 
 #. module: account
 #: constraint:account.account.template:0
@@ -4233,7 +4259,7 @@ msgstr ""
 msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
-msgstr ""
+msgstr "Error!\nYou cannot create recursive accounts."
 
 #. module: account
 #: field:account.account,exchange_rate:0
@@ -4271,12 +4297,12 @@ msgstr "Рахунок Категорії Витрат"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr ""
+msgstr "Expense View"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Extended Filters..."
 
 #. module: account
 #. openerp-web
@@ -4294,7 +4320,7 @@ msgstr "Можливості"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr ""
+msgstr "February"
 
 #. module: account
 #: view:cash.box.in:account.cash_box_in_form
@@ -4603,7 +4629,7 @@ msgstr ""
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
+msgstr "For taxes of type percentage, enter % ratio between 0-1."
 
 #. module: account
 #: field:account.invoice,period_id:0 field:account.invoice.report,period_id:0
@@ -4819,14 +4845,14 @@ msgstr ""
 #: code:addons/account/account_move_line.py:552
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Перейти до панелі налаштувань"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:8
 #, python-format
 msgid "Good Job!"
-msgstr ""
+msgstr "Гарна робота!"
 
 #. module: account
 #. openerp-web
@@ -5243,7 +5269,7 @@ msgstr "Рахунок Категорії Доходів"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "Income View"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
@@ -5294,7 +5320,7 @@ msgstr ""
 #: code:addons/account/wizard/account_invoice_refund.py:153
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Insufficient Data!"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -5419,7 +5445,7 @@ msgstr "Номер інвойса"
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Invoice Number must be unique per Company!"
 
 #. module: account
 #: field:account.invoice,reference:0 field:account.invoice.line,invoice_id:0
@@ -5434,7 +5460,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Статус рахунку"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -5555,7 +5581,7 @@ msgstr "Виписка інвойсів"
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "Рахунки та оплата"
 
 #. module: account
 #: field:account.bank.statement,message_is_follower:0
@@ -5631,7 +5657,7 @@ msgstr "Журнал"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "January"
-msgstr ""
+msgstr "January"
 
 #. module: account
 #. openerp-web
@@ -5719,7 +5745,7 @@ msgstr ""
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Запис в журналі"
 
 #. module: account
 #: view:account.model:account.view_model_form
@@ -5878,13 +5904,13 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #. module: account
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #. module: account
 #: help:account.aged.trial.balance,fiscalyear_id:0
@@ -5932,9 +5958,16 @@ msgstr ""
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -6168,12 +6201,12 @@ msgstr "Li."
 #: model:account.financial.report,name:account.account_financial_report_liability0
 #: model:account.financial.report,name:account.account_financial_report_liabilitysum0
 msgid "Liability"
-msgstr ""
+msgstr "Liability"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "Liability View"
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0 field:account.tax.code,line_ids:0
@@ -6280,7 +6313,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -6323,7 +6356,7 @@ msgstr "Максимальна сума списання"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #. module: account
 #: field:account.bank.statement,message_ids:0
@@ -6340,7 +6373,7 @@ msgstr "Повідомлення та історія бесіди"
 #. module: account
 #: view:account.tax:account.view_tax_form
 msgid "Misc"
-msgstr ""
+msgstr "Різне"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -6716,12 +6749,12 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: account
 #: field:account.invoice,number:0 field:account.move,name:0
 msgid "Number"
-msgstr ""
+msgstr "Number"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
@@ -6775,7 +6808,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "October"
-msgstr ""
+msgstr "October"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
@@ -7520,7 +7553,7 @@ msgstr ""
 #. module: account
 #: view:account.move:account.view_move_form
 msgid "Post"
-msgstr ""
+msgstr "Допис"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -7669,7 +7702,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Кількість"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -7721,13 +7754,13 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit And Loss"
-msgstr ""
+msgstr "Profit And Loss"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Доходи та витрати"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -7985,7 +8018,7 @@ msgstr ""
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Reconciled"
-msgstr ""
+msgstr "Reconciled"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -8259,7 +8292,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Зробити чернеткою"
 
 #. module: account
 #. openerp-web
@@ -8326,6 +8359,12 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
 msgstr ""
 
 #. module: account
@@ -8450,7 +8489,7 @@ msgstr ""
 #: view:account.invoice.report:account.view_account_invoice_report_search
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Продавець"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_search
@@ -8679,7 +8718,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -9148,7 +9187,7 @@ msgstr "Постачальник"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "ІПН:"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9272,7 +9311,7 @@ msgstr "Знак коду податку"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr ""
+msgstr "Tax Code Template"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
@@ -9334,7 +9373,7 @@ msgstr "Назва податку"
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr ""
+msgstr "Tax Name must be unique per company!"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_src_id:0
@@ -9457,7 +9496,7 @@ msgstr ""
 #: view:account.analytic.account:account.view_account_analytic_account_search
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Шаблон "
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9472,12 +9511,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Template for Fiscal Position"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
 msgid "Templates"
-msgstr ""
+msgstr "Шаблони"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -9601,12 +9640,12 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr ""
+msgstr "The code of the account must be unique per company !"
 
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "The code of the journal must be unique per company !"
 
 #. module: account
 #: help:account.journal,code:0
@@ -9617,6 +9656,20 @@ msgstr ""
 #: help:account.invoice,commercial_partner_id:0
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
 msgstr ""
 
 #. module: account
@@ -9649,6 +9702,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
+msgstr ""
+
+#. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
 #: constraint:account.central.journal:0
 #: constraint:account.common.account.report:0
@@ -9672,7 +9730,7 @@ msgstr ""
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "The journal and period chosen have to belong to the same company."
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:104
@@ -9704,7 +9762,7 @@ msgstr "Переміщення цього запису"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "The name of the journal must be unique per company !"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -9960,6 +10018,30 @@ msgid "This Year"
 msgstr ""
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9971,18 +10053,6 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
 msgstr ""
 
 #. module: account
@@ -10299,7 +10369,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -10491,12 +10561,12 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:136
 #, python-format
 msgid "Transaction"
-msgstr ""
+msgstr "Операція"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transactions"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -11054,6 +11124,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11061,13 +11138,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
@@ -11113,7 +11198,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11401,7 +11486,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:1807
 #, python-format
 msgid "You must choose at least one record."
-msgstr ""
+msgstr "Потрібно вибрати хоча б один запис."
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
@@ -11603,7 +11688,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "залишилось)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -11671,4 +11756,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Шановний(а) пан/пані,\n\nНаші записи вказують на те, що у вас є певні неоплачені рахунки. Будь ласка, ознайомтеся з деталями нижче.\nЯкщо сума вже була оплачена, то просто не звертайте уваги на це повідомлення. Інакше, відправте нас суму, що вказана нижче.\nЯкщо у вас є запитання до нас стосовно вашого рахунку, будь ласка, зв’яжіться з нами.\n\nДуже вдячні за вашу співпрацю.\nЗ найкращими побажаннями,"

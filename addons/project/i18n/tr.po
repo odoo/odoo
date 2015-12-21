@@ -4,12 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# gezgin biri <gezginbiri@hotmail.com>, 2015
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:52+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-12-09 19:27+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -165,7 +167,7 @@ msgstr "Analiz"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analiz Hesap"
+msgstr "Analitik Hesap"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -547,8 +549,8 @@ msgstr "Bitiş Tarihi"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Hata! Görev bitiş tarihi başlangıç ​​tarihi görevin ardından büyük olmalıdır"
+msgid "Error ! Task end-date must be greater than task start-date"
+msgstr "Hata! Görev bitiş tarihi, görev başlangıç tarihinden büyük olmalıdır"
 
 #. module: project
 #: constraint:project.task:0
@@ -557,8 +559,8 @@ msgstr "Hata! Sen özyinelemeli görevleri oluşturamazsınız."
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Hata! Proje başlangıç tarihi bitiş tarihinden sonra olamaz."
+msgid "Error! project start-date must be lower than project end-date."
+msgstr "Hata! Proje başlangıç tarihi proje bitiş tarihinden küçük olmalıdır."
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -615,7 +617,7 @@ msgstr "Otomatik görevler ile ilişkili görevleri ve sorunları izlemek için 
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -687,7 +689,7 @@ msgid ""
 "- Employees Only: employees see all tasks or issues\n"
 "- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr "Görevlerin ya da mevcut projeye ait sorunların görünürlüğünü düzenler:\n- Genel: herkes herşeyi görebilir; portal etkinse, portal kullanıcıları\n   bütün görev ve sorunları görebilir; anonim portal etkin ise, ziyaretçiler\n   bütün görev ve sorunları görür\n- Portal (yalnızca Portal kuruluysa kullanılabilir): personel her şeyi görür;\n   portal etkinse, portal kulanıcıları izledikleri ya da firmadan birinin izlediği\n   görev ya da sorunları görebilir\n- Yalnızca Personel: personel bütün görev ya da sorunları görebilir\n- Yalnızca İzleyiciler: personel yalnızca izlenen görev ya da sorunları görebilir; portal\n   etkinse, portal kullanıcıları izlenen görev ya da sorunları görebilir."
+msgstr "Görevlerin ya da mevcut projeye ait sorunların görünürlüğünü düzenler:\n- Genel: herkes herşeyi görebilir; portal etkinse, portal kullanıcıları\n   bütün görev ve sorunları görebilir; anonim portal etkin ise, ziyaretçiler\n   bütün görev ve sorunları görür\n- Portal (yalnızca Portal kuruluysa kullanılabilir): personel her şeyi görür;\n   portal etkinse, portal kulanıcıları izledikleri ya da firmadan birinin izlediği\n   görev ya da sorunları görebilir\n- Yalnızca Personel: personel bütün görev ya da sorunları görebilir\n- Yalnızca Takipçiler: personel yalnızca izlenen görev ya da sorunları görebilir; portal\n   etkinse, portal kullanıcıları izlenen görev ya da sorunları görebilir."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -786,7 +788,7 @@ msgstr "Sorunlarda çalışma zamanı faturalama"
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
@@ -840,7 +842,7 @@ msgstr "Son Güncelleme"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr "Firmanın hangi Pad kurulumunun yeni padlere bağlantı için kullanılabileceğini özelleştirmesine izin verir. (örneğin:  http://etherpad.com/).\n-pad Modülünü kurar"
 
@@ -1236,7 +1238,7 @@ msgstr "Sonraki aşaması için hazır"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr "Görev başına zamançizelge satırları"
+msgstr "Görev başına zaman çizelge satırları"
 
 #. module: project
 #: help:project.task.delegate,new_task_description:0
@@ -1613,8 +1615,10 @@ msgstr "Bu aşamada gösterilecek kayıt kalmadığında kanban görünümünde 
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Projeler ve görevlerde kullanılan ölçü birimini ayarlar."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
+msgstr "Bu projeler ve görevler için ölçüm birimini ayarlar.\nBirimi değiştirmek sadece yeni girişleri etkiler."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0

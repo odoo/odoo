@@ -1,0 +1,2157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-05-27 09:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Amharic (http://www.transifex.com/odoo/odoo-8/language/am/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: am\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: purchase
+#: model:email.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:email.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,module_stock_dropshipping:0
+msgid ""
+"\n"
+"Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically when purchase order in draft status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase order."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/stock.py:198
+#, python-format
+msgid " Buy"
+msgstr ""
+
+#. module: purchase
+#: field:product.product,purchase_count:0
+#: field:product.template,purchase_count:0
+msgid "# Purchases"
+msgstr ""
+
+#. module: purchase
+#: field:res.partner,supplier_invoice_count:0
+msgid "# Supplier Invoices"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,nbr:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: purchase
+#: field:res.partner,purchase_order_count:0
+msgid "# of Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: model:email.template,subject:purchase.email_template_edi_purchase
+msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
+msgstr ""
+
+#. module: purchase
+#: model:email.template,subject:purchase.email_template_edi_purchase_done
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "(update)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click here to record a supplier invoice.\n"
+"                </p><p>\n"
+"                    Supplier invoices can be pre-generated based on purchase\n"
+"                    orders or receipts. This allows you to control invoices\n"
+"                    you receive from your supplier according to the draft\n"
+"                    document in Odoo.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    This supplier has no purchase order. Click to create a new RfQ.\n"
+"                </p><p>\n"
+"                    The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    of the products and the supplier invoice.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a pricelist version.\n"
+"              </p><p>\n"
+"                There can be more than one version of a pricelist, each of\n"
+"                these must be valid during a certain period of time. Some\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
+"                etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new incoming shipment.\n"
+"              </p><p> \n"
+"                Here you can track all the product receipts of purchase\n"
+"                orders where the invoicing is \"Based on Incoming Shipments\",\n"
+"                and for which you have not received a supplier invoice yet.\n"
+"                You can generate a supplier invoice based on those receipts.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that will be converted into a purchase order. \n"
+"              </p><p>\n"
+"                Use this menu to search within your purchase orders by\n"
+"                references, supplier, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the supplier, control\n"
+"                the products received and control the supplier invoices.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a request for quotation.\n"
+"              </p><p>\n"
+"                The quotation contains the history of the discussion/negotiation\n"
+"                you had with your supplier. Once confirmed, a request for\n"
+"                quotation is converted into a purchase order.\n"
+"              </p><p>\n"
+"                Most propositions of purchase orders are created automatically\n"
+"                by Odoo based on inventory needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a draft invoice.\n"
+"          </p><p>\n"
+"            Use this menu to control the invoices to be received from your\n"
+"            supplier. Odoo generates draft invoices from your purchase\n"
+"            orders or receipts, according to your settings.\n"
+"          </p><p>\n"
+"            Once you receive a supplier invoice, you can match it with the\n"
+"            draft invoice and validate it.\n"
+"          </p>\n"
+"        "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to define a new product.\n"
+"          </p><p>\n"
+"            You must define a product for everything you purchase, whether\n"
+"            it's a physical product, a consumable or services you buy to\n"
+"            subcontractants.\n"
+"          </p><p>\n"
+"            The product form contains detailed information to improve the\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
+"            available suppliers, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+msgid ""
+"<p>\n"
+"                Here you can track all the lines of purchase orders where the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for which you\n"
+"                have not received a supplier invoice yet. You can generate a\n"
+"                draft supplier invoice based on the lines from this list.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
+msgid "Address Book"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_advance_bidding
+msgid "Advance bidding process"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_warning:0
+msgid "Alerts by products or supplier"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,module_warning:0
+msgid ""
+"Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
+"Example: Product: this product is deprecated, do not purchase more than 5.\n"
+"Supplier: don't forget to ask for an express delivery."
+msgstr ""
+
+#. module: purchase
+#: help:account.config.settings,module_purchase_analytic_plans:0
+#: help:purchase.config.settings,module_purchase_analytic_plans:0
+msgid ""
+"Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
+"-This installs the module purchase_analytic_plans."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,group_purchase_pricelist:0
+msgid ""
+"Allows to manage different prices based on rules per category of Supplier.\n"
+"Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,group_costing_method:0
+msgid "Allows you to compute product cost price based on average cost."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr ""
+
+#. module: purchase
+#: help:account.config.settings,group_analytic_account_for_purchases:0
+#: help:purchase.config.settings,group_analytic_account_for_purchases:0
+msgid "Allows you to specify an analytic account on purchase orders."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_analytic_accounting
+msgid "Analytic Accounting for Purchases"
+msgstr ""
+
+#. module: purchase
+#: field:account.config.settings,group_analytic_account_for_purchases:0
+#: field:purchase.config.settings,group_analytic_account_for_purchases:0
+msgid "Analytic accounting for purchases"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Apply"
+msgstr "ማመልከት"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Approve Order"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: selection:purchase.report,state:0
+msgid "Approved"
+msgstr "ጸድቋል"
+
+#. module: purchase
+#: view:purchase.order.group:purchase.view_purchase_order_group
+msgid "Are you sure you want to merge these orders?"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,procurement_ids:0
+msgid "Associated procurements"
+msgstr ""
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
+msgid "Average Delivery Time"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,price_average:0
+msgid "Average Price"
+msgstr "አማካኝ ዋጋ"
+
+#. module: purchase
+#: field:stock.warehouse,buy_pull_id:0
+msgid "BUY rule"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Based on Purchase Order lines"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_method:0
+msgid ""
+"Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
+"Based on generated invoice: create a draft invoice you can validate later.\n"
+"Based on incoming shipments: let you create an invoice when receipts are validated."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Based on generated draft invoice"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,default_invoice_method:0
+#: selection:purchase.order,invoice_method:0
+msgid "Based on incoming shipments"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,default_invoice_method:0
+msgid "Based on purchase order lines"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+#: selection:purchase.order,state:0
+msgid "Bid Received"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,bid_date:0
+msgid "Bid Received On"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,bid_validity:0
+msgid "Bid Valid Until"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
+#, python-format
+msgid "Buy"
+msgstr "ይግዙ"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_calendar
+msgid "Calendar View"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,module_purchase_requisition:0
+msgid ""
+"Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for Quotation\n"
+"            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
+msgstr ""
+
+#. module: purchase
+#: view:product.template:purchase.product_template_search_view_purchase
+#: field:product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1189
+#, python-format
+msgid ""
+"Can not cancel this procurement as the related purchase order has been "
+"confirmed already.  Please cancel the purchase order first. "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/stock.py:195
+#, python-format
+msgid "Can't find any generic Buy route."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order:purchase.purchase_order_form
+#: view:purchase.order.group:purchase.view_purchase_order_group
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "Cancel"
+msgstr "መሰረዝ"
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+msgid "Cancelled"
+msgstr "ተሰርዟል"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1016
+#, python-format
+msgid "Cannot delete a purchase order line which is in state '%s'."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,category_id:0
+msgid "Category"
+msgstr "ቡድን"
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Category of product"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Choose from several bids in a call for bids"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+msgid "Companies"
+msgstr "ድርጅት"
+
+#. module: purchase
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:purchase.view_purchase_order_search
+#: field:purchase.report,company_id:0
+msgid "Company"
+msgstr "ድርጅት"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:515
+#, python-format
+msgid "Compose Email"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
+msgid "Configuration"
+msgstr "ማስተካከያዎች"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1231
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_configuration
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Configure Purchases"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "Confirm"
+msgstr "ማረጋገጫ"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Confirm Order"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order.line,state:0
+msgid "Confirmed"
+msgstr "ተረጋገጠ"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
+msgid "Create invoices"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,create_uid:0
+#: field:purchase.order.group,create_uid:0
+#: field:purchase.order.line,create_uid:0
+#: field:purchase.order.line_invoice,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,create_date:0
+#: field:purchase.order,create_date:0 field:purchase.order.group,create_date:0
+#: field:purchase.order.line,create_date:0
+#: field:purchase.order.line_invoice,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,currency_id:0
+msgid "Currency"
+msgstr "ገንዘብ"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Customer Address"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Customer Address (Direct Delivery)"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
+msgid "Date Approved"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Date Req."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,date_approve:0
+msgid "Date on which purchase order has been approved"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,bid_validity:0
+msgid "Date on which the bid expired"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,bid_date:0
+msgid "Date on which the bid was received"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.report,date:0
+msgid "Date on which this document has been created"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,delay_pass:0
+msgid "Days to Deliver"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,delay:0
+msgid "Days to Validate"
+msgstr ""
+
+#. module: purchase
+#: model:product.pricelist,name:purchase.list0
+msgid "Default Purchase Pricelist"
+msgstr ""
+
+#. module: purchase
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,default_invoice_method:0
+msgid "Default invoicing control method"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:555
+#, python-format
+msgid "Define an expense account for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:599
+#, python-format
+msgid "Define purchase journal for this company: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,picking_type_id:0
+msgid "Deliver To"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Deliveries & Invoices"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,date_order:0
+msgid ""
+"Depicts the date where the Quotation should be validated and converted into "
+"a Purchase Order, by default it's the creation date."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,name:0
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Description"
+msgstr "ማብራርያ"
+
+#. module: purchase
+#: field:purchase.order,location_id:0 field:purchase.report,location_id:0
+msgid "Destination"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "Do you want to generate the supplier invoices?"
+msgstr ""
+
+#. module: purchase
+#: help:stock.picking,reception_to_invoice:0
+msgid ""
+"Does the picking contains some moves related to a purchase order invoiceable"
+" on the receipt?"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+msgid "Done"
+msgstr "ተጠናቋል"
+
+#. module: purchase
+#: selection:purchase.order.line,state:0
+msgid "Draft"
+msgstr "ንድፍ"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Draft PO"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1384
+#, python-format
+msgid "Draft Purchase Order created"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/edi/purchase_order.py:132
+#, python-format
+msgid "EDI Pricelist (%s)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_email_templates
+msgid "Email Templates"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:159 code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:538 code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:598 code:addons/purchase/purchase.py:1188
+#: code:addons/purchase/stock.py:195
+#, python-format
+msgid "Error!"
+msgstr "ስህተት!"
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+msgid "Exception"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: field:purchase.order,minimum_planned_date:0
+#: field:purchase.report,expected_date:0
+#: view:website:purchase.report_purchasequotation_document
+msgid "Expected Date"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+msgid "Expected Month"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Extended Filters"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_follower_ids:0
+msgid "Followers"
+msgstr "ከተከታይ"
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_double_validation:0
+msgid "Force two levels of approvals"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: view:purchase.order.line:purchase.purchase_order_line_search
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Group By"
+msgstr "በመደብ"
+
+#. module: purchase
+#: view:purchase.order.line:purchase.purchase_order_line_search
+msgid "Hide cancelled lines"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,id:0 field:purchase.order,id:0
+#: field:purchase.order.group,id:0 field:purchase.order.line,id:0
+#: field:purchase.order.line_invoice,id:0 field:purchase.report,id:0
+msgid "ID"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "አዳዲስ መልእክቶችን ስናይ አስፈላጊ ትኩረት መስጠት"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_2_stock_picking
+msgid "In Shipments"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:337
+#, python-format
+msgid "In order to delete a purchase order, you must cancel it first."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,group_advance_purchase_requisition:0
+msgid ""
+"In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
+"            buy which quantity"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
+msgid "Incoming  Products"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
+msgid "Incoming Products"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_2_stock_picking
+#: field:purchase.order,shipment_count:0
+msgid "Incoming Shipments"
+msgstr ""
+
+#. module: purchase
+#: view:stock.picking:purchase.view_picking_in_search_picking_inherit
+msgid "Incoming Shipments to Invoice"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,incoterm_id:0
+msgid "Incoterm"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,incoterm_id:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:337 code:addons/purchase/purchase.py:1016
+#, python-format
+msgid "Invalid Action!"
+msgstr "የተሳሳተ እርምጃ"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
+msgid "Invoice Control"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "Invoice Exception"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoiced:0
+msgid "Invoice Received"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1500
+#, python-format
+msgid "Invoice paid"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1480
+#, python-format
+msgid "Invoice received"
+msgstr ""
+
+#. module: purchase
+#: field:stock.picking,reception_to_invoice:0
+msgid "Invoiceable on incoming shipment?"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
+msgid "Invoiced"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_2_stock_picking
+#: field:purchase.order,invoice_count:0 field:purchase.order,invoice_ids:0
+msgid "Invoices"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:purchase.purchase_order_line_form
+msgid "Invoices and Incoming Shipments"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Invoicing Process"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Invoicing Settings"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr "ተከታይ ነው"
+
+#. module: purchase
+#: help:purchase.order,shipped:0
+msgid "It indicates that a picking has been done"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoiced:0
+msgid "It indicates that an invoice has been validated"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,write_uid:0 field:purchase.order,write_uid:0
+#: field:purchase.order.group,write_uid:0
+#: field:purchase.order.line,write_uid:0
+#: field:purchase.order.line_invoice,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,write_date:0
+#: field:purchase.order,write_date:0 field:purchase.order.group,write_date:0
+#: field:purchase.order.line,write_date:0
+#: field:purchase.order.line_invoice,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Location & Warehouse"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:159
+#, python-format
+msgid "Make sure you have at least an incoming picking type defined"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_requisition:0
+msgid "Manage calls for bids"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,group_uom:0
+msgid "Manage different units of measure for products"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_stock_dropshipping:0
+msgid "Manage dropshipping"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,group_purchase_pricelist:0
+msgid "Manage pricelist per supplier"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Manager"
+msgstr "አስተዳዳሪ"
+
+#. module: purchase
+#: view:purchase.order.line:purchase.purchase_order_line_form2
+msgid "Manual Invoices"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Manually Corrected"
+msgstr ""
+
+#. module: purchase
+#: help:res.company,po_lead:0
+msgid ""
+"Margin of error for supplier lead times. When the systemgenerates Purchase "
+"Orders for procuring products,they will be scheduled that many days earlier "
+"to cope with unexpected supplier delays."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
+msgid "Merge Purchase orders"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.group:purchase.view_purchase_order_group
+msgid "Merge orders"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_ids:0
+msgid "Messages"
+msgstr "መልእክቶች"
+
+#. module: purchase
+#: help:purchase.order,message_ids:0
+msgid "Messages and communication history"
+msgstr "የመልእክትና ግንኙነት ታሪኮች"
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
+msgid "Monthly Purchases"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Net Price"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+msgid "New Mail"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1222
+#, python-format
+msgid "No address defined for the supplier"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1220
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1218
+#, python-format
+msgid "No supplier defined for this product !"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+msgid "Not Invoiced"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:purchase.purchase_order_line_form
+msgid "Notes"
+msgstr "ማስታወሻዎች"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_invoice_pending
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+msgid "On Draft Invoices"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
+msgid "On Incoming Shipments"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
+msgid "On Purchase Order Lines"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.client,name:purchase.action_client_purchase_menu
+msgid "Open Purchase Menu"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0
+msgid "Order Date"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Order Date:"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Order Month"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,name:0
+#: view:purchase.order.line:purchase.purchase_order_line_search
+#: field:purchase.order.line,order_id:0
+msgid "Order Reference"
+msgstr ""
+
+#. module: purchase
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,state:0
+msgid "Order Status"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Order of Day"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Orders"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Our Order Reference:"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1363
+#, python-format
+msgid "PO: %s"
+msgstr ""
+
+#. module: purchase
+#: model:email.template,report_name:purchase.email_template_edi_purchase_done
+msgid "PO_${(object.name or '').replace('/','_')}"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: field:purchase.order.line,partner_id:0
+msgid "Partner"
+msgstr "ተባባሪ"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
+msgid "Partner Tags"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,payment_term_id:0
+msgid "Payment Term"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "የመጫኛ ዝርዝር"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:413
+#, python-format
+msgid "Please create Invoices."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.group:purchase.view_purchase_order_group
+msgid ""
+"Please note that: \n"
+" \n"
+" Orders will only be merged if: \n"
+" * Purchase Orders are in draft \n"
+" * Purchase Orders belong to the same supplier \n"
+" * Purchase Orders are have same stock location, same pricelist \n"
+" \n"
+" Lines will only be merged if: \n"
+" * Order lines are exactly the same except for the product,quantity and unit"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:45
+#, python-format
+msgid "Please select multiple order to merge in the list view."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,default_invoice_method:0
+msgid "Pre-generate draft invoices based on purchase orders"
+msgstr ""
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
+msgid "Price Per Supplier"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
+msgid "Price Types"
+msgstr "የዋጋው አይነቶች"
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
+msgid "Pricelist"
+msgstr "የዋጋ ዝርዝሮች"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
+msgid "Pricelists"
+msgstr "የዋጋ ዝርዝሮች"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Print RFQ"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_order
+msgid "Procurement"
+msgstr "ግዢ"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_rule
+msgid "Procurement Rule"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_product
+#: field:purchase.order,product_id:0
+#: view:purchase.order.line:purchase.purchase_order_line_search
+#: field:purchase.order.line,product_id:0 field:purchase.report,product_id:0
+msgid "Product"
+msgstr "እቃ"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Product Categories"
+msgstr "የእቃው ምድብ"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_template
+msgid "Product Template"
+msgstr "የእቃው ማሳያ"
+
+#. module: purchase
+#: field:purchase.order.line,product_uom:0
+msgid "Product Unit of Measure"
+msgstr "የእቃው መለክያ"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_product
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Products"
+msgstr "እቃዎች"
+
+#. module: purchase
+#: field:purchase.report,price_standard:0
+msgid "Products Value"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
+msgid "Products by Category"
+msgstr "እቃዋች በየ ክፍላቸው"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:851
+#, python-format
+msgid "Products received"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,module_purchase_double_validation:0
+msgid ""
+"Provide a double validation mechanism for purchases exceeding minimum amount.\n"
+"-This installs the module purchase_double_validation."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+msgid "Purchase"
+msgstr "ግዢ"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+#: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
+msgid "Purchase Analysis"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+msgid ""
+"Purchase Analysis allows you to easily check and analyse your company "
+"purchase history and performance. From this menu you can track your "
+"negotiation performance, the delivery performance of your suppliers, etc."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Purchase Confirmed"
+msgstr ""
+
+#. module: purchase
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
+#: field:procurement.order,purchase_id:0
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order:purchase.purchase_order_form
+#: view:purchase.order:purchase.purchase_order_graph
+#: view:purchase.order:purchase.purchase_order_tree
+#: model:res.request.link,name:purchase.req_link_purchase_order
+msgid "Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Purchase Order Confirmation N°"
+msgstr ""
+
+#. module: purchase
+#: field:account.invoice.line,purchase_line_id:0
+#: model:ir.model,name:purchase.model_purchase_order_line
+#: field:procurement.order,purchase_line_id:0
+#: view:purchase.order.line:purchase.purchase_order_line_form
+#: view:purchase.order.line:purchase.purchase_order_line_form2
+#: field:stock.move,purchase_line_id:0
+msgid "Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line_invoice
+msgid "Purchase Order Line Make Invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+#: view:purchase.order.line:purchase.purchase_order_line_tree
+msgid "Purchase Order Lines"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_group
+msgid "Purchase Order Merge"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:72
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.report:purchase.view_purchase_order_search
+#, python-format
+msgid "Purchase Orders"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_graph
+msgid "Purchase Orders Statistics"
+msgstr ""
+
+#. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1386
+#, python-format
+msgid "Purchase line created and linked to an existing Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+msgid "Purchase orders that include lines not invoiced."
+msgstr ""
+
+#. module: purchase
+#: field:stock.warehouse,buy_to_resupply:0
+msgid "Purchase to resupply this warehouse"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,negociation:0
+msgid "Purchase-Standard Price"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+#: view:product.product:purchase.view_product_normal_purchase_buttons_from
+#: view:product.template:purchase.view_product_template_purchase_buttons_from
+#: view:res.partner:purchase.purchase_partner_kanban_view
+#: view:res.partner:purchase.res_partner_view_purchase_buttons
+msgid "Purchases"
+msgstr "ግዢዎች"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchases Orders"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,dest_address_id:0
+msgid ""
+"Put an address if you want to deliver directly from the supplier to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Qty"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "ብዛት"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1388
+#, python-format
+msgid "Quantity added in existing Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Quotations"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "RFQ"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "RFQ & Bid"
+msgstr ""
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_approved
+msgid "RFQ Approved"
+msgstr ""
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
+msgid "RFQ Confirmed"
+msgstr ""
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_done
+msgid "RFQ Done"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
+#, python-format
+msgid "RFQ created"
+msgstr ""
+
+#. module: purchase
+#: model:email.template,report_name:purchase.email_template_edi_purchase
+msgid "RFQ_${(object.name or '').replace('/','_')}"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "RFQs and Purchases"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Re-Print RFQ"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Re-Send RFQ by Email"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Receive Invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Receive Products"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+msgid "Received"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,shipped_rate:0
+msgid "Received Ratio"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_tree
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+msgid "Reference"
+msgstr "ማመሳከሪያ"
+
+#. module: purchase
+#: field:purchase.report,product_uom:0
+msgid "Reference Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,origin:0
+msgid ""
+"Reference of the document that generated this purchase order request; a "
+"sales order or an internal procurement request."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,partner_ref:0
+msgid ""
+"Reference of the sales order or bid sent by your supplier. It's mainly used "
+"to do the matching when you receive the products as this reference is "
+"usually written on the delivery order sent by your supplier."
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchasequotation_document
+msgid "Regards,"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,related_location_id:0
+msgid "Related location"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: view:purchase.order:purchase.purchase_order_form
+#: selection:purchase.report,state:0
+#: view:website:purchase.report_purchasequotation_document
+msgid "Request for Quotation"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Request for Quotation N°"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+msgid "Requests for Quotation"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,move_ids:0
+msgid "Reservation"
+msgstr "ተቀማጭ እቃ"
+
+#. module: purchase
+#: field:purchase.order,create_uid:0
+#: view:purchase.report:purchase.view_purchase_order_search
+#: field:purchase.report,user_id:0
+msgid "Responsible"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Routes"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled Date"
+msgstr "የግዢ ቀን"
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: view:purchase.order.line:purchase.purchase_order_line_search
+msgid "Search Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "Select an Open Sales Order"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1114
+#, python-format
+msgid ""
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Send PO by Email"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Send RFQ by Email"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Set to Draft"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "Shipping Exception"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Shipping address:"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,origin:0
+msgid "Source Document"
+msgstr "የሰነዱ ምንጭ"
+
+#. module: purchase
+#: help:product.template,purchase_ok:0
+msgid "Specify if the product can be selected in a purchase order line."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,state:0
+#: view:purchase.order.line:purchase.purchase_order_line_search
+#: field:purchase.order.line,state:0
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Status"
+msgstr "ሁኔታው"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "ወደ ግምጃ ቤት የሚገቡና የሚወጡ እቃዎች"
+
+#. module: purchase
+#: view:purchase.order.line:purchase.purchase_order_line_form2
+msgid "Stock Moves"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_summary:0
+msgid "Summary"
+msgstr "ማጠቃለያ"
+
+#. module: purchase
+#: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.order:purchase.view_request_for_quotation_filter
+#: field:purchase.order,partner_id:0
+#: view:purchase.order.line:purchase.purchase_order_line_search
+#: view:purchase.order.line:purchase.purchase_order_line_tree
+#: view:purchase.report:purchase.view_purchase_order_search
+#: field:purchase.report,partner_id:0
+msgid "Supplier"
+msgstr "አቅራቢ"
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+msgid "Supplier Features"
+msgstr ""
+
+#. module: purchase
+#: view:res.partner:purchase.res_partner_view_purchase_account_buttons
+msgid "Supplier Inv."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:444
+#: code:addons/purchase/wizard/purchase_line_invoice.py:115
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
+#: view:res.partner:purchase.res_partner_view_purchase_account_buttons
+#, python-format
+msgid "Supplier Invoices"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_tax:0 field:purchase.order.line,taxes_id:0
+#: view:website:purchase.report_purchaseorder_document
+msgid "Taxes"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,notes:0
+msgid "Terms and Conditions"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_form
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,amount_untaxed:0
+msgid "The amount without tax"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1231
+#, python-format
+msgid ""
+"The product \"%s\" has been defined with your company as reseller which "
+"seems to be a configuration error!"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1134
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s %s, you should not "
+"purchase less."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1130
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,state:0
+msgid ""
+"The status of the purchase order or the quotation request. A request for "
+"quotation is a purchase order in a 'Draft' status. Then the order has to be "
+"confirmed by the user, the status switch to 'Confirmed'. Then the supplier "
+"must confirm the order to change the status to 'Approved'. When the purchase"
+" order is paid and received, the status becomes 'Done'. If a cancel action "
+"occurs in the invoice or in the receipt of goods, the status becomes in "
+"exception."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,amount_tax:0
+msgid "The tax amount"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,amount_total:0
+msgid "The total amount"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1335
+#, python-format
+msgid "There is no supplier associated to product %s"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid ""
+"This is computed as the minimum scheduled date of all purchase order lines' "
+"products."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of receipts that have been generated for this purchase "
+"order."
+msgstr ""
+
+#. module: purchase
+#: help:res.partner,property_product_pricelist_purchase:0
+msgid ""
+"This pricelist will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,picking_type_id:0
+msgid "This will determine picking type of incoming shipment"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+#: view:website:purchase.report_purchaseorder_document
+msgid "Total"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_tree
+msgid "Total Untaxed amount"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Total Without Taxes"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_tree
+msgid "Total amount"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:694
+#, python-format
+msgid "Unable to cancel the purchase order %s."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:700
+#, python-format
+msgid "Unable to cancel this purchase order."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,name:0
+msgid ""
+"Unique number of the purchase order, computed automatically when the "
+"purchase order is created."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,price_unit:0
+#: view:website:purchase.report_purchaseorder_document
+msgid "Unit Price"
+msgstr "የአንዱ ዋጋ"
+
+#. module: purchase
+#: field:purchase.report,quantity:0
+msgid "Unit Quantity"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "የእቃዎች መለክያ በየ ምድባቸው"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr "መለክያ"
+
+#. module: purchase
+#: field:purchase.order,message_unread:0
+msgid "Unread Messages"
+msgstr "ያልተነበቡ መልእክቶች"
+
+#. module: purchase
+#: view:purchase.order:purchase.purchase_order_tree
+msgid "Untaxed"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,group_costing_method:0
+msgid "Use 'Real Price' or 'Average' costing methods."
+msgstr ""
+
+#. module: purchase
+#: field:account.config.settings,module_purchase_analytic_plans:0
+msgid "Use multiple analytic accounts on orders"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_analytic_plans:0
+msgid "Use multiple analytic accounts on purchase orders"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_user
+msgid "User"
+msgstr "ተጠቃሚ"
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "VAT:"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,validator:0
+msgid "Validated By"
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Validated By:"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,validator:0
+msgid "Validated by"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Waiting Approval"
+msgstr "ፍቃድ ጠብቅ"
+
+#. module: purchase
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_warehouse
+#: field:purchase.report,picking_type_id:0
+msgid "Warehouse"
+msgstr "መጋዘን"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1114 code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1134
+#: code:addons/purchase/wizard/purchase_order_group.py:44
+#, python-format
+msgid "Warning!"
+msgstr "ማስጠንቀቅያ!"
+
+#. module: purchase
+#: field:purchase.order,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
+
+#. module: purchase
+#: help:stock.warehouse,buy_to_resupply:0
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:538
+#, python-format
+msgid "You cannot confirm a purchase order without any purchase order line."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:695
+#, python-format
+msgid "You have already received some goods for it.  "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:701
+#, python-format
+msgid "You must first cancel all invoices related to this purchase order."
+msgstr ""
+
+#. module: purchase
+#: view:website:purchase.report_purchaseorder_document
+msgid "Your Order Reference"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order.group:purchase.view_purchase_order_group
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "or"
+msgstr "ወይም"
+
+#. module: purchase
+#: field:purchase.order,related_usage:0
+msgid "unknown"
+msgstr ""

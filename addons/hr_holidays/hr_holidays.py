@@ -325,7 +325,7 @@ class hr_holidays(osv.osv):
         """ Override to avoid automatic logging of creation """
         if context is None:
             context = {}
-        context = dict(context, mail_create_nolog=True)
+        context = dict(context, mail_create_nolog=True, mail_create_nosubscribe=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         return super(hr_holidays, self).create(cr, uid, values, context=context)
@@ -393,7 +393,8 @@ class hr_holidays(osv.osv):
             elif record.holiday_type == 'category':
                 emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
                 leave_ids = []
-                for emp in obj_emp.browse(cr, uid, emp_ids):
+                batch_context = dict(context, mail_notify_force_send=False)
+                for emp in obj_emp.browse(cr, uid, emp_ids, context=context):
                     vals = {
                         'name': record.name,
                         'type': record.type,
@@ -406,7 +407,7 @@ class hr_holidays(osv.osv):
                         'parent_id': record.id,
                         'employee_id': emp.id
                     }
-                    leave_ids.append(self.create(cr, uid, vals, context=None))
+                    leave_ids.append(self.create(cr, uid, vals, context=batch_context))
                 for leave_id in leave_ids:
                     # TODO is it necessary to interleave the calls?
                     for sig in ('confirm', 'validate', 'second_validate'):

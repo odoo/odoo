@@ -108,18 +108,21 @@ class product_uom(osv.osv):
     def name_create(self, cr, uid, name, context=None):
         """ The UoM category and factor are required, so we'll have to add temporary values
             for imported UoMs """
+        if not context:
+            context = {}
         uom_categ = self.pool.get('product.uom.categ')
+        values = {self._rec_name: name, 'factor': 1}
         # look for the category based on the english name, i.e. no context on purpose!
         # TODO: should find a way to have it translated but not created until actually used
-        categ_misc = 'Unsorted/Imported Units'
-        categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
-        if categ_id:
-            categ_id = categ_id[0]
-        else:
-            categ_id, _ = uom_categ.name_create(cr, uid, categ_misc)
-        uom_id = self.create(cr, uid, {self._rec_name: name,
-                                       'category_id': categ_id,
-                                       'factor': 1})
+        if not context.get('default_category_id'):
+            categ_misc = 'Unsorted/Imported Units'
+            categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
+            if categ_id:
+                values['category_id'] = categ_id[0]
+            else:
+                values['category_id'] = uom_categ.name_create(
+                    cr, uid, categ_misc, context=context)[0]
+        uom_id = self.create(cr, uid, values, context=context)
         return self.name_get(cr, uid, [uom_id], context=context)[0]
 
     def create(self, cr, uid, data, context=None):
@@ -428,6 +431,14 @@ class product_attribute_line(osv.osv):
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
     }
+
+    def _check_valid_attribute(self, cr, uid, ids, context=None):
+        obj_pal = self.browse(cr, uid, ids[0], context=context)
+        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+
+    _constraints = [
+        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
+    ]
 
 
 #----------------------------------------------------------
@@ -829,6 +840,7 @@ class product_template(osv.osv):
             template_ids.add(p.product_tmpl_id.id)
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
+            args = args if args is not None else []
             results = product_product.name_search(
                 cr, user, name, args+domain, operator=operator, context=context, limit=limit)
             product_ids = [p[0] for p in results]
@@ -947,7 +959,12 @@ class product_product(osv.osv):
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+            if context.get('bin_size'):
+                result[obj.id] = obj.image_variant
+            else:
+                result[obj.id] = tools.image_get_resized_images(obj.image_variant, return_big=True, avoid_resize_medium=True)[name]
+            if not result[obj.id]:
+                result[obj.id] = getattr(obj.product_tmpl_id, name)
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):

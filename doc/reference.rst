@@ -21,3 +21,4 @@ Reference
     reference/reports
     reference/workflows
     reference/guidelines
+    reference/upgrade_api

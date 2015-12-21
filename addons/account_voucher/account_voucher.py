@@ -400,7 +400,7 @@ class account_voucher(osv.osv):
 
             tax = [tax_pool.browse(cr, uid, voucher.tax_id.id, context=context)]
             partner = partner_pool.browse(cr, uid, voucher.partner_id.id, context=context) or False
-            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
             tax = tax_pool.browse(cr, uid, taxes, context=context)
 
             total = voucher_amount
@@ -451,7 +451,7 @@ class account_voucher(osv.osv):
                 tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
                 if partner_id:
                     partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
                     tax = tax_pool.browse(cr, uid, taxes, context=context)
 
                 if not tax[0].price_include:
@@ -1294,7 +1294,7 @@ class account_voucher(osv.osv):
                     'move_id': move_id,
                     'partner_id': line.voucher_id.partner_id.id,
                     'currency_id': line.move_line_id.currency_id.id,
-                    'amount_currency': -1 * foreign_currency_diff,
+                    'amount_currency': (-1 if line.type == 'cr' else 1) * foreign_currency_diff,
                     'quantity': 1,
                     'credit': 0.0,
                     'debit': 0.0,

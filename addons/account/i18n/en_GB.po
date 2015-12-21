@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# SHAMNAS K A <shamnas@loyalitsolutions.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 09:27+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-11-28 08:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-8/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +46,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -87,7 +88,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n\n    <p>A new invoice is available for you: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: account
 #: help:account.invoice,state:0
@@ -100,15 +101,22 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Centralisation"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "സെക്കണ്ടുകൾ "
+
+#. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr ""
+msgstr "രേഖപ്പെടുത്തല്‍"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -120,7 +128,7 @@ msgstr "# of Digits"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr ""
+msgstr "രേഖപ്പെടുത്തല്‍"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
@@ -566,7 +574,7 @@ msgstr "A period is a fiscal period of time during which accounting entries shou
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "A selected move line was already reconciled."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1579,7 +1587,7 @@ msgstr "Applicability Options"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr ""
+msgstr "Applicable Code"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1599,22 +1607,26 @@ msgstr "Apply"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
 msgstr ""
 
 #. module: account
@@ -1874,12 +1886,12 @@ msgstr "Bank Details"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr ""
+msgstr "Bank Reconciliation Move Presets"
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "Bank Reconciliation Move preset"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -1998,32 +2010,32 @@ msgstr "Budgets"
 #. module: account
 #: field:account.statement.operation.template,name:0
 msgid "Button Label"
-msgstr ""
+msgstr "Button Label"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
 msgid "By Country"
-msgstr ""
+msgstr "By Country"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
 msgid "By Product"
-msgstr ""
+msgstr "By Product"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
 msgid "By Product Category"
-msgstr ""
+msgstr "By Product Category"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Refund"
-msgstr ""
+msgstr "By Refund"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "By Salespersons"
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -2093,7 +2105,7 @@ msgstr ""
 #. module: account
 #: view:account.move:account.view_move_form
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Cancel Entry"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
@@ -2193,7 +2205,7 @@ msgstr "Cannot create the invoice.\nThe related payment term is probably misconf
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration."
 
 #. module: account
 #: code:addons/account/account_move_line.py:551
@@ -2201,7 +2213,7 @@ msgstr ""
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr ""
+msgstr "Cannot find any account journal of \"%s\" type for this company, You should create one.\n Please go to Journal Configuration"
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -2569,6 +2581,13 @@ msgid "Choose Fiscal Year"
 msgstr "Choose Fiscal Year"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2613,7 +2632,7 @@ msgstr "Close states of Fiscal year and periods"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:55
 #, python-format
 msgid "Close the statement"
-msgstr ""
+msgstr "Close the statement"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -2920,7 +2939,7 @@ msgstr "Confirmed"
 #: code:addons/account/static/src/js/account_widgets.js:534
 #, python-format
 msgid "Congrats, you're all done !"
-msgstr ""
+msgstr "Congrats, you're all done !"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -2975,18 +2994,18 @@ msgstr "Counterpart"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Countries"
+msgid "Country"
+msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "Country Group"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
 msgid "Country of the Partner Company"
-msgstr ""
+msgstr "Country of the Partner Company"
 
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
@@ -3028,6 +3047,13 @@ msgstr "Create Monthly Periods"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Create Refund"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3402,7 +3428,7 @@ msgstr "Customer Taxes"
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "Customer ref:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -3491,7 +3517,7 @@ msgstr "Date of the day"
 #: help:account.bank.statement,message_last_post:0
 #: help:account.invoice,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date of the last message posted on the record."
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -3671,7 +3697,7 @@ msgstr "Description"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Description:"
-msgstr ""
+msgstr "Description:"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3854,12 +3880,12 @@ msgstr "Due Date Computation"
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Due Month"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Due Payments"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -3898,7 +3924,7 @@ msgstr "Effective date"
 #: code:addons/account/static/src/js/account_widgets.js:538
 #, python-format
 msgid "Efficiency at its finest"
-msgstr ""
+msgstr "Efficiency at its finest"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_email_templates
@@ -4282,7 +4308,7 @@ msgstr "Extended Filters..."
 #: code:addons/account/static/src/js/account_widgets.js:545
 #, python-format
 msgid "Fast reconciler"
-msgstr ""
+msgstr "Fast reconciler"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5931,9 +5957,16 @@ msgstr "Keep empty to use the period of the validation(invoice) date."
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -5954,7 +5987,7 @@ msgstr "Last Closing Balance"
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Last Message Date"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6548,7 +6581,7 @@ msgstr "Next supplier invoice number"
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "No Analytic Journal!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -7621,7 +7654,7 @@ msgstr "Printed"
 #: view:website:account.report_analyticcostledger
 #: view:website:account.report_analyticcostledgerquantity
 msgid "Printing Date:"
-msgstr ""
+msgstr "Printing Date:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -8326,6 +8359,12 @@ msgstr "Round per Line"
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
 msgstr "Round per line"
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr ""
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9619,6 +9658,20 @@ msgid ""
 msgstr "The commercial entity that will be used on Journal Entries for this invoice"
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "The computation method for the tax amount."
@@ -9646,6 +9699,11 @@ msgstr "The entries to reconcile should belong to the same company."
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr "The fiscal position will determine taxes and accounts used for the partner."
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
+msgstr ""
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -9956,6 +10014,30 @@ msgstr "This Period"
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "This Year"
+msgstr "This Year"
+
+#. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
 msgstr ""
 
 #. module: account
@@ -9973,23 +10055,11 @@ msgid ""
 msgstr "This account will be used instead of the default one as the receivable account for the current partner"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr "This account will be used to value outgoing stock using cost price."
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr "This account will be used to value outgoing stock using sale price."
-
-#. module: account
 #: help:account.config.settings,module_account_budget:0
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n-This installs the module account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10098,7 +10168,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10213,7 +10283,7 @@ msgstr "This optional field allow you to link an account template to a specific 
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -10245,7 +10315,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -10298,7 +10368,7 @@ msgstr "This wizard will validate all journal entries of a particular journal an
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -10490,7 +10560,7 @@ msgstr "Total:"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:136
 #, python-format
 msgid "Transaction"
-msgstr ""
+msgstr "Transaction"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -10798,7 +10868,7 @@ msgstr "VAT Legal Statement"
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "VAT required"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -10927,7 +10997,7 @@ msgstr "When new statement is created the status will be 'Draft'.\nAnd after get
 #: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
-msgstr ""
+msgstr "Whew, that was fast !"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -10951,7 +11021,7 @@ msgstr "With balance is not equal to 0"
 #: view:website:account.report_generalledger
 #: view:website:account.report_trialbalance
 msgid "With balance not equal to zero"
-msgstr ""
+msgstr "With balance not equal to zero"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10965,7 +11035,7 @@ msgstr "With movements"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr ""
+msgstr "With tax"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11053,6 +11123,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11060,13 +11137,21 @@ msgid ""
 msgstr "You can check this box to mark this journal item as a litigation with the associated partner"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr "You can not add/modify entries in a closed period %s of journal %s."
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
@@ -11112,7 +11197,7 @@ msgid ""
 msgstr "You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it."
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11234,7 +11319,7 @@ msgstr ""
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
-msgstr ""
+msgstr "You cannot delete an invoice which is not draft or cancelled. You should refund it instead."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1234
@@ -11412,7 +11497,7 @@ msgstr "You must define an analytic journal of type '%s'!"
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "You must first select a partner!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -11453,7 +11538,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:686
@@ -11462,7 +11547,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57
@@ -11471,14 +11556,14 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "You should have defined an 'Internal Transfer Account' in your cash register's journal!"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "You validated"
-msgstr ""
+msgstr "You validated"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -11619,7 +11704,7 @@ msgstr ""
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "the parent company"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -11631,14 +11716,14 @@ msgstr "title"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
-msgstr ""
+msgstr "to reconcile"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "transactions."
-msgstr ""
+msgstr "transactions."
 
 #. module: account
 #: field:account.cashbox.line,bank_statement_id:0

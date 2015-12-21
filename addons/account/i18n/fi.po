@@ -6,13 +6,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jan-Erik Finlander <janerik.finlander@gmail.com>, 2015
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
+# Jussi Lehto <jussi@gulfeo.com>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Kari Lindgren <karisatu@gmail.com>, 2015
+# Mika Karvinen <karvinenm@gmail.com>, 2015
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-23 19:49+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-12-09 15:44+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +52,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -90,7 +94,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Hei ${object.partner_id.name},</p>\n\n<p>Uusi lasku on saatavilla: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n\n&nbsp;&nbsp;<strong>VIITTEET</strong><br />\n&nbsp;&nbsp;Laskun numero: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Laskun summa: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Laskun päiväys: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Liittyvä tilaus: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Kontaktinne: <a href=\"mailto:${object.user_id.email or ''}?subject=Lasku%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p>\n\n% if object.paypal_url:\n<br/>\n<p>Maksaminen on mahdollista myös Paypalilla</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Jos sinulla on kysymyksiä, älä epäröi ottaa meihin yhteyttä.</p>\n<p>${object.company_id.name or 'Yhtiömme'} kiittää kun valitsit juuri meidät!</p>\n<br/>\n<br/>\n\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nPuh:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n\n% if object.company_id.website:\n<div>\nWeb:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
+msgstr ""
 
 #. module: account
 #: help:account.invoice,state:0
@@ -103,10 +107,17 @@ msgid ""
 msgstr "* Tilaa \"Ehdotus\" käytetään, kun käyttäjä on luonut uuden vahvistamattoman laskun.\n* Tilaa \"Proforma\" käytetään tarvittaessa ennen virallisen laskun tekoa. Tässä vaiheessa laskulla ei ole vielä laskunumeroa.\n* Tilaa \"Avoin\" käytetään, kun käyttäjä luo laskun ja sille generoidaan laskunumero. Lasku säilyy avoimena, kunnes se on maksettu. \n* Tila \"Maksettu\" asetetaan automaattisesti, kun lasku on maksettu. Vastaavat päiväkirjaviennit eivät ole välttämättä vielä täsmäytettyjä. \n* Tilaa \"Peruttu\" käytetään, kun käyttäjä peruuttaa laskun."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr "Keskitys"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "sekuntia"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -323,7 +334,7 @@ msgid ""
 "                the bottom of each invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi asiakkaalle laskun.\n</p><p>\nOdoon sähköinen laskutus mahdollistaa helpon ja nopean\nasiakkaiden maksusuoritusten keruun. Asiakaasi saa laskun \nsähköpostilla ja hän voi maksaa sen verkossa ja/tai lukea sen\nomaan tietojärjestelmäänsä.\n</p><p>\nAsiakkaan kanssa käydyt keskustelut näytetään automaattisesti kunkin laskun alapuolella.\n</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi asiakkaalle laskun.\n</p><p>\nOdoon sähköinen laskutus mahdollistaa helpon ja nopean\nasiakkaiden maksusuoritusten keruun. Asiakkaasi saa laskun \nsähköpostilla ja hän voi maksaa sen verkossa ja/tai lukea sen\nomaan tietojärjestelmäänsä.\n</p><p>\nAsiakkaan kanssa käydyt keskustelut näytetään automaattisesti kunkin laskun alapuolella.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -370,7 +381,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi uusi kassaloki.\n</p><p>\nKassakone mahdollistaa kassavientien hallinnan kassapäiväkirjoissasi. Tämä ominaisuus tarjoaa helpon tavan seurata päivittäisiä kassatapahtumia. Voit kirjata kassalippaassa olevat kolikot ja tehdä kirjauksia kun rahaa tulee lisää kassaan tai rahaa otetaan kassasta."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -382,7 +393,7 @@ msgid ""
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi tiliote laskutoimituksen? mallipohjan.\n</p><p>\nVoit käyttää mallipohjia luodaksesi nopeasti siirtorivin kun täsmäytät pankkitiliotteitasi.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -541,7 +552,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nValitse lisätäksesi uuden analyyttisen tilin (kustannuspaikan).\n</p>"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -656,7 +667,7 @@ msgstr "Analyyttisten tilien päiväkirja"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr ""
+msgstr "Tilin automaattinen täsmäytys"
 
 #. module: account
 #: field:account.tax,base_code_id:0
@@ -667,7 +678,7 @@ msgstr "Tilin peruskoodi"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr ""
+msgstr "Tilin pääkirja"
 
 #. module: account
 #: view:account.account:account.view_account_form
@@ -727,7 +738,7 @@ msgstr "Päiväkirja"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr ""
+msgstr "Päiväkirjan valinta"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
@@ -831,7 +842,7 @@ msgstr "Tilin lähde"
 #: model:ir.actions.act_window,name:account.action_account_state_open
 #: model:ir.model,name:account.model_account_state_open
 msgid "Account State Open"
-msgstr ""
+msgstr "Tili on auki"
 
 #. module: account
 #: view:account.account:account.account_account_graph
@@ -947,7 +958,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
+msgstr "Tilin ALV ilmoitus"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1297,7 +1308,7 @@ msgstr "Kaikki valitut päiväkirjaviennit vahvistetaan ja kirjataan. Tämä tar
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Kaikki tilikirjaukset pitää käsitellä jotta voit sulkea tiliotteen."
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -1602,22 +1613,26 @@ msgstr "Käytä"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr "Käytä vain jos toimitus- tai laskutusmaa täsmää ryhmään."
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
-msgstr "Käytä vain jos toimitus- tai laskutusmaa täsmää."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
+msgstr "Käytä vain jos kumppanilla on verotunnus"
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
 msgstr ""
 
 #. module: account
@@ -1976,7 +1991,7 @@ msgstr "Perustuen"
 #. module: account
 #: field:account.treasury.report,date:0
 msgid "Beginning of Period Date"
-msgstr ""
+msgstr "Kauden alkupäivä"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -2370,7 +2385,7 @@ msgstr "Tilikirja"
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr "Tilikartat"
+msgstr "Tilikartta"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_form
@@ -2480,7 +2495,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "Valitse tämä, jos yritys on juridinen kokonaisuus."
 
 #. module: account
 #: help:account.move,to_check:0
@@ -2572,6 +2587,13 @@ msgid "Choose Fiscal Year"
 msgstr "Valitse tilikausi"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2616,7 +2638,7 @@ msgstr "Sulje tilikauden ja jaksojen tilat"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:55
 #, python-format
 msgid "Close the statement"
-msgstr ""
+msgstr "Sulje tiliote"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -2844,7 +2866,7 @@ msgstr "Konfigurointi"
 #: code:addons/account/wizard/pos_box.py:75
 #, python-format
 msgid "Configuration Error"
-msgstr ""
+msgstr "Konfiguraatiovirhe!"
 
 #. module: account
 #: code:addons/account/account.py:3531
@@ -2950,7 +2972,7 @@ msgstr "Sopimukset"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_partner_analytic_accounts
 msgid "Contracts/Analytic Accounts"
-msgstr ""
+msgstr "Sopimukset/Analyyttiset tilit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -2978,18 +3000,18 @@ msgstr "Vastapuoli"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Maat"
+msgid "Country"
+msgstr "Maa"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "Maaryhmä"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
 msgid "Country of the Partner Company"
-msgstr ""
+msgstr "Kumppaniyrityksen maa"
 
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
@@ -3031,6 +3053,13 @@ msgstr "Luo kuukausijaksot"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Luo hyvitys"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr "Luo alaskirjaus"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3279,7 +3308,7 @@ msgstr "Luotonmäärä"
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr ""
+msgstr "Hyvityslaskun järjestys"
 
 #. module: account
 #: field:account.bank.statement,currency:0
@@ -3314,7 +3343,7 @@ msgstr "Valuutta"
 #: code:addons/account/account.py:1509
 #, python-format
 msgid "Currency Adjustment"
-msgstr ""
+msgstr "Valuuttakurssin asetus"
 
 #. module: account
 #: field:account.invoice.report,currency_rate:0
@@ -3465,7 +3494,7 @@ msgstr "Luontipäivä"
 #. module: account
 #: field:account.entries.report,date_maturity:0
 msgid "Date Maturity"
-msgstr ""
+msgstr "Eräpäivä"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3720,7 +3749,7 @@ msgstr "Näytä tili"
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "Display Account:"
-msgstr ""
+msgstr "Näytä tili:"
 
 #. module: account
 #: field:account.balance.report,display_account:0
@@ -3851,13 +3880,13 @@ msgstr "Eräpäivä"
 #. module: account
 #: view:account.payment.term.line:account.view_payment_term_line_form
 msgid "Due Date Computation"
-msgstr ""
+msgstr "Eräpäivän laskenta"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Eräkuukausi"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
@@ -4600,7 +4629,7 @@ msgstr ""
 #. module: account
 #: help:account.payment.term.line,value_amount:0
 msgid "For percent enter a ratio between 0-1."
-msgstr ""
+msgstr "Syötä prosenttimäärä osuutena välillä 0-1."
 
 #. module: account
 #: help:account.tax,amount:0
@@ -4821,7 +4850,7 @@ msgstr "Siirry seuraavaan kumppaniin"
 #: code:addons/account/account_move_line.py:552
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Mene asetusvalikkoon"
 
 #. module: account
 #. openerp-web
@@ -5934,9 +5963,16 @@ msgstr "Jätä tyhjäksi käyttääksesi jakson tarkistus(lasku) päivämäärä
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -6136,7 +6172,7 @@ msgstr "Viimeksi päivitetty"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Viimeisin täysi täsmäytys pvm"
 
 #. module: account
 #. openerp-web
@@ -6678,7 +6714,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Not filtered"
-msgstr ""
+msgstr "Ei suodatettu"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:92
@@ -7236,7 +7272,7 @@ msgstr "Ostovelkaraja"
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
 msgid "Payable and Receivables"
-msgstr ""
+msgstr "Maksettavat ja saatavat"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -8090,7 +8126,7 @@ msgstr "Referenssiyksikkö"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr ""
+msgstr "Dokumentin viite joka on luonut tämän laskulomakkeen."
 
 #. module: account
 #: help:account.invoice,origin:0 help:account.invoice.line,origin:0
@@ -8329,6 +8365,12 @@ msgstr "Pyöristä riveittäin"
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
 msgstr "Pyöristä riveittäin"
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr ""
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9183,7 +9225,7 @@ msgstr ""
 #: field:account.vat.declaration,target_move:0
 #: field:accounting.report,target_move:0
 msgid "Target Moves"
-msgstr "Kohteen liikkeet"
+msgstr "Kohdekirjaukset"
 
 #. module: account
 #: view:website:account.report_agedpartnerbalance
@@ -9198,7 +9240,7 @@ msgstr "Kohteen liikkeet"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance
 msgid "Target Moves:"
-msgstr ""
+msgstr "Kohdekirjaukset:"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -9622,6 +9664,20 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "Laskentatavat veromäärälle"
@@ -9648,6 +9704,11 @@ msgstr "Täsmäytettävien kirjanpitovientien pitää kuulua samalle yritykselle
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
 msgstr ""
 
 #. module: account
@@ -9962,6 +10023,30 @@ msgid "This Year"
 msgstr "Tänä vuonna"
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9974,18 +10059,6 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr "Tätä tiliä käytetään oletustilin sijasta tämän kumppanin saataville."
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr ""
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10301,7 +10374,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -11056,6 +11129,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11063,13 +11143,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr "Suljetun jakson %s päiväkirjaan %s ei voi lisätä tai muuttaa kirjauksia."
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr "Et voi avata uudelleen jaksoa, joka kuuluu suljetulle tilikaudelle"
@@ -11115,7 +11203,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11147,7 +11235,7 @@ msgstr ""
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "Et voi vaihtaa omistajayritystä tilille, jolla jo on päiväkirjavientejä."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1171
@@ -11433,7 +11521,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Sinun pitää asettaa alkupäivämäärä."
 
 #. module: account
 #: code:addons/account/account.py:422
@@ -11531,7 +11619,7 @@ msgstr "kirjaukset"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "force period"
-msgstr ""
+msgstr "pakota jakso"
 
 #. module: account
 #: help:account.bank.statement,name:0
