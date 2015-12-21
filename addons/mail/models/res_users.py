@@ -14,8 +14,7 @@ class Users(models.Model):
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
-    _inherit = ['res.users']
-    _inherits = {'mail.alias': 'alias_id'}
+    _inherit = ['mail.alias.mixin', 'res.users']
 
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
@@ -35,9 +34,13 @@ class Users(models.Model):
         self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
         return init_res
 
-    def _auto_init(self, cr, context=None):
-        """ Installation hook: aliases """
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init, self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+    def get_alias_model_name(self, vals):
+        return self._name
+
+    def get_alias_values(self):
+        values = super(Users, self).get_alias_values()
+        values['alias_force_thread_id'] = self.id
+        return values
 
     @api.model
     def create(self, values):
@@ -46,11 +49,7 @@ class Users(models.Model):
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise openerp.exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self.with_context(
-            alias_model_name=self._name,
-            alias_parent_model_name=self._name
-        )).create(values)
-        user.alias_id.sudo().write({"alias_force_thread_id": user.id, "alias_parent_thread_id": user.id})
+        user = super(Users, self).create(values)
 
         # create a welcome message
         user._create_welcome_message()
@@ -80,14 +79,6 @@ class Users(models.Model):
         body = _('%s has joined the %s network.') % (self.name, company_name)
         # TODO change SUPERUSER_ID into user.id but catch errors
         return self.partner_id.sudo().message_post(body=body)
-
-    @api.multi
-    def unlink(self):
-        # Cascade-delete mail aliases as well, as they should not exist without the user.
-        aliases = self.mapped('alias_id')
-        res = super(Users, self).unlink()
-        aliases.unlink()
-        return res
 
     def _message_post_get_pid(self):
         self.ensure_one()
