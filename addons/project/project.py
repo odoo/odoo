@@ -56,17 +56,17 @@ class project_task_type(osv.osv):
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-    _inherits = {'account.analytic.account': "analytic_account_id",
-                 "mail.alias": "alias_id"}
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.alias.mixin', 'mail.thread', 'ir.needaction_mixin']
+    _inherits = {'account.analytic.account': "analytic_account_id"}
     _period_number = 5
 
-    def _auto_init(self, cr, context=None):
-        """ Installation hook: aliases, project.project """
-        # create aliases for all projects and avoid constraint errors
-        alias_context = dict(context, alias_model_name='project.task')
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
-            'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
+    def get_alias_model_name(self, vals):
+        return vals.get('alias_model', 'project.task')
+
+    def get_alias_values(self):
+        values = super(project, self).get_alias_values()
+        values['alias_defaults'] = {'project_id': self.id}
+        return values
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
@@ -80,18 +80,13 @@ class project(osv.osv):
         return {'value': val}
 
     def unlink(self, cr, uid, ids, context=None):
-        alias_ids = []
-        mail_alias = self.pool.get('mail.alias')
         analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise UserError(_('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
-            elif proj.alias_id:
-                alias_ids.append(proj.alias_id.id)
             if proj.analytic_account_id and not proj.analytic_account_id.line_ids:
                 analytic_account_to_delete.add(proj.analytic_account_id.id)
         res = super(project, self).unlink(cr, uid, ids, context=context)
-        mail_alias.unlink(cr, uid, alias_ids, context=context)
         self.pool['account.analytic.account'].unlink(cr, uid, list(analytic_account_to_delete), context=context)
         return res
 
@@ -306,22 +301,14 @@ class project(osv.osv):
         self.write({'active': value})
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        # Prevent double project creation when 'use_tasks' is checked + alias management
-        create_context = dict(context, project_creation_in_progress=True,
-                              alias_model_name=vals.get('alias_model', 'project.task'),
-                              alias_parent_model_name=self._name,
-                              mail_create_nosubscribe=True)
-
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
         if ir_values:
             vals['alias_name'] = vals.get('alias_name') or vals.get('name')
-        project_id = super(project, self).create(cr, uid, vals, context=create_context)
-        project_rec = self.browse(cr, uid, project_id, context=context)
-        values = {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
-        return project_id
+        # Prevent double project creation when 'use_tasks' is checked
+        create_context = dict(context or {},
+                              project_creation_in_progress=True,
+                              mail_create_nosubscribe=True)
+        return super(project, self).create(cr, uid, vals, context=create_context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
