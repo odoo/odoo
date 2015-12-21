@@ -973,7 +973,7 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                        <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
                     </td>
                 </tr>
                 <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
