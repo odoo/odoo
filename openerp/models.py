@@ -2392,12 +2392,10 @@ class BaseModel(object):
         # (re-)create the FK
         self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
-
-    def _set_default_value_on_column(self, cr, column_name, context=None):
-        # ideally, we should use default_get(), but it fails due to ir.values
-        # not being ready
-
-        # get default value
+    def _init_column(self, cr, column_name, context=None):
+        """ Initialize the value of the given column for existing rows. """
+        # get the default value; ideally, we should use default_get(), but it
+        # fails due to ir.values not being ready
         default = self._defaults.get(column_name)
         if callable(default):
             default = default(self, cr, SUPERUSER_ID, context)
@@ -2594,7 +2592,7 @@ class BaseModel(object):
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
                                 if has_rows:
-                                    self._set_default_value_on_column(cr, k, context=context)
+                                    self._init_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
@@ -2648,7 +2646,7 @@ class BaseModel(object):
 
                             # initialize it
                             if has_rows:
-                                self._set_default_value_on_column(cr, k, context=context)
+                                self._init_column(cr, k, context=context)
 
                             # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
