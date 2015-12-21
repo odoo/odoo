@@ -6,7 +6,7 @@
         <!--Email template -->
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order - Send by Email (Portal)</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_invoice_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -16,7 +16,7 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="user_signature" eval="True"/>
             <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
     <p>Hello ${object.partner_id.name},</p>
     
@@ -89,7 +89,7 @@
 
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice - Send by Email (Portal)</field>
-            <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
+            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="account.model_account_invoice"/>
@@ -98,7 +98,7 @@
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
     <p>Hello ${object.partner_id.name},</p>
 

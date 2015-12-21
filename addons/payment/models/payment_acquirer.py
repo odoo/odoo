@@ -454,7 +454,7 @@ class PaymentTransaction(osv.Model):
     def get_next_reference(self, cr, uid, reference, context=None):
         ref_suffix = 1
         init_ref = reference
-        while self.pool['payment.transaction'].search_count(cr, uid, [('reference', '=', reference)], context=context):
+        while self.pool['payment.transaction'].search_count(cr, openerp.SUPERUSER_ID, [('reference', '=', reference)], context=context):
             reference = init_ref + '-' + str(ref_suffix)
             ref_suffix += 1
         return reference

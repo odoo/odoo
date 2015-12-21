@@ -83,7 +83,7 @@
                 % endif
 
                 % if not ctx.get('button_access') and not ctx.get('button_follow') and not ctx.get('button_unfollow') and ctx.get('model_name'):
-                <p style="padding: 5px 10px; font-size: 12px;"">
+                <p style="padding: 5px 10px; font-size: 12px;">
                 About <strong>${ctx['model_name']}
                 % if ctx.get('record_name'):
                 : ${ctx['record_name']}
@@ -97,7 +97,7 @@
                 % if ctx.get('actions'):
                 % for action in ctx['actions']:
                 <a href="${action['url']}" style="text-decoration:none; color: #a24689;"><strong>${action['title']}</strong></a>
-                %if len(ctx['actions']) > 1 and loop.index < len(ctx['actions']):
+                %if cmp(len(ctx['actions']), 1) == 1 and cmp(len(ctx['actions']), loop.index) == 1:
                     |
                 % endif
                 % endfor
@@ -111,8 +111,9 @@
                 </a>
                 % endif
                 <strong>using</strong>
-                <a href="www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo</strong></a>
+                <a href="https://www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo</strong></a>
                 % endif
+                </p>
             </td>
         </tr>
     </tbody></table>
@@ -136,7 +137,7 @@
                 % if ctx.get('tracking'):
                     <ul>
                     % for tracking in ctx['tracking']
-                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>
+                        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
                     % endfor
                     </ul>
                 % endif
@@ -154,7 +155,8 @@
         </tr></tbody>
     </table>
 </div>
-% endif]]></field>
+% endif
+]]></field>
         </record>
 
     </data>

@@ -15,7 +15,6 @@ import re
 import json
 import sys
 import time
-import urllib2
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -33,13 +32,12 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
-from openerp.modules import get_module_path, get_resource_path
+from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp import http
-import mimetypes
-from openerp.http import request, serialize_exception as _serialize_exception, STATIC_CACHE
+from openerp.http import request, serialize_exception as _serialize_exception
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -421,113 +419,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     return res
 
 def content_disposition(filename):
-    filename = ustr(filename)
-    escaped = urllib2.quote(filename.encode('utf8'))
-    browser = request.httprequest.user_agent.browser
-    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-    if browser == 'msie' and version < 9:
-        return "attachment; filename=%s" % escaped
-    elif browser == 'safari' and version < 537:
-        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-    else:
-        return "attachment; filename*=UTF-8''%s" % escaped
+    return request.registry['ir.http'].content_disposition(filename)
+
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
-    """ Get file, attachment or downloadable content
-
-    If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
-    binary field (via ``default_get``), otherwise fetches the field for
-    that precise record.
-
-    :param str xmlid: xmlid of the record
-    :param str model: name of the model to fetch the binary from
-    :param int id: id of the record from which to fetch the binary
-    :param str field: binary field
-    :param bool unique: add a max-age for the cache control
-    :param str filename: choose a filename
-    :param str filename_field: if not create an filename with model-id-field
-    :param bool download: apply headers to download the file
-    :param str mimetype: mintype of the field (for headers)
-    :param str default_mimetype: default mintype if no mintype found
-    :param Environment env: by default use request.env
-    :returns: (status, headers, content)
-    """
-    env = env or request.env
-    # get object and content
-    obj = None
-    if xmlid:
-        obj = env.ref(xmlid, False)
-    elif id and model in env.registry:
-        obj = env[model].browse(int(id))
-
-    # obj exists
-    if not obj or not obj.exists() or field not in obj:
-        return (404, [], None)
-
-    # check read access
-    try:
-        last_update = obj['__last_update']
-    except AccessError:
-        return (403, [], None)
-
-    status, headers, content = None, [], None
-
-    # attachment by url check
-    module_resource_path = None
-    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
-        url_match = re.match("^/(\w+)/(.+)$", obj.url)
-        if url_match:
-            module = url_match.group(1)
-            module_path = get_module_path(module)
-            module_resource_path = get_resource_path(module, url_match.group(2))
-            if module_path and module_resource_path:
-                module_path = os.path.join(os.path.normpath(module_path), '') # join ensures the path ends with '/'
-                module_resource_path = os.path.normpath(module_resource_path)
-                if module_resource_path.startswith(module_path):
-                    with open(module_resource_path, 'r') as f:
-                        content = base64.b64encode(f.read())
-                    last_update = str(os.path.getmtime(module_resource_path))
-        
-        if not module_resource_path:
-            module_resource_path = obj.url
-
-        if not content:
-            status = 301
-            content = module_resource_path 
-    else:
-        content = obj[field] or ''
-
-    # filename
-    if not filename:
-        if filename_field in obj:
-            filename = obj[filename_field]
-        elif module_resource_path:
-            filename = os.path.basename(module_resource_path)
-        else:
-            filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
-
-    # mimetype
-    if not mimetype:
-        if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
-            mimetype = obj.mimetype
-        elif filename:
-            mimetype = mimetypes.guess_type(filename)[0]
-        if not mimetype:
-            mimetype = default_mimetype
-    headers.append(('Content-Type', mimetype))
-
-    # cache
-    etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
-    retag = hashlib.md5(last_update).hexdigest()
-    status = status or (304 if etag == retag else 200)
-    headers.append(('ETag', retag))
-    headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
-
-    # content-disposition default name
-    if download:
-        headers.append(('Content-Disposition', content_disposition(filename)))
-
-    return (status, headers, content)
+    return request.registry['ir.http'].binary_content(
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
+        download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 def db_info():
     version_info = openerp.service.common.exp_version()
@@ -1104,13 +1002,13 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
-        if content and width and height:
+        if content and (width or height):
             # resize maximum 500*500
             if width > 500:
                 width = 500
             if height > 500:
                 height = 500
-            content = openerp.tools.image_resize_image(base64_source=content, size=(width, height), encoding='base64', filetype='PNG')
+            content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
 
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))

@@ -20,7 +20,7 @@ var LivechatButton = Widget.extend({
         "click": "open_chat"
     },
 
-    init: function (parent, server_url, options) {
+    init: function (parent, server_url, options, rule) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
             placeholder: _t('Ask something ...'),
@@ -28,24 +28,55 @@ var LivechatButton = Widget.extend({
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
         });
+        this.rule = rule || {};
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
     },
 
     willStart: function () {
-        return this.load_qweb_template();
+        var self = this;
+        var cookie = utils.get_cookie('im_livechat_session');
+        var ready;
+        if (!cookie) {
+            ready = session.rpc("/im_livechat/available", {channel_id: this.options.channel_id});
+        } else {
+            var channel = JSON.parse(cookie);
+            ready = $.when(true, session.rpc("/im_livechat/history", {channel_id: channel.id, limit: 100}));
+        }
+        return ready.then(function (available, history) {
+            self.available = available;
+            self.history = history;
+            if (available) {
+                return self.load_qweb_template();
+            }
+        });
     },
 
     start: function () {
-        this.$el.text(this.options.button_text);
-        bus.on('notification', this, function (notification) {
-            this.add_message(notification[1]);
-            this.render_messages();
-            if (this.chat_window.folded) {
-                this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+        if (!this.available) {
+            this.do_hide();
+        } else {
+            this.$el.text(this.options.button_text);
+            if (this.history) {
+                _.each(this.history.reverse(), this.add_message.bind(this));
+                this.open_chat();
+            } else if (this.rule.action === 'auto_popup') {
+                var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
+                if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
+                    this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+                }
             }
-        });
+            bus.on('notification', this, function (notification) {
+                if (this.channel && (notification[0] === this.channel.uuid)) {
+                    this.add_message(notification[1]);
+                    this.render_messages();
+                    if (this.chat_window.folded) {
+                        this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+                    }
+                }
+            });
+        }
         return this._super();
     },
 
@@ -65,6 +96,7 @@ var LivechatButton = Widget.extend({
         var self = this;
         var cookie = utils.get_cookie('im_livechat_session');
         var def;
+        clearTimeout(this.auto_popup_timeout);
         if (cookie) {
             def = $.when(JSON.parse(cookie));
         } else {
@@ -87,6 +119,7 @@ var LivechatButton = Widget.extend({
                 bus.start_polling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
+                utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
             }
         });
     },
@@ -96,13 +129,16 @@ var LivechatButton = Widget.extend({
         var options = {
             display_stars: false,
         };
-        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, channel.message_unread_counter, options);
+        var is_folded = (channel.state === 'folded');
+        this.chat_window = new ChatWindow(this, channel.id, channel.name, is_folded, channel.message_unread_counter, options);
         this.chat_window.appendTo($('body')).then(function () {
             self.chat_window.$el.css({right: 0, bottom: 0});
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            if (this.messages.length > 1) {
+            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled');
+            if (this.messages.length > 1 && !input_disabled) {
+                this.chat_window.toggle_fold(false);
                 this.ask_feedback();
             } else {
                 this.close_chat();
@@ -113,7 +149,10 @@ var LivechatButton = Widget.extend({
                 e.preventDefault();
                 return self.send_message(message); // try again just in case
             });
-
+        });
+        this.chat_window.on("fold_channel", this, function () {
+            this.channel.state = (this.channel.state === 'open') ? 'folded' : 'open';
+            utils.set_cookie('im_livechat_session', JSON.stringify(this.channel), 60*60);
         });
     },
 
@@ -126,7 +165,7 @@ var LivechatButton = Widget.extend({
         return session.rpc("/mail/chat_post", {uuid: this.channel.uuid, message_content: message.content});
     },
 
-    add_message: function (data) {
+    add_message: function (data, options) {
         var msg = {
             id: data.id,
             attachment_ids: data.attachment_ids,
@@ -148,7 +187,11 @@ var LivechatButton = Widget.extend({
             msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
         }
 
-        this.messages.push(msg);
+        if (options && options.prepend) {
+            this.messages.unshift(msg);
+        } else {
+            this.messages.push(msg);
+        }
     },
 
     render_messages: function () {
@@ -165,7 +208,7 @@ var LivechatButton = Widget.extend({
             channel_ids: [this.channel.id],
             date: time.datetime_to_str(new Date()),
             tracking_value_ids: [],
-        });
+        }, {prepend: true});
     },
 
     ask_feedback: function () {
@@ -191,6 +234,7 @@ var Feedback = Widget.extend({
 
     events: {
         'click .o_livechat_rating_choices img': 'on_click_smiley',
+        'click .o_livechat_no_feedback em': 'on_click_no_feedback',
         'click .o_rating_submit_button': 'on_click_send',
     },
 
@@ -215,6 +259,10 @@ var Feedback = Widget.extend({
             close_chat = true;
         }
         this._send_feedback({close: close_chat});
+    },
+
+    on_click_no_feedback: function () {
+        this.trigger("feedback_sent"); // will close the chat
     },
 
     on_click_send: function () {

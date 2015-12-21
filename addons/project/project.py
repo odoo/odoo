@@ -806,7 +806,7 @@ class task(osv.osv):
 
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         email_list = self.email_split(cr, uid, [res], msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, [res], email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, [res], email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 
@@ -830,7 +830,7 @@ class task(osv.osv):
                         pass
 
         email_list = self.email_split(cr, uid, ids, msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, ids, email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 

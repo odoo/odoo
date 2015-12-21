@@ -85,6 +85,7 @@ class SaleOrder(models.Model):
         default_team_id = self.env['crm.team']._get_default_team_id()
         return self.env['crm.team'].browse(default_team_id)
 
+    @api.constrains('fiscal_position_id')
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
         """
@@ -115,7 +116,7 @@ class SaleOrder(models.Model):
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
-    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
+    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False, domain=[('account_type', '=', 'normal')])
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
 

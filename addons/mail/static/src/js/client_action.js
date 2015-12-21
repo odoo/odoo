@@ -52,8 +52,8 @@ var PartnerInviteDialog = Dialog.extend({
             width: '100%',
             allowClear: true,
             multiple: true,
-            formatResult: function(item){
-                var css_class = "fa-circle" + (item.im_status === 'online' ? "" : "-o");
+            formatResult: function(item) {
+                var css_class = (item.im_status === 'away' ? "fa-clock-o" : "fa-circle" + (item.im_status === 'online' ? "" : "-o"));
                 return $('<span class="fa">').addClass(css_class).text(item.text);
             },
             query: function (query) {
@@ -76,7 +76,7 @@ var PartnerInviteDialog = Dialog.extend({
             var ChannelModel = new Model('mail.channel');
             return ChannelModel.call('channel_invite', [], {ids : [this.channel_id], partner_ids: _.pluck(data, 'id')})
                 .then(function(){
-                    var names = _.pluck(data, 'text').join(', ');
+                    var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
                     self.do_notify(_t('New people'), notification);
                 });
@@ -120,7 +120,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_attach_callback: function () {
-        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        if (this.channel) {
+            this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        }
     },
     on_detach_callback: function () {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
@@ -133,6 +135,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.action = action;
         this.options = options || {};
         this.channels_scrolltop = {};
+        this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
     },
 
     willStart: function () {
@@ -162,7 +165,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.composer = new ChatComposer(this);
         this.thread = new ChatThread(this, {
-            display_help: true
+            display_help: true,
+            shorten_messages: false,
         });
 
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
@@ -210,9 +214,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
-                chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
-                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
+                chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
             });
     },
 
@@ -291,9 +296,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Channel.call('channel_search_to_join', [search_val]).then(function(result){
             var values = [];
             _.each(result, function(channel){
+                var escaped_name = _.escape(channel.name);
                 values.push(_.extend(channel, {
-                    'value': channel.name,
-                    'label': channel.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;
@@ -305,9 +311,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Partner.call('im_search', [search_val, 20]).then(function(result){
             var values = [];
             _.each(result, function(user){
+                var escaped_name = _.escape(user.name);
                 values.push(_.extend(user, {
-                    'value': user.name,
-                    'label': user.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;
@@ -370,7 +377,15 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .removeClass('o_unread_message')
                 .addClass('o_active');
 
-            self.thread.scroll_to({offset: new_channel_scrolltop});
+            var $new_messages_separator = self.$('.o_thread_new_messages_separator');
+            if ($new_messages_separator.length) {
+                self.thread.$el.scrollTo($new_messages_separator);
+            } else {
+                self.thread.scroll_to({offset: new_channel_scrolltop});
+            }
+
+            // Update control panel before focusing the composer, otherwise focus is on the searchview
+            self.update_cp();
             if (!config.device.touch) {
                 self.composer.focus();
             }
@@ -378,7 +393,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.$('.o_mail_chat_sidebar').hide();
             }
 
-            self.update_cp();
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,

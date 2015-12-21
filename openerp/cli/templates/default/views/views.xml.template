@@ -1,6 +1,5 @@
 {%- set mod = name|snake -%}
 {%- set model = "%s.%s"|format(mod, mod) -%}
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
     <!-- explicit list view definition -->
@@ -41,7 +40,7 @@
       </field>
     </record>
     -->
-  
+
     <!-- Top menu item -->
     <!--
     <menuitem name="{{name}}" id="{{mod}}.menu_root"/>
