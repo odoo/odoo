@@ -296,6 +296,18 @@ class ir_http(orm.AbstractModel):
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+        env = env or request.env
+        obj = None
+        if xmlid:
+            obj = env.ref(xmlid, False)
+        elif id and model in self.pool:
+            obj = env[model].browse(int(id))
+        if obj and 'website_published' in obj._fields:
+            if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
+                env = env(user=openerp.SUPERUSER_ID)
+        return super(ir_http, self).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)

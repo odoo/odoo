@@ -1936,7 +1936,7 @@ class stock_move(osv.osv):
                                    ], 'Status', readonly=True, select=True, copy=False,
                  help= "* New: When the stock move is created and not yet confirmed.\n"\
                        "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"\
-                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
+                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
         'partially_available': fields.boolean('Partially Available', readonly=True, help="Checks if the move has some stock reserved", copy=False),

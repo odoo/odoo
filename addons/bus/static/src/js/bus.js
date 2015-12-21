@@ -7,11 +7,15 @@ var Widget = require('web.Widget');
 var bus = {};
 
 bus.ERROR_DELAY = 10000;
+bus.AWAY_TIMEOUT = 300000;  // 5 minutes
 
 bus.Bus = Widget.extend({
     init: function(){
+        var self = this;
         this._super();
-        this.options = {};
+        this.options = {
+            im_presence: true,
+        };
         this.activated = false;
         this.channels = [];
         this.last = 0;
@@ -21,9 +25,14 @@ bus.Bus = Widget.extend({
         // bus presence
         this.set("window_focus", true);
         this.on("change:window_focus", this, function () {
-            this.options.im_presence = this.get("window_focus");
+            clearTimeout(self.away_timeout);
             if (this.get("window_focus")) {
+                this.options.im_presence = true;
                 this.trigger('window_focus', this.is_master);
+            } else {
+                this.away_timeout = setTimeout(function () {
+                    self.options.im_presence = false;
+                }, bus.AWAY_TIMEOUT);
             }
         });
         $(window).on("focus", _.bind(this.window_focus, this));
@@ -120,13 +129,6 @@ var CrossTabBus = bus.Bus.extend({
         }
 
         on("storage", this.on_storage.bind(this));
-        if (this.is_master) {
-            setItem('bus.channels', this.channels);
-            setItem('bus.options', this.options);
-        } else {
-            this.channels = getItem('bus.channels', this.channels);
-            this.options = getItem('bus.options', this.options);
-        }
     },
     start_polling: function(){
         var self = this;
@@ -139,6 +141,13 @@ var CrossTabBus = bus.Bus.extend({
                 self.is_master = false;
                 self.stop_polling();
             });
+            if (this.is_master) {
+                setItem('bus.channels', this.channels);
+                setItem('bus.options', this.options);
+            } else {
+                this.channels = getItem('bus.channels', this.channels);
+                this.options = getItem('bus.options', this.options);
+            }
             return;  // start_polling will be called again on tab registration
         }
 

@@ -17,7 +17,7 @@ class AccountAnalyticLine(models.Model):
     ref = fields.Char(string='Ref.')
     currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
     amount_currency = fields.Monetary(related='move_id.amount_currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
-    partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
+    partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True, readonly=True)
 
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')

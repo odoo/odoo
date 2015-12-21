@@ -29,11 +29,14 @@ var NotificationTopButton = Widget.extend({
         },
         on_click: function (event) {
             event.preventDefault();
+            this.discuss_redirect();
+        },
+        discuss_redirect: _.debounce(function () {
             var discuss_ids = chat_manager.get_discuss_ids();
             this.do_action(discuss_ids.action_id, {clear_breadcrumbs: true}).then(function () {
                 core.bus.trigger('change_menu_section', discuss_ids.menu_id);
             });
-        },
+        }, 1000, true),
 });
 
 SystrayMenu.Items.push(NotificationTopButton);

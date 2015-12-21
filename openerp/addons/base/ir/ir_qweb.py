@@ -634,8 +634,9 @@ class FieldConverter(osv.AbstractModel):
         inherit_branding = context and context.get('inherit_branding')
         if not inherit_branding and context and context.get('inherit_branding_auto'):
             inherit_branding = self.pool['ir.model.access'].check(cr, uid, record._name, 'write', False, context=context)
+        translate = context and context.get('edit_translations') and context.get('translatable') and getattr(record._fields[field_name], 'translate', False)
 
-        if inherit_branding:
+        if inherit_branding or translate:
             # add branding attributes
             g_att += ''.join(
                 _build_attribute(name, value)

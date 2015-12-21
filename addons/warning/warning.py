@@ -196,7 +196,7 @@ class sale_order_line(osv.osv):
             fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
-            return {'value': {'th_weight' : 0, 'product_packaging': False,
+            return {'value': {'product_packaging': False,
                 'product_uom_qty': qty}, 'domain': {'product_uom': [],
                    'product_uom': []}}
         product_obj = self.pool.get('product.product')

@@ -445,6 +445,9 @@ var ChatterComposer = ChatComposer.extend({
             is_log: false,
             internal_subtypes: [],
         });
+        if (this.options.is_log) {
+            this.options.send_text = _('Log');
+        }
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
         });

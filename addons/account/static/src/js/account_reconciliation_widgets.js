@@ -128,7 +128,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.tax",
                     string: _t("Tax"),
                     type: "many2one",
-                    domain: [['type_tax_use','=','purchase']],
+                    domain: [['type_tax_use','!=','none']],
                 },
             },
             amount: {
@@ -155,7 +155,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.analytic.account",
                     string: _t("Analytic Acc."),
                     type: "many2one",
-                    domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
+                    domain: [['account_type', '=', 'normal']],
                 },
             },
         };
@@ -1767,8 +1767,8 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
     /** Creating */
 
     initializeCreateForm: function() {
-        this.label_field.set("value", this.st_line.name);
         this._super();
+        this.label_field.set("value", this.st_line.name);
     },
 
 
