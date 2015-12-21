@@ -15,7 +15,7 @@ Ready to create your own theme? Great. Here are some things you should know befo
 
 .. warning::
 
-  This tutorial requires having installed Odoo v8.0 and the Theme Support Engine (website_less) module. https://www.odoo.com/apps/8.0/website_less/
+  This tutorial requires having installed Odoo v9.0 and the Theme Support Engine (website_less) module. https://www.odoo.com/apps/9.0/website_less/
 
 
 An introduction for web designers

@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     purchase_price = fields.Float(string='Cost', digits=dp.get_precision('Product Price'))
 
     @api.multi
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id', 'product_uom')
     def product_id_change_margin(self):
         for line in self:
             if line.order_id.pricelist_id:

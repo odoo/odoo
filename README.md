@@ -16,14 +16,14 @@ a full-featured <a href="https://www.odoo.com">Open Source ERP</a> when you inst
 
 Getting started with Odoo
 -------------------------
-For a standard installation please follow the <a href="https://www.odoo.com/documentation/8.0/setup/install.html">Setup instructions</a>
+For a standard installation please follow the <a href="https://www.odoo.com/documentation/9.0/setup/install.html">Setup instructions</a>
 from the documentation.
 
 If you are a developer you may type the following command at your terminal:
 
-    wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
+    wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python
 
-Then follow <a href="https://www.odoo.com/documentation/8.0/tutorials.html">the developer tutorials</a>
+Then follow <a href="https://www.odoo.com/documentation/9.0/tutorials.html">the developer tutorials</a>
 
 
 For Odoo employees

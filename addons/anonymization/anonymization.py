@@ -10,6 +10,7 @@ except ImportError:
     import pickle
 import random
 import datetime
+from openerp.release import version_info
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
@@ -476,8 +477,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         # handle the view:
         view_id = self.pool['ir.model.data'].xmlid_to_res_id(
-            cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form',
-            context=context
+            cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
         )
 
         return {
@@ -524,7 +524,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             data = pickle.loads(base64.decodestring(wizard.file_import))
 
             migration_fix_obj = self.pool.get('ir.model.fields.anonymization.migration.fix')
-            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '8.0')])
+            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '.'.join(map(str, version_info[:2])))])
             fixes = migration_fix_obj.read(cr, uid, fix_ids, ['model_name', 'field_name', 'query', 'query_type', 'sequence'])
             fixes = group(fixes, ('model_name', 'field_name'))
 
@@ -583,8 +583,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
             # handle the view:
             view_id = self.pool['ir.model.data'].xmlid_to_res_id(
-                cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form',
-                context=context
+                cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
             )
 
 

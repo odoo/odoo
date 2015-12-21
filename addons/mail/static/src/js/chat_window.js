@@ -8,6 +8,9 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 
+var HEIGHT_OPEN = '400px';
+var HEIGHT_FOLDED = '28px';
+
 return Widget.extend({
     template: "mail.ChatWindow",
     events: {
@@ -33,15 +36,16 @@ return Widget.extend({
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
-            display_avatar: false,
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
-        this.thread.on('toggle_star_status', this, function (message_id) {
-            this.trigger('toggle_star_status', message_id);
-        });
+        this.thread.on('toggle_star_status', null, this.trigger.bind(this, 'toggle_star_status'));
+        this.thread.on('redirect_to_channel', null, this.trigger.bind(this, 'redirect_to_channel'));
+        this.thread.on('redirect', null, this.trigger.bind(this, 'redirect'));
 
-        this.fold();
+        if (this.folded) {
+            this.$el.css('height', HEIGHT_FOLDED);
+        }
         var def = this.thread.appendTo(this.$content);
         return $.when(this._super(), def);
     },
@@ -64,11 +68,11 @@ return Widget.extend({
     fold: function () {
         this.update_header();
         this.$el.animate({
-            height: this.folded ? "28px" : "333px"
+            height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
         });
     },
-    toggle_fold: function () {
-        this.folded = !this.folded;
+    toggle_fold: function (fold) {
+        this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
             this.unread_msgs = 0;
             this.trigger('messages_read');
@@ -78,14 +82,16 @@ return Widget.extend({
     on_keydown: function (event) {
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
+            var content = _.str.trim(this.$input.val());
             var message = {
-                content: this.$input.val(),
+                content: content,
                 attachment_ids: [],
                 partner_ids: [],
-                channel_id: this.channel_id,
             };
             this.$input.val('');
-            this.trigger('post_message', message);
+            if (content) {
+                this.trigger('post_message', message, this.channel_id);
+            }
         }
     },
     on_click_close: function (event) {

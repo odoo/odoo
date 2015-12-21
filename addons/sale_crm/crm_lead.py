@@ -34,7 +34,8 @@ class crm_lead(models.Model):
         account_invoice_domain = [
             ('state', 'in', ['open', 'paid']),
             ('user_id', '=', uid),
-            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1))
+            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1)),
+            ('type', 'in', ['out_invoice', 'out_refund'])
         ]
 
         invoice_ids = self.pool.get('account.invoice').search_read(cr, uid, account_invoice_domain, ['date', 'amount_untaxed_signed'], context=context)
@@ -47,5 +48,4 @@ class crm_lead(models.Model):
                     res['invoiced']['last_month'] += inv['amount_untaxed_signed']
 
         res['invoiced']['target'] = self.pool('res.users').browse(cr, uid, uid, context=context).target_sales_invoiced
-
         return res

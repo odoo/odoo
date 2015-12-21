@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-11-21 23:49+0000\n"
+"PO-Revision-Date: 2015-12-11 22:31+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "# από Δραστηριότητες"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(if leads are activated)"
-msgstr "(αν οι υποψήφιοι πελάτες είναι ενεργοποιημένοι)"
+msgstr "(αν οι συστάσεις είναι ενεργοποιημένες)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -138,7 +138,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Εισερχ
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Υποψήφιος Πελάτης</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Σύσταση</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -289,7 +289,7 @@ msgstr "<span class=\"panel-title\">\n<strong>Μοναδική τιμή</strong>
 msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Exercise 1</strong></span>\n"
 "                                    <span>(Lead Manager)</span>"
-msgstr "<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Άσκηση 1</strong></span>\n<span>(Διαχειριστής Υποψήφιων Πελατών)</span>"
+msgstr "<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Άσκηση 1</strong></span>\n<span>(Διαχειριστής Συστάσεων)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -363,7 +363,7 @@ msgstr "<strong>Άσκηση: </strong>Προσπαθήστε να αλλάξε�
 msgid ""
 "<strong>Exercise:</strong> Try to get the number of leads per salesperson "
 "and by creation date"
-msgstr "<strong>Άσκηση:</strong> Προσπαθήστε να πάρετε τον αριθμό των υποψήφιων πελατών ανά πωλητή και ανά ημερομηνία δημιουργίας"
+msgstr "<strong>Άσκηση:</strong> Προσπαθήστε να πάρετε τον αριθμό των συστάσεων ανά πωλητή και ανά ημερομηνία δημιουργίας"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -702,14 +702,14 @@ msgstr "Εφαρμογή της κατάργησης διπλότυπων"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr ""
+msgstr "Αρχειοθέτηση"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Archived"
-msgstr ""
+msgstr "Αρχειοθετημένα"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -865,22 +865,22 @@ msgstr "Εκστρατεία"
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Ακύρωση"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
 msgid "Cases by Sales Team"
-msgstr "Υποθέσεις κατά Ομάδα Πώλησης"
+msgstr "Υποθέσεις ανά Ομάδα Πώλησης"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr "Κατηγορία των υποψήφιων πελατών"
+msgstr "Κατηγορία Σύστασης"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
 msgid "Change Probability Automatically"
-msgstr "Αλλαξε την Πιθανότητα Αυτόματα"
+msgstr "Άλλαξε την Πιθανότητα Αυτόματα"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -921,7 +921,7 @@ msgstr "Πόλη"
 msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
-msgstr "Ταξινομήστε  και αναλύστε τις κατηγορίες υποψήφιοι πελάτες/ευκαιρίες ώς: Κατάρτιση, Εξυπηρέτηση"
+msgstr "Ταξινομήστε και αναλύστε τις κατηγορίες Συστάσεων/Ευκαιριών ως: Κατάρτιση, Εξυπηρέτηση"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:922
@@ -952,7 +952,7 @@ msgstr "Κάντε κλικ για να ορίσετε μια νέα ετικέ�
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
 msgid "Click to set a new stage in your lead/opportunity pipeline."
-msgstr "Κάντε κλικ για να ρυθμίσετε ένα νέο στάδιο στον αγωγό διοχέτευσης υποψήφιος πελάτης/ευκαιρία."
+msgstr "Κάντε κλικ για να ρυθμίσετε ένα νέο στάδιο στον αγωγό διοχέτευσης σύστασης/ευκαιρίας."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -962,24 +962,24 @@ msgstr "Κλείσιμο"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_closed
 msgid "Close Date"
-msgstr "Ημερομηνία Ολοκλήρωσης"
+msgstr "Ημερομηνία Κλεισίματος"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
 msgid "Closed"
-msgstr "Κλεισμένα"
+msgstr "Κλειστές"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Κλειστοί/Νεκροί υποψήφιοι πελάτες δεν μπορούν να μετατραπούν σε ευκαιρίες"
+msgstr "Κλειστές/Νεκρές Συστάσεις που δεν μπορούν να μετατραπούν σε ευκαιρίες"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_color
 msgid "Color Index"
-msgstr "Χρωματισμός Δείκτη"
+msgstr "Χρωμάτισε Ευρετήριο"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
@@ -989,12 +989,12 @@ msgstr "Χρωματισμός Δείκτη"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
-msgstr "Εταιρεία"
+msgstr "Εταιρία"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Company Name"
-msgstr "Όνομα Εταιρείας"
+msgstr "Επωνυμία Εταιρίας"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1020,6 +1020,11 @@ msgstr "Συγχαρητήρια, έχετε τελειώσει!"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
 msgstr "Καταναλωτές"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1052,7 +1057,7 @@ msgstr "Ημερομηνία Μετατροπής"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Ημερομηνία Μετατροπής απο Υποψήφιο Πελάτη σε Ευκαιρία"
+msgstr "Ημερομηνία Μετατροπής από Σύσταση σε Ευκαιρία"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1134,7 +1139,7 @@ msgid ""
 "                to better classify and analyse your leads and opportunities.\n"
 "                Such categories could for instance reflect your product\n"
 "                structure or the different types of sales you do."
-msgstr "Δημιουργήστε συγκεκριμένες ετικέτες που ταιριάζουν με τις δραστηριότητες της εταιρείας σας\nώστε να ταξινομείτε και να αναλύετε καλύτερα τους υποψήφιους πελάτες και τις ευκαιρίες.\nΤέτοιου είδους κατηγορίες για παράδειγμα αντανακλούν τη δομή του προϊόντος\nσας ή τους διαφορετικούς τύπους πωλήσεων που κάνετε"
+msgstr "Δημιουργήστε συγκεκριμένες ετικέτες που ταιριάζουν με τις δραστηριότητες της εταιρείας σας ώστε να ταξινομείτε και να αναλύετε καλύτερα τις συστάσεις και τις ευκαιρίες.\nΤέτοιου είδους κατηγορίες για παράδειγμα αντανακλούν τη\nδομή του προϊόντος σας ή τους διαφορετικούς τύπους\nπωλήσεων που κάνετε."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1244,7 +1249,7 @@ msgstr "Πελάτες"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
 msgid "Date"
-msgstr "Ημερ/νία"
+msgstr "Ημερομηνία"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_last_post
@@ -1259,7 +1264,7 @@ msgstr "Ημέρες εκχώρησης"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_close
 msgid "Days to Close"
-msgstr "Μέρες για Κλείσιμο"
+msgstr "Μέρες για να Κλείσει"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
@@ -1279,7 +1284,7 @@ msgstr "Προεπιλογή"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_prefix
 msgid "Default Alias Name for Leads"
-msgstr "Προεπιλεγμένο Ψευδώνυμο  Όνομα για τους Υποψήφιους Πελάτες"
+msgstr "Προεπιλεγμένο Ψευδώνυμο για τις Συστάσεις"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_defaults
@@ -1420,7 +1425,7 @@ msgid ""
 "                                    could be setup on the sales team form. You\n"
 "                                    can setup a generic email alias to create\n"
 "                                    incoming leads."
-msgstr "Κάθε όμαδα πωλήσεων έχει ένα ψευδώνυμο email, το οποίο\n θα μπορούσε να εγκατασταθεί στην φόρμα της ομάδας πωλήσεων. Εσείς\nμπορείτε να εγκαταστήσετε ένα γενικό ψευδώνυμο email  για να δημιουργήσετε\nεισερχόμενους υποψήφιους πελάτες."
+msgstr "Κάθε ομάδα πωλήσεων έχει ένα ψευδώνυμο email, το οποίο\nθα μπορούσε να εγκατασταθεί στην φόρμα της ομάδας πωλήσεων.\nΕσείς μπορείτε να εγκαταστήσετε ένα γενικό ψευδώνυμο\nemail  για να δημιουργήσετε εισερχόμενες συστάσεις."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1455,7 +1460,7 @@ msgstr "Τέλος"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Engage directly with your website visitors to convert them into leads."
-msgstr "Συνδέστε άμεσα τους επισκέπτες της ιστοσελίδας σας και μετατρέψτε τους σε υποψήφιους πελάτες"
+msgstr "Συνδέστε άμεσα τους επισκέπτες της ιστοσελίδας σας και μετατρέψτε τους σε συστάσεις."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_requirements
@@ -1467,7 +1472,7 @@ msgstr "Εισάγετε εδώ τις εσωτερικές απαιτήσεις
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Προβλεπόμενη ημερομηνία στην οποία η ευκαρία θα κερδιθεί"
+msgstr "Προβλεπόμενη ημερομηνία στην οποία η ευκαιρία θα κερδηθεί "
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -1525,7 +1530,7 @@ msgstr "Υπάρχοντα Εργαλεία"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
-msgstr "Προβλεπόμενο Κλέισιμο"
+msgstr "Προβλεπόμενο Κλείσιμο"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
@@ -1541,7 +1546,7 @@ msgstr "Προσδοκόμενα Έσοδα"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expiration Closing Month"
-msgstr "Λήξη Μήνα Κλείσιματος"
+msgstr "Λήξη Μήνα Κλεισίματος"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_legend_priority
@@ -1558,7 +1563,7 @@ msgstr "Εκτεταμένα Φίλτρα"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Extra Info"
-msgstr "Επιπλέον πληροφορίες"
+msgstr "Επιπλέον Πληροφορίες"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_fax
@@ -1785,7 +1790,7 @@ msgstr "Υψηλή"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_id
 #: model:ir.model.fields,field_description:crm.field_crm_stage_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_thread_id
@@ -1802,7 +1807,7 @@ msgstr "Κωδικός"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+msgstr "Εάν επιλεγεί τα νέα μυνήματα απαιτούν την προσοχή σας"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction
@@ -1893,7 +1898,7 @@ msgstr "Εισερχόμενα emails"
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
-msgstr "Τα εισερχόμενα email δημιουργούν υποψήφιους πελάτες αυτόματα όταν ένας νέος ενδιαφερόμενος έρχεται σε επαφή μαζί σας.\nΑυτός είναι ο πιο εύκολος τρόπος για να ενσωματωθεί το Odoo με εφαρμογές τρίτων."
+msgstr "Τα εισερχόμενα email δημιουργούν αυτόματα συστάσεις όταν ένας νέος ενδιαφερόμενος έρχεται σε επαφή μαζί σας.\nΑυτός είναι ο πιο εύκολος τρόπος για να ενσωματωθεί το Odoo με εφαρμογές τρίτων."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
@@ -2017,7 +2022,7 @@ msgstr "Τελευταία ενημέρωση στις"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
 msgid "Lead"
-msgstr "Υποψήφιος Πελάτης"
+msgstr "Σύσταση"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2033,12 +2038,12 @@ msgstr "Δημιουργ. Συστάσεις"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr "Υποψήφιος Πελάτης σε Συνεργάτη Ευκαιρίας"
+msgstr "Σύσταση σε Ευκαιρία Συνεργάτη"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead created"
-msgstr "Δημιουργήθηκαν υποψήφιοι πελάτες"
+msgstr "Δημιουργία Σύστασης"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -2048,7 +2053,7 @@ msgstr "Σύσταση/Ευκαιρία"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Lead/Opportunity Mass Mail"
-msgstr "Υποψήφιος πελάτης/Ευκαιρία Μαζική Αλληλογραφία"
+msgstr "Μαζική Αλληλογραφία Σύσταση/Ευκαιρία"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
@@ -2063,13 +2068,13 @@ msgstr "Υποψήφιος πελάτης/Ευκαιρία Μαζική Αλλη
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads"
-msgstr "Υποψήφιοι Πελάτες"
+msgstr "Συστάσεις"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:60
 #, python-format
 msgid "Leads / Opportunities"
-msgstr "Υποψήφιοι Πελάτες/Ευκαιρίες"
+msgstr "Συστάσεις / Ευκαιρίες"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2086,7 +2091,7 @@ msgid ""
 "Leads Analysis allows you to check different CRM related information like "
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
-msgstr "Η Ανάλυση των Συστάσεων σας επιτρέπει να ελέγξετε διαφορετικές, σχετικές με το CRM πληροφορίες όπως τις καθυστερήσεις για εξυπηρέτηση ή τον αριθμό των συστάσεων ανά στάδιο. Μπορείτε να ταξινομήσετε τις αναλύσεις των συστάσεων με διαφορετικές ομαδοποιήσεις για να έχετε μια ανάλυση με ακρίβεια και λεπτομέρεια ."
+msgstr "Η Ανάλυση των Συστάσεων σας επιτρέπει να ελέγξετε διαφορετικές, σχετικές με το CRM  πληροφορίες όπως τις καθυστερήσεις για εξυπηρέτηση ή τον αριθμό των συστάσεων ανά στάδιο. Μπορείτε να ταξινομήσετε τις  αναλύσεις των συστάσεων με διαφορετικές ομαδοποιήσεις για να έχετε μια ανάλυση με ακρίβεια και λεπτομέρεια ."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_salesperson
@@ -2096,22 +2101,22 @@ msgstr "Υπόψηφιοι Πελάτες ανα Πωλητές"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Leads Email Alias"
-msgstr "Τα ψευδώνυμα Email των υποψήφιων πελατών"
+msgstr "Ψευδώνυμο Email Συστάσεων"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Leads Form"
-msgstr "Φόρμα Υποψήφιου Πελάτη"
+msgstr "Φόρμα Συστάσεων"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Παραγωγή Υποψήφιων Πελατών"
+msgstr "Παραγωγή Συστάσεων"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads by Source"
-msgstr "Υποψήφιοι Πελάτες ανά Πηγή"
+msgstr "Συστάσεις ανά Πηγή"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
@@ -2133,12 +2138,12 @@ msgstr "Συστάσεις που δεν έχουν ζήτησει να εξαι
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
-msgstr "Οι υποψήφιοι πελάτες που έχετε διαλέξει που είναι εις διπλούν. Αν η λίστα είναι άδεια, σημαίνει ότι δεν βρήθηκαν διπλοεγγραφές."
+msgstr "Οι συστάσεις που έχετε επιλέξει έχουν διπλότυπα. Αν η λίστα είναι άδεια, σημαίνει ότι δεν βρέθηκαν διπλοεγγραφές."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr "Υποψήφιοι πελάτες με υπάρχουσες διπλοεγγραφές (για πληροφορίες)"
+msgstr "Συστάσεις με υπάρχουσες διπλοεγγραφές (για πληροφορίες)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity_opportunity_ids
@@ -2160,7 +2165,7 @@ msgstr "Γραμμές"
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr "Σύνδεσμος μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτό περιορίζει το τρέχον στάδιο στις επιλεγμένες ομάδες πώλησης."
+msgstr "Σύνδεση μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτή περιορίζει το τωρινό  στάδιο στις επιλεγμένες ομάδες πωλήσεων."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2230,7 +2235,7 @@ msgstr "Ορισμός ως Χαμένη"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr "Μάρκαρε Επιτυχία"
+msgstr "Μάρκαρε ως Κερδισμένη"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2322,7 +2327,7 @@ msgstr "Συγχώνευση με Χειροκίνητο Έλεγχο"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "Συγχώνευση με υποψήφιους πελάτες/ευκαιρίες του κάθε εταίρου"
+msgstr "Συγχώνευση με υπάρχουσες Συστάσεις/Ευκαιρίες για κάθε συνεργάτη"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
@@ -2388,7 +2393,7 @@ msgstr "Μηνύματα"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_ids
 msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+msgstr "Μυνήματα και ιστορικό επικοινωνιών"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
@@ -2400,12 +2405,12 @@ msgstr "Μηνύματα με εσωτερικούς υποτύπους θα ε�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
 msgid "MinID"
-msgstr ""
+msgstr "MinID"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Misc"
-msgstr "Διαφ."
+msgstr "Διάφορα"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_mobile
@@ -2452,12 +2457,12 @@ msgstr "Όνομα"
 #: model:crm.stage,name:crm.stage_lead4
 #, python-format
 msgid "Negotiation"
-msgstr "Διαπραγμάτευση"
+msgstr "Σε Διαπραγμάτευση"
 
 #. module: crm
 #: model:crm.stage,name:crm.crm_stage_2_1 model:crm.stage,name:crm.stage_lead1
 msgid "New"
-msgstr "Νέο"
+msgstr "Νέες"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -2473,7 +2478,7 @@ msgstr "Επόμενη Ενέργεια"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
 msgid "Next Action Date"
-msgstr ""
+msgstr "Επόμενη Ημερομηνία Ενέργειας"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2530,7 +2535,7 @@ msgstr "Κανένας πωλητής"
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
-msgstr "Κανονικό"
+msgstr "Κανονική"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_users_payment_next_action
@@ -2555,7 +2560,7 @@ msgstr "Αριθμός ενεργειών"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
 msgid "Number of Days to close the case"
-msgstr "Αριθμός Ημερών για κλείσιμο της υπόθεσης"
+msgstr "Ημέρες για το κλείσιμο της υπόθεσης"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_open
@@ -2640,14 +2645,14 @@ msgstr "Το Odoo θα σας βοηθήσει να δημιουργήσετε �
 msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                    opportunity and/or a new customer in your address book."
-msgstr "Αφού χαρακτηριστεί ώς κατάλληλος ο υποψήφιος πελάτης, μπορεί να μετατραπεί σε επιχειρηματική ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεων σας."
+msgstr "Μόλις χαρακτηριστεί ως κατάλληλη η Σύσταση, μπορεί να μετατραπεί σε επιχειρηματική ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεών σας."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                opportunity and/or a new customer in your address book."
-msgstr "Αφού χαρακτηριστεί ώς κατάλληλος ο υποψήφιος πελάτης, μπορεί να μετατραπεί σε επιχειρηματική\n ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεων σας."
+msgstr "Μόλις χαρακτηριστεί ως κατάλληλη η Σύσταση, μπορεί να μετατραπεί σε επιχειρηματική ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεών σας."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2656,7 +2661,7 @@ msgid ""
 "setting up a continuous improvement approach.We recommend you to organize "
 "weekly sales meeting with the team during which you will do a pipeline "
 "review."
-msgstr "Αφού έχετε αναπτύξει το CRM σας, είναι καιρός να αυξήσετε τα έσοδα σας. Ξεκινήστε με την εγκατάσταση μιας προσέγγισης συνεχούς βετιώσης.Προτείνουμε να οργανώνετε εβδομαδιαίες συναντήσεις για τις πωλήσεις με την ομάδα κατά τη διάρκεια της οποίας θα κάνετε μια αναθεώρηση της διοχέτευσης πληροφοριών."
+msgstr "Αφού έχετε αναπτύξει το CRM σας, είναι καιρός να αυξήσετε τα έσοδα σας. Ξεκινήστε με την εγκατάσταση μιας προσέγγισης συνεχούς βελτίωσης. Προτείνουμε να οργανώνετε εβδομαδιαίες συναντήσεις για τις πωλήσεις με την ομάδα κατά τη διάρκεια της οποίας θα κάνετε μια αναθεώρηση της διοχέτευσης πληροφοριών."
 
 #. module: crm
 #: code:addons/crm/base_partner_merge.py:318
@@ -2744,7 +2749,7 @@ msgstr "Ευκαιρίες που είναι ανατεθιμένες σε εμ�
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Opportunity"
-msgstr "Ευκαιρία"
+msgstr "Ευκαιρίες"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
@@ -2776,7 +2781,7 @@ msgstr "Ευκαιρίες Κερδισμένες"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_opt_out
 msgid "Opt-Out"
-msgstr "Εκτός συμφωνίας"
+msgstr "Δεν συμφωνεί"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2804,7 +2809,7 @@ msgstr "Εκπρόθεσμες Δραστηριότητες"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
 msgid "Overpassed Deadline"
-msgstr "Περασμένη Προθεσμία"
+msgstr "Εκπρόθεσμη Προθεσμία"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_user_id
@@ -2924,7 +2929,7 @@ msgstr ""
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
 msgid "Plan your sales strategy: objectives, leads, KPIs, and much more!"
-msgstr "Σχεδιάστε την στρατηγική πωλήσεων: στόχοι, υποψήφιοι πελάτες, Βασικά Σημεία Απόδοσης, και ακόμη περισσότερα!"
+msgstr "Σχεδιάστε την στρατηγική πωλήσεων: Στόχοι, Υποψήφιοι πελάτες, Βασικά Σημεία Απόδοσης και ακόμη περισσότερα!"
 
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
@@ -3011,7 +3016,7 @@ msgstr "Αξιολόγηση"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Reason for loosing leads"
-msgstr "Λόγος για να χάσετε υποψήφιους πελάτες"
+msgstr "Λόγος για την απώλεια σύστασης"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3041,7 +3046,7 @@ msgstr "Συσχετιζόμενο πεδίο"
 msgid ""
 "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
-msgstr "Υπενθύμιση για υποψήφιο πελάτη:${object.id} από ${object.partner_id != False and object.partner_id.name or object.contact_name}"
+msgstr "Υπενθύμιση για τη Σύσταση: ${object.id} από ${object.partner_id != False and object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -3051,7 +3056,7 @@ msgstr "Υπενθύμιση στον Χρήστη"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Αναφορές"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3144,7 +3149,7 @@ msgstr "Αποθήκευση φίλτρων ή προσθήκη οποιασδή
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "Αναζήτηση Υποψήφιων Πελατών"
+msgstr "Αναζήτηση Συστάσεων"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -3243,7 +3248,7 @@ msgstr "Ρύθμιση το ψευδώνυμο του τομέα σας"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "Προβολή του Μενού του Υποψήφιου Πελάτη"
+msgstr "Προβολή του Μενού του Σύσταση"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3336,7 +3341,7 @@ msgstr "Στάδιο άλλαξε"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "Stage of case"
-msgstr "στάδιο της υπόθεσης"
+msgstr "Στάδιο της υπόθεσης"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
@@ -3353,7 +3358,7 @@ msgstr "Στάδια"
 msgid ""
 "Stages will allow salespersons to easily track how a specific\n"
 "                lead or opportunity is positioned in the sales cycle."
-msgstr "Τα στάδια θα επιτρέπουν στους πωλητές να ανιχνεύουν εύκολα πως ένας συγκεκριμένος\nυποψήφιος πελάτης ή ευκαιρία είναι τοποθετημένος/η στο κύκλο των πωλήσεων."
+msgstr "Τα στάδια θα επιτρέπουν στους πωλητές να ανιχνεύουν εύκολα πως μία συγκεκριμένη\nσύσταση ή ευκαιρία είναι τοποθετημένη στο κύκλο των πωλήσεων."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3372,7 +3377,7 @@ msgstr "Οδός"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street 2..."
-msgstr ""
+msgstr "Οδός 2..."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -3393,7 +3398,7 @@ msgstr "Υποβολή"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Subscription Management"
-msgstr "Διαχείρηση Συνδρομών"
+msgstr "Διαχείριση Συνδρομών"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3464,7 +3469,7 @@ msgid ""
 "The first contact you get with a potential customer is a lead you qualify "
 "before converting it into a real business opportunity. Check this box to "
 "manage leads in this sales team."
-msgstr "Η πρώτη επαφή που έχετε με ένα πιθανό πελάτη είναι ένας υποψήφιος πελάτης που αξιολογείτε ώς κατάλληλος πριν τον μετατρέψετε σε πραγματική επιχειρηματική ευκαιρία. Επιλέξτε αυτό το πλαίσιο για τη διαχείριση των υποψήφιων πελατών σε αυτήν την ομάδα πωλήσεων."
+msgstr "Η πρώτη επαφή που έχετε με ένα πιθανό πελάτη είναι μία σύσταση που αξιολογείτε ώς κατάλληλος πριν τον μετατρέψετε σε πραγματική επιχειρηματική ευκαιρία. Επιλέξτε αυτό το πλαίσιο για τη διαχείριση των συστάσεων σε αυτήν την ομάδα πωλήσεων."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3538,7 +3543,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "Αυτές οι email διευθύνσεις θα προστεθούν στο CC πεδίο όλων των εισερχόμενων και εξερχόμενων emails για αυτή την εγγραφή πριν αποσταλεί. Διαφορετικές πολλαπλάσιες email διευθύνσεις με ένα ερωτηματικό"
+msgstr "Αυτές οι email διευθύνσεις θα προστεθούν στο CC πεδίο όλων των εισερχόμενων και εξερχόμενων emails για αυτή την εγγραφή πριν αποσταλεί. Διαφορετικές πολλαπλάσιες email διευθύνσεις  με ένα ερωτηματικό "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3591,14 +3596,14 @@ msgstr "Αυτή είναι μια πηγή του συνδέσμου Π.χ. Μ�
 msgid ""
 "This percentage depicts the default/average probability of the Case for this"
 " stage to be a success"
-msgstr "Αυτό το ποσοστό απεικονίζει την προρυθμισμένη/μέση πιθανότητα της περίπτωσης για αυτό το στάδιο ώστε να γίνει μια επιτυχία"
+msgstr "Αυτό το ποσοστό απεικονίζει την προεπιλεγμένη /μέση πιθανότητα της περίπτωσης για αυτό το στάδιο ώστε να γίνει μια επιτυχία"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid ""
 "This report analyses the source of your leads\n"
 "(including those converted into opportunities)."
-msgstr "Αυτή η αναφορά αναλύει την πηγή των υποψήφιων πελατών σας\n(συμπεριλαμβάνοντας και αυτούς που μετατράπηκαν σε ευκαιρίες)."
+msgstr "Αυτή η αναφορά αναλύει την πηγή των συστάσεών σας\n(συμπεριλαμβάνοντας και αυτές που μετατράπηκαν σε ευκαιρίες)."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
@@ -3621,7 +3626,7 @@ msgstr "Ώρα να κλείσει μια συμφωνία"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Qualify a Lead"
-msgstr "Ώρα για να κρίνετε ώς κατάλληλο έναν Υποψήφιο Πελάτη"
+msgstr "Ώρα να προκριθεί μια Σύσταση"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_title
@@ -3658,7 +3663,7 @@ msgstr "Τύπος"
 #: model:ir.model.fields,help:crm.field_crm_lead_type
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Ο Τύπος χρησιμοποιήτε για να ξεχωρίσει τους Πιθανούς Πελάτες από τις Ευκαιρίες"
+msgstr "Ο τύπος χρησιμοποιείται για να ξεχωρίσει τις Συστάσεις από τις Ευκαιρίες "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3681,7 +3686,7 @@ msgstr "Εκτός εάν ξεκινάτε μια νέα επιχείρηση, �
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread_counter
@@ -3696,7 +3701,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
 msgid "Update Date"
-msgstr "Ανανέωση Ημερ/νίας"
+msgstr "Ενημέρωση Ημερομηνίας"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3720,7 +3725,7 @@ msgid ""
 "                    opportunity or a customer. It can be a business card you received,\n"
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
-msgstr "Χρησιμοποιήστε τους υποψήφιους πελάτες αν χρειάζεται ένα βήμα προεπιλογής πριν να δημιουργήσετε μια\nευκαιρία ή έναν πελάτη. Θα μπορούσε να είναι μια επαγγελματική κάρτα που έχετε παραλάβει,\nμια φόρμα επικοινωνίας που έχει συμπληρωθεί μέσω της ιστοσελίδας σας, ή ένα αρχείο απο μη εγκεκριμένους υποψήφιους πελάτες για εισαγωγή, κλπ."
+msgstr "Χρησιμοποιήστε τις συστάσεις αν χρειάζεστε ένα προπαρασκευαστικό βήμα πριν την δημιουργία\nμιας ευκαιρίας ή ενός πελάτη. Θα μπορούσε να είναι μια επαγγελματική κάρτα που έχετε παραλάβει, μια φόρμα επικοινωνίας που έχει συμπληρωθεί μέσω της ιστοσελίδας σας, ή ένα αρχείο από μη εγκεκριμένους υποψήφιους πελάτες για εισαγωγή, κλπ.\n        "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_all_leads
@@ -3729,7 +3734,7 @@ msgid ""
 "                opportunity or a customer. It can be a business card you received,\n"
 "                a contact form filled in your website, or a file of unqualified\n"
 "                prospects you import, etc."
-msgstr "Χρησιμοποιήστε τους υποψήφιους πελάτες αν χρειάζεται ένα βήμα προεπιλογής πριν να δημιουργήσετε μια\nευκαιρία ή έναν πελάτη. Θα μπορούσε να είναι μια επαγγελματική κάρτα που έχετε παραλάβει,\nμια φόρμα επικοινωνίας που έχει συμπληρωθεί μέσω της ιστοσελίδας σας, ή ένα αρχείο απο μη εγκεκριμένους υποψήφιους πελάτες για εισαγωγή, κλπ."
+msgstr "Χρησιμοποιήστε τις συστάσεις αν χρειάζεστε ένα προπαρασκευαστικό βήμα πριν την δημιουργία\nμιας ευκαιρίας ή ενός πελάτη. Θα μπορούσε να είναι μια επαγγελματική κάρτα που έχετε παραλάβει, μια φόρμα επικοινωνίας που έχει συμπληρωθεί μέσω της ιστοσελίδας σας, ή ένα αρχείο από μη εγκεκριμένους υποψήφιους πελάτες για εισαγωγή, κλπ.\n        "
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -3767,7 +3772,7 @@ msgstr "Χρησιμοποιείται για να υπολογίσει τις �
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Χρησιμοποιείται για να ιεραρχήσει στάδια. Χαμηλότερο είναι το καλύτερο"
+msgstr "Χρησιμοποιείται για να δώσει σειρά στα στάδια. Χαμηλότερο είναι το καλύτερο"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_user_id
@@ -3908,7 +3913,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
 msgid ""
 "When sending mails, the default email address is taken from the sales team."
-msgstr "Όταν στέλνετε mails, η προρυθμισμένη διεύθυνση email εισάγεται από την ομάδα πωλήσεων."
+msgstr "Όταν στέλνετε mails, η προεπιλεγμένη διεύθυνση email εισάγεται από την ομάδα πωλήσεων."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3930,7 +3935,7 @@ msgstr "Αυτόματος Οδηγός"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
-msgstr "Επιτυχία"
+msgstr "Κερδισμένες"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
@@ -3945,7 +3950,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
 msgid "Working Time"
-msgstr "Χρόνος Εργασίας"
+msgstr "Ώρες Εργασίας"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4076,12 +4081,12 @@ msgstr "Ο Ιστότοπός σας"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "ZIP"
-msgstr "Τ.Κ."
+msgstr "ΤΚ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_zip
 msgid "Zip"
-msgstr "ΤΚ"
+msgstr "Τ.Κ."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

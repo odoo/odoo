@@ -77,6 +77,7 @@ try:
         'reduce': reduce,
         'map': map,
         'round': round,
+        'cmp': cmp,
 
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
@@ -101,7 +102,7 @@ class MailTemplate(models.Model):
         return res
 
     name = fields.Char('Name')
-    model_id = fields.Many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used")
+    model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "

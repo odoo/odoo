@@ -182,9 +182,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     report.record_result(load_test(module_name, idref, mode))
                     # Python tests
                     ir_http = registry['ir.http']
-                    # Force routing map to be rebuilt between each module test suite
-                    vars(ir_http).pop('routing_map', None)
-
+                    if hasattr(ir_http, '_routing_map'):
+                        # Force routing map to be rebuilt between each module test suite
+                        del(ir_http._routing_map)
                     report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
@@ -278,12 +278,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
 
-        if tools.config['load_language'] or update_module:
+        load_lang = tools.config.pop('load_language')
+        if load_lang or update_module:
             # some base models are used below, so make sure they are set up
             registry.setup_models(cr, partial=True)
 
-        if tools.config['load_language']:
-            for lang in tools.config['load_language'].split(','):
+        if load_lang:
+            for lang in load_lang.split(','):
                 tools.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated

@@ -335,6 +335,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         options = _.clone(options || {});
         var shadow = options.shadow || false;
+        options.headers = _.extend({}, options.headers)
+        if (odoo.debug) {
+            options.headers["X-Debug-Mode"] = true;
+        }
+
         delete options.shadow;
 
         return self.check_session_id().then(function() {
@@ -350,18 +355,14 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (self.origin_server) {
                 fct = ajax.jsonRpc;
                 if (self.override_session) {
-                    options.headers = _.extend({}, options.headers, {
-                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
-                    });
+                    options.headers["X-Openerp-Session-Id"] = self.session_id || '';
                 }
             } else if (self.use_cors) {
                 fct = ajax.jsonRpc;
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
                 if (self.override_session) {
-                    options.headers = _.extend({}, options.headers, {
-                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
-                    });
+                    options.headers["X-Openerp-Session-Id"] = self.session_id || '';
                 }
             } else {
                 fct = ajax.jsonpRpc;

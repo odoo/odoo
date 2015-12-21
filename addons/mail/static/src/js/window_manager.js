@@ -11,7 +11,7 @@ var web_client = require('web.web_client');
 // chat window management
 //----------------------------------------------------------------
 var chat_sessions = [];
-var CHAT_WINDOW_WIDTH = 260;
+var CHAT_WINDOW_WIDTH = 300;
 
 function open_chat (session) {
     if (!_.findWhere(chat_sessions, {id: session.id})) {
@@ -37,11 +37,25 @@ function open_chat (session) {
             chat_manager.fold_channel(channel_id);
         });
 
-        chat_session.window.on("post_message", null, function (message) {
-            chat_manager.post_message(message);
+        chat_session.window.on("post_message", null, function (message, channel_id) {
+            message.content = _.escape(message.content);
+            chat_manager.post_message(message, {channel_id: channel_id});
         });
         chat_session.window.on("messages_read", null, function () {
             chat_manager.mark_channel_as_seen(channel);
+        });
+        chat_session.window.on("redirect", null, function (res_model, res_id) {
+            chat_manager.redirect(res_model, res_id, open_chat);
+        });
+        chat_session.window.on("redirect_to_channel", null, function (channel_id) {
+            var session = _.findWhere(chat_sessions, {id: channel_id});
+            if (!session) {
+                chat_manager.join_channel(channel_id).then(function (channel) {
+                    chat_manager.detach_channel(channel);
+                });
+            } else {
+                session.window.toggle_fold(false);
+            }
         });
 
         chat_sessions.push(chat_session);

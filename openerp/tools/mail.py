@@ -26,6 +26,7 @@ _logger = logging.getLogger(__name__)
 
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body']
+whitelist_classes = set(['WordSection1', 'MsoNormal', 'SkyDrivePlaceholder', 'oe_mail_expand', 'stopSpelling'])
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
@@ -292,6 +293,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     if expand_options is None:
         expand_options = {}
+    whitelist_classes_local = whitelist_classes.copy()
+    if expand_options.get('oe_expand_container_class'):
+        whitelist_classes_local.add(expand_options.get('oe_expand_container_class'))
+    if expand_options.get('oe_expand_a_class'):
+        whitelist_classes_local.add(expand_options.get('oe_expand_a_class'))
 
     if not html or not isinstance(html, basestring):
         return html
@@ -316,7 +322,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         root = lxml.html.fromstring(inner_html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for node in root.iter():
         # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
         if node.tail:
@@ -336,6 +342,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
     quoted = False
     quote_begin = False
     overlength = False
+    replace_class = False
     overlength_section_id = None
     overlength_section_count = 0
     cur_char_nbr = 0
@@ -346,6 +353,17 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             continue
         # do not take into account multiple spaces that are displayed as max 1 space in html
         node_text = ' '.join((node.text and node.text.strip(' \t\r\n') or '').split())
+
+        # remove unwanted classes from node
+        if node.get('class'):
+            sanitize_classes = []
+            for _class in node.get('class').split(' '):
+                if _class in whitelist_classes_local:
+                    sanitize_classes.append(_class)
+                else:
+                    sanitize_classes.append('cleaned_'+_class)
+                    replace_class = True
+            node.set('class', ' '.join(sanitize_classes))
 
         # root: try to tag the client used to write the html
         if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
@@ -448,7 +466,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                 node_class = node.get('class', '') + ' oe_mail_cleaned'
                 node.set('class', node_class)
 
-    if not overlength and not quote_begin and not quoted:
+    if not overlength and not quote_begin and not quoted and not replace_class:
         return html
 
     # html: \n that were tail of elements have been encapsulated into <span> -> back to \n

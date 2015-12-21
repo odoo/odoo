@@ -417,7 +417,7 @@
                             <group>
                                 <label for="next_activity_id"/>
                                 <div>
-                                    <div class="o_row">
+                                    <div class="o_row mr16">
                                         <field name="next_activity_id"
                                                options="{'no_create': True, 'no_open': True}"
                                                domain="['|',('team_id','=',False),('team_id','=',team_id)]"
@@ -450,7 +450,7 @@
                         <page string="Internal Notes">
                             <field name="description"/>
                         </page>
-                        <page name="lead" string="Lead" groups="crm.group_use_lead">
+                        <page name="lead" string="Contact Information">
                             <group>
                                 <group>
                                     <field name="partner_name"/>

@@ -13,15 +13,15 @@ class CrmTeam(models.Model):
     @api.model
     @api.returns('self', lambda value: value.id if value else False)
     def _get_default_team_id(self, user_id=None):
-        team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        if not team_id:
-            if user_id is None:
-                user_id = self.env.uid
-            team_id = self.env['crm.team'].search([
-                '|',
-                ('user_id', '=', user_id),
-                ('member_ids', 'in', [user_id])],
-                limit=1) or self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
+        if user_id is None:
+            user_id = self.env.uid
+        team_id = self.env['crm.team'].search([
+            '|',
+            ('user_id', '=', user_id),
+            ('member_ids', 'in', [user_id])],
+            limit=1) or self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
+        if not team_id and self.env.context.get('default_team_id'):
+            team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         return team_id
 
     name = fields.Char('Sales Team', required=True, translate=True)

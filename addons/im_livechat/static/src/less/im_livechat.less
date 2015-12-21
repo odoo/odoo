@@ -18,42 +18,59 @@
     border-top-right-radius: 5px;
 }
 
-/* Livechat Rating : feedback smiley */
-.o_chat_window .o_chat_content .o_livechat_rating {
-    padding: 15px;
-
-    .o_livechat_rating_feedback_text {
-        text-align: justify;
+.o_chat_window {
+    z-index: 1002; // to go over the navbar
+    .o_thread_date_separator {
+        display: none;
     }
 
-    .o_livechat_rating_choices {
-        margin: 10px 0;
-        text-align: center;
+    .o_chat_content .o_livechat_rating {
+        /* Livechat Rating : feedback smiley */
+        padding: 15px;
 
-        > img {
-            width: 50px;
-            opacity: 0.60;
-            cursor: pointer;
-            margin: 5px;
-            &:hover, &.selected {
-                opacity: 1;
+        .o_livechat_no_feedback {
+            padding-top: 20px;
+            text-align: right;
+            font-size: 12px;
+
+            > em {
+                cursor: pointer;
             }
         }
-    }
 
-    /* feedback reason */
-    .o_livechat_rating_reason {
-        margin: 10px 0;
-        display: none; /* hidden by default */
-
-        > textarea {
-            width: 100%;
-            height: 70px;
-            resize: none;
+        .o_livechat_rating_feedback_text {
+            text-align: justify;
         }
-    }
 
-    .o_livechat_rating_reason_button > input {
-        float: right;
+        .o_livechat_rating_choices {
+            margin: 10px 0;
+            text-align: center;
+
+            > img {
+                width: 50px;
+                opacity: 0.60;
+                cursor: pointer;
+                margin: 5px;
+                &:hover, &.selected {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* feedback reason */
+        .o_livechat_rating_reason {
+            margin: 10px 0;
+            display: none; /* hidden by default */
+
+            > textarea {
+                width: 100%;
+                height: 70px;
+                resize: none;
+            }
+        }
+
+        .o_livechat_rating_reason_button > input {
+            float: right;
+        }
     }
 }
