@@ -103,7 +103,7 @@
                             This Month
                         </td>
                         <td t-attf-class="#{values and values['done']['target'] and values['done']['this_month'] >= values['done']['target'] ? 'o_main' : 'o_secondary'}" title="To Activity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action" data-extra="this_month">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['done']['this_month']"/>
@@ -116,7 +116,7 @@
                             </a>
                         </td>
                         <td t-attf-class="#{values and values['won']['target'] and values['won']['this_month'] >= values['won']['target'] ? 'o_main' : 'o_secondary'}" title="To Opportunity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph" data-extra="this_month">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="widget.render_monetary_field(values['won']['this_month'], values['currency_id'])"/>
@@ -187,12 +187,12 @@
                     <tr>
                         <td class="o_text">Last Month</td>
                         <td class="o_secondary" title="To Activity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action" data-extra="last_month">
                                 <t t-esc="values['done']['last_month']"/>
                             </a>
                         </td>
                         <td class="o_secondary" title="To Opportunity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph" data-extra="last_month">
                                 <t t-esc="widget.render_monetary_field(values['won']['last_month'], values['currency_id'])"/>
                             </a>
                         </td>

@@ -33,6 +33,9 @@
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('date', '&gt;=', datetime.date.today().strftime('%Y-%m-1')), ('date', '&lt;=', datetime.date.today().strftime('%Y-%m-%d')), ('user_id', '=', uid)]"/>
+                    <filter string="Last Month" name="last_month" domain="[('date', '&gt;=', (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-1')), ('date', '&lt;', datetime.date.today().strftime('%Y-%m-1')), ('user_id', '=', uid)]"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Created By"/>
                     <group expand="1" string="Group By">

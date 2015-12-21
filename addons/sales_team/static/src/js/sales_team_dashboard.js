@@ -68,12 +68,24 @@ var SalesTeamDashboardView = KanbanView.extend({
             }
         } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
             additional_context.search_default_won = 1;
+            if(action_extra === 'this_month') {
+                additional_context.search_default_this_month = 1;
+            } else if (action_extra === 'last_month') {
+                additional_context.search_default_last_month = 1;
+            } 
         } else if(action_name === 'account.action_account_invoice_report_all') {
             if(action_extra === 'this_month') {
                 additional_context.search_default_this_month = 1;
             } else if (action_extra === 'last_month') {
                 additional_context.search_default_last_month = 1;
             }
+        } else if(action_name === 'crm.crm_activity_report_action') {
+            if(action_extra === 'this_month') {
+                additional_context.search_default_this_month = 1;
+            } else if (action_extra === 'last_month') {
+                additional_context.search_default_last_month = 1;
+            }
+        }
 
         this.do_action(action_name, {additional_context: additional_context});
     },
