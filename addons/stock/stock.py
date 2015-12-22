@@ -1305,7 +1305,7 @@ class stock_picking(osv.osv):
                         if ops.package_id:
                             flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id])], context=context)) or False
                         else:
-                            flag = not quant.package_id.id
+                            flag = (not quant.package_id.id) and (ops.location_id.id == quant.location_id.id)
                         flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
                         flag = flag and (ops.owner_id.id == quant.owner_id.id)
                         if flag:
