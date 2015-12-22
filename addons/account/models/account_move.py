@@ -73,7 +73,7 @@ class AccountMove(models.Model):
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]}, default=_get_default_journal)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True)
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, string="Currency")
     rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of', help="Technical field used to keep track of the origin of journal entries created in case of fluctuation of the currency exchange rate. This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',

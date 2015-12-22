@@ -53,11 +53,11 @@ class sale_quote(http.Controller):
             'tx_id': tx_id,
             'tx_state': tx.state if tx else False,
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
-            'need_payment': not tx_id and order.state == 'manual',
+            'need_payment': order.invoice_status == 'to invoice' and (not tx or tx.state in ['draft', 'cancel', 'error']),
             'token': token,
         }
 
-        if order.require_payment or (not tx_id and order.state == 'manual'):
+        if order.require_payment or values['need_payment']:
             payment_obj = request.registry.get('payment.acquirer')
             acquirer_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=request.context)
             values['acquirers'] = list(payment_obj.browse(request.cr, token and SUPERUSER_ID or request.uid, acquirer_ids, context=request.context))

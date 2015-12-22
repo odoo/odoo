@@ -93,7 +93,7 @@ class account_analytic_line(models.Model):
 
     @api.model
     def _default_user(self):
-        return self.env.user.id
+        return self.env.context.get('user_id', self.env.user.id)
 
     name = fields.Char('Description', required=True)
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
