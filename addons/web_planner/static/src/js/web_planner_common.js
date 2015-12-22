@@ -413,52 +413,8 @@ var PlannerDialog = Widget.extend({
     }
 });
 
-var PlannerHelpMixin = {
-
-    on_menu_help: function(ev) {
-        ev.preventDefault();
-
-        var menu = $(ev.currentTarget).data('menu');
-        if (menu === 'about') {
-            if (!odoo.db_info) {
-                var self = this;
-                this.rpc("/web/webclient/version_info", {}).done(function(db_info) {
-                    self.on_menu_help_about(db_info);
-                });
-            } else {
-                this.on_menu_help_about(odoo.db_info);
-            }
-        } else if (menu === 'documentation') {
-            window.open('https://www.odoo.com/documentation/user', '_blank');
-        } else if (menu === 'planner') {
-            if (this.dialog) this.show_dialog();
-        } else if (menu === 'support') {
-            if (odoo.db_info && odoo.db_info.server_version_info[5] === 'c') {
-                window.open('https://www.odoo.com/buy', '_blank');
-            } else {
-                window.location.href = 'mailto:help@odoo.com';
-            }
-        }
-    },
-
-    on_menu_help_about: function(db_info) {
-        var $help = $(QWeb.render("PlannerLauncher.about", {db_info: db_info}));
-        $help.find('a.oe_activate_debug_mode').click(function (e) {
-            e.preventDefault();
-            window.location = $.param.querystring( window.location.href, 'debug');
-        });
-        new Dialog(this, {
-            size: 'medium',
-            dialogClass: 'o_act_window',
-            title: _t("About"),
-            $content: $help
-        }).open();
-    },
-};
-
 return {
     PlannerDialog: PlannerDialog,
-    PlannerHelpMixin: PlannerHelpMixin,
 };
 
 });
