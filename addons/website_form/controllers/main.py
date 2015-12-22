@@ -30,7 +30,7 @@ class WebsiteForm(http.Controller):
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
 
-        # Some fields have additionnal SQL constraints that we can't check generically
+        # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
         # TODO: How to get the name of the erroneous field ?
         except IntegrityError:
