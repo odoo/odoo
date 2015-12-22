@@ -4,6 +4,7 @@ odoo.define('web.ChangePassword', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var web_client = require('web.web_client');
 
 var _t = core._t;
 
@@ -11,7 +12,7 @@ var ChangePassword = Widget.extend({ // FIXME
     template: "ChangePassword",
     start: function() {
         var self = this;
-        this.getParent().set_title(_t("Change Password"));
+        web_client.set_title(_t("Change Password"));
         var $button = self.$el.find('.oe_form_button');
         $button.appendTo(this.getParent().$footer);
         $button.eq(1).click(function(){
