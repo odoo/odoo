@@ -141,7 +141,7 @@ class gamification_challenge(osv.Model):
             help="List of goals that will be set",
             required=True, copy=True),
 
-        'reward_id': fields.many2one('gamification.badge', string="For Every Succeding User"),
+        'reward_id': fields.many2one('gamification.badge', string="For Every Succeeding User"),
         'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
         'reward_second_id': fields.many2one('gamification.badge', string="For 2nd user"),
         'reward_third_id': fields.many2one('gamification.badge', string="For 3rd user"),
