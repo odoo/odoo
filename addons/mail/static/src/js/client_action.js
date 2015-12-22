@@ -52,8 +52,8 @@ var PartnerInviteDialog = Dialog.extend({
             allowClear: true,
             multiple: true,
             formatResult: function(item) {
-                var css_class = (item.im_status === 'away' ? "fa-clock-o" : "fa-circle" + (item.im_status === 'online' ? "" : "-o"));
-                return $('<span class="fa">').addClass(css_class).text(item.text);
+                var status = QWeb.render('mail.chat.UserStatus', {status: item.im_status});
+                return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
                 self.PartnersModel.call('im_search', [query.term, 20]).then(function(result){

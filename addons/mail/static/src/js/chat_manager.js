@@ -28,6 +28,7 @@ var needaction_counter = 0;
 var mention_partner_suggestions = [];
 var discuss_ids = {};
 var global_unread_counter = 0;
+var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 
 // Window focus/unfocus, beep and title
 //----------------------------------------------------------------------------------
@@ -274,8 +275,23 @@ function make_channel (data, options) {
         channel.name = data.direct_partner[0].name;
         channel.direct_partner_id = data.direct_partner[0].id;
         channel.status = data.direct_partner[0].im_status;
+        pinned_dm_partners.push(channel.direct_partner_id);
+        bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
     }
     return channel;
+}
+
+function remove_channel (channel) {
+    if (!channel) { return; }
+    if (channel.type === 'dm') {
+        var index = pinned_dm_partners.indexOf(channel.direct_partner_id);
+        if (index > -1) {
+            pinned_dm_partners.splice(index, 1);
+            bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
+        }
+    }
+    channels = _.without(channels, channel);
+    delete channel_defs[channel.id];
 }
 
 function get_channel_cache (channel, domain) {
@@ -434,7 +450,7 @@ function on_channel_notification (message) {
 
 function on_partner_notification (data) {
     if (data.info === "unsubscribe") {
-        channels = _.without(channels, chat_manager.get_channel(data.id));
+        remove_channel(chat_manager.get_channel(data.id));
         chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
     } else if (data.type === 'toggle_star') {
         on_toggle_star_notification(data);
@@ -744,8 +760,7 @@ var chat_manager = {
             def = ChannelModel.call('channel_pin', [channel.uuid, false]);
         }
         return def.then(function () {
-            channels = _.without(channels, channel);
-            delete channel_defs[channel.id];
+            remove_channel(channel);
         });
     },
     close_chat_session: function (channel_id) {

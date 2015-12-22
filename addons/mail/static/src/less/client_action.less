@@ -167,16 +167,6 @@
                 font-weight: bold;
             }
 
-            .o_user_status {
-                font-size: 10px;
-                position: relative;
-                bottom: 1px;
-                margin-right: 3px;
-                &.fa-circle {
-                    color: @odoo-brand-optional;
-                }
-            }
-
             > .badge {
                 color: white;
                 background-color: @odoo-brand-optional;
@@ -221,5 +211,16 @@
                 }
             }
         }
+    }
+}
+
+// User status bullet (in Discuss sidebar and Invite dialog)
+.o_mail_user_status {
+    font-size: 10px;
+    position: relative;
+    bottom: 1px;
+    margin-right: 3px;
+    &.o_user_online {
+        color: @odoo-brand-optional;
     }
 }
