@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import uuid
 
 from openerp import _, api, fields, models, modules, tools
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError
 from openerp.osv import expression
 
-from openerp.addons.bus.models.bus_presence import AWAY_TIMER
 
 
 class ChannelPartner(models.Model):
@@ -452,40 +449,6 @@ class Channel(models.Model):
     #------------------------------------------------------
     # Instant Messaging View Specific (Slack Client Action)
     #------------------------------------------------------
-    @api.model
-    def get_init_notifications(self):
-        """ Get unread messages and old messages received less than AWAY_TIMER
-            ago of minimized channel ONLY. This aims to set the minimized channel
-            when refreshing the page.
-            Note : the user need to be logged
-        """
-        # get current user's minimzed channel
-        minimized_channels = self.env['mail.channel.partner'].search([('is_minimized', '=', True), ('partner_id', '=', self.env.user.partner_id.id)]).mapped('channel_id')
-
-        # get the message since the AWAY_TIMER
-        threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
-        threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        domain = [('channel_ids', 'in', minimized_channels.ids), ('create_date', '>', threshold)]
-
-        # get the message since the last poll of the user
-        presence = self.env['bus.presence'].search([('user_id', '=', self._uid)], limit=1)
-        if presence:
-            domain.append(('create_date', '>', presence.last_poll))
-
-        # do the message search
-        message_values = self.env['mail.message'].message_fetch(domain=domain)
-
-        # create the notifications (channel infos first, then messages)
-        notifications = []
-        for channel_info in minimized_channels.channel_info():
-            notifications.append([(self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info])
-        for message_value in message_values:
-            for channel_id in message_value['channel_ids']:
-                if channel_id in minimized_channels.ids:
-                    message_value['channel_ids'] = [channel_id]
-                    notifications.append([(self._cr.dbname, 'mail.channel', channel_id), dict(message_value)])
-        return notifications
-
     @api.model
     def channel_fetch_slot(self):
         """ Return the channels of the user grouped by 'slot' (channel, direct_message or private_group), and

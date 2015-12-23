@@ -812,9 +812,6 @@ function init () {
         });
         needaction_counter = result.needaction_inbox_counter;
         mention_partner_suggestions = result.mention_partner_suggestions;
-    });
-
-    var load_emojis = session.rpc("/mail/chat_init").then(function (result) {
         emojis = result.emoji;
         _.each(emojis, function(emoji) {
             emoji_substitutions[emoji.source] = emoji.substitution;
@@ -827,7 +824,7 @@ function init () {
 
     bus.on('notification', null, on_notification);
 
-    return $.when(load_menu_id, load_action_id, load_channels, load_emojis).then(function (menu_id, action_id) {
+    return $.when(load_menu_id, load_action_id, load_channels).then(function (menu_id, action_id) {
         discuss_ids = {
             menu_id: menu_id,
             action_id: action_id,
