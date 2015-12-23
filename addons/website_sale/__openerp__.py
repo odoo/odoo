@@ -23,6 +23,7 @@ Odoo E-Commerce
         'res_config_view.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
+        'report/sale_report_view.xml',
     ],
     'demo': [
         'data/demo.xml',
