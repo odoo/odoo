@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-05 23:25+0000\n"
+"PO-Revision-Date: 2015-12-17 11:04+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * Η κατάσταση 'Πρόχειρο' χρησιμοποιείται όταν ο χρήστης κωδικοποιεί ένα νέο και μη επιβεβαιωμένο Τιμολόγιο.\n * Η κατάσταση 'Προσωρινό' όταν το τιμολόγιο είναι σε Προσωρινή κατάσταση, το τιμολόγιο δεν έχει αριθμό τιμολογίου.\n * Η κατάσταση 'Ανοικτό' χρησιμοποιείται όταν ο χρήστης δημιουργεί ένα τιμολόγιο, παράγεται ένας αριθμός τιμολογίου. Παραμένει σε κατάσταση ανοικτό μέχρι ο χρήστης να πληρώσει το τιμολόγιο.\n * Η κατάσταση 'Πληρωμένο' ορίζεται αυτοματοποιημένα όταν πληρωθεί το τιμολόγιο. Οι σχετιζόμενες ημερολογιακές εγγραφές είτε μπορεί να έχουν συμφωνηθεί είτε όχι.\n * Η κατάσταση 'Ακυρωμένο' χρησιμοποιείται όταν ο χρήστης ακυρώσει το τιμολόγιο."
+msgstr " * Η κατάσταση 'Πρόχειρο' χρησιμοποιείται όταν ο χρήστης κωδικοποιεί ένα νέο και μη επιβεβαιωμένο Τιμολόγιο.\n * Η κατάσταση 'Προσωρινό' όταν το τιμολόγιο είναι σε Προσωρινή κατάσταση, το τιμολόγιο δεν έχει αριθμό τιμολογίου.\n * Η κατάσταση 'Ανοικτό' χρησιμοποιείται όταν ο χρήστης δημιουργεί ένα τιμολόγιο, παράγεται ένας αριθμός τιμολογίου. Παραμένει σε κατάσταση ανοικτό μέχρι ο χρήστης να πληρώσει το τιμολόγιο.\n * Η κατάσταση 'Εξοφλημένο' ορίζεται αυτοματοποιημένα όταν πληρωθεί το τιμολόγιο. Οι σχετιζόμενες ημερολογιακές εγγραφές είτε μπορεί να έχουν συμφωνηθεί είτε όχι.\n * Η κατάσταση 'Ακυρωμένο' χρησιμοποιείται όταν ο χρήστης ακυρώσει το τιμολόγιο."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -207,7 +207,7 @@ msgstr "(αλλαγή)"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr "(αναβάθμιση)"
+msgstr "(ενημέρωση)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -264,7 +264,7 @@ msgid ""
 "                usually corresponds to the periods of the tax declaration.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να προσθέσετε μια οικονομική περίοδο.\n              </p><p>\n                Μια λογιστική περίοδος συνήθως είναι ένας μήνας ή ένα τρίμηνο.\n                Συνήθως αντιπροσωπεύει τις περιόδους φορολογικών δηλώσεων.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε μια οικονομική περίοδο.\n              </p><p>\n                Μια λογιστική περίοδος συνήθως είναι ένας μήνας ή ένα τρίμηνο.\n                Συνήθως αντιπροσωπεύει τις περιόδους φορολογικών δηλώσεων.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -280,7 +280,7 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να προσθέσετε ένα ημερολόγιο.\n              </p><p>\n                Ένα ημερολόγιο χρησιμοποιείται για να καταγράφει συναλλαγές όλων των λογισιτκών δεδομένων\n                που σχετίζονται με την καθημερινή λειτουργία της επιχείρησης.\n              </p><p>\n                Μια τυπική εταιρία μπορεί να χρησιμοποιεί ένα ημερολόγιο ανά μέθοδο πληρωμής (μετρητά,\n                λογαριασμοί τραπέζης, επιταγές), ένα ημερολόγιο αγορών, ένα ημερολόγιο πωλήσεων\n                and one for miscellaneous information.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε ένα ημερολόγιο.\n              </p><p>\n                Ένα ημερολόγιο χρησιμοποιείται για να καταγράφει συναλλαγές όλων των λογισιτκών δεδομένων\n                που σχετίζονται με την καθημερινή λειτουργία της επιχείρησης.\n              </p><p>\n                Μια τυπική εταιρία μπορεί να χρησιμοποιεί ένα ημερολόγιο ανά μέθοδο πληρωμής (μετρητά,\n                λογαριασμοί τραπέζης, επιταγές), ένα ημερολόγιο αγορών, ένα ημερολόγιο πωλήσεων\n                and one for miscellaneous information.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -296,7 +296,7 @@ msgid ""
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να προσθέσετε ένα λογαριασμό.\n              </p><p>\n                Ένας λογαριασμός είναι τμήμα ενός καθολικού που επιτρέπει στην εταιρία\n                να καταχωρεί τις χρεωστικές και πιστωτικές συναλλαγές όλων των ειδών.\n                Οι εταιρίες παρουσιάζουν τους ετήσιους λογαριασμούς τους σε δύο κύρια μέρη:\n                τον ισολογισμό και την δήλωση εισοδήματος (λογαριασμός κερδών και \n                ζημιών). Οι ετήσιοι λογαριασμοί μιας εταιρίας υποχρεούνται βάσει νόμου να\n                αποκαλύπτουν συγκεκριμένες πληροφορίες.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε ένα λογαριασμό.\n              </p><p>\n                Ένας λογαριασμός είναι τμήμα ενός καθολικού που επιτρέπει στην εταιρία\n                να καταχωρεί τις χρεωστικές και πιστωτικές συναλλαγές όλων των ειδών.\n                Οι εταιρίες παρουσιάζουν τους ετήσιους λογαριασμούς τους σε δύο κύρια μέρη:\n                τον ισολογισμό και την δήλωση εισοδήματος (λογαριασμός κερδών και \n                ζημιών). Οι ετήσιοι λογαριασμοί μιας εταιρίας υποχρεούνται βάσει νόμου να\n                αποκαλύπτουν συγκεκριμένες πληροφορίες.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -311,7 +311,7 @@ msgid ""
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να προσθέσετε λογαριασμό.\n              </p><p>\n                Κατά τις πολυ-νομισματικές συναλλαγές, μπορεί να χάσετε ή να κερδίσετε\n                κάποιο ποσό λόγων των μεταβολών στις συναλλαγματικές ισοτιμίες. This menu gives\n                Αυτό το μενού σας δίνει μαι πρόβλεψη του Κέρδους ή της Απώλειας εάν\n                οι συναλλαγές ολοκληρώνονταν σήμερα. Μόνο για λογαριασμούς με\n                δευτερεύον νόμισμα.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε λογαριασμό.\n              </p><p>\n                Κατά τις πολυ-νομισματικές συναλλαγές, μπορεί να χάσετε ή να κερδίσετε\n                κάποιο ποσό λόγων των μεταβολών στις συναλλαγματικές ισοτιμίες. This menu gives\n                Αυτό το μενού σας δίνει μαι πρόβλεψη του Κέρδους ή της Απώλειας εάν\n                οι συναλλαγές ολοκληρώνονταν σήμερα. Μόνο για λογαριασμούς με\n                δευτερεύον νόμισμα.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -328,7 +328,7 @@ msgid ""
 "                the bottom of each invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε ένα τιμολόγιο πελάτη.\n              </p><p>\n                Η ηλεκτρονική τιμολόγηση του Odoo's σας διευκολύνει κατά την \n                συλλογή των πληρωμών των πελατών σας. Ο πελάτης σας λαμβάνει το\n                τιμολόγιο μέσω e-mail και μπορεί να πληρώσει online και/ή να το εισάγει\n                στο δικό του σύστημα.\n              </p><p>\n                Οι συζητήσεις με τους πελάτες σας εμφανίζονται αυτοματοποιημένα \n                κάτω από κάθε τιμολόγιο.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε ένα τιμολόγιο πελάτη.\n              </p><p>\n                Η ηλεκτρονική τιμολόγηση του Odoo's σας διευκολύνει κατά την \n                συλλογή των πληρωμών των πελατών σας. Ο πελάτης σας λαμβάνει το\n                τιμολόγιο μέσω e-mail και μπορεί να πληρώσει online και/ή να το εισάγει\n                στο δικό του σύστημα.\n              </p><p>\n                Οι συζητήσεις με τους πελάτες σας εμφανίζονται αυτοματοποιημένα \n                κάτω από κάθε τιμολόγιο.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -343,7 +343,7 @@ msgid ""
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε επιστροφή χρημάτων σε πελάτη.\n              </p><p>\n                Μια επιστροφή είναι ένα έγγραφο που πιστώνει ένα τιμολόγιο ολικά ή \n                μερικά.\n              </p><p>\n                Αντί να δημιουργήσετε χειροκίνητα αποζημίωση σε πελάτη, μπορείτε\n                να την δημιουργήσετε απευθείας από το σχετικό τιμολόγιο του πελάτη.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε επιστροφή χρημάτων σε πελάτη.\n              </p><p>\n                Μια επιστροφή είναι ένα έγγραφο που πιστώνει ένα τιμολόγιο ολικά ή \n                μερικά.\n              </p><p>\n                Αντί να δημιουργήσετε χειροκίνητα αποζημίωση σε πελάτη, μπορείτε\n                να την δημιουργήσετε απευθείας από το σχετικό τιμολόγιο του πελάτη.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -360,7 +360,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε μία ημερολογιακή καταχώρηση.\n              </p><p>\n                Μία ημερολογιακή καταχώρηση αποτελείται από αρκετά ημερολογιακά αντικείμενα, καθένα από\n                τα οποία είναι μια χρεωστική ή μία πιστωτική συναλλαγή.\n              </p><p>\n                Το Odoo δημιουργεί αυτοματοποιημένα μία ημερολογιακή καταχώρηση ανά λογιστικό\n                έγγραφο: τιμολόγιο, επιστροφή, πληρωμή προμηθευτή, τραπεζική συναλλαγή,\n                κλπ. Έτσι, θα πρέπει να καταγράφετε τις ημερολογιακές καταχωρήσεις χειροκίνητα μόνο/κυρίως\n                για διάφορες λειτουργίες.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε μία ημερολογιακή καταχώρηση.\n              </p><p>\n                Μία ημερολογιακή καταχώρηση αποτελείται από αρκετά ημερολογιακά αντικείμενα, καθένα από\n                τα οποία είναι μια χρεωστική ή μία πιστωτική συναλλαγή.\n              </p><p>\n                Το Odoo δημιουργεί αυτοματοποιημένα μία ημερολογιακή καταχώρηση ανά λογιστικό\n                έγγραφο: τιμολόγιο, επιστροφή, πληρωμή προμηθευτή, τραπεζική συναλλαγή,\n                κλπ. Έτσι, θα πρέπει να καταγράφετε τις ημερολογιακές καταχωρήσεις χειροκίνητα μόνο/κυρίως\n                για διάφορες λειτουργίες.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -375,7 +375,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε νέα καταχώρηση μετρητών.\n              </p><p>\n                Η Ταμειακή Μηχανή σας επιτρέπει να διαχειρίζεστε τις καταχωρήσεις μετρητών \n                στα ημερολόγια μετρητών. Αυτό το χαρακτηριστικό σας δίνει ένα εύκολο τρόπο να παρακολουθείτε\n                τις πληρωμές μετρητών σε καθημερινή βάση. Μπορείτε να εισάγετε τα κέρματα που βρίσκονται στην\n                ταμειακή σας, και στη συνέχεια να καταχωρείτε τις εγγραφές όταν τα χρήματα μπαίνουν ή\n                βγαίνουν από την ταμειακή.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε νέα καταχώρηση μετρητών.\n              </p><p>\n                Η Ταμειακή Μηχανή σας επιτρέπει να διαχειρίζεστε τις καταχωρήσεις μετρητών \n                στα ημερολόγια μετρητών. Αυτό το χαρακτηριστικό σας δίνει ένα εύκολο τρόπο να παρακολουθείτε\n                τις πληρωμές μετρητών σε καθημερινή βάση. Μπορείτε να εισάγετε τα κέρματα που βρίσκονται στην\n                ταμειακή σας, και στη συνέχεια να καταχωρείτε τις εγγραφές όταν τα χρήματα μπαίνουν ή\n                βγαίνουν από την ταμειακή.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -387,7 +387,7 @@ msgid ""
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε ένα πρότυπο λειτουργίας κινήσεων.\n              </p><p>\n                Αυτές μπορούν να χρησιμοποιηθούν για άμεση δημιουργία γραμμών κίνησης κατά τη συμφωνία\n                των τραπεζικών κινήσεων.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε ένα πρότυπο λειτουργίας κινήσεων.\n              </p><p>\n                Αυτές μπορούν να χρησιμοποιηθούν για άμεση δημιουργία γραμμών κίνησης κατά τη συμφωνία\n                των τραπεζικών κινήσεων.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -402,7 +402,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καθορίσετε ένα νέο τύπο λογαριασμού.\n              </p><p>\n                Ένας τύπος λογαριασμού χρησιμοποιείται για να καθορίσει τον τρόπο που χρησιμοποιείται ο λογαριασμός\n                στο κάθε ημερολόγιο. Η μέθοδος μη δεδουλευμένων σε έναν τραπεζικό λογαριασμό καθορίζει\n                την διαδικασία του ετήσιου κλεισίματος. Οι Αναφορές όπως ο Ισολογισμός\n                και η κατάσταση Κερδών και Ζημιών χρησιμοποιούν την κατηγορία\n                (κέρδη/ζημίες ή ισολογισμός).\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καθορίσετε ένα νέο τύπο λογαριασμού.\n              </p><p>\n                Ένας τύπος λογαριασμού χρησιμοποιείται για να καθορίσει τον τρόπο που χρησιμοποιείται ο λογαριασμός\n                στο κάθε ημερολόγιο. Η μέθοδος μη δεδουλευμένων σε έναν τραπεζικό λογαριασμό καθορίζει\n                την διαδικασία του ετήσιου κλεισίματος. Οι Αναφορές όπως ο Ισολογισμός\n                και η κατάσταση Κερδών και Ζημιών χρησιμοποιούν την κατηγορία\n                (κέρδη/ζημίες ή ισολογισμός).\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -416,7 +416,7 @@ msgid ""
 "                entries to automate the postings in the system.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καθορίσετε μία νέα επαναλαμβανόμενη καταχώρηση.\n              </p><p>\n                Μια επαναλαμβανόμενη καταχώρηση πραγματοποιείται σε επαναλαμβανόμενη βάση από μία συγκεκριμένη\n                ημερομηνία, π.χ. σε αντιστοιχία με την υπογραφή μίας σύμβασης ή ενός συμφωνητικού\n                με ενάν πελάτη ή προμηθευτή. Μπορείτε να δημιουργείτε τέτοιες καταχωρήσεις\n                ώστε να αυτοματοποιήσετε την καταχώρηση στο σύστημα.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καθορίσετε μία νέα επαναλαμβανόμενη καταχώρηση.\n              </p><p>\n                Μια επαναλαμβανόμενη καταχώρηση πραγματοποιείται σε επαναλαμβανόμενη βάση από μία συγκεκριμένη\n                ημερομηνία, π.χ. σε αντιστοιχία με την υπογραφή μίας σύμβασης ή ενός συμφωνητικού\n                με ενάν πελάτη ή προμηθευτή. Μπορείτε να δημιουργείτε τέτοιες καταχωρήσεις\n                ώστε να αυτοματοποιήσετε την καταχώρηση στο σύστημα.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -430,7 +430,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καθορίσετε ένα νέο κωδικό φόρου.\n              </p><p>\n                Αναλόγως της χώραρς, ένας κωδικός φόρου είναι συνήθως ένα κελί προς συμπλήρωση\n                στις φορολογικές δηλώσεις. Το Odoo σας επιτρέπει να καθορίζετε την\n                δομή του φόρου και ο κάθε υπολογισμός του φόρου θα καταχωρείται σε\n                έναν ή περισσότερους φορολογικούς κωδικούς.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καθορίσετε ένα νέο κωδικό φόρου.\n              </p><p>\n                Αναλόγως της χώραρς, ένας κωδικός φόρου είναι συνήθως ένα κελί προς συμπλήρωση\n                στις φορολογικές δηλώσεις. Το Odoo σας επιτρέπει να καθορίζετε την\n                δομή του φόρου και ο κάθε υπολογισμός του φόρου θα καταχωρείται σε\n                έναν ή περισσότερους φορολογικούς κωδικούς.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -443,7 +443,7 @@ msgid ""
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καταγράψετε ένα νέο τιμολόγιο προμηθευτή.\n              </p><p>\n                Μπορείτε να ελέγχετε το τιμολόγιο από τον προμηθευτή σας σύμφωνα με\n                τις αγορές ή τις πωλήσεις σας. Το Odoo μπορεί να δημιουργήσει\n                πρόχειρα τιμολόγια αυτοματοποιημένα από τις παραγγελίες αγοράς ή τις αποδείξεις.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καταγράψετε ένα νέο τιμολόγιο προμηθευτή.\n              </p><p>\n                Μπορείτε να ελέγχετε το τιμολόγιο από τον προμηθευτή σας σύμφωνα με\n                τις αγορές ή τις πωλήσεις σας. Το Odoo μπορεί να δημιουργήσει\n                πρόχειρα τιμολόγια αυτοματοποιημένα από τις παραγγελίες αγοράς ή τις αποδείξεις.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -459,7 +459,7 @@ msgid ""
 "                the related sale or puchase invoices.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καταχωρίσετε μία περίληψη τραπεζικού λογαριασμού.\n              </p><p>\n                Η περίληψη τραπεζικού λογαριασμού είναι μία περίληψη όλων των χρηματοοικονομικών συναλλαγών\n                που έλαβαν χώρα σε μία συγκεκριμένη χρονική περίοδο  σε έναν τραπεζικό λογαριασμό. Πρέπει\n                να την λαμβάνετε τακτικά από την τράπεζά σας.\n              </p><p>\n                Το Odoo σας επιτρέπει να συμφωνείτε γραμμές απευθείας με\n                τα σχετικά τιμολόγια πώλησης ή αγοράς.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καταχωρίσετε μία περίληψη τραπεζικού λογαριασμού.\n              </p><p>\n                Η περίληψη τραπεζικού λογαριασμού είναι μία περίληψη όλων των χρηματοοικονομικών συναλλαγών\n                που έλαβαν χώρα σε μία συγκεκριμένη χρονική περίοδο  σε έναν τραπεζικό λογαριασμό. Πρέπει\n                να την λαμβάνετε τακτικά από την τράπεζά σας.\n              </p><p>\n                Το Odoo σας επιτρέπει να συμφωνείτε γραμμές απευθείας με\n                τα σχετικά τιμολόγια πώλησης ή αγοράς.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -471,7 +471,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να καταχωρίσετε επιστροφή χρημάτων από προμηθευτή.\n              </p><p>\n                Αντί να δημιουργήσετε την επιστροφή από προμηθευτή χειροκίνητα, μπορείτε να δημιουργήσετε\n                επιστροφές και να τις συμφωνήσετε άμεσα από τα σχετικά τιμολόγια προμηθευτών.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καταχωρίσετε επιστροφή χρημάτων από προμηθευτή.\n              </p><p>\n                Αντί να δημιουργήσετε την επιστροφή από προμηθευτή χειροκίνητα, μπορείτε να δημιουργήσετε\n                επιστροφές και να τις συμφωνήσετε άμεσα από τα σχετικά τιμολόγια προμηθευτών.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -488,7 +488,7 @@ msgid ""
 "                would be referred to as FY 2011.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να ξεκινήσετε μία νέα λογιστική χρήση.\n              </p><p>\n                Καθορίστε την οικονομική χρήση της εταιρίας σας σύμφωνα με τις ανάγκες σας. Η\n                λογιστική χρήση είναι η περίοδος στο τέλος της οποίας οι λογαριασμοί\n                της εταιρίας κλείνουν (συνήθως 12μηνη). Η λογιστική χρήση\n                αναφέρεται συνήθως με την ημερομηνία κλεισίματος. Για παράδειγμα,\n                εάν η λογιστική χρήση μιας εταιρίας κλείνει στις 30 Νοεμβρίου 2011, τότε\n                οτιδήποτε μεταξύ 1ης Δεκεμβρίου 2010 και 30ης Νοεμβρίου 2011\n                αναφέρεται ως ΛΧ 2011.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να ξεκινήσετε μία νέα λογιστική χρήση.\n              </p><p>\n                Καθορίστε την οικονομική χρήση της εταιρίας σας σύμφωνα με τις ανάγκες σας. Η\n                λογιστική χρήση είναι η περίοδος στο τέλος της οποίας οι λογαριασμοί\n                της εταιρίας κλείνουν (συνήθως 12μηνη). Η λογιστική χρήση\n                αναφέρεται συνήθως με την ημερομηνία κλεισίματος. Για παράδειγμα,\n                εάν η λογιστική χρήση μιας εταιρίας κλείνει στις 30 Νοεμβρίου 2011, τότε\n                οτιδήποτε μεταξύ 1ης Δεκεμβρίου 2010 και 30ης Νοεμβρίου 2011\n                αναφέρεται ως ΛΧ 2011.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -518,7 +518,7 @@ msgid ""
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Επιλέξτε για να ρυθμίσετε έναν νέο τραπεζικό λογαριασμό. \n          </p><p>\n            Ρυθμίστε τους τραπεζικούς λογαριασμούς της εταιρίας σας και επιλέξτε αυτούς που πρέπει\n            να εμφανίζονται στο υποσέλιδο της αναφοράς.\n          </p><p>\n            Εάν χρησιμοποιείται την εφαρμογή λογιστικής του Odoo, τα ημερολόγια και\n            οι λογαριασμοί θα δημιουργηθούν αυτοματοποιημένα με βάση αυτά τα δεδομένα.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Κάντε κλικ για να ρυθμίσετε έναν νέο τραπεζικό λογαριασμό. \n          </p><p>\n            Ρυθμίστε τους τραπεζικούς λογαριασμούς της εταιρίας σας και επιλέξτε αυτούς που πρέπει\n            να εμφανίζονται στο υποσέλιδο της αναφοράς.\n          </p><p>\n            Εάν χρησιμοποιείται την εφαρμογή λογιστικής του Odoo, τα ημερολόγια και\n            οι λογαριασμοί θα δημιουργηθούν αυτοματοποιημένα με βάση αυτά τα δεδομένα.\n          </p>\n        "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -546,7 +546,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Επιλέξτε για να δημιουργήσετε ένα νέο αναλυτικό λογαριασμό.\n              </p><p>\n                Ο συνηθισμένος πίνακας λογαριασμών έχει μία δομή που καθορίζεται από το\n                νομικό πλαίσιο της χώρας. Η δομή του πίνακα αναλυτικών\n                λογαριασμών πρέπει να αντανακλά τις επιχειρησιακές σας ανάγκες\n                σχετικά με τις αναφορές κόστους/εσόδων.\n              </p><p>\n                Συνήθως δομούνται από συμβάσεις, projects, προϊόντα ή\n                τμήματα. Οι περισσότερες λειτουργίες του Odoo (τιμολόγια,\n                χρονοδιαγράμματα, έξοδα, κ.λπ.) δημιουργούν αναλυτικές εγγραφές στους\n                σχετιζόμενους λογαριασμούς.\n              </p>\n            "
+msgstr "<p>\n                Κάντε κλικ για να δημιουργήσετε ένα νέο αναλυτικό λογαριασμό.\n              </p><p>\n                Ο συνηθισμένος πίνακας λογαριασμών έχει μία δομή που καθορίζεται από το\n                νομικό πλαίσιο της χώρας. Η δομή του πίνακα αναλυτικών\n                λογαριασμών πρέπει να αντανακλά τις επιχειρησιακές σας ανάγκες\n                σχετικά με τις αναφορές κόστους/εσόδων.\n              </p><p>\n                Συνήθως δομούνται από συμβάσεις, projects, προϊόντα ή\n                τμήματα. Οι περισσότερες λειτουργίες του Odoo (τιμολόγια,\n                χρονοδιαγράμματα, έξοδα, κ.λπ.) δημιουργούν αναλυτικές εγγραφές στους\n                σχετιζόμενους λογαριασμούς.\n              </p>\n            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -1262,7 +1262,7 @@ msgstr "Όλοι οι έταιροι"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Όλες οι Αποθηκευμένες Εγγραφές"
+msgstr "Όλες οι Καταχωρημένες Εγγραφές"
 
 #. module: account
 #: view:website:account.report_trialbalance
@@ -1287,14 +1287,14 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Όλες οι νέες ημερολογιακές καταχωρίσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη καταχωριμένες', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωριμένες'."
+msgstr "Όλες οι νέες ημερολογιακές καταχωρήσεις που δημιουργήθηκαν αυτόματα εντάσσονται στην κατάσταση 'Μη Καταχωρημένο', αλλά μπορείτε να ορίσετε την επιλογή να προσπεράσετε αυτή την κατάσταση στο σχετικό ημερολόγιο. Σε αυτή την περίπτωση, θα φέρονται ως ημερολογιακές καταχωρίσεις αυτόματα δημιουργημένες από το σύστημα στην επικύρωση εγγράφου (τιμολόγια, τραπεζικές καταθέσεις...) και θα δημιουργούνται στην κατάσταση 'Καταχωρημένο'."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
-msgstr "Όλες οι επιλεγμένες ημερολογιακές εγγραφές θα επικυρωθούν και θα καταχωριθούν. Αυτό σημαίνει ότι δεν θα μπορείτε να τροποποιήσετε τα λογιστικά πεδία τους στο εξής."
+msgstr "Όλες οι επιλεγμένες ημερολογιακές εγγραφές θα επικυρωθούν και θα καταχωρηθούν. Αυτό σημαίνει ότι δεν θα μπορείτε να τροποποιήσετε τα λογιστικά πεδία τους στο εξής."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:348
@@ -2525,7 +2525,7 @@ msgid ""
 "Check this box to automatically post entries of this journal. Note that "
 "legally, some entries may be automatically posted when the source document "
 "is validated (Invoices), whatever the status of this field."
-msgstr "Ενεργοποιήστε για να κοινοποιείτε αυτόματα τις καταχωρίσεις αυτού του ημερολογίου. Σημειώστε ότι η νομοθεσία ορίζει ότι μερικές καταχωρίσεις κοινοποιούνται αυτόματα όταν το έγγραφο είναι επικυρωμένο (Τιμολόγια), ασχέτως της κατάστασης αυτού του πεδίου."
+msgstr "Ενεργοποιήστε για να κοινοποιείτε αυτόματα τις καταχωρήσεις αυτού του ημερολογίου. Σημειώστε ότι η νομοθεσία ορίζει ότι μερικές καταχωρήσεις κοινοποιούνται αυτόματα όταν το έγγραφο είναι επικυρωμένο (Τιμολόγια), ασχέτως της κατάστασης αυτού του πεδίου."
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -5083,7 +5083,7 @@ msgstr "Εάν το ενεργό πεδίο έχει την τιμή Ψευδέ�
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Αν αυτό το κουτί είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογισιτικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
+msgstr "Αν αυτό το κουτί είναι επιλεγμένο το σύστημα θα προσπαθήσει να ομαδοποιήσει τις λογιστικές γραμμές όταν τις δημιουργεί από τα τιμολόγια."
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -6850,7 +6850,7 @@ msgstr "Χρησιμοποιήστε την συντόμευση ctrl-enter μό
 #: selection:account.invoice.report,state:0 selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "Ανοικτά"
+msgstr "Ανοιχτό"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -6862,7 +6862,7 @@ msgstr "Άνοιγμα Ταμείου"
 #: view:account.chart:account.view_account_chart
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Open Charts"
-msgstr "Ανοικτά Σχέδια"
+msgstr "Ανοιχτά Σχέδια"
 
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
@@ -7052,7 +7052,7 @@ msgstr "Εξοφλημένο"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Πληρωμένο/Συμφωνημένο"
+msgstr "Εξοφλημένο/Συμφωνημένο"
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -7570,22 +7570,22 @@ msgstr "Καταχώριση Ημερολογιακών Εγγραφών"
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted"
-msgstr "Αποθηεκευμένη"
+msgstr "Καταχωρημένο"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Καταχωρημένες Ημερολογιακές Εγγραφές"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Καταχωριμένα Ημερολογιακά Στοιχεία"
+msgstr "Καταχωρημένα Ημερολογιακά Στοιχεία"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Posted entries"
-msgstr "Καταχωριμένες εγγραφές"
+msgstr "Καταχωρημένες εγγραφές"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -7759,7 +7759,7 @@ msgstr ""
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Κέρδη και Ζημίες"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -8701,7 +8701,7 @@ msgstr "Το επιλεγμένο τιμολόγιο (ή τιμολόγια) δ�
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Send by Email"
-msgstr "Στάλθηκε με Email"
+msgstr "Αποστολή με Email"
 
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
@@ -9418,7 +9418,7 @@ msgstr "Χρησιμοποίηση Φόρου στο"
 msgid ""
 "Tax base different!\n"
 "Click on compute to update the tax base."
-msgstr "Διαφορετική βάση φόρου!\nΕπιλέξτε Υπολογισμός για να αναβαθμίσετε την βάση των φόρων."
+msgstr "Διαφορετική βάση φόρου!\nΚάντε κλικ για ενημέρωση της βάσης των φόρων."
 
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
@@ -9588,7 +9588,7 @@ msgstr "Η κίνηση του λογαριασμού (%s) για συγκέντ
 msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
-msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγαρφή πολλαπλών νομισμάτων."
+msgstr "Το ποσό, εκφρασμένο σε ένα (προαιρετικό) διαφορετικό νόμισμα αν πρόκειται για εγγραφή πολλαπλών νομισμάτων."
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -9794,7 +9794,7 @@ msgstr "Ο λογαριασμός συνεργάτη που χρησιμοποι
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "Παραπομπή συνεργατη για το τιμολόγιο"
+msgstr "Παραπομπή συνεργάτη για το τιμολόγιο"
 
 #. module: account
 #: code:addons/account/account_invoice.py:513
@@ -10120,7 +10120,7 @@ msgid ""
 "invoice has been dereconciled and it does not fit anymore the 'paid' state. "
 "You should press this button to re-open it and let it continue its normal "
 "process after having resolved the eventual exceptions it may have created."
-msgstr "Αυτό το κουμπί εμφανίζεται μόνο όταν η κατάσταση του τιμολογίου είναι 'πληρωμένο' (υποδεικνύοντας ότι έχει πλήρως συμφωνηθεί) και η ένδειξη της επιλογής του αυτόματου υπολογισμού 'συμφωνήθηκε' είναι Ψευδές (υποδεικνύοντας ότι δεν ισχύει πλέον). Με άλλα λόγια, το τιμολόγιο είναι μη συμφωνημένο και δεν χαρακτηρίζεται ως 'πληρωμένο'. Πρέπει να πατήσετε αυτό το κουμπί ώστε να το ξανα-ανοίξετε και να επιτρέψετε να συνεχίσει την φυσιολογική διαδικασία μετά την επίλυση των εξαιρέσεων που μπορεί να έχει δημιουργήσει."
+msgstr "Αυτό το κουμπί εμφανίζεται μόνο όταν η κατάσταση του τιμολογίου είναι 'Εξοφλημένο' (υποδεικνύοντας ότι έχει πλήρως συμφωνηθεί) και η ένδειξη της επιλογής του αυτόματου υπολογισμού 'Συμφωνήθηκε' είναι Ψευδές (υποδεικνύοντας ότι δεν ισχύει πλέον). Με άλλα λόγια, το τιμολόγιο είναι μη συμφωνημένο και δεν χαρακτηρίζεται ως 'Εξοφλημένο'. Πρέπει να πατήσετε αυτό το κουμπί ώστε να το ξανα-ανοίξετε και να επιτρέψετε να συνεχίσει την φυσιολογική διαδικασία μετά την επίλυση των εξαιρέσεων που μπορεί να έχει δημιουργήσει."
 
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
@@ -10168,7 +10168,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωριθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
+msgstr "Αυτό το πεδίο χρησιμοποιείται για να καταγράψει την ονομασία του τρίτου μέρους κατά την εισαγωγή των τραπεζικών στοιχείων σε ηλεκτρονική μορφή, όταν ο συνεργάτης δεν έχει καταχωρηθεί στη βάση δεδομένων (ή δεν μπορεί να εντοπιστεί)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10458,7 +10458,7 @@ msgstr "Σύνολο Τιμολογημένων"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr "Πληρωτέο Σύνολο"
+msgstr "Υπόλοιπο ως Προμηθευτής"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
@@ -10468,7 +10468,7 @@ msgstr "Συνολική Ποσότητα"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Σύνολο Εισπρακτέων"
+msgstr "Υπόλοιπο ως Πελάτης"
 
 #. module: account
 #: field:account.invoice.report,residual:0
@@ -10519,7 +10519,7 @@ msgstr "Συνολικό οφειλόμενο ποσό πελάτη"
 #. module: account
 #: help:res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr "Το συνολικό ποσό που πρέπει να πληρώσετε σε αυτον τον προμηθευτή."
+msgstr "Το συνολικό ποσό που θα πρέπει να πληρώσετε σε αυτόν τον προμηθευτή."
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
@@ -10698,17 +10698,17 @@ msgstr "Μη Εξοφλημένα Τιμολόγια"
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Μη καταχωριμένα"
+msgstr "Μη Καταχωρημένο"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Μη Καταχωριμένες Ημερολογιακές Εγγραφές"
+msgstr "Μη Καταχωρημένες Ημερολογιακές Εγγραφές"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Μη Καταχωριμένα Ημερολογιακά Αντικείμενα"
+msgstr "Μη Καταχωρημένα Ημερολογιακά Αντικείμενα"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -10894,7 +10894,7 @@ msgstr "Επικύρωση Γραμμών Κίνησης Λογαριασμού"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr "Επικυρωμένη"
+msgstr "Επικυρωμένο"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -11302,7 +11302,7 @@ msgstr "Δεν μπορείτε να απενεργοποιήσετε ένα λ�
 #: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr "Δεν μπορείτε να διαγράψετε μία καταχωριμένη ημερολογιακή εγγραφή \"%s\"."
+msgstr "Δεν μπορείτε να διαγράψετε μία καταχωρημένη ημερολογιακή εγγραφή \"%s\"."
 
 #. module: account
 #: code:addons/account/account_invoice.py:423
@@ -11343,7 +11343,7 @@ msgstr "Δεν μπορείτε να εφαρμόσετε αυτή την τρο
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωριμένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης καταχωρίσεων."
+msgstr "Δεν μπορείτε να τροποποιήσετε μια καταχωρημένη εγγραφή γι' αυτό το ημερολόγιο.\nΠρώτα πρέπει να ορίσετε στο ημερολόγιο την δυνατότητα ακύρωσης εγγραφών."
 
 #. module: account
 #: code:addons/account/account.py:1124
