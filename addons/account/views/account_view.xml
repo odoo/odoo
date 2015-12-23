@@ -449,7 +449,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="balance_end_real!=balance_end and state=='open'" decoration-info="state=='open' and (balance_end_real==balance_end)" string="Statements">
+                <tree decoration-danger="not is_difference_zero and state=='open'" decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -458,6 +458,7 @@
                     <field name="balance_end" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
                 </tree>
             </field>
         </record>
