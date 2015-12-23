@@ -2,7 +2,7 @@
 <template>
     <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
         <t t-jquery="span:first" t-operation="prepend">
-						<t t-esc="name"/>&amp;nbsp;
+            <t t-esc="name"/>&amp;nbsp;
             <span t-attf-class="o_calendar_invitation #{el['status']}"/>
         </t>
     </t>
