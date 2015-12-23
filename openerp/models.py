@@ -5989,14 +5989,14 @@ class BaseModel(object):
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
+            values = dict(record._cache)
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # load missing fields values, to avoid false changes
+        # load fields on secondary records, to avoid false changes
         with env.do_in_onchange():
-            for name in field_onchange:
-                record.mapped(name)
-        values = dict(record._cache)
+            for field_seq in secondary:
+                record.mapped(field_seq)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
