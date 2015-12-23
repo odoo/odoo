@@ -41,7 +41,7 @@ You can manage:
         'hr_installer.xml',
         'hr_data.xml',
         'hr_tip_data.xml',
-        'res_config_view.xml',
+        'hr_config_settings_views.xml',
         'views/hr.xml',
         'hr_dashboard.xml',
     ],

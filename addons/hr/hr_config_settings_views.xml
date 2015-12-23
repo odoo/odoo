@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="base.action_open_website"/>
+            <field name="state">open</field>
+        </record>
+        <record id="hr_config_settings_view_form" model="ir.ui.view">
+            <field name="name">hr.config.settings.form</field>
+            <field name="model">hr.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Human Resources" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Human Resources">
+                        <label for="id" string="Gamification"/>
+                        <div>
+                            <field name="module_hr_gamification"/>
+                            <label for="module_hr_gamification"/>
+                        </div>
+                        <label for="id" string="Employee Contracts"/>
+                        <div>
+                            <field name="module_hr_contract"/>
+                            <label for="module_hr_contract"/>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="hr_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Configure HR</field>
+            <field name="res_model">hr.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="hr_config_settings_menu"
+                  name="Settings"
+                  parent="menu_human_resources_configuration"
+                  sequence="0"
+                  groups="base.group_configuration"
+                  action="hr_config_settings_action"/>
+    </data>
+</openerp>

@@ -3,5 +3,6 @@
 
 import hr
 
+import hr_config_settings
 import res_users
 import res_partner
