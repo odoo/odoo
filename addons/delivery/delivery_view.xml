@@ -256,7 +256,7 @@
                   </xpath>
                   <xpath expr="//h1" position="before">
                       <div class="oe_right oe_button_box">
-                          <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','=','grid')]}" />
+                          <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}" />
                       </div>
                   </xpath>
                   <xpath expr="//form[@string='Transfer']/header/button[last()]" position="after">
