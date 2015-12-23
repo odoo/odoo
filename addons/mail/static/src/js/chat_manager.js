@@ -552,6 +552,9 @@ var chat_manager = {
             body: _.str.trim(data.content),
             attachment_ids: data.attachment_ids,
         };
+        if ('subject' in data) {
+            msg.subject = data.subject;
+        }
         if ('channel_id' in options) {
             // post a message in a channel
             return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
