@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
+var session = require('web.session');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
@@ -65,7 +66,9 @@ var PlannerDialog = Widget.extend({
     willStart: function() {
         var self = this;
         var res = this._super.apply(this, arguments).then(function() {
-            return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]);
+            return (new Model('web.planner')).call('render',
+                [self.planner.view_id[0], self.planner.planner_application],
+                {context: session.user_context});
         }).then(function(template) {
             self.$res = $(template);
         });
