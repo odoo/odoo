@@ -1272,7 +1272,8 @@ class Html(_String):
     type = 'html'
     _slots = {
         'sanitize': True,               # whether value must be sanitized
-        'strip_style': False,           # whether to strip style attributes
+        'strip_style': False,           # whether to strip style attributes (otherwise: sanitized)
+        'strip_classes': True,          # whether to strip classes attributes
     }
 
     def _setup_attrs(self, model, name):
@@ -1289,11 +1290,15 @@ class Html(_String):
     _related_strip_style = property(attrgetter('strip_style'))
     _description_strip_style = property(attrgetter('strip_style'))
 
+    _column_strip_classes = property(attrgetter('strip_classes'))
+    _related_strip_classes = property(attrgetter('strip_classes'))
+    _description_strip_classes = property(attrgetter('strip_classes'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value, strip_style=self.strip_style)
+            return html_sanitize(value, silent=True, strict=True, strip_style=self.strip_style, strip_classes=self.strip_classes)
         return value
 
 

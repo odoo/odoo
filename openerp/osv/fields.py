@@ -343,19 +343,20 @@ class text(_column):
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
-    __slots__ = ['_sanitize', '_strip_style', '_symbol_f', '_symbol_set']
+    __slots__ = ['_sanitize', '_strip_style', '_strip_classes', '_symbol_f', '_symbol_set']
 
     def _symbol_set_html(self, value):
         if value is None or value is False:
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value, strip_style=self._strip_style)
+        return html_sanitize(value, silent=True, strict=True, strip_style=self._strip_style, strip_classes=self._strip_classes)
 
-    def __init__(self, string='unknown', sanitize=True, strip_style=False, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, strip_classes=True, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
         self._strip_style = strip_style
+        self._strip_classes = strip_classes
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
@@ -364,6 +365,7 @@ class html(text):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
         args['strip_style'] = self._strip_style
+        args['strip_classes'] = self._strip_classes
         return args
 
 import __builtin__
