@@ -444,6 +444,12 @@
                     <field name="use_tasks"/>
                     <label for="use_tasks"/>
                 </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="object" name="projects_action" 
+                        icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
+                        <field string="Projects" name="project_count" widget="statinfo"/>
+                    </button>
+                </xpath>
             </field>
         </record>
 

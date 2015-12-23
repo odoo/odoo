@@ -324,7 +324,7 @@ class WebsiteForum(http.Controller):
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
-            'name': post.get('post_name', ''),
+            'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
             'content': post.get('content', False),
             'content_link': post.get('content_link', False),
             'parent_id': post_parent and post_parent.id or False,
