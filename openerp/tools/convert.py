@@ -704,6 +704,8 @@ form: module.record_id""" % (xml_id,)
                 if f_name in model._fields:
                     if model._fields[f_name].type == 'integer':
                         f_val = int(f_val)
+                    elif model._fields[f_name].type in ['float', 'monetary']:
+                        f_val = float(f_val)
             res[f_name] = f_val
 
         id = self.pool['ir.model.data']._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode, context=rec_context )
