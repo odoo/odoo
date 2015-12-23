@@ -969,7 +969,10 @@ var X2ManyListView = ListView.extend({
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
+                var tmp = field.no_rerender;
+                field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
+                field.no_rerender = tmp;
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
