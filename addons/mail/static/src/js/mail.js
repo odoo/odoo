@@ -1967,7 +1967,7 @@ openerp.mail = function (session) {
             this._super.apply(this);
             this.bind_events();
             var searchview_loaded = this.load_searchview(this.defaults);
-            if (! this.searchview.has_defaults) {
+            if (_.isEmpty(this.searchview.defaults)) {
                 this.message_render();
             }
             // render sidebar
@@ -1990,10 +1990,11 @@ openerp.mail = function (session) {
             this.searchview.on('search_data', this, this.do_searchview_search);
             this.searchview.appendTo(this.$('.oe-view-manager-search-view')).then(function () {
                 self.searchview.toggle_visibility(true);
+                if (!_.isEmpty(self.searchview.defaults)) {
+                    self.searchview.do_search();
+                }
             });
-            if (this.searchview.has_defaults) {
-                this.searchview.ready.then(this.searchview.do_search);
-            }
+
             return this.searchview
         },
 
