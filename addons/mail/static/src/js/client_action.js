@@ -52,8 +52,8 @@ var PartnerInviteDialog = Dialog.extend({
             allowClear: true,
             multiple: true,
             formatResult: function(item) {
-                var css_class = (item.im_status === 'away' ? "fa-clock-o" : "fa-circle" + (item.im_status === 'online' ? "" : "-o"));
-                return $('<span class="fa">').addClass(css_class).text(item.text);
+                var status = QWeb.render('mail.chat.UserStatus', {status: item.im_status});
+                return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
                 self.PartnersModel.call('im_search', [query.term, 20]).then(function(result){
@@ -558,7 +558,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_composer_input_focused: function () {
         var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
-        var composer = channel.mass_mailing ? self.extended_composer : self.basic_composer;
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
         composer.mention_set_prefetched_partners(suggestions);
     },
 
