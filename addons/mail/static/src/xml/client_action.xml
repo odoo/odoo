@@ -84,7 +84,7 @@
                 </span>
                 <span t-if="display_hash" class="o_mail_hash">#</span>
                 <t t-esc="channel.name"/>
-                <i t-if="channel.mass_mailing" class="fa fa-envelope-o"/>
+                <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       t-att-title="_t('Leave this channel')" t-att-data-channel-id="channel.id"/>
@@ -97,9 +97,9 @@
     </t>
 
     <t t-name="mail.chat.UserStatus">
-        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" t-attf-title="Online"/>
-        <i t-if="status == 'away'" class="o_mail_user_status fa fa-circle" t-attf-title="Idle"/>
-        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" t-attf-title="Offline"/>
+        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
+        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
+        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
     </t>
 
     <t t-name="mail.chat.UndoSnackbar">

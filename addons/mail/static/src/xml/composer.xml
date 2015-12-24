@@ -5,11 +5,11 @@
          <div class="o_composer_attachments_list"/>
          <t t-if="widget.extended">
              <div class="o_composer_subject">
-                 <input placeholder="Subject"></input>
+                 <input type="text" placeholder="Subject"></input>
                  <t t-call="mail.ChatComposer.Buttons"></t>
              </div>
          </t>
-         <div class="o_composer">
+         <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
              <textarea class="o_composer_input" placeholder="Write something..."/>
              <t t-if="!widget.extended">
                  <t t-call="mail.ChatComposer.Buttons"></t>
