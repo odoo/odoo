@@ -11,7 +11,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var LIMIT = 100;
-var preview_msg_max_size = 50;
+var preview_msg_max_size = 200;
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);

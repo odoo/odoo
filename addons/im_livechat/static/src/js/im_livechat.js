@@ -276,9 +276,9 @@ var Feedback = Widget.extend({
         };
         return session.rpc('/im_livechat/feedback', args).then(function () {
             if (options.close) {
-                var content = _.str.sprintf(_t("I rated you with :rating_%d"), self.rating);
+                var content = _.str.sprintf(_t("Rating: :rating_%d"), self.rating);
                 if (options.reason) {
-                    content += _.str.sprintf(_t(" for the following reason: %s"), options.reason);
+                    content += " \n" + options.reason;
                 }
                 self.trigger("send_message", {content: content});
                 self.trigger("feedback_sent"); // will close the chat

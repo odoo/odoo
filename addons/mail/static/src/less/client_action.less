@@ -103,12 +103,15 @@
                     margin-right: 5px;
                     border: none;
                 }
+                &.o_extended_composer .o_composer_input {
+                    margin-right: 0;
+                }
+            }
 
-                .o_composer_buttons {
-                    .o-flex(0, 0, auto);
-                    .o_composer_button_send {
-                        float: right;
-                    }
+            .o_composer_buttons {
+                .o-flex(0, 0, auto);
+                .o_composer_button_send {
+                    float: right;
                 }
             }
         }
@@ -222,5 +225,8 @@
     margin-right: 3px;
     &.o_user_online {
         color: @odoo-brand-optional;
+    }
+    &.o_user_idle {
+        color: orange;
     }
 }
