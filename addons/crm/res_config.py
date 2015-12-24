@@ -43,7 +43,7 @@ class crm_configuration(osv.TransientModel):
             alias_id = alias_ids and alias_ids[0] or False
         return alias_id
 
-    def get_default_generate_sales_team_alias(self, cr, uid, ids, context=None):
+    def get_default_generate_sales_team_alias(self, cr, uid, fields, context=None):
         return {'generate_sales_team_alias': self.pool['ir.values'].get_default(
             cr, uid, 'sales.config.settings', 'generate_sales_team_alias')}
 
@@ -51,7 +51,7 @@ class crm_configuration(osv.TransientModel):
         config_value = self.browse(cr, uid, ids, context=context).generate_sales_team_alias
         self.pool['ir.values'].set_default(cr, uid, 'sales.config.settings', 'generate_sales_team_alias', config_value)
 
-    def get_default_alias_prefix(self, cr, uid, ids, context=None):
+    def get_default_alias_prefix(self, cr, uid, fields, context=None):
         alias_name = False
         alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
         if alias_id:

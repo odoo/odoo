@@ -141,7 +141,7 @@
                             <field name="email" invisible="1"/>
                             <label for="login" class="oe_edit_only" string="Email Address"/>
                             <h2>
-                                <field name="login" on_change="on_change_login(login)"
+                                <field name="login"
                                         placeholder="email@yourcompany.com"/>
                             </h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_light_multi_company"/>
@@ -182,7 +182,7 @@
                             <h1><field name="name" required="1"/></h1>
                             <field name="email" invisible="1"/>
                             <label for="login" class="oe_edit_only" string="Email Address"/>
-                            <h2><field name="login" on_change="on_change_login(login)"/></h2>
+                            <h2><field name="login"/></h2>
                             <group>
                                 <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
                                         attrs="{'invisible': [('id', '=', False)]}"/>

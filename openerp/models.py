@@ -1397,10 +1397,8 @@ class BaseModel(object):
         return res
 
     def _rec_name_fallback(self, cr, uid, context=None):
-        rec_name = self._rec_name
-        if rec_name not in self._columns:
-            rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
-        return rec_name
+        # if self._rec_name is set, it belongs to self._fields
+        return self._rec_name or 'id'
 
     #
     # Overload this method if you need a window title which depends on the context

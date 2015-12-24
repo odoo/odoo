@@ -21,7 +21,7 @@
 % set access_url = is_online and access_action['url'] or '/report/pdf/sale.report_saleorder/' + str(object.id)
 
 <p>Dear
-% if object.partner_id.company_type == 'company' and object.child_ids:
+% if object.partner_id.is_company and object.child_ids:
     ${object.partner_id.child_ids[0].name}
 % else :
     ${object.partner_id.name}

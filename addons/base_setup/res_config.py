@@ -42,7 +42,7 @@ class base_config_settings(osv.osv_memory):
             'target': 'current',
         }
 
-    def get_default_company_share_partner(self, cr, uid, ids, fields, context=None):
+    def get_default_company_share_partner(self, cr, uid, fields, context=None):
         partner_rule = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'base.res_partner_rule', context=context)
         return {
             'company_share_partner': not bool(partner_rule.active)

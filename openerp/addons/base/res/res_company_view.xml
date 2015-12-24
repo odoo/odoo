@@ -30,9 +30,9 @@
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                                 </group>
@@ -65,10 +65,10 @@
                             <group string="Configuration (RML)" groups="base.group_no_one">
                                 <group col="2" colspan="2">
                                     <button name="%(preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
-                                    <field name="rml_paper_format" on_change="onchange_rml_paper_format(rml_paper_format)"/>
+                                    <field name="rml_paper_format"/>
                                 </group>
                                 <group col="3" colspan="2">
-                                    <field name="font" class="oe_inline" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)"/>
+                                    <field name="font" class="oe_inline"/>
                                     <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
                                 </group>
                                 <group col="1" colspan="2">
