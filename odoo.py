@@ -153,6 +153,12 @@ def main():
     elif len(sys.argv) == 2 and sys.argv[1] in cmds:
         cmds[sys.argv[1]]()
     else:
+        if sys.argv[1] == 'gevent':
+            sys.argv.remove('gevent')
+            import gevent.monkey
+            gevent.monkey.patch_all()
+            import psycogreen.gevent
+            psycogreen.gevent.patch_psycopg()
         import odoo
         odoo.cli.main()
 
