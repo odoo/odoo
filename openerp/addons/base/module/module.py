@@ -622,8 +622,8 @@ class module(osv.osv):
             'auto_install': terp.get('auto_install', False),
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
+            'url': terp.get('url') or terp.get('live_test_url', ''),
         }
-
 
     def create(self, cr, uid, vals, context=None):
         new_id = super(module, self).create(cr, uid, vals, context=context)
