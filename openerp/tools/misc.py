@@ -294,6 +294,14 @@ def reverse_enumerate(l):
     """
     return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
+def partition(pred, elems):
+    """ Return a pair equivalent to:
+        ``filter(pred, elems), filter(lambda x: not pred(x), elems)` """
+    yes, nos = [], []
+    for elem in elems:
+        (yes if pred(elem) else nos).append(elem)
+    return yes, nos
+
 def topological_sort(elems):
     """ Return a list of elements sorted so that their dependencies are listed
     before them in the result.

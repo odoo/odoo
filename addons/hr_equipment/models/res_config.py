@@ -11,8 +11,8 @@ class HrEquipmentConfigSettings(models.TransientModel):
     equipment_alias_prefix = fields.Char('Use the following alias to report internal equipment issue')
     alias_domain = fields.Char("Alias Domain")
 
-    @api.multi
-    def get_default_alias_equipment(self):
+    @api.model
+    def get_default_alias_equipment(self, fields):
         alias_name = False
         alias_id = self.env.ref('hr_equipment.mail_alias_equipment')
         if alias_id:
@@ -29,8 +29,8 @@ class HrEquipmentConfigSettings(models.TransientModel):
                     alias_id.write({'alias_name': record.equipment_alias_prefix})
         return True
 
-    @api.multi
-    def get_default_alias_domain(self):
+    @api.model
+    def get_default_alias_domain(self, fields):
         alias_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
         if not alias_domain:
             domain = self.env["ir.config_parameter"].get_param("web.base.url")

@@ -9,7 +9,7 @@ from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
 from openerp import tools, api
-from openerp.addons.base.res.res_partner import format_address
+from openerp.addons.base.res.res_partner import FormatAddress
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -51,7 +51,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_name']
 
 
-class crm_lead(format_address, osv.osv):
+class crm_lead(FormatAddress, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"

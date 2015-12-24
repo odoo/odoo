@@ -10,16 +10,15 @@ class calendar_config_settings(osv.TransientModel):
         'server_uri': fields.char('URI for tuto')
     }
     
-    def set_calset(self,cr,uid,ids,context=None) :
+    def set_calset(self, cr, uid, ids, context=None) :
         params = self.pool['ir.config_parameter']
-        myself = self.browse(cr,uid,ids[0],context=context)
+        myself = self.browse(cr, uid, ids[0], context=context)
         params.set_param(cr, uid, 'google_calendar_client_id', (myself.cal_client_id or '').strip(), groups=['base.group_system'], context=None)
         params.set_param(cr, uid, 'google_calendar_client_secret', (myself.cal_client_secret or '').strip(), groups=['base.group_system'], context=None)
         
 
-    def get_default_all(self,cr,uid,ids,context=None):
+    def get_default_all(self, cr, uid, fields, context=None):
         params = self.pool.get('ir.config_parameter')
-        
         cal_client_id = params.get_param(cr, uid, 'google_calendar_client_id',default='',context=context)
         cal_client_secret = params.get_param(cr, uid, 'google_calendar_client_secret',default='',context=context)
         server_uri= "%s/google_account/authentication" % params.get_param(cr, uid, 'web.base.url',default="http://yourcompany.odoo.com",context=context)
