@@ -558,7 +558,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_composer_input_focused: function () {
         var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
-        var composer = channel.mass_mailing ? self.extended_composer : self.basic_composer;
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
         composer.mention_set_prefetched_partners(suggestions);
     },
 
