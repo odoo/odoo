@@ -1,0 +1,269 @@
+/************** DEFINITION of ANIMATIONS *************/
+@keyframes markAnim {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.5) scaleY(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1) scaleY(1);
+  }
+}
+@-moz-keyframes markAnim {
+  0% {
+    opacity: 0;
+    -moz-transform: scaleX(0.5) scaleY(0.5);
+  }
+  30% {
+    opacity: 1;
+    -moz-transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: scaleX(1) scaleY(1);
+  }
+}
+@-webkit-keyframes markAnim {
+  0% {
+    opacity: 0;
+    -webkit-transform: scaleX(0.5) scaleY(0.5);
+  }
+  30% {
+    opacity: 1;
+    -webkit-transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scaleX(1) scaleY(1);
+  }
+}
+@-o-keyframes markAnim {
+  0% {
+    opacity: 0;
+    -o-transform: scaleX(0.5) scaleY(0.5);
+  }
+  30% {
+    opacity: 1;
+    -o-transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -o-transform: scaleX(1) scaleY(1);
+  }
+}
+@-ms-keyframes markAnim {
+  0% {
+    opacity: 0;
+    -ms-transform: scaleX(0.5) scaleY(0.5);
+  }
+  30% {
+    opacity: 1;
+    -ms-transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -ms-transform: scaleX(1) scaleY(1);
+  }
+}
+@-webkit-keyframes bounceIn {
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
+  100% {
+    -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    -webkit-transform: scale3d(0.97, 0.97, 0.97);
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+@keyframes bounceIn {
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
+  100% {
+    -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    -webkit-transform: scale3d(0.97, 0.97, 0.97);
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+/************** MIXINS for ANIMATIONS *************/
+/************** USAGE of ANIMATIONS *************/
+.o_wow_thumbs:after {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  font-size: 300px;
+  font-family: "FontAwesome";
+  content: "\f164";
+  color: #21b799;
+  animation: markAnim ease-in-out 1s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode: forwards;
+  /*when the spec is finished*/
+  -webkit-animation: markAnim ease-in-out 1s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode: forwards;
+  /*Chrome 16+, Safari 4+*/
+  -moz-animation: markAnim ease-in-out 1s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode: forwards;
+  /*FF 5+*/
+  -o-animation: markAnim ease-in-out 1s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode: forwards;
+  /*Not implemented yet*/
+  -ms-animation: markAnim ease-in-out 1s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode: forwards;
+  /*IE 10+*/
+}
+@media (max-width: 992px) {
+  .o_wow_thumbs:after {
+    left: 40%;
+    font-size: 30vw;
+  }
+}
+.o_wow_peace:after {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  font-size: 300px;
+  font-family: "FontAwesome";
+  content: "\f118";
+  color: #21b799;
+  animation: markAnim ease-in-out 1s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode: forwards;
+  /*when the spec is finished*/
+  -webkit-animation: markAnim ease-in-out 1s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode: forwards;
+  /*Chrome 16+, Safari 4+*/
+  -moz-animation: markAnim ease-in-out 1s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode: forwards;
+  /*FF 5+*/
+  -o-animation: markAnim ease-in-out 1s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode: forwards;
+  /*Not implemented yet*/
+  -ms-animation: markAnim ease-in-out 1s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode: forwards;
+  /*IE 10+*/
+}
+@media (max-width: 992px) {
+  .o_wow_peace:after {
+    left: 40%;
+    font-size: 30vw;
+  }
+}
+.o_wow_heart:after {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  font-size: 300px;
+  font-family: "FontAwesome";
+  content: "\f004";
+  color: #21b799;
+  animation: markAnim ease-in-out 1s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode: forwards;
+  /*when the spec is finished*/
+  -webkit-animation: markAnim ease-in-out 1s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode: forwards;
+  /*Chrome 16+, Safari 4+*/
+  -moz-animation: markAnim ease-in-out 1s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode: forwards;
+  /*FF 5+*/
+  -o-animation: markAnim ease-in-out 1s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode: forwards;
+  /*Not implemented yet*/
+  -ms-animation: markAnim ease-in-out 1s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode: forwards;
+  /*IE 10+*/
+}
+@media (max-width: 992px) {
+  .o_wow_heart:after {
+    left: 40%;
+    font-size: 30vw;
+  }
+}
