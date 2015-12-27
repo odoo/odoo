@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# First author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
-# Copyright (c) 2012 -TODAY Open Business Solutions, SRL. (http://obsdr.com). All rights reserved.
-# This is a fork to upgrade to odoo 8.0
-# by Marcos Organizador de Negocios - Eneldo Serrata - www.marcos.org.do
 
 {
     'name': 'Dominican Republic - Accounting',
@@ -32,6 +26,8 @@ This is the base module to manage the accounting chart for Dominican Republic.
         # Adds fiscal position
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
+        'data/ir.sequence.csv',
+        # 'data/account.journal.csv',
         # configuration wizard, views, reports...
         'data/account_chart_template.yml',
     ],
