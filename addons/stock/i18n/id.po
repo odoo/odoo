@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-12-03 00:46+0000\n"
+"PO-Revision-Date: 2015-12-25 13:38+0000\n"
 "Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -150,7 +151,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Penjual Lokasi: lokasi Virtual mewakili lokasi sumber untuk produk yang berasal dari vendor Anda\n                       \n* View: lokasi Virtual digunakan untuk membuat struktur hirarkis untuk gudang Anda, menggabungkan lokasi anaknya; tidak dapat secara langsung mengandung produk\n                       \n* Internal Lokasi: lokasi fisik di dalam gudang Anda sendiri,\n                       \n* Pelanggan Lokasi: lokasi Virtual mewakili lokasi tujuan untuk produk dikirim ke pelanggan Anda\n                       \n* Persediaan Loss: Virtual lokasi menjabat sebagai mitra untuk operasi persediaan digunakan untuk memperbaiki tingkat stok (persediaan fisik)\n                       \n* Pengadaan: lokasi Virtual melayani rekan sebagai sementara untuk operasi pengadaan ketika sumber (vendor atau produksi) belum diketahui. Lokasi ini harus kosong ketika scheduler pengadaan telah selesai berjalan.\n                       \n* Produksi: Virtual rekan lokasi untuk operasi produksi: lokasi ini mengkonsumsi bahan baku dan menghasilkan produk jadi\n                       \n* Transit Lokasi: lokasi Counterpart yang harus digunakan dalam antar-perusahaan atau operasi antar-gudang\n                      "
 
 #. module: stock
 #. openerp-web
@@ -205,7 +206,7 @@ msgid ""
 "                physical, partner or virtual locations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk menambahkan lokasi.\n              </p><p>\n                Tentukan lokasi Anda untuk mencerminkan struktur gudang dan\n                organisasi. Odoo mampu mengelola lokasi fisik\n                (gudang, rak, bin, dll), lokasi mitra (pelanggan,\n                pemasok) dan lokasi maya yang merupakan mitra dari\n                operasi saham seperti pesanan manufaktur\n                konsumsi, persediaan, dll\n              </p><p>\n                Setiap operasi saham di Odoo bergerak produk dari satu\n                lokasi satu sama lain. Misalnya, jika Anda menerima produk\n                dari pemasok, Odoo akan memindahkan produk dari Supplier\n                lokasi ke lokasi Stock. Setiap laporan dapat dilakukan pada\n                fisik, pasangan atau lokasi virtual.\n              </p>\n\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -214,7 +215,7 @@ msgid ""
 "                Click to add a reordering rule.\n"
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
-msgstr ""
+msgstr "Anda dapat menentukan aturan stok Anda minimal, sehingga Odoo akan secara otomatis membuat pesanan pembuatan draft atau meminta kutipan menurut tingkat stok. Setelah stok virtual Produk (= stok di tangan minus pesanan dikonfirmasi dan reservasi) di bawah kuantitas minimum, Odoo akan menghasilkan permintaan pengadaan untuk meningkatkan stok sampai jumlah maksimum."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -243,7 +244,7 @@ msgid ""
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk menambahkan nomor seri.\n              </p><p>\n                Ini adalah daftar dari semua banyak produksi yang direkam. Kapan\n                Anda pilih banyak, Anda bisa mendapatkan\n                ketertelusuran produk yang terkandung dalam banyak. Secara default,\n                daftar disaring pada nomor seri yang tersedia di\n                gudang Anda, tetapi Anda dapat hapus centang tombol 'Tersedia' untuk\n                mendapatkan semua banyak Anda diproduksi, diterima atau dikirim ke\n                pelanggan.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_form
@@ -308,7 +309,7 @@ msgid ""
 "                received using the buttons on the right of each line.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Klik untuk mendaftarkan penerimaan produk. \n              </p><p>\n               Di sini Anda dapat menerima produk individu, tidak peduli what\n               pesanan pembelian atau memilih agar mereka berasal. Anda akan find\n              daftar semua produk Anda menunggu. Setelah Anda receive\n               perintah, Anda dapat menyaring berdasarkan nama or? pemasok\n               referensi pesanan pembelian. Kemudian Anda dapat mengkonfirmasi semua       products\n               menerima menggunakan tombol-tombol di sebelah kanan setiap line.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receive_move

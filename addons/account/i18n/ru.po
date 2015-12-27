@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-19 19:57+0000\n"
+"PO-Revision-Date: 2015-12-25 21:32+0000\n"
 "Last-Translator: Василий Тимкович <vasiliy@simbioz.com.ua>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -5113,7 +5113,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr ""
+msgstr "Если выбрать 'Округлять построчно', то сначала по каждому налогу вычисляется и округляется значение налога в каждой строке заказа/счета, а затем эти округленные значения суммируются для вычисления общей суммы этого налога. Если выбрать 'Округлять итог', то округляется сумма значений для каждого налога, вычисленных для каждой строки заказа/счета. В случае продажи с включенным налогом следует выбирать 'Округлять построчно', для того, чтобы сумма построчных значений с включенными налогами равнялась общей сумме заказа/счета вместе с налогами."
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -5149,7 +5149,7 @@ msgstr ""
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
-msgstr ""
+msgstr "Если вы отменили сверку, вы должны также проверить все действия, что связаны с этими сделками, поскольку они не будут отключены"
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -5168,7 +5168,7 @@ msgid ""
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "Если вы используете условия оплаты, срок оплаты будет вычисляться автоматически при генерации бухгалтерских проводок. Срок платежа может вычислить несколько дат, например 50% сейчас и 50% через один месяц, но если вы хотите установить дату, убедитесь, что срок оплаты не установлен в счете. Если вы оставите срок оплаты и дату пустой, это означает прямую оплату."
 
 #. module: account
 #: help:account.journal,cash_control:0
@@ -5631,7 +5631,7 @@ msgstr "Он указывает, что счет был отправлен."
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "It took you"
-msgstr ""
+msgstr "Вы принимаете это"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6819,7 +6819,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "Как только черновик счета подтвержден, Вы не будете иметь \nвозможность изменить их. Счета получат уникальный номер и \nэлементы журнала будут созданы в вашем плане счетов."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -8015,7 +8015,7 @@ msgstr "Сверить списание"
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Согласование демо банковской ведомости"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -8067,7 +8067,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 #: model:ir.ui.menu,name:account.menu_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "Сверка Банковских Выписок"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
@@ -8205,7 +8205,7 @@ msgstr ""
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "Основа возмещения на этом типе. Вы не можете Изменить и Отменить, если счет-фактура уже выверена"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -8616,7 +8616,7 @@ msgstr "Выберите финансовый год для удаления п�
 #: code:addons/account/static/src/js/account_widgets.js:975
 #, python-format
 msgid "Select Partner"
-msgstr ""
+msgstr "Выберите Партнера"
 
 #. module: account
 #: view:account.analytic.balance:account.account_analytic_balance_view
@@ -8691,7 +8691,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "Выбранная счет-фактура(ы) не может быть отменена, поскольку она уже находятся в состоянии «Отмененные» или «Готово»."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:41
@@ -9195,14 +9195,14 @@ msgstr "TIN:"
 #: view:cash.box.out:account.cash_box_out_form
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "Взять Деньги"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_widgets.js:546
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
-msgstr ""
+msgstr "Берем в среднем менее 5 секунд, чтобы согласовать сделку."
 
 #. module: account
 #: field:account.aged.trial.balance,target_move:0
@@ -9545,7 +9545,7 @@ msgstr "Условия"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "That's on average"
-msgstr ""
+msgstr "Это в среднем"
 
 #. module: account
 #: help:account.account,type:0
@@ -9610,7 +9610,7 @@ msgstr "Сумма выражена в валюте связанного сче�
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "Сумма, выраженная во вторичной валюте, должна быть положительной, когда счет дебетуется и отрицательной, когда счет кредитуется."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
@@ -9623,7 +9623,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:728
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "Строка банковской выписки уже сверена."
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -9701,7 +9701,7 @@ msgstr "Записи для сверки должны относиться к о
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Финансовое положение будет определять налоги и счета, используемые для партнера."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -10024,24 +10024,24 @@ msgstr "В этом году"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур вместо стандартной стоимости затрат для текущего продукта."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур вместо стандартной оценки продаж для текущего продукта."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур, чтобы оценить расходы."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур, чтобы оценить продажи."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10062,7 +10062,7 @@ msgstr "Этот счет будет использоваться, вместо 
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Это позволяет бухгалтерам управлять аналитическими и перекрестными бюджетами. После того, как мастер бюджета и бюджеты определены, менеджеры проектов могут установить запланированную сумму на каждом аналитическом счете. \n-Это устанавливает модуль account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10101,7 +10101,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
-msgstr ""
+msgstr "Этот логический выбор поможет вам, если вы хотите предложить пользователю кодировать оценки продажи и покупки или выбрать из списка налогов. Этот последний выбор предполагает, что совокупность налогов, определенных для выбранного шаблона полностью завершено"
 
 #. module: account
 #: help:account.config.settings,complete_tax_set:0
@@ -10111,7 +10111,7 @@ msgid ""
 "encode the sales and purchase rates or use the usual m2o fields. This last "
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
-msgstr ""
+msgstr "Этот логический выбор поможет вам, если вы хотите предложить пользователю кодировать оценки продажи и покупки или воспользоваться обычным m2o полем. Этот последний выбор  предполагает, что совокупность налогов, определенных для выбранного шаблона полностью завершено"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -10171,7 +10171,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "Это поле используется для записи имени третьей стороны при импорте банковской выписки в электронном формате, когда партнер еще не существует в базе данных (или не найден)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10243,7 +10243,7 @@ msgstr "Этот журнал будет создана автоматическ
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
-msgstr ""
+msgstr "Этот заголовок будет показан в отчете показать баланс, вычисленного для данного фильтра сравнения."
 
 #. module: account
 #: view:account.vat.declaration:account.view_account_vat_declaration
@@ -10267,7 +10267,7 @@ msgid ""
 "This option allows you to get more details about the way your balances are "
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
-msgstr ""
+msgstr "Этот выбор позволяет Вам получать более подробную информацию о способе, которым вычислены ваши балансы. Потому что это потребление пространства, мы не позволяем использовать его, делая сравнение."
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -10277,7 +10277,7 @@ msgid ""
 " allow you to define chart templates that extend another and complete it "
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
-msgstr ""
+msgstr "Это необязательное поле позволяет связать шаблон счета с специфическим шаблоном счета, которые могут отличаться от их корневого родителя которому они принадлежат. Это позволит вам определить шаблоны счета, которые расширяют другой и дополняют его несколькими новыми счетами (Вам не нужно определять всю структуру, ту что является общей для обоих одновременно)."
 
 #. module: account
 #. openerp-web
@@ -10286,7 +10286,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "На этой странице показаны все банковские операции, которые должны быть согласованы и обеспечивает аккуратный интерфейс, чтобы сделать это."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -10318,7 +10318,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "Это техническое поле может быть использовано в строке выписки во время создания/импорта для того, чтобы избежать процесса согласования для него в дальнейшем. Строка выписки просто создаст копию на этом счете"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -10377,12 +10377,12 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
+msgstr "Заголовок 2 (жирный шрифт)"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr ""
+msgstr "Заголовок 3 (полужирный, строчный)"
 
 #. module: account
 #: field:account.analytic.chart,to_date:0
@@ -11000,7 +11000,7 @@ msgstr "Когда новый отчет создан - статус стане�
 #: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
-msgstr ""
+msgstr "Вот так, это было быстро!"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -11024,7 +11024,7 @@ msgstr "С балансом не равным 0"
 #: view:website:account.report_generalledger
 #: view:website:account.report_trialbalance
 msgid "With balance not equal to zero"
-msgstr ""
+msgstr "С балансом не равным нулю"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -11038,7 +11038,7 @@ msgstr "С движением"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr ""
+msgstr "С налогом"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11338,7 +11338,7 @@ msgstr ""
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr ""
+msgstr "Вы не можете сделать эту модификацию на сверенной записи. Вы можете просто изменить некоторые не правовые поля или необходимо сначала нажать кнопку отменить сверку.\n%s."
 
 #. module: account
 #: code:addons/account/account.py:1352
@@ -11397,7 +11397,7 @@ msgstr "Вы не можете использовать неактивный с�
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "Вы не можете использовать этот общий счет в этом журнале, проверьте вкладку 'Контроля Доступа' в связанном журнале."
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -11500,7 +11500,7 @@ msgstr "Вы должны определить журнал аналитики �
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Вы должны сначала выбрать партнера!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -11541,7 +11541,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Вы должны настроить 'Счет Выгоды Обменного Курса' в параметрах бухгалтерских настроек, чтобы управлять автоматически бухгалтерскими записями, связанными с различиями между обменными курсами."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:686
@@ -11550,7 +11550,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Вы должны настроить 'Счет Потерь на Обменном Курсе' в параметрах бухгалтерских настроек, чтобы управлять автоматически бухгалтерскими записями, связанными с различиями между обменными курсами."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57
@@ -11559,14 +11559,14 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Вы должны были определить 'Внутренний Трансфертный Счет' в журнале Вашего кассового аппарата!"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "You validated"
-msgstr ""
+msgstr "Вы утвердили"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -11601,7 +11601,7 @@ msgstr "дни"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
-msgstr ""
+msgstr "например sales@odoo.com"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -11683,7 +11683,7 @@ msgstr "закрытие периода"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
-msgstr ""
+msgstr "сверки с помощью сочетания клавиш Ctrl-Enter."
 
 #. module: account
 #. openerp-web
@@ -11702,7 +11702,7 @@ msgstr "res_config_contents"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "seconds per transaction."
-msgstr ""
+msgstr "секунд на транзакцию."
 
 #. module: account
 #: view:res.partner:account.view_partner_property_form
@@ -11719,14 +11719,14 @@ msgstr "заглавие"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
-msgstr ""
+msgstr "согласовать"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "transactions."
-msgstr ""
+msgstr "транзакции."
 
 #. module: account
 #: field:account.cashbox.line,bank_statement_id:0
