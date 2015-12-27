@@ -343,6 +343,7 @@
             <field name="name">China</field>
             <field name="code">cn</field>
             <field file="base/static/img/country_flags/cn.png" name="image" type="base64" />
+            <field eval="'%(country_name)s%(state_name)s%(city)s%(street)s%(street2)s %(zip)s'" name="address_format" />
             <field name="currency_id" ref="CNY" />
             <field eval="86" name="phone_code" />
         </record>
