@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-11-08 17:05+0000\n"
+"PO-Revision-Date: 2015-12-22 17:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgstr "Precio promedio"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Puede ser tratado como gasto"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -105,7 +105,7 @@ msgstr ""
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Coeficiente para convertir la unidad de medida por defecto (UdM) en la unidad de venta UdV = UdM * coeff "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -204,7 +204,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si la valoración en tiempo real está habilitada para un producto, el sistema escribirá automáticamente apuntes contables correspondiendo a los movimientos de existencias, con el precio del producto especificado por el ‘Método de coste’. La cuenta de variación de existencias establecida en la categoría de producto representará el valor actual de inventario, y las cuentas de entrada y salida de existencias representarán la contrapartida para las entradas y salidas de producto."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -353,7 +353,7 @@ msgstr "Producto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Tiempo de alerta producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -365,7 +365,7 @@ msgstr "Categoría de producto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Tiempo de vida producto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
@@ -375,7 +375,7 @@ msgstr "Cantidad del producto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Tiempo eliminación producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -387,7 +387,7 @@ msgstr "Plantilla producto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Duración del producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -426,12 +426,12 @@ msgstr "Texto original"
 msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
+msgstr "Especifique aquí una unidad de medida si la factura se realizará en otra unidad distinta a la del inventario. Déjelo vacío para usar la de por defecto."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Especifique si el producto se puede seleccionar en un gasto de recursos humanos."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -453,7 +453,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Precio estándar: El precio de coste se actualiza manualmente al final de un periodo específico (normalmente cada año).\nPrecio medio: El precio de coste se recalca con cada recepción y es usado para la valoración de producto.\nPrecio real: El precio de coste mostrado es el precio del último producto saliente (se usará por ejemplo en el caso de una pérdida de inventario)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -528,7 +528,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Unidad de medida -> Coeficiente UdV"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
@@ -565,28 +565,28 @@ msgstr "Valor"
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que se notifique una alerta."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes se conviertan en peligrosos y no deban ser consumidos."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes deban eliminarse del stock."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes se empiecen a deteriorar, sin ser peligroso aún."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
