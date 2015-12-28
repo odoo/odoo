@@ -4359,7 +4359,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 });
 
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
-    template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
         this.registry = this.registry.extend({
