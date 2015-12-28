@@ -9,7 +9,7 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.bus.models.bus import TIMEOUT
 
 DISCONNECTION_TIMER = TIMEOUT + 5
-AWAY_TIMER = 600  # 10 minutes
+AWAY_TIMER = 1800  # 30 minutes
 
 
 class BusPresence(models.Model):
