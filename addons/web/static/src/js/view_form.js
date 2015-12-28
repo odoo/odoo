@@ -4606,7 +4606,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.dataset.evict_record(record.get('id'));
 
         return this._super(record);
-    }
+    },
+    reload_content: function() {
+        this.page = Math.min(
+            this.page,
+            Math.floor(this.dataset.size() / this.limit()));
+        return this._super.apply(this, arguments);
+    },
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
     setup_resequence_rows: function () {
