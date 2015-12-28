@@ -87,7 +87,7 @@ var SalesTeamDashboardView = KanbanView.extend({
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
             this._updated = new Model('crm.lead')
-                            .call('modify_target_sales_dashboard', [target_name, target_value])
+                            .call('modify_target_sales_dashboard', [target_name, parseInt(target_value)])
                             .then(function() {
                                 return self.render();
                             });
