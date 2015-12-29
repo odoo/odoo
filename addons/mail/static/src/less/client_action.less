@@ -10,6 +10,35 @@
         height: auto;
     }
 
+    .o_mail_annoying_notification_bar {
+        height: 40px;
+        background-color: #DFA941;
+        color: white;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+        .o-flex-display();
+        border-bottom: 1px solid @odoo-main-color-muted;
+
+        .o_mail_request_permission {
+            .o-flex-display();
+            justify-content: center;
+            .o-flex(1,1, auto);
+        }
+        > span {
+            font-size: 16px;
+            line-height: 40px;
+            > a {
+                color: white;
+                margin-left: 5px;
+                text-decoration: underline;
+            }
+
+            &.fa-close {
+                margin-right: 10px;
+                cursor: pointer;
+            }
+        }
+    }
+
     .o_mail_chat_sidebar {
         width: @mail-chat-sidebar-width;
         height: 100%;

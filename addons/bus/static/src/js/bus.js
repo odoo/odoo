@@ -32,8 +32,9 @@ bus.Bus = Widget.extend({
                 this.trigger('window_focus', this.is_master);
             }
         });
-        $(window).on("focus", _.bind(this.window_focus, this));
-        $(window).on("blur", _.bind(this.window_blur, this));
+        $(window).on("focus", _.bind(this.focus_change, this, true));
+        $(window).on("blur", _.bind(this.focus_change, this, false));
+        $(window).on("unload", _.bind(this.focus_change, this, false));
         _.each('click,keydown,keyup'.split(','), function(evtype) {
             $(window).on(evtype, function() {
                 self.last_presence = new Date().getTime();
@@ -93,11 +94,8 @@ bus.Bus = Widget.extend({
         this.channels = _.without(this.channels, channel);
     },
     // bus presence : window focus/unfocus
-    window_focus: function() {
-        this.set("window_focus", true);
-    },
-    window_blur: function() {
-        this.set("window_focus", false);
+    focus_change: function(focus) {
+        this.set("window_focus", focus);
     },
     is_odoo_focused: function () {
         return this.get("window_focus");
@@ -211,6 +209,10 @@ var CrossTabBus = bus.Bus.extend({
         if(e.key === 'bus.options'){
             this.options = JSON.parse(value);
         }
+        // update focus
+        if(e.key === 'bus.focus'){
+            this.set('window_focus', JSON.parse(value));
+        }
     },
     add_channel: function(){
         this._super.apply(this, arguments);
@@ -230,6 +232,10 @@ var CrossTabBus = bus.Bus.extend({
     delete_option: function(){
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
+    },
+    focus_change: function(focus) {
+        this._super.apply(this, arguments);
+        setItem('bus.focus', focus);
     },
 });
 
