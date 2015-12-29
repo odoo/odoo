@@ -27,31 +27,31 @@
                 <span class="fa fa-star-o"/> Starred
             </div>
 
-            <t t-set="channel_type">public</t>
+            <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Channels</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
-                <t t-set="display_hash">true</t>
+                <t t-set="display_hash" t-value="true"/>
                 <t t-set="input_placeholder">Add a channel</t>
             </t>
 
-            <t t-set="channel_type">dm</t>
+            <t t-set="channel_type" t-value="'dm'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Direct Messages</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
-                <t t-set="display_status">true</t>
+                <t t-set="display_status" t-value="true"/>
                 <t t-set="input_placeholder">Open chat</t>
             </t>
 
-            <t t-set="channel_type">private</t>
+            <t t-set="channel_type" t-value="'private'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Private Channels</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="input_placeholder">Add a channel</t>
-                <t t-set="display_hash">true</t>
+                <t t-set="display_hash" t-value="true"/>
             </t>
         </div>
     </t>
