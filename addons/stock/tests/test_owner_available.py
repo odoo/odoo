@@ -60,6 +60,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
 
+        self.productA.invalidate_cache()
         self.assertAlmostEqual(32.0, self.productA.virtual_available)
 
     def test_with_owner(self):
@@ -69,4 +70,5 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertAlmostEqual(10.0, prod_context.virtual_available)
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
+        prod_context.invalidate_cache()
         self.assertAlmostEqual(5.0, prod_context.virtual_available)

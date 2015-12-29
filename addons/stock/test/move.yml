@@ -38,6 +38,7 @@
   !python {model: product.product}: |
     context['location'] = False
     product = self.browse(cr, uid, ref('move_product'), context=context)
+    product.invalidate_cache()
     assert product.qty_available == -5, 'Expecting -5 products in stock, got %.2f!' % (product.qty_available,)
 
     context['location'] = ref('stock.stock_location_customers')
@@ -88,6 +89,7 @@
   !python {model: product.product}: |
     context['location'] = False
     product = self.browse(cr, uid, ref('move_product'), context=context)
+    product.invalidate_cache()
     assert product.qty_available == 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,)
     assert product.virtual_available == 8.0, 'Expecting 8 products in virtual stock, got %.2f!' % (product.virtual_available,)
 -
@@ -101,6 +103,7 @@
   !python {model: product.product}: |
     context['location'] = False
     product = self.browse(cr, uid, ref('move_product'), context=context)
+    product.invalidate_cache()
     assert product.qty_available == 8, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,)
 
     context['location'] = ref('stock.stock_location_customers')

@@ -1073,6 +1073,7 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', self.UnitA.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.qty for quant in quants]
         self.assertEqual(sum(total_qty), 144, 'Expecting 144 Units , got %.4f Units on location stock!' % (sum(total_qty)))
+        self.UnitA.invalidate_cache()
         self.assertEqual(self.UnitA.qty_available, 144, 'Expecting 144 Units , got %.4f Units of quantity available!' % (self.UnitA.qty_available))
 
         # ------------------------------------------------
@@ -1114,6 +1115,7 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.qty for quant in quants]
         self.assertEqual(sum(total_qty), 4000, 'Expecting 4000 kg , got %.4f on location stock!' % (sum(total_qty)))
+        productKG.invalidate_cache()
         self.assertEqual(productKG.qty_available, 4000, 'Expecting 4000 kg , got %.4f of quantity available!' % (productKG.qty_available))
 
 
@@ -1159,6 +1161,7 @@ class TestStockFlow(TestStockCommon):
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 10, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
         inventory2.write({'line_ids': [(0, 0, x) for x in line_vals]})
         inventory2.action_done()
+        packproduct.invalidate_cache()
         self.assertEqual(packproduct.qty_available, 40, "Wrong qty available for packproduct")
         self.assertEqual(lotproduct.qty_available, 10, "Wrong qty available for lotproduct")
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', lot1.id)])

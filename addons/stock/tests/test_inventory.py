@@ -58,5 +58,6 @@ class TestInventory(TransactionCase):
 
         inventory_test1.action_done()
 
+        inventory_product.invalidate_cache()
         product = inventory_product.with_context({'location': self.env.ref('stock.stock_location_14').id})
         self.assertEqual(product.qty_available, 20, 'Expecting 20 products, got %.2f on location stock_location_14!' % (product.qty_available,))

@@ -125,6 +125,198 @@ class ProductProduct(models.Model):
             self.reordering_min_qty = data['product_min_qty']
             self.reordering_max_qty = data['product_max_qty']
 
+    @api.v7
+    def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
+        print "_product_available v7 >>>>>>>>>>>>>>>>>>>>>", self
+        context = context or {}
+        field_names = field_names or []
+
+        domain_products = [('product_id', 'in', ids)]
+        domain_quant, domain_move_in, domain_move_out = [], [], []
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations(cr, uid, ids, context=context)
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_quant += domain_products
+
+        if context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', context['lot_id']))
+        if context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', context['owner_id']))
+            owner_domain = ('restrict_partner_id', '=', context['owner_id'])
+            domain_move_in.append(owner_domain)
+            domain_move_out.append(owner_domain)
+        if context.get('package_id'):
+            domain_quant.append(('package_id', '=', context['package_id']))
+
+        domain_move_in += domain_move_in_loc
+        domain_move_out += domain_move_out_loc
+        moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
+        moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
+
+        domain_quant += domain_quant_loc
+        quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+
+        moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
+        moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            id = product.id
+            qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            outgoing_qty = float_round(moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            virtual_available = float_round(quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            res[id] = {
+                'qty_available': qty_available,
+                'incoming_qty': incoming_qty,
+                'outgoing_qty': outgoing_qty,
+                'virtual_available': virtual_available,
+            }
+        return res
+
+    @api.v8
+    def _product_available(self):
+        print "_product_available v8 >>>>>>>>>>>>>>>>>>>>>", self
+        domain_products = [('product_id', 'in', self.ids)]
+        domain_quant, domain_move_in, domain_move_out = [], [], []
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        domain_move_in += self._get_domain_dates() + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_move_out += self._get_domain_dates() + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_quant += domain_products
+        if self.env.context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', self.env.context['lot_id']))
+        if self.env.context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', self.env.context['owner_id']))
+            owner_domain = ('restrict_partner_id', '=', self.env.context['owner_id'])
+            domain_move_in.append(owner_domain)
+            domain_move_out.append(owner_domain)
+        if self.env.context.get('package_id'):
+            domain_quant.append(('package_id', '=', self.env.context['package_id']))
+
+        domain_move_in += domain_move_in_loc
+        domain_move_out += domain_move_out_loc
+        moves_in = self.env['stock.move'].read_group(domain_move_in, ['product_id', 'product_qty'], ['product_id'])
+        moves_out = self.env['stock.move'].read_group(domain_move_out, ['product_id', 'product_qty'], ['product_id'])
+
+        domain_quant += domain_quant_loc
+        quants = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
+
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+
+        moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
+        moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
+        for product in self:
+            qty_available = float_round(quants.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
+            incoming_qty = float_round(moves_in.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
+            outgoing_qty = float_round(moves_out.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
+            virtual_available = float_round(quants.get(product.id, 0.0) + moves_in.get(product.id, 0.0) - moves_out.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
+            product.qty_available = qty_available
+            product.incoming_qty = incoming_qty
+            product.outgoing_qty = outgoing_qty
+            product.virtual_available = virtual_available
+
+    @api.model
+    def _search_product_quantity(self, obj, name, domain):
+        print "_search_product_quantity >>>>>>>>>>>>>>>>>>>>>", self, obj, name, domain
+        res = []
+        for field, operator, value in domain:
+            #to prevent sql injections
+            assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
+            assert isinstance(value, (float, int)), 'Invalid domain right operand'
+
+            if operator == '=':
+                operator = '=='
+
+            ids = []
+            if name == 'qty_available' and (value != 0.0 or operator not in ('==', '>=', '<=')):
+                res.append(('id', 'in', self._search_qty_available(operator, value)))
+            else:
+                product_ids = self.search([])
+                if product_ids:
+                    #TODO: Still optimization possible when searching virtual quantities
+                    for element in product_ids:
+                        if eval(str(element[field]) + operator + str(value)):
+                            ids.append(element.id)
+                    res.append(('id', 'in', ids))
+        return res
+
+    @api.model
+    def _search_qty_available(self, operator, value):
+        print "_search_qty_available >>>>>>>>>>>>>>>>>>>>>", self, operator, value
+        domain_quant = []
+        if self.env.context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', self.env.context['lot_id']))
+        if self.env.context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', self.env.context['owner_id']))
+        if self.env.context.get('package_id'):
+            domain_quant.append(('package_id', '=', self.env.context['package_id']))
+        domain_quant += self._get_domain_locations([])[0]
+        quants = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+        quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
+        return(list(quants))
+
+    @api.multi
+    def _product_available_text(self):
+        print "_product_available_text >>>>>>>>>>>>>>>>>>>>>", self
+        res = {}
+        for product in self:
+            res[product.id] = str(product.qty_available) + _(" On Hand")
+        return res
+
+    qty_available = fields.Float(compute="_product_available", multi='qty_available',
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        string='Quantity On Hand',
+        fnct_search="_search_product_quantity",
+        help="Current quantity of products.\n"
+             "In a context with a single Stock Location, this includes "
+             "goods stored at this Location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods stored in the Stock Location of this Warehouse, or any "
+             "of its children.\n"
+             "stored in the Stock Location of the Warehouse of this Shop, "
+             "or any of its children.\n"
+             "Otherwise, this includes goods stored in any Stock Location "
+             "with 'internal' type.")
+    virtual_available = fields.Float(compute="_product_available", multi='qty_available',
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        string='Forecast Quantity',
+        search="_search_product_quantity",
+        help="Forecast quantity (computed as Quantity On Hand "
+             "- Outgoing + Incoming)\n"
+             "In a context with a single Stock Location, this includes "
+             "goods stored in this location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods stored in the Stock Location of this Warehouse, or any "
+             "of its children.\n"
+             "Otherwise, this includes goods stored in any Stock Location "
+             "with 'internal' type.")
+    incoming_qty = fields.Float(compute="_product_available", multi='qty_available',
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        string='Incoming',
+        search="_search_product_quantity",
+        help="Quantity of products that are planned to arrive.\n"
+             "In a context with a single Stock Location, this includes "
+             "goods arriving to this Location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods arriving to the Stock Location of this Warehouse, or "
+             "any of its children.\n"
+             "Otherwise, this includes goods arriving to any Stock "
+             "Location with 'internal' type.")
+    outgoing_qty = fields.Float(compute="_product_available", multi='qty_available',
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        string='Outgoing',
+        search="_search_product_quantity",
+        help="Quantity of products that are planned to leave.\n"
+             "In a context with a single Stock Location, this includes "
+             "goods leaving this Location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods leaving the Stock Location of this Warehouse, or "
+             "any of its children.\n"
+             "Otherwise, this includes goods leaving any Stock "
+             "Location with 'internal' type.")
+
     reception_count = fields.Integer(compute="_stock_move_count", string="Receipt")
     delivery_count = fields.Integer(compute="_stock_move_count", string="Delivery")
 

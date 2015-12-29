@@ -84,10 +84,11 @@
   !python {model: stock.inventory}: |
     self.action_done(cr, uid, [ref('inventory_test1')], context=context)
 -
-  I check that the quantity on hand is 20 on the location and it's parent.
+  I check that the quantity on hand is 20 on the location and its parent.
 -
   !python {model: product.product}: |
     context['location'] = ref('stock.stock_location_14')
     product = self.browse(cr, uid, ref('inventory_product'), context=context)
+    product.invalidate_cache()
     assert product.qty_available == 20, 'Expecting 20 products, got %.2f on location stock_location_14!' % (product.qty_available,)
 

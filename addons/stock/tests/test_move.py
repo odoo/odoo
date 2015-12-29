@@ -29,6 +29,7 @@ class TestMove(TransactionCase):
 
         move_test0.action_done()
 
+        move_product.invalidate_cache()
         product = move_product.with_context({'location': False})
         self.assertEqual(product.qty_available, -5, 'Expecting -5 products in stock, got %.2f!' % (product.qty_available,))
 
@@ -62,12 +63,14 @@ class TestMove(TransactionCase):
 
         move_test1.action_confirm()
 
+        move_product.invalidate_cache()
         product = move_product.with_context({'location': False})
         self.assertEqual(product.qty_available, 10, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,))
         self.assertEqual(product.virtual_available, 8.0, 'Expecting 8 products in virtual stock, got %.2f!' % (product.virtual_available,))
 
         move_test1.action_done()
 
+        product.invalidate_cache()
         product = move_product.with_context({'location': False})
         self.assertEqual(product.qty_available, 8, 'Expecting 10 products in stock, got %.2f!' % (product.qty_available,))
 
