@@ -1167,7 +1167,7 @@ class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {
