@@ -11,6 +11,16 @@ from openerp.tools.float_utils import float_compare
 _logger = logging.getLogger(__name__)
 
 
+def normalize_keys_upper(data):
+    """Set all keys of a dictionnary to uppercase
+
+    Buckaroo parameters names are case insensitive
+    convert everything to upper case to be able to easily detected the presence
+    of a parameter by checking the uppercase key only
+    """
+    return dict((key.upper(), val) for key, val in data.items())
+
+
 class AcquirerBuckaroo(osv.Model):
     _inherit = 'payment.acquirer'
 
@@ -123,6 +133,7 @@ class TxBuckaroo(osv.Model):
     def _buckaroo_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from buckaroo, verify it and find the related
         transaction record. """
+        data = normalize_keys_upper(data)
         reference, pay_id, shasign = data.get('BRQ_INVOICENUMBER'), data.get('BRQ_PAYMENT'), data.get('BRQ_SIGNATURE')
         if not reference or not pay_id or not shasign:
             error_msg = 'Buckaroo: received data with missing reference (%s) or pay_id (%s) or shashign (%s)' % (reference, pay_id, shasign)
@@ -151,7 +162,7 @@ class TxBuckaroo(osv.Model):
 
     def _buckaroo_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
-
+        data = normalize_keys_upper(data)
         if tx.acquirer_reference and data.get('BRQ_TRANSACTIONS') != tx.acquirer_reference:
             invalid_parameters.append(('Transaction Id', data.get('BRQ_TRANSACTIONS'), tx.acquirer_reference))
         # check what is buyed
@@ -163,6 +174,7 @@ class TxBuckaroo(osv.Model):
         return invalid_parameters
 
     def _buckaroo_form_validate(self, cr, uid, tx, data, context=None):
+        data = normalize_keys_upper(data)
         status_code = int(data.get('BRQ_STATUSCODE','0'))
         if status_code in self._buckaroo_valid_tx_status:
             tx.write({
