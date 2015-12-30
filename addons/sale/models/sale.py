@@ -653,6 +653,19 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
 
+    @api.depends('invoice_lines', 'invoice_lines.invoice_id', 'invoice_lines.invoice_id.state', 
+                 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids', 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids.invoice_id', 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids.invoice_id.state')
+    def _compute_invoice_amount(self):
+        for line in self:
+            amt_invoiced = 0.0
+            refund_amount_total = 0.0
+            for invoice_line in line.invoice_lines:
+                if invoice_line.invoice_id.state in ('open', 'paid'):
+                    amt_invoiced += invoice_line.price_total
+                refund_amount_total += sum(invoice_line.invoice_id.refund_invoice_ids.filtered(lambda x: x.state in ['open', 'paid']).mapped('amount_total'))
+            line.amt_invoiced = amt_invoiced - refund_amount_total
+            line.amt_to_invoice = line.price_total - amt_invoiced
+
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
@@ -876,6 +889,8 @@ class SaleOrderLine(models.Model):
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
     procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
+    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', store=True)
+    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
