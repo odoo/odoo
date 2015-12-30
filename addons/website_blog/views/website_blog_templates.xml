@@ -190,7 +190,8 @@
     <t t-call="website_blog.index">
         <div t-attf-class="#{blog_post_cover_properties.get('resize_class', '')}" id="title"  t-ignore="True">
             <div id="js_blogcover" t-attf-class="#{blog_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{blog_post_cover_properties.get('background-image', 'none')};opacity:#{blog_post_cover_properties.get('opacity', 1)}">
-                <div class="container blog_publish_btn">
+                <div class="container">
+                    <div class="mt16">
                     <t t-call="website.publish_management">
                         <t t-set="object" t-value="blog_post"/>
                         <t t-set="publish_edit" t-value="True"/>
@@ -202,6 +203,7 @@
                           <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
                         </li>
                     </t>
+                    </div>
                 </div>
             </div>
             <div class="blog_title">
