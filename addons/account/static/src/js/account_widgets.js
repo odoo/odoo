@@ -35,6 +35,7 @@ openerp.account = function (instance) {
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
+            this.monetaryIsZero; // Method that tests if a monetary amount == 0 ; loaded from the server
             this.formatCurrency; // Method that formats the currency ; loaded from the server
             this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
 
@@ -176,6 +177,14 @@ openerp.account = function (instance) {
                 .call("get_format_currencies_js_function")
                 .then(function(data) {
                     self.formatCurrency = new Function("amount, currency_id", data);
+                })
+            );
+    
+            // Get the function to compare monetary values
+            deferred_promises.push(new instance.web.Model("decimal.precision")
+                .call("precision_get", ["Account"])
+                .then(function(digits) {
+                    self.monetaryIsZero = _.partial(instance.web.float_is_zero, _, digits);
                 })
             );
     
@@ -321,7 +330,7 @@ openerp.account = function (instance) {
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
+                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return self.monetaryIsZero(o.get("balance")); }));
             }
         },
 
@@ -601,7 +610,7 @@ openerp.account = function (instance) {
                     .filter([['id', 'in', self.statement_ids]])
                     .all()
                     .then(function(data){
-                        if (_.all(data, function(o) { return o.balance_end_real === o.balance_end })) {
+                        if (_.all(data, function(o) { return self.monetaryIsZero(o.balance_end_real - o.balance_end) })) {
                             self.$(".button_close_statement").show();
                             self.$(".button_close_statement").click(function() {
                                 self.$(".button_close_statement").attr("disabled", "disabled");
@@ -677,6 +686,7 @@ openerp.account = function (instance) {
             this._super(parent);
     
             this.formatCurrency = this.getParent().formatCurrency;
+            this.monetaryIsZero = this.getParent().monetaryIsZero;
             if (context.initial_data_provided) {
                 // Process data
                 _.each(context.reconciliation_proposition, function(line) {
@@ -1319,7 +1329,7 @@ openerp.account = function (instance) {
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
-            if (Math.abs(self.get("balance")).toFixed(3) === "0.000") balance_type = "equal";
+            if (self.monetaryIsZero(self.get("balance"))) balance_type = "equal";
             else if (self.get("balance") * self.st_line.amount > 0) balance_type = "greater";
             else if (self.get("balance") * self.st_line.amount < 0) balance_type = "lower";
 

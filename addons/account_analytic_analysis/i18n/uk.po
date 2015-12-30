@@ -1,21 +1,22 @@
-# Ukrainian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Ukrainian <uk@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-12-19 19:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:55+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -36,18 +37,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -99,8 +96,7 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
@@ -112,12 +108,9 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. Odoo will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. Odoo will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -126,8 +119,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
@@ -146,10 +138,8 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                Odoo automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                Odoo automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
@@ -160,10 +150,8 @@ msgstr ""
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
@@ -205,7 +193,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Cancelled"
-msgstr ""
+msgstr "Скасовано"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -215,7 +203,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed"
-msgstr ""
+msgstr "Закрито"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -311,12 +299,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Створив"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Створено"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -346,17 +334,17 @@ msgstr ""
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "День (дні)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Кінець місяця"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -369,10 +357,10 @@ msgid "End date passed or prepaid unit consumed"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:681
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Помилка!"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
@@ -415,7 +403,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr ""
+msgstr "Групувати за"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -425,14 +413,14 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Сума годин за місяцями"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,id:0
 #: field:account_analytic_analysis.summary.month,id:0
 #: field:account_analytic_analysis.summary.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -456,7 +444,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "In Progress"
-msgstr ""
+msgstr "В процесі"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
@@ -486,7 +474,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Рахунки"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -496,12 +484,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Востаннє відредаговано"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Дата останньої зміни"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
@@ -522,10 +510,10 @@ msgstr "Місяць"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Місяць (місяці)"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "No Customer Defined!"
 msgstr ""
@@ -579,7 +567,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -587,7 +575,7 @@ msgid "Pending contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:682
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
 msgstr ""
@@ -600,12 +588,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Кількість"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -620,7 +608,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Повторення"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -648,12 +636,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Повторювати кожні"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Повторювати кожного (Дня/Тижня/Місяця/Року)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -661,7 +649,7 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:550
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
 msgstr ""
@@ -670,17 +658,17 @@ msgstr ""
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Start Month"
-msgstr ""
+msgstr "Місяць початку"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
@@ -724,7 +712,7 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:652
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:659
 #, python-format
 msgid "Timesheets to Invoice of %s"
 msgstr ""
@@ -742,7 +730,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Total"
-msgstr ""
+msgstr "Разом"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -768,7 +756,7 @@ msgstr ""
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr "Всього часу"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -826,12 +814,12 @@ msgstr ""
 #: field:account.analytic.account,user_ids:0
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
-msgstr "Користувач"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Тиждень (тижні)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -845,10 +833,10 @@ msgstr ""
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Рік(роки)"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""

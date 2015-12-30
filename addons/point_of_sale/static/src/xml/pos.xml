@@ -1277,7 +1277,7 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_subtotal())"/>
+                        <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                     </td>
                 </tr>
                 <t t-foreach="order.get_tax_details()" t-as="taxdetail">
