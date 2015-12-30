@@ -27,7 +27,7 @@ var CompareListView = ListView.extend({
 
     generate_purchase_order: function () {
         var self = this;
-        new Model(self.dataset.model).call("generate_po",[self.dataset.context.tender_id]).then(function(result) {
+        new Model("purchase.requisition").call("generate_po",[self.dataset.context.tender_id]).then(function(result) {
             self.ViewManager.action_manager.history_back();
         });
     },

@@ -34,11 +34,6 @@ class PurchaseOrderLine(models.Model):
 
     quantity_tendered = fields.Float(string='Quantity Tendered', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the tender", oldname='quantity_bid')
 
-    @api.model
-    def generate_po(self, tender_id):
-        #call generate_po from tender with active_id. Called from js widget
-        return self.env['purchase.requisition'].browse(tender_id).generate_po()
-
     @api.multi
     def button_confirm(self):
         for element in self:
