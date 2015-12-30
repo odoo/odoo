@@ -5,16 +5,26 @@ var chat_manager = require('mail.chat_manager');
 var ChatWindow = require('mail.ChatWindow');
 
 var core = require('web.core');
+var utils = require('web.utils');
 var web_client = require('web.web_client');
 
+var QWeb = core.qweb;
 
 // chat window management
 //----------------------------------------------------------------
+var CHAT_WINDOW_WIDTH = 300 + 5;  // 5 pixels between windows
 var chat_sessions = [];
-var CHAT_WINDOW_WIDTH = 300;
+var display_state = {
+    hidden_sessions: [],
+    hidden_unread_counter: 0,  // total number of unread msgs in hidden chat windows
+    nb_slots: 0,
+    space_left: 0,
+    windows_dropdown_is_open: false,  // used to keep dropdown open when closing chat windows
+};
 
 function open_chat (session) {
-    if (!_.findWhere(chat_sessions, {id: session.id})) {
+    var chat_session = _.findWhere(chat_sessions, {id: session.id});
+    if (!chat_session) {
         var channel = chat_manager.get_channel(session.id);
         var chat_session = {
             id: session.id,
@@ -58,7 +68,10 @@ function open_chat (session) {
             }
         });
 
-        chat_sessions.push(chat_session);
+        // insert chat_session such that it will be the right-most visible window
+        compute_available_slots(chat_sessions.length+1);
+        chat_sessions.splice(display_state.nb_slots-1, 0, chat_session);
+
         chat_session.window.appendTo($('body'))
             .then(reposition_windows)
             .then(function () {
@@ -67,6 +80,8 @@ function open_chat (session) {
                 chat_session.window.render(messages);
                 chat_session.window.scrollBottom();
             });
+    } else if (chat_session.window.is_hidden) {
+        make_session_visible(chat_session);
     }
 }
 
@@ -86,16 +101,92 @@ function toggle_fold_chat (channel) {
     }
 }
 
-function reposition_windows () {
+function compute_available_slots (nb_windows) {
+    var width = window.innerWidth;
+    var nb_slots = Math.floor(width/CHAT_WINDOW_WIDTH);
+    var space_left = width - (Math.min(nb_slots, nb_windows)*CHAT_WINDOW_WIDTH);
+    if (nb_slots < nb_windows && space_left < 50) {
+        nb_slots--;  // leave at least 50px for the hidden windows dropdown button
+        space_left += CHAT_WINDOW_WIDTH;
+    }
+    display_state.nb_slots = nb_slots;
+    display_state.space_left = space_left;
+}
+
+var reposition_windows = _.debounce(function () {
+    compute_available_slots(chat_sessions.length);
+    var hidden_sessions = [];
+    var hidden_unread_counter = 0;
+    var nb_slots = display_state.nb_slots;
     _.each(chat_sessions, function (session, index) {
-        session.window.$el.css({right: (CHAT_WINDOW_WIDTH + 5) * index, bottom: 0});
+        if (index < nb_slots) {
+            session.window.$el.css({right: CHAT_WINDOW_WIDTH*index, bottom: 0});
+            session.window.do_show();
+        } else {
+            hidden_sessions.push(session);
+            hidden_unread_counter += session.window.unread_msgs;
+            session.window.do_hide();
+        }
     });
+    display_state.hidden_sessions = hidden_sessions;
+    display_state.hidden_unread_counter = hidden_unread_counter;
+
+    if (display_state.$hidden_windows_dropdown) {
+        display_state.$hidden_windows_dropdown.remove();
+    }
+    if (hidden_sessions.length) {
+        display_state.$hidden_windows_dropdown = render_hidden_sessions_dropdown();
+        var $hidden_windows_dropdown = display_state.$hidden_windows_dropdown;
+        $hidden_windows_dropdown.css({right: CHAT_WINDOW_WIDTH * nb_slots, bottom: 0})
+                                .appendTo($('body'));
+        reposition_hidden_sessions_dropdown();
+        display_state.windows_dropdown_is_open = false;
+
+        $hidden_windows_dropdown.on('click', '.o_chat_header', function (event) {
+            var session_id = $(event.currentTarget).data('session-id');
+            var session = _.findWhere(hidden_sessions, {id: session_id});
+            if (session) {
+                make_session_visible(session);
+            }
+        });
+        $hidden_windows_dropdown.on('click', '.o_chat_window_close', function (event) {
+            var session_id = $(event.currentTarget).closest('.o_chat_header').data('session-id');
+            var session = _.findWhere(hidden_sessions, {id: session_id});
+            if (session) {
+                session.window.on_click_close(event);
+                display_state.windows_dropdown_is_open = true;  // keep the dropdown open
+            }
+        });
+    }
+}, 100);
+
+function make_session_visible (session) {
+    utils.swap(chat_sessions, session, chat_sessions[display_state.nb_slots-1]);
+    session.window.toggle_fold(false);
+    reposition_windows();
+}
+
+function render_hidden_sessions_dropdown () {
+    var $dropdown = $(QWeb.render("mail.ChatWindowsDropdown", {
+        sessions: display_state.hidden_sessions,
+        open: display_state.windows_dropdown_is_open,
+        unread_counter: display_state.hidden_unread_counter,
+    }));
+    return $dropdown;
+}
+
+function reposition_hidden_sessions_dropdown () {
+    // Unfold dropdown to the left if there is enough place
+    var $dropdown_ul = display_state.$hidden_windows_dropdown.children('ul');
+    if (display_state.space_left > $dropdown_ul.width() + 10) {
+        $dropdown_ul.addClass('dropdown-menu-right');
+    }
 }
 
 function update_sessions (message, scrollBottom) {
     _.each(chat_sessions, function (session) {
         if (_.contains(message.channel_ids, session.id)) {
-            if (!session.window.folded) {
+            if (!session.window.folded && !session.window.is_hidden) {
                 chat_manager.mark_channel_as_seen(chat_manager.get_channel(session.id));
             }
             chat_manager.get_messages({channel_id: session.id}).then(function (messages) {
@@ -139,11 +230,19 @@ core.bus.on('web_client_ready', null, function () {
     });
 
     chat_manager.bus.on('update_channel_unread_counter', null, function (channel) {
+        display_state.hidden_unread_counter = 0;
         _.each(chat_sessions, function (session) {
             if (channel.id === session.id) {
                 session.window.update_unread(channel.unread_counter);
             }
+            if (session.window.is_hidden) {
+                display_state.hidden_unread_counter += session.window.unread_msgs;
+            }
         });
+        if (display_state.$hidden_windows_dropdown) {
+            display_state.$hidden_windows_dropdown.html(render_hidden_sessions_dropdown().html());
+            reposition_hidden_sessions_dropdown();
+        }
     });
 
     chat_manager.is_ready.then(function() {
@@ -153,6 +252,8 @@ core.bus.on('web_client_ready', null, function () {
             }
         });
     });
+
+    core.bus.on('resize', null, reposition_windows);
 });
 
 });
