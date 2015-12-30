@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-09 13:34+0000\n"
+"PO-Revision-Date: 2015-12-18 23:53+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -42,12 +42,12 @@ msgstr "&nbsp;"
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "(update)"
-msgstr "(αναβάθμιση)"
+msgstr "(ενημέρωση)"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid ") is \""
-msgstr ""
+msgstr ") είναι \""
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -721,7 +721,7 @@ msgstr "Κλεισμένα"
 #: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr "Κλεισμένα & Απεσταλμένα"
+msgstr "Κλεισμένα & Καταχωρημένα"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -1027,7 +1027,7 @@ msgstr "Ημερομηνίες"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:826
 #, python-format
 msgid "Debug Window"
-msgstr "Παράθυρο Debug"
+msgstr "Παράθυρο Eντοπισμoύ σφαλμάτων"
 
 #. module: point_of_sale
 #: field:res.users,pos_config:0
@@ -1552,7 +1552,7 @@ msgstr "Ομαδοποίηση Εγγραφών Ημερολογίου"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:860
 #, python-format
 msgid "Hardware Events"
-msgstr "Συμβάντα Hardware"
+msgstr "Συμβάντα Υλικού"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
@@ -1743,7 +1743,7 @@ msgstr "Μεγάλες Μπάρες Κύλισης"
 #: field:pos.order,write_uid:0 field:pos.order.line,write_uid:0
 #: field:pos.session,write_uid:0 field:pos.session.opening,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: point_of_sale
 #: field:pos.category,write_date:0 field:pos.config,write_date:0
@@ -1753,7 +1753,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: field:pos.order,write_date:0 field:pos.order.line,write_date:0
 #: field:pos.session,write_date:0 field:pos.session.opening,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
@@ -2498,7 +2498,7 @@ msgstr "Συλλογή με"
 #. module: point_of_sale
 #: field:pos.config,picking_type_id:0 field:pos.order,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Τύπος Διαλογής"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
@@ -2667,7 +2667,7 @@ msgstr "Ταχυδρομικός Κώδικας"
 #: view:pos.order:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0
 msgid "Posted"
-msgstr "Αποσταλμένες"
+msgstr "Καταχωρημένο"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pommes_de_terre
@@ -3135,7 +3135,7 @@ msgstr "Κωδικός Αριθμός Βάρδιας"
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
 msgid "Session Status"
-msgstr "Καθεστώς Βάρδιας"
+msgstr "Κατάσταση Βάρδιας"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_session_summary
@@ -3357,7 +3357,7 @@ msgstr "Δηλώσεις"
 #: field:pos.session.opening,pos_state_str:0 field:report.pos.order,state:0
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
@@ -4039,7 +4039,7 @@ msgstr "Δεν μπορείτε να αλλάξετε συναλλασόμενο
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
-msgstr "Δεν μπορείτε να επιβεβαιώσετε όλες τις παραγγελίες από αυτή την βάρδια, γιατί δεν είναι σε καθεστώς 'Πληρωμένες'"
+msgstr "Δεν μπορείτε να επιβεβαιώσετε όλες τις παραγγελίες από αυτή την βάρδια, γιατί δεν είναι σε κατάσταση 'Εξοφλημένο'"
 
 #. module: point_of_sale
 #: constraint:pos.session:0

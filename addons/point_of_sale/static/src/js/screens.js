@@ -1283,7 +1283,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
                 this.toggle_save_button();
 
-                contents.find('.image-uploader').on('change',function(){
+                contents.find('.image-uploader').on('change',function(event){
                     self.load_image_file(event.target.files[0],function(res){
                         if (res) {
                             contents.find('.client-picture img, .client-picture .fa').remove();

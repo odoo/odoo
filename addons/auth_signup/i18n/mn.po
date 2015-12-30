@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2015-12-17 08:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -26,17 +27,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"Odoo.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -49,37 +46,35 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Та Odoo дахь баримтууд хандах эрхтэй болохын тулд \"${object.company_id.name}\"-д уригдсан байна.\n                    </p>\n                    <p>\n                        Урилгыг хүлээн авахын тулд дараах холбоосыг дарна уу:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">\"${object.company_id.name}\"-руу хандах урилгыг хүлээн авах</a></li>\n                    </ul>\n                    <p>\n                        Баярлалаа,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Энэ эмэйлд холбогдох Odoo эрхийн нууц үгийг шинэчлэхийг хүссэн байна.</p>\n\n<p><a href=\"${object.signup_url}\">Энэ холбоосоор</a> та нууц үгээ солих боломжтой.</p>\n\n<p>Анхааруулга: Хэрэв та үүнийг хүлээгээгүй байсан бол энэ эмэйлийг үл хэрэгсэж болно.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Odoo-руу холбогдох урилга ${object.company_id.name}"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
+msgstr "Энэ хэрэглэгчид нууц үг шинэчлэхийг хүссэн. Дараах холбоосыг агуулсан эмэйл илгээгдсэн:"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Activated"
-msgstr ""
+msgstr "Идэвхжсэн"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -90,28 +85,34 @@ msgstr "Гадаад хэрэглэгчид бүртгүүлэхийг зөвш�
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Нууц үгээ шинэчлэх итгэмжлэгдсэн эмэйл илгээгдсэн"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
+"An invitation email containing the following subscription link has been "
+"sent:"
+msgstr "Дараах бүртгэлийн холбоосыг агуулсан урилга эмэйл илгээгдсэн:"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
-msgstr ""
+msgstr "Баталгаажуулалт бүтэлгүйтлээ."
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-#: view:website:auth_signup.signup
+#: view:website:auth_signup.reset_password view:website:auth_signup.signup
 msgid "Back to Login"
 msgstr "Дахин нэвтрэх"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:295
+#: code:addons/auth_signup/res_users.py:294
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr "Имэйлийг илгээх боломжгүй: хэрэглэгчид имэйл хаяг алга"
@@ -122,10 +123,16 @@ msgid "Confirm Password"
 msgstr "Нууц үгийг баталгаажуулах"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Таны нууц үгийг шинэчилж чадсангүй"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -135,8 +142,7 @@ msgstr "Нэвтрэх хуудаснаас нууц үг шинэчлэхийг
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Хэрэв тэмдэглээгүй бол зөвхөн уригдсан хэрэглэгчид л бүртгүүлэх боломжтой"
+msgstr "Хэрэв тэмдэглээгүй бол зөвхөн уригдсан хэрэглэгчид л бүртгүүлэх боломжтой"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
@@ -147,7 +153,7 @@ msgstr "Бүртгүүлэх жетон хүчингүй"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Хэзээ ч холбогдоогүй"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -157,7 +163,7 @@ msgstr "Харилцагч"
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Нууц үг"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -175,18 +181,23 @@ msgid "Reset password"
 msgstr "Нууц үгийг шинэчлэх"
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr ""
+
+#. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Нууц үг солих зааврыг илгээх"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Урилга эмэйл илгээх"
 
 #. module: auth_signup
-#: view:website:auth_signup.signup
-#: view:website:web.login
+#: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
 msgstr "Бүртгүүлэх"
 
@@ -236,17 +247,16 @@ msgid "Users"
 msgstr "Хэрэглэгчид"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
-#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Таны эмэйл"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Таны нэр"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "Ж: А.Отгонбаяр"

@@ -3,12 +3,13 @@
 # * auth_signup
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-05 18:32+0000\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2015-12-21 13:49+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\nΈχει αποσταλεί ένα email με τον παρακάτω σύνδεσμο:\n<p>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης του λογαριασμού Odoo του χρήστη αυτού του email.</p>\n\n<p>Μπορείτε να αλλάξετε τον κωδικό πρόσβασης ακολουθώντας αυτόν τον <a href=\"${object.signup_url}\">σύνδεσμο</a>.</p>\n\n<p>Σημείωση: Εάν δεν έχετε ζητήσει εσείς αυτό το email, μπορείτε με ασφάλεια να το αγνοήσετε.</p>"
+msgstr "\n<p>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης του λογαριασμού Odoo του χρήστη αυτού του email.</p>\n\n<p>Μπορείτε να αλλάξετε τον κωδικό πρόσβασης ακολουθώντας αυτόν τον <a href=\"${object.signup_url}\">σύνδεσμο</a>.</p>\n\n<p>Σημείωση: Εάν δεν έχετε ζητήσει εσείς αυτό το email, μπορείτε με ασφάλεια να το αγνοήσετε.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -94,7 +95,13 @@ msgid ""
 msgstr "Έχει αποσταλεί μία πρόσκληση με email το οποίο περιέχει τον παρακάτω σύνδεσμο σύνδεσης:"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Κάποιος άλλος χρήστης έχει ήδη εγγραφεί χρησιμοποιώντας αυτό το email."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr "Η ταυτοποίηση απέτυχε."
@@ -116,7 +123,13 @@ msgid "Confirm Password"
 msgstr "Επιβεβαίωση Κωδικού Πρόσβασης"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Δεν μπορεί να δημιουργηθεί νέος λογαριασμός."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr "Δεν ήταν δυνατή η επαναφορά του κωδικού πρόσβασής σας"
@@ -168,6 +181,12 @@ msgid "Reset password"
 msgstr "Επαναφορά κωδικού πρόσβασης"
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Επαναφορά Κωδικού Πρόσβασης: Λανθασμένο όνομα χρήστη ή email "
+
+#. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
 msgstr "Αποστολή Οδηγιών Επαναφοράς Κωδικού Πρόσβασης"
@@ -210,7 +229,7 @@ msgstr "Διεύθυνση URL Εγγραφής"
 #. module: auth_signup
 #: field:res.users,state:0
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
