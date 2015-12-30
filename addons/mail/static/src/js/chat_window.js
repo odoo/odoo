@@ -29,6 +29,7 @@ return Widget.extend({
             display_stars: true,
         });
         this.unread_msgs = unread_msgs || 0;
+        this.is_hidden = false;
     },
     start: function () {
         this.$content = this.$('.o_chat_content');
@@ -50,23 +51,17 @@ return Widget.extend({
         return $.when(this._super(), def);
     },
     render: function (messages) {
-        this.update_header();
+        this.update_unread(this.unread_msgs);
         this.thread.render(messages, {display_load_more: false});
-    },
-    update_header: function () {
-        var title = this.unread_msgs > 0 ?
-            this.title + ' (' + this.unread_msgs + ')' : this.title;
-        this.$('.o_chat_title').text(title);
     },
     update_unread: function (counter) {
         this.unread_msgs = counter;
-        this.update_header();
+        this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
     },
     scrollBottom: function () {
         this.$content.scrollTop(this.$content[0].scrollHeight);
     },
     fold: function () {
-        this.update_header();
         this.$el.animate({
             height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
         });
@@ -78,6 +73,18 @@ return Widget.extend({
             this.trigger('messages_read');
         }
         this.fold();
+    },
+    do_show: function () {
+        this.is_hidden = false;
+        this._super.apply(this, arguments);
+    },
+    do_hide: function () {
+        this.is_hidden = true;
+        this._super.apply(this, arguments);
+    },
+    do_toggle: function (display) {
+        this.is_hidden = _.isBoolean(display) ? !display : !this.is_hidden;
+        this._super.apply(this, arguments);
     },
     on_keydown: function (event) {
         // ENTER key (avoid requiring jquery ui for external livechat)
