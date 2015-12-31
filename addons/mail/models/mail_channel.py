@@ -600,3 +600,20 @@ class Channel(models.Model):
                 INNER JOIN mail_channel C ON CP.channel_id = C.id
             WHERE C.uuid = %s""", (uuid,))
         return self._cr.dictfetchall()
+
+    @api.multi
+    def channel_fetch_preview(self):
+        """ Return the last message of the given channels """
+        self._cr.execute("""
+            SELECT mail_channel_id AS id, MAX(mail_message_id) AS message_id
+            FROM mail_message_mail_channel_rel
+            WHERE mail_channel_id IN %s
+            GROUP BY mail_channel_id
+            """, (tuple(self.ids),))
+        channels_preview = dict((r['message_id'], r) for r in self._cr.dictfetchall())
+        last_messages = self.env['mail.message'].browse(channels_preview.keys()).message_format()
+        for message in last_messages:
+            channel = channels_preview[message['id']]
+            del(channel['message_id'])
+            channel['last_message'] = message
+        return channels_preview.values()

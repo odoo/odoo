@@ -21,6 +21,7 @@ var UserModel = new Model('res.users', session.context);
 //----------------------------------------------------------------------------------
 var messages = [];
 var channels = [];
+var channels_preview_def;
 var channel_defs = {};
 var emojis = [];
 var emoji_substitutions = {};
@@ -112,6 +113,14 @@ function strip_html (node, transform_children) {
     return transform_children();
 }
 
+function inline (node, transform_children) {
+    if (node.nodeType === 3) return node.data;
+    if (node.tagName === "BR") return " ";
+    if (node.tagName.match(/^(A|P|DIV)$/)) return transform_children();
+    node.innerHTML = transform_children();
+    return node.outerHTML;
+}
+
 // Message and channel manipulation helpers
 //----------------------------------------------------------------------------------
 
@@ -126,7 +135,6 @@ function add_message (data, options) {
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
-            var is_chat = channel && !_.contains(["public", "private"], channel.type);
             if (channel) {
                 add_to_cache(msg, []);
                 if (options.domain && options.domain !== []) {
@@ -135,15 +143,15 @@ function add_message (data, options) {
                 if (options.increment_unread) {
                     update_channel_unread_counter(channel, channel.unread_counter+1);
                 }
-            }
-            if (channel && channel.hidden) {
-                channel.hidden = false;
-                chat_manager.bus.trigger('new_channel', channel);
-            }
-            if (is_chat && options.show_notification && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
-                var query = {is_displayed: false};
-                chat_manager.bus.trigger('anyone_listening', channel, query);
-                notify_incoming_message(msg, query);
+                if (channel.hidden) {
+                    channel.hidden = false;
+                    chat_manager.bus.trigger('new_channel', channel);
+                }
+                if (channel.is_chat && options.show_notification && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
+                    var query = {is_displayed: false};
+                    chat_manager.bus.trigger('anyone_listening', channel, query);
+                    notify_incoming_message(msg, query);
+                }
             }
         });
         if (!options.silent) {
@@ -316,6 +324,7 @@ function make_channel (data, options) {
         pinned_dm_partners.push(channel.direct_partner_id);
         bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
     }
+    channel.is_chat = !channel.type.match(/^(public|private|static)$/);
     return channel;
 }
 
@@ -578,11 +587,14 @@ function on_chat_session_notification (chat_session) {
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
         channel = chat_session.is_minimized && chat_manager.get_channel(chat_session.id);
         if (channel) {
+            channel.is_detached = true;
+            channel.is_folded = (chat_session.state === "folded");
             chat_manager.bus.trigger("open_chat", channel);
         }
     } else if (chat_session.state === "closed") {
         channel = chat_manager.get_channel(chat_session.id);
         if (channel) {
+            channel.is_detached = false;
             chat_manager.bus.trigger("close_chat", channel);
         }
     }
@@ -844,6 +856,44 @@ var chat_manager = {
                 redirect_to_document(res_model, res_id, view_id);
             });
         }
+    },
+
+    get_channels_preview: function (channels) {
+        var channels_preview = _.map(channels, function (channel) {
+            var info = _.pick(channel, 'id', 'is_chat', 'name', 'status', 'unread_counter');
+            info.last_message = _.last(channel.cache['[]'].messages);
+            if (!info.is_chat) {
+                info.image_src = '/web/image/mail.channel/'+channel.id+'/image_small';
+            } else if (channel.direct_partner_id) {
+                info.image_src = '/web/image/res.partner/'+channel.direct_partner_id+'/image_small';
+            } else {
+                info.image_src = '/mail/static/src/img/smiley/avatar.jpg';
+            }
+            return info;
+        });
+        if (!channels_preview_def) {
+            var missing_channel_ids = _.pluck(_.where(channels_preview, {last_message: undefined}), 'id');
+            if (missing_channel_ids.length) {
+                channels_preview_def = ChannelModel
+                    .call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true})
+                    .then(function (channels) {
+                        _.each(channels, function (channel) {
+                            var msg = add_message(channel.last_message);
+                            _.findWhere(channels_preview, {id: channel.id}).last_message = msg;
+                        });
+                    });
+            } else {
+                channels_preview_def = $.when();
+            }
+        }
+        return channels_preview_def.then(function () {
+            return _.filter(channels_preview, function (channel) {
+                return channel.last_message;  // remove empty channels
+            });
+        });
+    },
+    get_message_body_preview: function (message_body) {
+        return parse_and_transform(message_body, inline);
     },
 };
 
