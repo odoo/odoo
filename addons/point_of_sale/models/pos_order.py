@@ -566,9 +566,6 @@ class pos_order(osv.osv):
             'res_id': inv_ids and inv_ids[0] or False,
         }
 
-    def create_account_move(self, cr, uid, ids, context=None):
-        return self._create_account_move_line(cr, uid, ids, None, None, context=context)
-
     def _prepare_analytic_account(self, cr, uid, line, context=None):
         '''This method is designed to be inherited in a custom module'''
         return False
@@ -756,7 +753,7 @@ class pos_order(osv.osv):
         return True
 
     def action_done(self, cr, uid, ids, context=None):
-        self.create_account_move(cr, uid, ids, context=context)
+        self._create_account_move_line(cr, uid, ids, context=context)
         return True
 
 class pos_order_line(osv.osv):

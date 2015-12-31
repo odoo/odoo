@@ -48,14 +48,6 @@ class pos_make_payment(osv.osv_memory):
             'context': context,
         }
 
-    def print_report(self, cr, uid, ids, context=None):
-        active_id = context.get('active_id', [])
-        datas = {'ids' : [active_id]}
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'pos.receipt',
-            'datas': datas,
-        }
 
     def _default_journal(self, cr, uid, context=None):
         if not context:
