@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2015-09-10 00:48+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-24 05:40+0000\n"
+"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,39 +27,39 @@ msgstr "\n请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款�
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
 msgid "RIB and optional IBAN"
-msgstr ""
+msgstr "RIB和可选IBAN"
 
 #. module: l10n_fr_rib
 #: field:res.partner.bank,rib_acc_number:0
 msgid "RIB account number"
-msgstr ""
+msgstr "RIB帐号"
 
 #. module: l10n_fr_rib
 #: field:res.partner.bank,bank_code:0
 msgid "Bank Code"
-msgstr ""
+msgstr "银行代码"
 
 #. module: l10n_fr_rib
 #: code:addons/l10n_fr_rib/bank.py:54
 #, python-format
 msgid "The RIB key %s does not correspond to the other codes: %s %s %s."
-msgstr ""
+msgstr "RIB  %s不对应的代码: %s %s %s."
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_office_field
 msgid "office"
-msgstr ""
+msgstr "办公"
 
 #. module: l10n_fr_rib
 #: field:res.bank,rib_code:0
 msgid "RIB Bank Code"
-msgstr ""
+msgstr "银行账户证明（RIB）"
 
 #. module: l10n_fr_rib
 #: code:addons/l10n_fr_rib/bank.py:58
 #, python-format
 msgid "The IBAN %s is not valid."
-msgstr ""
+msgstr "%s 不是有效的大小"
 
 #. module: l10n_fr_rib
 #: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
@@ -69,7 +69,7 @@ msgstr "银行账户"
 #. module: l10n_fr_rib
 #: field:res.partner.bank,office:0
 msgid "Office Code"
-msgstr ""
+msgstr "期间代码"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
@@ -79,12 +79,12 @@ msgstr "bank_bic"
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bank_code_field
 msgid "bank_code"
-msgstr ""
+msgstr "代码"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
 msgid "key"
-msgstr ""
+msgstr "键："
 
 #. module: l10n_fr_rib
 #: code:addons/l10n_fr_rib/bank.py:53 code:addons/l10n_fr_rib/bank.py:58
@@ -96,7 +96,7 @@ msgstr "错误！"
 #: help:res.partner.bank,key:0
 msgid ""
 "The key is a number allowing to check the correctness of the other codes."
-msgstr ""
+msgstr "关键是一个数，允许检查的其他代码的正确性。"
 
 #. module: l10n_fr_rib
 #: field:res.partner.bank,key:0
@@ -106,17 +106,17 @@ msgstr "关键字"
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
 msgid "rib_acc_number"
-msgstr ""
+msgstr "对方编号"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
 msgid "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
-msgstr ""
+msgstr "%(bank_name)s：IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: l10n_fr_rib
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "肋和/或IBAN无效"
 
 #. module: l10n_fr_rib
 #: model:ir.model,name:l10n_fr_rib.model_res_bank
@@ -126,4 +126,4 @@ msgstr "银行"
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
 msgid "acc_number"
-msgstr ""
+msgstr "为定义没有增值税编号。"

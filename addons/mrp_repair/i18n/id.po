@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-11-28 06:38+0000\n"
+"PO-Revision-Date: 2015-12-18 13:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-7/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "Persediaan Pindah"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -36,7 +36,7 @@ msgstr "Buat faktur ulang"
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Batal Perbaikan Orde"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
@@ -56,7 +56,7 @@ msgstr "Mencetak Tanggal"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "Kelompok oleh mitra alamat faktur"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_unread:0
@@ -67,7 +67,7 @@ msgstr "Pesan Belum Dibaca"
 #: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Tidak ada produk didefinisikan pada Biaya!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair,company_id:0
@@ -87,7 +87,7 @@ msgstr "Faktur pengecualian"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "Serial Number"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
@@ -113,7 +113,7 @@ msgstr "Alamat faktur"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "Memilih pasangan untuk siapa pesanan akan ditagih dan disampaikan."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -162,7 +162,7 @@ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Operations"
-msgstr ""
+msgstr "Operasi"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -179,7 +179,7 @@ msgid ""
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk menciptakan tatanan reparasi.\n              </p><p>\n                Dalam urutan perbaikan, Anda dapat detail komponen Anda menghapus,\n                menambah atau mengganti dan mencatat waktu yang Anda habiskan di berbagai\n                operasi.\n              </p><p>\n                Urutan perbaikan menggunakan tanggal garansi pada Serial Number di\n                Untuk mengetahui apakah apakah perbaikan harus ditagih ke\n                pelanggan atau tidak.\n              </p>\n            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -188,7 +188,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
 "* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
+msgstr "* Status 'Draft' diatur secara otomatis sebagai draft saat order perbaikan dalam status rancangan. * Status 'Dikonfirmasi' diatur secara otomatis sebagai konfirmasi ketika pesanan perbaikan dalam status konfirmasi. * Status 'Selesai' diatur secara otomatis ketika pesanan perbaikan selesai. * Status 'Dibatalkan' diatur secara otomatis ketika pengguna membatalkan pesanan perbaikan."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -204,7 +204,7 @@ msgstr "Pajak"
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr ""
+msgstr "Pesanan perbaikan"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -246,7 +246,7 @@ msgstr "Rekanan"
 #: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Tidak ada akun yang ditetapkan untuk pasangan \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0 selection:mrp.repair,state:0
@@ -263,18 +263,18 @@ msgid ""
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
+msgstr "* Status 'Draft' digunakan ketika pengguna pengkodean urutan perbaikan baru dan belum dikonfirmasi.\n* Status 'Dikonfirmasi' digunakan ketika pengguna menegaskan agar perbaikan.\n* Status 'Siap Perbaikan' digunakan untuk mulai memperbaiki, pengguna dapat mulai memperbaiki hanya setelah pesanan perbaikan dikonfirmasi.\n* Status 'Untuk Faktur' digunakan untuk menghasilkan faktur sebelum atau setelah memperbaiki yang dilakukan.\n* Status 'Selesai' diatur ketika memperbaiki yang selesai.\n* Status 'Dibatalkan' digunakan ketika pengguna membatalkan pesanan perbaikan."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr ""
+msgstr "Agar perbaikan"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Nomor seri diperlukan untuk lini operasi dengan produk '%s'"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -285,7 +285,7 @@ msgstr ""
 #: field:mrp.repair,prodlot_id:0 field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
+msgstr "Jumlah Lot"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_follower_ids:0
@@ -305,12 +305,12 @@ msgstr "Jenis"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "Biaya Line (s)"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "Untuk Faktur"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -327,7 +327,7 @@ msgstr "Total :"
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr ""
+msgstr "Operasi ini akan membatalkan proses perbaikan, tetapi tidak akan membatalkan itu Faktur. Apakah Anda ingin melanjutkan?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -337,7 +337,7 @@ msgstr "Daftar Harga"
 #. module: mrp_repair
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Kutip Catatan"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair,state:0 field:mrp.repair.line,state:0
@@ -347,17 +347,17 @@ msgstr "Status"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Cari Pesanan Reair"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "Tambah"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line view:mrp.repair:0
 msgid "Repair Line"
-msgstr ""
+msgstr "Perbaikan Jalur"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -367,17 +367,17 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
 msgid "Invoice Method"
-msgstr ""
+msgstr "Metode faktur"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
 msgid "Repaired"
-msgstr ""
+msgstr "Diperbaiki"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Menambahkan catatan internal yang ..."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -388,12 +388,12 @@ msgstr "Baris Tagihan"
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Sebelum Perbaikan"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "Lokasi saat ini"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -439,22 +439,22 @@ msgstr "Draft"
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Perbaikan Referensi"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair view:mrp.repair:0
 msgid "Repair Order"
-msgstr ""
+msgstr "Perbaikan Orde"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "Dalam perbaikan"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Siap Untuk Perbaikan"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -467,17 +467,17 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
+msgstr "Memilih 'Sebelum Perbaikan' atau 'Setelah Perbaikan' akan memungkinkan Anda untuk menghasilkan faktur sebelum atau setelah perbaikan dilakukan masing-masing. 'Tidak ada faktur' berarti Anda tidak ingin untuk menghasilkan faktur untuk pesanan ini perbaikan."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Garansi Kadaluarsa"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Pricelist dari mitra yang dipilih."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -492,18 +492,18 @@ msgstr "tidak diketahui"
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0 report:repair.order:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "Produk untuk Perbaikan"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "Setelah Perbaikan"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Aktif ID tidak Ditemukan"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
@@ -519,12 +519,12 @@ msgstr "Tanggal"
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "No partner!"
-msgstr ""
+msgstr "Tidak ada mitra!"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Biaya perbaikan Baris"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -534,7 +534,7 @@ msgstr "Quotation"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Konfirmasi Perbaikan"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -549,14 +549,14 @@ msgstr "Ringkasan"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
-msgstr ""
+msgstr "Akhir Perbaikan"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:419
 #: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Tidak ada akun yang ditetapkan untuk produk \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -577,18 +577,18 @@ msgstr "Informasi produk"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
-msgstr ""
+msgstr "Membuat Faktur"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "Mulai Perbaikan"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "Anda harus memilih Partner Faktur Alamat dalam bentuk perbaikan!"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
@@ -619,7 +619,7 @@ msgstr "Batal"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Menambahkan catatan kutipan ..."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -629,12 +629,12 @@ msgstr "Lokasi Tujuan"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Operation Line(s)"
-msgstr ""
+msgstr "Line Operation (s)"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "Pengiriman Lokasi"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -651,7 +651,7 @@ msgid ""
 "defined on selected product. If the current date is below the warranty "
 "expiration limit, each operation and fee you will add will be set as 'not to"
 " invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
+msgstr "Batas garansi kadaluarsa dihitung sebagai: tanggal langkah terakhir   garansi didefinisikan pada produk yang dipilih. Jika tanggal saat ini berada di bawah batas kedaluwarsa garansi, setiap operasi dan biaya Anda akan menambahkan akan ditetapkan sebagai 'tidak ditagih' secara default. Perhatikan bahwa Anda dapat mengubah secara manual setelah itu."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -662,7 +662,7 @@ msgstr "Buat Faktur"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "Pesanan Reair"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
@@ -673,7 +673,7 @@ msgstr "Keterangan"
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "Operasi jalur"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair.fee,product_id:0
@@ -684,7 +684,7 @@ msgstr "Produk"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "Faktur Dikoreksi"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -715,7 +715,7 @@ msgstr "Apakah anda benar-benar ingin membuat faktur ?"
 #: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "Agar perbaikan sudah ditagih."
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -725,18 +725,18 @@ msgstr "Pengambilan"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Jumlah untaxed"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Perbaikan Orde Referensi"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Agar perbaikan tidak ditagih."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -751,7 +751,7 @@ msgstr "Hapus"
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Faktur Alamat"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_ids:0
@@ -771,12 +771,12 @@ msgstr "Lokasi Sumber"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel view:mrp.repair:0
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Batal Perbaikan"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "Tidak ada Faktur"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -786,4 +786,4 @@ msgstr "Total"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "Siap untuk Perbaikan"

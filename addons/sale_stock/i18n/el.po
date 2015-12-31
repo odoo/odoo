@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2015-07-30 22:38+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-28 22:48+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-7/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
+msgstr "Για να επιτρέπεται οι πωλητές σας να ετοιμάζουν τιμολόγια για Παραγγελίες Παράδοσης χρησιμοποιώντας το μενού 'Παραδόσεις προς Τιμολόγηση'."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -34,13 +34,13 @@ msgstr "Εντολή Παράδοσης"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Παραδόσεις προς Τιμολόγηση"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:579
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Πληροφορίες Παραλαβής ! :"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
@@ -60,7 +60,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
+msgstr "Επιλέξατε μία ποσότητα %d Μονάδων.\nΑλλά δεν είναι συμβατή με την επιλεγμένη συσκευασία.\nΕδώ βλέπετε μία πρόταση των ποσοτήτων σύμφωνα με την συσκευασία:\nΓραμμωτός Κώδικας: %s Ποσότητα: %s Τύπος: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -87,7 +87,7 @@ msgstr "Ακύρωση Εντολής"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "Πρέπει πρώτα να ακυρώσετε όλες τις παραγγελίες πώλησης που συνδέονται με αυτή την παραγγελία πώλησης."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -135,12 +135,12 @@ msgstr "Μη Έγκυρη Ενέργεια!"
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Χρονοδιάγραμμα Έργου"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Δυνατότητα διαφορετικής διεύθυνσης παράδοσης και τιμολόγησης"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:581
@@ -157,12 +157,12 @@ msgstr "Παραγγελία Προμήθειας"
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "Λεπτομέρειες επαφής"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Τιμολόγηση με βάση τις παραδόσεις"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -208,7 +208,7 @@ msgstr "Δυναμική Ανάθεση"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Η προεπιλεγμένη μέθοδος τιμολόγησης είναι"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -223,7 +223,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Προβολή Παραγγελίας Παράδοσης"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -275,17 +275,17 @@ msgstr "άκυρη κατάσταση για test_state"
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Σας επιτρέπει να επισημάνετε γραμμές παραγγελίας πώλησης με ιδιότητες."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Δημιουργία τιμολογίων μετά και με βάση τις παραγγελίες παράδοσης"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Δυνατότητα προσθήκης κόστους για μεταφορικά"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -306,7 +306,7 @@ msgstr ""
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Οι Διεθνείς Εμπορικοί Όροι είναι μία σειρά προκαθορισμένων εμπορικών όρων που χρησιμοποιούνται στις διεθνείς συναλλαγές."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -319,12 +319,12 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Παράδοση όλων άπαξ μόλις τα προϊόντα είναι διαθέσιμα."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Ενεργοποίηση Τιμολόγησης των Παραγγελιών Παράδοσης"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -340,13 +340,13 @@ msgstr ""
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
+msgstr "Επιλέξτε 'Παράδοση κάθε προϊόντος μόλις γίνει διαθέσιμο' εάν επιτρέπετε την μερική παράδοση."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Αδυναμία ακύρωσης της παραγγελίας πώλησης!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -371,17 +371,17 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr ""
+msgstr "Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την πραγματική ημερομηνία που είχε υποσχεθεί, ώστε να αντιμετωπιστούν τυχόν μη αναμενόμενες καθυστερήσεις στην εφοδιαστική αλυσίδα."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Ιδιότητες προϊόντος στις γραμμές παραγγελίας"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "Μπορείτε να δημιουργήσετε τιμολόγια με βάση τις παραγγελίες πωλήσεων ή με βάση τις αποστολές."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -407,7 +407,7 @@ msgstr ""
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
+msgstr "Δυνατότητα καθορισμού διαφορετικών διευθύνσεων παράδοσης και τιμολόγησης σε μία παραγγελία πώλησης. "
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -425,14 +425,14 @@ msgstr "Ανάθεση"
 #: code:addons/sale_stock/sale_stock.py:629
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Ανεπαρκές απόθεμα ! :"
 
 #. module: sale_stock
 #: help:sale.order.line,delay:0
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Ο αριθμός των ημερών μεταξύ της επιβεβαίωσης της παραγγελίας και της αποστολής των προϊόντων στον πελάτη"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -440,12 +440,12 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
+msgstr "Η παραγγελία πώλησης από προεπιλογή θα ρυθμιστεί ώστε να παραδοθούν όλα τα προϊόντα άπαξ αντί να παραδίδεται το κάθε προϊόν όταν είναι διαθέσιμο. Αυτό μπορεί να έχει συνέπειες στο κόστος των μεταφορικών. "
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Τιμολόγηση με βάση τις παραγγελίες πώλησης"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -484,7 +484,7 @@ msgstr "Δημιουργία Τιμολογίου"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Προετοιμασία τιμολογίων με βάση τις ενέργειες των αποστολών"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
@@ -533,7 +533,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Παράδωση όλων το προϊόντων ταυτόχρονα"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
@@ -543,7 +543,7 @@ msgstr "Σχετική Παραλαβή"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -573,12 +573,12 @@ msgstr "Αγνόησε Εξαίρεση"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
+msgstr "Σχεδιάζετε να πουλήσετε %.2f %s αλλά έχετε διαθέσιμα μόνο %.2f %s !\nΤο πραγματικό σας απόθεμα είναι %.2f %s. (χωρίς κρατήσεις)"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Επαναδημιουργία Παραγγελίας Παράδοσης"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
@@ -593,7 +593,7 @@ msgstr "Picked"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Παράδοση κάθε προϊόντος μόλις είναι διαθέσιμο"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_packing0

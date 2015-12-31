@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-07-17 08:28+0000\n"
+"PO-Revision-Date: 2015-12-28 17:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr "Причина"
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "Дегрессивный Фактор"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
@@ -135,7 +135,7 @@ msgstr "Позиции амортизации"
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "Это сумма, которую вы планируете иметь, что вы не можете обесценить."
 
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
@@ -278,7 +278,7 @@ msgstr "Метод вычисления"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
+msgstr "Prorata temporis могут быть применены только для метода время  \"количество амортизации\"."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
@@ -354,7 +354,7 @@ msgstr "Не проведенная сумма"
 #: field:account.asset.category,method_time:0
 #: field:account.asset.history,method_time:0
 msgid "Time Method"
-msgstr ""
+msgstr "Метод Времени"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
@@ -373,7 +373,7 @@ msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
 "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr ""
+msgstr "Выберите метод, используемый для расчета даты и числа линий амортизации.\nКоличество отчислений на амортизацию: Фиксированное количество амортизационных линий и время между 2 обесцениваниями.\nДата окончания: Выберите время между 2 обесцениваниями и дату обесценивания которая не будет выходить за рамки."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -382,7 +382,7 @@ msgid ""
 "Choose the method to use to compute the dates and number of depreciation lines.\n"
 "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr ""
+msgstr "Выберите метод, используемый для расчета даты и числа линий амортизации.\n* Количество отчислений на амортизацию: Фиксированное количество амортизационных линий и время между 2 обесцениваниями.\n* Дата окончания: Выберите время между 2 обесцениваниями и дату обесценивания которая не будет выходить за рамки."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -400,7 +400,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "Когда актив создается, это статус 'Черновик'.\nЕсли актив будет подтвержден, статус переходит в \"Запущен \" и амортизация линий может быть учтена в бухгалтерском учете.\nВы можете вручную закрыть актив, в случае если амортизация закончилась. Если последняя строка амортизация проводится, актив автоматически переходит в этот статус."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -609,7 +609,7 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
+msgstr "Выберите метод, используемый для расчета суммы линий амортизации.\n* Линейный: Рассчитано на основе: Валовая Стоимость / Количество отчислений на амортизацию\n* Дегрессивный: Рассчитано на основе: Остаточная Стоимость * Дегрессивный Фактор"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -626,7 +626,7 @@ msgid ""
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\n            Из этого отчета Вы можете иметь обзор по всем аммортизациям.\n            Инструмент поиска также можно использовать для персонализации отчетов по активам,\n            и таким образом сопоставить этот анализ согласно Вашим потребностям;\n          </p>\n        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -643,7 +643,7 @@ msgstr "Название"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
+msgstr "Проверьте это, если вы хотите, чтобы автоматически подтверждать активы этой категории, когда создана счет-фактура."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
