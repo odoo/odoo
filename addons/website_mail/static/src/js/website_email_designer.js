@@ -336,7 +336,7 @@
                 _.find(website.editor.fontIcons, function (font) {
                     return _.find(website.editor.getCssSelectors(font.parser), function (css) {
                         if ($font.is('.'+css[3].join(',.'))) {
-                            content = css[1].match(/content:\s*['"](.)['"]/)[1];
+                            content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                             return true;
                         }
                     });
