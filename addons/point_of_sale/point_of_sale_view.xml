@@ -81,7 +81,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="location_id" widget="selection" groups="stock.group_locations"/>
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
-                                <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
+                                <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                                 <field name="picking_id" readonly="1"/>
                                 <field name="pos_reference"/>
                             </group>
