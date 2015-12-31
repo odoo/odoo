@@ -246,7 +246,7 @@
                                 <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
                             </h2>
                             <label for="tag_ids" class="oe_edit_only"/>
-                            <field name="tag_ids" widget="many2many_tags" />
+                            <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                         </div>
                         <group col="2" string="General Properties">
                             <group >
@@ -857,6 +857,31 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="group_fleet_user"/>
+
+        <record id="fleet_vehicle_tag_view_form" model="ir.ui.view">
+            <field name="name">fleet.vehicle.tag.form</field>
+            <field name="model">fleet.vehicle.tag</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="fleet_vehicle_tag_action" model="ir.actions.act_window">
+            <field name="name">Vehicle Tags</field>
+            <field name="res_model">fleet.vehicle.tag</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new tag.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112" groups="base.group_no_one"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_service_types_tree'>
             <field name="name">fleet.service.type.tree</field>

@@ -36,6 +36,32 @@
         <field name="domain">[('user_id','=',uid)]</field>
     </record>
 
+    <!-- note Tag Form View -->
+    <record id="note_tag_view_form" model="ir.ui.view">
+      <field name="name">note.tag.form</field>
+      <field name="model">note.tag</field>
+      <field name="arch" type="xml">
+        <form string="Tags">
+          <group>
+            <field name="name"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- note Tag Action -->
+    <record id="note_tag_action" model="ir.actions.act_window">
+      <field name="name">Tags</field>
+      <field name="res_model">note.tag</field>
+      <field name="view_type">form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to add a new tag.
+        </p>
+      </field>
+    </record>
+
+
     <!-- New note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
       <field name="name">note.note.kanban</field>
@@ -114,7 +140,7 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
                 <sheet>
-                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create_edit': True}"/>
                     <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 </sheet>
                 <div class="oe_chatter">
@@ -169,6 +195,7 @@
     <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note" web_icon="note,static/description/icon.png"/>
     <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_no_one"/>
     <menuitem name="Stages" id="menu_notes_stage" parent="menu_note_configuration" action="note.action_note_stage" sequence="21" />
+    <menuitem id="notes_tag_menu" parent="menu_note_configuration" action="note_tag_action" sequence="22"/>
 
   </data>
 </openerp>
