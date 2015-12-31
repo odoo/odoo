@@ -1,6 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 from hashlib import sha1
 import logging
+import urllib
 import urlparse
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
@@ -70,17 +71,22 @@ class AcquirerBuckaroo(osv.Model):
         values = dict(values or {})
 
         if inout == 'out':
-            if 'BRQ_SIGNATURE' in values:
-                del values['BRQ_SIGNATURE']
-            items = sorted((k.upper(), v) for k, v in values.items())
-            sign = ''.join('%s=%s' % (k, v) for k, v in items)
+            for key in values.keys():
+                # case insensitive keys
+                if key.upper() == 'BRQ_SIGNATURE':
+                    del values[key]
+                    break
+
+            items = sorted(values.items(), key=lambda (x, y): x.lower())
+            sign = ''.join('%s=%s' % (k, urllib.unquote_plus(v)) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k,get_value(k)) for k in keys)
         #Add the pre-shared secret key at the end of the signature
         sign = sign + acquirer.brq_secretkey
         if isinstance(sign, str):
+            # TODO: remove me? should not be used
             sign = urlparse.parse_qsl(sign)
-        shasign = sha1(sign).hexdigest()
+        shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
 
@@ -133,6 +139,7 @@ class TxBuckaroo(osv.Model):
     def _buckaroo_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from buckaroo, verify it and find the related
         transaction record. """
+        origin_data = dict(data)
         data = normalize_keys_upper(data)
         reference, pay_id, shasign = data.get('BRQ_INVOICENUMBER'), data.get('BRQ_PAYMENT'), data.get('BRQ_SIGNATURE')
         if not reference or not pay_id or not shasign:
@@ -152,7 +159,7 @@ class TxBuckaroo(osv.Model):
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         #verify shasign
-        shasign_check = self.pool['payment.acquirer']._buckaroo_generate_digital_sign(tx.acquirer_id, 'out' ,data)
+        shasign_check = self.pool['payment.acquirer']._buckaroo_generate_digital_sign(tx.acquirer_id, 'out', origin_data)
         if shasign_check.upper() != shasign.upper():
             error_msg = 'Buckaroo: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
             _logger.error(error_msg)
