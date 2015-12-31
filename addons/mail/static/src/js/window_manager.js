@@ -25,16 +25,12 @@ var display_state = {
 function open_chat (session) {
     var chat_session = _.findWhere(chat_sessions, {id: session.id});
     if (!chat_session) {
-        var channel = chat_manager.get_channel(session.id);
-        var chat_session = {
+        chat_session = {
             id: session.id,
             uuid: session.uuid,
             name: session.name,
-            window: new ChatWindow(web_client, session.id, session.name, session.is_folded, channel.unread_counter),
+            window: new ChatWindow(web_client, session.id, session.name, session.is_folded, session.unread_counter),
         };
-        if (!session.is_folded) {
-            chat_manager.mark_channel_as_seen(channel);
-        }
         chat_session.window.on("close_chat_session", null, function () {
             close_chat(chat_session);
             chat_manager.close_chat_session(chat_session.id);
@@ -52,7 +48,7 @@ function open_chat (session) {
             chat_manager.post_message(message, {channel_id: channel_id});
         });
         chat_session.window.on("messages_read", null, function () {
-            chat_manager.mark_channel_as_seen(channel);
+            chat_manager.mark_channel_as_seen(session);
         });
         chat_session.window.on("redirect", null, function (res_model, res_id) {
             chat_manager.redirect(res_model, res_id, open_chat);
@@ -79,9 +75,16 @@ function open_chat (session) {
             }).then(function (messages) {
                 chat_session.window.render(messages);
                 chat_session.window.scrollBottom();
+                if (!session.is_folded) {
+                    chat_manager.mark_channel_as_seen(session);
+                }
             });
-    } else if (chat_session.window.is_hidden) {
-        make_session_visible(chat_session);
+    } else {
+        if (chat_session.window.is_hidden) {
+            make_session_visible(chat_session);
+        } else if (session.is_folded !== chat_session.window.folded) {
+            chat_session.window.toggle_fold(session.is_folded);
+        }
     }
 }
 
@@ -251,6 +254,15 @@ core.bus.on('web_client_ready', null, function () {
                 open_chat(channel);
             }
         });
+    });
+
+    chat_manager.bus.on('detach_channel', null, function (channel) {
+        var chat_session = _.findWhere(chat_sessions, {id: channel.id});
+        if (!chat_session || chat_session.window.folded) {
+            chat_manager.detach_channel(channel);
+        } else if (chat_session && chat_session.window.is_hidden) {
+            make_session_visible(chat_session);
+        }
     });
 
     core.bus.on('resize', null, reposition_windows);
