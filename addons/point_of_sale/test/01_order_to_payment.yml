@@ -124,7 +124,7 @@
   I generate the journal entries
 -
   !python {model: pos.order}: |
-    self.create_account_move(cr, uid, [ref('pos_order_pos0')], {})
+    self._create_account_move_lines(cr, uid, [ref('pos_order_pos0')], {})
 -
   I test that the generated journal entry is attached to the PoS order
 -
