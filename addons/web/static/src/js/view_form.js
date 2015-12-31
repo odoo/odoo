@@ -4607,10 +4607,10 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         return this._super(record);
     },
     reload_content: function () {
-        this.page = Math.min(
+        this.page = Math.max(0, Math.min(
             this.page,
             Math.ceil(this.dataset.size() / this.limit()) - 1
-        );
+        ));
         return this._super.apply(this, arguments);
     },
 });
