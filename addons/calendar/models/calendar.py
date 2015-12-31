@@ -702,6 +702,10 @@ class CalendarEvent(models.Model):
         return super(CalendarEvent, self.browse(get_real_ids(self.ids))).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
 
     @api.multi
+    def _get_message_needaction(self):
+        return super(CalendarEvent, self.browse(get_real_ids(self.ids)))._get_message_needaction()
+
+    @api.multi
     def do_sendmail(self):
         for event in self:
             current_user = self.env.user
@@ -924,8 +928,6 @@ class CalendarEvent(models.Model):
                 fields2.append(f)
         select = map(lambda x: (x, calendar_id2real_id(x)), self.ids)
         result = []
-        if self.ids:
-            self.invalidate_cache()
         real_data = super(CalendarEvent, self.browse([real_id for calendar_id, real_id in select])).read(fields=fields2, load=load)
         real_data = dict(zip([x['id'] for x in real_data], real_data))
         for calendar_id, real_id in select:
