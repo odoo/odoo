@@ -690,6 +690,32 @@
             groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
+        <!--  MASS MAILING CAMPAIGN TAGS !-->
+        <record id="mail_mass_mailing_tag_view_form" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.tag.form</field>
+            <field name="model">mail.mass_mailing.tag</field>
+            <field name="arch" type="xml">
+                <form string="Campaign Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="mass_mailing_tag_action" model="ir.actions.act_window">
+            <field name="name">Campaign Tags</field>
+            <field name="res_model">mail.mass_mailing.tag</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="mass_mailing_tag_menu" parent="menu_mass_mailing_configuration" action="mass_mailing_tag_action" sequence="2" groups="base.group_no_one"/>
+
+
         <!--  MASS MAILING CAMPAIGNS !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_search">
             <field name="name">mail.mass_mailing.campaign.search</field>
@@ -773,7 +799,7 @@
                         <group>
                             <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                         </group>
                         <notebook>
                             <page string="Tracking">

@@ -124,7 +124,7 @@
                         </div>
                         <div>
                             <label for="categ_ids" class="oe_edit_only"/>
-                            <field name="categ_ids" widget="many2many_tags"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                         </div>
                     </h2>
                 </div>
@@ -622,6 +622,37 @@
         parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_stage_act"
         sequence="1"/>
+
+    <!-- Tag Form View -->
+    <record id="hr_applicant_category_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.category.form</field>
+        <field name="model">hr.applicant.category</field>
+        <field name="arch" type="xml">
+            <form string="Tags">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tag Action -->
+    <record id="hr_applicant_category_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">hr.applicant.category</field>
+        <field name="view_type">form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_applicant_category_menu"
+        parent="menu_hr_recruitment_configuration"
+        action="hr_applicant_category_action"
+        sequence="2" groups="base.group_no_one"/>
 
     <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">

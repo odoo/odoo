@@ -34,7 +34,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="base.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Public Information">
                                 <group>

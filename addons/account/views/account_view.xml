@@ -17,7 +17,8 @@
                              <field name="code" placeholder="code"/>
                              <field name="user_type_id" widget="selection"/>
                              <field name="tax_ids" widget="many2many_tags"/>
-                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
+                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="
+                             {'no_create_edit': True}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
@@ -396,6 +397,30 @@
            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.move.line"
            src_model="account.journal"/>
+
+        <!-- Tags -->
+        <record id="account_tag_view_form" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="account_tag_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">account.account.tag</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+        <menuitem id="account_tag_menu" parent="account_account_menu" action="account_tag_action" groups="base.group_no_one"/>
 
         <!-- Bank statement -->
 
