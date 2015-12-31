@@ -3,7 +3,6 @@ odoo.define('mail.systray', function (require) {
 
 var core = require('web.core');
 var SystrayMenu = require('web.SystrayMenu');
-var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 
 var chat_manager = require('mail.chat_manager');
@@ -40,34 +39,5 @@ var NotificationTopButton = Widget.extend({
 });
 
 SystrayMenu.Items.push(NotificationTopButton);
-
-
-
-/**
- *  * Global ComposeMessage Top Button
- *   *
- *    * Add a link on the top user bar to write a full mail. It opens the form view
- *     * of the mail.compose.message (in a modal).
- *      */
-var ComposeMessageTopButton = Widget.extend({
-    template:'mail.ComposeMessageTopButton',
-    events: {
-        "click": "on_compose_message",
-    },
-    on_compose_message: function (ev) {
-        ev.preventDefault();
-        web_client.action_manager.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'mail.compose.message',
-            view_mode: 'form',
-            view_type: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-        });
-    },
-});
-
-// Put the ComposeMessageTopButton widget in the systray menu
-SystrayMenu.Items.push(ComposeMessageTopButton);
 
 });

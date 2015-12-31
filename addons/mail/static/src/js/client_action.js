@@ -191,6 +191,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             chat_manager.mark_all_as_read();
         });
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
+        this.$buttons.on('click', '.o_mail_chat_button_new_message', this.on_click_new_message);
 
         this.thread.on('redirect', this, function (res_model, res_id) {
             chat_manager.redirect(res_model, res_id, this.set_channel.bind(this));
@@ -375,7 +376,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
                 .toggle(channel.type !== "dm" && channel.type !== 'static');
             self.$buttons
-                .find('.o_mail_chat_button_mark_read')
+                .find('.o_mail_chat_button_mark_read, .o_mail_chat_button_new_message')
                 .toggle(channel.id === "channel_inbox");
             self.$buttons
                 .find('.o_mail_chat_button_unstar_all')
@@ -589,6 +590,16 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             res_id: this.channel.id,
             views: [[false, 'form']],
             target: 'current'
+        });
+    },
+    on_click_new_message: function () {
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.compose.message',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            target: 'new',
         });
     },
 });
