@@ -178,9 +178,9 @@ class Contact(models.AbstractModel):
 
     # helper to call the rendering of contact field
     @api.model
-    def get_record_to_html(self, partner_ids, options=None):
+    def get_record_to_html(self, partner_id, options=None):
         node = self.record_to_html('record', {
-            'record': self.env['res.partner'].browse(partner_ids[0])},
+            'record': self.env['res.partner'].browse(partner_id)},
             options=options)
         return node and node.__html__()
 
