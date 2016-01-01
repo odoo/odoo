@@ -247,7 +247,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
 
         function process_data(data) {
             return _.map(data, function(d) {
-                return _.object(['id', 'name', 'status'], d);
+                return _.object(['id', 'display_name', 'status'], d);
             });
         }
     }
