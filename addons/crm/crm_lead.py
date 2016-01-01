@@ -267,6 +267,10 @@ class crm_lead(FormatAddress, osv.osv):
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
+        fields = ['partner_name', 'contact_name', 'title', 'street', 'street2', 'city', 'state_id', 'country_id', 'email_from', 'phone', 'mobile', 'fax', 'zip', 'function']
+        lead_data = self.read(cr, uid, ids, fields, context=context)
+        if lead_data and any([lead_data[0][key] for key in lead_data[0] if key != 'id' and key != 'email_from']):
+            return {'value': {}}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
@@ -279,7 +283,7 @@ class crm_lead(FormatAddress, osv.osv):
                 'city': partner.city,
                 'state_id': partner.state_id and partner.state_id.id or False,
                 'country_id': partner.country_id and partner.country_id.id or False,
-                'email_from': partner.email,
+                'email_from': lead_data and lead_data[0]['email_from'] or partner.email,
                 'phone': partner.phone,
                 'mobile': partner.mobile,
                 'fax': partner.fax,
