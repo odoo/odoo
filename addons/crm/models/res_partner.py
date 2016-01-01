@@ -14,41 +14,6 @@ class ResPartner(models.Model):
     opportunity_count = fields.Integer(compute='_compute_opportunity_meeting_count', string="Opportunity")
     meeting_count = fields.Integer(compute='_compute_opportunity_meeting_count', string="# Meetings")
 
-    @api.multi
-    def redirect_partner_form(self, partner_id):
-        self.ensure_one()
-        search_view = self.env.ref('base.view_res_partner_filter')
-        return {
-            'domain': "[]",
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'res.partner',
-            'res_id': int(partner_id),
-            'view_id': False,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': search_view.id or False
-        }
-
-    @api.multi
-    def make_opportunity(self, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None):
-        CrmLead = self.env['crm.lead']
-        tag_ids = self.env['crm.lead.tag'].search([])
-        opportunity_ids = {}
-        for partner in self:
-            if not partner_id:
-                partner_id = partner.id
-            opportunity = CrmLead.create({
-                'name' : opportunity_summary,
-                'planned_revenue' : planned_revenue,
-                'probability' : probability,
-                'partner_id' : partner_id,
-                'tag_ids' : tag_ids and tag_ids[0] or [],
-                'type': 'opportunity'
-            })
-            opportunity_ids[partner_id] = opportunity.id
-        return opportunity_ids
-
     def _compute_opportunity_meeting_count(self):
         for partner in self:
             operator = 'child_of' if partner.is_company else '='
