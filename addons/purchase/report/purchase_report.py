@@ -68,6 +68,7 @@ class purchase_report(osv.osv):
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
+                    s.currency_id as currency_id,
                     s.fiscal_position_id as fiscal_position_id,
                     l.product_id,
                     p.product_tmpl_id,
@@ -99,6 +100,7 @@ class purchase_report(osv.osv):
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
                 group by
                     s.company_id,
+                    s.currency_id,
                     s.create_uid,
                     s.partner_id,
                     u.factor,
