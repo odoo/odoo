@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-19 19:54+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-01-01 16:08+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +101,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Gratulujeme! Váš životopis nás zaujal!\nZavolám Vám čo najskôr, bude to 10 minútový telefónny rozhovor a naplánujeme prvé stretnutie.</p>\n<p>Ak sa Vám nebudeme vedieť s Vami spjoiť, prosím neváhajte ma kontaktovať na čísle  001 312 349 3030.\nAk nebudem odpovedať, zanechajte mi prosím odkaz s približnými časmi kedy Vás môžem opäť kontaktovať.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id.signature | safe}"
+msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Gratulujeme! Váš životopis nás zaujal!\nZavoláme Vám čo najskôr, bude to 10 minútový telefónny rozhovor a naplánujeme prvé stretnutie.</p>\n<p>Ak sa Vám nebudeme vedieť s Vami spojiť, prosím neváhajte nás kontaktovať na čísle  001 312 349 3030.\nAk nebudeme odpovedať, zanechajte nám prosím odkaz s približnými časmi kedy Vás môžeme opäť kontaktovať.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.applicant_refuse
@@ -113,7 +114,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Ďakujeme Vám za Váš záujem o našu spoločnosť a za Vašu prihlášku.\nŽiaľ, Váš profil nezodpovedá našim potrebám alebo náborová\nkampaň už bola ukončená.</p>\n<p>Ak si želáte viac informácií, neváhajte nás kontaktovať telefonicky.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id and object.user_id.signature | safe or ''}"
+msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Ďakujeme Vám za Váš záujem o našu spoločnosť a za Vašu žiadosť.\nŽiaľ, Váš profil nezodpovedá našim potrebám alebo výberové konanie už bolo ukončené.</p>\n<p>Ak si želáte viac informácií, neváhajte nás kontaktovať telefonicky.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -214,7 +215,7 @@ msgstr "Aliasovaný model"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
 msgid "Allow the automatic indexation of resumes"
-msgstr "POvoliť automatické indexovanie životopisov"
+msgstr "Povoliť automatické indexovanie životopisov"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -224,7 +225,7 @@ msgstr "Odpovedať na otázku o podobných pozíciach"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 msgid "Applicant"
-msgstr "Aplikant"
+msgstr "Uchádzač"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -266,7 +267,7 @@ msgid ""
 "Applicants and their attached CV are created automatically when an email is sent.\n"
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
-msgstr "Uchádzači a ich priložené CV-čka sú automaticky vytvorený keď sa pošle email.\nAk nainštalujete moduly pre správu dokumentov, všetky životopisy sú indexované automaticky,\ntakže môžete ľahko prehľadávať ich obsah."
+msgstr "Uchádzači a ich priložené CV-čka sú automaticky vytvorené keď sa pošle email.\nAk nainštalujete moduly pre správu dokumentov, všetky životopisy sú indexované automaticky,\ntakže môžete ľahko prehľadávať ich obsah."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
