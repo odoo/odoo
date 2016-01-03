@@ -3,13 +3,14 @@
 # * stock
 # 
 # Translators:
+# Ostap <Ostap.Yakovenko@gmail.com>, 2015
 # SV <svilij@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-12-25 21:26+0000\n"
+"PO-Revision-Date: 2015-12-31 15:17+0000\n"
 "Last-Translator: SV <svilij@yahoo.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -3541,7 +3542,7 @@ msgstr "Название"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Negative"
-msgstr ""
+msgstr "Отрицательный"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_negative_dest_location_id
@@ -3551,7 +3552,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Negative Stock"
-msgstr ""
+msgstr "Отрицательный Запас"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -3566,7 +3567,7 @@ msgstr "Новое количество на руках"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr ""
+msgstr "Новое Перемещение"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_fresh_record
@@ -4116,12 +4117,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Periodical Tasks"
-msgstr ""
+msgstr "Периодические Задачи"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
-msgstr ""
+msgstr "Физические Запасы по Месяцам"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -4131,36 +4132,36 @@ msgstr "Физические места хранения"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Физическая Упаковка"
 
 #. module: stock
 #: code:addons/stock/stock.py:3704
 #, python-format
 msgid "Pick"
-msgstr ""
+msgstr "Комплектация"
 
 #. module: stock
 #: code:addons/stock/stock.py:3809
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr ""
+msgstr "Комплектация + Упаковка + Доставка"
 
 #. module: stock
 #: code:addons/stock/stock.py:3808
 #, python-format
 msgid "Pick + Ship"
-msgstr ""
+msgstr "Комплектация + Доставка"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
 msgid "Pick Type"
-msgstr ""
+msgstr "Тип Комплектации"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_pick_id
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_pick_id
 msgid "Pick id"
-msgstr ""
+msgstr "Комплектация id"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4175,12 +4176,12 @@ msgstr "Комплектовочный лист"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "Комплектовочные листы"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr ""
+msgstr "Операции Комплектации"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -4190,12 +4191,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "Тип Комплектации"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Picking Type Name"
-msgstr ""
+msgstr "Наименование Типа Комплектации"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
@@ -4207,7 +4208,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Picking Type for Returns"
-msgstr ""
+msgstr "Тип Комплектации для Возвратов"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_config
@@ -4216,12 +4217,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "Типы Комплектации"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
 msgid "Picking Waves"
-msgstr ""
+msgstr "Волны Комплектации"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
@@ -4241,7 +4242,7 @@ msgstr "Комплектование уже осуществлено"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr ""
+msgstr "Комплектации для Групп"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4292,7 +4293,7 @@ msgstr "Пожалуйста укажите как минимум одно не�
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Positive"
-msgstr ""
+msgstr "Положительный"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -4745,19 +4746,19 @@ msgstr ""
 #: code:addons/stock/stock.py:3803
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "Приход в 1 этап"
 
 #. module: stock
 #: code:addons/stock/stock.py:3804
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "Приход в 2 этапа"
 
 #. module: stock
 #: code:addons/stock/stock.py:3805
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "Приход в 3 этапа"
 
 #. module: stock
 #: code:addons/stock/stock.py:3656
@@ -4772,7 +4773,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "Приход продуктов напрямую на склад (1 этап)"
 
 #. module: stock
 #: code:addons/stock/product.py:295
@@ -6225,14 +6226,14 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "Выгрузка во входящее местоположение, затем на склад (2 этапа)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr ""
+msgstr "Выгрузка во входящее местоположение, прохождение контроля качества, затем на склад (3 этапа)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
