@@ -1290,7 +1290,8 @@ class pos_order(osv.osv):
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
                     'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
+                    'analytic_account_id': tax.account_analytic_collected_id.id,
                 })
 
             # counterpart
