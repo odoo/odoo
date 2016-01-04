@@ -52,7 +52,7 @@ function notify_incoming_message (msg, options) {
     if (msg.author_id[1]) {
         title += _t(' from ') + _.escape(msg.author_id[1]);
     }
-    var content = $(msg.body).text().substr(0, preview_msg_max_size);
+    var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
 
     if (bus.is_odoo_focused()) {
         if (!options.is_displayed) {
@@ -104,6 +104,12 @@ function add_link (node, transform_children) {
     if (node.tagName === "A") return node.outerHTML;
     node.innerHTML = transform_children();
     return node.outerHTML;
+}
+
+function strip_html (node, transform_children) {
+    if (node.nodeType === 3) return node.data;  // text node
+    if (node.tagName === "BR") return "\n";
+    return transform_children();
 }
 
 // Message and channel manipulation helpers
