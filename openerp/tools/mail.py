@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
 import cgi
 import logging
 import lxml.html
@@ -11,7 +10,9 @@ import re
 import socket
 import threading
 import time
+from email.header import decode_header
 from email.utils import getaddresses
+from lxml import etree
 
 import openerp
 from openerp.loglevels import ustr
@@ -637,13 +638,18 @@ email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", 
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
 
+# legacy behavior: match [ID] in the Subject, used with the fallback model of the mail gateway
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
+
+# update command in emails body
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 
 # Updated in 7.0 to match the model name as well
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
 reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?[^>]*@([^>]*)>", re.UNICODE)
+
+mail_header_msgid_re = re.compile('<[^<>]+>')
 
 
 def generate_tracking_message_id(res_id):
@@ -709,3 +715,28 @@ def email_split(text):
                 # is strictly required in RFC2822's `addr-spec`.
                 if addr[1]
                 if '@' in addr[1]]
+
+def email_references(references):
+    ref_match, model, thread_id, hostname = False, False, False, False
+    if references:
+        ref_match = reference_re.search(references)
+    if ref_match:
+        model = ref_match.group(2)
+        thread_id = int(ref_match.group(1))
+        hostname = ref_match.group(3)
+    return (ref_match, model, thread_id, hostname)
+
+# was mail_message.decode()
+def decode_smtp_header(text):
+    """Returns unicode() string conversion of the the given encoded smtp header
+    text"""
+    if text:
+        text = decode_header(text.replace('\r', ''))
+        # The joining space will not be needed as of Python 3.3
+        # See https://hg.python.org/cpython/rev/8c03fe231877
+        return ' '.join([ustr(x[0], x[1]) for x in text])
+    return u''
+
+# was mail_thread.decode_header()
+def decode_smtp_headers(message, header, separator=' '):
+    return separator.join(map(decode_smtp_header, filter(None, message.get_all(header, []))))

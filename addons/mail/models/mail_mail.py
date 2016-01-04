@@ -3,11 +3,10 @@
 import base64
 import datetime
 import logging
+import psycopg2
 import threading
-
 from email.utils import formataddr
 
-import psycopg2
 
 from openerp import _, api, fields, models
 from openerp import tools

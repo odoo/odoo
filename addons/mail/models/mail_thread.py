@@ -8,7 +8,6 @@ import lxml
 from lxml import etree
 import logging
 import pytz
-import re
 import socket
 import time
 import xmlrpclib
@@ -19,18 +18,10 @@ from werkzeug import url_encode
 from openerp import _, api, fields, models
 from openerp import exceptions
 from openerp import tools
-from openerp.addons.mail.models.mail_message import decode
 from openerp.tools.safe_eval import safe_eval as eval
 
 
 _logger = logging.getLogger(__name__)
-
-
-mail_header_msgid_re = re.compile('<[^<>]+>')
-
-
-def decode_header(message, header, separator=' '):
-    return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
 
 class MailThread(models.AbstractModel):
@@ -752,7 +743,7 @@ class MailThread(models.AbstractModel):
         """ Find partners related to some header fields of the message.
 
             :param string message: an email.message instance """
-        s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
+        s = ', '.join([tools.decode_smtp_header(message.get(h)) for h in header_fields if message.get(h)])
         return filter(lambda x: x, self._find_partner_from_emails(tools.email_split(s)))
 
     @api.model
@@ -776,7 +767,7 @@ class MailThread(models.AbstractModel):
         assert len(route) == 5, 'A route should contain 5 elements: model, thread_id, custom_values, uid, alias record'
 
         message_id = message.get('Message-Id')
-        email_from = decode_header(message, 'From')
+        email_from = tools.decode_smtp_headers(message, 'From')
         author_id = message_dict.get('author_id')
         model, thread_id, alias = route[0], route[1], route[4]
         record_set = None
@@ -927,29 +918,159 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
         Alias = self.env['mail.alias']
+
+        # various information
         fallback_model = model
+        local_hostname = socket.gethostname()
+        message_id = message.get('Message-Id')
+        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
+        # compute references to find if message is a reply to an existing thread
+        references = tools.decode_smtp_headers(message, 'References')
+        in_reply_to = tools.decode_smtp_headers(message, 'In-Reply-To').strip()
+        thread_references = references or in_reply_to
+        reply_match, reply_model, reply_thread_id, reply_hostname = tools.email_references(thread_references)
+        # author and recipients
+        email_from = tools.decode_smtp_headers(message, 'From')
+        email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+        email_to = tools.decode_smtp_headers(message, 'To')
+        email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
+        # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
+        # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
+        rcpt_tos = \
+            ','.join([tools.decode_smtp_headers(message, 'Delivered-To'),
+                      tools.decode_smtp_headers(message, 'To'),
+                      tools.decode_smtp_headers(message, 'Cc'),
+                      tools.decode_smtp_headers(message, 'Resent-To'),
+                      tools.decode_smtp_headers(message, 'Resent-Cc')])
+        rcpt_tos_localparts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
+
+        # 0: bounce management
+        if bounce_alias and bounce_alias in email_to or \
+                message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
+            original = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+            if original and original.get_payload():
+                original_pl = original.get_payload()[0]
+                original_references = tools.decode_smtp_headers(original_pl, 'References')
+                original_in_reply_to = tools.decode_smtp_headers(original_pl, 'In-Reply-To').strip()
+                # TDE: clear variable use in this method
+                (ref_match, bounce_model, bounce_thread_id, bounce_hostname) = tools.email_references(original_references or original_in_reply_to)
+
+            # bounce alias: find original thread
+            if not bounce_model and not bounce_thread_id and bounce_alias:
+                # Bounce regex
+                # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
+                # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+                import re
+                bounce_re = re.compile("%s-(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+                bounce_match = bounce_re.search(email_to)
+                if bounce_match:
+                    bounce_model = bounce_match.group(2)
+                    bounce_thread_id = bounce_match.group(3)
+
+            _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail model: %s, thread_id: %s',
+                         email_from, email_to, message_id, bounce_model, bounce_thread_id)
+            if bounce_model and bounce_model in self.pool and hasattr(self.pool[bounce_model], 'message_receive_bounce') and bounce_thread_id:
+                self.env[bounce_model].browse(bounce_thread_id).message_receive_bounce()
+            return False
+
+        if reply_match:
+            # find original thread by matching the exact message-id
+            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+
+            # message is a reply to an existing thread (6.1 compatibility)
+            # do not match forwarded emails from another OpenERP system (thread_id collision!)
+            if not mail_messages and local_hostname == reply_hostname and reply_thread_id and reply_model in self.pool:
+                mail_messages = MailMessage.sudo().search([
+                    ('message_id', '=', False),
+                    ('model', '=', reply_model),
+                    ('res_id', '=', reply_thread_id)], limit=1)
+
+            if mail_messages:
+                model, thread_id = mail_messages.model, mail_messages.res_id
+                alias = Alias.search([('alias_name', '=', email_to_localpart)], limit=1)
+                alias = alias[0] if alias else None
+                route = self.with_context(drop_alias=True).message_route_verify(
+                    message, message_dict,
+                    (model, thread_id, custom_values, self._uid, alias),
+                    update_author=True, assert_model=False, create_fallback=True)
+                if route:
+                    _logger.info(
+                        'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                        email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
+                    return [route]
+                elif route is False:
+                    return []
+
+        # no route found for a matching reference (or reply), so parent is invalid
+        message_dict.pop('parent_id', None)
+        # 4. Look for a matching mail.alias entry
+        if rcpt_tos_localparts:
+            aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
+            routes = []
+            for alias in aliases:
+                user_id = alias.alias_user_id.id
+                if not user_id:
+                    user_id = self._uid
+                    _logger.info('No matching user_id for the alias %s', alias.alias_name)
+                route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                route = self.message_route_verify(
+                    message, message_dict, route,
+                    update_author=True, assert_model=True, create_fallback=True)
+                if route:
+                    _logger.info(
+                        'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                        email_from, email_to, message_id, route)
+                    routes.append(route)
+            if aliases:
+                return routes
+
+
+
+
 
         # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
-        email_from = decode_header(message, 'From')
-        email_to = decode_header(message, 'To')
-        references = decode_header(message, 'References')
-        in_reply_to = decode_header(message, 'In-Reply-To').strip()
+        email_from = tools.decode_smtp_headers(message, 'From')
+        email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+        email_to = tools.decode_smtp_headers(message, 'To')
+        references = tools.decode_smtp_headers(message, 'References')
+        in_reply_to = tools.decode_smtp_headers(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
+        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
 
-        # 0. First check if this is a bounce message or not.
-        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-        #    As all MTA does not respect this RFC (googlemail is one of them),
-        #    we also need to verify if the message come from "mailer-daemon"
-        localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
-        if message.get_content_type() == 'multipart/report' or localpart == 'mailer-daemon':
-            _logger.info("Not routing bounce email from %s to %s with Message-Id %s",
-                         email_from, email_to, message_id)
-            return []
+        # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
+        if bounce_alias and bounce_alias in email_to or \
+                message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
+            original = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+            if original and original.get_payload():
+                original_pl = original.get_payload()[0]
+                original_references = tools.decode_smtp_headers(original_pl, 'References')
+                original_in_reply_to = tools.decode_smtp_headers(original_pl, 'In-Reply-To').strip()
+                # TDE: clear variable use in this method
+                (ref_match, bounce_model, bounce_thread_id, bounce_hostname) = tools.email_references(original_references or original_in_reply_to)
+
+            # bounce alias: find original thread
+            if not bounce_model and not bounce_thread_id and bounce_alias:
+                # Bounce regex
+                # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
+                # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+                import re
+                bounce_re = re.compile("%s-(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+                bounce_match = bounce_re.search(email_to)
+                if bounce_match:
+                    bounce_model = bounce_match.group(2)
+                    bounce_thread_id = bounce_match.group(3)
+
+            _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail model: %s, thread_id: %s',
+                         email_from, email_to, message_id, bounce_model, bounce_thread_id)
+            if bounce_model and bounce_model in self.pool and hasattr(self.pool[bounce_model], 'message_receive_bounce') and bounce_thread_id:
+                self.env[bounce_model].browse(bounce_thread_id).message_receive_bounce()
+            return False
 
         # 1. message is a reply to an existing message (exact match of message_id)
-        ref_match = thread_references and tools.reference_re.search(thread_references)
-        msg_references = mail_header_msgid_re.findall(thread_references)
+        ref_match, reply_model, reply_thread_id, reply_hostname = tools.email_references(thread_references)
+        msg_references = tools.mail_header_msgid_re.findall(thread_references)
         mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
         if ref_match and mail_messages:
             model, thread_id = mail_messages.model, mail_messages.res_id
@@ -969,9 +1090,6 @@ class MailThread(models.AbstractModel):
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
         if ref_match:
-            reply_thread_id = int(ref_match.group(1))
-            reply_model = ref_match.group(2) or fallback_model
-            reply_hostname = ref_match.group(3)
             local_hostname = socket.gethostname()
             # do not match forwarded emails from another OpenERP system (thread_id collision!)
             if local_hostname == reply_hostname:
@@ -1023,11 +1141,11 @@ class MailThread(models.AbstractModel):
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos = \
-             ','.join([decode_header(message, 'Delivered-To'),
-                       decode_header(message, 'To'),
-                       decode_header(message, 'Cc'),
-                       decode_header(message, 'Resent-To'),
-                       decode_header(message, 'Resent-Cc')])
+             ','.join([tools.decode_smtp_headers(message, 'Delivered-To'),
+                       tools.decode_smtp_headers(message, 'To'),
+                       tools.decode_smtp_headers(message, 'Cc'),
+                       tools.decode_smtp_headers(message, 'Resent-To'),
+                       tools.decode_smtp_headers(message, 'Resent-Cc')])
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
         if local_parts:
             aliases = Alias.search([('alias_name', 'in', local_parts)])
@@ -1057,7 +1175,7 @@ class MailThread(models.AbstractModel):
         # 5. Fallback to the provided parameters, if they work
         if not thread_id:
             # Legacy: fallback to matching [ID] in the Subject
-            match = tools.res_re.search(decode_header(message, 'Subject'))
+            match = tools.res_re.search(tools.decode_smtp_headers(message, 'Subject'))
             thread_id = match and match.group(1)
             # Convert into int (bug spotted in 7.0 because of str)
             try:
@@ -1235,6 +1353,16 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
+    @api.multi
+    def message_receive_bounce(self, mail_id=None):
+        """Called by ``message_process`` when a bounce email (such as Undelivered
+        Mail Returned to Sender) is received for an existing thread. The default
+        behavior is to check is an integer  ``message_bounce`` column exists.
+        If it is the case, its content is incremented. """
+        if 'message_bounce' in self._fields:
+            for obj in self:
+                obj.write({'message_bounce': obj.message_bounce + 1})
+
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
         extracted from the email. Note that this processing is specific to the
@@ -1298,7 +1426,7 @@ class MailThread(models.AbstractModel):
                         # RFC2231
                         filename=email.utils.collapse_rfc2231_value(filename).strip()
                     else:
-                        filename=decode(filename)
+                        filename=tools.decode_smtp_header(filename)
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
@@ -1369,19 +1497,19 @@ class MailThread(models.AbstractModel):
         msg_dict['message_id'] = message_id
 
         if message.get('Subject'):
-            msg_dict['subject'] = decode(message.get('Subject'))
+            msg_dict['subject'] = tools.decode_smtp_header(message.get('Subject'))
 
         # Envelope fields not stored in mail.message but made available for message_new()
-        msg_dict['from'] = decode(message.get('from'))
-        msg_dict['to'] = decode(message.get('to'))
-        msg_dict['cc'] = decode(message.get('cc'))
-        msg_dict['email_from'] = decode(message.get('from'))
+        msg_dict['from'] = tools.decode_smtp_header(message.get('from'))
+        msg_dict['to'] = tools.decode_smtp_header(message.get('to'))
+        msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'))
+        msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
         partner_ids = self._message_find_partners(message, ['To', 'Cc'])
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
         if message.get('Date'):
             try:
-                date_hdr = decode(message.get('Date'))
+                date_hdr = tools.decode_smtp_header(message.get('Date'))
                 parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
                 if parsed_date.utcoffset() is None:
                     # naive datetime, so we arbitrarily decide to make it
@@ -1398,12 +1526,12 @@ class MailThread(models.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if message.get('In-Reply-To'):
-            parent_ids = self.env['mail.message'].search([('message_id', '=', decode(message['In-Reply-To'].strip()))], limit=1)
+            parent_ids = self.env['mail.message'].search([('message_id', '=', tools.decode_smtp_header(message['In-Reply-To'].strip()))], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            msg_list = mail_header_msgid_re.findall(decode(message['References']))
+            msg_list = tools.mail_header_msgid_re.findall(tools.decode_smtp_header(message['References']))
             parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in msg_list])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
