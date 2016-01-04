@@ -1438,7 +1438,7 @@ class procurement_order(osv.osv):
             if seller_qty:
                 qty[procurement.product_id.id] = max(qty[procurement.product_id.id], seller_qty)
             prices_qty += [(procurement.product_id, qty[procurement.product_id.id], partner)]
-        prices = pricelist_obj.price_get_multi(cr, uid, [pricelist_id], prices_qty)
+        prices = pricelist_obj.price_get_multi(cr, uid, [pricelist_id], prices_qty, context=context)
 
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
@@ -1641,14 +1641,15 @@ class procurement_order(osv.osv):
             procs_done += create_purchase_procs[create_purchase]
             line_values = []
             procurements = self.browse(cr, uid, create_purchase_procs[create_purchase], context=context)
-            partner = partner_obj.browse(cr, uid, create_purchase[0], context=context)
+            procurement = procurements[0]
+            ctx_company = dict(context or {}, force_company=procurement.company_id.id)
+            partner = partner_obj.browse(cr, uid, create_purchase[0], context=ctx_company)
 
             #Create purchase order itself:
-            procurement = procurements[0]
             schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, procurement.company_id, context=context)
             purchase_date = self._get_purchase_order_date(cr, uid, procurement, procurement.company_id, schedule_date, context=context)
 
-            value_lines = self._get_po_line_values_from_procs(cr, uid, procurements, partner, schedule_date, context=context)
+            value_lines = self._get_po_line_values_from_procs(cr, uid, procurements, partner, schedule_date, context=ctx_company)
             line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
             name = seq_obj.next_by_code(cr, uid, 'purchase.order', context=context) or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
