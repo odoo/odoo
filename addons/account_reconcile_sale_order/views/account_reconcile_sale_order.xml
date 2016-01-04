@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="project assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/account_reconcile_sale_order/static/src/less/account_reconciliation.less"/>
+            <script type="text/javascript" src="/account_reconcile_sale_order/static/src/js/account_reconciliation_widgets.js"></script>
+        </xpath>
+    </template>
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+        <field name="name">Sales Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+    </record>
+
+</odoo>
