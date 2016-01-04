@@ -74,6 +74,13 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         this.lines_reconciled_with_ctrl_enter = 0;
         this.time_widget_loaded = Date.now();
 
+        // Used to push the right state in the URL on reverse breadcrumb
+        this.webclient_state = {
+            action: context.id,
+            active_id: context.context.active_id,
+            active_ids: context.context.active_ids,
+            menu_id: context.context.params.menu_id
+        };
         this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof ActionManager });
         this.crash_manager = new CrashManager();
         this.formatCurrencies; // Method that formats the currency ; loaded from the server
@@ -239,6 +246,8 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     do_show: function() {
         var self = this;
         var super_call = _.bind(this._super, this);
+        // Make sure the current state is pushed back in the URL
+        self.action_manager.do_push_state(self.webclient_state);
         // Reload presets if they were modified
         self.model_presets.query(['write_date']).order_by('-write_date').first().then(function (data) {
             if (!data || data.write_date != self.presets_last_write_date) {
