@@ -127,7 +127,6 @@ class ProductProduct(models.Model):
 
     @api.v7
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        print "_product_available v7 >>>>>>>>>>>>>>>>>>>>>", self
         context = context or {}
         field_names = field_names or []
 
@@ -176,7 +175,6 @@ class ProductProduct(models.Model):
 
     @api.v8
     def _product_available(self):
-        print "_product_available v8 >>>>>>>>>>>>>>>>>>>>>", self
         domain_products = [('product_id', 'in', self.ids)]
         domain_quant, domain_move_in, domain_move_out = [], [], []
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
@@ -217,7 +215,6 @@ class ProductProduct(models.Model):
 
     @api.model
     def _search_product_quantity(self, obj, name, domain):
-        print "_search_product_quantity >>>>>>>>>>>>>>>>>>>>>", self, obj, name, domain
         res = []
         for field, operator, value in domain:
             #to prevent sql injections
@@ -243,7 +240,6 @@ class ProductProduct(models.Model):
 
     @api.model
     def _search_qty_available(self, operator, value):
-        print "_search_qty_available >>>>>>>>>>>>>>>>>>>>>", self, operator, value
         domain_quant = []
         if self.env.context.get('lot_id'):
             domain_quant.append(('lot_id', '=', self.env.context['lot_id']))
@@ -259,7 +255,6 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _product_available_text(self):
-        print "_product_available_text >>>>>>>>>>>>>>>>>>>>>", self
         res = {}
         for product in self:
             res[product.id] = str(product.qty_available) + _(" On Hand")

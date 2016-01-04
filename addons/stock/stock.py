@@ -789,9 +789,99 @@ class StockPicking(models.Model):
     recompute_pack_op = fields.Boolean('Recompute pack operation?', help='True if reserved quants changed, which mean we might need to recompute the package operations', copy=False, default=False)
     launch_pack_operations = fields.Boolean("Launch Pack Operations", copy=False, default=False)
 
+    @api.depends('move_type', 'launch_pack_operations', 'move_lines.state', 'move_lines.partially_available', 'move_lines.picking_id')
+    def _state_get(self):
+        '''The state of a picking depends on the state of its related stock.move
+            draft: the picking has no line or any one of the lines is draft
+            done, draft, cancel: all lines are done / draft / cancel
+            confirmed, waiting, assigned, partially_available depends on move_type (all at once or partial)
+        '''
+        for pick in self:
+            if not pick.move_lines:
+                pick.state = pick.launch_pack_operations and 'assigned' or 'draft'
+                continue
+            if any([x.state == 'draft' for x in pick.move_lines]):
+                pick.state = 'draft'
+                continue
+            if all([x.state == 'cancel' for x in pick.move_lines]):
+                pick.state = 'cancel'
+                continue
+            if all([x.state in ('cancel', 'done') for x in pick.move_lines]):
+                pick.state = 'done'
+                continue
+
+            order = {'confirmed': 0, 'waiting': 1, 'assigned': 2}
+            order_inv = {0: 'confirmed', 1: 'waiting', 2: 'assigned'}
+            lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel', 'done')]
+            if pick.move_type == 'one':
+                pick.state = order_inv[min(lst)]
+            else:
+                #we are in the case of partial delivery, so if all move are assigned, picking
+                #should be assign too, else if one of the move is assigned, or partially available, picking should be
+                #in partially available state, otherwise, picking is in waiting or confirmed state
+                pick.state = order_inv[max(lst)]
+                if not all(x == 2 for x in lst):
+                    if any(x == 2 for x in lst):
+                        pick.state = 'partially_available'
+                    else:
+                        #if all moves aren't assigned, check if we have one product partially available
+                        for move in pick.move_lines:
+                            if move.partially_available:
+                                pick.state = 'partially_available'
+                                break
+
+    state = fields.Selection(compute="_state_get", copy=False, store=True,
+        selection=[
+            ('draft', 'Draft'),
+            ('cancel', 'Cancelled'),
+            ('waiting', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('partially_available', 'Partially Available'),
+            ('assigned', 'Available'),
+            ('done', 'Done'),
+            ], string='Status', readonly=True, select=True, track_visibility='onchange',
+        help="""
+            * Draft: not confirmed yet and will not be scheduled until confirmed\n
+            * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+            * Waiting Availability: still waiting for the availability of products\n
+            * Partially Available: some products are available and reserved\n
+            * Ready to Transfer: products reserved, simply waiting for confirmation.\n
+            * Transferred: has been processed, can't be modified or cancelled anymore\n
+            * Cancelled: has been cancelled, can't be confirmed anymore""", defaul="draft"
+    )
+    group_id = fields.Many2one(related='move_lines.group_id', comodel_name='procurement.group', string='Procurement Group', readonly=True, store=True)
+
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.multi
+    def _get_pickings_dates_priority(self):
+        res = set()
+        for move in self:
+            if move.picking_id and (not (move.picking_id.min_date < move.date_expected < move.picking_id.max_date) or move.priority > move.picking_id.priority):
+                res.add(move.picking_id.id)
+        return list(res)
+
+    @api.multi
+    def action_assign_owner(self):
+        for picking in self:
+            picking.pack_operation_ids.write({'owner_id': picking.owner_id.id})
+
+    @api.onchange('partner_id', 'picking_type_id')
+    def onchange_picking_type(self):
+        if self.picking_type_id:
+            if not self.picking_type_id.default_location_src_id and self.partner_id:
+                location_id = self.partner_id.property_stock_supplier.id
+            else:
+                location_id = self.picking_type_id.default_location_src_id.id
+
+            if not self.picking_type_id.default_location_dest_id and self.partner_id:
+                location_dest_id = self.partner_id.property_stock_customer.id
+            else:
+                location_dest_id = self.picking_type_id.default_location_dest_id.id
+            self.location_id = location_id
+            self.location_dest_id = location_dest_id
 
     @api.model
     def create(self, vals):
