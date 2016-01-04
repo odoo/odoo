@@ -4,7 +4,6 @@
 
 {
     'name': 'Just In Time Scheduling',
-    'version': '1.0',
     'category': 'Base',
     'description': """
 This module will automatically reserve the picking from stock when a sale order is confirmed
@@ -23,9 +22,5 @@ still unreserve a picking.
     """,
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['sale_stock'],
-    'data': [],
-    'demo': [],
-    'test': [],
-    'installable': True,
     'auto_install': True,
 }
