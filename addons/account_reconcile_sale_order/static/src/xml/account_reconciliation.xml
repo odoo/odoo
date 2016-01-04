@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-extend="bank_statement_reconciliation_line">
+        <t t-jquery=".initial_line .cell_label" t-operation="append">
+            <a href="javascript:void(0)"
+                t-if="init_data &amp;&amp; init_data.sale_order_id"
+                class="fa fa-external-link link_open_sale_order"
+                title="Open corresponding sale order"></a>
+        </t>
+    </t>
+
+</templates>
