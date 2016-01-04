@@ -404,16 +404,13 @@ var abstractReconciliationLine = Widget.extend({
         this.formatCurrencies = this.getParent().formatCurrencies;
         this.renderPresetsButtons = this.getParent().renderPresetsButtons;
 
-        if (context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
-            console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
-
-        if (context.initial_data_provided) {
+        if (context.init_data) {
             // Process data
-            this.partner_id = context.line.partner_id;
-            _.each(context.reconciliation_proposition, function(line) {
+            this.partner_id = context.init_data.line.partner_id;
+            _.each(context.init_data.reconciliation_proposition, function(line) {
                 self.decorateMoveLine(line);
             }, this);
-            this.set("mv_lines_selected", context.reconciliation_proposition);
+            this.set("mv_lines_selected", context.init_data.reconciliation_proposition);
         } else {
             this.set("mv_lines_selected", []);
         }
@@ -1205,9 +1202,9 @@ var bankStatementReconciliation = abstractReconciliation.extend({
                         var child_promises = [];
                         var datum = data.shift();
                         if (datum !== undefined)
-                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
+                            child_promises.push(self.displayReconciliation(datum.line.id, 'match', false, datum));
                         while ((datum = data.shift()) !== undefined)
-                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
+                            child_promises.push(self.displayReconciliation(datum.line.id, 'inactive', false, datum));
 
                         // When reconciliations are instanciated, make an entrance
                         $.when.apply($, child_promises).then(function(){
@@ -1313,20 +1310,15 @@ var bankStatementReconciliation = abstractReconciliation.extend({
             });
     },
 
-    displayReconciliation: function(line_id, mode, animate_entrance, initial_data_provided, line, reconciliation_proposition) {
+    displayReconciliation: function(line_id, mode, animate_entrance, init_data) {
         var self = this;
         animate_entrance = defaultIfUndef(animate_entrance, true);
-        initial_data_provided = defaultIfUndef(initial_data_provided, false);
-
-        var context = {
+        var widget = new self.children_widget(self, {
             line_id: line_id,
             mode: mode,
             animate_entrance: animate_entrance,
-            initial_data_provided: initial_data_provided,
-            line: initial_data_provided ? line : undefined,
-            reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
-        };
-        var widget = new self.children_widget(self, context);
+            init_data: init_data,
+        });
         return widget.appendTo(self.$(".reconciliation_lines_container"));
     },
 
@@ -1409,16 +1401,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
                 var child_promises = [];
                 var datum;
                 while ((datum = data.shift()) !== undefined) {
-                    var context = {
-                        line_id: datum.st_line.id,
-                        mode: 'inactive',
-                        animate_entrance: false,
-                        initial_data_provided: true,
-                        line: datum.st_line,
-                        reconciliation_proposition: datum.reconciliation_proposition,
-                    };
-                    var widget = new bankStatementReconciliationLine(self, context);
-                    child_promises.push(widget.appendTo(self.$(".reconciliation_lines_container")));
+                    child_promises.push(self.displayReconciliation(datum.line.id, 'inactive', false, datum));
                 }
                 self.last_displayed_reconciliation_index += reconciliations_to_show.length;
                 return $.when.apply($, child_promises).then(function(){
@@ -1607,24 +1590,21 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         this.template_prefix = "bank_statement_";
         this._super(parent, context);
 
-        if (context.line_id === undefined ||
-            context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
-            console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
-
         this.line_id = context.line_id;
         this.model_bank_statement_line = this.getParent().model_bank_statement_line;
         this.formatCurrencies = this.getParent().formatCurrencies;
 
-        if (context.initial_data_provided) {
+        if (context.init_data) {
             // Process data
-            this.st_line = context.line;
+            this.init_data = context.init_data;
+            this.st_line = context.init_data.line;
             this.decorateStatementLine(this.st_line);
             this.set("currency_id", this.st_line.currency_id);
 
             // Exclude selected move lines
             if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
                 this.getParent().excluded_move_lines_ids[this.partner_id] = [];
-            this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
+            this.getParent().excludeMoveLines(this, this.partner_id, context.init_data.reconciliation_proposition);
         } else {
             this.st_line = undefined;
             this.partner_id = undefined;
@@ -1633,7 +1613,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
     loadData: function() {
         var self = this;
-        if (self.context.initial_data_provided)
+        if (self.context.init_data)
             return;
 
         // Get ids of selected move lines (to exclude them from reconciliation proposition)
@@ -1646,10 +1626,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         return self.model_bank_statement_line
             .call("get_data_for_reconciliation_widget", [[self.line_id], excluded_move_lines_ids])
             .then(function (data) {
-                self.st_line = data[0].st_line;
+                self.init_data = data[0];
+                self.st_line = data[0].line;
                 self.decorateStatementLine(self.st_line);
                 self.set("currency_id", self.st_line.currency_id);
-                self.partner_id = data[0].st_line.partner_id;
+                self.partner_id = self.st_line.partner_id;
                 if (self.getParent().excluded_move_lines_ids[self.partner_id] === undefined)
                     self.getParent().excluded_move_lines_ids[self.partner_id] = [];
                 var mv_lines = [];
@@ -1665,6 +1646,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         var self = this;
         self.$el.prepend(QWeb.render("bank_statement_reconciliation_line", {
             line: self.st_line,
+            init_data: self.init_data,
             presets: self.renderPresetsButtons(self.get("presets")),
         }));
 
@@ -1705,7 +1687,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             self.$el.empty();
             self.$el.removeClass("no_partner");
             self.context.mode = mode;
-            self.context.initial_data_provided = false;
+            self.context.init_data = undefined;
             self.is_valid = true;
             self.is_consistent = true;
             self.filter = "";
