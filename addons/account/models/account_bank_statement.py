@@ -425,21 +425,32 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def get_data_for_reconciliation_widget(self, excluded_ids=None):
-        """ Returns the data required to display a reconciliation widget, for each statement line in self """
+        """ Used to fetch the data required to instanciate 1 or more reconciliation widgets. The data sent to the reconciliation
+            widgets can be extended through get_data_for_single_reconciliation_widget ; this method makes sure required data are present.
+
+            :param (list of int) excluded_ids: ids of account.move.line which cannot currently be used because
+                they are already used in other reconciliation widgets
+            :returns: List of dicts containing at least 'line' (dict corresponding to the account.bank.statement.line)
+                and 'reconciliation_proposition' (list of dicts corresponding to account.move.line)
+        """
         excluded_ids = excluded_ids or []
         ret = []
 
         for st_line in self:
-            aml_recs = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
-            target_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.journal_id.company_id.currency_id
-            rp = aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)
-            excluded_ids += [move_line['id'] for move_line in rp]
-            ret.append({
-                'st_line': st_line.get_statement_line_for_reconciliation_widget(),
-                'reconciliation_proposition': rp
-            })
+            data_dict = st_line.get_data_for_single_reconciliation_widget(excluded_ids)
+            if not 'line' in data_dict:
+                data_dict['line'] = st_line.get_statement_line_for_reconciliation_widget()
+            if not 'reconciliation_proposition' in data_dict:
+                aml_recs = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
+                data_dict['reconciliation_proposition'] = st_line.prepare_move_lines_for_reconciliation_widget(aml_recs)
+            excluded_ids += [line['id'] for line in data_dict['reconciliation_proposition']]
+            ret.append(data_dict)
 
         return ret
+
+    def get_data_for_single_reconciliation_widget(self, excluded_move_line_ids):
+        """ Extension point to add more data to initialize a reconciliation widget or override the default data. Must return a dict. """
+        return {}
 
     def get_statement_line_for_reconciliation_widget(self):
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
@@ -486,8 +497,7 @@ class AccountBankStatementLine(models.Model):
         """ Returns move lines for the bank statement reconciliation widget, formatted as a list of dicts
         """
         aml_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
-        target_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
-        return aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
+        return self.prepare_move_lines_for_reconciliation_widget(aml_recs)
 
     ####################################################
     # Reconciliation methods
@@ -496,12 +506,12 @@ class AccountBankStatementLine(models.Model):
     def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, additional_domain=None, overlook_partner=False):
         """ Return account.move.line records which can be used for bank statement reconciliation.
 
-            :param excluded_ids:
-            :param str:
-            :param offset:
-            :param limit:
-            :param additional_domain:
-            :param overlook_partner:
+            :param (list of int) excluded_ids: ids of account.move.line which must not be fetched
+            :param (string) str: search string to filter the move lines
+            :param (int) offset: as described in the doc of Model.search(), used to impement the pager
+            :param (int) limit: as described in the doc of Model.search(), used to impement the pager
+            :param (search domain) additional_domain: domain to further filter move lines
+            :param (bool) overlook_partner: true if move lines do not need to have the same partner as the statement line
         """
         # Domain to fetch registered payments (use case where you encode the payment before you get the bank statement)
         reconciliation_aml_accounts = [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id]
@@ -605,16 +615,9 @@ class AccountBankStatementLine(models.Model):
         return ret
 
     def _get_move_lines_for_auto_reconcile(self):
-        """ Returns the move lines that the method auto_reconcile can use to try to reconcile the statement line """
-        pass
-
-    @api.multi
-    def auto_reconcile(self):
-        """ Try to automatically reconcile the statement.line ; return the counterpart journal entry/ies if the automatic reconciliation succeeded, False otherwise.
-            TODO : this method could be greatly improved and made extensible
+        """ Returns the move lines that the method auto_reconcile can use to try to reconcile the statement line
         """
-        self.ensure_one()
-        match_recs = self.env['account.move.line']
+        match_recs = None
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()
@@ -626,15 +629,25 @@ class AccountBankStatementLine(models.Model):
             domain = equal_amount_domain + [('ref', '=', self.name)]
             match_recs = self.get_move_lines_for_reconciliation(limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_recs and len(match_recs) != 1:
-                return False
+                return None
 
         # Look for a single move line with the same partner, the same amount
         if not match_recs:
             if self.partner_id:
                 match_recs = self.get_move_lines_for_reconciliation(limit=2, additional_domain=equal_amount_domain)
                 if match_recs and len(match_recs) != 1:
-                    return False
+                    return None
 
+        return match_recs
+
+    @api.multi
+    def auto_reconcile(self):
+        """ Try to automatically reconcile the statement.line ; return the counterpart journal entry/ies
+            if the automatic reconciliation succeeded, False otherwise.
+        """
+        self.ensure_one()
+
+        match_recs = self._get_move_lines_for_auto_reconcile()
         if not match_recs:
             return False
 
@@ -645,13 +658,7 @@ class AccountBankStatementLine(models.Model):
             if aml.account_id.internal_type == 'liquidity':
                 payment_aml_rec = (payment_aml_rec | aml)
             else:
-                amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
-                counterpart_aml_dicts.append({
-                    'name': aml.name if aml.name != '/' else aml.move_id.name,
-                    'debit': amount < 0 and -amount or 0,
-                    'credit': amount > 0 and amount or 0,
-                    'move_line': aml
-                })
+                counterpart_aml_dicts.append(self.prepare_counterpart_aml_dict_for(aml))
 
         try:
             with self._cr.savepoint():
@@ -665,6 +672,22 @@ class AccountBankStatementLine(models.Model):
             self.env['account.move'].invalidate_cache()
             self.env['account.move.line'].invalidate_cache()
             return False
+
+    def prepare_counterpart_aml_dict_for(self, move_line):
+        """ Returns the dict used to reconcile a move line, as described in process_reconciliation
+        """
+        amount = move_line.currency_id and move_line.amount_residual_currency or move_line.amount_residual
+        return {
+            'name': move_line.name if move_line.name != '/' else move_line.move_id.name,
+            'debit': amount < 0 and -amount or 0,
+            'credit': amount > 0 and amount or 0,
+            'move_line': move_line
+        }
+
+    def prepare_move_lines_for_reconciliation_widget(self, move_lines):
+        """ Returns move_lines formatted for the reconciliation widget (as a list of dicts) """
+        target_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+        return move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
 
     def _prepare_reconciliation_move(self, move_name):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
