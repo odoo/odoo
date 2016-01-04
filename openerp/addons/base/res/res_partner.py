@@ -397,11 +397,10 @@ class res_partner(osv.Model, format_address):
         return result
 
     @api.multi
-    def onchange_state(self, state_id):
-        if state_id:
-            state = self.env['res.country.state'].browse(state_id)
-            return {'value': {'country_id': state.country_id.id}}
-        return {'value': {}}
+    @api.onchange("state_id")
+    def _onchange_state_id(self):
+        if self.state_id:
+            self.country_id = self.state_id.country_id
 
     @api.onchange('email')
     def onchange_email(self):
