@@ -1,40 +1,41 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+# Ahmed Mohamed Salah <a.salah@puzzlewebworx.com>, 2015
+# Anass Ahmed <anass.1430@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Mostafa Wahbi <m.wahbi.fms@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-12-29 23:41+0000\n"
+"Last-Translator: Anass Ahmed <anass.1430@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:30+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -43,8 +44,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -53,16 +53,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -74,42 +69,34 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; direction: rtl; \">\n\n    <p>مرحباً ${object.partner_id.name},</p>\n    \n    <p>إليك ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} من ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>أرقام الإشارة</strong><br />\n       &nbsp;&nbsp;رقم الأمر: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;إجمالي الأمر: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;تاريخ الأمر: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;رقم إشارة الأمر: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;رقم إشارتك: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;نقطة اتصالك: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>إذا كان لديك أية استفسارات، فنرجو ألا تتردد في الاتصال بنا.</p>\n    <p>شكراً لك!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                الهاتف:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                موقع ويب:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
@@ -122,8 +109,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -132,16 +118,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -153,67 +134,57 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; direction: rtl;\">\n\n    <p>مرحباً ${object.partner_id.name},</p>\n    \n    <p>إليك ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} من ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>أرقام الإشارة</strong><br />\n       &nbsp;&nbsp;رقم طلب عرض السعر: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;تاريخ طلب عرض السعر: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;رقم إشارة طلب عرض السعر: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;رقم إشارتك: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;نقطة اتصالك: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>إذا كان لديك أي استفسارات، فنرجو ألا تتردد في الاتصال بنا.</p>\n    <p>شكراً لك!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                الهاتف:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                موقع ويب:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
-"Creates the dropship route and add more complex tests-This installs the "
-"module stock_dropshipping."
-msgstr ""
+"Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
+msgstr "\nسيقوم بإنشاء مسار الشحن المباشر ويضيف اختبارات أكثر تعقيداً. سيقوم هذا بتثبيت الموديول stock_dropshipping."
 
 #. module: purchase
 #: help:purchase.order.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically when purchase order in draft "
-"status.                                        \n"
-"* The 'Confirmed' status is set automatically as confirm when purchase order "
-"in confirm status.                                        \n"
-"* The 'Done' status is set automatically when purchase order is set as done. "
-"                                       \n"
-"* The 'Cancelled' status is set automatically when user cancel purchase "
-"order."
-msgstr ""
+" * The 'Draft' status is set automatically when purchase order in draft status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase order."
+msgstr "* حالة 'مسودة' يتم ضبطها تلقائياً عند إنشاء أمر الشراء.\n* يتم اختيار حالة 'مؤكد' تلقائياً عند تأكيد أمر الشراء.\n* يتم اختيار حالة 'منتهي' عند تنتهي معالجة أمر الشراء بالكامل.\n* يتم اختيار حالة 'ملغي' عندما تقوم بإلغاء أمر شراء."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:185
+#: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr "شراء"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "عدد المشتريات"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr ""
+msgstr "عدد فواتير المورد"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
@@ -228,7 +199,7 @@ msgstr "عدد طلبات الشراء"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} أمر (رقم الإشارة ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
@@ -246,30 +217,26 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click here to record a supplier invoice.\n"
 "                </p><p>\n"
-"                    Supplier invoices can be pre-generated based on "
-"purchase\n"
+"                    Supplier invoices can be pre-generated based on purchase\n"
 "                    orders or receipts. This allows you to control invoices\n"
 "                    you receive from your supplier according to the draft\n"
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء فاتورة مورد جديدة.\n</p><p>\nيمكن إنشاء الفواتير مسبقاً اعتماداً على بنود\nأوامر الشراء أو إيصالاتها. يسمح لك هذا بمتابعة\nومراقبة الفواتير التي تتلقاها من مورديك وفقاً\nلمسودات المستند في أودو.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    This supplier has no purchase order. Click to create a "
-"new RfQ.\n"
+"                    This supplier has no purchase order. Click to create a new RfQ.\n"
 "                </p><p>\n"
-"                    The request for quotation is the first step of the "
-"purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to "
-"control the receipt\n"
+"                    The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nلا توجد أوامر شراء لهذا المورد. انقر لإنشاء طلب عرض سعر جديد.\n</p><p>\nطلب عرض السعر هي أول خطوة في عمليات المشتريات. ما أن يتم\nتحويله إلى أمر شراء، ستكون قادراً على التحكم في استلام المنتجات\nالقادمة من المورد.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -279,12 +246,11 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإضافة إصدار من قائمة الأسعار.\n</p><p>\nيمكنك أن تنشئ أكثر من إصدار لقائمة الأسعار، وكل منهم\nيجب أن يكون سارياً لفترة معينة. بعض الأمثلة للإصدارات:\nالأسعار الأساسية، أسعار 2010، أسعار 2011، تخفيضات\nالصيف، وما شابه ذلك.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -293,31 +259,26 @@ msgid ""
 "                Click to create a new incoming shipment.\n"
 "              </p><p> \n"
 "                Here you can track all the product receipts of purchase\n"
-"                orders where the invoicing is \"Based on Incoming "
-"Shipments\",\n"
+"                orders where the invoicing is \"Based on Incoming Shipments\",\n"
 "                and for which you have not received a supplier invoice yet.\n"
-"                You can generate a supplier invoice based on those "
-"receipts.\n"
+"                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء شحنة واردة جديدة.\n</p><p>\nيمكنك هنا تتبع كافة المنتجات الواردة إليك من أوامر الشراء،\nوالتي تستخدم أسلوب إصدار الفواتير \"اعتماداً على الشحنات\nالواردة\"، والتي لم تتلقى فواتيرها من المورد حتى الآن. يمكنك\nإنشاء فاتورة المورد ارتكازاً للمنتجات التي تم استلامها.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that will be converted into a "
-"purchase order. \n"
+"                Click to create a quotation that will be converted into a purchase order. \n"
 "              </p><p>\n"
 "                Use this menu to search within your purchase orders by\n"
-"                references, supplier, products, etc. For each purchase "
-"order,\n"
-"                you can track the related discussion with the supplier, "
-"control\n"
+"                references, supplier, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the supplier, control\n"
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء طلب عرض سعر جديد يمكنك تحويله إلى أمر شراء.\n</p><p>\nاستخدم هذه القائمة للبحث في أوامر الشراء باستخدام رقم الإشارة،\nالمورد، المنتجات، وغيرها. لكل أمر شراء، يمكنك متابعة المناقشات\nوالمفاوضات، التحكم في المنتجات الواردة وكيفية تسجيل الفواتير\nالخاصة بالمورد.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -325,17 +286,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
-"                The quotation contains the history of the "
-"discussion/negociation\n"
+"                The quotation contains the history of the discussion/negotiation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
-"                Most propositions of purchase orders are created "
-"automatically\n"
+"                Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء طلب عرض سعر جديد.\n</p><p>\nيتضمن طلب عرض السعر سجلاً بكافة المناقشات والمفاوضات\nالتي أجريتها مع المورد. ما أن يتم تأكيد طلب عرض السعر، سيتحول\nتلقائياً إلى أمر شراء.\n</p><p>\nأغلب طلبات عروض السعر يتم إنشاءها تلقائياً بواسطة أودو\nاعتماداً على مستويات المخزون واحتياجاتها.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -351,7 +310,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء مسودة فاتورة جديدة.\n</p><p>\nاستخدم هذه القائمة للتحكم في الفواتير التي تلقيتها\nمن مورديك. يقوم أودو بإنشاء مسودات الفواتير من\nبيانات أوامر الشراء أو إيصالاتها، ووفقاً لإعداداتك.\n</p><p>\nما أن تتلقى فاتورة المورد، يمكنك مطابقتها مع\nبيانات مسودة الفاتورة التي قمت بإنشاءها ثم تأكيدها.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -364,27 +323,23 @@ msgid ""
 "            subcontractants.\n"
 "          </p><p>\n"
 "            The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتعريف منتج جديد.\n</p><p>\nيجب أن تقوم بتعريف منتجات لكل شيء تشتريه، سواء\nكان ذلك منتجاً فعلياً، استهلاكياً أو خدمة تشتريها لمؤسستك\nأو لحساب مقاول من الباطن.\n</p><p>\nتتضمن بيانات نموذج المنتج معلومات تفصيلية لتسهيل عمليات\nالمشتريات، مثل: الأسعار، لوجستيات المشتريات الدورية، البيانات\nالمحاسبية، الموردين المتوفرين، وغير ذلك.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
 msgid ""
 "<p>\n"
-"                Here you can track all the lines of purchase orders where "
-"the\n"
-"                invoicing is \"Based on Purchase Order Lines\", and for "
-"which you\n"
-"                have not received a supplier invoice yet. You can generate "
-"a\n"
+"                Here you can track all the lines of purchase orders where the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for which you\n"
+"                have not received a supplier invoice yet. You can generate a\n"
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nيمكنك هنا متابعة كافة بنود أوامر الشراء، والتي تم إصدار فواتيرها\n\"وفقاً لبنود أمر الشراء\" والتي لم تستلم أصل فاتورة المورد لها بعد.\nيمكنك إنشاء مسودة فاتورة المورد اعتماداً على تلك البنود من\nهذه القائمة.\n</p>"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -394,7 +349,7 @@ msgstr "دفتر العناوين"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "عمليات المناقصات والمشتريات المتقدمة"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -404,27 +359,25 @@ msgstr "التنبيه بالمنتج أو المورد"
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to purchase a given product or a given supplier.\n"
+"Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "يسمح لك بضبط تنبيهات على المنتجات وإرسال هذه التنبيهات عندما يرغب مستخدم في شراء منتج معين، أو من مورد معين.\nمثال: في حالة المنتج: لا تتعامل على هذا المنتج، أو لا تشتري أكثر من 5 قطع منه.\nفي حالة المورد: لا تنسى أن تطلب الشحن السريع من هذا المورد."
 
 #. module: purchase
 #: help:account.config.settings,module_purchase_analytic_plans:0
 #: help:purchase.config.settings,module_purchase_analytic_plans:0
 msgid ""
-"Allows the user to maintain several analysis plans. These let you split "
-"lines on a purchase order between several accounts and analytic plans.\n"
+"Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr ""
+msgstr "يسمح للمستخدم بإنشاء عدة خطط تحليلية. تسمح لك الخطط التحليلية بتوزيع البنود في أوامر الشراء بين عدة حسابات وخطط تحليلية.\n- سيقوم هذا بتثبيت الموديول purchase_analytic_plans."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "يسمح لك بإدارة أسعار مختلفة وفقاً للقواعد المحددة على فئة المورد.\nمثال: 10% خصم لموزعي التجزئة، دعاية خصم 5 جنيه على هذا المنتج، إلخ."
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
@@ -441,7 +394,7 @@ msgstr "يسمح لك باختيار والحفاظ على وحدات قياس �
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "يسمح لك بتحديد الحساب التحليلي في أوامر الشراء."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -451,13 +404,13 @@ msgstr "حساب تحليلي"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "المحاسبة التحليلية في المشتريات"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "الحسابات التحليلية على المشتريات"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -483,12 +436,12 @@ msgstr "هل أنت متأكد من دمج طلبات الشراء هذه؟"
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
 msgid "Associated procurements"
-msgstr ""
+msgstr "المشتريات الدورية المقترنة"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "متوسط زمن التسليم"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
@@ -498,22 +451,20 @@ msgstr "متوسط السعر"
 #. module: purchase
 #: field:stock.warehouse,buy_pull_id:0
 msgid "BUY rule"
-msgstr ""
+msgstr "قاعدة الشراء"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "ارتكازاً لبنود أمر الشراء"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid ""
-"Based on Purchase Order lines: place individual lines in 'Invoice Control / "
-"On Purchase Order lines' from where you can selectively create an invoice.\n"
+"Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
-"Based on incoming shipments: let you create an invoice when receipts are "
-"validated."
-msgstr ""
+"Based on incoming shipments: let you create an invoice when receipts are validated."
+msgstr "ارتكازاً لبنود أوامر الشراء: إنشاء فواتير للبنود التي تريدها في أمر الشراء عند إصدار الفواتير.\nارتكازاً لمسودات الفواتير: قم بإنشاء الفاتورة يدوياً ثم قم باعتمادها لاحقاً.\nارتكازاً للشحنات الواردة: يتيح لك إنشاء الفواتير اعتماداً على الكميات التي تم استلامها بالفعل."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -524,35 +475,34 @@ msgstr "على أساس توليد مسودة فاتورة"
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "ارتكازاً إلى الكميات الموردة"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "ارتكازاً لبنود أوامر الشراء"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr ""
+msgstr "تم استلام العطاء"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr ""
+msgstr "تم استلام العطاء في"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "العطاء صالح حتى"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1160
-#: code:addons/purchase/stock.py:179
+#: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
-msgstr ""
+msgstr "شراء"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_calendar
@@ -562,13 +512,10 @@ msgstr "عرض النتيجة"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Calls for bids are used when you want to generate requests for quotations to "
-"several suppliers for a given set of products.\n"
-"            You can configure per product if you directly do a Request for "
-"Quotation\n"
-"            to one supplier or if you want a Call for Bids to compare offers "
-"from several suppliers."
-msgstr ""
+"Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for Quotation\n"
+"            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
+msgstr "يتم استخدام المناقصات والعطاءات عندما ترغب في إنشاء طلبات عروض الأسعار لعدة موردين دفعة واحدة لمجموعة معينة من المنتجات.\nيمكنك ضبط الإعدادات لكل منتج إذا قمت بإنشاء طلب عرض سعر مباشرة بدون مناقصة وإرساله إلى مورد واحد،\nأو يمكنك استخدام المناقصات والعطاءات لمقارنة العطاءات الواردة والمفاضلة فيما بينها."
 
 #. module: purchase
 #: view:product.template:purchase.product_template_search_view_purchase
@@ -577,10 +524,18 @@ msgid "Can be Purchased"
 msgstr "يمكن أن تُشترى"
 
 #. module: purchase
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:1189
+#, python-format
+msgid ""
+"Can not cancel this procurement as the related purchase order has been "
+"confirmed already.  Please cancel the purchase order first. "
+msgstr "لا يمكن إلغاء هذه المشتريات الدورية لأنها قامت بإنشاء أوامر شراء بالفعل، وتم تأكيد أوامر الشراء تلك. الرجاء إلغاء أوامر الشراء المقترنة أولاً."
+
+#. module: purchase
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "لم يمكن إيجاد مسار 'شراء' افتراضي."
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -591,17 +546,16 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "لا يمكن حذف بند أمر شراء في حالة '%s'."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -611,12 +565,12 @@ msgstr "فئة"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Category of product"
-msgstr ""
+msgstr "فئة المنتج"
 
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Choose from several bids in a call for bids"
-msgstr ""
+msgstr "اختر من بين عدة عطاءات في المناقصة"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -624,18 +578,17 @@ msgid "Companies"
 msgstr "الشركات"
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
 #: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,company_id:0
 msgid "Company"
 msgstr "شركة"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:506
+#: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "رسالة جديدة"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
@@ -643,16 +596,16 @@ msgid "Configuration"
 msgstr "إعدادات"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "ضبط المشتريات"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -680,21 +633,20 @@ msgstr "إنشاء الفواتير"
 #: field:purchase.order.line,create_uid:0
 #: field:purchase.order.line_invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: purchase
 #: field:purchase.config.settings,create_date:0
-#: field:purchase.order,create_date:0
-#: field:purchase.order.group,create_date:0
+#: field:purchase.order,create_date:0 field:purchase.order.group,create_date:0
 #: field:purchase.order.line,create_date:0
 #: field:purchase.order.line_invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "العملة"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -704,23 +656,22 @@ msgstr "عنوان العميل"
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "عنوان العميل (توصيل مباشر)"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "تاريخ الموافقة"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Date Req."
 msgstr "وقت الطلب"
 
 #. module: purchase
 #: help:purchase.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
@@ -730,12 +681,12 @@ msgstr "تاريخ قبول امر الشراء"
 #. module: purchase
 #: help:purchase.order,bid_validity:0
 msgid "Date on which the bid expired"
-msgstr ""
+msgstr "التاريخ الذي انتهت فيه صلاحية العطاء"
 
 #. module: purchase
 #: help:purchase.order,bid_date:0
 msgid "Date on which the bid was received"
-msgstr ""
+msgstr "التاريخ الذي تم استلام العطاء فيه"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -768,44 +719,43 @@ msgid "Default invoicing control method"
 msgstr "طريقة تحكم الفوترة الافتراضية"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:546
+#: code:addons/purchase/purchase.py:555
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "قم بتحديد حساب مصروفات لهذا المنتج: %s (المعرف: %d)."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:590
+#: code:addons/purchase/purchase.py:599
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "قم بتعريف يومية المشتريات لهذه الشركة: %s (المعرف: %d)."
 
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "تسليم إلى"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "التسليم والفواتير"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a Purchase Order, by default it's the creation date."
-msgstr ""
+msgstr "يرصد التاريخ الذي يجب اعتماد طلب عرض السعر فيه وتحويله إلى أمر شراء، وقيمته الافتراضية تكون دائماً تاريخ إنشاءه."
 
 #. module: purchase
 #: field:purchase.order.line,name:0
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Description"
 msgstr "وصف"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: field:purchase.report,location_id:0
+#: field:purchase.order,location_id:0 field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "المقصد"
 
@@ -817,13 +767,12 @@ msgstr "هل تريد انشاء فاتورة المورد؟"
 #. module: purchase
 #: help:stock.picking,reception_to_invoice:0
 msgid ""
-"Does the picking contains some moves related to a purchase order invoiceable "
-"on the receipt?"
-msgstr ""
+"Does the picking contains some moves related to a purchase order invoiceable"
+" on the receipt?"
+msgstr "هل يحتوي هذا الالتقاط على بعض الحركات المرتبطة بأمر شراء قابل للفوترة على الإيصال؟"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
 msgstr "تم"
@@ -839,7 +788,7 @@ msgid "Draft PO"
 msgstr "طلب شراء 'مسودة'"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1366
+#: code:addons/purchase/purchase.py:1384
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "تم انشاء طلب شراء 'مسودة'"
@@ -848,7 +797,7 @@ msgstr "تم انشاء طلب شراء 'مسودة'"
 #: code:addons/purchase/edi/purchase_order.py:132
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "قائمة أسعار EDI (%s)"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -858,14 +807,13 @@ msgstr "قوالب البريد الإلكتروني"
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "معالج تكوين رسالة بريد الالكتروني"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
-#: code:addons/purchase/purchase.py:529
-#: code:addons/purchase/purchase.py:546
-#: code:addons/purchase/purchase.py:589
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:159 code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:538 code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:598 code:addons/purchase/purchase.py:1188
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Error!"
 msgstr "خطأ!"
@@ -880,19 +828,19 @@ msgstr "استثناء"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,minimum_planned_date:0
 #: field:purchase.report,expected_date:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Expected Date"
 msgstr "التاريخ المتوقع"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "Expected Month"
-msgstr ""
+msgstr "الشهر المتوقع"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "الفلاتر التفصيلية"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -907,7 +855,7 @@ msgstr "المتابعون"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "طلب مستويين من الاعتمادات"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -915,42 +863,39 @@ msgstr ""
 #: view:purchase.order.line:purchase.purchase_order_line_search
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "إخفاء البنود الملغاة"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
 
 #. module: purchase
-#: field:purchase.config.settings,id:0
-#: field:purchase.order,id:0
-#: field:purchase.order.group,id:0
-#: field:purchase.order.line,id:0
-#: field:purchase.order.line_invoice,id:0
-#: field:purchase.report,id:0
+#: field:purchase.config.settings,id:0 field:purchase.order,id:0
+#: field:purchase.order.group,id:0 field:purchase.order.line,id:0
+#: field:purchase.order.line_invoice,id:0 field:purchase.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 msgid "In Shipments"
-msgstr ""
+msgstr "في الشحنات"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
+#: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "لحذف طلب شراء، يجب أن تلغيه أولا"
@@ -958,8 +903,7 @@ msgstr "لحذف طلب شراء، يجب أن تلغيه أولا"
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
 msgid ""
-"In the process of a public bidding, you can compare the bid lines and choose "
-"for each requested product from which bid you\n"
+"In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
 msgstr ""
 
@@ -982,26 +926,25 @@ msgstr "الشحنات الواردة"
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr ""
+msgstr "الشحنات الواردة بلا فواتير"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
 msgid "Incoterm"
-msgstr ""
+msgstr "مصطلحات تجارية مشتركة"
 
 #. module: purchase
 #: help:purchase.order,incoterm_id:0
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "الشروط التجارية الدولية هي مجموعة من الشروط والأحكام مسبقة الإعداد، وتستخدم عادة في المعاملات الدولية."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:337 code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "إجراء خاطئ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -1014,15 +957,14 @@ msgid "Invoice Control"
 msgstr "مراقبة الفاتورة"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "خلل في الفاتورة"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "خط الفاتورة"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -1035,39 +977,37 @@ msgid "Invoice Received"
 msgstr "تم استلام الفاتورة"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1482
+#: code:addons/purchase/purchase.py:1500
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "تم دفع الفاتورة"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1462
+#: code:addons/purchase/purchase.py:1480
 #, python-format
 msgid "Invoice received"
-msgstr ""
+msgstr "تم استلام الفاتورة"
 
 #. module: purchase
 #: field:stock.picking,reception_to_invoice:0
 msgid "Invoiceable on incoming shipment?"
-msgstr ""
+msgstr "إصدار الفاتورة عند الاستلام؟"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "مفوتر"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
-#: field:purchase.order,invoice_count:0
-#: field:purchase.order,invoice_ids:0
+#: field:purchase.order,invoice_count:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "الفواتير"
 
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "الفواتير والشحنات الواردة"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1102,7 +1042,7 @@ msgstr "توضح انه قد تم عمل الاختيار"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been validated"
-msgstr ""
+msgstr "يوضح أنه قد تم اعتماد فاتورة"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -1112,35 +1052,39 @@ msgstr "اليومية"
 #. module: purchase
 #: field:purchase.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "تاريخ آخر رسالة"
 
 #. module: purchase
-#: field:purchase.config.settings,write_uid:0
-#: field:purchase.order,write_uid:0
+#: field:purchase.config.settings,write_uid:0 field:purchase.order,write_uid:0
 #: field:purchase.order.group,write_uid:0
 #: field:purchase.order.line,write_uid:0
 #: field:purchase.order.line_invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: purchase
 #: field:purchase.config.settings,write_date:0
-#: field:purchase.order,write_date:0
-#: field:purchase.order.group,write_date:0
+#: field:purchase.order,write_date:0 field:purchase.order.group,write_date:0
 #: field:purchase.order.line,write_date:0
 #: field:purchase.order.line_invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
-msgstr ""
+msgstr "الموقع و المخزن"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:159
+#, python-format
+msgid "Make sure you have at least an incoming picking type defined"
+msgstr "تأكد أنك قد قمت بضبط نوع استلام واحد على الأقل"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
-msgstr ""
+msgstr "إدارة المناقصات"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
@@ -1150,7 +1094,7 @@ msgstr "ادارة عدة وحدات قياس للمنتجات"
 #. module: purchase
 #: field:purchase.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr ""
+msgstr "إدارة الشحن المباشر"
 
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
@@ -1203,35 +1147,35 @@ msgstr "الرسائل و سجل التواصل"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "المشتريات الشهرية"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Net Price"
 msgstr "السعر الصافي"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "بريد جديد"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1205
+#: code:addons/purchase/purchase.py:1222
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "لم يتم تحديد عنوان لهذا المورد"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1203
+#: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "لم يتم تحديد مورد افتراضي لهذا المنتج"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1201
+#: code:addons/purchase/purchase.py:1218
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "لم يتم تحديد مورد لهذا المنتج!"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1248,7 +1192,7 @@ msgstr "ملاحظات"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "من مسودات الفواتير"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
@@ -1260,7 +1204,7 @@ msgstr "عند الشحنات القادمة"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "من بنود أوامر الشراء"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
@@ -1269,16 +1213,15 @@ msgstr "فتح قائمة الشراء"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
 msgstr "تاريخ الأمر"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "تاريخ الأمر:"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -1289,7 +1232,7 @@ msgstr "سطور الأوامر"
 #: view:purchase.order:purchase.view_purchase_order_filter
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "شهر الأمر"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -1319,9 +1262,9 @@ msgid "Orders"
 msgstr "الطلبيّات"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
-msgstr ""
+msgstr "رقم إشارتنا للأمر:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
@@ -1329,15 +1272,15 @@ msgid "Outgoing Mails"
 msgstr "رسائل البريد الصادر"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1346
+#: code:addons/purchase/purchase.py:1363
 #, python-format
 msgid "PO: %s"
-msgstr ""
+msgstr "PO: %s"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1348,12 +1291,12 @@ msgstr "شريك"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Tags"
-msgstr ""
+msgstr "وسوم الشريك"
 
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "شروط السداد"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1362,7 +1305,7 @@ msgid "Picking List"
 msgstr "قائمة الالتقاط"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
+#: code:addons/purchase/purchase.py:413
 #, python-format
 msgid "Please create Invoices."
 msgstr "الرجاء انشاء فواتير"
@@ -1395,7 +1338,7 @@ msgstr "إصدار فواتير 'مسودة' على أساس طلبات الشر
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Supplier"
-msgstr ""
+msgstr "السعر لكل مورد"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1403,8 +1346,7 @@ msgid "Price Types"
 msgstr "أنواع السعر"
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "قائمة الأسعار"
 
@@ -1423,7 +1365,7 @@ msgstr "قوائم الاسعار"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "طباعة طلب عرض السعر"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1433,14 +1375,13 @@ msgstr "المشتريات"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "قاعدة المشتريات الدورية"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
 #: field:purchase.order,product_id:0
 #: view:purchase.order.line:purchase.purchase_order_line_search
-#: field:purchase.order.line,product_id:0
-#: field:purchase.report,product_id:0
+#: field:purchase.order.line,product_id:0 field:purchase.report,product_id:0
 msgid "Product"
 msgstr "المنتج"
 
@@ -1479,16 +1420,15 @@ msgid "Products by Category"
 msgstr "المنتجات بالتصنيف"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:842
+#: code:addons/purchase/purchase.py:851
 #, python-format
 msgid "Products received"
-msgstr ""
+msgstr "المنتجات المستلمة"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Provide a double validation mechanism for purchases exceeding minimum "
-"amount.\n"
+"Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "-This installs the module purchase_double_validation."
 msgstr ""
 
@@ -1509,14 +1449,12 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
-"يسمح لك تحليل الشراء للتحقق بسهولة وتحليل سجل الشراء لشركتك والاداء. يمكنك "
-"من هذه القائمة متابعة اداء التفاوض, اداء التسليم من المورد الخاص بك, الخ."
+msgstr "يسمح لك تحليل الشراء للتحقق بسهولة وتحليل سجل الشراء لشركتك والاداء. يمكنك من هذه القائمة متابعة اداء التفاوض, اداء التسليم من المورد الخاص بك, الخ."
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Purchase Confirmed"
-msgstr ""
+msgstr "تم تأكيد الشراء"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -1536,7 +1474,7 @@ msgid "Purchase Order"
 msgstr "أمر الشراء"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation N°"
 msgstr "تأكيد أمر الشراء ن°"
 
@@ -1588,10 +1526,10 @@ msgid "Purchase Pricelist"
 msgstr "قائمة اسعار الشراء"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1368
+#: code:addons/purchase/purchase.py:1386
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
-msgstr ""
+msgstr "بند الشراء مقترن بأمر شراء قائم بالفعل"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -1601,7 +1539,7 @@ msgstr "طلبات الشراء التي تحتوي على خطوط (أصناف)
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "شراء لتموين المخازن"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1631,8 +1569,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Qty"
 msgstr "الكمية"
 
@@ -1642,10 +1580,10 @@ msgid "Quantity"
 msgstr "كمية"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1370
+#: code:addons/purchase/purchase.py:1388
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
-msgstr ""
+msgstr "الكمية مُضافة إلى سطر أمر الشراء الحالي"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1662,34 +1600,33 @@ msgstr "الحصة المطلوبة"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr ""
+msgstr "عرض السعر والعطاء"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "تم اعتماد طلب عرض السعر"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "تم تأكيد طلب عرض السعر"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "تمت معالجة طلب عرض السعر"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:318
-#: code:addons/purchase/purchase.py:936
+#: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "تم إنشاء طلب عرض السعر"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1699,12 +1636,12 @@ msgstr "طلبات عروض أسعار و شراء"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "إعادة طباعة طلب عرض السعر"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "إعادة إرسالة RFQ بالبريد"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1724,7 +1661,7 @@ msgstr "تاريخ التلقي"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "نسبة الاستلام"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -1754,25 +1691,25 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Regards,"
 msgstr "مع التحية،"
 
 #. module: purchase
 #: field:purchase.order,related_location_id:0
 msgid "Related location"
-msgstr ""
+msgstr "المكان المقترن"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.report,state:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
 msgstr "طلب التسعير"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Request for Quotation N°"
 msgstr "طلب التسعير"
 
@@ -1797,7 +1734,7 @@ msgstr "مسؤول"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Routes"
-msgstr ""
+msgstr "المسارات"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1814,25 +1751,25 @@ msgstr "ابحث عن امر شراء"
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "اختر أمر بيع مفتوح"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1114
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure."
 msgstr "وحدة القياس المختارة لا تنتمي إلى نفس تصنيف وحدة قياس المنتج"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "إرسال PO بالبريد"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "إرسال RFQ بالبريد"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1840,16 +1777,15 @@ msgid "Set to Draft"
 msgstr "حفظ كمسودة"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "خلل شحن"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
-msgid "Shipping address :"
-msgstr "عنوان الشحن"
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Shipping address:"
+msgstr "عنوان الشحن:"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1859,7 +1795,7 @@ msgstr "مستند المصدر"
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
+msgstr "يحدد ما إذا كان يمكن اختيار المنتج في بنود أوامر الشراء."
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -1903,15 +1839,15 @@ msgstr "مورِّد"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Supplier Features"
-msgstr ""
+msgstr "خصائص المورد"
 
 #. module: purchase
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
 msgid "Supplier Inv."
-msgstr ""
+msgstr "فاتورة المورد"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:435
+#: code:addons/purchase/purchase.py:444
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -1925,9 +1861,8 @@ msgid "Supplier Reference"
 msgstr "مرجع المورد"
 
 #. module: purchase
-#: field:purchase.order,amount_tax:0
-#: field:purchase.order.line,taxes_id:0
-#: view:website:purchase.report_purchaseorder
+#: field:purchase.order,amount_tax:0 field:purchase.order.line,taxes_id:0
+#: view:website:purchase.report_purchaseorder_document
 msgid "Taxes"
 msgstr "الضرائب"
 
@@ -1939,7 +1874,7 @@ msgstr "الشروط و الأحكام"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "الشروط والأحكام..."
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1951,28 +1886,26 @@ msgstr "الكمية بدون الضرائب"
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr ""
-"تضع قائمة الاسعار العملة المستخدمه لامر البيع هذا. وهي تحسب سعر المورد "
-"للمنتجات المختارة/الكميات."
+msgstr "تضع قائمة الاسعار العملة المستخدمه لامر البيع هذا. وهي تحسب سعر المورد للمنتجات المختارة/الكميات."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
+msgstr "تم ضبط المنتج '%s' وتحديد شركتك كمورد له، وهو ما يبدو أنه خطأ بالإعدادات!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1134
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
+msgstr "المورد المحدد له كمية دنيا مضبوطة إلى %s %s، ولا يمكنك أن تشتري كمية أقل منها."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1130
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "يقوم بالبيع لهذا المنتج المود المختار فقط بواسطة %s"
@@ -1983,8 +1916,8 @@ msgid ""
 "The status of the purchase order or the quotation request. A request for "
 "quotation is a purchase order in a 'Draft' status. Then the order has to be "
 "confirmed by the user, the status switch to 'Confirmed'. Then the supplier "
-"must confirm the order to change the status to 'Approved'. When the purchase "
-"order is paid and received, the status becomes 'Done'. If a cancel action "
+"must confirm the order to change the status to 'Approved'. When the purchase"
+" order is paid and received, the status becomes 'Done'. If a cancel action "
 "occurs in the invoice or in the receipt of goods, the status becomes in "
 "exception."
 msgstr ""
@@ -2000,10 +1933,10 @@ msgid "The total amount"
 msgstr "المبلغ الكلي"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1318
+#: code:addons/purchase/purchase.py:1335
 #, python-format
 msgid "There is no supplier associated to product %s"
-msgstr ""
+msgstr "لا يوجد مورد مقترن بالمنتج %s"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -2017,29 +1950,23 @@ msgstr "تم حسابها كأدنى حد للتاريخ المجدول لكل �
 msgid ""
 "This is the list of receipts that have been generated for this purchase "
 "order."
-msgstr ""
+msgstr "هذه قائمة بأوامر الاستلام التي تم إنشائها لأمر الشراء هذا."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
-"ستستخدم قائمة الاسعار, بدلا عن القائمة الافتراضية, للشراءات من الشريك الحالي"
+msgstr "ستستخدم قائمة الاسعار, بدلا عن القائمة الافتراضية, للشراءات من الشريك الحالي"
 
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
-
-#. module: purchase
-#: view:product.template:purchase.product_template_search_view_purchase
-msgid "To Purchase"
-msgstr "لشراء"
+msgstr "سيحدد هذا نوع الاستلام للشحنات الواردة."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total"
 msgstr "الإجمالي"
 
@@ -2054,9 +1981,9 @@ msgid "Total Untaxed amount"
 msgstr "كمية مادون الضرائب الكلية"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "إجمالي دون الضرائب"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -2064,13 +1991,13 @@ msgid "Total amount"
 msgstr "الكمية الكلية"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:694
 #, python-format
 msgid "Unable to cancel the purchase order %s."
-msgstr ""
+msgstr "لم يمكن إلغاء أمر الشراء %s."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:691
+#: code:addons/purchase/purchase.py:700
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "لم نتمكن من إلغاء طلب الشراء"
@@ -2084,14 +2011,14 @@ msgstr "رقم فريد لطلب الشراء تم تكوينه تلقائياً
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Unit Price"
 msgstr "سعر الوحدة"
 
 #. module: purchase
 #: field:purchase.report,quantity:0
 msgid "Unit Quantity"
-msgstr ""
+msgstr "كمية الوحدة"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -2122,17 +2049,17 @@ msgstr "المبلغ دون ضرائب"
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0
 msgid "Use 'Real Price' or 'Average' costing methods."
-msgstr ""
+msgstr "استخدم طرق احتساب التكاليف بالمتوسط أو الأسعار الفعلية."
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr ""
+msgstr "استخدم عدة حسابات تحليلية على الأوامر"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "استخدم عدة حسابات تحليلية على أوامر الشراء"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2140,10 +2067,10 @@ msgid "User"
 msgstr "مستخدم"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "VAT:"
-msgstr ""
+msgstr "ضريبة القيمة المضافة:"
 
 #. module: purchase
 #: field:purchase.report,validator:0
@@ -2151,9 +2078,9 @@ msgid "Validated By"
 msgstr "تحقق من صلاحيته بواسطة"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Validated By:"
-msgstr ""
+msgstr "اعتمد بواسطة:"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -2177,9 +2104,8 @@ msgid "Warehouse"
 msgstr "المخزن"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
-#: code:addons/purchase/purchase.py:1119
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1114 code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1134
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2188,40 +2114,49 @@ msgstr "تحذير!"
 #. module: purchase
 #: field:purchase.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "رسائل الموقع الإلكتروني"
 
 #. module: purchase
 #: help:purchase.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "سجل اتصال الموقع الإلكتروني"
 
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "عند شراء المنتجات، يمكن أن يتم تسليمها إلى هذا المخزن"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:538
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr "لا يمكنك تأكيد طلب شراء بدون خطوط شراء (أصناف)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:686
+#: code:addons/purchase/purchase.py:695
 #, python-format
 msgid "You have already received some goods for it.  "
-msgstr ""
+msgstr "لقد استلمت بالفعل بعض المنتجات منه."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:692
+#: code:addons/purchase/purchase.py:701
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr "يجب عليك أولا إلغاء جميع الفواتير المتعلقة بهذا أمر الشراء."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Your Order Reference"
 msgstr "مرجع الامر الخاص بك"
 
-#~ msgid "Reference UOM"
-#~ msgstr "وحة القياس للمرجع"
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order.group:purchase.view_purchase_order_group
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "or"
+msgstr "أو"
+
+#. module: purchase
+#: field:purchase.order,related_usage:0
+msgid "unknown"
+msgstr "غير معروف"
