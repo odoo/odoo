@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import datetime
 
 from odoo import api, fields, models, _
@@ -42,12 +43,12 @@ class LunchOrder(models.Model):
                              'Status', readonly=True, index=True, copy=False,
                              compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
-    previous_order_ids = fields.Many2many('lunch.order.line', compute='_compute_previous_order_ids',
-                                          default=lambda self: self._default_previous_order_ids())
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
     balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
+    previous_order_ids = fields.Many2many('lunch.order.line', compute='_compute_previous_order')
+    previous_order_widget = fields.Text(compute='_compute_previous_order')
 
     @api.one
     @api.depends('order_line_ids')
@@ -74,9 +75,35 @@ class LunchOrder(models.Model):
         if self.state == 'new':
             self.alerts = alert_msg and '\n'.join(alert_msg) or False
 
-    @api.depends('user_id')
-    def _compute_previous_order_ids(self):
-        self.previous_order_ids = self._default_previous_order_ids()
+    @api.multi
+    @api.depends('user_id', 'state')
+    def _compute_previous_order(self):
+        self.ensure_one()
+        self.previous_order_widget = json.dumps(False)
+
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
+        # If we use prev_order.ids, we will have duplicates (identical orders).
+        # Therefore, this following part removes duplicates based on product_id and note.
+        self.previous_order_ids = {
+            (order.product_id, order.note): order.id
+            for order in prev_order
+        }.values()
+
+        if self.previous_order_ids:
+            lunch_data = {}
+            for line in self.previous_order_ids:
+                lunch_data[line.id] = {
+                    'line_id': line.id,
+                    'product_id': line.product_id.id,
+                    'product_name': line.product_id.name,
+                    'supplier': line.supplier.name,
+                    'note': line.note,
+                    'price': line.price,
+                    'currency': line.currency_id.symbol,
+                    'digits': [69, line.currency_id.decimal_places],
+                    'position': line.currency_id.position,
+                }
+            self.previous_order_widget = json.dumps(lunch_data)
 
     @api.one
     @api.depends('user_id')
