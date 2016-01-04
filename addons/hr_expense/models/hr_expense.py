@@ -27,6 +27,7 @@ class HrExpense(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account', domain=[('account_type', '=', 'normal')])
+    account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=lambda self: self.env['ir.property'].get('property_account_expense_categ_id', 'product.category'))
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     description = fields.Text()
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
@@ -66,6 +67,9 @@ class HrExpense(models.Model):
             self.unit_amount = self.env['product.template']._price_get(self.product_id, 'standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
             self.tax_ids = self.product_id.supplier_taxes_id
+            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            if account:
+                self.account_id = account
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):
@@ -261,7 +265,9 @@ class HrExpense(models.Model):
     def _move_line_get(self):
         account_move = []
         for expense in self:
-            if expense.product_id:
+            if expense.account_id:
+                account = expense.account_id
+            elif expense.product_id:
                 account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
                 if not account:
                     raise UserError(_("No Expense account found for the product %s (or for it's category), please configure one.") % (expense.product_id.name))
@@ -269,6 +275,7 @@ class HrExpense(models.Model):
                 account = self.env['ir.property'].with_context(force_company=expense.company_id.id).get('property_account_expense_categ_id', 'product.category')
                 if not account:
                     raise UserError(_('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
+
             move_line = {
                     'type': 'src',
                     'name': expense.name.split('\n')[0][:64],
