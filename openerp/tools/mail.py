@@ -57,6 +57,81 @@ class _Cleaner(clean.Cleaner):
         for el in doc.iter():
             self.parse_style(el)
 
+        for el in doc.iter():
+            self.detect_quote(el)
+
+    def detect_quote(self, el):
+
+        def _create_new_node(tag, text, tail=None, attrs=None):
+            new_node = etree.Element(tag)
+            new_node.text = text
+            new_node.tail = tail
+            if attrs:
+                for key, val in attrs.iteritems():
+                    new_node.set(key, val)
+            return new_node
+
+        def _tag_matching_regex_in_text(regex, node, tag='span', attrs=None):
+            text = node.text or ''
+            if not re.search(regex, text):
+                return
+
+            child_node = None
+            idx, node_idx = 0, 0
+            for item in re.finditer(regex, text):
+                # print 'found from', item.start(), 'to', item.end(), 'with idx', idx, 'with', text[item.start():item.end()]
+                new_node = _create_new_node(tag, text[item.start():item.end()], None, attrs)
+                # print '\t created', new_node
+                if child_node is None:
+                    node.text = text[idx:item.start()]
+                    new_node.tail = text[item.end():]
+                    node.insert(node_idx, new_node)
+                    # print '\t\t inserted in node'
+                else:
+                    child_node.tail = text[idx:item.start()]
+                    # print '\t\t setted', child_node, 'tail to', child_node.tail
+                    new_node.tail = text[item.end():]
+                    # child_node.addnext(new_node)
+                    node.insert(node_idx, new_node)
+                    # print '\t\t sibling to ', child_node
+                child_node = new_node
+                idx = item.end()
+                node_idx = node_idx + 1
+
+        el_class = el.get('class', '') or ''
+        el_id = el.get('id', '') or ''
+
+        # gmail or yahoo // # outlook, html // # msoffice
+        if ('gmail_extra' in el_class or 'yahoo_quoted' in el_class) or \
+                (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+                ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
+            el.set('data-o-mail-quote', '1')
+            if el.getparent() is not None:
+                el.getparent().set('data-o-mail-quote-container', '1')
+
+        #     # root: try to tag the client used to write the html
+        #     if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
+        #         root.set('msoffice', '1')
+        #     # find quote in msoffice / hotmail / blockquote / text quote and signatures
+        #     if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
+        #         quote_begin = True
+        #         node.set('in_quote', '1')
+        #         node.set('tail_remove', '1')
+
+        # text_quote_regex = re.compile(r"(\n[>]+(?:[^\n\r]*|[\n\r]+[>]+))")
+        # text_quote_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+)")
+        # signature_regex = re.compile(r"(\n[-]{2}[\s]?[\r\n]{1,2}[\s\S]+)")
+        complete_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+|(?:(?:^|\n)[-]{2}[\s]?[\r\n]{1,2}[\s\S]+))")
+        if not el.get('data-o-mail-quote'):
+            _tag_matching_regex_in_text(complete_regex, el, 'span', {'data-o-mail-quote': '1'})
+
+        if el.tag == 'blockquote':
+            # remove single node
+            el.set('data-o-mail-quote-node', '1')
+            el.set('data-o-mail-quote', '1')
+        if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
+            el.set('data-o-mail-quote', '1')
+
     def parse_style(self, el):
         attributes = el.attrib
         styling = attributes.get('style')
@@ -77,6 +152,9 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
     if not src:
         return src
     src = ustr(src, errors='replace')
+    # html: remove encoding attribute inside tags
+    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
+    src = doctype.sub(r"", src)
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
@@ -153,7 +231,6 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
         cleaned = cleaned[5:-6]
 
     return cleaned
-
 
 #----------------------------------------------------------
 # HTML Cleaner
