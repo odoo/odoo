@@ -3,8 +3,8 @@
 
     <t t-extend="mail.chat.Sidebar">
         <t t-jquery=".o_mail_chat_sidebar" t-operation="append">
-            <t t-set="channel_type">livechat</t>
-            <t t-set="disable_add_channel">true</t>
+            <t t-set="channel_type" t-value="'livechat'"/>
+            <t t-set="disable_add_channel" t-value="true"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Livechat</t>
             </t>

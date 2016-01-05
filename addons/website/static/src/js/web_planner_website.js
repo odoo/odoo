@@ -14,14 +14,13 @@ if(!$('#oe_systray').length) {
     return $.Deferred().reject("DOM doesn't contain '#oe_systray'");
 }
 
-var WebsitePlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
+var WebsitePlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
     start: function() {
         var self = this;
         var res = this._super.apply(this, arguments);
         return res.then(this.get_website_planner.bind(this)).then(function(planner) {
-            self.$el.filter('.o_planner_systray').on('click', self, self.show_dialog.bind(self));
-            self.$el.filter('.o_planner_help').on('click', '.dropdown-menu li a[data-menu]', self.on_menu_help);
+            self.$el.on('click', self, self.show_dialog.bind(self));
             if (planner.length) {
                 self.planner = planner[0];
                 self.planner.data = $.parseJSON(planner[0].data) || {};
@@ -51,9 +50,9 @@ var WebsitePlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
 });
 
 return ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
-            var websitePlannerLauncher = new WebsitePlannerLauncher();
-            websitePlannerLauncher.prependTo($('#oe_systray'));
-        });
+    var websitePlannerLauncher = new WebsitePlannerLauncher();
+    websitePlannerLauncher.prependTo($('#oe_systray'));
+});
 
 });
 
