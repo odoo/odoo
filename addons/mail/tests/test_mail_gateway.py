@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from email.utils import formataddr
+
 from .common import TestMail
 from openerp.tools import mute_logger
 import socket

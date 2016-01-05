@@ -1375,6 +1375,7 @@ class BaseModel(object):
         from openerp.http import request
         Users = self.pool['res.users']
         for group_ext_id in groups.split(','):
+            group_ext_id = group_ext_id.strip()
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
                 if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
