@@ -122,6 +122,9 @@ class website_hr_recruitment(http.Controller):
             self.create_attachment(applicant_id, value['partner_name'], post)
         return request.render("website_hr_recruitment.thankyou", {})
 
+    def _get_applicant_files_fields(self):
+        return ['ufile']
+
     def create_attachment(self, applicant_id, partner_name, post):
         """
         :type post: dict
@@ -134,14 +137,15 @@ class website_hr_recruitment(http.Controller):
         :param applicant_id: id of an hr.applicant used for the 'res_id'
         """
         env = request.env(user=SUPERUSER_ID)
-        attachment_value = {
-            'name': post['ufile'].filename,
-            'res_name': partner_name,
-            'res_model': 'hr.applicant',
-            'res_id': applicant_id,
-            'datas': base64.encodestring(post['ufile'].read()),
-            'datas_fname': post['ufile'].filename,
-        }
-        env['ir.attachment'].create(attachment_value)
+        for fname in self._get_applicant_files_fields():
+            attachment_value = {
+                'name': post[fname].filename,
+                'res_name': partner_name,
+                'res_model': 'hr.applicant',
+                'res_id': applicant_id,
+                'datas': base64.encodestring(post[fname].read()),
+                'datas_fname': post[fname].filename,
+            }
+            env['ir.attachment'].create(attachment_value)
 
 # vim :et:
