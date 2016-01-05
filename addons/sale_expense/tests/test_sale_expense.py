@@ -7,7 +7,13 @@ class TestSaleExpense(TestSale):
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
         # create a so with a product invoiced on delivery
-        prod = self.env.ref('product.product_product_1')
+        prod = self.env['product.product'].create({
+            'name': "GAP Analysis Service",
+            'standard_price': 20.5,
+            'list_price': 30.75,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            })
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -21,7 +27,15 @@ class TestSaleExpense(TestSale):
         init_price = so.amount_total
 
         # create some expense and validate it (expense at cost)
-        prod_exp_1 = self.env.ref('hr_expense.air_ticket')
+        prod_exp_1 = self.env['product.product'].create({
+            'name': "Air Flight",
+            'list_price': 700.0,
+            'standard_price': 700.0,
+            'type': 'service',
+            'can_be_expensed': True,
+            'invoice_policy': 'cost',
+            'expense_policy': 'cost',
+        })
         company = self.env.ref('base.main_company')
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company.id})
         account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
@@ -49,6 +63,17 @@ class TestSaleExpense(TestSale):
 
         # create some expense and validate it (expense at sales price)
         init_price = so.amount_total
+        prod_exp_2 = self.env['product.product'].create({
+            'name': "Car Travel Expenses",
+            'list_price': 0.50,
+            'standard_price': 0.32,
+            'type': 'service',
+            'uom_id': self.env.ref('product.product_uom_km').id,
+            'uom_po_id': self.env.ref('product.product_uom_km').id,
+            'can_be_expensed': True,
+            'invoice_policy': 'cost',
+            'expense_policy': 'sales_price',
+        })
         prod_exp_2 = self.env.ref('hr_expense.car_travel')
         exp = self.env['hr.expense'].create({
             'name': 'Car Travel',
