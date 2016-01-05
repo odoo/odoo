@@ -434,6 +434,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
+        ProductUom = self.env['product.uom']
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
                 line.qty_received = 0.0
@@ -444,7 +445,10 @@ class PurchaseOrderLine(models.Model):
             total = 0.0
             for move in line.move_ids:
                 if move.state == 'done':
-                    total += move.product_uom_qty
+                    if move.product_uom != line.product_uom:
+                        total += ProductUom._compute_qty_obj(move.product_uom, move.product_uom_qty, line.product_uom)
+                    else:
+                        total += move.product_uom_qty
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
