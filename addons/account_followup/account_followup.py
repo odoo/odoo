@@ -252,7 +252,7 @@ class res_partner(osv.osv):
         if partner.unreconciled_aml_ids:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             current_date = fields.date.context_today(self, cr, uid, context=context)
-            rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
+            rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser", context=context)
             final_res = rml_parse._lines_get_with_partner(partner, company.id)
 
             for currency_dict in final_res:
@@ -278,7 +278,7 @@ class res_partner(osv.osv):
                     if date <= current_date and aml['balance'] > 0:
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
-                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + (aml['ref'] or '') + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                    followup_table +="<TR>" + strbegin + rml_parse.formatLang(aml['date'], date=True) + strend + strbegin + aml['name'] + strend + strbegin + (aml['ref'] or '') + strend + strbegin + rml_parse.formatLang(date, date=True) + strend + strbegin + rml_parse.formatLang(aml['balance'], dp='Account', currency_obj=currency) + strend + strbegin + block + strend + "</TR>"
 
                 total = reduce(lambda x, y: x+y['balance'], currency_dict['line'], 0.00)
 
