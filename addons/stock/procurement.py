@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
+from odoo import api
 from openerp.tools.translate import _
 
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
@@ -254,6 +255,7 @@ class procurement_order(osv.osv):
                     res = pull_obj.search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
         return res
 
+    @api.cr_uid_records_context
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
