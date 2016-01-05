@@ -30,8 +30,8 @@ class sale_order_line(osv.osv):
             help="Choose an event ticket and it will automatically create a registration for this event ticket."),
         # those 2 fields are used for dynamic domains and filled by onchange
         # TDE: really necessary ? ...
-        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type"),
-        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
+        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type", readonly=True),
+        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean', readonly=True),
     }
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
