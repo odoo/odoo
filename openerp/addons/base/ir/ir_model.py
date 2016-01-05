@@ -1098,10 +1098,31 @@ class ir_model_data(osv.osv):
                     },context=context)
         else:
             if mode=='init' or (mode=='update' and xml_id):
+                inherit_xml_ids = []
+                for table, field_name in model_obj._inherits.items():
+                    xml_ids = self.pool['ir.model.data'].search(cr, uid, [
+                        ('module', '=', module),
+                        ('name', '=', xml_id + '_' + table.replace('.', '_')),
+                    ], context=context)
+                    # XML ID found in the database, try to recover an existing record
+                    if xml_ids:
+                        found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
+                        record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
+                        # The record exists, store the id and don't recreate the XML ID
+                        if record.exists():
+                            inherit_xml_ids.append(found_xml_id.model)
+                            values[field_name] = found_xml_id.res_id
+                        # Orphan XML ID, delete it
+                        else:
+                            found_xml_id.unlink()
+
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
                     if model_obj._inherits:
                         for table in model_obj._inherits:
+                            if table in inherit_xml_ids:
+                                continue
+
                             inherit_id = model_obj.browse(cr, uid,
                                     res_id,context=context)[model_obj._inherits[table]]
                             self.create(cr, SUPERUSER_ID, {

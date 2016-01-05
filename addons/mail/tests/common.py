@@ -39,6 +39,7 @@ class TestMail(common.SavepointCase):
         cls.env['ir.mail_server']._patch_method('build_email', build_email)
         cls.env['ir.mail_server']._patch_method('send_email', send_email)
 
+
         # User groups
         user_group_employee = cls.env.ref('base.group_user')
         user_group_portal = cls.env.ref('base.group_portal')
