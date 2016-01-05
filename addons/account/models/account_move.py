@@ -421,6 +421,7 @@ class AccountMoveLine(models.Model):
             # Note : this short-circuiting is better for performances, but also required
             # since postgresql doesn't implement empty list (so 'AND id in ()' is useless)
             return []
+        res_ids = res_ids and tuple(res_ids)
 
         assert res_type in ('partner', 'account')
         assert account_type in ('payable', 'receivable', None)
@@ -447,21 +448,22 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
+                        AND l.company_id = {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY {7} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                    GROUP BY {8} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
                     ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
             WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
@@ -472,6 +474,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
+                self.env.user.company_id.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias

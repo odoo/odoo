@@ -21,7 +21,11 @@
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
-                             <field name="reconcile"/>
+                             <label for="reconcile"/>
+                             <div>
+                                <field name="reconcile"/> 
+                                <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                             </div>
                              <field name="deprecated"/>
                            </group>
                            <group>
