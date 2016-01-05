@@ -140,10 +140,10 @@
         <template id="loader" name="Livechat : Javascript appending the livechat button">
 
             <t t-if="not info">
-                <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, channel)"/>
+                <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
             </t>
 
-            <t t-if="info" t-translation="off">
+            <t t-if="info['available']" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
@@ -158,8 +158,7 @@
                         var button = new im_livechat.LivechatButton(
                             $('body'),
                             "<t t-esc="info['server_url']"/>",
-                            <t t-raw="json.dumps(info.get('options', {}))"/>,
-                            <t t-raw="json.dumps(info.get('rule', False))"/>
+                            <t t-raw="json.dumps(info.get('options', {}))"/>
                         );
                         button.appendTo($('body'));
                         window.livechat_button = button;

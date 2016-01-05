@@ -52,8 +52,8 @@ var PartnerInviteDialog = Dialog.extend({
             allowClear: true,
             multiple: true,
             formatResult: function(item) {
-                var css_class = (item.im_status === 'away' ? "fa-clock-o" : "fa-circle" + (item.im_status === 'online' ? "" : "-o"));
-                return $('<span class="fa">').addClass(css_class).text(item.text);
+                var status = QWeb.render('mail.chat.UserStatus', {status: item.im_status});
+                return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
                 self.PartnersModel.call('im_search', [query.term, 20]).then(function(result){
@@ -116,6 +116,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.undo_mark_as_read(msgs_ids, channel);
             });
         },
+        "click .o_mail_annoying_notification_bar .fa-close": function (event) {
+            this.$(".o_mail_annoying_notification_bar").slideUp();
+        },
+        "click .o_mail_request_permission": function (event) {
+            event.preventDefault();
+            this.$(".o_mail_annoying_notification_bar").slideUp();
+            window.Notification.requestPermission();
+        },
     },
 
     on_attach_callback: function () {
@@ -135,6 +143,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.options = options || {};
         this.channels_scrolltop = {};
         this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
+        this.notification_bar = (window.Notification.permission === "default");
     },
 
     willStart: function () {
@@ -558,7 +567,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_composer_input_focused: function () {
         var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
-        var composer = channel.mass_mailing ? self.extended_composer : self.basic_composer;
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
         composer.mention_set_prefetched_partners(suggestions);
     },
 
