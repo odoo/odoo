@@ -107,7 +107,7 @@
                         This floor has no tables yet, use the <i class="fa fa-plus"></i> button in the editing toolbar to create new tables.
                     </div>
                     <div class='tables'></div>
-                    <span class='edit-button editing'><i class='fa fa-pencil'></i></span>
+                    <span t-if="widget.pos.user.role == 'manager'" class='edit-button editing'><i class='fa fa-pencil'></i></span>
                     <div class='edit-bar oe_hidden'>
                         <span class='edit-button new-table'>
                             <i class='fa fa-plus'></i>
