@@ -20,16 +20,11 @@ class website_hr_recruitment(http.Controller):
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
     ], type='http', auth="public", website=True)
     def jobs(self, country=None, department=None, office_id=None, **kwargs):
-        env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
-
+        env = request.env(
+            context=dict(
+                request.env.context, show_address=True, no_tag_br=True))
         Country = env['res.country']
-        Jobs = env['hr.job']
-
-        # List jobs available to current UID
-        job_ids = Jobs.search([], order="website_published desc,no_of_recruitment desc").ids
-        # Browse jobs as superuser, because address is restricted
-        jobs = Jobs.sudo().browse(job_ids)
-
+        jobs = self._get_all_jobs()
         # Deduce departments and offices of those jobs
         departments = set(j.department_id for j in jobs if j.department_id)
         offices = set(j.address_id for j in jobs if j.address_id)
@@ -53,15 +48,32 @@ class website_hr_recruitment(http.Controller):
             jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
 
         # Render page
-        return request.website.render("website_hr_recruitment.index", {
-            'jobs': jobs,
-            'countries': countries,
-            'departments': departments,
-            'offices': offices,
-            'country_id': country,
-            'department_id': department,
-            'office_id': office_id,
-        })
+        return request.website.render(
+            "website_hr_recruitment.index", self._get_render_datas({
+                'jobs': jobs,
+                'countries': countries,
+                'departments': departments,
+                'offices': offices,
+                'country_id': country,
+                'department_id': department,
+                'office_id': office_id,
+            }, kwargs))
+
+    def _get_all_jobs(self):
+        env = request.env(
+            context=dict(
+                request.env.context, show_address=True, no_tag_br=True))
+        Jobs = env['hr.job']
+        # List jobs available to current UID
+        job_ids = Jobs.search(
+            [], order="website_published desc,no_of_recruitment desc").ids
+        # Browse jobs as superuser, because address is restricted
+        jobs = Jobs.sudo().browse(job_ids)
+
+        return jobs
+
+    def _get_render_datas(self, datas, kwargs):
+        return datas
 
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
