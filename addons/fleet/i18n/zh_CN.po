@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-12-18 04:08+0000\n"
-"Last-Translator: jerry hao <erp_hao@163.com>\n"
+"PO-Revision-Date: 2015-12-30 06:38+0000\n"
+"Last-Translator: fausthuang\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -601,12 +601,12 @@ msgstr "驾驶员：from'%s'to'%s'"
 msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance)."
-msgstr ""
+msgstr "每个合同(e.g.: 租用) 可能包含多个服务\n                (修理,保险,定期维护)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
 msgid "Each service can used in contracts, as a standalone service or both."
-msgstr ""
+msgstr "每种服务都可以以单个或同时在合同中使用."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_search
@@ -774,7 +774,7 @@ msgstr "有警告"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr ""
+msgstr "有合约逾期"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_due_soon
@@ -812,7 +812,7 @@ msgid ""
 "Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
 "                field."
-msgstr ""
+msgstr "在这里你可以对所有车辆增加加油项。您也可以使用搜索字段来过滤特定车辆的日志。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
@@ -820,7 +820,7 @@ msgid ""
 "Here you can add various odometer entries for all vehicles.\n"
 "                You can also show odometer value for a particular vehicle using\n"
 "                the search field."
-msgstr ""
+msgstr "在这里你可以对所有车辆增加里程表输入项。您也可以使用搜索字段来显示特定车辆的里程数."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
@@ -1055,12 +1055,12 @@ msgstr "车辆标志图片(小图片)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_name
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_search
 msgid "Make"
-msgstr ""
+msgstr "品牌"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_id
 msgid "Make of the vehicle"
-msgstr ""
+msgstr "车辆的品牌"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -1068,7 +1068,7 @@ msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "                their related services, costs. Odoo will automatically warn\n"
 "                you when some contracts have to be renewed."
-msgstr ""
+msgstr "管理你所有的合同(租赁，保险，等等)使用与他们相关的服务,费用.Odoo 会自动提醒你当合同需要更新时."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1124,7 +1124,7 @@ msgstr "模型"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_tree
 msgid "Model Make"
-msgstr ""
+msgstr "型号制作"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_act
@@ -1300,7 +1300,7 @@ msgid ""
 "Odoo helps you keeping track of all the services done\n"
 "                on your vehicle. Services can be of many type: occasional\n"
 "                repair, fixed maintenance, etc."
-msgstr ""
+msgstr "Odoo 能帮你保留所有你的车辆的已发生服务的轨迹. 服务可以是多样的: 临时的修理，固定的维护，等等."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
@@ -1308,7 +1308,7 @@ msgid ""
 "Odoo helps you managing the costs for your different\n"
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
-msgstr ""
+msgstr "Odoo帮你管理不同汽车的成本费用.。成本费用被自动从服务，合同(固定或者定期的)和燃油记录中创建."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
@@ -1316,14 +1316,14 @@ msgstr ""
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
-msgstr ""
+msgstr "Odoo能帮你管理不同车辆的费用.费用从服务，合同中产生并显示在这里。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
-msgstr ""
+msgstr "当服务和合同需要更新时，Odoo会提醒你。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1588,7 +1588,7 @@ msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图片。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1671,7 +1671,7 @@ msgstr "条款和条件"
 msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
-msgstr ""
+msgstr "感谢有不同的过滤器，Odoo 能只打印生效的费用，并且用类型和车辆排序。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1997,12 +1997,12 @@ msgstr "每年"
 msgid ""
 "You can customize available status to track the evolution of\n"
 "                each vehicle. Example: Active, Being Repaired, Sold."
-msgstr ""
+msgstr "您可以自定义可用状态来跟踪每个车辆的演变。例如：在用的，正在维修，销售出去的等"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
+msgstr "你能定义多种车型( 比如 A3，A4) 为每个品牌(Audi)"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -2010,7 +2010,7 @@ msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
 "                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle."
-msgstr ""
+msgstr "您保留每辆车的相关的合同，服务，固定和定期的费用,里程数和加油记录的轨迹来管理您的车队."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form

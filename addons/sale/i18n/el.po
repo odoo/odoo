@@ -3,13 +3,13 @@
 # * sale
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-12-17 10:39+0000\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "# από Ποσ."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 msgid "# of Sales Order"
-msgstr "# της Εντολής Πώλησης"
+msgstr "# της Παραγγελίας"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -199,7 +199,7 @@ msgstr "Διευθύνσεις"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Διευθύνσεις στις Εντολές Πώλησης"
+msgstr "Διευθύνσεις στις Παραγγελίες"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:126
@@ -215,14 +215,14 @@ msgstr "Σύνθετη τιμολόγηση με βάση τον τύπο"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr "Επιτρέπει να ορίσετε μία έκπτωση στις γραμμές των εντολών πωλήσεων"
+msgstr "Επιτρέπει να ορίσετε μία έκπτωση στις γραμμές των παραγγελιών"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "Επιτρέπει την επεξεργασία των εντολών πωλήσεων απο το μενού 'Εντολές Πώλησης' (όχι απο το μενού των προσφορών)"
+msgstr "Επιτρέπει την επεξεργασία των παραγγελιών από το μενού 'Παραγγελίες' (όχι απο το μενού των προσφορών)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -235,12 +235,12 @@ msgstr "Επιτρέπει τη διαχείριση διαφορετικών τ
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "Σας επιτρέπει να επιλέξετε και δυντηρήσετε διαφορετικές μονάδες μέτρησης για προϊόντα."
+msgstr "Σας επιτρέπει να επιλέξετε και συντηρήσετε διαφορετικές μονάδες μέτρησης για προϊόντα."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_config_settings_group_analytic_account_for_sales
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr "Σας επιτρέπει να καθορίσετε ένα αναλυτικό λογαριασμό στις εντολές πώλησης"
+msgstr "Σας επιτρέπει να καθορίσετε ένα αναλυτικό λογαριασμό στις παραγγελίες."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
@@ -432,7 +432,7 @@ msgstr "Ημερομηνία του τελευταίου μηνύματος  π�
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
 msgid "Date on which sales order is created."
-msgstr "Ημερομηνία στην οποία η εντολή πώλησης δημιουργήθηκε"
+msgstr "Ημερομηνία στην οποία η παραγγελία δημιουργήθηκε"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -482,7 +482,7 @@ msgstr "Απαιτούμενος Χρόνος για Παράδοση"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
-msgstr "Διεύθυνση παράδοσης για την τρέχουσα εντολής πώλησης "
+msgstr "Διεύθυνση παράδοσης για την τρέχουσα παραγγελία."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -526,7 +526,7 @@ msgstr "Έκπτωση στις γραμμές"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr "Εμφάνιση 3 πεδίων σε εντολές πώλησης: πελάτης, διεύθυνση τιμολόγησης, διεύθυνση παράδοσης"
+msgstr "Εμφάνιση 3 πεδίων σε παραγγελίες: πελάτης, διεύθυνση τιμολόγησης, διεύθυνση παράδοσης"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -539,12 +539,12 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "Εμφάνιση Διεθνών Οικονομικών Όρων σε Εντολές Πώλησης και σε σχετικά τιμολόγια "
+msgstr "Εμφάνιση Διεθνών Οικονομικών Όρων σε Παραγγελίες και σε σχετικά τιμολόγια"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Εμφάνιση περιθωρίων σε προσφορές και σε εντολές πώλησης"
+msgstr "Εμφάνιση περιθωρίων σε προσφορές και σε παραγγελίες"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -671,12 +671,12 @@ msgid ""
 "If a sale order is done, you cannot modify it manually anymore. However, you"
 " will still be able to invoice or deliver. This is used to freeze the sale "
 "order."
-msgstr "Εάν μια εντολή πώλησης έχει ολοκληρωθεί, δεν μπορείτε να  την τροποποιήσετε πλέον με το χέρι. Ωστόσο, μπορείτε να τιμολογήσετε ή να παραδώσετε. Αυτό χρησιμοποιείται για να οριστικοποιήσει την εντολή πώλησης."
+msgstr "Εάν μια παραγγελία έχει ολοκληρωθεί, δεν μπορείτε να  την τροποποιήσετε πλέον με το χέρι. Ωστόσο, μπορείτε να τιμολογήσετε ή να παραδώσετε. Αυτό χρησιμοποιείται για να οριστικοποιήσει την παραγγελία."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μυνήματα χρειάζονται την προσοχή σας"
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
@@ -742,7 +742,7 @@ msgstr "Τιμολόγησε Εντολή"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "Τιμολόγηση Εντολων Πώλησης"
+msgstr "Τιμολόγηση Παραγγελιών"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_status
@@ -758,7 +758,7 @@ msgstr "Στόχος Τιμολόγησης"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
 msgid "Invoice address for current sales order."
-msgstr "Διεύθυνση Τιμολόγησης για την τρέχουσα Εντολή Πώλησης."
+msgstr "Διεύθυνση Τιμολόγησης για την τρέχουσα παραγγελία."
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
@@ -928,7 +928,7 @@ msgstr "Μηνύματα"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_ids
 msgid "Messages and communication history"
-msgstr "Μυνήματα και ιστορικότητα επικοινωνίας"
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -938,12 +938,12 @@ msgstr "Οι παραγγελίες μου"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "Οι Γραμμές των δικών μου Εντολών Πώλησης"
+msgstr "Οι Γραμμές των δικών μου Παραγγελιών"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
-msgstr "Ποτέ να μην επιτραπεί η τροποποίηση μιας επιβεβαιωμένης εντολής πώλησης"
+msgstr "Ποτέ να μην επιτραπεί η τροποποίηση μιας επιβεβαιωμένης παραγγελίας"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -953,7 +953,7 @@ msgstr "Νέα Προσφορά"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "Καμία έκπτωση σε γραμμές εντολών πληρωμής, γενική έκπτωση μόνο "
+msgstr "Καμία έκπτωση σε γραμμές παραγγελιών, γενική έκπτωση μόνο."
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -971,7 +971,7 @@ msgstr "Όχι παραλλαγές στα προϊόντα"
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved \n"
 "                from the Quotations list to the Sales Order list."
-msgstr "Σημειώστε ότι όταν η Προσφορά μετατραπεί σε Εντολή Πληρωμής, θα μεταφερθεί\nαπό την λίστα των Προσφορών στη λίστα των Εντολών Πληρωμής."
+msgstr "Σημειώστε ότι όταν η Προσφορά μετατραπεί σε Παραγγελία, θα μεταφερθεί από την λίστα των Προσφορών στη λίστα των Παραγγελιών."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -980,7 +980,7 @@ msgstr "Σημειώστε ότι όταν η Προσφορά μετατραπ�
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
-msgstr "Σημειώστε ότι όταν η Προσφορά μετατραπεί σε Εντολή Πληρωμής, θα μεταφερθεί από την λίστα των Προσφορών στη λίστα των Εντολών Πληρωμής."
+msgstr "Σημειώστε ότι όταν η Προσφορά μετατραπεί σε Παραγγελία, θα μεταφερθεί από την λίστα των Προσφορών στη λίστα των Παραγγελιών."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1083,7 +1083,7 @@ msgstr "Παραγγελθείσα Ποσότητα "
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr "Ημερομηνία Παραγγελίας της Εντολής Πώλησης"
+msgstr "Ημερομηνία διαταγής της παραγγελίας"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -1155,7 +1155,7 @@ msgstr "Τιμοκατάλογος"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_pricelist_id
 msgid "Pricelist for current sales order."
-msgstr "Τιμοκατάλογος για την τρέχουσα εντολή πώλησης."
+msgstr "Τιμοκατάλογος για την τρέχουσα παραγγελία."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1332,7 +1332,7 @@ msgstr "Προσφορές και Πωλήσεις"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
-msgstr "Παραπομπή του εγράφου που δημιούργησε αυτή την αίτηση εντολής πώλησης"
+msgstr "Παραπομπή του εγράφου που δημιούργησε αυτή την αίτηση παραγγελίας."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1342,24 +1342,24 @@ msgstr "Αναφορές"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale Order"
-msgstr "Εντολή Πώλησης"
+msgstr "Παραγγελία"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line_so_line
 #: model:ir.model.fields,field_description:sale.field_procurement_order_sale_line_id
 msgid "Sale Order Line"
-msgstr "Γραμμή Εντολής Πώλησης"
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 msgid "Sale Order Lines"
-msgstr "Γραμμές Εντολής Πώλησης"
+msgstr "Γραμμές Παραγγελίας"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Τροποποίηση Εντολής Πώλησης"
+msgstr "Τροποποίηση Παραγγελίας"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1415,39 +1415,39 @@ msgstr "Πληροφορίες Πώλησης"
 #: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.report,state:0
 msgid "Sales Order"
-msgstr "Εντολή Πώλησης"
+msgstr "Παραγγελία"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "Η Εντολή Πώλησης Επιβεβαιώθηκε"
+msgstr "Η Παραγγελία Επιβεβαιώθηκε"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Γραμμή Εντολής Πώλησης"
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Γραμμές Εντολών Πώλησης"
+msgstr "Γραμμές Παραγγελίας"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "Γραμμές Εντολών Πωλήσεων έτοιμες για να τιμολογηθούν"
+msgstr "Γραμμές Παραγγελίας έτοιμες για να τιμολογηθούν"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "Γραμμές Εντολών Πώλησης σχετιζόμενες στις δικές μου Εντολές Πωλήσεων"
+msgstr "Γραμμές Παραγγελιών σχετιζόμενες στις δικές μου Παραγγελίες"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Order that haven't yet been confirmed"
-msgstr "Εντολές Πώλησης οι οποίες ακόμη δεν επιβεβαιώθηκαν"
+msgstr "Παραγγελίες οι οποίες ακόμη δεν επιβεβαιώθηκαν"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -1460,12 +1460,12 @@ msgstr "Εντολές Πώλησης οι οποίες ακόμη δεν επι
 #: model:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model:ir.ui.view,arch_db:sale.view_sale_order_pivot
 msgid "Sales Orders"
-msgstr "Εντολές Πώλησης"
+msgstr "Παραγγελίες"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Στατιστικά Εντολών Πωλήσεων"
+msgstr "Στατιστικά Παραγγελιών"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -1506,7 +1506,7 @@ msgstr "Πωλητής"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "Αναζήτηση Εντολή Πώλησης"
+msgstr "Αναζήτηση Παραγγελίας"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -1554,7 +1554,7 @@ msgstr "Εγκατάσταση προεπιλεγμένων όρων και πρ
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sale orders and invoices"
-msgstr "Εμφάνιση διεθνών οικονομικών όρων σε εντολές πώλησης και σε τιμολόγια "
+msgstr "Εμφάνιση διεθνών οικονομικών όρων σε παραγγελίες και σε τιμολόγια "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -1625,7 +1625,7 @@ msgstr "Όροι και προϋποθέσεις"
 msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
-msgstr "Η Εντολή Πληρωμής %s συνδεδεμένη με τον Αναλυτικό Λογαριασμό πρέπει να επικυρωθεί πριν την εγγραφή των εξόδων."
+msgstr "Η Παραγγελία %s συνδεδεμένη με τον Αναλυτικό Λογαριασμό πρέπει να επικυρωθεί πριν την εγγραφή των εξόδων."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -1635,14 +1635,14 @@ msgstr "Το ποσό που θα τιμολογηθεί εκ των προτέ�
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
 msgid "The analytic account related to a sales order."
-msgstr "Ο αναλυτικός λογαριασμός που σχετίζεται με μία εντολή πώλησης"
+msgstr "Ο αναλυτικός λογαριασμός που σχετίζεται με μία παραγγελία"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
 msgid ""
 "The printed reports will display the incoterms for the sale orders and the "
 "related invoices"
-msgstr "Οι εκτυπωμένες αναφορές θα εμφανίζουν διεθνείς οικονομικούς όρους για τις εντολές πληρωμής και για τα σχετικά τιμολόγια"
+msgstr "Οι εκτυπωμένες αναφορές θα εμφανίζουν διεθνείς οικονομικούς όρους για τις παραγγελίες και για τα σχετικά τιμολόγια"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:124
@@ -1688,7 +1688,7 @@ msgid ""
 " partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "Αυτή η έκθεση κάνει ανάλυση στις προσφορές και τις εντολές πώλησης. Η Ανάλυση ελέγχει τα έσοδα των πωλήσεων και τα ταξινομεί με διαφορετικές ομάδες κριτηρίων (πωλητής, συνεργάτης, προϊόν, κλπ.) Χρησιμοποιείστε αυτή την έκθεση για να εφαρμόσετε ανάλυση σε πωλήσεις που δεν έχουν τιμολογηθεί ακόμη. Εάν θέλετε να αναλύσετε τον τζίρο σας, θα πρέπει να χρησθμοποιήσετε "
+msgstr "Αυτή η έκθεση κάνει ανάλυση στις προσφορές και στις παραγγελίες. Η Ανάλυση ελέγχει τα έσοδα των πωλήσεων και τα ταξινομεί με διαφορετικές ομάδες κριτηρίων (πωλητής, συνεργάτης, προϊόν, κλπ.) Χρησιμοποιείστε αυτή την έκθεση για να εφαρμόσετε ανάλυση σε πωλήσεις που δεν έχουν τιμολογηθεί ακόμη. Εάν θέλετε να αναλύσετε τον τζίρο σας, θα πρέπει να την χρησιμοποιήσετε."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1708,7 +1708,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr "Αυτή η έκθεση κάνει ανάλυση τις εντολές πώλησης.  Η ανάλυση ελέγχει τα έσοδα απο τις πωλήσεις και τα ταξινομεί ανά διαφορετικά ομαδικά κριτήρια (πωλητής, εταίρος, προϊόν, κλπ). Χρησιμοποιεί την έκθεση για να κάνει ανάλυση για πωλήσεις που δεν έχουν τιμολογηθεί ακόμη. Αν θέλετε να αναλύσετε τον κύκλο εργασιών, θα πρέπει να χρησιμοποιήσετε την έκθεση Ανάλυση Τιμολογίου στην εφαρμογή της Λογιστικής"
+msgstr "Αυτή η έκθεση κάνει ανάλυση τις παραγγελίες.  Η ανάλυση ελέγχει τα έσοδα απο τις πωλήσεις και τα ταξινομεί ανά διαφορετικά ομαδικά κριτήρια (πωλητής, εταίρος, προϊόν, κλπ). Χρησιμοποιεί την έκθεση για να κάνει ανάλυση για πωλήσεις που δεν έχουν τιμολογηθεί ακόμη. Αν θέλετε να αναλύσετε τον κύκλο εργασιών, θα πρέπει να χρησιμοποιήσετε την έκθεση Ανάλυση Τιμολογίου στην εφαρμογή της Λογιστικής"
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -1769,7 +1769,7 @@ msgstr "Μονάδα Μέτρησης"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread_counter
@@ -1837,7 +1837,7 @@ msgstr "Έχει εισαχθεί λάθος τιμή!"
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr "Δεν μπορείτε να αφαιρέσετε μια γραμμή εντολής πώλησης.\nΑπορρίψτε τις αλλαγές και προσπαθήστε να ρυθμίσετε την ποσότητα στο 0."
+msgstr "Δεν μπορείτε να αφαιρέσετε μια γραμμή παραγγελίας.\nΑπορρίψτε τις αλλαγές και προσπαθήστε να ρυθμίσετε την ποσότητα σε 0."
 
 #. module: sale
 #: code:addons/sale/sale.py:153
@@ -1851,7 +1851,7 @@ msgstr "Μπορείτε να διαγράψετε μόνο τις πρόχει�
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
-msgstr "Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά: \nεπιβεβαιώστε την Προσφοράς σε μια Εντολή Πώλησης, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."
+msgstr "Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά: \nεπιβεβαιώστε την Προσφορά σε μια Παραγγελία, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1860,7 +1860,7 @@ msgstr "Οι επόμενες ενέργειες σας θα πρέπει να �
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr "Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά:  επιβεβαιώστε την Προσφοράς σε μια Εντολή Πώλησης, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."
+msgstr "Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά: \nεπιβεβαιώστε την Προσφορά σε μια Παραγγελία, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
