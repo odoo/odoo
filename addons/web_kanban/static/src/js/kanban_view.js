@@ -837,7 +837,15 @@ function transform_qweb_template (node, fvg, many2manys) {
                 } else {
                     node.attrs.type = 'button';
                 }
-                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_kanban_action oe_kanban_action_' + node.tag;
+
+                var action_classes = " oe_kanban_action oe_kanban_action_" + node.tag;
+                if (node.attrs['t-attf-class']) {
+                    node.attrs['t-attf-class'] += action_classes;
+                } else if (node.attrs['t-att-class']) {
+                    node.attrs['t-att-class'] += " + '" + action_classes + "'";
+                } else {
+                    node.attrs['class'] = (node.attrs['class'] || '') + action_classes;
+                }
             }
             break;
     }
