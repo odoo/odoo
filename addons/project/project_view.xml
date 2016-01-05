@@ -339,6 +339,9 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable" attrs="{'invisible':[('displayed_image_id','=', False)]}">
+                                        <li><a type="remove_cover">Remove Cover Image</a></li>
+                                    </t>
                                     <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
