@@ -61,6 +61,12 @@
         date_planned: !eval time.strftime('%Y-%m-%d')
 
 -
+  I confirm the purchase order
+-
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_3")])
+
+-
   !record {model: purchase.order, id: purchase_order_4}:
     partner_id: base.res_partner_4
     order_line:
@@ -122,6 +128,12 @@
         price_unit: 154.5
         product_uom: product.product_uom_unit
         date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  I confirm the purchase order
+-
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_6")])
 
 -
   !record {model: purchase.order, id: purchase_order_7}:
