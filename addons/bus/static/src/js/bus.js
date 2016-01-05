@@ -5,17 +5,18 @@ var session = require('web.session');
 var Widget = require('web.Widget');
 
 var bus = {};
+var PARTNERS_PRESENCE_CHECK_PERIOD = 30000;  // don't check presence more than once every 30s
+
+var TAB_HEARTBEAT_PERIOD = 10000;  // 10 seconds
+var MASTER_TAB_HEARTBEAT_PERIOD = 1500;  // 1.5 second
 
 bus.ERROR_DELAY = 10000;
-bus.AWAY_TIMEOUT = 300000;  // 5 minutes
 
 bus.Bus = Widget.extend({
     init: function(){
         var self = this;
         this._super();
-        this.options = {
-            im_presence: true,
-        };
+        this.options = {};
         this.activated = false;
         this.channels = [];
         this.last = 0;
@@ -23,20 +24,22 @@ bus.Bus = Widget.extend({
         this.is_master = true;
 
         // bus presence
+        this.last_presence = new Date().getTime();
+        this.last_partners_presence_check = this.last_presence;
         this.set("window_focus", true);
         this.on("change:window_focus", this, function () {
-            clearTimeout(self.away_timeout);
             if (this.get("window_focus")) {
-                this.options.im_presence = true;
                 this.trigger('window_focus', this.is_master);
-            } else {
-                this.away_timeout = setTimeout(function () {
-                    self.options.im_presence = false;
-                }, bus.AWAY_TIMEOUT);
             }
         });
-        $(window).on("focus", _.bind(this.window_focus, this));
-        $(window).on("blur", _.bind(this.window_blur, this));
+        $(window).on("focus", _.bind(this.focus_change, this, true));
+        $(window).on("blur", _.bind(this.focus_change, this, false));
+        $(window).on("unload", _.bind(this.focus_change, this, false));
+        _.each('click,keydown,keyup'.split(','), function(evtype) {
+            $(window).on(evtype, function() {
+                self.last_presence = new Date().getTime();
+            });
+        });
     },
     start_polling: function(){
         if(!this.activated){
@@ -52,7 +55,16 @@ bus.Bus = Widget.extend({
     poll: function() {
         var self = this;
         self.activated = true;
-        var data = {channels: self.channels, last: self.last, options : self.options};
+        var now = new Date().getTime();
+        var options = _.extend({}, this.options, {
+            bus_inactivity: now - this.get_last_presence(),
+        });
+        if (this.last_partners_presence_check + PARTNERS_PRESENCE_CHECK_PERIOD > now) {
+            options = _.omit(options, 'bus_presence_partner_ids');
+        } else {
+            this.last_partners_presence_check = now;
+        }
+        var data = {channels: self.channels, last: self.last, options: options};
         session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
             self._notification_receive(result);
             if(!self.stop){
@@ -82,14 +94,14 @@ bus.Bus = Widget.extend({
         this.channels = _.without(this.channels, channel);
     },
     // bus presence : window focus/unfocus
-    window_focus: function() {
-        this.set("window_focus", true);
-    },
-    window_blur: function() {
-        this.set("window_focus", false);
+    focus_change: function(focus) {
+        this.set("window_focus", focus);
     },
     is_odoo_focused: function () {
         return this.get("window_focus");
+    },
+    get_last_presence: function () {
+        return this.last_presence;
     },
     update_option: function(key, value){
         this.options[key] = value;
@@ -140,6 +152,12 @@ var CrossTabBus = bus.Bus.extend({
             }, function () {
                 self.is_master = false;
                 self.stop_polling();
+            }, function () {
+                // Write last_presence in local storage if it has been updated since last heartbeat
+                var hb_period = this.is_master ? MASTER_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
+                if (self.last_presence + hb_period > new Date().getTime()) {
+                    setItem('bus.last_presence', self.last_presence);
+                }
             });
             if (this.is_master) {
                 setItem('bus.channels', this.channels);
@@ -161,7 +179,7 @@ var CrossTabBus = bus.Bus.extend({
             var max_id = Math.max(last, 0);
             var new_notifications = _.filter(notifications, function (notif) {
                 max_id = Math.max(max_id, notif.id);
-                return notif.id > last;
+                return notif.id < 0 || notif.id > last;
             });
             this.last = max_id;
             if (new_notifications.length) {
@@ -204,6 +222,9 @@ var CrossTabBus = bus.Bus.extend({
         this._super.apply(this, arguments);
         setItem('bus.channels', this.channels);
     },
+    get_last_presence: function () {
+        return getItem('bus.last_presence') || new Date().getTime();
+    },
     update_option: function(){
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
@@ -212,13 +233,9 @@ var CrossTabBus = bus.Bus.extend({
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
     },
-    window_focus: function() {
+    focus_change: function(focus) {
         this._super.apply(this, arguments);
-        setItem('bus.focus', true);
-    },
-    window_blur: function() {
-        this._super.apply(this, arguments);
-        setItem('bus.focus', false);
+        setItem('bus.focus', focus);
     },
 });
 
@@ -248,9 +265,10 @@ var tab_manager = {
     isMaster: false,
     id: new Date().getTime() + ':' + (Math.random() * 1000000000 | 0),
 
-    register_tab: function (is_master_callback, is_no_longer_master) {
+    register_tab: function (is_master_callback, is_no_longer_master, on_heartbeat_callback) {
         this.is_master_callback = is_master_callback;
         this.is_no_longer_master = is_no_longer_master || function () {};
+        this.on_heartbeat_callback = on_heartbeat_callback || function () {};
 
         var peers = getItem(tab_manager.peersKey, {});
         peers[tab_manager.id] = new Date().getTime();
@@ -287,7 +305,6 @@ var tab_manager = {
     },
     heartbeat: function () {
         var current = new Date().getTime();
-        var pollPeriod = 10000;
         var heartbeatValue = localStorage[tab_manager.heartbeatKey] || 0;
         var peers = getItem(tab_manager.peersKey, {});
 
@@ -315,17 +332,17 @@ var tab_manager = {
                 tab_manager.last_heartbeat = current;
                 localStorage[tab_manager.heartbeatKey] = current;
                 setItem(tab_manager.peersKey, cleanedPeers);
-                pollPeriod = 1500;
             }
         } else {
             //update own heartbeat
             peers[tab_manager.id] = current;
             setItem(tab_manager.peersKey, peers);
         }
+        this.on_heartbeat_callback();
 
         setTimeout(function(){
             tab_manager.heartbeat();
-        }, pollPeriod);
+        }, tab_manager.isMaster ? MASTER_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD);
     },
     is_last_heartbeat_mine: function () {
         var heartbeatValue = localStorage[tab_manager.heartbeatKey] || 0;

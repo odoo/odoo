@@ -448,6 +448,9 @@
 <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
   <xpath expr="//t[@t-placeholder='select']" position="replace">
     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
+    <t t-call="website_sale.variants">
+      <t t-set="ul_class" t-value="'nav-stacked'"/>
+    </t>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
         <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
@@ -772,13 +775,13 @@
                   </div>
               </td>
               <td class="text-center" id="td-price" name="price">
-                  <del t-attf-class="text-danger #{'' if (compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 0.1 else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
+                  <del t-attf-class="text-danger #{'' if line.product_id.lst_price &gt; line.discounted_price else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="line.product_id.lst_price" t-field-options='{
                         "widget": "monetary",
                         "from_currency": "line.company_id.currency_id",
                         "display_currency": "website.currency_id"
                     }'/>
-                <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
+                <span t-field="line.discounted_price" style="white-space: nowrap;" t-field-options='{
                      "widget": "monetary",
                      "display_currency": "website.currency_id"
                  }'/>

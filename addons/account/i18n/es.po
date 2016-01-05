@@ -6,6 +6,7 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2015
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
 # Carlos Liébana <carlosliebana@gmail.com>, 2015
+# Eneldo Serrata <eneldoserrata@gmail.com>, 2016
 # Javier Ramirez <elbomba887@gmail.com>, 2015
 # Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
 # José Vicente <txusev@gmail.com>, 2015
@@ -19,9 +20,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-11-26 22:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-12-17 14:09+0000\n"
+"PO-Revision-Date: 2016-01-02 21:15+0000\n"
+"Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    <p>A new invoice is available for you: </p>\n"
 "    \n"
@@ -85,7 +86,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hola ${object.partner_id.name},</p>\n    <p>Tiene a su disposición una nueva factura: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Nº de factura: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Total factura: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fecha factura: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Nº pedido: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>También puede pagarla directamente con Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Si tiene alguna pregunta, no dude en contactar con nosotros.</p>\n    <p>Gracias por elegir ${object.company_id.name or 'nuestra compañía'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -469,7 +470,7 @@ msgstr "<strong>Crear una factura de cliente</strong>"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr "<strong>Crear un resguardo de dep&oacute;sito</strong><br/>\nLe permite anotar los diferentes pagos que constituyen su dep&oacute;sito bancario (podr&iacute;a tener que"
+msgstr "<strong>Crear un resguardo de dep&#243;sito</strong><br/>\nLe permite anotar los diferentes pagos que constituyen su dep&#243;sito bancario (podr&iacute;a tener que"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -500,12 +501,12 @@ msgstr "<strong>Fecha hasta:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr "<strong>Resguardo de dep&oacute;sito</strong>"
+msgstr "<strong>Resguardo de dep&#243;sito</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Description:</strong>"
-msgstr "<strong>Descripci&oacute;n:</strong>"
+msgstr "<strong>Descripci&#243;n:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -530,7 +531,7 @@ msgstr "<strong>Gastos</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Posici&oacute;n fiscal:</strong>"
+msgstr "<strong>Posici&#243;n fiscal:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -547,26 +548,26 @@ msgstr "<strong>Diarios:</strong>"
 msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
-msgstr "<strong>Marque las facturas a pagar</strong><br/>Agrupe o filtre sus facturas para ver cu&aacute;les vencen la pr&oacute;xima semana, &aacute;bralas individualmente, haga click en <strong>'Pagar'</strong> y seleccione su método de pago preferido."
+msgstr "<strong>Marque las facturas a pagar</strong><br/>Agrupe o filtre sus facturas para ver cu&aacute;les vencen la pr&#243;xima semana, &aacute;bralas individualmente, haga click en <strong>'Pagar'</strong> y seleccione su método de pago preferido."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Next action:</strong><br/>"
-msgstr "<strong>Siguiente acci&oacute;n:</strong><br/>"
+msgstr "<strong>Siguiente acci&#243;n:</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr "<strong>Reconciaci&oacute;n de pagos sobre la marcha:</strong> recomendaciones automáticas de pagos pendientes al crear facturas."
+msgstr "<strong>Reconciaci&#243;n de pagos sobre la marcha:</strong> recomendaciones automáticas de pagos pendientes al crear facturas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
-msgstr "<strong>O cree &oacute;rdenes de pago</strong><br/>\nCree una &Oacute;rden de pago y seleccione las facturas que quiere pagar como L&iacute;neas de entrada (s&oacute;lo aparecer&aacute;n las facturas validadas)."
+msgstr "<strong>O cree &#243;rdenes de pago</strong><br/>\nCree una &Oacute;rden de pago y seleccione las facturas que quiere pagar como L&iacute;neas de entrada (s&#243;lo aparecer&aacute;n las facturas validadas)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -576,7 +577,7 @@ msgstr "<strong>Asociado:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Period Length (days)</strong>"
-msgstr "<strong>Duraci&oacute;n del per&iacute;odo (d&iacute;as)</strong>"
+msgstr "<strong>Duraci&#243;n del per&iacute;odo (d&iacute;as)</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -600,7 +601,7 @@ msgstr "<strong>Conciliar la cuenta bancaria</strong>"
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr "<strong>Conciliar con una transacci&oacute;n existente</strong><br/>\nEn este caso, Odoo deber&iacute;a hacer coincidir autom&aacute;ticamente el extracto bancario con la transacci&oacute;n marcada, guardada con anterioridad."
+msgstr "<strong>Conciliar con una transacci&#243;n existente</strong><br/>\nEn este caso, Odoo deber&iacute;a hacer coincidir autom&aacute;ticamente el extracto bancario con la transacci&#243;n marcada, guardada con anterioridad."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -612,7 +613,7 @@ msgstr "<strong>Conciliar sus extractos bancarios</strong>"
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr "<strong>Anotar el extracto bancario (o importar archivo)</strong><br/>\nDependiendo del vol&uacute;men de transacciones, deber&iacute; guardar su extracto bancario cada semana o varias veces al d&iacute;a."
+msgstr "<strong> Declaración de Registro de Banco (o archivo de importación)</strong><br/>\nDependiendo del volumen de sus transacciones, debe estar grabando su estado de cuenta cada semana a varias veces al día."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -624,14 +625,14 @@ msgstr "<strong>Anotar extracto bancario</strong>"
 msgid ""
 "<strong>Record a payment by check on the Invoice</strong><br/>\n"
 "                                        Simply click on the 'Pay' button."
-msgstr "<strong>Anotar un pago marc&aacute;ndolo en la Factura</strong><br/>\nSimplemente haga click en el bot&oacute;n 'Pagar'."
+msgstr "<strong>Anotar un pago marc&aacute;ndolo en la Factura</strong><br/>\nSimplemente haga click en el bot&#243;n 'Pagar'."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reduced data entry:</strong> no need to manually create invoices, "
 "register bank statements, and send payment follow-ups."
-msgstr "<strong>Introducci&oacute;n de datos reducida:</strong> no hay necesidad de crear manualmente facturas, registros bancarios, ni de mandar seguimientos de pagos."
+msgstr "<strong>Introducci&#243;n de datos reducida:</strong> no hay necesidad de crear manualmente facturas, registros bancarios, ni de mandar seguimientos de pagos."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -2204,19 +2205,9 @@ msgid "Cashbox Lines"
 msgstr "Líneas de caja"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
-msgid "Cashbox end id"
-msgstr "Caja final id"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
-msgid "Cashbox id"
-msgstr "Caja id"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
-msgid "Cashbox start id"
-msgstr "Caja inicial id"
+msgid "Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -2926,7 +2917,9 @@ msgstr "Id movimiento crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_currency_id
@@ -2935,6 +2928,7 @@ msgstr "Id movimiento crédito"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_currency_id
@@ -2942,6 +2936,7 @@ msgstr "Id movimiento crédito"
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_currency_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_currency_id
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -2960,19 +2955,11 @@ msgid "Currency as per company's country."
 msgstr "Moneda por país de la compañía"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1168
-#: code:addons/account/models/account_move.py:1176
+#: code:addons/account/models/account_move.py:1180
+#: code:addons/account/models/account_move.py:1188
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Diferencia en tasa de cambio de divisa"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
-#: model:ir.model.fields,field_description:account.field_account_move_currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
-msgid "Currency id"
-msgstr "Moneda"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -3590,6 +3577,11 @@ msgstr "Fin de mes siguiente"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
 msgid "Ending Balance"
 msgstr "Saldo final"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
+msgid "Ending Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5469,12 +5461,6 @@ msgstr "Circular:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_ids
 msgid "Messages"
 msgstr "Mensajes"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_message_ids
-#: model:ir.model.fields,help:account.field_account_invoice_message_ids
-msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -7482,6 +7468,11 @@ msgstr "Fecha inicial"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
 msgid "Starting Balance"
 msgstr "Saldo inicial"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
+msgid "Starting Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -9646,6 +9637,11 @@ msgstr "la lista de clientes"
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "la compañia matriz"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the product list"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

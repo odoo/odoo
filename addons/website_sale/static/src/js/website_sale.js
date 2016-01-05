@@ -101,12 +101,12 @@ $('.oe_website_sale').each(function () {
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
         var product_ids = [];
-        var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").first();
+        var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").last();
         if (!product_dom.length) {
             return;
         }
         _.each(product_dom.data("attribute_value_ids"), function(entry) {
-            product_ids.push(entry);});
+            product_ids.push(entry[0]);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
         if ($("#product_detail").length) {
