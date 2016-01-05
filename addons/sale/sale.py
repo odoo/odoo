@@ -8,7 +8,9 @@ from openerp import api, fields, models, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
 from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.misc import formatLang
 from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+
 
 class res_company(models.Model):
     _inherit = "res.company"
@@ -503,6 +505,19 @@ class SaleOrder(models.Model):
 
         return report_pages
 
+    @api.multi
+    def _get_tax_amount_by_group(self):
+        self.ensure_one()
+        res = {}
+        currency = self.currency_id or self.company_id.currency_id
+        for line in self.order_line:
+            for tax in line.tax_id:
+                group = tax.tax_group_id
+                res.setdefault(group, 0.0)
+                res[group] += tax.compute_all(line.price_unit, quantity=line.product_uom_qty)['taxes'][0]['amount']
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
+        res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
+        return res
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
