@@ -177,6 +177,16 @@ class AccountAccount(models.Model):
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
+    @api.multi
+    def action_open_reconcile(self):
+        # Open reconciliation view for this account
+        action_context = {'show_mode_selector': False, 'account_ids': [self.id,]}
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'manual_reconciliation_view',
+            'context': action_context,
+        }
+
 
 class AccountJournal(models.Model):
     _name = "account.journal"
