@@ -112,6 +112,7 @@ class TestOnChange(common.TransactionCase):
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
             (5,),
+            (4, message.id),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': message.body,
@@ -153,11 +154,14 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = discussion.onchange(values, 'moderator', field_onchange)
 
+        participants_value = [(5,)]
+        for user in discussion.participants + demo:
+            participants_value.append((4, user.id))
+            participants_value.append((1, user.id, {'display_name': user.display_name}))
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(1, user.id, {'display_name': user.display_name})
-                      for user in discussion.participants + demo],
+            participants_value,
         )
 
     def test_onchange_one2many_value(self):
