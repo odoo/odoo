@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from stock import *
+import inherit_stock_move
 import inherit_product
 import partner
 import product

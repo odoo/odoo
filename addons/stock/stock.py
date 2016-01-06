@@ -1719,7 +1719,6 @@ class StockMove(models.Model):
             # Keeping in product default UoM
             move.remaining_qty = float_round(qty, precision_rounding=move.product_id.uom_id.rounding)
 
-    @api.multi
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _quantity_normalize(self):
         for m in self:
@@ -1888,33 +1887,6 @@ class StockMove(models.Model):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
-
-    @api.onchange('product_id', 'product_qty', 'product_uom')
-    def onchange_quantity(self):
-        """ On change of product quantity finds UoM
-        @param product_id: Product id
-        @param product_qty: Changed Quantity of product
-        @param product_uom: Unit of measure of product
-        @return: Dictionary of values
-        """
-        warning = {}
-        result = {}
-
-        if (not self.product_id) or (self.product_qty <= 0.0):
-            result['product_qty'] = 0.0
-            return {'value': result}
-
-        # Warn if the quantity was decreased
-        if self.ids:
-            for move in self.read(['product_qty']):
-                if self.product_qty < move['product_qty']:
-                    warning.update({
-                        'title': _('Information'),
-                        'message': _("By changing this quantity here, you accept the "
-                                "new quantity as complete: Odoo will not "
-                                "automatically generate a back order.")})
-                break
-        return {'warning': warning}
 
     @api.multi
     def do_unreserve(self):
@@ -2487,7 +2459,7 @@ class StockMove(models.Model):
         todo = self.filtered(lambda move: move.state == "draft")
         # todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
         if todo:
-            self = todo.action_confirm()
+            self = self.browse(todo.action_confirm())
         pickings = set()
         procurement_ids = set()
         #Search operations that are linked to the moves
