@@ -50,26 +50,25 @@ msgstr "\n"
 #: help:stock.config.settings,module_stock_dropshipping:0
 msgid "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\n"
-"Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:1703
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s reserved)"
+msgstr " (%s xí trước)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1706
 #, python-format
 msgid " (reserved)"
-msgstr " (reserved)"
+msgstr " (xí trước)"
 
 #. module: stock
 #: code:addons/stock/stock.py:3236
 #, python-format
 msgid " MTO"
-msgstr " MTO"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/product.py:227
@@ -104,19 +103,19 @@ msgstr " Trình tự ra"
 #: code:addons/stock/stock.py:3649
 #, python-format
 msgid " Sequence packing"
-msgstr " Sequence packing"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3376
 #: code:addons/stock/stock.py:3650
 #, python-format
 msgid " Sequence picking"
-msgstr " Sequence picking"
+msgstr " "
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr " Dịch chuyển kho đã tồn tại?"
+msgstr " Dịch chuyển /biến động kho đã tồn tại?"
 
 #. module: stock
 #: code:addons/stock/stock.py:2527
@@ -167,9 +166,9 @@ msgid "* Supplier Location: Virtual location representing the source location fo
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho một địa điểm nguồn của sản phẩm nhận được từ nhà cung cấp\n"
+msgstr "* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho một địa điểm nguồn của sản phẩm nhận được nhà cung cấp\n"
 "                       \n"
-"* View: Địa điểm ảo được sử dụng để tạo một cấu trúc phả hệ cho kho hàng của bạn, không trực tiếp lưu trữ sản phẩm\n"
+"* Chỉ xem: Địa điểm ảo được sử dụng để tạo một cấu trúc phả hệ cho kho hàng của bạn, không trực tiếp lưu trữ sản phẩm\n"
 "                       \n"
 "* Địa điểm nội bộ: Địa điểm vật lý trong nhà kho của bạn,\n"
 "                       \n"
@@ -177,9 +176,9 @@ msgstr "* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho 
 "                       \n"
 "* Kiểm kê: Địa điểm ảo phục vụ để đối ứng các hoạt động tồn kho được sử dụng để hiệu chỉnh mức tồn kho (Tồn kho vật lý)\n"
 "                       \n"
-"* Mua sắm / Cung ứng: Địa điểm ảo phục vụ như một đối ứng tạm cho hoạt động Mua sắm / Cung ứng khi địa điểm nguồn (nhà cung cấp hoặc sản xuất) chưa được xác định. Địa điểm này nên để trống kho kế hoạch mua sắm chạy xong.\n"
+"* Mua sắm / Cung ứng: Địa điểm ảo phục vụ như một đối ứng tạm cho hoạt động procurement (Mua sắm / Cung ứng) khi địa điểm nguồn (nhà cung cấp hoặc sản xuất) chưa được xác định. Địa điểm này nên trống rỗng khi kế hoạch mua sắm/cung ứng chạy xong.\n"
 "                       \n"
-"* Sản xuất: Địa điểm đối ứng cho các hoạt động sản xuất: địa điểm này tiêu thụ nguyên liệu thô và sản xuất thành phẩm\n"
+"* Sản xuất: Địa điểm đối ứng cho các hoạt động sản xuất: địa điểm này tiêu thụ nguyên liệu thô và sản xuất thành phẩm. Sẽ xuất hiện bút toán kế toán nêus sản phẩm ở chế độ hạch toán tự động.\n"
 "                       \n"
 "* Địa điểm chuyển tiếp: Địa điểm đối ứng được sử dụng trong các hoạt động chuyển kho nội bộ\n"
 "                      "
@@ -305,15 +304,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                if it should show the customer.  \n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new picking type. \n"
-"              </p><p>\n"
-"                The picking type system allows you to assign each stock\n"
-"                operation a specific type which will alter its views accordingly.  \n"
-"                On the picking type you could e.g. specify if packing is needed by default, \n"
-"                if it should show the customer.  \n"
-"              </p>\n"
-"            "
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -434,9 +425,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 msgid "<p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.\n"
 "                </p>\n"
 "            "
-msgstr "<p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.\n"
-"                </p>\n"
-"            "
+msgstr ""
 
 #. module: stock
 #. openerp-web
@@ -543,7 +532,7 @@ msgstr "Cho phép xác định một vài phương thức đóng gói trên sả
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid "Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."
-msgstr "Cho phép bạn tạo và quản lý kích thước và loại bao bì mà bạn muốn duy trì trong hệ thống."
+msgstr "Cho phép bạn tạo và quản lý kích thước và kiểu bao bì mà bạn muốn duy trì trong hệ thống."
 
 #. module: stock
 #: help:stock.config.settings,group_uom:0
@@ -681,7 +670,7 @@ msgstr "Best price (not yet active!)"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "Mang hàng hóa ra khỏi địa điểm kho trước khi vận chuyển (Pick + Ship)"
+msgstr "Mang hàng hóa ra địa điểm xuất (output) trước khi bàn giao (Lấy hàng + Bàn giao)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -1236,7 +1225,7 @@ msgstr "Default Owner"
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
 msgid "Default Resupply Warehouse"
-msgstr "Default Resupply Warehouse"
+msgstr "Nhà kho Tái cung ứng"
 
 #. module: stock
 #: field:stock.picking.type,default_location_src_id:0
@@ -1266,12 +1255,12 @@ msgstr "Tuyến đường mặc định thông qua nhà kho"
 #. module: stock
 #: help:stock.location,putaway_strategy_id:0
 msgid "Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."
-msgstr "Xác định phương thức mặc định được sử dụng để cho thấy địa  lưu trữ chính xác của sản phẩm. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có thể áp dụng trên địa điểm cha nếu không được thiết lập ở đây."
+msgstr "Xác định phương thức mặc định được sử dụng để đề xuất địa điểm (giá/kệ) chính xác để lưu trữ sản phẩm. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có thể áp dụng trên địa điểm cha nếu không được thiết lập ở đây."
 
 #. module: stock
 #: help:stock.location,removal_strategy_id:0
 msgid "Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."
-msgstr "Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."
+msgstr "Xác định phương thức mặc định được sử dụng để đề xuất địa điểm (giá/kệ) chính xác mà từ đó lấy sản phẩm ra, hay từ lô nào, v.v. đối với địa điểm này. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có thể áp dụng trên địa điểm cha nếu không được thiết lập ở đây."
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -1641,7 +1630,7 @@ msgstr "Give to the more specialized category, a higher priority to have them in
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
 msgid "Goods will always be resupplied from this warehouse"
-msgstr "Hàng hóa luôn được cung cấp lại từ kho này"
+msgstr "Hàng hóa luôn được tái cung cấp từ kho này"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
@@ -1650,7 +1639,7 @@ msgstr "Hàng hóa luôn được cung cấp lại từ kho này"
 #: view:stock.production.lot:stock.search_product_lot_filter
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr "Group By"
+msgstr "Nhóm theo"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -2236,7 +2225,7 @@ msgstr "Linked Quant"
 #. module: stock
 #: view:stock.location:stock.view_location_form
 msgid "Localization"
-msgstr "Lưu trú / Vị trí"
+msgstr "Lưu trú / Vị trí / Định vị"
 
 #. module: stock
 #: field:product.product,location_id:0
@@ -2259,7 +2248,7 @@ msgstr "Địa điểm"
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
 msgid "Location & Warehouse"
-msgstr "Kho & Địa điểm"
+msgstr "Điểm điểm kho & Kho hàng"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
@@ -2292,7 +2281,7 @@ msgstr "Địa điểm Kho"
 #. module: stock
 #: field:stock.location,usage:0
 msgid "Location Type"
-msgstr "Loại Địa điểm"
+msgstr "Kiểu Địa điểm"
 
 #. module: stock
 #: help:stock.move,location_dest_id:0
@@ -2386,7 +2375,7 @@ msgstr "Cung ứng theo đơn hàng (MTO)"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)"
-msgstr ""
+msgstr "Đóng gói vào một địa điểm chuyên dụng (chuyển vào địa điểm đóng gói), rồi đưa ra điểm điểm xuất (Output) để chờ giao (Pick + Pack + Ship)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -3018,29 +3007,29 @@ msgstr ""
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,packaging_id:0
 msgid "Packaging"
-msgstr ""
+msgstr "Đóng gói"
 
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
 msgid "Packing Location"
-msgstr ""
+msgstr "Địa điểm đóng gói"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Hoạt động đóng gói"
 
 #. module: stock
 #: code:addons/stock/stock.py:3503
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "Khu vực đóng gói"
 
 #. module: stock
 #: field:stock.transfer_details,packop_ids:0
 msgid "Packs"
-msgstr ""
+msgstr "Gói"
 
 #. module: stock
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
@@ -3150,17 +3139,17 @@ msgstr "Bảng kế hàng hóa"
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "Loại hoạt động"
+msgstr "Kiểu giao nhận"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
 msgid "Picking Type Code"
-msgstr ""
+msgstr "Mã Kiểu giao nhận"
 
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr "Tên"
+msgstr "Tên Kiểu giao nhận"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
@@ -3223,7 +3212,7 @@ msgstr "Ngày lên kế hoạch"
 #: code:addons/stock/stock.py:2498
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr "Vui lòng cung cấp số dương để loại bỏ."
+msgstr "Vui lòng cung cấp số dương để loại bỏ thành phế liệu."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:162
@@ -3955,17 +3944,17 @@ msgstr "Reserved quants"
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
 msgid "Resupply From Other Warehouses"
-msgstr "Cung cấp lại từ Kho khác"
+msgstr "Tái cung cấp từ các kho khác"
 
 #. module: stock
 #: field:stock.warehouse,resupply_route_ids:0
 msgid "Resupply Routes"
-msgstr "Resupply Routes"
+msgstr "Tuyến Tái cung cấp"
 
 #. module: stock
 #: field:stock.warehouse,resupply_wh_ids:0
 msgid "Resupply Warehouses"
-msgstr "Kho cung cấp lại"
+msgstr "Kho Tái cung cấp"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -4043,7 +4032,7 @@ msgstr "Tuyến đường"
 #. module: stock
 #: help:stock.warehouse,resupply_route_ids:0
 msgid "Routes will be created for these resupply warehouses and you can select them on products and product categories"
-msgstr "Tuyến đường sẽ được tạo cho các kho cung cấp lại và bạn có thể chọn nó trên sản phẩm và nhóm sản phẩm"
+msgstr "Tuyến đường sẽ được tạo cho các kho tái cung cấp này và bạn có thể chọn nó trên sản phẩm và nhóm sản phẩm"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4216,7 +4205,7 @@ msgstr "Số sê-ri"
 #. module: stock
 #: field:procurement.rule,warehouse_id:0
 msgid "Served Warehouse"
-msgstr "Served Warehouse"
+msgstr "Áp dụng cho Kho"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -4248,7 +4237,7 @@ msgstr "Setting a product and a source package means that the product will be ta
 #. module: stock
 #: field:stock.location,posy:0
 msgid "Shelves (Y)"
-msgstr "Shelves (Y)"
+msgstr "Kệ/Ngăn/Giá (Y)"
 
 #. module: stock
 #: code:addons/stock/stock.py:3542
@@ -4259,7 +4248,7 @@ msgstr "Ship Only"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr "Ship directly from stock (Ship only)"
+msgstr "Giao trực tiếp từ kho (Chỉ bàn giao)"
 
 #. module: stock
 #: field:stock.warehouse,code:0
@@ -4274,7 +4263,7 @@ msgstr "Tên viết tắt được sử dụng để xác định kho hàng"
 #. module: stock
 #: help:stock.move,string_availability_info:0
 msgid "Show various information on stock availability for this move"
-msgstr "Show various information on stock availability for this move"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -4541,7 +4530,7 @@ msgstr "Trường kỹ thuật miêu tả một nhà kho để xem xét việc l
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid "Technical field used for resupply routes between warehouses that belong to this company"
-msgstr "Trường kỹ thuật được sử dụng cho tuyến đường cung cấp lại giữa các nhà kho thuộc công ty này"
+msgstr "Trường kỹ thuật được sử dụng cho các tuyến đường tái cung cấp giữa các nhà kho thuộc công ty này"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
@@ -4727,7 +4716,7 @@ msgstr "The stock operation where the packing has been made"
 #. module: stock
 #: help:procurement.rule,warehouse_id:0
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Kho hàng mà quy tắc này được áp dụng"
 
 #. module: stock
 #: help:procurement.rule,propagate_warehouse_id:0
@@ -4951,7 +4940,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,code:0
 msgid "Type of Operation"
-msgstr "Loại hoạt động"
+msgstr "Kiểu hoạt động"
 
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
@@ -4961,12 +4950,12 @@ msgstr "Kiểu đóng gói"
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
 msgid "Type of the new Operation"
-msgstr ""
+msgstr "Kiểu của hoạt động mới"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Types of Operation"
-msgstr "Hoạt động"
+msgstr "Kiểu Hoạt động"
 
 #. module: stock
 #: help:stock.production.lot,name:0
@@ -5025,12 +5014,12 @@ msgstr "Unknown Pack"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr "Unload in input location then go to stock (2 steps)"
+msgstr "Dỡ vào một địa điểm trước khi đưa vào lưu trữ (2 bước)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location, go through a quality control before being admitted in stock (3 steps)"
-msgstr "Unload in input location, go through a quality control before being admitted in stock (3 steps)"
+msgstr "Dỡ vào một địa điểm rồi chuyển qua địa điểm kiểm soát chất lượng trước khi đưa vào lưu trữ (3 bước)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
