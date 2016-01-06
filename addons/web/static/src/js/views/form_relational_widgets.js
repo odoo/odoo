@@ -480,25 +480,26 @@ var AbstractManyField = common.AbstractField.extend({
         this.trigger("load_record", record);
     },
 
-    set_value: function(ids) {
+    set_value: function(ids, options) {
         ids = (ids || []).slice();
+        options = options || {};
         if (_.find(ids, function(id) { return typeof(id) === "string"; } )) {
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            return this.send_commands(ids, {'_inhibit_on_change_flag': this._inhibit_on_change_flag});
+            return this.send_commands(ids, _.extend({'_inhibit_on_change_flag': this._inhibit_on_change_flag}, options));
         }
-        this.dataset.reset_ids(ids);
+        this.dataset.reset_ids(ids, options);
         return $.when(this._super(ids));
     },
 
-    internal_set_value: function(ids) {
+    internal_set_value: function(ids, options) {
         if (_.isEqual(ids, this.get("value"))) {
             return;
         }
         var tmp = this.no_rerender;
         this.no_rerender = true;
-        this.data_replace(ids.slice());
+        this.set_value(ids.slice(), _.extend({'keep_read_data': true}, options));
         this.no_rerender = tmp;
     },
 
