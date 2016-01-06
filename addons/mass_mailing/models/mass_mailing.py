@@ -685,6 +685,8 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
+        elif 'opt_out' in self.pool[mailing_model]._fields:
+            value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
             value['mailing_domain'] = []
         value['body_html'] = "on_change_model_and_list"
