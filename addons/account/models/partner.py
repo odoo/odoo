@@ -306,7 +306,8 @@ class ResPartner(models.Model):
 
             # generate where clause to include multicompany rules
             where_query = account_invoice_report._where_calc([
-                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id)
+                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
+                ('type', 'in', ('out_invoice', 'out_refund'))
             ])
             account_invoice_report._apply_ir_rules(where_query, 'read')
             from_clause, where_clause, where_clause_params = where_query.get_sql()

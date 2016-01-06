@@ -6,10 +6,14 @@
              <field name="model">sale.order</field>
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_id']" position="after">
+                <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
                     <field name="event_id" domain="['|', ('event_type_id','=', False),('event_type_id', '=', event_type_id),('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id), ('seats_available', '>', 0)]" attrs="{'invisible': [('event_id', '=', False)], 'required': [('event_id', '!=', False)]}"
                         on_change="onchange_event_ticket_id(event_ticket_id, context)"/>
+                    <field name="event_type_id" invisible="1"/>
+                    <field name="event_ok" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="after">
                     <field name="event_type_id" invisible="1"/>
                     <field name="event_ok" invisible="1"/>
                 </xpath>
