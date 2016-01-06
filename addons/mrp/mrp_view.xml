@@ -620,7 +620,7 @@
                             <field name="user_id"/>
                             <field name="origin"/>
                         </group>
-                        <group groups="stock.group_locations">
+                        <group groups="stock.group_stock_multi_locations">
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                         </group>
@@ -680,7 +680,7 @@
                                             <field name="product_uom_qty" readonly="1"/>
                                             <field name="restrict_lot_id" groups="stock.group_production_lot"/>
                                             <field name="product_uom" options="{'no_open':True,'no_create':True}" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_stock_multi_locations"/>
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_scrap)d"

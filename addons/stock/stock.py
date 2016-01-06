@@ -110,7 +110,8 @@ class stock_location(osv.osv):
                       """, select=True),
         'complete_name': fields.function(_complete_name, type='char', string="Full Location Name",
                             store={'stock.location': (_get_sublocations, ['name', 'location_id', 'active'], 10)}),
-        'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
+        'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade',
+            help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location."),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
         'partner_id': fields.many2one('res.partner', 'Owner', help="Owner of the location if not internal"),
@@ -3294,7 +3295,7 @@ class stock_warehouse(osv.osv):
 
     _columns = {
         'name': fields.char('Warehouse Name', required=True, select=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True, help='The company is automatically set from your user preferences.'),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True),
@@ -3703,7 +3704,7 @@ class stock_warehouse(osv.osv):
         max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
         max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
         internal_active_false = (warehouse.reception_steps == 'one_step') and (warehouse.delivery_steps == 'ship_only')
-        internal_active_false = internal_active_false and not self.user_has_groups(cr, uid, 'stock.group_locations')
+        internal_active_false = internal_active_false and not self.user_has_groups(cr, uid, 'stock.group_stock_multi_locations')
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receipts'),

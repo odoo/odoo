@@ -17,7 +17,7 @@
                         </div>
                         <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_production_lot"
                             context="{'default_product_id': product_id}"/>
-                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     </group>
                     <footer>
                         <button name="do_move_consume" string="Ok" type="object" class="btn-primary"/>

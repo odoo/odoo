@@ -78,7 +78,7 @@
                         <page name="extra" string="Extra Info">
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="location_id" widget="selection" groups="stock.group_locations"/>
+                                <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
                                 <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                                 <field name="picking_id" readonly="1"/>
@@ -658,9 +658,9 @@
                             <field name="name"/>
                         </h1>
                         <group col="4">
-                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
+                            <field name="picking_type_id" widget="selection" groups="stock.group_stock_multi_locations" 
                                 on_change="onchange_picking_type_id(picking_type_id)"/>
-                            <field name="stock_location_id" groups="stock.group_locations"/>
+                            <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="journal_id" widget="selection"/>
@@ -718,7 +718,7 @@
             <field name="arch" type="xml">
                 <tree string="Point of Sale Configuration" decoration-muted="state == 'inactive'">
                     <field name="name" />
-                    <field name="stock_location_id" groups="stock.group_locations"/>
+                    <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="state" />
                 </tree>
             </field>
@@ -732,7 +732,7 @@
                     <field name="name" />
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
-                    <field name="stock_location_id" groups="stock.group_locations" />
+                    <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
                 </search>
             </field>
         </record>
