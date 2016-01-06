@@ -366,25 +366,29 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
+
+        self.on_form_changed();
+        self.rendering_engine.init_fields();
+        self.is_initialized.resolve();
+        self.do_update_pager(record.id === null || record.id === undefined);
+        if (self.sidebar) {
+           self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+        }
+        if (record.id) {
+            self.do_push_state({id:record.id});
+        } else {
+            self.do_push_state({});
+        }
+        self.$el.removeClass('oe_form_dirty');
+        self.autofocus();
+
         return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
-                // trigger onchanges
-                self.do_onchange(null);
+                _.defer(function() {
+                    // trigger onchanges
+                    self.do_onchange(null);
+                });
             }
-            self.on_form_changed();
-            self.rendering_engine.init_fields();
-            self.is_initialized.resolve();
-            self.do_update_pager(record.id === null || record.id === undefined);
-            if (self.sidebar) {
-               self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
-            }
-            if (record.id) {
-                self.do_push_state({id:record.id});
-            } else {
-                self.do_push_state({});
-            }
-            self.$el.removeClass('oe_form_dirty');
-            self.autofocus();
         });
     },
     /**
