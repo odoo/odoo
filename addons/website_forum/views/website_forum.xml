@@ -10,12 +10,6 @@
     </xpath>
 </template>
 
-<template id="summernote_assets" inherit_id="website.layout" name="Forum Summernote Assets">
-    <xpath expr='//t[@t-call-assets="web_editor.summernote"]' position="attributes">
-        <attribute name="groups"/>
-    </xpath>
-</template>
-
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
     <xpath expr="." position="inside">
         <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
@@ -47,13 +41,8 @@
 
 <!-- Page Index -->
 <template id="header" name="Forum Index">
+    <t t-set="load_editor" t-value="True"/>
     <t t-call="website.layout">
-        <t groups="base.group_website_designer" t-set="is_designer" t-value="True"/>
-        <t t-if="not is_designer">
-            <t t-set="head">
-                <t t-call-assets="web_editor.summernote"/>
-            </t>
-        </t>
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
