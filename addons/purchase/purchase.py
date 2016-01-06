@@ -583,7 +583,7 @@ class PurchaseOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
-            self.taxes_id = self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id)
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
         else:
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
