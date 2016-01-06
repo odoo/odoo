@@ -770,10 +770,10 @@ var BufferedDataSet = DataSetStatic.extend({
             if (options.to_create !== undefined) cached.to_create = options.to_create;
             if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
         }
-        cached.values = _.extend({'id': id}, cached.from_read, cached.changes, cached.readonly_fields);
+        cached.values = _.extend({'id': id}, cached.from_read, cached.readonly_fields, cached.changes);
         return cached;
     },
-    create: function(data, options) {        
+    create: function(data, options) {
         var changes = _.extend({}, this.last_default_get, data);
         var cached = this._update_cache(_.uniqueId(this.virtual_id_prefix), _.extend({'changes': changes, 'to_create': true}, options));
         this.trigger("dataset_changed", data, options);
