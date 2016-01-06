@@ -1005,7 +1005,18 @@
                                         <field name="amount_currency"/>
                                     </group>
                                     <group string="Reconciliation">
-                                        <field name="reconciled"/>
+                                        <label for="reconciled"/>
+                                        <div>
+                                            <field name="reconciled"/>
+                                            <field name="matched_debit_ids" invisible="1"/>
+                                            <field name="matched_credit_ids" invisible="1"/>
+                                            <button name="open_reconcile_view"
+                                                class="oe_link"
+                                                type="object"
+                                                string="-> View reconciled entries"
+                                                attrs="{'invisible': [('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
+                                            </button>
+                                        </div>
                                     </group>
                                     <group string="States">
                                         <field name="blocked"/>
@@ -1219,6 +1230,14 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box">
+                            <button name="open_reconcile_view"
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                type="object"
+                                string="View reconciled entries">
+                            </button>
+                        </div>
                     <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
                     <h1>
                         <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
