@@ -444,6 +444,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.starting_ids = [];
         this.mutex = new utils.Mutex();
         this.view.on("load_record", this, this._on_load_record);
+        this.last_value = null;
         this.dataset.on('dataset_changed', this, function() {
             var options = _.clone(_.last(arguments));
             if (!_.isObject(options) || _.isArray(options)) {
@@ -456,9 +457,17 @@ var AbstractManyField = common.AbstractField.extend({
             }
         });
         this.on("change:commands", this, function (options) {
-            self._inhibit_on_change_flag = !!options._inhibit_on_change_flag;
-            self.set({'value': self.dataset.ids.slice()});
+            self._inhibit_on_change_flag = true;
+            self.set({'value': self.dataset.ids.slice()}, options);
             self._inhibit_on_change_flag = false;
+
+            var value = self.get_value();
+
+            options.has_changed = !_.isEqual(self.last_value, value);
+            if (!options._inhibit_on_change_flag && options.has_changed) {
+                this.trigger('changed_value');
+            }
+            self.last_value = value;
         });
     },
 
