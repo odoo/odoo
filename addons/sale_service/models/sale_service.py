@@ -24,6 +24,7 @@ class procurement_order(osv.osv):
     def _is_procurement_task(self, cr, uid, procurement, context=None):
         return procurement.product_id.type == 'service' and procurement.product_id.track_service=='task' or False
 
+    @api.cr_uid_records_context
     def _assign(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
         if not res:
