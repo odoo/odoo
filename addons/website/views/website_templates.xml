@@ -102,6 +102,9 @@
             <t t-if="not title">
                 <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
+            <t groups="base.group_website_designer">
+                <t t-set="load_editor" t-value="True"/>
+            </t>
 
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -132,7 +135,9 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
-            <t groups="base.group_website_designer" t-call-assets="web_editor.summernote"/>
+            <t t-if="load_editor">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
             <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
             <t groups="base.group_website_publisher" t-call-assets="website.assets_editor" async="True"/>
