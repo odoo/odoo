@@ -195,7 +195,7 @@ class ImLivechatChannel(models.Model):
     @api.model
     def get_livechat_info(self, channel_id, username='Visitor'):
         info = {}
-        info['available'] = len(self.browse(channel_id).get_available_users())
+        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
         if info['available']:
             info['server_url'] = self.env['ir.config_parameter'].get_param('web.base.url')
             info['options'] = self.sudo().get_channel_infos(channel_id)
