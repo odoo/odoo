@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import urlparse
 import werkzeug.urls
 
@@ -83,14 +84,6 @@ class MailMail(osv.Model):
             return match.group(1) + urlparse.urljoin(domain, match.group(2))
         body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
         body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
-
-        # resolve relative image url to absolute for outlook.com
-        def _sub_relative2absolute(match):
-            return match.group(1) + urlparse.urljoin(domain, match.group(2))
-        # Regex: https://regex101.com/r/aE8uG5/3
-        body = re.sub('(<img(?=\s)[^>]*\ssrc=["\'])(/[^/][^"\']+)', _sub_relative2absolute, body)
-        # Regex: https://regex101.com/r/kT3lD5/2
-        body = re.sub(r'(<[^>]+\bstyle=["\'][^"\']+\burl\([\'"]?)(/[^/\'"][^\'")]+)', _sub_relative2absolute, body)
 
         # generate tracking URL
         if mail.statistics_ids:
