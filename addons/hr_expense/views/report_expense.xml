@@ -2,7 +2,7 @@
 <odoo>
 <template id="report_expense">
     <t t-call="report.html_container">
-        <t t-foreach="docs" t-as="o">
+        <t t-foreach="get_expenses()" t-as="o">
             <t t-call="report.external_layout">
                 <div class="page">
                     <h2>HR Expenses</h2>
@@ -10,25 +10,26 @@
                     <div class="row mt32 mb32">
                         <div class="col-xs-3">
                             <strong>Employee:</strong>
-                            <p t-field="o.employee_id.name"/>
+                            <p t-esc="o['employee_name']"/>
                         </div>
                         <div class="col-xs-3">
-                            <strong>Date:</strong>
-                            <p t-field="o.date"/>
+                            <strong>Manager:</strong>
+                            <p t-esc="o['validator_name']"/>
                         </div>
                         <div class="col-xs-3">
-                            <strong>Description:</strong>
-                            <p t-field="o.name"/>
+                            <strong>Status:</strong>
+                            <p t-esc="o['state']"/>
                         </div>
                         <div class="col-xs-3">
-                            <strong>Validated By:</strong>
-                            <p t-field="o.employee_id.parent_id.name"/>
+                            <strong>Currency:</strong>
+                            <p t-field="o['currency'].name"/>
                         </div>
                     </div>
 
                     <table class="table table-condensed">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Name</th>
                                 <th>Unit Price</th>
                                 <th class="text-center">Qty</th>
@@ -38,35 +39,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <span t-field="o.name"/> 
-                                    <span t-field="o.analytic_account_id.name"/>
-                                </td>
-                                <td>
-                                    <span t-field="o.unit_amount"/>
-                                </td>
-                                <td class="text-center">
-                                    <span t-field="o.quantity"/>
-                                </td>
-                                <td groups="product.group_uom">
-                                    <span t-field="o.product_uom_id"/>
-                                </td>
-                                <td>
-                                    <t t-foreach="o.tax_ids" t-as="tax">
-                                      <t t-if="tax.description">
-                                        <span t-field="tax.description"/>
-                                      </t>
-                                      <t t-if="not tax.description">
-                                        <span t-field="tax.name"/>
-                                      </t>
-                                    </t>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="o.total_amount"
-                                        t-field-options='{"widget": "monetary", "display_currency":"o.currency_id"}'/>
-                                </td>
-                            </tr>
+                            <t t-foreach="o['lines']" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-field='line.date'/>
+                                        <t t-if="line.description">
+                                            <sup><span t-esc="o['notes_index'][line.id]"/></sup>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.name"/> 
+                                        <t t-if="line.analytic_account_id.name">
+                                            (<span t-field="line.analytic_account_id.name"/>)
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.unit_amount" 
+                                            t-field-options='{"widget": "monetary", "display_currency":"line.currency_id"}'/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td groups="product.group_uom">
+                                        <span t-field="line.product_uom_id"/>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                          <t t-if="tax.description">
+                                            <span t-field="tax.description"/>
+                                          </t>
+                                          <t t-if="not tax.description">
+                                            <span t-field="tax.name"/>
+                                          </t>
+                                        </t>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.total_amount"
+                                            t-field-options='{"widget": "monetary", "display_currency":"line.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </t>
                         </tbody>
                     </table>
 
@@ -76,15 +88,18 @@
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
                                     <td class="text-right">
-                                        <span t-field="o.total_amount"
-                                            t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        <span t-esc="formatLang(o['total_amount'], currency_obj=o['currency'])"/>
                                     </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
-
-                    <p t-field="o.description"/>
+                    <t t-foreach="o['notes']" t-as="note">
+                        <span t-esc="note['index']"/>. <span t-esc="note['description']"/>
+                        <br/>
+                    </t>
+                    <br/>
+                    <br/>
                     <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
                     <p>This document must be dated and signed for reimbursement.</p>
                 </div>

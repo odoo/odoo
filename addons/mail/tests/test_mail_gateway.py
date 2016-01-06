@@ -313,7 +313,7 @@ class TestMailgateway(TestMail):
                          'message_process: incoming email on Partners alias should send a bounce email')
         self.assertIn('New Frogs', self._mails[0].get('subject'),
                       'message_process: bounce email on Partners alias should contain the original subject')
-        self.assertIn('test.sylvie.lelitre@agrolait.com', self._mails[0].get('email_to'),
+        self.assertIn(formataddr(('Sylvie Lelitre', 'test.sylvie.lelitre@agrolait.com')), self._mails[0].get('email_to'),
                       'message_process: bounce email on Partners alias should have original email sender as recipient')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')

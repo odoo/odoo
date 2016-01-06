@@ -213,6 +213,10 @@ class AccountMove(models.Model):
             return [x.id for x in reversed_moves]
         return True
 
+    @api.multi
+    def open_reconcile_view(self):
+        return self.line_ids.open_reconcile_view()
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -1143,6 +1147,18 @@ class AccountMoveLine(models.Model):
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
+
+    @api.multi
+    def open_reconcile_view(self):
+        model, action_id = self.pool['ir.model.data'].get_object_reference(self._cr, self._uid, 'account', "action_account_moves_all_a")
+        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        ids = []
+        for aml in self:
+            if aml.account_id.reconcile:
+                ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
+                ids.append(aml.id)
+        action['domain'] = [('id', 'in', ids)]
+        return action
 
 
 class AccountPartialReconcile(models.Model):
