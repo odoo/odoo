@@ -65,7 +65,13 @@ Best Regards,''')
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
         new_prefix_length = len(new_prefix)
-        number = current_code[len(old_prefix):]
+        # find index of first occurence of a digits different than 0 after the prefix
+        index = len(old_prefix)
+        for c in current_code[len(old_prefix):]:
+            if c != '0':
+                break
+            index += 1
+        number = current_code[index:]
         return new_prefix + '0' * (digits - new_prefix_length - len(number)) + number
 
     def reflect_code_prefix_change(self, old_code, new_code, digits):
@@ -74,6 +80,20 @@ Best Regards,''')
         for account in accounts:
             if account.code.startswith(old_code):
                 account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
+
+    def reflect_code_digits_change(self, digits):
+        accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
+        for account in accounts:
+            if len(account.code) < digits:
+                account.write({'code': account.code + '0' * (digits - len(account.code))})
+            elif len(account.code) > digits:
+                # try removing extra zero from end of account code
+                code = account.code
+                while len(code) != digits:
+                    if code[len(code)-1] != '0':
+                        break
+                    code = code[:len(code)-1]
+                account.write({'code': code})
 
     @api.multi
     def write(self, values):
@@ -86,4 +106,6 @@ Best Regards,''')
             if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
+            if values.get('accounts_code_digits'):
+                company.reflect_code_digits_change(digits)
         return super(ResCompany, self).write(values)
