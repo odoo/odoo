@@ -1096,7 +1096,7 @@ exports.Orderline = Backbone.Model.extend({
             product: this.product,
             price: this.price,
         });
-            orderline.order = null;
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
