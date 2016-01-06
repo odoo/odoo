@@ -843,7 +843,7 @@ var BufferedDataSet = DataSetStatic.extend({
         var self = this;
         var to_get = _.filter(ids, function(id) {
             var cache = self.get_cache(id);
-            return !cache.to_create && _.any(fields, function(x) {return cache.from_read[x] === undefined;});
+            return !cache.to_create && _.any(fields, function(x) {return cache.from_read[x] === undefined && cache.changes[x] === undefined;});
         });
         options = options || {};
 
