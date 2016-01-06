@@ -802,6 +802,19 @@ var BufferedDataSet = DataSetStatic.extend({
                     delete data[k];
                 }
             });
+
+            // prevent future changes to detect wrong development
+            if (self.debug_mode) {
+                (function freeze (obj) {
+                    Object.freeze(obj);
+                    _.each(obj, function (v, k) {
+                        if (_.isObject(v)) {
+                            freeze(v);
+                        }
+                    });
+                })(data);
+            }
+
             self._update_cache(id, options);
 
             if (dirty) {
