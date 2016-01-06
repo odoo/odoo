@@ -1,50 +1,39 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
-from openerp import tools
-
-AVAILABLE_PRIORITIES = [
-   ('0', 'Low'),
-   ('1', 'Normal'),
-   ('2', 'High')
-]
+from odoo import fields, models, tools
 
 
-class crm_claim_report(osv.osv):
+class CrmClaimReport(models.Model):
     """ CRM Claim Report"""
 
     _name = "crm.claim.report"
-    _auto = False
     _description = "CRM Claim Report"
+    _auto = False
 
-    _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'team_id':fields.many2one('crm.team', 'Team', oldname='section_id', readonly=True),
-        'nbr': fields.integer('# of Claims', readonly=True),  # TDE FIXME master: rename into nbr_claims
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'claim_date': fields.datetime('Claim Date', readonly=True),
-        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', readonly=True,domain="[('team_ids','=',team_id)]"),
-        'categ_id': fields.many2one('crm.claim.category', 'Category',readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
-        'date_deadline': fields.date('Deadline', readonly=True, select=True),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True),
-        'subject': fields.char('Claim Subject', readonly=True)
-    }
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    team_id = fields.Many2one('crm.team', string='Team', oldname='section_id', readonly=True)
+    nbr = fields.Integer(string='# of Claims', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    create_date = fields.Datetime(string='Create Date', readonly=True, index=True)
+    claim_date = fields.Datetime(string='Claim Date', readonly=True)
+    delay_close = fields.Float(string='Delay to close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
+    stage_id = fields.Many2one('crm.claim.stage', string='Stage', readonly=True, domain="[('team_ids', '=', team_id)]")
+    categ_id = fields.Many2one('crm.claim.category', string='Category', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')])
+    type_action = fields.Selection([('correction', 'Corrective Action'), ('prevention', 'Preventive Action')], string='Action Type')
+    date_closed = fields.Datetime(string='Close Date', readonly=True, index=True)
+    date_deadline = fields.Date(string='Deadline', readonly=True, index=True)
+    delay_expected = fields.Float(string='Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
+    email = fields.Integer(string='# Emails', readonly=True)
+    subject = fields.Char(string='Claim Subject', readonly=True)
 
     def init(self, cr):
-
         """ Display Number of cases And Team Name
         @param cr: the current row, from the database cursor,
          """
-
         tools.drop_view_if_exists(cr, 'crm_claim_report')
         cr.execute("""
             create or replace view crm_claim_report as (

@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <menuitem id="menu_config_claim" name="Claim"
             groups="base.group_no_one"
             parent="base.menu_sale_config" sequence="55"/>
@@ -48,8 +46,7 @@
             </field>
         </record>
 
-        <menuitem action="crm_claim_categ_action" name="Categories"
-            id="menu_crm_case_claim-act" parent="menu_config_claim" groups="base.group_no_one"/>
+        <menuitem id="menu_crm_case_claim-act" action="crm_claim_categ_action" name="Categories" parent="menu_config_claim" groups="base.group_no_one"/>
 
         <!-- Claim Stages -->
 
@@ -96,8 +93,8 @@
 
         <!-- Claims    -->
 
-        <record model="ir.ui.view" id="crm_case_claims_tree_view">
-            <field name="name">CRM - Claims Tree</field>
+        <record id="crm_case_claims_tree_view" model="ir.ui.view">
+            <field name="name">crm.claim.tree</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <tree string="Claims">
@@ -115,8 +112,8 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="crm_case_claims_form_view">
-            <field name="name">CRM - Claims Form</field>
+        <record id="crm_case_claims_form_view" model="ir.ui.view">
+            <field name="name">crm.claim.form</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <form string="Claim">
@@ -139,8 +136,7 @@
                             <page string="Claim Description">
                                 <group colspan="2" col="2" groups="base.group_user">
                                     <separator colspan="2" string="Claim Reporter"/>
-                                    <field name="partner_id" string="Partner"
-                                        on_change="onchange_partner_id(partner_id)"/>
+                                    <field name="partner_id"/>
                                     <field name="partner_phone"/>
                                     <field name="email_from" widget="email"/>
                                 </group>
@@ -189,8 +185,8 @@
 
         <!-- Claim Calendar view -->
 
-        <record model="ir.ui.view" id="crm_case_claims_calendar_view">
-            <field name="name">Claims Actions</field>
+        <record id="crm_case_claims_calendar_view" model="ir.ui.view">
+            <field name="name">crm.claim.calendar</field>
             <field name="model">crm.claim</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
@@ -204,7 +200,7 @@
         <!-- Crm claim Search view -->
 
         <record id="view_crm_case_claims_filter" model="ir.ui.view">
-            <field name="name">CRM - Claims Search</field>
+            <field name="name">crm.claim.search</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
@@ -225,5 +221,4 @@
                 </search>
             </field>
         </record>
-     </data>
-</openerp>
+</odoo>

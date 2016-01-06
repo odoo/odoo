@@ -17,18 +17,13 @@ automatically new claims based on incoming emails.
     """,
     'depends': ['crm'],
     'data': [
-        'crm_claim_view.xml',
-        'crm_claim_menu.xml',
         'security/ir.model.access.csv',
-        'report/crm_claim_report_view.xml',
-        'crm_claim_data.xml',
-        'res_partner_view.xml',
+        'data/crm_claim_data.xml',
+        'views/crm_claim_views.xml',
+        'views/crm_claim_menu.xml',
+        'views/res_partner_views.xml',
+        'views/crm_claim_report_views.xml',
     ],
-    'demo': ['crm_claim_demo.xml'],
-    'test': [
-        'test/process/claim.yml',
-        'test/ui/claim_demo.yml'
-    ],
+    'demo': ['data/crm_claim_demo.xml'],
     'installable': True,
-    'auto_install': False,
 }
