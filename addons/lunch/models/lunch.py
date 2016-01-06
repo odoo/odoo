@@ -156,32 +156,41 @@ class LunchOrderLine(models.Model):
         """
         The order_line is ordered to the vendor but isn't received yet
         """
-        self.state = 'ordered'
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'ordered'
+        else:
+            raise AccessError(_("Only your lunch manager processes the orders."))
 
     @api.one
     def confirm(self):
         """
         confirm one or more order line, update order status and create new cashmove
         """
-        if self.state != 'confirmed':
-            values = {
-                'user_id': self.user_id.id,
-                'amount': -self.price,
-                'description': self.product_id.name,
-                'order_id': self.id,
-                'state': 'order',
-                'date': self.date,
-            }
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            if self.state != 'confirmed':
+                values = {
+                    'user_id': self.user_id.id,
+                    'amount': -self.price,
+                    'description': self.product_id.name,
+                    'order_id': self.id,
+                    'state': 'order',
+                    'date': self.date,
+                }
             self.env['lunch.cashmove'].create(values)
             self.state = 'confirmed'
+        else:
+            raise AccessError(_("Only your lunch manager sets the orders as received."))
 
     @api.one
     def cancel(self):
         """
         cancel one or more order.line, update order status and unlink existing cashmoves
         """
-        self.state = 'cancelled'
-        self.cashmove.unlink()
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'cancelled'
+            self.cashmove.unlink()
+        else:
+            raise AccessError(_("Only your lunch manager cancels the orders."))
 
 
 class LunchProduct(models.Model):

@@ -12,6 +12,8 @@
             <field name="model">lunch.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search">
+                    <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                    <separator/>
                     <field name="name" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
                     <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
@@ -20,6 +22,7 @@
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
+                        <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>
                         <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
                         <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Vendor Orders by Month"/>
                     </group>
@@ -56,26 +59,6 @@
                 </search>
             </field>
         </record>
-
-        <!--View search for order-->
-        <record id="lunch_order_view_search" model="ir.ui.view">
-            <field name='name'>lunch.order.search</field>
-            <field name='model'>lunch.order</field>
-            <field name='arch' type='xml'>
-                <search string="lunch orders">
-                    <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="order_line_ids"/>
-                    <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
-                    <separator/>
-                    <filter name="new" string="New" domain="[('state','=','new')]"/>
-                    <filter name="received" string="Received" domain="[('state','=','confirmed')]"/>
-                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
-                    <filter name='by_users' string="Users" context="{'group_by':'user_id'}"/>
-                </search>
-            </field>
-        </record>
-
 
         <record id="lunch_alert_view_search" model="ir.ui.view">
             <field name="name">lunch.alert.search</field>
@@ -129,24 +112,19 @@
         </record>
         <menuitem name="New Order" parent="menu_lunch_title" id="lunch_order_menu_form" action="lunch_order_action_form" sequence="1"/>
 
-        <record id="lunch_order_action_tree" model="ir.actions.act_window">
+        <record id="lunch_order_line_action" model="ir.actions.act_window">
             <field name="name">Your Orders</field>
-            <field name="res_model">lunch.order</field>
+            <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="lunch_order_view_search"/>
-            <field name="context">{"search_default_is_mine":1, "search_default_received":1}</field>
+            <field name="search_view_id" ref="lunch_order_line_view_search"/>
+            <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a lunch order.
-            </p>
             <p>
-                A lunch order is defined by its user, date and order lines.
-                Each order line corresponds to a product, an additional note and a price.
-                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.
+                There is no previous order recorded. Click on "My Lunch" and then create a new lunch order.
             </p>
             </field>
         </record>
-        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_action_tree" sequence="2"/>
+        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_line_action" sequence="2"/>
 
         <record id="lunch_cashmove_view_tree_2" model="ir.ui.view">
             <field name="name">lunch.cashmove.tree</field>
@@ -334,15 +312,15 @@
             <field name="arch" type="xml">
                 <tree string="Order lines Tree" create="false" edit="false">
                     <field name='date'/>
-                    <field name='user_id'/>
                     <field name='supplier' invisible='1'/>
                     <field name='product_id'/>
                     <field name='note'/>
                     <field name='state'/>
-                    <field name='price' sum="Total"/>
-                    <button name="order" string="Order" type="object" icon="terp-call-start" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}"/>
-                    <button name="confirm" string="Receive" type="object" icon="gtk-apply" attrs="{'invisible': [('state','!=','ordered')]}"/>
-                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}"/>
+                    <field name='user_id'/>
+                    <field name='price' sum="Total" string="Price"/>
+                    <button name="order" string="Order" type="object" icon="terp-call-start" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="confirm" string="Receive" type="object" icon="gtk-apply" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager"/>
                 </tree>
             </field>
         </record>
