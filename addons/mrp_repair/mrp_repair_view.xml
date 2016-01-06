@@ -11,8 +11,8 @@
                 <field name="product_id" />
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="location_id" groups="stock.group_locations"/>
-                <field name="location_dest_id" groups="stock.group_locations"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
@@ -55,8 +55,8 @@
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <group>
-                            <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
-                            <field name="location_dest_id" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                         </group>
@@ -81,8 +81,8 @@
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                             <field name="invoiced"/>
-                                            <field name="location_id" groups="stock.group_locations"/>
-                                            <field name="location_dest_id" groups="stock.group_locations"/>
+                                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                                         </group>
                                     </page>
                                     <page string="History">
@@ -98,8 +98,8 @@
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id, product_id, product_uom, product_uom_qty, parent.partner_id, False, context)"/>
                                 <field name='name'/>
                                 <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
-                                <field name="location_id" groups="stock.group_locations"/>
-                                <field name="location_dest_id" groups="stock.group_locations"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>

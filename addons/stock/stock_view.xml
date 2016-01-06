@@ -13,7 +13,7 @@
         <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="2" groups="base.group_no_one"/>
         <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
             sequence="100" groups="group_stock_manager,base.group_configuration"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="base.group_configuration" sequence="1"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="stock.group_stock_manager" sequence="1"/>
         <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_config_settings" sequence="2" groups="stock.group_adv_location"/>
         <menuitem id="menu_packages_config" name="Packages" parent="menu_stock_config_settings" sequence="3" groups="product.group_stock_packaging"/>
         <menuitem
@@ -47,7 +47,7 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="product.group_uom"/>
-                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 </tree>
             </field>
         </record>
@@ -119,7 +119,7 @@
                                 <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
                                     <field name="product_id"  domain="[('type','=','product')]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
                                     <field name="product_uom_id" groups="product.group_uom" string="UoM" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
-                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_locations" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
                                     <field name="prod_lot_id" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                                     <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" groups="stock.group_tracking_lot"/>
                                     <field name="partner_id" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" groups="stock.group_tracking_owner"/>
@@ -210,7 +210,7 @@
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="qty"/>
-                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 </tree>
                              </field>
                         </page>
@@ -280,8 +280,8 @@
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_packaging" domain="[('product_tmpl_id','=',product_tmpl_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
-                    <field name="location_id" groups="stock.group_locations"/>
-                    <field name="location_dest_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
                     <field name="date_expected" string="Date Expected"/>
@@ -518,7 +518,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
+        <menuitem action="action_location_form" id="menu_action_location_form" 
+            groups="stock.group_stock_multi_locations"
             parent="menu_warehouse_config" sequence="2"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -582,7 +583,7 @@
             <field name="arch" type="xml">
                 <tree string="Warehouse">
                     <field name="name"/>
-                    <field name="lot_stock_id" groups="stock.group_locations"/>
+                    <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -599,7 +600,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_stock_manager"
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" 
+            groups="stock.group_stock_multi_warehouses"
             parent="menu_warehouse_config" sequence="1"/>
 
         <!--
@@ -698,7 +700,7 @@
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom" class="oe_inline"/>
                             </div>
                         </group>
-                        <group string="Locations" groups="stock.group_locations">
+                        <group string="Locations" groups="stock.group_stock_multi_locations">
                             <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]"/>
                             <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]"/>
                         </group>
@@ -823,8 +825,8 @@
                     <group>
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}" on_change="onchange_picking_type(picking_type_id,partner_id)"/>
-                            <field name="location_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                            <field name="location_dest_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -853,15 +855,15 @@
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
-                                    <field name="from_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
-                                    <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
+                                    <field name="from_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
+                                    <field name="to_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
                                     <field name="qty_done" attrs="{'readonly': [('lots_visible', '=', True)]}"/>
                                     <button name="split_lot" string="Lot Split" type="object" icon="fa-list" groups="stock.group_production_lot"
                                             attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available','done'])]}"/>
-                                    <button name="show_details" string="Modify" type="object" icon="fa-pencil" groups="stock.group_locations"
+                                    <button name="show_details" string="Modify" type="object" icon="fa-pencil" groups="stock.group_stock_multi_locations"
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
                             </field>
@@ -870,8 +872,8 @@
                                 <tree editable="bottom" decoration-muted="qty_done&gt;0">
                                     <field name="package_id" required="1" string="Package To Move"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
-                                    <field name="from_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
-                                    <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
+                                    <field name="from_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
+                                    <field name="to_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
@@ -1223,7 +1225,7 @@
             <field name="arch" type="xml">
                 <pivot string="Stock Moves Analysis">
                     <field name="product_id" type="row"/>
-                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
                     <field name="product_uom_qty" type="measure"/>
                 </pivot>
             </field>
@@ -1235,7 +1237,7 @@
             <field name="arch" type="xml">
                 <graph string="Stock Moves Analysis">
                     <field name="product_id"/>
-                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
                     <field name="product_uom_qty" type="measure"/>
                 </graph>
             </field>
@@ -1260,8 +1262,8 @@
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"
                         groups="stock.group_stock_user"/>
-                    <field name="location_id" groups="stock.group_locations"/>
-                    <field name="location_dest_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
@@ -1332,13 +1334,13 @@
                         </group>
                         <group name="origin_grp" string="Origin">
                             <field name="origin"/>
-                            <field name="location_id" groups="stock.group_locations"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
                             <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
                             <field name="create_date" groups="base.group_no_one"/>
                             <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                             <field name="group_id"/>
                         </group>
-                        <group name="destination_grp" string="Destination" groups="stock.group_locations">
+                        <group name="destination_grp" string="Destination" groups="stock.group_stock_multi_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
                             <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
@@ -1426,8 +1428,8 @@
                     <group expand="0" string="Group By">
                         <filter string="Product" name="by_product" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
-                        <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_locations"/>
-                        <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_locations"/>
+                        <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
@@ -1727,8 +1729,8 @@
             <field name="arch" type="xml">
                 <tree string="Reordering Rules">
                     <field name="name"/>
-                    <field name="warehouse_id" groups="stock.group_locations"/>
-                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
@@ -1744,7 +1746,7 @@
                 <search string="Reordering Rules Search">
                     <field name="name" string="Reordering Rules"/>
                     <field name="warehouse_id"/>
-                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="product_id"/>
                     <group expand="0" string="Group By">
@@ -1770,9 +1772,9 @@
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
-                                <field name="location_id" groups="stock.group_locations"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
@@ -1978,8 +1980,8 @@
                                 <button type="object" name="show_picking" icon="fa-list-alt" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                 <field name="product_uom_qty"/>
                                 <field name="date"/>
-                                <field name="location_id" groups="stock.group_locations" string="Source Location Zone"/>
-                                <field name="location_dest_id" groups="stock.group_locations" string="Destination Location Zone"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations" string="Source Location Zone"/>
+                                <field name="location_dest_id" groups="stock.group_stock_multi_locations" string="Destination Location Zone"/>
                                 <field name="state" invisible="1"/>
                             </tree>
                         </field>
@@ -2047,7 +2049,7 @@
         <menuitem id="menu_quants" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="120" action="quantsact"/>
         <menuitem id="menu_procurement_rules" name="Global Procurement Rules" parent="stock.menu_routes_config" action="procrules" groups="base.group_no_one" sequence="3"/>
         <menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
-        <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4" groups="stock.group_locations"/>
+        <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4" groups="stock.group_stock_multi_locations"/>
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
