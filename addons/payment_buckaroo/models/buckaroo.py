@@ -107,7 +107,7 @@ class AcquirerBuckaroo(osv.Model):
             'Brq_culture': (partner_values.get('lang') or 'en_US').replace('_', '-'),
         })
         if buckaroo_tx_values.get('return_url'):
-            buckaroo_tx_values['add_returndata'] = {'return_url': '%s' % buckaroo_tx_values.pop('return_url')}
+            buckaroo_tx_values['add_returndata'] = buckaroo_tx_values.pop('return_url')
         else: 
             buckaroo_tx_values['add_returndata'] = ''
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign(acquirer, 'in', buckaroo_tx_values)
