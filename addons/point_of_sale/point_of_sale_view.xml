@@ -20,7 +20,6 @@
                         <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                         <button name="refund" string="Return Products" type="object" 
                             attrs="{'invisible':[('state','=','draft')]}"/>
-                        <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                     </header>
                     <sheet>
@@ -80,7 +79,7 @@
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="location_id" widget="selection" groups="stock.group_locations"/>
-                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
+                                <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                                 <field name="picking_id" readonly="1"/>
                                 <field name="pos_reference"/>
@@ -534,9 +533,10 @@
                 Categories are used to browse your products through the
                 touchscreen interface.
               </p><p>
-                If you put a photo on the category, the layout of the
-                touchscreen interface will automatically. We suggest not to put
-                a photo on categories for small (1024x768) screens.
+                If you put a photo on the category and enable the option in the
+                point of sale configuration, the layout of the touchscreen interface
+                will automatically be displayed. We suggest not to put a photo
+                on categories for small (1024x768) screens.
               </p>
             </field>
         </record>
@@ -834,10 +834,9 @@
                         <group>
                             <field name="cash_control" invisible="1" />
                             <group>
-                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_manager', 'base.group_sale_manager']}"/>
+                                <field name="user_id"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="config_id"/>
-                                <field name="rescue" attrs="{'invisible': [('rescue', '=', False)]}" />
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>

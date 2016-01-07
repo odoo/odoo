@@ -82,13 +82,10 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
-    module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
+    module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
-                 'Revenue recognition: This allows you to manage the Revenue recognition on selling product. '
-                 'It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n'
-             '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
-             'but not accounting (Journal Items, Chart of Accounts, ...)')
+             '-This installs the module account_asset.')
     module_account_budget = fields.Boolean(string='Budget management',
         help='This allows accountants to manage analytic and crossovered budgets. '
              'Once the master budgets and the budgets are defined, '
@@ -118,16 +115,16 @@ class AccountConfigSettings(models.TransientModel):
 
     module_account_plaid = fields.Boolean(string="Plaid Connector",
                                           help='Get your bank statements from you bank and import them through plaid.com.\n'
-                                          '-that installs the module account_plaid.')
+                                          '-This installs the module account_plaid.')
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically",
         help='Get your bank statements from your bank and import them through yodlee.com.\n'
-                                          '-that installs the module account_yodlee.')
+                                          '-This installs the module account_yodlee.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",
         help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
-            'This installs the module account_bank_statement_import_qif.')
+            '-This installs the module account_bank_statement_import_qif.')
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
-            'This installs the module account_bank_statement_import_ofx.')
+            '-This installs the module account_bank_statement_import_ofx.')
 
 
     @api.model

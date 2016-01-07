@@ -9,6 +9,7 @@ import datetime
 
 import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 
@@ -129,6 +130,16 @@ class sale_order_line(osv.osv):
         values = self._inject_quote_description(cr, uid, values, context)
         return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
 
+    # The overrided onchange was written in new api, sorry
+    # Take the description on the order template if the product is present in it
+    @api.multi
+    @api.onchange('product_id')
+    def product_id_change(self):
+        domain = super(sale_order_line, self).product_id_change()
+        if self.order_id.template_id:
+            self.name = next((quote_line.name for quote_line in self.order_id.template_id.quote_line if quote_line.product_id.id == self.product_id.id), self.name) 
+        return domain
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -155,16 +166,8 @@ class sale_order(osv.osv):
             ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
-    def _get_template_id(self, cr, uid, context=None):
-        try:
-            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_quote', 'website_quote_template_default')[1]
-        except ValueError:
-            template_id = False
-        return template_id
-
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
-        'template_id' : _get_template_id,
     }
 
     def open_quotation(self, cr, uid, quote_id, context=None):
@@ -182,7 +185,7 @@ class sale_order(osv.osv):
 
         if partner:
             context = dict(context or {})
-            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
+            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context=context).lang
 
         pricelist_obj = self.pool['product.pricelist']
 
@@ -237,7 +240,7 @@ class sale_order(osv.osv):
             }))
         date = False
         if quote_template.number_of_days > 0:
-            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
+            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
@@ -269,23 +272,6 @@ class sale_order(osv.osv):
             'target': 'self',
             'res_id': quote.id,
         }
-
-    def action_quotation_send(self, cr, uid, ids, context=None):
-        action = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
-        ir_model_data = self.pool.get('ir.model.data')
-        quote_template_id = self.read(cr, uid, ids, ['template_id'], context=context)[0]['template_id']
-        if quote_template_id:
-            try:
-                template_id = ir_model_data.get_object_reference(cr, uid, 'website_quote', 'email_template_edi_sale')[1]
-            except ValueError:
-                pass
-            else:
-                action['context'].update({
-                    'default_template_id': template_id,
-                    'default_use_template': True
-                })
-
-        return action
 
     def _confirm_online_quote(self, cr, uid, order_id, tx, context=None):
         """ Payment callback: validate the order and write tx details in chatter """

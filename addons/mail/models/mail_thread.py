@@ -54,7 +54,7 @@ class MailThread(models.AbstractModel):
         Options:
             - _mail_flat_thread: if set to True, all messages without parent_id
                 are automatically attached to the first message posted on the
-                ressource. If set to False, the display of Chatter is done using
+                resource. If set to False, the display of Chatter is done using
                 threads, and no parent_id is automatically set.
 
     MailThread features can be somewhat controlled through context keys :
@@ -728,8 +728,11 @@ class MailThread(models.AbstractModel):
         """ Get specific notification email values to store on the notification
         mail_mail. Void method, inherit it to add custom values. """
         self.ensure_one()
-        res = dict()
-        return res
+        database_uuid = self.env['ir.config_parameter'].get_param('database.uuid')
+        return {'headers': repr({
+            'X-Odoo-Objects': "%s-%s" % (self._model, self.id),
+            'X-Odoo-db-uuid': database_uuid
+        })}
 
     # ------------------------------------------------------
     # Mail gateway
@@ -1627,8 +1630,10 @@ class MailThread(models.AbstractModel):
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
-        else:
-            body = tools.html_keep_url(body)
+        # TMP: do not rewrite URLs in html because it creates errors. A fix is
+        # pending in 9, so this code is temporarily deactivated.
+        # else:
+        #     body = tools.html_keep_url(body)
 
         # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)

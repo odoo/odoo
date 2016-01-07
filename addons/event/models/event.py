@@ -176,7 +176,7 @@ class event_event(models.Model):
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Innner Left')
+    badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
 

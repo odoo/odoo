@@ -191,11 +191,8 @@
     }
 
     &.o_kanban_mobile {
-        span {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            display: block;
+        span, div.label {
+            .o_text_overflow;
         }
     }
 

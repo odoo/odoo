@@ -9,52 +9,8 @@ class crm_team(osv.Model):
     _inherit = 'crm.team'
     _inherits = {'mail.alias': 'alias_id'}
 
-    def _get_default_stage_ids(self, cr, uid, context=None):
-        return [
-            (0, 0, {
-                'name': _('Incoming'),
-                'sequence': 1,
-                'probability': 10.0,
-                'on_change': True,
-                'fold': False,
-                'type': 'both',
-            }),
-            (0, 0, {
-                'name': _('Qualified'),
-                'sequence': 2,
-                'probability': 30.0,
-                'on_change': True,
-                'fold': False,
-                'type': 'opportunity',
-            }),
-            (0, 0, {
-                'name': _('Proposal'),
-                'sequence': 3,
-                'probability': 70.0,
-                'on_change': True,
-                'fold': False,
-                'type': 'opportunity',
-            }),
-            (0, 0, {
-                'name': _('Negotiation'),
-                'sequence': 4,
-                'probability': 85.0,
-                'on_change': True,
-                'fold': False,
-                'type': 'opportunity',
-            }),
-            (0, 0, {
-                'name': _('Won'),
-                'sequence': 50,
-                'probability': 100.0,
-                'on_change': True,
-                'fold': True,
-                'type': 'both',
-            })]
-
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
-        'stage_ids': fields.many2many('crm.stage', 'crm_team_stage_rel', 'team_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
         'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
@@ -67,7 +23,6 @@ class crm_team(osv.Model):
             'crm.lead', self._columns['alias_id'], 'name', alias_prefix='Lead+', alias_defaults={}, context=context)
 
     _defaults = {
-        'stage_ids': _get_default_stage_ids,
         'use_opportunities': True,
     }
 

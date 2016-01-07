@@ -169,8 +169,7 @@ class MassMailingCampaign(osv.Model):
     """Model of mass mailing campaigns. """
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
-
-    _inherit = ['utm.mixin']
+    _rec_name = "campaign_id"
     _inherits = {'utm.campaign': 'campaign_id'}
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -229,14 +228,18 @@ class MassMailingCampaign(osv.Model):
         return result
 
     _columns = {
-        'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
         'user_id': fields.many2one(
             'res.users', 'Responsible',
             required=True,
         ),
         'campaign_id': fields.many2one('utm.campaign', 'campaign_id', 
-            required=True, ondelete='cascade'),
+            required=True, ondelete='cascade',
+            help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special"),
+        'source_id':fields.many2one('utm.source', 'Source',
+            help="This is the link source, e.g. Search Engine, another domain,or name of email list"),
+        'medium_id': fields.many2one('utm.medium', 'Medium',
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad"),
         'tag_ids': fields.many2many(
             'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
             'tag_id', 'campaign_id', string='Tags'),
@@ -246,8 +249,8 @@ class MassMailingCampaign(osv.Model):
         ),
         'unique_ab_testing': fields.boolean(
             'AB Testing',
-            help='If checked, recipients will be mailed only once, allowing to send'
-                 'various mailings in a single campaign to test the effectiveness'
+            help='If checked, recipients will be mailed only once, allowing to send '
+                 'various mailings in a single campaign to test the effectiveness '
                  'of the mailings.'),
         'color': fields.integer('Color Index'),
         'clicks_ratio': fields.function(
@@ -341,17 +344,6 @@ class MassMailingCampaign(osv.Model):
             res[cid] = set(stat.res_id for stat in Statistics.browse(cr, uid, stat_ids, context=context))
         return res
 
-    def on_change_campaign_name(self, cr, uid, ids, name, context=None):
-        if name:
-            mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
-            if mass_mailing_campaign.campaign_id:
-                utm_campaign_id = mass_mailing_campaign.campaign_id.id
-                self.pool['utm.campaign'].write(cr, uid, [utm_campaign_id], {'name': name}, context=context)
-            else:
-                utm_campaign_id = self.pool['utm.campaign'].create(cr, uid, {'name': name}, context=context)
-
-            return {'value': {'campaign_id': utm_campaign_id}}
-
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "stage_id":
@@ -389,8 +381,8 @@ class MassMailing(osv.Model):
     _period_number = 6
     _order = 'sent_date DESC'
     # _send_trigger = 5  # Number under which mails are send directly
-
-    _inherit = ['utm.mixin']
+    _inherits = {'utm.source': 'source_id'}
+    _rec_name = "source_id"
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing """
@@ -478,7 +470,6 @@ class MassMailing(osv.Model):
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
 
     _columns = {
-        'name': fields.char('Subject', required=True),
         'active': fields.boolean('Active'),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
@@ -494,6 +485,12 @@ class MassMailing(osv.Model):
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
         ),
+        'campaign_id': fields.many2one('utm.campaign', 'Campaign', 
+            help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special"),
+        'source_id':fields.many2one('utm.source', 'Subject', required=True, ondelete='cascade',
+            help="This is the link source, e.g. Search Engine, another domain, or name of email list"),
+        'medium_id': fields.many2one('utm.medium', 'Medium', 
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad"),
         'clicks_ratio': fields.function(
             _get_clicks_ratio, string="Number of Clicks",
             type="integer",
@@ -609,6 +606,7 @@ class MassMailing(osv.Model):
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
         'mailing_domain': [],
+        'medium_id': lambda self,cr,uid,ctx=None: self.pool['ir.model.data'].xmlid_to_res_id(cr, SUPERUSER_ID, 'utm.utm_medium_email'),
     }
 
     def onchange_mass_mailing_campaign_id(self, cr, uid, id, mass_mailing_campaign_ids, context=None):

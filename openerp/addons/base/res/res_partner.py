@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import datetime
+import hashlib
 from lxml import etree
 import math
 import pytz
+import threading
+import urllib2
 import urlparse
 
 import openerp
@@ -143,8 +147,7 @@ class res_partner_title(osv.osv):
 
 @api.model
 def _lang_get(self):
-    languages = self.env['res.lang'].search([])
-    return [(language.code, language.name) for language in languages]
+    return self.env['res.lang'].get_installed()
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 
@@ -269,8 +272,7 @@ class res_partner(osv.Model, format_address):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
-        default=lambda self: self._get_default_image(False, True))
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",)
     image_medium = openerp.fields.Binary("Medium-sized image",
         compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
@@ -302,14 +304,29 @@ class res_partner(osv.Model, format_address):
         return [category_id] if category_id else False
 
     @api.model
-    def _get_default_image(self, is_company, colorize=False):
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
-        with open(img_path, 'rb') as f:
-            image = f.read()
+    def _get_default_image(self, partner_type, is_company, parent_id):
+        if getattr(threading.currentThread(), 'testing', False):
+            return False
 
-        # colorize user avatars
-        if not is_company:
+        colorize, img_path, image = False, False, False
+
+        if partner_type in ['contact', 'other'] and parent_id:
+            image = self.browse(parent_id).image.decode('base64')
+
+        if not image and partner_type == 'invoice':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'money.png')
+        elif not image and partner_type == 'delivery':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'truck.png')
+        elif not image and is_company:
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
+        elif not image:
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')
+            colorize = True
+
+        if img_path:
+            with open(img_path, 'rb') as f:
+                image = f.read()
+        if image and colorize:
             image = tools.image_colorize(image)
 
         return tools.image_resize_image_big(image.encode('base64'))
@@ -337,7 +354,6 @@ class res_partner(osv.Model, format_address):
         'is_company': False,
         'company_type': 'person',
         'type': 'contact',
-        'image': False,
     }
 
     _constraints = [
@@ -386,6 +402,11 @@ class res_partner(osv.Model, format_address):
             state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {'value': {}}
+
+    @api.onchange('email')
+    def onchange_email(self):
+        if not self.image and not self.env.context.get('yaml_onchange') and self.email:
+            self.image = self._get_gravatar_image(self.email)
 
     @api.multi
     def on_change_company_type(self, company_type):
@@ -546,6 +567,10 @@ class res_partner(osv.Model, format_address):
         # migrating to the new API
         c_type = vals.get('company_type', self._context.get('default_company_type'))
         is_company = vals.get('is_company', self._context.get('default_is_company'))
+        # compute default image in create, because computing gravatar in the onchange
+        # cannot be easily performed if default images are in the way
+        if not vals.get('image'):
+            vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
         if c_type:
             vals['is_company'] = c_type == 'company'
         else:
@@ -704,6 +729,17 @@ class res_partner(osv.Model, format_address):
         if not ids:
             return self.name_create(cr, uid, email, context=context)[0]
         return ids[0]
+
+    def _get_gravatar_image(self, email):
+        gravatar_image = False
+        email_hash = hashlib.md5(email.lower()).hexdigest()
+        url = "https://www.gravatar.com/avatar/" + email_hash
+        try:
+            image_content = urllib2.urlopen(url + "?d=404&s=128", timeout=5).read()
+            gravatar_image = base64.b64encode(image_content)
+        except Exception:
+            pass
+        return gravatar_image
 
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)

@@ -82,8 +82,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     @api.constrains('fiscal_position_id')
     @api.onchange('fiscal_position_id')
@@ -150,8 +149,8 @@ class SaleOrder(models.Model):
     @api.multi
     def unlink(self):
         for order in self:
-            if order.state != 'draft':
-                raise UserError(_('You can only delete draft quotations!'))
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
         return super(SaleOrder, self).unlink()
 
     @api.multi
@@ -788,8 +787,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
 
@@ -837,7 +835,11 @@ class ProductProduct(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service', default='manual')
+    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
+        help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+             "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+             "Create a task and track hours: Create a task on the sale order validation and track the work hours.",
+        default='manual')
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
@@ -867,5 +869,8 @@ class ProductTemplate(models.Model):
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
-         ('cost', 'Invoice based on time and material')],
-        string='Invoicing Policy', default='order')
+         ('cost', 'Reinvoice Costs')],
+        string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
+                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n'
+                                        'Reinvoice Costs: Invoice with some additional charges (product transfer, labour charges,...)',
+                                        default='order')

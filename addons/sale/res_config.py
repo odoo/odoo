@@ -25,8 +25,8 @@ class sale_configuration(osv.TransientModel):
         'group_product_pricelist':fields.boolean("Show pricelists On Products", implied_group='product.group_product_pricelist'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/purchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_discount_per_so_line': fields.selection([
@@ -44,6 +44,10 @@ class sale_configuration(osv.TransientModel):
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')
             ], "Margins"),
+        'module_sale_layout': fields.selection([
+            (0, 'Do not personalize sale orders and invoice reports'),
+            (1, 'Personnalize the sale orders and invoice report with separators, page-breaks or subtotals')
+            ], "Sale Reports Layout"),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
@@ -99,12 +103,3 @@ class sale_configuration(osv.TransientModel):
         if sale_pricelist_setting == 'formula':
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
-
-
-class account_config_settings(osv.osv_memory):
-    _inherit = 'account.config.settings'
-    _columns = {
-        'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
-            implied_group='sale.group_analytic_accounting',
-            help="Allows you to specify an analytic account on sales orders."),
-    }

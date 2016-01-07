@@ -392,7 +392,7 @@
             </p><p>
                 This application helps you to track equipments used by employees.
                 Create some laptop, printer or phone and link each equipment to an employee or departement.
-                You will manage allocations, issues and mainteannce of equipment.
+                You will manage allocations, issues and maintenance of equipment.
             </p>
         </field>
     </record>
@@ -580,13 +580,8 @@
 
     <data noupdate="1">
         <!-- After installation of the module, open the related menu -->
-        <record id="action_client_hr_equipment_menu" model="ir.actions.client">
-            <field name="name">Open Equipments Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('menu_equipment_title')}"/>
-        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_hr_equipment_menu"/>
+            <field name="action_id" ref="base.action_open_website"/>
             <field name="state">open</field>
         </record>
     </data>

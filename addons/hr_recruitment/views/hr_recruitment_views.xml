@@ -136,8 +136,7 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="user_id"
-                            context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
+                        <field name="user_id"/>
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/>
@@ -353,12 +352,10 @@
         <field name="context">{'default_job_id': active_id}</field>
         <field name="help" type="html">
               <p>
-                Create here some alias...
-                That will allow you to track from where the applicant is coming from...
+                Create some aliases that will allow you to track where applicants come from.
               </p>
               <p>
-                Create email and url for each distinct source. <br/>
-                When the applicant will arrive, you will know from wich source the Job position is coming.
+                These aliases can be emails or urls for every source. When the applicant arrives here through one of these you'll know where he came from.
               </p>
          </field>
     </record>
@@ -590,6 +587,7 @@
                     <group>
                         <field name="name"/>
                         <field name="sequence" groups="base.group_no_one"/>
+                        <field name="job_id"/>
                     </group>
                     <group>
                          <field name="fold"/>
@@ -623,7 +621,7 @@
         name="Stages"
         parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_stage_act"
-        sequence="1" groups="base.group_no_one"/>
+        sequence="1"/>
 
     <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
@@ -730,13 +728,8 @@
     </data>
     <data noupdate="1">
         <!-- After installation of the module, open the related menu -->
-        <record id="action_client_hr_recruitment_menu" model="ir.actions.client">
-            <field name="name">Open HR Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('menu_hr_recruitment_root')}"/>
-        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_hr_recruitment_menu"/>
+            <field name="action_id" ref="base.action_open_website"/>
             <field name="state">open</field>
         </record>
     </data>

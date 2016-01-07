@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import logging
+import threading
+
 from email.utils import formataddr
 
 import psycopg2
@@ -49,6 +52,8 @@ class MailMail(models.Model):
     failure_reason = fields.Text(
         'Failure Reason', readonly=1,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
+    scheduled_date = fields.Char('Scheduled Send Date',
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
 
     @api.model
     def create(self, values):
@@ -97,7 +102,11 @@ class MailMail(models.Model):
                                 messages are sent).
         """
         if not self.ids:
-            filters = [('state', '=', 'outgoing')]
+            filters = ['&',
+                       ('state', '=', 'outgoing'),
+                       '|',
+                       ('scheduled_date', '<', datetime.datetime.now()),
+                       ('scheduled_date', '=', False)]
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
@@ -105,8 +114,12 @@ class MailMail(models.Model):
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
-            # of previously sent emails!
-            res = self.browse(ids).send(auto_commit=True)
+            # of previously sent emails! Does not auto_commit if in
+            # testing mode
+            if (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
+                res = self.browse(ids).send(auto_commit=False)
+            else:
+                res = self.browse(ids).send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res

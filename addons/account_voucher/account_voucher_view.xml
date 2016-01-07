@@ -58,7 +58,10 @@
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['posted'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
+                                            'posted': 'success'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -168,17 +171,10 @@
 
     </data>
     <data noupdate="1">
-
         <!-- After installation of the module, open the related menu -->
-        <record id="action_client_invoice_menu" model="ir.actions.client">
-            <field name="name">Open Invoicing Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
-        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_invoice_menu"/>
+            <field name="action_id" ref="base.action_open_website"/>
             <field name="state">open</field>
         </record>
-
     </data>
 </openerp>

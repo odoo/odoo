@@ -2,10 +2,9 @@
 <openerp>
     <data noupdate="1">
         <record id="default_website" model="website">
-            <field name="name">www.openerp.com</field>
+            <field name="name">localhost</field>
+            <field name="domain">localhost</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
-            <field name="default_lang_id" ref="base.lang_en"/>
             <field name="user_id" ref="base.public_user"/>
         </record>
 
@@ -43,6 +42,10 @@
             <field name="category_id" ref="base.module_category_website"/>
         </record>
 
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_website_designer'))]"/>
+        </record>
+
         <record id="action_module_website" model="ir.actions.act_window">
             <field name="name">Website Apps</field>
             <field name="res_model">ir.module.module</field>
@@ -51,7 +54,7 @@
             <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_website'))+'}'"/>
             <field name="help" type="html">
               <p><b>No website module found!</b></p>
-              <p>You should try others search criteria.</p>
+              <p>You should try other search criteria.</p>
             </field>
         </record>
 
@@ -63,7 +66,7 @@
             <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_theme'))+'}'"/>
             <field name="help" type="html">
               <p><b>No theme module found!</b></p>
-              <p>You should try others search criteria.</p>
+              <p>You should try other search criteria.</p>
             </field>
         </record>
 

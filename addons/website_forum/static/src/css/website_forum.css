@@ -14,11 +14,19 @@
 .author-box {
   min-width: 200px;
   padding: 4px;
-  background-color: #f5f5f5;
+  background-color: whitesmoke;
 }
 
 .question-block {
   margin-left: 50px;
+}
+
+.o_forum_tag_follow_box {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  opacity: 0.9;
 }
 
 .question {
@@ -29,7 +37,7 @@
   font-size: 150%;
 }
 .question .badge {
-  background-color: #ccc;
+  background-color: #cccccc;
   margin-left: 4px;
 }
 .question .badge-active {
@@ -52,7 +60,8 @@ img.o_forum_avatar {
 
 img.o_forum_avatar_big {
   max-width: 75px;
-  margin-right: 10px; }
+  margin-right: 10px;
+}
 
 .oe_grey {
   background-color: #eeeeee;
@@ -73,17 +82,15 @@ img.o_forum_avatar_big {
 .oe_answer_true {
   color: #3c763d;
 }
-
-.forum_answer .oe_answer_true:hover {
-  color: #4D964E;
+.oe_answer_true:hover {
+  color: #4d964e;
 }
 
 .oe_answer_false {
   color: #bbbbbb;
 }
-
 .oe_answer_false:hover {
-  color: #9E9C9C;
+  color: #9e9c9c;
 }
 
 .favourite_question {
@@ -105,7 +112,7 @@ a.no-decoration {
 }
 
 .oe_comment_grey {
-  background-color: #f5f5f5;
+  background-color: whitesmoke;
   padding: 4px;
 }
 
@@ -144,30 +151,35 @@ a.no-decoration {
 }
 
 button.btn-link.text-muted {
-  color: #999;
+  color: #999999;
 }
 
 .o_forum_user_bio_expand {
   position: absolute;
   z-index: 200;
-  display: none; }
+  display: none;
+}
 
 .o_forum_tooltip_heading {
   padding: 0px;
   margin: 0px;
-  font-size: 18px; }
+  font-size: 18px;
+}
 
 .o_forum_user_bio {
   color: black;
   width: 318px;
   min-height: 100px;
   cursor: auto;
-  border: 1px solid darkgray;
+  border: 1px solid darkgrey;
   background-color: whitesmoke;
   line-height: 13px;
   font-size: 11px;
-  word-wrap: break-word; }
-  .o_forum_user_bio .o_forum_tooltip_line {
-    min-height: 13px; }
-  .o_forum_user_bio .o_forum_tooltip_header {
-    min-height: 75px; }
+  word-wrap: break-word;
+}
+.o_forum_user_bio .o_forum_tooltip_line {
+  min-height: 13px;
+}
+.o_forum_user_bio .o_forum_tooltip_header {
+  min-height: 75px;
+}

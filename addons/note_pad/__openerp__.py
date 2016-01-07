@@ -6,7 +6,7 @@
     'version': '0.1',
     'category': 'Tools',
     'description': """
-This module update memos inside OpenERP for using an external pad
+This module update memos inside Odoo for using an external pad
 =================================================================
 
 Use for update your text memo in real time with the following user that you invite.

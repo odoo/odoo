@@ -15,6 +15,9 @@
             <field name="category_id" ref="module_fleet_category"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('fleet.group_fleet_manager'))]"/>
+        </record>
     </data>
 
     <data noupdate="1">

@@ -17,7 +17,7 @@ class LunchOrder(models.Model):
     _order = 'date desc'
 
     def _default_previous_order_ids(self):
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid)], limit=20, order='id desc')
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
         # If we return return prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
         return {
@@ -194,6 +194,7 @@ class LunchProduct(models.Model):
     description = fields.Text('Description')
     price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
+    active = fields.Boolean(default=True)
 
 
 class LunchProductCategory(models.Model):
@@ -245,6 +246,7 @@ class LunchAlert(models.Model):
     sunday = fields.Boolean('Sunday')
     start_hour = fields.Float('Between', oldname='active_from', required=True, default=7)
     end_hour = fields.Float('And', oldname='active_to', required=True, default=23)
+    active = fields.Boolean(default=True)
 
     @api.multi
     def name_get(self):

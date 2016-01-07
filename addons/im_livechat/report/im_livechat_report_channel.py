@@ -20,7 +20,7 @@ class ImLivechatReportChannel(models.Model):
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers")
     nbr_message = fields.Integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation")
-    partner_id = fields.Many2one('res.partner', 'Opertor', readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
 
     def init(self, cr):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !

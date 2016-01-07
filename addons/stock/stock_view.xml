@@ -637,7 +637,9 @@
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong><span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['waiting', 'confirmed', 'partially_available'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span></strong>
+                                        <strong><span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'partially_available': 'warning', 'done': 'success'}}"/>
+                                        </span></strong>
                                     </div>
                                 </div>
                                 <div class="row text-muted">
@@ -988,7 +990,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1013,7 +1015,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1037,7 +1039,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1061,7 +1063,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
        </record>
@@ -1086,7 +1088,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1110,7 +1112,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1135,7 +1137,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1160,7 +1162,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1209,7 +1211,7 @@
               <p class="oe_view_nocontent_create">
                 Click here to create a new transfer.
               </p><p>
-                You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
         </record>
@@ -1694,9 +1696,7 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new transfer.
               </p><p>
-                    You can either do it immediatly or mark it as Todo for future processing.
-              </p><p>
-                    Use your scanner to validate the transferred quantity quicker.
+                    You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
 

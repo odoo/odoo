@@ -12,10 +12,6 @@
             <field name="product_uom_qty">5.0</field>
         </record>
 
-        <record id="project.project_stage_2" model="project.task.type">
-                <field name="closed" eval="True"/>
-        </record>
-
         <record id="project_GAP" model="project.project">
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="state">open</field>

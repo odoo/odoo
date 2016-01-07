@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">base.config.settings.inherit.signup</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_portal']/.." position="after">
+                    <div>
+                        <field name="auth_signup_reset_password" class="oe_inline"/>
+                        <label for="auth_signup_reset_password"/>
+                    </div>
+                    <div>
+                        <field name="auth_signup_uninvited" class="oe_inline"/>
+                        <label for="auth_signup_uninvited"/>
+                    </div>
+                    <div attrs="{'invisible':[('auth_signup_uninvited','=',False)]}" groups="base.group_no_one">
+                        <label for="auth_signup_template_user_id"/>
+                        <field name="auth_signup_template_user_id" class="oe_inline"
+                            attrs="{'required': [('auth_signup_uninvited', '=', True)]}"
+                            domain="['|',('active','=',0),('active','=',1)]"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

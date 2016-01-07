@@ -78,7 +78,10 @@
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default',
+                                            'done': 'success'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -136,11 +139,11 @@
                         type="action" context="{'default_advance_payment_method': 'percentage'}"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
-                    <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
                     <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary" type="object" context="{'show_sale': True}"/>
                     <button name="action_confirm" states="draft" string="Confirm Sale" type="object" context="{'show_sale': True}"/>
+                    <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <button name="action_done" type="object" string="Set to Done" states="sale"
@@ -308,7 +311,7 @@
                         <page string="Other Information">
                             <group>
                                 <group string="Sales Information" name="sales_person">
-                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}"/>
+                                    <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -360,12 +363,6 @@
                     <field name="product_id"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
-                    <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
-                    <separator/>
-                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]"/>
-                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]"/>
-                    <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
@@ -376,22 +373,53 @@
             </field>
         </record>
 
+        <record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.quotation</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]" help="Sales Order that haven't yet been confirmed"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_sale" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('progress','done'))]" />
+                    <separator/>
+                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]" />
+                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]" />
+                </xpath>
+            </field>
+        </record>
+
         <record id="action_orders" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="context">{'show_sale': True}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Create a Quotation, the first step of a new sale.
                 </p><p>
-                    Your next actions should flow efficiently: confirm the Quotation to a Sale Order, then create the Invoice and collect the Payment.
-                </p><p>
-                    Note that once a Quotation becomes a Sale Order, it will be moved from the Quotations list to the Sales Order list.
+                    Once the quotation is confirmed, it becomes a sales order.
+                    You'll be able to invoice it and collect payments.
+                    From the <i>Sales Orders</i> menu, you can track delivery
+                    orders or services.
                 </p>
             </field>
         </record>
@@ -408,6 +436,7 @@
             <field name="view_mode">tree,form,calendar,graph,pivot</field>
             <field name="context">{'show_sale': True}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem name="Invoicing"
             id="menu_sale_invoicing" parent="base.menu_base_partner"
@@ -424,6 +453,7 @@
             <field name="view_mode">tree,form,calendar,graph,pivot</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{'show_sale': True}</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_orders_upselling"
             id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
@@ -437,9 +467,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
@@ -542,10 +571,13 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="invoice_policy" widget="radio"/>
-                    <field name="track_service" widget="radio" invisible="True"/>
-                </field>
+                <group name="sale" position="inside">
+                    <separator string="Invoicing Policy" colspan="4"/>
+                    <group>
+                        <field name="invoice_policy" widget="radio"/>
+                        <field name="track_service" widget="radio" invisible="True"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -600,7 +632,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
             <field name="context">{
                     'show_sale': True,
@@ -624,7 +656,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
             <field name="context">{
                     'show_sale': True,
@@ -648,7 +680,7 @@
                 }
             </field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.

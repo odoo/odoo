@@ -35,8 +35,11 @@ __all__ = [
     'Environment',
     'Meta', 'guess', 'noguess',
     'model', 'multi', 'one',
-    'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
+    'cr', 'cr_context',
+    'cr_uid', 'cr_uid_context',
+    'cr_uid_id', 'cr_uid_id_context',
+    'cr_uid_ids', 'cr_uid_ids_context',
+    'cr_uid_records', 'cr_uid_records_context',
     'constrains', 'depends', 'onchange', 'returns',
 ]
 
@@ -563,6 +566,57 @@ def cr_uid_ids_context(method):
         return upgrade(self, result, *args, **kwargs)
 
     return make_wrapper(cr_uid_ids_context, method, method, new_api)
+
+
+def cr_uid_records(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self`` as parameters. Such a method::
+
+            @api.cr_uid_records
+            def method(self, cr, uid, records, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records, method, method, new_api)
+
+
+def cr_uid_records_context(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self``, ``context`` as parameters. Such a method::
+
+            @api.cr_uid_records_context
+            def method(self, cr, uid, records, args, context=None):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args, context=context)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        kwargs['context'] = context
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records_context, method, method, new_api)
 
 
 def v7(method_v7):

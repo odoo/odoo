@@ -89,6 +89,7 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user"
                                 options="{'no_open': True, 'no_create': True}"/>
+                            <field name="account_id" groups="account.group_account_user"/>
                             <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
                         </group><group>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -140,7 +141,10 @@
                                         <span><t t-esc="record.employee_id.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'submit'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['cancel'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['post'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
+                                            'done': 'success'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>

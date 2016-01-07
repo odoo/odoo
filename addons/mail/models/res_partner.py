@@ -16,6 +16,7 @@ class Partner(models.Model):
     _mail_flat_thread = False
     _mail_mass_mailing = _('Customers')
 
+    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
     notify_email = fields.Selection([
         ('none', 'Never'),
         ('always', 'All Messages')],

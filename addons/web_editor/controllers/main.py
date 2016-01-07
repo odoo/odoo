@@ -74,9 +74,10 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
         ], type='http', auth="none")
     def export_icon_to_png(self, icon, color='#000', size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
-        """ This method converts FontAwesom pictograms to Images and is Used only
-            for mass mailing becuase custom fonts are not supported in mail.
-            :param icon : character from FontAwesom cheatsheet
+        """ This method converts an unicode character to an image (using Font
+            Awesome font by default) and is used only for mass mailing because
+            custom fonts are not supported in mail.
+            :param icon : decimal encoding of unicode character
             :param color : RGB code of the color
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
@@ -87,6 +88,9 @@ class Web_Editor(http.Controller):
         # Initialize font
         addons_path = http.addons_manifest['web']['addons_path']
         font_obj = ImageFont.truetype(addons_path + font, size)
+
+        # if received character is not a number, keep old behaviour (icon is character)
+        icon = unichr(int(icon)) if icon.isdigit() else icon
 
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))

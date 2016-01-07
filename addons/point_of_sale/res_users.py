@@ -6,7 +6,6 @@ class res_users(osv.osv):
     _inherit = 'res.users'
     _columns = {
         'pos_security_pin': fields.char('Security PIN',size=32, help='A Security PIN used to protect sensible functionality in the Point of Sale'),
-        'pos_config' : fields.many2one('pos.config', 'Default Point of Sale', domain=[('state', '=', 'active')]),
     }
 
     def _check_pin(self, cr, uid, ids, context=None):

@@ -43,7 +43,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed' and not r.rescue)
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
             result[record.id] = {
                 'current_session_id': session_id,
                 'current_session_state': session_id.state,
@@ -75,7 +75,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened' and not r.rescue).user_id.name
+            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
         return result
 
     _columns = {
@@ -392,8 +392,7 @@ class pos_session(osv.osv):
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1, copy=False),
-        'rescue': fields.boolean('Rescue session', readonly=True,
-                                 help="Auto-generated session for orphan orders, ignored in constraints"),
+        
         'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
         'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
@@ -464,8 +463,7 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', session.user_id.id),
-                ('rescue', '=', False)
+                ('user_id', '=', session.user_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -476,8 +474,7 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=None):
             domain = [
                 ('state', '!=', 'closed'),
-                ('config_id', '=', session.config_id.id),
-                ('rescue', '=', False)
+                ('config_id', '=', session.config_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:

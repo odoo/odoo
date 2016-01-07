@@ -55,10 +55,3 @@ class order(report_sxw.rml_parse):
         self.cr.execute(sql)
         data = self.cr.dictfetchall()
         return data
-
-
-class report_order_receipt(osv.AbstractModel):
-    _name = 'report.point_of_sale.report_receipt'
-    _inherit = 'report.abstract_report'
-    _template = 'point_of_sale.report_receipt'
-    _wrapped_report_class = order

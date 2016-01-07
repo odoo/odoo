@@ -189,7 +189,9 @@ class product_attribute(osv.Model):
 class product_attribute_value(osv.Model):
     _inherit = "product.attribute.value"
     _columns = {
-        'color': fields.char("HTML Color Index", help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."),
+        'html_color': fields.char("HTML Color Index", oldname='color', help="Here you can set a "
+            "specific HTML color index (e.g. #ff0000) to display the color on the website if the "
+            "attibute type is 'Color'."),
     }
 
     # TODO in master: remove this function and change 'color' field name

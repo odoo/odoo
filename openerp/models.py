@@ -372,19 +372,26 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        params = {
+            'model': self._name,
+            'name': self._description,
+            'info': next(cls.__doc__ for cls in type(self).mro() if cls.__doc__),
+            'state': 'manual' if self._custom else 'base',
+            'transient': self._transient,
+        }
         cr.execute("""
             UPDATE ir_model
-               SET transient=%s
-             WHERE model=%s
+               SET name=%(name)s, info=%(info)s, transient=%(transient)s
+             WHERE model=%(model)s
          RETURNING id
-        """, [self._transient, self._name])
+        """, params)
         if not cr.rowcount:
-            cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
-            model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id, model, name, info, state, transient) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (model_id, self._name, self._description, self.__doc__, 'base', self._transient))
-        else:
-            model_id = cr.fetchone()[0]
+            cr.execute("""
+                INSERT INTO ir_model (model, name, info, state, transient)
+                VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
+                RETURNING id
+            """, params)
+        model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
@@ -412,6 +419,7 @@ class BaseModel(object):
                 'ttype': f.type,
                 'relation': f.comodel_name or None,
                 'index': bool(f.index),
+                'store': bool(f.store),
                 'copy': bool(f.copy),
                 'related': f.related and ".".join(f.related),
                 'readonly': bool(f.readonly),
@@ -696,6 +704,7 @@ class BaseModel(object):
                 'related': field['related'],
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
+                'store': bool(field['store']),
             }
             # FIXME: ignore field['serialization_field_id']
             if field['ttype'] in ('char', 'text', 'html'):
@@ -2411,7 +2420,6 @@ class BaseModel(object):
 
     def _auto_init(self, cr, context=None):
         """
-
         Call _field_create and, unless _auto is False:
 
         - create the corresponding table in database for the model,
@@ -2426,7 +2434,12 @@ class BaseModel(object):
         - save in self._foreign_keys a list a foreign keys to create (see
           _auto_end).
 
+        Note: you should not override this method. Instead, you can modify the
+        model's database schema by overriding method :meth:`~.init`, which is
+        called right after this one.
         """
+        assert 'todo' in (context or {}), "Context not passed correctly to method _auto_init()."
+
         self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
 
@@ -2442,7 +2455,7 @@ class BaseModel(object):
 
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
-        todo_end = []
+        todo_end = context['todo']
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
@@ -2703,8 +2716,6 @@ class BaseModel(object):
 
             todo_end.append((1000, func, ()))
 
-        return todo_end
-
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
@@ -2713,6 +2724,11 @@ class BaseModel(object):
         cr.commit()
         del self._foreign_keys
 
+    def init(self, cr):
+        """ This method is called after :meth:`~._auto_init`, and may be
+            overridden to create or modify a model's database schema.
+        """
+        pass
 
     def _table_exist(self, cr):
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
@@ -3898,6 +3914,7 @@ class BaseModel(object):
         updend = []
         direct = []
         has_trans = context.get('lang') and context['lang'] != 'en_US'
+        single_lang = len(self.pool['res.lang'].get_installed(cr, user, context)) <= 1
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3907,7 +3924,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if not (has_trans and column.translate and not callable(column.translate)):
+                    if single_lang or not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
@@ -4227,13 +4244,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            current_field = self._columns[field]
-            if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+            column = self._columns[field]
+            if column._classic_write:
+                updates.append((field, '%s', column._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
+                if (hasattr(column, '_fnct_inv')) and not isinstance(column, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4245,11 +4262,9 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(current_field, fields.related):
+                if not isinstance(column, fields.related):
                     upd_todo.append(field)
-            if field in self._columns \
-                    and hasattr(current_field, 'selection') \
-                    and vals[field]:
+            if hasattr(column, 'selection') and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             updates.append(('create_uid', '%s', user))
@@ -4273,6 +4288,16 @@ class BaseModel(object):
 
         id_new, = cr.fetchone()
         recs = self.browse(cr, user, id_new, context)
+
+        if context.get('lang') and context['lang'] != 'en_US':
+            # add translations for context['lang']
+            for field in vals:
+                column = self._columns[field]
+                if column._classic_write and column.translate and not callable(column.translate):
+                    self.pool['ir.translation']._set_ids(
+                        cr, user, self._name+','+field, 'model',
+                        context['lang'], recs.ids, vals[field], vals[field],
+                    )
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:

@@ -2,41 +2,6 @@
 <openerp>
     <data>
         <!--
-            CRM CASE STAGE
-        -->
-        <!-- Stage Search view -->
-        <record id="crm_lead_stage_search" model="ir.ui.view">
-            <field name="name">Stage - Search</field>
-            <field name="model">crm.stage</field>
-            <field name="arch" type="xml">
-                <search string="Stage Search">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="sequence"/>
-                    <field name="probability"/>
-                </search>
-            </field>
-        </record>
-
-        <!-- Stage Form view -->
-        <record id="crm_lead_stage_act" model="ir.actions.act_window">
-            <field name="name">Stages</field>
-            <field name="res_model">crm.stage</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_stage_tree"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to set a new stage in your lead/opportunity pipeline.
-              </p><p>
-                Stages will allow salespersons to easily track how a specific
-                lead or opportunity is positioned in the sales cycle.
-              </p>
-            </field>
-        </record>
-
-        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" groups="base.group_no_one"/>
-
-        <!--
             LEADS/OPPORTUNITIES CATEGORIES
         -->
 
@@ -106,22 +71,13 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="action_set_lost" string="Mark Lost"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': [('active', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" clickable="True"
-                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
-                            options="{'fold_field': 'fold'}"
-                            on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
-                                attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
                     <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
@@ -240,6 +196,7 @@
                     <field name="create_date"/>
                     <field name="name" string="Lead"/>
                     <field name="contact_name"/>
+                    <field name="city"/>
                     <field name="country_id"/>
                     <field name="email_from"/>
                     <field name="phone"/>
@@ -247,6 +204,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="team_id"/>
+                    <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="campaign_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
@@ -281,12 +239,15 @@
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="planned_revenue"/>
+                    <field name="kanban_state"/>
+                    <field name="date_action"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
                     <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
+                    <field name="title_action"/>
                     <field name="active"/>
                     <field name="company_currency"/>
                     <templates>
@@ -314,22 +275,22 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="text-muted">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
+                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value">, <t t-esc="record.partner_id.value"/></span>
                                     </div>
-                                    <div class="text-muted">
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                        <span t-attf-class="#{red || ''}">
-                                            <field name="date_action"/>
-                                            <t t-if="record.date_action.raw_value"> : </t>
-                                            <field name="next_activity_id"/>
-                                        </span>
-                                    </div>
+
                                     <div class="o_kanban_footer">
                                         <field name="priority" widget="priority" groups="base.group_user"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
                                             <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <div>
+                                            <a name="%(crm.crm_activity_log_action)d" type="action">
+                                              <span
+                                                t-if="record.date_action.raw_value" t-att-title="record.date_action.value + ': '+ record.title_action.value"
+                                                t-attf-class="oe_kanban_status oe_kanban_status_#{record.kanban_state.raw_value}"/>
+                                            </a>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>
@@ -383,10 +344,6 @@
         </record>
 
 
-        <!--
-            OPPORTUNITY
-        -->
-
         <!-- Opportunities Form View -->
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
             <field name="name">Opportunities</field>
@@ -402,9 +359,11 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False)]}"/>
+                        <button name="%(crm.crm_activity_log_action)d" string="Log Activity" type="action" class="btn-link"
+                            attrs="{'invisible': [('active', '=', False)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
-                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
@@ -428,8 +387,6 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-
-
                             <h2 class="o_row">
                                 <div>
                                     <label for="planned_revenue" class="oe_edit_only" />
@@ -459,7 +416,6 @@
                             </group>
 
                             <group>
-                                <field name="last_activity_id" invisible="1"/>
                                 <label for="next_activity_id"/>
                                 <div>
                                     <div class="o_row mr16">
@@ -470,27 +426,10 @@
                                         <span class="oe_form_field"
                                               attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
                                         <field name="date_action" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..."/>
-                                        <div attrs="{'invisible': ['|', ('last_activity_id', '=', False), ('next_activity_id', '!=', False)]}">
-                                            <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
-                                                <field name="next_activity_1" readonly="1"/>
-                                            </button>
-                                            <span attrs="{'invisible': [('next_activity_2','=',False)]}">|</span>
-                                            <button name="log_next_activity_2" type="object" class="btn-link" attrs="{'invisible': [('next_activity_2','=',False)]}">
-                                                <field name="next_activity_2" readonly="1"/>
-                                            </button>
-                                            <span attrs="{'invisible': [('next_activity_3','=',False)]}">|</span>
-                                            <button name="log_next_activity_3" type="object" class="btn-link" attrs="{'invisible': [('next_activity_3','=',False)]}">
-                                                <field name="next_activity_3" readonly="1"/>
-                                            </button>
-                                        </div>
                                     </div>
-                                    <div class="o_row">
+                                    <div>
                                         <field name="title_action" placeholder="e.g. Discuss proposal"
-                                               attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
-                                        <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
-                                            <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
-                                            <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
-                                        </div>
+                                           attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
                                     </div>
                                 </div>
                                 <field name="date_deadline"/>
@@ -610,8 +549,6 @@
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
-                    <filter string="Lost" name="lost"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
@@ -626,14 +563,11 @@
                                      ('date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
                             ]"/>
                     <filter string="Overdue Activities" name="overdue"
-                            domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <separator/>
-                    <filter string="Follow-up" name="follow_up"
-                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
+                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <filter string="Archived" domain="[('active', '=', False)]"/>
+                    <filter string="Lost" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>
@@ -696,7 +630,7 @@
         </record>
 
         <record id="action_mark_as_lost" model="ir.actions.server">
-            <field name="name">Mark As Lost</field>
+            <field name="name">Mark as lost</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
@@ -708,7 +642,7 @@
         <record id="ir_mark_as_lost" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="'crm.lead'" name="model"/>
-            <field name="name">Mark As Lost</field>
+            <field name="name">Mark as lost</field>
             <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 

@@ -35,9 +35,10 @@
             <field name="arch" type="xml">
                 <search string="Product">
                     <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
+                    <field name="categ_id" domain="[('categ_id', 'child_of', self)]"/>
                     <separator/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                    <filter string="Products" name="consumable" domain="[('type','=','consu')]" help="Products your store in the inventory"/>
+                    <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                     <separator/>
@@ -55,11 +56,9 @@
                 <tree string="Product">
                     <field name="name"/>
                     <field name="standard_price"/>
-                    <field name="volume"/>
                     <field name="weight"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state"/>
                     <field name="uom_id" invisible="1"/>
                 </tree>
             </field>
@@ -112,8 +111,8 @@
                                         <div name="standard_price_uom" groups="base.group_user">
                                             <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                         </div>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="uom_po_id" groups="product.group_uom"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom" options="{'no_create': True}"/>
+                                        <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
                                         <field name="currency_id" invisible="1"/> 
                                     </group>
                                 </group>
@@ -128,7 +127,7 @@
                                     <group name="group_lots_and_weight">
                                         <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
                                         <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
-                                            <field name="weight" string="Weight"/>
+                                            <field name="weight"/>
                                         </div>
                                     </group>
                                 </group>
@@ -440,7 +439,6 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="barcode"/>
-                    <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
             </field>

@@ -102,6 +102,9 @@
             <t t-if="not title">
                 <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
+            <t groups="base.group_website_designer">
+                <t t-set="load_editor" t-value="True"/>
+            </t>
 
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -132,7 +135,12 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-if="load_editor">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
+            <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <t groups="base.group_website_publisher" t-call-assets="website.assets_editor" async="True"/>
             <script type="text/javascript">
                 odoo.define('web.csrf', function (require) {
                     var token = "<t t-esc="request.csrf_token(None)"/>";
@@ -200,18 +208,8 @@
     </html>
 </template>
 
-<template id="layout_editor" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="before">
-        <t groups="base.group_website_designer" t-call-assets="web_editor.summernote"/>
-        <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
-    </xpath>
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
-        <t t-call-assets="website.assets_editor" async="True"/>
-    </xpath>
-</template>
-
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
-    <xpath expr="//div[contains(@id, 'footer')]" position="inside">
+    <xpath expr="//footer" position="inside">
         <div class="container mt16 mb8">
             <div class="pull-right" t-ignore="true" t-if="not editable">
                 Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with

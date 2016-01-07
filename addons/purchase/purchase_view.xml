@@ -78,7 +78,7 @@
           </p><p>
             You must define a product for everything you purchase, whether
             it's a physical product, a consumable or services you buy to
-            subcontractants.
+            subcontractors.
           </p><p>
             The product form contains detailed information to improve the
             purchase process: prices, procurement logistics, accounting data,
@@ -150,7 +150,7 @@
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
+                        help="Set a purchase order as done if you don't want to receive vendor bills anymore for this purchase order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
@@ -284,6 +284,7 @@
                     <field name="create_uid"/>
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that include lines not invoiced."/>
@@ -326,7 +327,9 @@
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['approved'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>

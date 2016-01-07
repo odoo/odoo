@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="0">
         <record model="ir.rule" id="sale_team_comp_rule">
             <field name="name">Sales Team multi-company</field>
@@ -7,4 +7,4 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
     </data>
-</openerp>
+</odoo>

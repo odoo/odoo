@@ -53,7 +53,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'purchase.group_purchase_user', 'account.group_account_invoice']}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="exclusive" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="multiple_rfq_per_supplier" attrs="{'readonly': [('state','not in',('draft'))]}"/>
@@ -89,11 +89,11 @@
                                 </group>
                             </form>
                         </field>
-                        <separator string="Requests for Quotation"/>
+                        <separator string="Requests for Quotation" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         <button name="%(action_purchase_requisition_partner)d" type="action"
                         string="Request a Quotation" icon="fa-cogs"
                         attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                        <field name="purchase_ids" options="{'reload_on_button': true}">
+                        <field name="purchase_ids" options="{'reload_on_button': true}" attrs="{'invisible': [('state', '=', 'draft')]}" readonly="1">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>

@@ -146,5 +146,13 @@
             <field name="sequence">0</field>
         </record>
 
+        <!-- Partner Trust Property -->
+        <record forcecreate="True" id="default_followup_trust" model="ir.property">
+            <field name="name">Followup Trust Property</field>
+            <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'trust')]"/>
+            <field name="value">normal</field>
+            <field name="type">selection</field>
+        </record>
+
     </data>
 </openerp>

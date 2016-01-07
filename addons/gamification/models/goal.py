@@ -64,10 +64,6 @@ class gamification_goal_definition(osv.Model):
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
-        # model_inherited_model_ids can be removed in master.
-        # It was only used to force a domain in the form view which is now set by `on_change_model_id`
-        'model_inherited_model_ids': fields.related('model_id', 'inherited_model_ids', type="many2many", obj="ir.model",
-            string="Inherited models", readonly="True"),
         'field_id': fields.many2one('ir.model.fields',
             string='Field to Sum',
             help='The field containing the value to evaluate'),
@@ -276,7 +272,7 @@ class gamification_goal(osv.Model):
 
         return result
 
-    def update(self, cr, uid, ids, context=None):
+    def update_goal(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
         If a manual goal is not updated for enough time, the user will be
@@ -401,7 +397,7 @@ class gamification_goal(osv.Model):
 
         This should only be used when creating goals manually (in draft state)"""
         self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-        return self.update(cr, uid, ids, context=context)
+        return self.update_goal(cr, uid, ids, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
         """Mark a goal as reached.

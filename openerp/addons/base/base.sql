@@ -45,6 +45,7 @@ CREATE TABLE ir_model_fields (
   relation_table varchar,
   column1 varchar,
   column2 varchar,
+  store boolean,
   primary key(id)
 );
 

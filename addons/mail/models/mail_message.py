@@ -53,7 +53,7 @@ class Message(models.Model):
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
         string='Attachments',
-        help='Attachments are linked to a document through model / res_id and to the message'
+        help='Attachments are linked to a document through model / res_id and to the message '
              'through this field.')
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', select=True, ondelete='set null',
@@ -101,7 +101,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        help='Tracked values are stored in a separate model. This field allow to reconstruct'
+        help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
     no_auto_thread = fields.Boolean(

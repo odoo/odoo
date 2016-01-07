@@ -44,7 +44,7 @@ class procurement_group(osv.osv):
         'name': fields.char('Reference', required=True),
         'move_type': fields.selection([
             ('direct', 'Partial'), ('one', 'All at once')],
-            'Delivery Method', required=True),
+            'Delivery Type', required=True),
         'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
     }
     _defaults = {
