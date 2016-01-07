@@ -38,7 +38,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         format_date = lang_params.get("date_format", '%B-%d-%Y')
         format_time = lang_params.get("time_format", '%I-%M %p')
 
-        fdate = ts.strftime(format_date)
+        fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time)
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 

@@ -20,8 +20,12 @@
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                             <field name="internal_type" invisible="1"/>
-                             <field name="reconcile"/>
+                             <field name="internal_type" invisible="1" readonly="1"/>
+                             <label for="reconcile"/>
+                             <div>
+                                <field name="reconcile"/> 
+                                <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                             </div>
                              <field name="deprecated"/>
                            </group>
                            <group>
@@ -469,7 +473,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="balance_end_real!=balance_end and state=='open'" decoration-info="state=='open' and (balance_end_real==balance_end)" string="Statements">
+                <tree decoration-danger="not is_difference_zero and state=='open'" decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -478,6 +482,7 @@
                     <field name="balance_end" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1020,7 +1025,18 @@
                                         <field name="amount_currency"/>
                                     </group>
                                     <group string="Reconciliation">
-                                        <field name="reconciled"/>
+                                        <label for="reconciled"/>
+                                        <div>
+                                            <field name="reconciled"/>
+                                            <field name="matched_debit_ids" invisible="1"/>
+                                            <field name="matched_credit_ids" invisible="1"/>
+                                            <button name="open_reconcile_view"
+                                                class="oe_link"
+                                                type="object"
+                                                string="-> View reconciled entries"
+                                                attrs="{'invisible': [('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
+                                            </button>
+                                        </div>
                                     </group>
                                     <group string="States">
                                         <field name="blocked"/>
@@ -1237,6 +1253,14 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box">
+                            <button name="open_reconcile_view"
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                type="object"
+                                string="View reconciled entries">
+                            </button>
+                        </div>
                     <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
                     <h1>
                         <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>

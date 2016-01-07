@@ -4,6 +4,12 @@
     <!-- Client Action -->
     <t t-name="mail.client_action">
         <div class="o_mail_chat">
+            <t t-if="widget.notification_bar">
+                <div class="o_mail_annoying_notification_bar">
+                    <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
+                    <span class="fa fa-close"></span>
+                </div>
+            </t>
             <div class="o_mail_chat_sidebar"/>
             <div class="o_mail_chat_content"/>
         </div>
@@ -21,31 +27,31 @@
                 <span class="fa fa-star-o"/> Starred
             </div>
 
-            <t t-set="channel_type">public</t>
+            <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Channels</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
-                <t t-set="display_hash">true</t>
+                <t t-set="display_hash" t-value="true"/>
                 <t t-set="input_placeholder">Add a channel</t>
             </t>
 
-            <t t-set="channel_type">dm</t>
+            <t t-set="channel_type" t-value="'dm'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Direct Messages</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
-                <t t-set="display_status">true</t>
+                <t t-set="display_status" t-value="true"/>
                 <t t-set="input_placeholder">Open chat</t>
             </t>
 
-            <t t-set="channel_type">private</t>
+            <t t-set="channel_type" t-value="'private'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Private Channels</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="input_placeholder">Add a channel</t>
-                <t t-set="display_hash">true</t>
+                <t t-set="display_hash" t-value="true"/>
             </t>
         </div>
     </t>
@@ -77,10 +83,14 @@
             <t t-set="counter" t-value="channel.needaction_counter"/>
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id"
                  t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
-                <span><i t-if="display_status" t-att-class="'o_user_status fa ' + (channel.status == 'online' ? 'fa-circle' : (channel.status == 'away' ? 'fa-clock-o' : 'fa-circle-o'))" t-attf-title="#{channel.status}"/></span>
+                <span t-if="display_status">
+                    <t t-call="mail.chat.UserStatus">
+                        <t t-set="status" t-value="channel.status"/>
+                    </t>
+                </span>
                 <span t-if="display_hash" class="o_mail_hash">#</span>
                 <t t-esc="channel.name"/>
-                <i t-if="channel.mass_mailing" class="fa fa-envelope-o"/>
+                <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       t-att-title="_t('Leave this channel')" t-att-data-channel-id="channel.id"/>
@@ -90,6 +100,12 @@
             <span t-if="display_hash">#</span>
             <input type="text" t-attf-placeholder="#{input_placeholder}"/>
         </div>
+    </t>
+
+    <t t-name="mail.chat.UserStatus">
+        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
+        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
+        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
     </t>
 
     <t t-name="mail.chat.UndoSnackbar">

@@ -420,8 +420,7 @@ class WebRequest(object):
         return consteq(hm, hm_expected)
 
 def route(route=None, **kw):
-    """
-    Decorator marking the decorated method as being a handler for
+    """Decorator marking the decorated method as being a handler for
     requests. The method must be part of a subclass of ``Controller``.
 
     :param route: string or array. The route part that will determine which
@@ -434,8 +433,8 @@ def route(route=None, **kw):
 
                  * ``user``: The user must be authenticated and the current request
                    will perform using the rights of the user.
-                 * ``admin``: The user may not be authenticated and the current request
-                   will perform using the admin user.
+                 * ``public``: The user may or may not be authenticated. If she isn't,
+                   the current request will perform using the shared Public user.
                  * ``none``: The method is always active, even if there is no
                    database. Mainly used by the framework and authentication
                    modules. There request code will not have any facilities to access
@@ -446,16 +445,55 @@ def route(route=None, **kw):
     :param cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the route.
 
-                      Defaults to ``True``.
+                      Defaults to ``True``. See :ref:`CSRF Protection
+                      <csrf>` for more.
 
-                      CSRF protection only applies to *UNSAFE* methods as
-                      defined by :rfc:`7231`: GET, HEAD, TRACE and OPTIONS are
-                      safe, all other methods are unsafe.
+    .. _csrf:
 
-                      CSRF protection requires a csrf token to be sent as part
-                      of the request's form data, it can be obtained via
-                      :meth:`request.csrf_token()
-                      <openerp.http.WebRequest.csrf_token>`
+    .. admonition:: CSRF Protection
+        :class: alert-warning
+
+        .. versionadded:: 9.0
+
+        Odoo implements token-based `CSRF protection
+        <https://en.wikipedia.org/wiki/CSRF>`_.
+
+        CSRF protection is enabled by default and applies to *UNSAFE*
+        HTTP methods as defined by :rfc:`7231` (all methods other than
+        ``GET``, ``HEAD``, ``TRACE`` and ``OPTIONS``).
+
+        CSRF protection is implemented by checking requests using
+        unsafe methods for a value called ``csrf_token`` as part of
+        the request's form data. That value is removed from the form
+        as part of the validation and does not have to be taken in
+        account by your own form processing.
+
+        When adding a new controller for an unsafe method (mostly POST
+        for e.g. forms):
+
+        * if the form is generated in Python, a csrf token is
+          available via :meth:`request.csrf_token()
+          <openerp.http.WebRequest.csrf_token`, the
+          :data:`~openerp.http.request` object is available by default
+          in QWeb (python) templates, it may have to be added
+          explicitly if you are not using QWeb.
+
+        * if the form is generated in Javascript, the CSRF token is
+          added by default to the QWeb (js) rendering context as
+          ``csrf_token`` and is otherwise available as ``csrf_token``
+          on the ``web.core`` module:
+
+          .. code-block:: javascript
+
+              require('web.core').csrf_token
+
+        * if the endpoint can be called by external parties (not from
+          Odoo) as e.g. it is a REST API or a `webhook
+          <https://en.wikipedia.org/wiki/Webhook>`_, CSRF protection
+          must be disabled on the endpoint. If possible, you may want
+          to implement other methods of request validation (to ensure
+          it is not called by an unrelated third-party).
+
     """
     routing = kw.copy()
     assert 'type' not in routing or routing['type'] in ("http", "json")
@@ -769,6 +807,34 @@ class HttpRequest(WebRequest):
                 and request.endpoint.routing.get('csrf', True): # csrf checked by default
             token = self.params.pop('csrf_token', None)
             if not self.validate_csrf(token):
+                if token is not None:
+                    _logger.warn("CSRF validation failed on path '%s'",
+                                 request.httprequest.path)
+                else:
+                    _logger.warn("""No CSRF validation token provided for path '%s'
+
+Odoo URLs are CSRF-protected by default (when accessed with unsafe
+HTTP methods). See
+https://www.odoo.com/documentation/9.0/reference/http.html#csrf for
+more details.
+
+* if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
+  token in the form, Tokens are available via `request.csrf_token()`
+  can be provided through a hidden input and must be POST-ed named
+  `csrf_token` e.g. in your form add:
+
+      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+* if the form is generated or posted in javascript, the token value is
+  available as `csrf_token` on `web.core` and as the `csrf_token`
+  value in the default js-qweb execution context
+
+* if the form is accessed by an external third party (e.g. REST API
+  endpoint, payment gateway callback) you will need to disable CSRF
+  protection (and implement your own protection if necessary) by
+  passing the `csrf=False` parameter to the `route` decorator.
+                    """, request.httprequest.path)
+
                 raise werkzeug.exceptions.BadRequest('Invalid CSRF Token')
 
         r = self._call_function(**self.params)

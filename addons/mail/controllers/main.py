@@ -164,7 +164,7 @@ class MailController(http.Controller):
             return self._redirect_to_messaging()
         Model = request.env[model]
         try:
-            Model.browse(res_id).message_unsubscribe_users()
+            Model.browse(res_id).sudo().message_unsubscribe_users([request.uid])
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
