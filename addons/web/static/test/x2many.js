@@ -449,7 +449,7 @@ Tour.register({
         },
         {
             title:      "change text value",
-            element:    '.oe_form_field[data-fieldname="body"] textarea',
+            element:    '.oe_form_field[data-fieldname="body"] textarea[name="body"]',
             sampleText: 'ccc'
         },
         {
