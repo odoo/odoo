@@ -205,6 +205,7 @@ var NumberPopupWidget = PopupWidget.extend({
         this._super(options);
 
         this.inputbuffer = '' + (options.value   || '');
+        this.decimal_separator = _t.database.parameters.decimal_point;
         this.renderElement();
         this.firstinput = true;
     },

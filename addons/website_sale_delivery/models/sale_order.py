@@ -109,21 +109,24 @@ class SaleOrder(orm.Model):
 
     def _get_delivery_methods(self, cr, uid, order, context=None):
         carrier_obj = self.pool.get('delivery.carrier')
-        delivery_ids = carrier_obj.search(cr, uid, [('website_published', '=', True)], context=context)
+        carrier_ids = carrier_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         available_carrier_ids = []
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        for carrier in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
+
+        new_context = dict(context, order_id=order.id)
+        for carrier in carrier_ids:
 
             try:
-                _logger.debug("Checking availability of %s" % carrier.name)
-                if carrier.available:
-                    available_carrier_ids.append(carrier.id)
+                _logger.debug("Checking availability of carrier #%s" % carrier)
+                available = carrier_obj.read(cr, SUPERUSER_ID, [carrier], fields=['available'], context=new_context)[0]['available']
+                if available:
+                    available_carrier_ids = available_carrier_ids + [carrier]
             except ValidationError as e:
                 # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
                 # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                _logger.debug("%s removed from e-commerce carrier list. %s" % (carrier.name, e))
+                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier, e))
 
         return available_carrier_ids
 

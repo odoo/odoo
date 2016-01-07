@@ -1,4 +1,4 @@
-odoo.define('mail.ChatComposer', function (require) {
+odoo.define('mail.composer', function (require) {
 "use strict";
 
 var chat_manager = require('mail.chat_manager');
@@ -310,7 +310,7 @@ var MentionManager = Widget.extend({
 
 });
 
-var Composer = Widget.extend({
+var BasicComposer = Widget.extend({
     template: "mail.ChatComposer",
 
     events: {
@@ -393,6 +393,10 @@ var Composer = Widget.extend({
         this.mention_manager.prependTo(this.$('.o_composer'));
 
         return this._super();
+    },
+
+    toggle: function(state) {
+        this.$el.toggle(state);
     },
 
     preprocess_message: function () {
@@ -655,6 +659,38 @@ var Composer = Widget.extend({
     },
 });
 
-return Composer;
+var ExtendedComposer = BasicComposer.extend({
+    init: function (parent, options) {
+        options = _.defaults(options || {}, {
+            input_min_height: 120,
+        });
+        this.extended = true;
+        return this._super(parent, options);
+    },
+
+    start: function () {
+        this.$subject_input = this.$(".o_composer_subject input");
+        return this._super.apply(this, arguments);
+    },
+
+    preprocess_message: function () {
+        var self = this;
+        return this._super().then(function (message) {
+            var subject = self.$subject_input.val();
+            self.$subject_input.val("");
+            message.subject = subject;
+            return message;
+        });
+    },
+
+    prevent_send: function () {
+        return true;
+    },
+});
+
+return {
+    BasicComposer: BasicComposer,
+    ExtendedComposer: ExtendedComposer,
+};
 
 });

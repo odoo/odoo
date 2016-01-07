@@ -3,7 +3,7 @@
 
 import logging
 from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -51,6 +51,25 @@ class DeliveryCarrier(models.Model):
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
     fixed_price = fields.Float(compute='_compute_fixed_price', inverse='_set_product_fixed_price', store=True, string='Fixed Price',help="Keep empty if the pricing depends on the advanced pricing per destination")
     shipping_enabled = fields.Boolean(string="Shipping enabled", default=True, help="Uncheck this box to disable package shipping while validating Delivery Orders")
+
+    @api.multi
+    def name_get(self):
+        display_delivery = self.env.context.get('display_delivery', False)
+        order_id = self.env.context.get('order_id', False)
+        if display_delivery and order_id:
+            order = self.env['sale.order'].browse(order_id)
+            currency = order.pricelist_id.currency_id.name or ''
+            res = []
+            for carrier_id in self.ids:
+                try:
+                    r = self.read([carrier_id], ['name', 'price'])[0]
+                    res.append((r['id'], r['name'] + ' (' + (str(r['price'])) + ' ' + currency + ')'))
+                except ValidationError:
+                    r = self.read([carrier_id], ['name'])[0]
+                    res.append((r['id'], r['name']))
+        else:
+            res = super(DeliveryCarrier, self).name_get()
+        return res
 
     @api.depends('product_id.list_price', 'product_id.product_tmpl_id.list_price')
     def _compute_fixed_price(self):
@@ -233,6 +252,8 @@ class DeliveryCarrier(models.Model):
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
+
+        total = order.currency_id.with_context(date=order.date_order).compute(total, order.company_id.currency_id)
 
         return self.get_price_from_picking(total, weight, volume, quantity)
 

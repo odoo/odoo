@@ -12,7 +12,8 @@ class SaleOrderLine(models.Model):
     def _compute_analytic(self, domain=None):
         lines = {}
         if not domain:
-            domain = [('so_line', 'in', self.ids), ('unit_amount', '<=', 0.0)]
+            # To filter on analyic lines linked to an expense
+            domain = [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
         data = self.env['account.analytic.line'].read_group(
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False

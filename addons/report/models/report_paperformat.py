@@ -75,7 +75,7 @@ class report_paperformat(osv.Model):
         return True
 
     _constraints = [
-        (_check_format_or_page, 'Error ! You cannot select a format AND speficic '
+        (_check_format_or_page, 'Error ! You cannot select a format AND specific '
                                 'page width/height.', ['format']),
     ]
 

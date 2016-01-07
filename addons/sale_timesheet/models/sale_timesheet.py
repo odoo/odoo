@@ -56,7 +56,10 @@ class AccountAnalyticLine(models.Model):
                     ('product_id.type', '=', 'service')],
                     limit=1)
             if sol:
-                result['so_line'] = sol.id
+                result.update({
+                    'so_line': sol.id,
+                    'product_id': sol.product_id.id,
+                })
                 result = self._get_timesheet_cost(result)
 
         result = super(AccountAnalyticLine, self)._get_sale_order_line(vals=result)
@@ -75,7 +78,7 @@ class AccountAnalyticLine(models.Model):
             uom = (emp or user).company_id.project_time_mode_id
             # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
             result.update(
-                amount=(-unit_amount * emp.timesheet_cost),
+                amount=(-unit_amount * cost),
                 product_uom_id=uom.id
             )
         return result
@@ -155,7 +158,8 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_analytic(self, domain=None):
         if not domain:
-            domain = [('so_line', 'in', self.ids), '|', ('unit_amount', '<=', 0.0), ('is_timesheet', '=', True)]
+            # To filter on analyic lines linked to an expense
+            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('is_timesheet', '=', True)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 
     @api.model

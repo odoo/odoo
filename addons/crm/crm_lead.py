@@ -117,9 +117,9 @@ class crm_lead(format_address, osv.osv):
         """ Very interesting kanban state color. This makes complete sense. Or
         not. """
         result = {}
-        today = datetime.now()
+        today = date.today()
         for lead in self.browse(cr, uid, ids, context=context):
-            result[lead.id] = 'normal'
+            result[lead.id] = 'grey'
             if lead.date_action:
                 lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT)
                 if lead_date > today:

@@ -1384,6 +1384,7 @@ class BaseModel(object):
         from openerp.http import request
         Users = self.pool['res.users']
         for group_ext_id in groups.split(','):
+            group_ext_id = group_ext_id.strip()
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
                 if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
@@ -5421,24 +5422,27 @@ class BaseModel(object):
         Returns a new version of this recordset attached to the provided
         user.
 
-        By default this returns a `SUPERUSER` recordset, where access control
-        and record rules are bypassed.
+        By default this returns a ``SUPERUSER`` recordset, where access
+        control and record rules are bypassed.
 
         .. note::
-            Using `sudo` could cause data access to cross the boundaries of
-            record rules, possibly mixing records that are meant to be
-            isolated (e.g. records from different companies in multi-company
-            environments).
+
+            Using ``sudo`` could cause data access to cross the
+            boundaries of record rules, possibly mixing records that
+            are meant to be isolated (e.g. records from different
+            companies in multi-company environments).
 
             It may lead to un-intuitive results in methods which select one
             record among many - for example getting the default company, or
             selecting a Bill of Materials.
 
         .. note::
+
             Because the record rules and access control will have to be
             re-evaluated, the new recordset will not benefit from the current
             environment's data cache, so later data access may incur extra
             delays while re-fetching from the database.
+
         """
         return self.with_env(self.env(user=user))
 
@@ -5931,20 +5935,23 @@ class BaseModel(object):
         if match:
             method, params = match.groups()
 
+            class RawRecord(object):
+                def __init__(self, record):
+                    self._record = record
+                def __getitem__(self, name):
+                    field = self._record._fields[name]
+                    value = self._record[name]
+                    return field.convert_to_write(value)
+                def __getattr__(self, name):
+                    return self[name]
+
             # evaluate params -> tuple
             global_vars = {'context': self._context, 'uid': self._uid}
             if self._context.get('field_parent'):
-                class RawRecord(object):
-                    def __init__(self, record):
-                        self._record = record
-                    def __getattr__(self, name):
-                        field = self._record._fields[name]
-                        value = self._record[name]
-                        return field.convert_to_write(value)
                 record = self[self._context['field_parent']]
                 global_vars['parent'] = RawRecord(record)
-            field_vars = self._convert_to_write(self._cache)
-            params = eval("[%s]" % params, global_vars, field_vars)
+            field_vars = RawRecord(self)
+            params = eval("[%s]" % params, global_vars, field_vars, nocopy=True)
 
             # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)

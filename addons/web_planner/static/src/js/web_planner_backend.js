@@ -13,7 +13,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 var PlannerDialog = planner.PlannerDialog;
 
-var PlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
+var PlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
     init: function(parent) {
         this._super(parent);
@@ -25,12 +25,10 @@ var PlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
         core.bus.on("change_menu_section", self, self.on_menu_clicked);
 
         var res =  self._super.apply(this, arguments).then(function() {
-            self.$el.filter('.o_planner_systray').on('click', self, self.show_dialog.bind(self));
-            self.$el.filter('.o_planner_help').on('click', '.dropdown-menu li a[data-menu]', self.on_menu_help);
+            self.$el.on('click', self, self.show_dialog.bind(self));
             return self.fetch_application_planner();
         }).then(function(apps) {
-            self.$el.filter('.o_planner_systray').hide();  // hidden by default
-            self.$el.filter('.o_planner_help').find('.o_planner_link').hide();
+            self.$el.hide();  // hidden by default
             self.$('.progress').tooltip({html: true, placement: 'bottom', delay: {'show': 500}});
             self.planner_apps = apps;
             return apps;
@@ -58,8 +56,7 @@ var PlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
             this.setup(this.planner_apps[menu_id]);
             this.need_reflow = true;
         } else {
-            this.$el.filter('.o_planner_systray').hide();
-            this.$el.filter('.o_planner_help').find('.o_planner_link').hide();
+            this.$el.hide();
             this.need_reflow = true;
         }
         if (this.need_reflow) {
@@ -96,7 +93,7 @@ var PlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
         } else {
             this.$(".progress").show();
         }
-        this.$el.filter('.o_planner_systray').show();
+        this.$el.show();
         this.$(".progress-bar").css('width', percent+"%");
     },
     show_dialog: function() {

@@ -706,6 +706,7 @@ var KanbanView = View.extend({
         return this.load_records(offset, column.dataset).then(function (result) {
             _.each(result.records, function (r) {
                 column.add_record(r, {no_update: true});
+                self.dataset.add_ids([r.id]);
             });
             column.offset += self.limit;
             column.remaining = Math.max(column.remaining - self.limit, 0);

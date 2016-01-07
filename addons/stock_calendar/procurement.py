@@ -30,8 +30,8 @@ class procurement_order(osv.osv):
                 date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
                 purchase_date, delivery_date = self._get_previous_dates(cr, uid, orderpoint, date_planned, context=context)
                 if purchase_date and delivery_date:
-                    self.write(cr, uid, {'next_delivery_date': self._convert_to_UTC(cr, uid, delivery_date, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                                         'next_purchase_date': self._convert_to_UTC(cr, uid, purchase_date, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT),}, context=context)
+                    self.write(cr, uid, {'next_delivery_date': delivery_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                                         'next_purchase_date': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),}, context=context)
 
     @api.v8
     def _get_purchase_order_date(self, schedule_date):
@@ -105,8 +105,6 @@ class procurement_order(osv.osv):
         att_obj = self.pool.get('resource.calendar.attendance')
         context = context or {}
         context['no_round_hours'] = True
-        # Date should be converted to the correct timezone
-        start_date = self._convert_to_tz(cr, uid, start_date, context=context)
         # First check if the orderpoint has a Calendar as it should be delivered at this calendar date
         purchase_date = False
         delivery_date = start_date
@@ -135,8 +133,8 @@ class procurement_order(osv.osv):
         context = context or {}
         context['no_round_hours'] = True
         if not new_date:
-            new_date = self._convert_to_tz(cr, uid, datetime.utcnow(), context=context)
-        now_date = self._convert_to_tz(cr, uid, datetime.utcnow(), context=context)
+            new_date = datetime.utcnow()
+        now_date = datetime.utcnow()
 
         # Search first calendar day (without group)
         res = calendar_obj._schedule_days(cr, uid, orderpoint.calendar_id.id, 1, new_date, compute_leaves=True, context=context)
@@ -178,21 +176,6 @@ class procurement_order(osv.osv):
                 return (date1, res[0][1])
         return (False, False)
 
-    def _convert_to_tz(self, cr, uid, date, context=None):
-        if not context or not context.get('tz'):
-            return date
-        utc_date = pytz.UTC.localize(date)
-        timezone = pytz.timezone(context['tz'])
-        return utc_date.astimezone(timezone)
-
-    def _convert_to_UTC(self, cr, uid, date, context=None):
-        """
-            The date should be timezone aware
-        """
-        if not context or not context.get('tz'):
-            return date
-        return date.astimezone(pytz.UTC)
-
     def _get_group(self, cr, uid, orderpoint, context=None):
         """
             Will return the groups and the end dates of the intervals of the purchase calendar
@@ -207,15 +190,13 @@ class procurement_order(osv.osv):
         context = context or {}
         context['no_round_hours'] = True
         date = False
-        now_date = self._convert_to_tz(cr, uid, datetime.utcnow(), context=context)
+        now_date = datetime.utcnow()
         res_intervals = []
         if orderpoint.purchase_calendar_id and orderpoint.purchase_calendar_id.attendance_ids:
             if orderpoint.last_execution_date:
                 new_date = datetime.strptime(orderpoint.last_execution_date, DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 new_date = datetime.utcnow()
-            # Convert to timezone of user
-            new_date = self._convert_to_tz(cr, uid, new_date, context=context)
             intervals = calendar_obj._schedule_days(cr, uid, orderpoint.purchase_calendar_id.id, 1, new_date, compute_leaves=True, context=context)
             for interval in intervals:
                 # If last execution date, interval should start after it in order not to execute the same orderpoint twice
@@ -285,8 +266,8 @@ class procurement_order(osv.osv):
                     date = res_group[1]
                     subtract_qty = orderpoint_obj.subtract_procurements_from_orderpoints(cr, uid, [x.id for x in ops_dict[key]], context=context)
                     first_op = True
-                    ndelivery = date and self._convert_to_UTC(cr, uid, date, context=context) or False
-                    npurchase = res_group[3] and self._convert_to_UTC(cr, uid, res_group[3], context=context) or False
+                    ndelivery = date
+                    npurchase = res_group[3]
                     for op in ops_dict[key]:
                         try:
                             prods = prod_qty[op.product_id.id]['virtual_available']

@@ -78,7 +78,7 @@ not be fetched by browsers. The ``src/css``, ``src/js`` and ``src/xml``
 sub-folders are conventional and not strictly necessary.
 
 ``oepetstore/static/css/petstore.css``
-    currently empty, will hold the CSS_ for pet store content
+    Currently empty, will hold the CSS_ for pet store content
 ``oepetstore/static/xml/petstore.xml``
     Mostly empty, will hold :ref:`reference/qweb` templates
 ``oepetstore/static/js/petstore.js``
@@ -102,6 +102,8 @@ sub-folders are conventional and not strictly necessary.
         }
 
 Which only prints a small message in the browser's console.
+
+The files in the ``static`` folder, need to be defined within the module in order for them to be loaded correctly. Everything in ``src/xml`` is defined in ``__openerp__.py`` while the contents of ``src/css`` and ``src/js`` are defined in ``petstore.xml``, or a similar file.
 
 .. warning::
 
