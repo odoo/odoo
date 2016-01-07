@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-25 13:28+0000\n"
-"PO-Revision-Date: 2015-12-05 23:23+0000\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -436,7 +436,7 @@ msgid ""
 "            opportunities.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\nΕπιλέξτε για να προγραμματίσετε μια νέα συνάντηση.\n</p><p>\nΤο ημερολόγιο είναι κοινό ανάμεσα στους εργαζόμενους και πλήρως διασυνδεμένο με\nμε άλλες εφαρμογές όπως οι άδειες εργαζομένων ή οι επαγγελματικές\nευκαιρίες.\n</p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να προγραμματίσετε μια νέα συνάντηση.\n</p><p>\nΤο ημερολόγιο είναι κοινό ανάμεσα στους εργαζόμενους και πλήρως διασυνδεμένο με\nμε άλλες εφαρμογές όπως οι άδειες εργαζομένων ή οι επαγγελματικές\nευκαιρίες.\n</p>\n        "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1593
@@ -736,7 +736,7 @@ msgstr "Λάθος!"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr "Γεγονός"
+msgstr "Συμβάν"
 
 #. module: calendar
 #: field:calendar.event,display_time:0
@@ -904,14 +904,14 @@ msgstr "Τελευταία ημερομηνία μηνύματος"
 #: field:calendar.contacts,write_uid:0 field:calendar.event,write_uid:0
 #: field:calendar.event.type,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: calendar
 #: field:calendar.alarm,write_date:0 field:calendar.attendee,write_date:0
 #: field:calendar.contacts,write_date:0 field:calendar.event,write_date:0
 #: field:calendar.event.type,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
@@ -921,7 +921,7 @@ msgstr "Η τελευταία ειδοποίηση επισημάνθηκε ως
 #. module: calendar
 #: help:calendar.event,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "Επιτρέπει στο γεγονός να επαναληφθεί αυτόματα σε αυτό το χρονικό διάστημα"
+msgstr "Επιτρέπει στο συμβάν να επαναληφθεί αυτόματα σε αυτό το χρονικό διάστημα"
 
 #. module: calendar
 #: field:calendar.event,location:0
@@ -931,7 +931,7 @@ msgstr "Τοποθεσία"
 #. module: calendar
 #: help:calendar.event,location:0
 msgid "Location of Event"
-msgstr "Τοποθεσία Γεγονότος"
+msgstr "Τοποθεσία Συμβάντος"
 
 #. module: calendar
 #: field:calendar.contacts,user_id:0
@@ -1029,7 +1029,7 @@ msgstr "Μήνας(ες)"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr "Οι Εκδηλώσεις Μου"
+msgstr "Τα συμβάντα μου"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1262,12 +1262,12 @@ msgstr "Αρχίζει στις"
 #. module: calendar
 #: field:calendar.attendee,state:0 field:calendar.event,state:0
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr "Το καθεστώς της συμμετοχής του συμμετέχοντα"
+msgstr "Η κατάσταση της συμμετοχής του συμμετέχοντα "
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1313,7 +1313,7 @@ msgstr "Τρίτο"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence..."
-msgstr "Η εκδήλωση είναι συνδεδεμένη με μια επαναλαμβανόμενη..."
+msgstr "Το συμβάν είναι συνδεδεμένο με μια επαναλαμβανόμενη..."
 
 #. module: calendar
 #: field:calendar.event,th:0
@@ -1361,7 +1361,7 @@ msgstr "Μονάδα"
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,message_unread:0
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form

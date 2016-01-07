@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-05 23:23+0000\n"
+"PO-Revision-Date: 2016-01-02 22:34+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgid ""
 "                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>\n"
 "                        </p>\n"
 "                        %(static_help)s"
-msgstr "<p class='oe_view_nocontent_create'>\n                            Επιλέξτε για να προσθέσετε ένα νέο έγγραφο %(document)s ή να στείλετε e-mail προς: <a href='mailto:%(email)s'>%(email)s</a>\n                        </p>\n                        %(static_help)s"
+msgstr "<p class='oe_view_nocontent_create'>\nΚάντε κλικ για να προσθέσετε ένα νέο έγγραφο '%(document)s' ή να στείλτε ένα e-mail προς: <a href='mailto:%(email)s'>%(email)s</a>\n </p>\n %(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -75,7 +75,7 @@ msgstr "<p class='oe_view_nocontent_create'>\n                            Επι
 msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
-msgstr "<p class='oe_view_nocontent_create'>Επιλέξτε για να προσθέσετε ένα νέο %(document)s</p>%(static_help)s"
+msgstr "<p class='oe_view_nocontent_create'>Κάντε κλικ για να προσθέσετε μία νέα %(document)s</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -212,7 +212,7 @@ msgstr "Ψευδώνυμο"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr "Ψευδώνυμο για την αποδοχή μηνυμάτων ηλεκτρονικού ταχυδρομείου Από"
+msgstr "Ψευδώνυμο για την αποδοχή emails από"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
@@ -319,7 +319,7 @@ msgstr "Συγγραφέας"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr "Συγγραφέας του μυνήματος. Εάν δεν ρυθμιστεί, email από αυτές τις email διευθύνσεις που δεν ταιριάζουν σε κανένα συνεργάτη."
+msgstr "Συγγραφέας του μηνύματος. Εάν δεν ρυθμιστεί, email από αυτές τις email διευθύνσεις που δεν ταιριάζουν σε κανένα συνεργάτη."
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
@@ -902,7 +902,7 @@ msgstr "Μη έγκυρη έκφραση, πρέπει να είναι μια σ
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr "Πρόσκληση να ακολουθήσει %s: %s"
+msgstr "Πρόσκληση για να ακολουθήσετε: %s: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -1009,7 +1009,7 @@ msgstr "Έχει δημιουργηθεί email για να ενημερώσει
 #: code:addons/mail/static/src/xml/mail.xml:257
 #, python-format
 msgid "Mark as Todo"
-msgstr "Επισήμανση ως Να-Γίνει"
+msgstr "Επισήμανση ως Εκκρεμότητα"
 
 #. module: mail
 #: field:mail.group,image_medium:0
@@ -1041,7 +1041,7 @@ msgstr "Μήνυμα"
 #. module: mail
 #: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
-msgstr "Περιγραφή εγγραφής Μυνήματος"
+msgstr "Περιγραφή εγγραφής Μηνύματος"
 
 #. module: mail
 #: field:mail.message.subtype,name:0
@@ -1090,7 +1090,7 @@ msgstr "Τύπος Μηνύματος: email για email μηνύματα, ει
 #. module: mail
 #: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
 msgid "Message unique identifier"
-msgstr "Μοναδικός ταυτοποιητής μυνήματος"
+msgstr "Μοναδικός ταυτοποιητής μηνύματος"
 
 #. module: mail
 #: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
@@ -1359,7 +1359,7 @@ msgstr "Προφίλ Συνεργάτη"
 #: help:mail.message,notified_partner_ids:0
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
-msgstr "Συνεργάτες που έχουν προώθηση ειδοποιήσεων αυτού του μυνήματος στα εισερχόμενα τους"
+msgstr "Συνεργάτες που έχουν προώθηση ειδοποιήσεων αυτού του μηνύματος στα εισερχόμενα τους"
 
 #. module: mail
 #: help:mail.mail,auto_delete:0
@@ -1443,7 +1443,7 @@ msgstr "Ανάγνωση"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr "Λήψη Εισερχομένων Ειδοποιήσεων με Email"
+msgstr "Λήψη Ειδοποιήσεων με Email"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1608,7 +1608,7 @@ msgstr "Ακολουθία"
 #: code:addons/mail/static/src/xml/mail.xml:254
 #, python-format
 msgid "Set back to Todo"
-msgstr "Ορίστε ως Εκκρεμότητα"
+msgstr "Επισήμανση ως Εκκρεμότητα"
 
 #. module: mail
 #. openerp-web
@@ -1797,7 +1797,7 @@ msgstr "Προς ανάγνωση"
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr "Να-Γίνει"
+msgstr "Εκκρεμότητες"
 
 #. module: mail
 #. openerp-web

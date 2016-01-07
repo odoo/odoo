@@ -805,7 +805,7 @@ class sale_order(osv.osv):
                 elif line[1]:
                     prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
                 if prod and prod.taxes_id:
-                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]
                 order_line.append(line)
 
             # link      (4, ID)
@@ -815,7 +815,7 @@ class sale_order(osv.osv):
                 for line_id in line_ids:
                     prod = line_obj.browse(cr, uid, line_id, context=context).product_id
                     if prod and prod.taxes_id:
-                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]}])
+                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id, context=context)]]}])
                     else:
                         order_line.append([4, line_id])
             else:
@@ -928,7 +928,7 @@ class sale_order_line(osv.osv):
         'product_uos_qty': fields.float('Quantity (UoS)' ,digits_compute= dp.get_precision('Product UoS'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
-        'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}, digits_compute=dp.get_precision('Stock Weight')),
         'state': fields.selection(
                 [('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')],
                 'Status', required=True, readonly=True, copy=False,
@@ -1147,7 +1147,7 @@ class sale_order_line(osv.osv):
             taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
         else:
             taxes = product_obj.taxes_id
-        result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
@@ -1230,7 +1230,16 @@ class sale_order_line(osv.osv):
         return self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
-                date_order=date_order, context=context)
+                date_order=date_order, fiscal_position=context.get('fiscal_position', False), context=context)
+
+    def onchange_product_uom(self, cursor, user, ids, pricelist, product, qty=0,
+                             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+                             lang=False, update_tax=True, date_order=False, fiscal_position=False, context=None):
+        ctx = dict(context or {}, fiscal_position=fiscal_position)
+        return self.product_uom_change(cursor, user, ids, pricelist, product,
+                                      qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
+                                      partner_id=partner_id, lang=lang, update_tax=update_tax,
+                                      date_order=date_order, context=ctx)
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-24 20:41+0000\n"
+"PO-Revision-Date: 2015-12-15 16:25+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "- güncelle"
 #. module: stock_account
 #: view:product.category:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Hesap Stok Özellikleri"
+msgstr "Muhasebe Hesapları"
 
 #. module: stock_account
 #: view:stock.config.settings:stock_account.view_stock_config_settings_inherit
@@ -308,7 +308,7 @@ msgstr "Faturalama"
 #. module: stock_account
 #: field:stock.invoice.onshipping,journal_type:0
 msgid "Journal Type"
-msgstr "Yevmiye"
+msgstr "Yevmiye Türü"
 
 #. module: stock_account
 #: field:stock.change.standard.price,write_uid:0
@@ -393,7 +393,7 @@ msgstr "Operasyon Tarihi"
 #. module: stock_account
 #: selection:product.template,valuation:0
 msgid "Periodical (manual)"
-msgstr "Periyodik (manuel)"
+msgstr "Periyodik (Manuel)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -456,7 +456,7 @@ msgstr "Gerçek Fiyat"
 #. module: stock_account
 #: selection:product.template,valuation:0
 msgid "Real Time (automated)"
-msgstr "Gerçek Zamanlı (otomatik)"
+msgstr "Gerçek Zamanlı (Otomatik)"
 
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
@@ -522,7 +522,7 @@ msgstr "Sevkiyattan Stok Faturalandırma"
 #. module: stock_account
 #: field:product.category,property_stock_journal:0
 msgid "Stock Journal"
-msgstr "Stok Yevmiye"
+msgstr "Stok Yevmiyesi"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -631,7 +631,7 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr "Gerçek-zamanlı envanter değerlendirmesi yaparken, gelen tüm stokların hareketlerine karşılık gelen günlük öğeleri bu hesaba işlenecektir, kaynak konumda özel bir değerlendirme hesabı yoksa. Bu kategorideki ürünler için bu varsayılan değerdir. Her ürüne doğrudan da ayarlanabilir."
+msgstr "Gerçek-zamanlı envanter değerlendirmesi yaparken, gelen tüm stokların hareketlerine karşılık gelen yevmiye kalemleri bu hesaba işlenecektir, kaynak konumda özel bir değerlendirme hesabı yoksa. Bu kategorideki ürünler için bu varsayılan değerdir. Her ürüne doğrudan da ayarlanabilir."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -640,7 +640,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "Gerçek zamanlı envanter değerlemesi yaparken, gelen bütün stok hareketlerinin karşıt günlük öğeleri, kaynak konumda özel bir değerleme hesabı tanımlanıncaya kadar bu hesaba işlenecektir. Ürüne tanımlanmamışsa, ürün kategorisinden bir tane kullanılır."
+msgstr "Gerçek zamanlı envanter değerlemesi yaparken, gelen bütün stok hareketlerinin karşıt yevmiye kalemleri, kaynak konumda özel bir değerleme hesabı tanımlanıncaya kadar bu hesaba işlenecektir. Ürüne tanımlanmamışsa, ürün kategorisinden bir tane kullanılır."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -650,7 +650,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr "Gerçek-zamanlı envanter değerlemesi yaparken, hedef konuma özel bir değerleme hesabı ayarlanmadıkça, çıkan tüm stok hareketlerinin günlük öğeleri bu hesaba işlenecektir. Bu, bu kategorideki tüm ürünler için varsayılan değerdir. Aynı zamanda her ürünü de doğrudan ayarlanabilir."
+msgstr "Gerçek-zamanlı envanter değerlemesi yaparken, hedef konuma özel bir değerleme hesabı ayarlanmadıkça, çıkan tüm stok hareketlerinin yevmiye kalemleri bu hesaba işlenecektir. Bu, bu kategorideki tüm ürünler için varsayılan değerdir. Aynı zamanda her ürünü de doğrudan ayarlanabilir."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -659,7 +659,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "Gerçek zamanlı stok değerlendirmesi yaparken, bütün çıkan stok stok hareketlerinin karşıt günlük öğeleri bu hesaba işlenecektir, eğer varış konumuna özel bir değerlendirme hesabı ayarlanmamışsa."
+msgstr "Gerçek zamanlı stok değerlendirmesi yaparken, bütün çıkan stok stok hareketlerinin karşıt yevmiye kalemleri bu hesaba işlenecektir, eğer varış konumuna özel bir değerlendirme hesabı ayarlanmamışsa."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0

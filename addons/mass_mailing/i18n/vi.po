@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:37+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
+"PO-Revision-Date: 2015-12-11 09:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgid ""
 "                Click to create a recipient.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để tạo người nhận.\n              </p>\n            "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -93,7 +93,7 @@ msgid ""
 "                Create a campaign to structure mass mailing and get analysis from email status.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to define a new mass mailing campaign.\n              </p><p>\n                Nhấp chuột để định nghĩa mới một chiến dịch gửi email hàng loạt.\n              </p>\n            "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -104,7 +104,7 @@ msgid ""
 "    Mailing lists allows you to to manage customers and\n"
 "    contacts easily and to send to mailings in a single click.\n"
 "</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n    Nhấp chuột để tạo mới một danh sách gửi email.\n</p><p>\n    Danh sách gửi email cho phép bản quản lý khách hàng và\n    các liên hệ một cách đễ dàng, đồng thời cho phép bạn gửi email đến tất cả những người trong danh sách chỉ với một cú nhấp chuột.\n</p>"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
@@ -115,7 +115,7 @@ msgid ""
 "</p><p>\n"
 "    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.\n"
 "</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n    Nhấp chuột để tạo mới một Gửi email hàng loại.\n</p><p>\n    Mỗi Gửi email hàng loại cho phép bạn dễ dàng thiết kế email và gửi hàng loạt tới các liên hệ, khách hàng, nguồn dẫn của bạn sử dụng các Danh sách gửi email được định nghĩa trước.\n</p>"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,unique_ab_testing:0
@@ -137,7 +137,7 @@ msgstr ""
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Đính kèm một tập tin"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,attachment_ids:0
@@ -155,7 +155,7 @@ msgstr "Thân"
 #: field:mail.mass_mailing.campaign,bounced:0
 #: field:mail.statistics.report,bounced:0
 msgid "Bounced"
-msgstr ""
+msgstr "Bị trả về"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -166,7 +166,7 @@ msgstr "Chiến dịch"
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
-msgstr ""
+msgstr "Các giai đoạn của chiến dịch"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_email_campaigns
@@ -187,7 +187,7 @@ msgstr "Phân loại"
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Change Email Design"
-msgstr ""
+msgstr "Đổi thiết kế email"
 
 #. module: mass_mailing
 #: view:website:website.snippets
@@ -197,12 +197,12 @@ msgstr ""
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Click to design your email."
-msgstr ""
+msgstr "Nhấp chuột đề thiết kế email của bạn."
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,color:0 field:mail.mass_mailing.campaign,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Chỉ số màu sắc"
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.test,email_to:0
@@ -217,12 +217,12 @@ msgstr "Cấu hình"
 #. module: mass_mailing
 #: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_form
 msgid "Contact List"
-msgstr ""
+msgstr "Danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
 msgid "Contact Lists"
-msgstr ""
+msgstr "Danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
@@ -244,7 +244,7 @@ msgstr "Ngày tạo"
 #: field:mail.mass_mailing.stage,create_uid:0
 #: field:mail.mass_mailing.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Tạo bởi"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,create_date:0
@@ -265,37 +265,37 @@ msgstr "Ngày tạo"
 #. module: mass_mailing
 #: help:mail.mail.statistics,exception:0
 msgid "Date of technical error leading to the email not being sent"
-msgstr ""
+msgstr "Ngày xảy ra lỗi kỹ thuật khiến email không được gửi đi"
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Ngày mà thông điệp cuối cùng được ghi nhận vào bản ghi."
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,scheduled:0
 msgid "Date when the email has been created"
-msgstr ""
+msgstr "Ngày mà email được tạo"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,opened:0
 msgid "Date when the email has been opened the first time"
-msgstr ""
+msgstr "Ngày mà email được mở lần đầu tiên"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,sent:0
 msgid "Date when the email has been sent"
-msgstr ""
+msgstr "Ngày mà email được gửi"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,replied:0
 msgid "Date when this email has been replied for the first time."
-msgstr ""
+msgstr "Ngày mà email được trả lời lần đầu tiên."
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,bounced:0
 msgid "Date when this email has bounced."
-msgstr ""
+msgstr "Ngày mà email này bị trả về."
 
 #. module: mass_mailing
 #: view:email.template:mass_mailing.view_email_template_kanban
@@ -314,22 +314,22 @@ msgstr "Đã giao tận nơi"
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
 msgid "Design"
-msgstr ""
+msgstr "Thiết kế"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Design Email"
-msgstr ""
+msgstr "Thiết kế Email"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,res_id:0
 msgid "Document ID"
-msgstr ""
+msgstr "ID Tài liệu"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,model:0
 msgid "Document model"
-msgstr ""
+msgstr "Mô hình (model) Tài liệu"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,mailing_domain:0
@@ -345,7 +345,7 @@ msgstr "Dự thảo"
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Duplicate"
-msgstr ""
+msgstr "Nhân bản"
 
 #. module: mass_mailing
 #: view:email.template:mass_mailing.view_email_template_kanban
@@ -355,7 +355,7 @@ msgstr "Sửa"
 #. module: mass_mailing
 #: view:email.template:mass_mailing.email_template_form_minimal
 msgid "Edit Template"
-msgstr ""
+msgstr "Sửa mẫu"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,email:0
@@ -365,17 +365,17 @@ msgstr "Email"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
-msgstr ""
+msgstr "Thống kê email"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Email Thread"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Đồ thuật soạn thảo email"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -385,7 +385,7 @@ msgstr "Emails"
 #. module: mass_mailing
 #: field:mail.mass_mailing,statistics_ids:0
 msgid "Emails Statistics"
-msgstr ""
+msgstr "Thống kê email"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,exception:0
@@ -395,7 +395,7 @@ msgstr "Ngoại lệ"
 #. module: mass_mailing
 #: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
-msgstr ""
+msgstr "Loại trừ đối tác đánh dấu Opt-Out"
 
 #. module: mass_mailing
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
@@ -453,34 +453,34 @@ msgid ""
 "ID of the related mail_mail. This field is an integer field becausethe "
 "related mail_mail can be deleted separately from its statistics.However the "
 "ID is needed for several action and controllers."
-msgstr ""
+msgstr "ID của đối tượng mail_mail liên quan. Trường này là một trường kiểu integer bởi vì mail_mail liên quan có thể bị xóa riêng rẽ từ chính bảng thống kê của nó. Tuy nhiên, ID của nó thì vẫn cần thiết cho một số action và controllers."
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Nếu dánh dấu, các thông điệp mới bắt buộc phải có sự có mặt của bạn."
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.campaign,unique_ab_testing:0
 msgid ""
 "If checked, recipients will be mailed only once, allowing to sendvarious "
 "mailings in a single campaign to test the effectivenessof the mailings."
-msgstr ""
+msgstr "Nếu đánh dấu, người nhận sẽ chỉ được gửi mail một lần, cho phép gửi một số mailings trong một chiến dịch để kiểm thử hiệu của của mailings."
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
 msgid "In Document"
-msgstr ""
+msgstr "Trong Tài liệu"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Là một Người dõi theo"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Ngày thông điệp cuối cùng"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,write_uid:0 field:mail.mass_mailing,write_uid:0
@@ -491,7 +491,7 @@ msgstr ""
 #: field:mail.mass_mailing.stage,write_uid:0
 #: field:mail.mass_mailing.test,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,write_date:0
@@ -503,17 +503,17 @@ msgstr ""
 #: field:mail.mass_mailing.stage,write_date:0
 #: field:mail.mass_mailing.test,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Cập nhật lần cuối vào"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,mail_mail_id:0
 msgid "Mail"
-msgstr ""
+msgstr "Mail"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Mail Body"
-msgstr ""
+msgstr "Thân mail"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,mail_mail_id_int:0
@@ -528,18 +528,18 @@ msgstr ""
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_tree
 msgid "Mail Statistics"
-msgstr ""
+msgstr "Thống kê Mail"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_email_template
 msgid "Mail Templates"
-msgstr ""
+msgstr "Mẫu Mail"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #: field:mail.mass_mailing.test,mass_mailing_id:0
 msgid "Mailing"
-msgstr ""
+msgstr "Mailing"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:344
@@ -549,12 +549,12 @@ msgstr ""
 #: field:mail.mass_mailing.list,name:0
 #, python-format
 msgid "Mailing List"
-msgstr ""
+msgstr "Danh sách Mailing"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
 msgid "Mailing List Subscribers"
-msgstr ""
+msgstr "Người đăng ký nhận tin Mailing"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_list
@@ -586,27 +586,27 @@ msgstr ""
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
 msgid "Manage Mass Mailing Campaigns"
-msgstr ""
+msgstr "Quản lý Chiến dịch Gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: field:marketing.config.settings,group_mass_mailing_campaign:0
 msgid "Manage Mass Mailing using Campaign"
-msgstr ""
+msgstr "Quản lý Gửi mail hàng loạt sử dụng Chiến dịch"
 
 #. module: mass_mailing
 #: help:marketing.config.settings,group_mass_mailing_campaign:0
 msgid "Manage mass mailign using Campaigns"
-msgstr ""
+msgstr "Quản lý Gửi mail hàng loạt sử dụng các Chiến dịch"
 
 #. module: mass_mailing
 #: field:mail.statistics.report,name:0
 msgid "Mass Mail"
-msgstr ""
+msgstr "Mail Hàng loạt"
 
 #. module: mass_mailing
 #: field:mail.statistics.report,campaign:0
 msgid "Mass Mail Campaign"
-msgstr ""
+msgstr "Chiến dich Gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
@@ -617,13 +617,13 @@ msgstr ""
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_graph
 msgid "Mass Mailing"
-msgstr ""
+msgstr "Gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
 #: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_report
 msgid "Mass Mailing Analysis"
-msgstr ""
+msgstr "Phân tích Gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
@@ -633,41 +633,41 @@ msgstr ""
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
-msgstr ""
+msgstr "Chiến dịch gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_stage
 msgid "Mass Mailing Campaign Stage"
-msgstr ""
+msgstr "Giai đoạn Chiến dịch gửi mail hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_campaigns
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_tree
 msgid "Mass Mailing Campaigns"
-msgstr ""
+msgstr "Các Chiến dịch gửi email hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_category
 msgid "Mass Mailing Category"
-msgstr ""
+msgstr "Phân loại Gửi email hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_contact
 msgid "Mass Mailing Contact"
-msgstr ""
+msgstr "Liên hệ gửi email hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_stages
 msgid "Mass Mailing Stages"
-msgstr ""
+msgstr "Các giai đoạn gửi email hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_graph
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Statistics"
-msgstr ""
+msgstr "Thống kê gửi email hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_mail_statistics_report
@@ -676,7 +676,7 @@ msgid ""
 "information like number of bounced mails, opened mails, replied mails. You "
 "can sort out your analysis by different groups to get accurate grained "
 "analysis."
-msgstr ""
+msgstr "Thống kê gửi email hàng loạt cho phép bạn kiểm tra các thông tin khác nhau liên quan đến việc gửi email (vd: số email bị trả lại, số email được mở, số email được trả lời, v.v.). Bạn có thể sắp xếp các phân tích của bạn theo các nhóm tiêu chí khác nhau để có cái nhìn phân tích chính xác giúp bạn ra quyết định thông minh nhất."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
@@ -688,12 +688,12 @@ msgstr ""
 #: view:mail.mass_mailing.stage:mass_mailing.view_mail_mass_mailing_stage_search
 #: view:mail.mass_mailing.stage:mass_mailing.view_mail_mass_mailing_stage_tree
 msgid "Mass Mailings"
-msgstr ""
+msgstr "Gửi thư loạt"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,message_id:0
 msgid "Message-ID"
-msgstr ""
+msgstr "Message-ID"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_ids:0
@@ -703,7 +703,7 @@ msgstr "Thông điệp"
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Messages and communication history"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,name:0
@@ -724,7 +724,7 @@ msgstr ""
 #. module: mass_mailing
 #: field:mail.mass_mailing.list,contact_nbr:0
 msgid "Number of Contacts"
-msgstr ""
+msgstr "Số lượng Liên hệ"
 
 #. module: mass_mailing
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
@@ -734,13 +734,13 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Mở Menu Marketing"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:555
 #, python-format
 msgid "Open with Visual Editor"
-msgstr ""
+msgstr "Mở bằng trình soạn thảo trực quan"
 
 #. module: mass_mailing
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
@@ -758,13 +758,13 @@ msgstr "Đã mở"
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Opened Daily"
-msgstr ""
+msgstr "Được mở Hàng ngày"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,opened_ratio:0
 #: field:mail.mass_mailing.campaign,opened_ratio:0
 msgid "Opened Ratio"
-msgstr ""
+msgstr "Tỷ lệ mở thư"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,opt_out:0
@@ -796,7 +796,7 @@ msgstr ""
 #. module: mass_mailing
 #: view:email.template:mass_mailing.email_template_form_minimal
 msgid "Preview"
-msgstr ""
+msgstr "Xem trước"
 
 #. module: mass_mailing
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
@@ -809,7 +809,7 @@ msgstr "Đã nhận"
 #: field:mail.mass_mailing,received_ratio:0
 #: field:mail.mass_mailing.campaign,received_ratio:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "Tỷ lệ Nhận"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -817,12 +817,12 @@ msgstr ""
 #: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_form
 #: field:mail.mass_mailing.test,email_to:0
 msgid "Recipients"
-msgstr ""
+msgstr "Người nhận"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,mailing_model:0
 msgid "Recipients Model"
-msgstr ""
+msgstr "Model Người nhận"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -840,23 +840,23 @@ msgstr ""
 #: field:mail.mass_mailing.campaign,replied:0
 #: field:mail.statistics.report,replied:0
 msgid "Replied"
-msgstr ""
+msgstr "Đã trả lời"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Replied Daily"
-msgstr ""
+msgstr "Đã trả lời Hàng ngày"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,replied_ratio:0
 #: field:mail.mass_mailing.campaign,replied_ratio:0
 msgid "Replied Ratio"
-msgstr ""
+msgstr "Tỷ lệ trả lời"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,reply_to:0
 msgid "Reply To"
-msgstr ""
+msgstr "Trả lời Đến"
 
 #. module: mass_mailing
 #: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
@@ -866,7 +866,7 @@ msgstr ""
 #. module: mass_mailing
 #: field:mail.mass_mailing,reply_to_mode:0
 msgid "Reply-To Mode"
-msgstr ""
+msgstr "Chế độ Reply-To"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
@@ -877,65 +877,65 @@ msgstr "Chịu trách nhiệm"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_test
 msgid "Sample Mail Wizard"
-msgstr ""
+msgstr "Đồ thuật gửi mail mẫu"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_1
 msgid "Schedule"
-msgstr ""
+msgstr "Ấn định (thời gian)"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,scheduled:0 field:mail.mass_mailing,scheduled:0
 #: field:mail.mass_mailing.campaign,scheduled:0
 msgid "Scheduled"
-msgstr ""
+msgstr "Đã ấn định"
 
 #. module: mass_mailing
 #: field:mail.statistics.report,scheduled_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Ngày ấn định sẵn"
 
 #. module: mass_mailing
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Tháng ấn định sẵn"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
-msgstr ""
+msgstr "Chọn Danh mục gửi mail..."
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists:"
-msgstr ""
+msgstr "Chọn Danh mục gửi mail:"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Select recipients"
-msgstr ""
+msgstr "Chọn Người nhận"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send Sample Mail"
-msgstr ""
+msgstr "Gửi thư mẫu"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a Sample Mail"
-msgstr ""
+msgstr "Gửi một thư mẫu"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
 msgid ""
 "Send a sample of this mailing to the above of email addresses for test "
 "purpose."
-msgstr ""
+msgstr "Gửi một thư mẫu đến các địa chỉ email bên trên cho mục đích kiểm thử."
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Send to All"
-msgstr ""
+msgstr "Gửi đến Tất cả"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,sent:0 field:mail.mass_mailing,sent:0
@@ -944,33 +944,33 @@ msgstr ""
 #: field:mail.statistics.report,sent:0
 #: selection:mail.statistics.report,state:0
 msgid "Sent"
-msgstr ""
+msgstr "Đã gửi"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "Sent By"
-msgstr ""
+msgstr "Gửi bởi"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,sent_date:0
 msgid "Sent Date"
-msgstr ""
+msgstr "Ngày gửi"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,sent:0
 msgid "Sent Emails"
-msgstr ""
+msgstr "Email đã gửi"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
 msgid "Sent Month"
-msgstr ""
+msgstr "Tháng gửi"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Thứ tự"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
@@ -1012,7 +1012,7 @@ msgstr "Tiêu đề"
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "Subscribe"
-msgstr ""
+msgstr "Đăng ký nhận tin"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_summary:0
@@ -1036,29 +1036,29 @@ msgstr ""
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 msgid "Tested"
-msgstr ""
+msgstr "Đã kiểm thử"
 
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "Thanks"
-msgstr ""
+msgstr "Cám ơn"
 
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "Thanks for your subscription!"
-msgstr ""
+msgstr "Cám ơn bạn đã đăng ký nhận tin!"
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,opt_out:0
 msgid "The contact has chosen not to receive mails anymore from this list"
-msgstr ""
+msgstr "Liên hệ này đã chọn không nhận mail từ danh mục này nữa"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "This option is not available for the recipients you selected.\n"
 "                                                Please use a specific reply-to email address."
-msgstr ""
+msgstr "Tùy chọn này không khả dụng đối với những người nhận bạn chọn.\n                                                Hãy sử dụng địa chỉ reply-to cụ thể."
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,total:0 field:mail.mass_mailing.campaign,total:0
@@ -1073,17 +1073,17 @@ msgstr "Tin chưa đọc"
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Thông điệp Website"
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "emails are in queue and will be sent soon."
-msgstr ""
+msgstr "những email đang trong hàng đợi sẽ được gửi sớm."
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
@@ -1093,4 +1093,10 @@ msgstr "hoặc"
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "your email..."
+msgstr "email của bạn..."
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mail_mail.py:72
+#, python-format
+msgid "Click to unsubscribe"
 msgstr ""

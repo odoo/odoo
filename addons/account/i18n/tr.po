@@ -5,13 +5,13 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # gezgin biri <gezginbiri@hotmail.com>, 2015
-# Murat Kaplan <muratk@projetgrup.com>, 2015
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-05 12:25+0000\n"
+"PO-Revision-Date: 2016-01-02 19:39+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n * 'Proforma' faturanın Proforma durumunda olması ve bu durumda fatura numaralandırılmaz.\n * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı fatutaryı ödemeyinceye kadar açık durumdadır.\n * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Günlük girişlerinin uzlaştırılımış  yada uzlaştırılmamış olamsıyla ilgilidir.\n * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
+msgstr " * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n * 'Proforma' faturanın Proforma durumunda olması ve bu durumda fatura numaralandırılmaz.\n * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı fatutaryı ödemeyinceye kadar açık durumdadır.\n * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış  yada uzlaştırılmamış olamsıyla ilgilidir.\n * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -281,7 +281,7 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Bir günlük oluşturmak için tıklayın.\n              </p><p>\n                Günlükler şirketiniz ile ilgili bütün muhasebe hareketlerinin\n                kaydedilmesinde kullanılır.\n              </p><p>\n                Normal bir şirkette her ödeme yöntemi(nakit, çek, bankalar) için\n                ayrı bir günlük, satış ve satın alma yevmiyeleri.\n               </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Bir yevmiye oluşturmak için tıklayın.\n              </p><p>\n                Yevmiyeler şirketiniz ile ilgili bütün muhasebe hareketlerinin\n                kaydedilmesinde kullanılır.\n              </p><p>\n                Normal bir şirkette her ödeme yöntemi(nakit, çek, bankalar) için\n                ayrı bir yevmiye, satış ve satın alma yevmiyeleri.\n               </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -361,7 +361,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Bir günlük girişi oluşturmak için tıklayın.\n              </p><p>\n                Bir günlük girişi hem borç hem de alacak işlemlerine ait\n                birçok girişi içerir.\n              </p><p>\n                Odoo otomatik olarak her muhasebe belgesi için bir adet\n                oluşturur: Fatura, iade, tedarikçi ödemesi, banka hesap özeti,\n                vb. Yani, günlük girişlerini yalnızca elle kaydedersiniz/ genellikle\n                çeşitli işlemler için.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Bir yevmiye girişi oluşturmak için tıklayın.\n              </p><p>\n                Bir yevmiye girişi hem borç hem de alacak işlemlerine ait\n                birçok girişi içerir.\n              </p><p>\n                Odoo otomatik olarak her muhasebe belgesi için bir adet\n                oluşturur: Fatura, iade, tedarikçi ödemesi, banka hesap özeti,\n                vb. Yani, yevmiye girişlerini yalnızca elle kaydedersiniz/ genellikle\n                çeşitli işlemler için.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -376,7 +376,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni kasa defteri oluşturmak için tıklayın.\n              </p><p>\n                Bir Kasa Defteri nakit yevmiyelerinizi ve nakit kayıtlarını yönetmenizi\n                sağlar. Bu özellik, nakit ödemelerinizi günlük olarak kolay bir şekilde\n                izlemenizi sağlar. Kasanızdaki madeni paraları girebilir ve\n                kasanıza para giriş çıkışı olduğunda girişleri yapar.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni kasa defteri oluşturmak için tıklayın.\n              </p><p>\n                Bir Kasa Defteri nakit yevmiyelerinizi ve nakit kayıtlarını yönetmenizi\n                sağlar. Bu özellik, nakit ödemelerinizi yevmiye olarak kolay bir şekilde\n                izlemenizi sağlar. Kasanızdaki madeni paraları girebilir ve\n                kasanıza para giriş çıkışı olduğunda girişleri yapar.\n                </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -403,7 +403,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir hesap tipi tanımlamak için tıklayın.\n              </p><p>\n                Hesap tipi bir hesabın her günlük defterinde nasıl kullanıldığını\n                belirlemek için kullanılır. Hesap tipindeki erteleme yöntemi\n                yıl sonu kapanış girişleri sırasındaki işleyişi belirler.\n                Bilanço kâr/zarar raporları gibi raporlarda bu alanı kullanır\n                \n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir hesap tipi tanımlamak için tıklayın.\n              </p><p>\n                Hesap tipi bir hesabın her yevmiye defterinde nasıl kullanıldığını\n                belirlemek için kullanılır. Hesap tipindeki erteleme yöntemi\n                yıl sonu kapanış girişleri sırasındaki işleyişi belirler.\n                Bilanço kâr/zarar raporları gibi raporlarda bu alanı kullanır\n                \n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -528,7 +528,7 @@ msgid ""
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
-msgstr "<p>\n                    Günlük öğeleri bulunamadı.\n                </p>\n            "
+msgstr "<p>\n                    Yevmiye kalemleri bulunamadı.\n                </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -547,7 +547,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Yeni bir analiz hesabı eklemek için tıklayın.\n              </p><p>\n                Normal hesap planları ülkelerin yasal gereksinimlerine göre\n                tanımlanan bir yapıya sahiptir. Analiz hesap planı yapısı ise\n                kendi firmanızın gereksinimlerini maliyetlerin/gelirlerin\n                raporlama şartlarını yansıtır.\n              </p><p>\n                Bunlar genellikle sözleşmeler, projeler, ürünler yada\n                bölümlere göre yapılandırılır. Odoo işlemlerinin çoğu (faturalar,\n                zaman çizelgeleri, giderler, vb.) ilgili hesaplar üzerinde\n                analiz girişlerini oluşturur.\n              </p>\n            "
+msgstr "<p>\n                Yeni bir analitik hesabı eklemek için tıklayın.\n              </p><p>\n                Normal hesap planları ülkelerin yasal gereksinimlerine göre\n                tanımlanan bir yapıya sahiptir. Analitik Hesap planı yapısı ise\n                kendi firmanızın gereksinimlerini maliyetlerin/gelirlerin\n                raporlama şartlarını yansıtır.\n              </p><p>\n                Bunlar genellikle sözleşmeler, projeler, ürünler yada\n                bölümlere göre yapılandırılır. Odoo işlemlerinin çoğu (faturalar,\n                zaman çizelgeleri, giderler, vb.) ilgili hesaplar üzerinde\n                analiz girişlerini oluşturur.\n              </p>\n            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -632,27 +632,27 @@ msgstr "Geçikmiş Hesaplar Mizan Raporu"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr "Analiz Hesap Bilançosu"
+msgstr "Analitik Hesap Bilançosu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr "Analiz Hesap Planı"
+msgstr "Analitik Hesap Planı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr "Analiz Maliyet Hesabı Defteri"
+msgstr "Analitik Hesap Maliyet Raporu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr "Günlük Raporları için Analiz Maliyet Defteri"
+msgstr "Analitik Hesap Maliyet Raporu (Yevmiye Raporları)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr "Analiz Hesap Ters Bilançosu"
+msgstr "Analitik Hesap Ters Bakiyesi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -1288,7 +1288,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Elle oluşturulan bütün yeni günlük girişleri genelde 'İşlenmemiş' durumundadır, fakat gerekli ayarları yaparak girişlerin durumunu sistem tarafından otomatik oluşturulmuş girişleri gibi 'İşlenmiş'e doğrudan dönmesini sağlayabilirsiniz."
+msgstr "Elle oluşturulan bütün yeni yevmiye kayıtları genelde 'İşlenmemiş' durumundadır, fakat gerekli ayarları yaparak girişlerin durumunu sistem tarafından otomatik oluşturulmuş girişleri gibi 'İşlenmiş'e doğrudan dönmesini sağlayabilirsiniz."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
@@ -1344,7 +1344,7 @@ msgstr "Faturaları proforma durumunda koymanıza izin verir."
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr "Analiz muhasebesi kullanmanızı sağlar."
+msgstr "Analitik Muhasebe kullanmanızı sağlar."
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -1420,7 +1420,7 @@ msgstr "Analiz Yönü:"
 #: model:ir.ui.menu,name:account.next_id_40
 #: view:website:account.report_analyticjournal
 msgid "Analytic"
-msgstr "Analiz"
+msgstr "Analitik"
 
 #. module: account
 #. openerp-web
@@ -1428,7 +1428,7 @@ msgstr "Analiz"
 #: code:addons/account/static/src/js/account_widgets.js:123
 #, python-format
 msgid "Analytic Acc."
-msgstr "Analiz Hes."
+msgstr "Analitik Hes."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -1440,42 +1440,42 @@ msgstr "Analiz Hes."
 #: field:account.move.line.reconcile.writeoff,analytic_id:0
 #: field:account.statement.operation.template,analytic_account_id:0
 msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+msgstr "Analitik Hesap"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
 msgid "Analytic Account Charts"
-msgstr "Analiz Hesap Planı"
+msgstr "Analitik Hesap Planı"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analiz Muhasebesi"
+msgstr "Analitik Muhasebe"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_list
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "Analiz Hesapları"
+msgstr "Analitik Hesaplar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.action_report_analytic_balance
 msgid "Analytic Balance"
-msgstr "Analiz Bilançosu"
+msgstr "Analitik Bakiye"
 
 #. module: account
 #: view:website:account.report_analyticbalance
 msgid "Analytic Balance -"
-msgstr "Analiz Bilançosu -"
+msgstr "Analitik Bakiye -"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
-msgstr "Analiz Girişleri"
+msgstr "Analitik Kayıtları"
 
 #. module: account
 #: view:analytic.entries.report:account.view_account_analytic_entries_search
@@ -1483,29 +1483,29 @@ msgstr "Analiz Girişleri"
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr "Analiz Girişleri Analizi"
+msgstr "Analitik Kayıtları Analizi"
 
 #. module: account
 #: model:ir.model,name:account.model_analytic_entries_report
 msgid "Analytic Entries Statistics"
-msgstr "Analiz Giriş İstatistikleri"
+msgstr "Analitik Kayıt İstatistikleri"
 
 #. module: account
 #: code:addons/account/project/wizard/project_account_analytic_line.py:47
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Satıra göre Analiz Girişleri"
+msgstr "Satıra Göre Analitik Kayıtları"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr "Analiz Girişi"
+msgstr "Analitik Kaydı"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr "Analiz Öğeler"
+msgstr "Analitik Kayıtlar"
 
 #. module: account
 #: view:account.analytic.journal:account.view_account_analytic_journal_form
@@ -1519,23 +1519,23 @@ msgstr "Analiz Öğeler"
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 #: view:website:account.report_analyticjournal
 msgid "Analytic Journal"
-msgstr "Analiz Yevmiyesi"
+msgstr "Analitik Yevmiyesi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Analiz Günlüğü Öğeleri"
+msgstr "Analitik Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "Bir satınalma günlüğü ile ilişkili Analiz Günlük Öğeleri"
+msgstr "Bir satınalma günlüğü ile ilişkili Analitik Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Analytic Journal Items related to a sale journal."
-msgstr "Bir satış günlüğüne bağlı Analiz Günlük Öğeleri."
+msgstr "Bir satış günlüğüne bağlı Analitik Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.analytic.journal:account.view_analytic_journal_search
@@ -1543,36 +1543,36 @@ msgstr "Bir satış günlüğüne bağlı Analiz Günlük Öğeleri."
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Analiz Günlükleri"
+msgstr "Analitik Yevmiyeleri"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analiz Satırı"
+msgstr "Analitik Satırı"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Analytic Lines"
-msgstr "Analiz Satırları"
+msgstr "Analitik Satırları"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_tree
 #: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
-msgstr "Analiz hesap"
+msgstr "Analitik Hesap"
 
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr "Analiz muhasebesi"
+msgstr "Analitik Muhasebe"
 
 #. module: account
 #: field:account.move.line,analytic_lines:0
 msgid "Analytic lines"
-msgstr "Analiz Satırları"
+msgstr "Analitik Satırları"
 
 #. module: account
 #: field:account.tax,applicable_type:0
@@ -1650,7 +1650,7 @@ msgstr "Giriş oluşturmak istediğinizden emin misiniz?"
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "Günlük Girişlerini açmak istediğinizden emin misiniz?"
+msgstr "Yevmiye Girişlerini açmak istediğinizden emin misiniz?"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -1668,7 +1668,7 @@ msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like:"
 " 0.0231 EUR."
-msgstr "Örneğin ondalık doğruluğu 2 olarak ayarlandığında günlük girişleri 9.99 TRL,  yanısıra ondalık doğruluğu olarak 4 kullanıldığında günlük girişleri 2.0345 TRL olur"
+msgstr "Örneğin ondalık doğruluğu 2 olarak ayarlandığında yevmiye kayıtları 9.99 TRL,  yanısıra ondalık doğruluğu olarak 4 kullanıldığında yevmiye kayıtları 2.0345 TRL olur"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -2214,7 +2214,7 @@ msgstr "Bu firma için bir hesap planı bulunamadı. Bir tane yapılandırmalıs
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "Bu firmaya ait \"%s\" türünde hiçbir hesap günlüğü bulunamıyor. Bir tane oluşturmalısınız.\n Lütfen Günlük Yapılandırmasına gidin"
+msgstr "Bu firmaya ait \"%s\" türünde hiçbir hesap günlüğü bulunamıyor. Bir tane oluşturmalısınız.\n Lütfen Yevmiye Yapılandırmasına gidin"
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -2222,7 +2222,7 @@ msgstr "Bu firmaya ait \"%s\" türünde hiçbir hesap günlüğü bulunamıyor. 
 msgid ""
 "Cannot find any account journal of type \"%s\" for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "Bu firma için \"%s\" türünde hiç bir hesap günlüğü bulunamadı. Bir tane oluşturmalısınız.\n Lütfen Günlük Yapılandırmaya gidin"
+msgstr "Bu firma için \"%s\" türünde hiç bir hesap günlüğü bulunamadı. Bir tane oluşturmalısınız.\n Lütfen Yevmiye Yapılandırmaya gidin"
 
 #. module: account
 #: code:addons/account/account.py:3455
@@ -2303,7 +2303,7 @@ msgstr "Ürün Kategorisi"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_central_journal
 msgid "Central Journal"
-msgstr "Merkezi Günlük"
+msgstr "Merkezi Yevmiye"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -2323,7 +2323,7 @@ msgstr "Merkezi Yevmiye"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Merkezileştirme Günlüğü"
+msgstr "Merkezileştirme Yevmiyesi"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -2414,7 +2414,7 @@ msgstr "Hesap Planı:"
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr "Analiz Hesap Planı"
+msgstr "Analitik Hesap Planı"
 
 #. module: account
 #: field:account.vat.declaration,chart_tax_id:0
@@ -2485,7 +2485,7 @@ msgstr "İş Ortağı KDV'ye tabi ise bu kutuyu işaretleyin. KDV bildirimlerind
 #. module: account
 #: help:account.account,reconcile:0
 msgid "Check this box if this account allows reconciliation of journal items."
-msgstr "Bu hesap günlük öğelerinin uzlaştırılmasına izin veriyorsa bu kutuyu işaretleyin."
+msgstr "Bu hesap yevmiye öğelerinin uzlaştırılmasına izin veriyorsa bu kutuyu işaretleyin."
 
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
@@ -2526,7 +2526,7 @@ msgid ""
 "Check this box to automatically post entries of this journal. Note that "
 "legally, some entries may be automatically posted when the source document "
 "is validated (Invoices), whatever the status of this field."
-msgstr "Bu günlüğün girişlerinin otomatik işlenmesi için bu kutuyu işaretleyin. Bazı girişlerin, durumu ne olursa olsun, kaynak belge (fatura) doğrulanır doğrulanmaz otomatik olarak işlenebileceğini unutmayın."
+msgstr "Bu yevmiyenin girişlerinin otomatik işlenmesi için bu kutuyu işaretleyin. Bazı girişlerin, durumu ne olursa olsun, kaynak belge (fatura) doğrulanır doğrulanmaz otomatik olarak işlenebileceğini unutmayın."
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -2795,7 +2795,7 @@ msgstr "Şirketin bir mali yılı var"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili şirket"
+msgstr "Bu yevmiyeyle ilişkili firma"
 
 #. module: account
 #: view:accounting.report:account.accounting_report_view
@@ -2967,7 +2967,7 @@ msgstr "Sözleşmeler"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_partner_analytic_accounts
 msgid "Contracts/Analytic Accounts"
-msgstr "Sözleşmeler/Analiz Hesaplar"
+msgstr "Sözleşmeler / Analitik Hesaplar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -3616,7 +3616,7 @@ msgstr "Aralık"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr "Günlük girişleri için ondalık doğruluğu"
+msgstr "Yevmiye girişleri için ondalık doğruluğu"
 
 #. module: account
 #: field:account.journal,default_credit_account_id:0
@@ -3902,7 +3902,7 @@ msgstr "Süre"
 #: code:addons/account/account.py:3197
 #, python-format
 msgid "ECNJ"
-msgstr "ECNJ"
+msgstr "ALMI"
 
 #. module: account
 #: code:addons/account/account.py:3195
@@ -4016,7 +4016,7 @@ msgstr "Dönem Sonu"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Yıl Sonu Girişleri Günlüğü"
+msgstr "Yıl Sonu Girişleri Yevmiyesi"
 
 #. module: account
 #: field:account.analytic.balance,date2:0
@@ -4682,7 +4682,7 @@ msgid ""
 "following the analytic account you defined matching your business need. Use "
 "the tool search to analyse information about analytic entries generated in "
 "the system."
-msgstr "Bu görünümde, işinizin gereksinimine göre tanımladığınız analiz hesabı izleyen farklı analiz girişlerin incelemesi vardır. Bu aracı, sistemde oluşturulan analiz girişler hakkındaki inceleme bilgilerini aramak için kullanabilirsiniz."
+msgstr "Bu görünümde, işinizin gereksinimine göre tanımladığınız analitik hesabı izleyen farklı analiz girişlerin incelemesi vardır. Bu aracı, sistemde oluşturulan analitik girişler hakkındaki inceleme bilgilerini aramak için kullanabilirsiniz."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -4744,12 +4744,12 @@ msgstr "Genel Bilgiler"
 #: model:ir.actions.report.xml,name:account.action_report_general_journal
 #: view:website:account.report_generaljournal
 msgid "General Journal"
-msgstr "Genel Günlük"
+msgstr "Genel Yevmiye"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "Genel Günlükler"
+msgstr "Genel Yevmiyeler"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
@@ -4823,7 +4823,7 @@ msgid ""
 "Gives the type of the analytic journal. When it needs for a document (eg: an"
 " invoice) to create analytic entries, Odoo will look for a matching journal "
 "of the same type."
-msgstr "Analiz günlüğünün türünü verir. Bir belge için (örn: bir fatura) analiz girişleri oluşturmak gerektiğinde, Odoo aynı türe uyan bir günlük arayacaktır."
+msgstr "Analitik yevmiyenin türünü verir. Bir belge için (örn: bir fatura) analitik girişleri oluşturmak gerektiğinde, Odoo aynı türe uyan bir yevmiye arayacaktır."
 
 #. module: account
 #: code:addons/account/account_invoice.py:726
@@ -5056,7 +5056,7 @@ msgstr "Eğer etkin kutusu seçili değilse, hesabı silmeden gizlemenize izin v
 msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
-msgstr "Eğer etkin kutusu Yanlışa ayarlıysa, analiz yevmiyeyi silmeden gizlemenizi sağlayacaktır."
+msgstr "Eğer etkin kutusu Yanlışa ayarlıysa, analitik yevmiyeyi silmeden gizlemenizi sağlayacaktır."
 
 #. module: account
 #: help:account.journal.period,active:0
@@ -5091,7 +5091,7 @@ msgstr "Bu kutu işaretlenirse, faturalardan muhasebe satırları oluşturulurke
 msgid ""
 "If you do not check this box, you will be able to do invoicing & payments, "
 "but not accounting (Journal Items, Chart of  Accounts, ...)"
-msgstr "Eğer bu kutuyu işaretlemezseniz faturalama & ödemeler yapabilirsiniz, ama muhasebe (Günlük Öğeleri, HesapPlanları, ...) yapamazsınız."
+msgstr "Eğer bu kutuyu işaretlemezseniz faturalama & ödemeler yapabilirsiniz, ama muhasebe (Yevmiye Kalemleri, HesapPlanları, ...) yapamazsınız."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5173,7 +5173,7 @@ msgstr "Eğer ödeme Koşullarını kullanıyorsanız, vade tarihi muhasebe giri
 msgid ""
 "If you want the journal should be control at opening/closing, check this "
 "option"
-msgstr "Eğer günlüğün açılış ve kapanışta kontrol edilmesini istiyorsanız bu seçeneği işaretleyin"
+msgstr "Eğer yevmiyenin açılış ve kapanışta kontrol edilmesini istiyorsanız bu seçeneği işaretleyin"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5202,7 +5202,7 @@ msgstr "İhtilaflı"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr "Bir mali yılı kapatmak için önce ilgili günlük girişlerini işlemelisiniz."
+msgstr "Bir mali yılı kapatmak için önce ilgili yevmiye girişlerini işlemelisiniz."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -5217,7 +5217,7 @@ msgstr "Bir dönemi kapatmak için önce ilgili yevmiye kayıtlarını işlemeli
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr "Bir banka hesap özeti satırını silmek için, ilgili günlük öğelerini silmek için önce onu iptal etmelisiniz."
+msgstr "Bir banka hesap özeti satırını silmek için, ilgili yevmiye öğelerini silmek için önce onu iptal etmelisiniz."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:392
@@ -5225,7 +5225,7 @@ msgstr "Bir banka hesap özeti satırını silmek için, ilgili günlük öğele
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr "Bir banka hesap özetini silmek için, öncelikle ilişkili günlük öğelerini silmek için hesap özetini iptal etmelisiniz."
+msgstr "Bir banka hesap özetini silmek için, öncelikle ilişkili yevmiye öğelerini silmek için hesap özetini iptal etmelisiniz."
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -5384,12 +5384,12 @@ msgstr "Geçersiz İşlem!"
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.action_account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr "Ters Analiz Bilançosu"
+msgstr "Ters Analiz Bakiyesi"
 
 #. module: account
 #: view:website:account.report_invertedanalyticbalance
 msgid "Inverted Analytic Balance -"
-msgstr "Ters Analiz Bilançosu -"
+msgstr "Ters Analiz Bakiyesi -"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -5481,7 +5481,7 @@ msgstr "Fatura Vergi Hesabı"
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr "Fatura Vergi Analiz Hesabı"
+msgstr "Fatura Vergi Analitik Hesap"
 
 #. module: account
 #: code:addons/account/wizard/account_state_open.py:38
@@ -5691,7 +5691,7 @@ msgstr "Ocak"
 #: view:website:account.report_journal
 #, python-format
 msgid "Journal"
-msgstr "Günlük"
+msgstr "Yevmiye"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5708,7 +5708,7 @@ msgstr "Yevmiye :"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "Günlük Kodu"
+msgstr "Yevmiye Kodu"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -5718,66 +5718,66 @@ msgstr "Günlük Kodu"
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Yevmiye Girişleri"
+msgstr "Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "Aylık Günlük Girişleri"
+msgstr "Aylık Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries to Review"
-msgstr "Gözden Geçirilecek Günlük Girişleri"
+msgstr "Gözden Geçirilecek Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current period"
-msgstr "Geçerli dönemin içindeki döneme ait günlük girişleri"
+msgstr "Geçerli dönemin içindeki döneme ait yevmiye kayıtları"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current year"
-msgstr "Geçerli yıl içindeki dönemli Günlük Girişleri"
+msgstr "Geçerli yıl içindeki dönemli Yevmiye Kayıtları"
 
 #. module: account
 #: field:account.bank.statement.line,journal_entry_id:0
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr "Yevmiye Girişi"
+msgstr "Yevmiye Kaydı"
 
 #. module: account
 #: view:account.model:account.view_model_form
 #: view:account.model:account.view_model_search
 #: view:account.model:account.view_model_tree
 msgid "Journal Entry Model"
-msgstr "Yevmiye Giriş Modeli"
+msgstr "Yevmiye Kayıt Modeli"
 
 #. module: account
 #: view:account.model.line:account.view_model_line_form
 #: view:account.model.line:account.view_model_line_tree
 msgid "Journal Entry Model Line"
-msgstr "Günlük Girişi Modeli Satırı"
+msgstr "Yevmiye Kayıt Modeli Satırı"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal Entry Number"
-msgstr "Günlük Giriş Numarası"
+msgstr "Yevmiye Kayıt Numarası"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 msgid "Journal Entry Reconcile"
-msgstr "Yevmiye Girişlerini Uzlaştır"
+msgstr "Yevmiye Kayıtlarını Uzlaştır"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Journal Item"
-msgstr "Yevmiye Öğesi"
+msgstr "Yevmiye Kalemleri"
 
 #. module: account
 #: code:addons/account/account_move_line.py:892
@@ -5785,13 +5785,13 @@ msgstr "Yevmiye Öğesi"
 msgid ""
 "Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not "
 "balanced!"
-msgstr "Günlük öğesi '%s' (id: %s) denk olmadığından uzlaştırma için kullanılamaz!"
+msgstr "Yevmiye kalemii '%s' (id: %s) denk olmadığından uzlaştırma için kullanılamaz!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:888
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr "Günlük Öğesi '%s' (id: %s), Hareket '%s' zaten uzlaştırılmış!"
+msgstr "Yevmiye Kalemi '%s' (id: %s), Hareket '%s' zaten uzlaştırılmış!"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -5812,18 +5812,18 @@ msgstr "Günlük Öğesi '%s' (id: %s), Hareket '%s' zaten uzlaştırılmış!"
 #: field:res.partner,journal_item_count:0
 #, python-format
 msgid "Journal Items"
-msgstr "Yevmiye Öğeleri"
+msgstr "Yevmiye Kalemleri"
 
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Günlük Öğeleri Analizi"
+msgstr "Yevmiye Kalemleri Analizi"
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr "Uzlaştırılacak Yevmiye Öğeleri"
+msgstr "Uzlaştırılacak Yevmiye Kalemleri"
 
 #. module: account
 #: field:account.analytic.journal,name:0 field:account.journal,name:0
@@ -5834,7 +5834,7 @@ msgstr "Yevmiye Adı"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Günlük Dönemi"
+msgstr "Yevmiye Dönemi"
 
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
@@ -5844,7 +5844,7 @@ msgstr "Yevmiye Seç"
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "Analiz girişler için günlük"
+msgstr "Analitik girişler için yevmiye"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
@@ -5860,7 +5860,7 @@ msgstr "Yevmiye-Dönem Adı"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal:"
-msgstr "Günlük:"
+msgstr "Yevmiye:"
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -5888,7 +5888,7 @@ msgstr "Günlük:"
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "Günlükler"
+msgstr "Yevmiyeler"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -5898,7 +5898,7 @@ msgstr "Günlükler"
 #: view:website:account.report_partnerledger
 #: view:website:account.report_partnerledgerother
 msgid "Journals:"
-msgstr "Günlükler:"
+msgstr "Yevmiyeler:"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6216,7 +6216,7 @@ msgstr "Satırlar"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr "Otomatik oluşturulan Günlük Öğelerine bağla."
+msgstr "Otomatik oluşturulan Yevmiye Kalemlerine bağla."
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -6582,7 +6582,7 @@ msgstr "Sonraki tedarikçi fatura numarası"
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr "Analiz Günlüğü Yok!"
+msgstr "Analitik Yevmiye Yok!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -6802,7 +6802,7 @@ msgstr "Tamam"
 #: code:addons/account/account.py:3199
 #, python-format
 msgid "OPEJ"
-msgstr "OPEJ"
+msgstr "ACLS"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6817,7 +6817,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr "Taslak faturalar onaylandığında artık faturaları değiştiremeyeceksiniz.\n                        Faturalar özgün numara alacak ve günlük öğeleri\n                        hesap planınızda oluşturulacaktır."
+msgstr "Taslak faturalar onaylandığında artık faturaları değiştiremeyeceksiniz.\n                        Faturalar özgün numara alacak ve yevmiye kalemleri\n                        hesap planınızda oluşturulacaktır."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -6856,7 +6856,7 @@ msgstr "Açık"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Open CashBox"
-msgstr "Kasa Kutusunu Aç"
+msgstr "Kasayı Aç"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
@@ -6937,7 +6937,7 @@ msgstr "Gelir Hesabı Açılış Girişleri"
 #: code:addons/account/account.py:3191
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Açılış Giriş Günlükleri"
+msgstr "Açılış Fişi Yevmiyesi"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -6967,7 +6967,7 @@ msgstr "Açılış Dönemi"
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.cashbox.line,subtotal_opening:0
 msgid "Opening Subtotal"
-msgstr "Açılış Aratoplamı"
+msgstr "Açılış Ara Toplamı"
 
 #. module: account
 #: help:account.cashbox.line,number_opening:0
@@ -7534,7 +7534,7 @@ msgstr "Yevmiye için lütfen bir sıra tanımlayın."
 #: code:addons/account/account_invoice.py:797
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr "Bu faturayla ilgili günlüğeye lütfen bir sıra tanımlayın."
+msgstr "Bu faturayla ilgili yevmiyeye lütfen bir sıra tanımlayın."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:330
@@ -7562,7 +7562,7 @@ msgstr "İşle"
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Post Journal Entries"
-msgstr "Günlük Girişleri İşle"
+msgstr "Yevmiye Kayıtlarını İşle"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7576,12 +7576,12 @@ msgstr "İşlendi"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "İşlenmiş Yevmiye Girişleri"
+msgstr "İşlenmiş Yevmiye Kayıtları"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "İşlenmiş Günlük Öğeleri"
+msgstr "İşlenmiş Yevmiye Kalemleri"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7639,7 +7639,7 @@ msgstr "Eğer para birimi, şirket para biriminden farklıysa Raporu para birimi
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr "Satış/Satınalma Günlüğü Yazdır"
+msgstr "Satış/Satınalma Yevmiyesi Yazdır"
 
 #. module: account
 #: view:account.vat.declaration:account.view_account_vat_declaration
@@ -7847,7 +7847,7 @@ msgstr "Satınalma Yevmiyesi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr "Satınalma iade Günlüğü"
+msgstr "Satınalma iade Yevmiyesi"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -8169,7 +8169,7 @@ msgstr "İade Faturası"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "İade Günlüğü"
+msgstr "İade Yevmiyesi"
 
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
@@ -8185,7 +8185,7 @@ msgstr "Vergi İadesi Hesabı"
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr "Vergi İadesi Analiz Hesabı"
+msgstr "Vergi İadesi Analitik Hesap"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -8393,7 +8393,7 @@ msgstr "SAT"
 #: code:addons/account/account.py:3196
 #, python-format
 msgid "SCNJ"
-msgstr "SCNJ"
+msgstr "SATI"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -8421,12 +8421,12 @@ msgstr "Satış Vergisi"
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr "Satış Günlüğü"
+msgstr "Satış Yevmiyesi"
 
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr "Satış iade Günlüğü"
+msgstr "Satış İade Yevmiyesi"
 
 #. module: account
 #: view:website:account.report_salepurchasejournal
@@ -8436,7 +8436,7 @@ msgstr "Satış/Satınalma Yevmiyesi"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr "Satış/Satınalma Günlükler"
+msgstr "Satış/Satınalma Yevmiyeleri"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -8454,7 +8454,7 @@ msgstr "Satış Yevmiyesi"
 #: code:addons/account/account.py:3188
 #, python-format
 msgid "Sales Refund Journal"
-msgstr "Satış İadesi Yevmiyesi"
+msgstr "Satış İade Yevmiyesi"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
@@ -8504,7 +8504,7 @@ msgstr "Hesap Şablonlarını Ara"
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Analiz Satırları Ara"
+msgstr "Analitik Satırları Ara"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -8530,7 +8530,7 @@ msgstr "Fatura Ara"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Günlük Öğelerini Ara"
+msgstr "Yevmiye Öğelerini Ara"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -8788,7 +8788,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for invoices. Leave empty if you don't want to use an analytic account"
 " on the invoice tax lines by default."
-msgstr "Fatura satırları için varsayılan olarak kullanılacak analiz hesabı ayarlayın. Fatura satırlarında varsayılan bir hesap kullanmak istemiyorsanız boş bırakın."
+msgstr "Fatura satırları için varsayılan olarak kullanılacak analitik hesabı ayarlayın. Fatura satırlarında varsayılan bir hesap kullanmak istemiyorsanız boş bırakın."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -8796,7 +8796,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
-msgstr "İadeler için fatura vergi satırlarında varsayılan olarak kullanılacak analiz hesap ayarlayın. Eğer fatura vergi satırlarında varsayılan bir analiz hesap kullanmak istemiyorsanız boş bırakın."
+msgstr "İadeler için fatura vergi satırlarında varsayılan olarak kullanılacak analiz hesap ayarlayın. Eğer fatura vergi satırlarında varsayılan bir analitik hesap kullanmak istemiyorsanız boş bırakın."
 
 #. module: account
 #: help:account.chart.template,visible:0
@@ -9016,7 +9016,7 @@ msgstr "Hesap Özeti"
 #: code:addons/account/account_bank_statement.py:352
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr "Hesap özeti %s onaylandı, günlük öğeleri oluşturuldu."
+msgstr "Hesap özeti %s onaylandı, yevmiye kalemleri oluşturuldu."
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_form
@@ -9553,7 +9553,7 @@ msgid ""
 "can have children accounts for multi-company consolidations, "
 "payable/receivable are for partners accounts (for debit/credit "
 "computations), closed for depreciated accounts."
-msgstr "'İç Tür' farklı hesap türlerindeki olan özellikler için kullanılır: görünüm günlük öğelerini alamaz, birleştirme (konsolidasyon) çok şirketli hesaplarının birleştirilmelerinin alt hesapları için, borç/alacak iş ortağı hesapları için (borç/alacak hesaplamaları) , kapalı değer düşmesi hesapları için."
+msgstr "'İç Tür' farklı hesap türlerindeki olan özellikler için kullanılır: görünüm yevmiye öğelerini alamaz, birleştirme (konsolidasyon) çok şirketli hesaplarının birleştirilmelerinin alt hesapları için, borç/alacak iş ortağı hesapları için (borç/alacak hesaplamaları) , kapalı değer düşmesi hesapları için."
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -9656,7 +9656,7 @@ msgstr "Bu kod raporlarda görünecektir."
 #: help:account.invoice,commercial_partner_id:0
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr "Bu faturaya ait Günlük Girişlerinde kullanılacak ticari varlık"
+msgstr "Bu faturaya ait Yevmiye Girişlerinde kullanılacak ticari varlık"
 
 #. module: account
 #: constraint:account.config.settings:0
@@ -9687,7 +9687,7 @@ msgstr "Hesap özetine girilecek para birimi"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr "Günlük öğesi tarihi tanımlı dönem içinde değil. Ya tarihi değiştirmelisiniz ya da günlük ayarlarından bu kısıtlamayı kaldırmalısınız."
+msgstr "Yevmiye öğesi tarihi tanımlı dönem içinde değil. Ya tarihi değiştirmelisiniz ya da yevmiye ayarlarından bu kısıtlamayı kaldırmalısınız."
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
@@ -9839,7 +9839,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "günlük kaydınızın seçili hesabı farklı bir para biriminde işlemi zorluyor.Bu şekilde giriş yapmak için ya hesaptan para birimini kaldırın ya da günlük görünüm türünü çoklu-para birimi olarak seçin."
+msgstr "yevmiye kaydınızın seçili hesabı farklı bir para biriminde işlemi zorluyor.Bu şekilde giriş yapmak için ya hesaptan para birimini kaldırın ya da yevmiye görünüm türünü çoklu-para birimi olarak seçin."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1391
@@ -9910,13 +9910,13 @@ msgstr "Şu anda hesap tablosu olmayan şirket yoktur. Bu yüzden sihirbaz çal�
 #: code:addons/account/account_cash_statement.py:315
 #, python-format
 msgid "There is no Loss Account on the journal %s."
-msgstr "%s GünlüğündeZarar Hesabı yok."
+msgstr "%s Yevmiyesinde Zarar Hesabı yok."
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:320
 #, python-format
 msgid "There is no Profit Account on the journal %s."
-msgstr "%s Günlüğünde Kar Hesabı yok."
+msgstr "%s Yevmiyesinde Kar Hesabı yok."
 
 #. module: account
 #: code:addons/account/account.py:1456
@@ -10060,7 +10060,7 @@ msgstr "Bu hesap, geçerli İş Ortağı için alacak hesabı olarak varsayılan
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr "Bu modül muhasebecinin analiz bütçe ve aşılmış bütçeleri yönetmenizi sağlar.Ana bütçe ve bütçeler tanımlandıktan sonra proje yöneticisi her analiz hesabına planlanan tutarları yerleştirebilir."
+msgstr "Bu modül muhasebecinin analiz bütçe ve aşılmış bütçeleri yönetmenizi sağlar. Ana bütçe ve bütçeler tanımlandıktan sonra proje yöneticisi her analiz hesabına planlanan tutarları yerleştirebilir."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10091,7 +10091,7 @@ msgid ""
 "This allows you to manage the assets owned by a company or a person.\n"
 "It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Bu modül, bir firma yada kişiye ait demirbaşları yönetmenizi sağlar.\nBu demirbaşlarda oluşan amortismanları izler ve bu amortisman satırları için hesap hareketi oluşturur.\n-account_asset Modülünü kurar. Bu kutuyu işaretlemezseniz, faturalama ve ödeme yapabilirsiniz ancak muhasebe işlemleri (Günlük Öğeleri, Hesap Planları, ...) yapamazsınız."
+msgstr "Bu modül, bir firma yada kişiye ait demirbaşları yönetmenizi sağlar.\nBu demirbaşlarda oluşan amortismanları izler ve bu amortisman satırları için hesap hareketi oluşturur.\n-account_asset Modülünü kurar. Bu kutuyu işaretlemezseniz, faturalama ve ödeme yapabilirsiniz ancak muhasebe işlemleri (Yevmiye Kalemleri, Hesap Planları, ...) yapamazsınız."
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -10154,7 +10154,7 @@ msgstr "Bu alan yalnızca, geliştiricilere özel alanda belirli vergiler oluşt
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr "Bu alan borç ve alacak günlük girişleri için kullanılır. Bu satıra ait ödemeye ödeme sınırlama tarihi koyabilirsiniz."
+msgstr "Bu alan borç ve alacak yevmiye kayıtları için kullanılır. Bu satıra ait ödemeye ödeme sınırlama tarihi koyabilirsiniz."
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -10219,7 +10219,7 @@ msgstr "Bu uzlaştırılacak veya uzlaştırılmayacak bir şey olup olmadığı
 msgid ""
 "This journal already contains items for this period, therefore you cannot "
 "modify its company field."
-msgstr "Bu günlük hali hazırda bu dönem için öğeler içerdiğinden, şirket alanını değiştiremezsiniz."
+msgstr "Bu yevmiye hali hazırda bu dönem için öğeler içerdiğinden, şirket alanını değiştiremezsiniz."
 
 #. module: account
 #: code:addons/account/account.py:799
@@ -10227,7 +10227,7 @@ msgstr "Bu günlük hali hazırda bu dönem için öğeler içerdiğinden, şirk
 msgid ""
 "This journal already contains items, therefore you cannot modify its company"
 " field."
-msgstr "Bu günlük hali hazırda öğeler içerdiğinden şirket alanını değiştiremezseniz."
+msgstr "Bu yevmiye hali hazırda öğeler içerdiğinden şirket alanını değiştiremezseniz."
 
 #. module: account
 #: help:res.partner.bank,journal_id:0
@@ -10349,7 +10349,7 @@ msgid ""
 "This wizard will generate the end of year journal entries of selected fiscal"
 " year. Note that you can run this wizard many times for the same fiscal "
 "year: it will simply replace the old opening entries with the new ones."
-msgstr "Bu sihirbaz, seçili mali yıla ait yıl sonu günlük kayıtlarını oluşturacaktır. Bu sihirbazı aynı mali yıl için birçok kez çalıştırabilirsiniz. Sadece eski girişleri  yenileriyle değiştirecektir."
+msgstr "Bu sihirbaz, seçili mali yıla ait yıl sonu yevmiye kayıtlarını oluşturacaktır. Bu sihirbazı aynı mali yıl için birçok kez çalıştırabilirsiniz. Sadece eski girişleri  yenileriyle değiştirecektir."
 
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
@@ -10363,7 +10363,7 @@ msgstr "Bu sihirbaz seçilen mali yıl için yıl sonu kapanış yevmiye kayıtl
 msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
-msgstr "Bu sihirbaz belirli bir günlük ve dönemdeki  bütün günlük kayıtlarını onaylar. Günlük girişleri onaylandığında girişleri artık güncelleyemezsiniz."
+msgstr "Bu sihirbaz belirli bir yevmiye ve dönemdeki  bütün yevmiye kayıtlarını onaylar. Yevmiye girişleri onaylandığında girişleri artık güncelleyemezsiniz."
 
 #. module: account
 #. openerp-web
@@ -10638,7 +10638,7 @@ msgstr "Denk değil"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unbalanced Journal Items"
-msgstr "Denk olmayan Günlük Öğeleri"
+msgstr "Denk olmayan Yevmiye Kalemleri"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -10709,7 +10709,7 @@ msgstr "İşlenmemiş Yevmiye Kayıtları"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "İşlenmemiş Yevmiye Öğeleri"
+msgstr "İşlenmemiş Yevmiye Kalemleri"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -10766,7 +10766,7 @@ msgstr "Uzlaştırılmamış Girişler"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled Journal Items"
-msgstr "Uzlaştırılmamış Günlük Öğeleri"
+msgstr "Uzlaştırılmamış Yevmiye Kalemleri"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -10783,7 +10783,7 @@ msgstr "Uzlaşma kaldırma"
 #. module: account
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr "Vergisiz"
+msgstr "Vergisiz Tutar"
 
 #. module: account
 #: view:account.invoice:account.invoice_tree
@@ -10924,7 +10924,7 @@ msgstr "Görünüm"
 #. module: account
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "View Account Analytic Lines"
-msgstr "Analiz Hesap Satırlarını Göster"
+msgstr "Analitik Hesap Satırlarını Göster"
 
 #. module: account
 #. openerp-web
@@ -10977,7 +10977,7 @@ msgid ""
 "When journal period is created. The status is 'Draft'. If a report is "
 "printed it comes to 'Printed' status. When all transactions are done, it "
 "comes in 'Done' status."
-msgstr "Yevmiye dönemi oluşturulduğunda, durum 'Taslak' tır. Bir rapor yazdırıldığındadurum 'Yazdırılmış' halini alır. Bütün hareketler tamamalandığında durum 'Tamamlandı' halini alır."
+msgstr "Yevmiye dönemi oluşturulduğunda, durum 'Taslak' tır. Bir rapor yazdırıldığında durum 'Yazdırılmış' halini alır. Bütün hareketler tamamalandığında durum 'Tamamlandı' halini alır."
 
 #. module: account
 #: help:account.period,state:0
@@ -11149,7 +11149,7 @@ msgstr "Kapanmış bir dönemde (%s) yevmiye %s kayıtlara ekleme/değiştirme  
 msgid ""
 "You can not cancel closing entries if the 'End of Year Entries Journal' "
 "period is closed."
-msgstr ""
+msgstr "Yıl Sonu Dönemi kapatılmış olan kapanış kayıtlarını iptal edemezsiniz."
 
 #. module: account
 #: code:addons/account/account.py:1057
@@ -11171,7 +11171,7 @@ msgstr "Sadece taslak faturaların para birimini değiştirebilirsiniz !"
 #. module: account
 #: constraint:account.move.reconcile:0
 msgid "You can only reconcile journal items with the same partner."
-msgstr "Günlük öğelerini sadece aynı iş ortağı için uzlaştırabilirsiniz."
+msgstr "Yevmiye öğelerini sadece aynı iş ortağı için uzlaştırabilirsiniz."
 
 #. module: account
 #: help:account.invoice.refund,journal_id:0
@@ -11222,7 +11222,7 @@ msgstr "Kısmen ödenmiş bir faturayı iptal edemezsiniz! Önce ödeme kayıtla
 #: code:addons/account/account.py:691
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr "Günlük öğeleri içerdiğinden hesap kodunu değiştiremezsiniz!"
+msgstr "Yevmiye kalemleri içerdiğinden hesap kodunu değiştiremezsiniz!"
 
 #. module: account
 #: code:addons/account/account.py:709
@@ -11230,7 +11230,7 @@ msgstr "Günlük öğeleri içerdiğinden hesap kodunu değiştiremezsiniz!"
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr "Hali hazırda günlük öğeleri içeren bir hesabın sahibi şirketi değiştiremezsiniz."
+msgstr "Hali hazırda yevmiye kalemleri içeren bir hesabın sahibi şirketi değiştiremezsiniz."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1171
@@ -11244,7 +11244,7 @@ msgstr "Vergiyi değiştiremezsiniz, Satırları silip yeniden oluşturmalısın
 msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
 "contains journal items!"
-msgstr "Günlük öğeleri içeren herhangi bir hesabı 'Kapalı' dan farklı bir türe değiştiremezsiniz!"
+msgstr "Yevmiye kalemleri içeren herhangi bir hesabı 'Kapalı' dan farklı bir türe değiştiremezsiniz!"
 
 #. module: account
 #: code:addons/account/account.py:679
@@ -11252,7 +11252,7 @@ msgstr "Günlük öğeleri içeren herhangi bir hesabı 'Kapalı' dan farklı bi
 msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
 "items!"
-msgstr "Günlük öğeleri içerdiğinden hesap türünü '%s' e değiştiremezsiniz!"
+msgstr "Yevmiye kalemleri içerdiğinden hesap türünü '%s' e değiştiremezsiniz!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:894
@@ -11267,25 +11267,25 @@ msgstr "Merkezden kontrollü günlükte bir fatura oluşturamazsınız. Yapılan
 #: code:addons/account/account_move_line.py:599
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
-msgstr "Kapalı olan %s %s hesabında günlük öğeleri oluşturmazsınız."
+msgstr "Kapalı olan %s %s hesabında yevmiye kalemleri oluşturmazsınız."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items on an account of type view or consolidation."
-msgstr "Görünüm ve birleştirme türündeki hesaplada günlük öğesi oluşturamzsınız."
+msgstr "Görünüm ve birleştirme türündeki hesaplamada yevmiye kalemi oluşturamazsınız."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr "Kapalı hesapta günlük öğeleri oluşturamazsınız."
+msgstr "Kapalı hesapta yevmiye kalemleri oluşturamazsınız."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
-msgstr "İkincil bir para birimiyle günlük öğeleri oluşturmak için hem döviz hem de döviz tutarı alanlarını doldurmalısınız."
+msgstr "İkincil bir para birimiyle yevmiye kalemleri oluşturmak için hem döviz hem de döviz tutarı alanlarını doldurmalısınız."
 
 #. module: account
 #: constraint:account.move:0
@@ -11297,7 +11297,7 @@ msgstr "Merkezi yevmiye üzerinde bir dönem için birden fazla hareket oluştur
 #: code:addons/account/account.py:657
 #, python-format
 msgid "You cannot deactivate an account that contains journal items."
-msgstr "Günlük öğeleri içeren bir hesabın etkinliğini kaldıramazsınız."
+msgstr "Yevmiye kalemleri içeren bir hesabın etkinliğini kaldıramazsınız."
 
 #. module: account
 #: code:addons/account/account.py:1415
@@ -11328,7 +11328,7 @@ msgstr "Taslak olmayan veya iptal edilmemiş bir faturayı silemezsiniz. Bunun y
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n"
 "%s."
-msgstr "Onaylanmış bir kayıt için bu değişikliği yapamazsınız! Yalnızca bazı geçerli olmayan alanları değiştirebilirsiniz ya da önce günlük kaydından uzlaşmayı kaldırmalısınız\n%s."
+msgstr "Onaylanmış bir kayıt için bu değişikliği yapamazsınız! Yalnızca bazı geçerli olmayan alanları değiştirebilirsiniz ya da önce yevmiye kaydından uzlaşmayı kaldırmalısınız\n%s."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1236
@@ -11363,7 +11363,7 @@ msgstr "Şirket para birimi ile aynı olan bir ikincil para birimi tanımlayamaz
 #: code:addons/account/account.py:659
 #, python-format
 msgid "You cannot remove an account that contains journal items."
-msgstr "Günlük öğeleri içeren bir hesabı kaldıramazsınız."
+msgstr "Yevmiye kalemleri içeren bir hesabı kaldıramazsınız."
 
 #. module: account
 #: code:addons/account/account.py:664
@@ -11380,7 +11380,7 @@ msgid ""
 "You cannot unreconcile journal items if they has been generated by the"
 "                                                         opening/closing "
 "fiscal year process."
-msgstr "Mali yıl çılış/kapanış işlemlerince oluşturulan günlük öğelerinin uzlaşmasını kaldırmazsınız."
+msgstr "Mali yıl çılış/kapanış işlemlerince oluşturulan yevmiye öğelerinin uzlaşmasını kaldırmazsınız."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1173
@@ -11395,7 +11395,7 @@ msgstr "Etkin olmayan hesabı kullanamazsınız."
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr "Bu günlükte bu genel hesabı kullanamazsınız, ilgili günlük 'Giriş Denetimleri' sekmesini denetleyin."
+msgstr "Bu günlükte bu genel hesabı kullanamazsınız, ilgili yevmiye 'Giriş Denetimleri' sekmesini denetleyin."
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -11418,7 +11418,7 @@ msgstr "Bu yevmiye kaydını doğrulayamazsınız, çünkü \"%s\" hesabı \"%s\
 #: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
-msgstr "Bu %s günlüğünü açma izniniz yok!"
+msgstr "Bu %s yevmiyesini açma izniniz yok!"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11440,7 +11440,7 @@ msgstr "Açılış bakiyesini hesaplamak için yeterli bilgi sağlayamadınız, 
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "'%s' Yevmiyesinde bir analiz günlük tanımlamalısınız!"
+msgstr "'%s' Yevmiyesinde bir analitik yevmiye tanımlamalısınız!"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
@@ -11492,7 +11492,7 @@ msgstr "En az bir kayıt seçmelisiniz."
 #: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr "'%s' Tipinde bir analiz günlük tanımlamalısınız!"
+msgstr "'%s' Tipinde bir analitik yevmiye tanımlamalısınız!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
@@ -11524,7 +11524,7 @@ msgstr "Bir başlangıç tarihi girmelisiniz."
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr "İlk bakiyeyi ayarlamak için merkezileştirmesi işaretli bir Açılış günlük gereksiniminiz var!"
+msgstr "İlk bakiyeyi ayarlamak için merkezileştirmesi işaretli bir Açılış yevmiye gereksiniminiz var!"
 
 #. module: account
 #: code:addons/account/account.py:1080
@@ -11604,7 +11604,7 @@ msgstr "e.g. sales@odoo.com"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "eInvoicing & Payments"
-msgstr "eFaturalama & Ödemeler"
+msgstr "Faturalama & Ödemeler"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
