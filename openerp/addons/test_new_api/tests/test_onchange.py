@@ -88,7 +88,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
             strip_prefix('messages.', field_onchange),
-            ['author', 'body', 'name', 'size'],
+            ['author', 'body', 'name', 'size', 'tags'],
         )
 
         # modify discussion name
@@ -104,6 +104,7 @@ class TestOnChange(common.TransactionCase):
                     'body': BODY,
                     'author': USER.id,
                     'size': len(BODY),
+                    'tags': [],
                 }),
             ],
         }
@@ -118,12 +119,14 @@ class TestOnChange(common.TransactionCase):
                 'body': message.body,
                 'author': message.author.name_get()[0],
                 'size': message.size,
+                'tags': [(5,)],
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
                 'size': len(BODY),
+                'tags': [(5,)],
             }),
         ])
 

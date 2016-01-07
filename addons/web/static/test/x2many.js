@@ -464,7 +464,6 @@ Tour.register({
             title:      "test one2many field not triggered onchange",
             waitNot:    'textarea[name="message_concat"]:propValueContains(ccc)',
         },
-
         {
             title:      "open the many2one to select an other user",
             element:    '.oe_list .oe_m2o_drop_down_button',
@@ -497,10 +496,21 @@ Tour.register({
             title:      "test one2many onchange",
             waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger2] Demo User:ccccc)',
         },
-
+        {
+            title:      "test first many2many_tags in one2many onchange",
+            waitFor:    '.oe_list_field_many2many_tags:eq(0):containsRegex(/^test[^,]*$/)',
+        },
+        {
+            title:      "test second many2many_tags in one2many onchange",
+            waitFor:    '.oe_list_field_many2many_tags:eq(1):containsRegex(/^test[^,]*, test[^,]*$/)', // twice author changes => 2 tags
+        },
+        {
+            title:      "test third many2many_tags in one2many onchange",
+            waitFor:    '.oe_list_field_many2many_tags:eq(2):containsRegex(/^test[^,]*$/)',
+        },
         {
             title:      "click outside to trigger one2many onchange",
-            element:    '.o_form_field_many2manytags .oe_m2o_drop_down_button',
+            element:    '.o_form_field_many2manytags .oe_m2o_drop_down_button:first',
         },
         {
             title:      "add a tag",
@@ -517,6 +527,16 @@ Tour.register({
             waitNot:   'textarea[name="message_concat"]:propValueContains(Administrator:d)',
         },
         
+        // check data to save
+        {
+            title:      "check first many2many_tags in one2many before save",
+            waitFor:    '.oe_list_field_many2many_tags:eq(0):containsRegex(/^test[^,]*$/)',
+        },
+        {
+            title:      "check second many2many_tags in one2many before save",
+            waitFor:    '.oe_list_field_many2many_tags:eq(1):containsRegex(/^test[^,]*, test[^,]*$/)',
+        },
+
         // save
         {
             title:      "save discussion",
@@ -525,6 +545,15 @@ Tour.register({
         },
 
         // check saved data
+        {
+            title:      "check first many2many_tags in one2many after save",
+            waitFor:    '.oe_list_field_many2many_tags:eq(0):containsRegex(/^test[^,]*$/)',
+            waitNot:    'button.oe_form_button_save:visible',
+        },
+        {
+            title:      "check second many2many_tags in one2many after save",
+            waitFor:    '.oe_list_field_many2many_tags:eq(1):containsRegex(/^test[^,]*, test[^,]*$/)',
+        },
         {
             title:      "check data 10",
             waitFor:    '.oe_form_text_content:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
