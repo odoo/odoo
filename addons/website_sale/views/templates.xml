@@ -1478,10 +1478,13 @@
 
 <!-- Add a link to the product page in the portal orders followup page -->
 <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
-    <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
-        <a t-att-href="ol.product_id.website_url">
-            <span t-esc="ol.product_id.name"/>
+    <xpath expr="//div[@id='product_name']/*" position="replace">
+        <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
+            <span t-esc="ol.name"/>
         </a>
+        <t t-if="not ol.product_id.website_published">
+          <span t-esc="ol.name"/>
+        </t>
     </xpath>
 </template>
 

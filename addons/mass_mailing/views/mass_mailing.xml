@@ -384,7 +384,8 @@
                 <form string="Mass Mailing">
                     <header style="min-height:31px;">
                         <button name="action_test_mailing" type="object" class="oe_highlight" string="Test Mailing"/>
-                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"/>
+                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"
+                            confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 

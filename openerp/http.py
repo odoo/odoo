@@ -433,8 +433,8 @@ def route(route=None, **kw):
 
                  * ``user``: The user must be authenticated and the current request
                    will perform using the rights of the user.
-                 * ``admin``: The user may not be authenticated and the current request
-                   will perform using the admin user.
+                 * ``public``: The user may or may not be authenticated. If she isn't,
+                   the current request will perform using the shared Public user.
                  * ``none``: The method is always active, even if there is no
                    database. Mainly used by the framework and authentication
                    modules. There request code will not have any facilities to access

@@ -1300,7 +1300,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
             this.toggle_save_button();
 
-            contents.find('.image-uploader').on('change',function(){
+            contents.find('.image-uploader').on('change',function(event){
                 self.load_image_file(event.target.files[0],function(res){
                     if (res) {
                         contents.find('.client-picture img, .client-picture .fa').remove();
@@ -1519,7 +1519,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                             event.keyCode === 110 ||  // Decimal point (numpad)
                             event.keyCode === 188 ||  // Comma
                             event.keyCode === 46 ) {  // Numpad dot
-                    key = '.';
+                    key = self.decimal_point;
                 } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
                     key = '' + (event.keyCode - 48);
                 } else if (event.keyCode === 45) { // Minus
@@ -1578,7 +1578,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
-                this.$('.paymentline.selected .edit').text(this.inputbuffer);
+                this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
             }
         }
     },
@@ -1704,9 +1704,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         this.gui.show_popup('number',{
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
-            'value': value,
+            'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(Number(value));
+                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
                 self.order_changes();
                 self.render_paymentlines();
             }
