@@ -619,10 +619,15 @@ class view(osv.osv):
                     requested (similar to ``id``)
         """
         if context is None: context = {}
+        context = context.copy()
 
         # if view_id is not a root view, climb back to the top.
         base = v = self.browse(cr, uid, view_id, context=context)
+        check_view_ids = context.setdefault('check_view_ids', [])
         while v.mode != 'primary':
+            # Add inherited views to the list of loading forced views
+            # Otherwise, inherited views could not find elements created in their direct parents if that parent is defined in the same module
+            check_view_ids.append(v.id)
             v = v.inherit_id
         root_id = v.id
 

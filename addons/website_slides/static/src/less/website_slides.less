@@ -12,6 +12,11 @@
     @MAX-Z-INDEX : 2147483647;
 } .define-color-if-not-defined();
 
+.top_covered_image {
+    object-fit: cover;
+    object-position: top;
+}
+
 .oe_slides_panel_footer {
     background-color: @navbar-default-bg;
 }
@@ -45,6 +50,7 @@ section.oe_slides_promote_box {
 }
 
 img.oe_slides_channel_thumbnail {
+    .top_covered_image();
     height: 250px;
     width: 100%
 }
@@ -54,6 +60,7 @@ img.oe_slides_opacity {
 }
 
 img.oe_slides_promote_image {
+    .top_covered_image();
     max-height: 300px;
     width: 100%;
     overflow: hidden;
@@ -65,6 +72,7 @@ img.oe_slides_promote_image {
 }
 
 .oe_slides_apart_small {
+    .top_covered_image();
     height: 60px;
     width: 90px;
 }
@@ -97,6 +105,7 @@ textarea.o_slides_comment {
 }
 
 .oe_slides_grid_thumbnail {
+    .top_covered_image();
     height: 200px;
     width: 100%;
     overflow: hidden;
