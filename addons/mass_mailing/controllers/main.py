@@ -22,5 +22,10 @@ class MassMailController(http.Controller):
     @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="none")
     def full_url_redirect(self, code, stat_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['link.tracker.click'].add_click(cr, uid, code, request.httprequest.remote_addr, request.session['geoip'].get('country_code'), stat_id=stat_id, context=context)
+
+        # don't assume geoip is set, it is part of the website module
+        # which mass_mailing doesn't depend on
+        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
+
+        request.registry['link.tracker.click'].add_click(cr, uid, code, request.httprequest.remote_addr, country_code, stat_id=stat_id, context=context)
         return werkzeug.utils.redirect(request.registry['link.tracker'].get_url_from_code(cr, uid, code, context=context), 301)

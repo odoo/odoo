@@ -263,8 +263,8 @@
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
-                                options='{"no_open": True}'/>
                                 on_change="onchange_user_id(user_id, context)"
+                                options='{"no_open": True}'/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours)"/>
@@ -442,6 +442,12 @@
                     <field name="use_tasks"/>
                     <label for="use_tasks"/>
                 </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="object" name="projects_action" 
+                        icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
+                        <field string="Projects" name="project_count" widget="statinfo"/>
+                    </button>
+                </xpath>
             </field>
         </record>
 
@@ -598,7 +604,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="project_grp" string="Projects">
-                        <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]"/>
+                        <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]" groups="base.group_no_one"/>
                     </group>
                 </xpath>
             </field>

@@ -2,7 +2,7 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var chat_manager = require('mail.chat_manager');
-var ChatComposer = require('mail.ChatComposer');
+var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
 
 var ajax = require('web.ajax');
@@ -432,7 +432,7 @@ var Followers = form_common.AbstractField.extend({
 // popup when suggested partner is selected without email, or other
 // informations), and the button to open the full composer wizard.
 // -----------------------------------------------------------------------------
-var ChatterComposer = ChatComposer.extend({
+var ChatterComposer = composer.BasicComposer.extend({
     template: 'mail.chatter.ChatComposer',
 
     init: function (parent, dataset, options) {
@@ -549,7 +549,7 @@ var ChatterComposer = ChatComposer.extend({
     },
 
     /**
-     * Check the additionnal partners (not necessary registered partners), and open a popup form view
+     * Check the additional partners (not necessary registered partners), and open a popup form view
      * for the ones who informations is missing.
      * @param Array : list of 'recipient' partners to complete informations or validate
      * @returns Deferred resolved with the list of checked suggested partners (real partner)
