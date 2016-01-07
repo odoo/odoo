@@ -115,16 +115,16 @@ class AccountConfigSettings(models.TransientModel):
 
     module_account_plaid = fields.Boolean(string="Plaid Connector",
                                           help='Get your bank statements from you bank and import them through plaid.com.\n'
-                                          '-that installs the module account_plaid.')
+                                          '-This installs the module account_plaid.')
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically",
         help='Get your bank statements from your bank and import them through yodlee.com.\n'
-                                          '-that installs the module account_yodlee.')
+                                          '-This installs the module account_yodlee.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",
         help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
-            'This installs the module account_bank_statement_import_qif.')
+            '-This installs the module account_bank_statement_import_qif.')
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
-            'This installs the module account_bank_statement_import_ofx.')
+            '-This installs the module account_bank_statement_import_ofx.')
 
 
     @api.model
