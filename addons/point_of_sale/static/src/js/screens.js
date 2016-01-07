@@ -1706,7 +1706,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
             'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(instance.web.parse_value(value, {type: "float"}, 0));
+                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
                 self.order_changes();
                 self.render_paymentlines();
             }
