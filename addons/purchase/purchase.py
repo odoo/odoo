@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api, fields, models, _
+from openerp import api, fields, models, _, SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_is_zero, float_compare
@@ -150,7 +150,7 @@ class PurchaseOrder(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
-        help="Technical field used to display the Drop Ship Address")
+        help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
 
     @api.model
@@ -434,6 +434,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
+        ProductUom = self.env['product.uom']
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
                 line.qty_received = 0.0
@@ -444,7 +445,10 @@ class PurchaseOrderLine(models.Model):
             total = 0.0
             for move in line.move_ids:
                 if move.state == 'done':
-                    total += move.product_uom_qty
+                    if move.product_uom != line.product_uom:
+                        total += ProductUom._compute_qty_obj(move.product_uom, move.product_uom_qty, line.product_uom)
+                    else:
+                        total += move.product_uom_qty
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
@@ -581,7 +585,11 @@ class PurchaseOrderLine(models.Model):
             self.name += '\n' + product_lang.description_purchase
 
         fpos = self.order_id.fiscal_position_id
-        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+        if self.env.uid == SUPERUSER_ID:
+            company_id = self.env.user.company_id.id
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
+        else:
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
         self._suggest_quantity()
         self._onchange_quantity()
