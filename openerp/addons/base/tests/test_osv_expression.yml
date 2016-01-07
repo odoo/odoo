@@ -52,6 +52,22 @@
         ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1')])])
         assert len(ids) == 1, ids
 -
+    Test hierarchical search with inactive children
+-
+    !record {model: res.partner.category, id: inactive_category}:
+        name: Inactive category
+        parent_id: categ_root
+        active: False
+-
+    !python {model: res.partner.category }: |
+        # yes, we need that, because in yaml files, defaults win against
+        # explicitly set values when creating records
+        self.write(cr, uid, ref('inactive_category'), {'active': False})
+        ids = self.search(
+            cr, uid, [('id', 'child_of', ref('categ_root'))],
+            context={'active_test': False})
+        assert ref('inactive_category') in ids, "inactive child not found"
+-
     Testing that some domain expressions work
 -
     !python {model: res.partner }: |
