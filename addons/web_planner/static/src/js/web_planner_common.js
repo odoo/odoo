@@ -3,6 +3,7 @@ odoo.define('web.planner.common', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var dom_utils = require('web.dom_utils');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
 var session = require('web.session');
@@ -76,11 +77,6 @@ var PlannerDialog = Widget.extend({
     start: function() {
         var self = this;
         return this._super.apply(this, arguments).then(function() {
-            self.$el.on('keyup', "textarea", function() {
-                if (this.scrollHeight != this.clientHeight) {
-                    this.style.height = this.scrollHeight + "px";
-                }
-            }); 
             self.$res.find('.o_planner_page').andSelf().filter('.o_planner_page').each(function(index, dom_page) {
                 var page = new Page(dom_page, index);
                 self.pages.push(page);
@@ -277,6 +273,7 @@ var PlannerDialog = Widget.extend({
         return result;
     },
     _display_page: function(page_id) {
+        var self = this;
         var mark_as_done_button = this.$('button.mark_as_done');
         var next_button = this.$('a.btn-next');
         var page = this._find_page_by_id(page_id);
@@ -312,7 +309,10 @@ var PlannerDialog = Widget.extend({
         this.planner.data.last_open_page = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
         this.$(".modal-body").scrollTop("0");
-        autosize(this.$("textarea"));
+
+        this.$('textarea').each(function () {
+            dom_utils.autoresize($(this), {parent: self});
+        });
 
         this.$('.o_currently_shown_page').text(this.currently_shown_page.title);
     },
