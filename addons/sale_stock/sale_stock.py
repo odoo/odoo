@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from openerp.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -203,7 +204,7 @@ class SaleOrderLine(models.Model):
             mto_route_id = False
             try:
                 mto_route_id = self.env['stock.warehouse']._get_mto_route()
-            except models.except_orm:
+            except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
             if mto_route_id and mto_route_id in product_routes.ids:

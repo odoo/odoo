@@ -213,6 +213,10 @@ class AccountMove(models.Model):
             return [x.id for x in reversed_moves]
         return True
 
+    @api.multi
+    def open_reconcile_view(self):
+        return self.line_ids.open_reconcile_view()
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -421,6 +425,7 @@ class AccountMoveLine(models.Model):
             # Note : this short-circuiting is better for performances, but also required
             # since postgresql doesn't implement empty list (so 'AND id in ()' is useless)
             return []
+        res_ids = res_ids and tuple(res_ids)
 
         assert res_type in ('partner', 'account')
         assert account_type in ('payable', 'receivable', None)
@@ -447,21 +452,22 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
+                        AND l.company_id = {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY {7} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                    GROUP BY {8} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
                     ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
             WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
@@ -472,6 +478,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
+                self.env.user.company_id.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
@@ -1140,6 +1147,18 @@ class AccountMoveLine(models.Model):
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
+
+    @api.multi
+    def open_reconcile_view(self):
+        model, action_id = self.pool['ir.model.data'].get_object_reference(self._cr, self._uid, 'account', "action_account_moves_all_a")
+        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        ids = []
+        for aml in self:
+            if aml.account_id.reconcile:
+                ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
+                ids.append(aml.id)
+        action['domain'] = [('id', 'in', ids)]
+        return action
 
 
 class AccountPartialReconcile(models.Model):
