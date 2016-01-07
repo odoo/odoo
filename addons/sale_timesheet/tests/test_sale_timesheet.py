@@ -9,7 +9,7 @@ class TestSaleTimesheet(TestSale):
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products """
         # intial so
-        prod_ts = self.env.ref('product.product_product_0')
+        prod_ts = self.env.ref('product.service_order_01')
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,

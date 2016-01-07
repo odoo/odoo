@@ -13,7 +13,7 @@
 -
   !python {model: product.product}: |
     from openerp.tools import float_compare
-    product = self.browse(cr, uid, ref("product_product_25"), context=context)
+    product = self.browse(cr, uid, ref("product_delivery_01"), context=context)
     assert float_compare(product.price, product.lst_price + 1, precision_digits=2) == 0, "Wrong sale price: Laptop."
 -
   I check sale price of IT component.
@@ -28,7 +28,7 @@
   !python {model: product.product}: |
     from openerp.tools import float_compare
     context.update({'quantity':5})
-    product = self.browse(cr, uid, ref("product_product_26"), context=context)
+    product = self.browse(cr, uid, ref("product_product_25"), context=context)
     assert float_compare(product.price, product.lst_price-product.lst_price*(0.05), precision_digits=2) == 0, "Wrong sale price: IT component if more than 3 Unit."
 -
   I check sale price of LCD Monitor.

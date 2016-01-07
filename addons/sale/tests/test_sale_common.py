@@ -29,10 +29,10 @@ class TestSale(AccountingTestCase):
         })
         # create quotation with differend kinds of products (all possible combinations)
         self.products = {
-            'prod_order': self.env.ref('product.product_product_43'),
-            'prod_del': self.env.ref('product.product_product_47'),
-            'serv_order': self.env.ref('product.product_product_0'),
-            'serv_del': self.env.ref('product.product_product_56'),
+            'prod_order': self.env.ref('product.product_order_01'),
+            'prod_del': self.env.ref('product.product_delivery_01'),
+            'serv_order': self.env.ref('product.service_order_01'),
+            'serv_del': self.env.ref('product.service_delivery'),
         }
 
         self.partner = self.env.ref('base.res_partner_1')

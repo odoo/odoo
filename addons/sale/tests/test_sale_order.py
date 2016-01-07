@@ -103,7 +103,7 @@ class TestSaleOrder(TestSale):
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
-        serv_cost = self.env.ref('product.product_product_1b')
+        serv_cost = self.env.ref('product.service_cost_01')
         prod_gap = self.env.ref('product.product_product_1')
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
