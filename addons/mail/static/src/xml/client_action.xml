@@ -81,7 +81,7 @@
     </t>
     <t t-name="mail.chat.SidebarItems">
         <t t-foreach="channels" t-as="channel">
-            <t t-set="counter" t-value="channel.needaction_counter"/>
+            <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id"
                  t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
                 <span t-if="display_status">
