@@ -149,8 +149,8 @@ class ResUsers(models.Model):
     @api.multi
     def copy(self, default=None):
         self.ensure_one()
-        context = self.env.context
+        sup = super(ResUsers, self)
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
-            context['reset_password'] = False
-        return super(ResUsers, self.with_context(context)).copy(default=default)
+            sup = super(ResUsers, self.with_context(reset_password=False))
+        return sup.copy(default=default)
