@@ -30,13 +30,15 @@ var MessagingMenu = Widget.extend({
             this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
             this.filter = false;
             chat_manager.bus.on("update_needaction", this, this.update_counter);
-            this.update_counter(chat_manager.get_needaction_counter());
+            chat_manager.bus.on("update_channel_unread_counter", this, this.update_counter);
+            this.update_counter();
             return this._super();
         },
         is_open: function () {
             return this.$el.hasClass('open');
         },
-        update_counter: function (counter) {
+        update_counter: function () {
+            var counter = chat_manager.get_needaction_counter() + chat_manager.get_chat_unread_counter();
             this.$('.o_notification_counter').text(counter);
             if (this.is_open()) {
                 this.render_channels_preview();

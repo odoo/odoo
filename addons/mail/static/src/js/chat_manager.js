@@ -23,6 +23,7 @@ var messages = [];
 var channels = [];
 var channels_preview_def;
 var channel_defs = {};
+var chat_unread_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
@@ -303,7 +304,7 @@ function make_channel (data, options) {
         display_needactions: options.display_needactions,
         mass_mailing: data.mass_mailing,
         needaction_counter: data.message_needaction_counter || 0,
-        unread_counter: data.message_unread_counter || 0,
+        unread_counter: 0,
         last_seen_message_id: data.seen_message_id,
         cache: {'[]': {
             all_history_loaded: false,
@@ -325,6 +326,9 @@ function make_channel (data, options) {
         bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
     }
     channel.is_chat = !channel.type.match(/^(public|private|static)$/);
+    if (data.message_unread_counter) {
+        update_channel_unread_counter(channel, data.message_unread_counter);
+    }
     return channel;
 }
 
@@ -440,6 +444,9 @@ function fetch_document_messages (ids, options) {
 }
 
 function update_channel_unread_counter (channel, counter) {
+    if (channel.is_chat) {
+        chat_unread_counter = chat_unread_counter - channel.unread_counter + counter;
+    }
     channel.unread_counter = counter;
     chat_manager.bus.trigger("update_channel_unread_counter", channel);
 }
@@ -470,7 +477,11 @@ function on_notification (notification) {
 }
 
 function on_needaction_notification (message) {
-    message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
+    message = add_message(message, {
+        channel_id: 'channel_inbox',
+        show_notification: true,
+        increment_unread: true,
+    });
     invalidate_caches(message.channel_ids);
     needaction_counter++;
     _.each(message.channel_ids, function (channel_id) {
@@ -505,6 +516,8 @@ function on_partner_notification (data) {
         on_mark_as_read_notification(data);
     } else if (data.type === 'mark_as_unread') {
         on_mark_as_unread_notification(data);
+    } else if (data.info === 'channel_seen') {
+        on_channel_seen_notification(data);
     } else {
         on_chat_session_notification(data);
     }
@@ -573,6 +586,13 @@ function on_mark_as_unread_notification (data) {
     });
     needaction_counter += data.message_ids.length;
     chat_manager.bus.trigger('update_needaction', needaction_counter);
+}
+
+function on_channel_seen_notification (data) {
+    var channel = chat_manager.get_channel(data.id);
+    if (channel && channel.unread_counter) {
+        update_channel_unread_counter(channel, 0);
+    }
 }
 
 function on_chat_session_notification (chat_session) {
@@ -759,6 +779,9 @@ var chat_manager = {
 
     get_needaction_counter: function () {
         return needaction_counter;
+    },
+    get_chat_unread_counter: function () {
+        return chat_unread_counter;
     },
 
     get_discuss_ids: function () {
