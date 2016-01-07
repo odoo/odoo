@@ -80,7 +80,7 @@
   I confirm the sale order
 -
   !python {model: sale.order}: |
-    self.action_confirm(cr, uid, ref("sale_order_so0"), context=context)
+    self.action_confirm(cr, uid, [ref("sale_order_so0")], context=context)
 -
   I verify that a procurement has been generated for sale order
 -

@@ -4,11 +4,11 @@
 -
   I add a sub product in Bill of material for product External Hard Disk.
 -
-  !record {model: mrp.bom, id: mrp.mrp_bom_9}:
-    product_id: product.product_product_28
+  !record {model: mrp.bom, id: mrp.mrp_bom_kit}:
+    product_id: product.product_delivery_02
     product_uom: product.product_uom_unit
     sub_products:
-      - product_id: product.product_product_33
+      - product_id: product.product_delivery_01
         product_uom: product.product_uom_unit
         product_qty: 2.0
         subproduct_type: fixed
@@ -16,10 +16,10 @@
   I create a production order for External Hard Disk.
 -
   !record {model: mrp.production, id: mrp_production_mo0}:
-    product_id: product.product_product_28
+    product_id: product.product_delivery_02
     product_qty: 2.0
     product_uom: product.product_uom_unit
-    bom_id: mrp.mrp_bom_9
+    bom_id: mrp.mrp_bom_kit
     location_src_id: stock.stock_location_stock
 -
   I compute the data of production order.
@@ -40,7 +40,7 @@
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
-    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_33'))])
+    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_delivery_01'))])
     assert move_ids, 'No moves are created !'
 -
   I want to start the production so I force the reservation of products.
@@ -74,6 +74,6 @@
 -
   !python {model: stock.move}: |
     production_order = self.pool.get('mrp.production').browse(cr, uid, ref("mrp_production_mo0"))
-    move_ids = self.search(cr, uid, [('origin','=',production_order.name), ('product_id','in',[ref("product.product_product_28"),ref("product.product_product_33")])])
+    move_ids = self.search(cr, uid, [('origin','=',production_order.name), ('product_id','in',[ref("product.product_delivery_02"),ref("product.product_delivery_01")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'

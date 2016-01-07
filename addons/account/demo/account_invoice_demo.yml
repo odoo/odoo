@@ -10,12 +10,12 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
-      - name: 'Dell Inspiron Laptop without OS'
-        product_id: product.product_product_49
+      - name: ''
+        product_id: product.consu_delivery_02
         price_unit: 642.0
         quantity: 5
-      - name: 'Linutop'
-        product_id: product.product_product_50
+      - name: ''
+        product_id: product.consu_delivery_03
         price_unit: 280.0
         quantity: 5.0
 -
@@ -27,12 +27,12 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
-      - name: '8-port Switch'
-        product_id: product.product_product_51
+      - name: ''
+        product_id: product.consu_delivery_03
         price_unit: 50.0
         quantity: 3
-      - name: '30m RJ45 wire'
-        product_id: product.product_product_52
+      - name: ''
+        product_id: product.consu_delivery_01
         price_unit: 25
         quantity: 20
 -
@@ -44,38 +44,16 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
-      - name: 'TypeMatrix Dvorak Keyboard'
-        product_id: product.product_product_53
+      - name: ''
+        product_id: product.consu_delivery_01
         price_unit: 90.0
         quantity: 5
-      - name: 'Ergonomic Mouse'
-        product_id: product.product_product_54
+      - name: ''
+        product_id: product.consu_delivery_03
         price_unit: 15.0
         quantity: 5.0
 -
   !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_3}
--
-  !record {model: account.invoice, id: demo_invoice_invest_sale}:
-    company_id: base.main_company
-    partner_id: base.res_partner_3
-    type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y-%m')+'-08'
--
-  !python {model: ir.model.data} : |
-      account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_sale_of_land_account')])])
-      line_vals = {
-          'invoice_id': ref('demo_invoice_invest_sale'),
-          'name': "Land located at '50.635336,4.863298'",
-          'price_unit': 210600,
-      }
-      if account_id:
-          line_vals['account_id'] = account_id[0]
-          tax_id = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>', 0)])
-          if tax_id:
-            line_vals['invoice_line_tax_ids'] = [(6, 0, [tax_id[0]])]
-          self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'sale_of_land_line')
-          self.pool.get('account.invoice').browse(cr, uid, ref('demo_invoice_invest_sale'))._onchange_invoice_line_ids()
-          self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('demo_invoice_invest_sale')], 'invoice_open')
 -
    Set the context for supplier bills because the 'type' field is readonly in invoice form views, so it value won't be considered by the yaml import
 -
@@ -91,15 +69,15 @@
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
-      - name: 'Toner Cartridge'
+      - name: ''
         price_unit: 10.0
         quantity: 1.0
-        product_id: product.product_product_39
+        product_id: product.product_delivery_01
         uom_id: product.product_uom_unit
-      - name: 'Zed+ Antivirus'
+      - name: ''
         price_unit: 4.0
         quantity: 1.0
-        product_id: product.product_product_43
+        product_id: product.product_order_01
         uom_id: product.product_uom_unit
 -
   !record {model: account.invoice, id: demo_invoice_january_wages}:

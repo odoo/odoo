@@ -24,7 +24,6 @@ class TestSaleService(TestSale):
         task = project.task_ids.filtered(lambda t: t.name == '%s:%s' % (so.name, prod_task.name))
         self.assertTrue(task, 'Sale Service: task is not created')
         self.assertEqual(task.partner_id, so.partner_id, 'Sale Service: customer should be the same on task and on SO')
-
         # register timesheet on task
         self.env['account.analytic.line'].create({
             'name': 'Test Line',

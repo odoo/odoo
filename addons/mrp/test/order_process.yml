@@ -14,7 +14,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
-    assert len(order.product_lines) == 5, "Production lines are not generated proper."
+    assert len(order.product_lines) == 7, "Production lines are not generated proper."
 -
   Now I check workcenter lines.
 -

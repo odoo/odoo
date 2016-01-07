@@ -15,25 +15,31 @@ class TestMoveExplode(common.TransactionCase):
         self.Product = self.env['product.product']
 
         #product that has a phantom bom
-        self.product_bom = self.env.ref('product.product_product_3')
+        self.product_bom = self.env.ref('product.product_product_5')
         #bom with that product
-        self.bom = self.env.ref('mrp.mrp_bom_9')
+        self.bom = self.env.ref('mrp.mrp_bom_kit')
         #partner agrolait
         self.partner = self.env.ref('base.res_partner_1')
-        #bom: PC Assemble (with property: DDR 512MB)
-        self.bom_prop = self.env.ref('mrp.mrp_bom_property_0')
+        #bom:  (with property: DDR 512MB)
+        self.bom_prop = self.env.ref('mrp.mrp_bom_manufacture')
+        self.bom_prop.write({'property_ids': [(6,0,[self.env['ir.model.data'].xmlid_to_res_id('mrp.mrp_property_8')])]})
 
         self.template = self.env.ref('product.product_product_3_product_template')
-        #property: DDR 512MB
-        self.mrp_property = self.env.ref('mrp.mrp_property_0')
-        #product: RAM SR2
-        self.product_bom_prop = self.env.ref('product.product_product_14')
-        #phantom bom for RAM SR2 with three lines containing properties
-        self.bom_prop_line = self.env.ref('mrp.mrp_bom_property_line')
-        #product: iPod included in the phantom bom
-        self.product_A = self.env.ref('product.product_product_11')
-        #product: Mouse, Wireless included in the phantom bom
-        self.product_B = self.env.ref('product.product_product_12')
+        self.mrp_property = self.env.ref('mrp.mrp_property_8')
+        self.product_bom_prop = self.env.ref('product.product_product_5')
+        #phantom bom for 17 with seven lines containing properties
+        self.bom_prop_line = self.env.ref('mrp.mrp_bom_kit')
+        # write different properties on the bom and on 2 bom lines
+        self.bom_prop_line.write({'property_ids': [(6,0,[self.env['ir.model.data'].xmlid_to_res_id('mrp.mrp_property_0')])], 'product_id': self.env['ir.model.data'].xmlid_to_res_id('product.product_product_5')})
+        #product: Motherboard included in the phantom bom
+        self.product_A = self.env.ref('product.product_product_20')
+        #product: 24 Graphic card in the phantom bom
+        self.product_B = self.env.ref('product.product_product_24')
+        for bom_line in self.bom_prop_line.bom_line_ids:
+            if bom_line.product_id.id in [self.env.ref('product.product_product_20').id, self.env.ref('product.product_product_24').id]:
+                bom_line.write({'property_ids': [(6, 0, [self.env['ir.model.data'].xmlid_to_res_id('mrp.mrp_property_8')])]})
+            else:
+                bom_line.write({'property_ids': [(6, 0, [self.env['ir.model.data'].xmlid_to_res_id('mrp.mrp_property_0')])]})
         #pricelist
         self.pricelist = self.env.ref('product.list0')
 
@@ -41,28 +47,25 @@ class TestMoveExplode(common.TransactionCase):
     def test_00_sale_move_explode(self):
         """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the
             BoM"""
-        #create sale order with one sale order line containing product with a phantom bom
+        # Remove properties on the bom an on the bom lines
+        self.bom.write({'property_ids': [(6,0,[])]})
+        for line in self.bom.bom_line_ids:
+            line.write({'property_ids': [(6,0,[])]})
+        # Create sale order with one sale order line containing product with a phantom bom
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.product_bom.name, 'product_id': self.product_bom.id, 'product_uom_qty': 1, 'product_uom': self.product_bom.uom_id.id})],
             'pricelist_id': self.pricelist.id,
         }
         self.so = self.SaleOrder.create(vals=so_vals)
-        sol_vals = {
-            'order_id': self.so.id,
-            'name': self.product_bom.name,
-            'product_id': self.product_bom.id,
-            'product_uom': self.product_bom.uom_id.id,
-            'product_uom_qty': 1.0,
-        }
-        self.SaleOrderLine.create(values=sol_vals)
         #confirm sale order
         self.so.action_confirm()
         #get all move associated to that sale_order
         move_ids = self.so.picking_ids.mapped('move_lines').ids
         #we should have same amount of move as the component in the phatom bom
-        bom_component_length = self.MrpBom._bom_explode(self.bom, self.product_bom, 1.0, [])
+        bom_component_length = self.MrpBom._bom_explode(self.bom, self.product_bom, 1.0, properties=[])
         self.assertEqual(len(move_ids), len(bom_component_length[0]))
 
     def test_00_bom_find(self):

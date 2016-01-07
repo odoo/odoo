@@ -32,8 +32,8 @@
           self._update(cr, uid, 'account.invoice', 'sale', vals, 'test_crm_sale_invoice_2')
           if account_sale_id:
               vals = {
-                  'name': 'Basic computer with Dvorak keyboard and left-handed mouse',
-                  'product_id': ref('product.product_product_57'),
+                  'name': '',
+                  'product_id': ref('product.consu_delivery_03'),
                   'invoice_id': ref('test_crm_sale_invoice_1'),
                   'price_unit': 250,
                   'quantity': 1,
@@ -41,8 +41,8 @@
               }
               self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_1')
               vals = {
-                  'name': 'Little server with raid 1 and 512ECC ram',
-                  'product_id': ref('product.product_product_58'),
+                  'name': '',
+                  'product_id': ref('product.consu_delivery_02'),
                   'invoice_id': ref('test_crm_sale_invoice_1'),
                   'price_unit': 800,
                   'quantity': 2,
@@ -50,8 +50,8 @@
               }
               self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_2')
               vals = {
-                  'name': 'Server with raid 10 and 2048ECC ram',
-                  'product_id': ref('product.product_product_59'),
+                  'name': '',
+                  'product_id': ref('product.consu_delivery_01'),
                   'invoice_id': ref('test_crm_sale_invoice_1'),
                   'price_unit': 4800,
                   'quantity': 4,
@@ -59,8 +59,8 @@
               }
               self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_3')
               vals = {
-                  'name': 'Basic formation with Dvorak',
-                  'product_id': ref('product.product_product_53'),
+                  'name': '',
+                  'product_id': ref('product.consu_delivery_01'),
                   'invoice_id': ref('test_crm_sale_invoice_2'),
                   'price_unit': 500,
                   'quantity': 1,
