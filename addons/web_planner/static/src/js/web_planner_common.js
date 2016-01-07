@@ -116,6 +116,13 @@ var PlannerDialog = Widget.extend({
             self.trigger('planner_progress_changed', self.get('progress'));
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
+
+        // re-apply the minimal value of 5 percent if the user manually undid every page
+        if (this.planner.progress === 0 && this.get('progress') === 0) {
+            this.planner.progress = 5;
+            this.set('progress', 5);
+        }
+
         this.set('progress', this.planner.progress); // set progress to trigger initial UI update
     },
     _render_done_page: function (page) {
@@ -388,7 +395,11 @@ var PlannerDialog = Widget.extend({
         });
 
         var percent = parseInt((done_pages / total_pages) * 100, 10);
+        if (percent === 0) {
+            percent = 5;
+        }
         this.set('progress', percent);
+
         this.planner.progress = percent;
         // save data and progress in database
         this._save_planner_data();
