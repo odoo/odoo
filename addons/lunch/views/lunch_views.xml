@@ -83,6 +83,7 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="message"/>
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -434,6 +435,25 @@
             </field>
         </record>
 
+        <record id="ir_actions_server_lunch_archive_product" model="ir.actions.server">
+            <field name="name">Archive/Unarchive</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_lunch_product" />
+            <field name="state">code</field>
+            <field name="code">self.toggle_active(cr, uid, context.get('active_ids', []), context=context)</field>
+        </record>
+
+        <record id="ir_values_lunch_archive_product" model="ir.values">
+            <field name="name">action_lunch_archive_product</field>
+            <field name="action_id" ref="action_server_lunch_archive_product" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_server_lunch_archive_product'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_lunch_product" />
+            <field name="model">lunch.product</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!-- Search for product -->
         <record id="lunch_product_view_search" model="ir.ui.view">
             <field name="name">lunch.product.search</field>
@@ -447,6 +467,7 @@
                     <group expand="0" string="Group By">
                         <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
                         <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     </group>
                 </search>
             </field>
@@ -459,18 +480,27 @@
                 <form string="Products Form">
                     <header>
                     </header>
-                    <group>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group>
-                            <field name='name'/>
-                            <field name='category_id'/>
+                            <group>
+                                <field name='name'/>
+                                <field name='category_id'/>
+                            </group>
+                            <group>
+                                <field name='supplier'/>
+                                <field name='price'/>
+                            </group>
                         </group>
-                        <group>
-                            <field name='supplier'/>
-                            <field name='price'/>
-                        </group>
-                    </group>
-                    <label for='description'/>
-                    <field name='description'/>
+                        <label for='description'/>
+                        <field name='description'/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -494,6 +524,13 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group>
                         <group string="Schedule Date">
                             <field name="alert_type"/>
