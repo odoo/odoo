@@ -20,7 +20,7 @@
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                             <field name="internal_type" invisible="1"/>
+                             <field name="internal_type" invisible="1" readonly="1"/>
                              <field name="reconcile"/>
                              <field name="deprecated"/>
                            </group>
@@ -469,7 +469,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="balance_end_real!=balance_end and state=='open'" decoration-info="state=='open' and (balance_end_real==balance_end)" string="Statements">
+                <tree decoration-danger="not is_difference_zero and state=='open'" decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -478,6 +478,7 @@
                     <field name="balance_end" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
                 </tree>
             </field>
         </record>

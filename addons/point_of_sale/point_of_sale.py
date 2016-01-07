@@ -314,7 +314,7 @@ class pos_config(osv.osv):
                 'config_id': record.id,
             }
             session_id = proxy.create(cr, uid, values, context=context)
-            record.current_session_id = proxy.browse(cr, uid, session_id, context=context)
+            self.write(cr, SUPERUSER_ID, record.id, {'current_session_id': session_id}, context=context)
             if record.current_session_id.state == 'opened':
                 return self.open_ui(cr, uid, ids, context=context)
             return self._open_session(session_id)
