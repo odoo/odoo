@@ -143,7 +143,6 @@
                 <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
             </t>
 
-            <t t-if="info['available']" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
@@ -154,6 +153,7 @@
                     </t>
 
                     odoo.define('im_livechat.livesupport', function (require) {
+            <t t-if="info['available']" t-translation="off">
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
                             $('body'),
@@ -162,9 +162,9 @@
                         );
                         button.appendTo($('body'));
                         window.livechat_button = button;
+            </t>
                     });
                 });
-            </t>
         </template>
 
 
