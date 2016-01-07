@@ -610,6 +610,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
             instead of converting it into html
     """
     html = ustr(html)
+    if not content:
+        return html
     if plaintext and preserve:
         content = u'\n<pre>%s</pre>\n' % ustr(content)
     elif plaintext:
