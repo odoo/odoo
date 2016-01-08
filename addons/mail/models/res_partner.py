@@ -105,12 +105,22 @@ class Partner(models.Model):
         recipients_nbr, recipients_max = len(recipients), 50
         email_chunks = [recipients[x:x + recipients_max] for x in xrange(0, len(recipients), recipients_max)]
         for email_chunk in email_chunks:
+            # TDE FIXME: missing message parameter. So we will find mail_message_id
+            # in the mail_values and browse it. It should already be in the
+            # cache so should not impact performances.
+            mail_message_id = mail_values.get('mail_message_id')
+            message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
+            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_recipient_values'):
+                tig = self.env[message.model].browse(message.res_id)
+                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk.ids)
+            else:
+                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk.ids)
             create_values = {
                 'body_html': body,
                 'subject': subject,
-                'recipient_ids': [(4, recipient.id) for recipient in email_chunk],
             }
             create_values.update(mail_values)
+            create_values.update(recipient_values)
             emails |= self.env['mail.mail'].create(create_values)
         return emails, recipients_nbr
 
