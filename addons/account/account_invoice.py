@@ -779,6 +779,7 @@ class account_invoice(models.Model):
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
                     line2[tmp]['tax_amount'] += l['tax_amount']
+                    line2[tmp]['amount_currency'] += l['amount_currency']
                     line2[tmp]['analytic_lines'] += l['analytic_lines']
                 else:
                     line2[tmp] = l
