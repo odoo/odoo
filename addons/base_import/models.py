@@ -158,9 +158,13 @@ class ir_import(orm.TransientModel):
         return fields
 
     def _read_file(self, file_type, record, options):
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(file_type, (None, None, None))
-        if handler:
-            return getattr(self, '_read_' + file_extension)(record, options)
+        # force fallback on file extension for excel mime type
+        # as Chrome on a Windows 10 with Excel installed
+        # sends it for a simple csv file
+        if file_type != 'application/vnd.ms-excel':
+            (file_extension, handler, req) = FILE_TYPE_DICT.get(file_type, (None, None, None))
+            if handler:
+                return getattr(self, '_read_' + file_extension)(record, options)
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
         # leading to browser not sending mime types)
