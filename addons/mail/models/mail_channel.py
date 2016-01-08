@@ -500,13 +500,8 @@ class Channel(models.Model):
         values['channel_private_group'] = self.search([('channel_type', '=', 'channel'), ('public', '=', 'private'), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
         return values
 
-    # TODO master: remove domain argument
     @api.model
     def channel_search_to_join(self, name=None, domain=None):
-        return self._channel_search_to_join(name)
-
-    @api.model
-    def _channel_search_to_join(self, name=None, domain=None):
         """ Return the channel info of the channel the current partner can join
             :param name : the name of the researched channels
             :param domain : the base domain of the research
@@ -514,9 +509,14 @@ class Channel(models.Model):
         """
         if not domain:
             domain = []
-        domain += [('channel_type', '=', 'channel'), ('channel_partner_ids', 'not in', [self.env.user.partner_id.id])]
+        domain = expression.AND([
+            [('channel_type', '=', 'channel')],
+            [('channel_partner_ids', 'not in', [self.env.user.partner_id.id])],
+            [('public', '!=', 'private')],
+            domain
+        ])
         if name:
-            domain.append(('name', 'ilike', '%'+name+'%'))
+            domain = expression.AND([domain, [('name', 'ilike', '%'+name+'%')]])
         return self.search(domain).read(['name', 'public', 'uuid', 'channel_type'])
 
     @api.multi
