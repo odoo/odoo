@@ -56,7 +56,6 @@ var PlannerDialog = Widget.extend({
         this._super(parent);
         this.planner = planner;
         this.cookie_name = this.planner.planner_application + '_last_page';
-        this.set('progress', 0);
         this.pages = [];
         this.menu_items = [];
     },
@@ -116,14 +115,18 @@ var PlannerDialog = Widget.extend({
             self.trigger('planner_progress_changed', self.get('progress'));
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
-
-        // re-apply the minimal value of 5 percent if the user manually undid every page
-        if (this.planner.progress === 0 && this.get('progress') === 0) {
-            this.planner.progress = 5;
-            this.set('progress', 5);
+        // set progress to trigger initial UI update
+        var initial_progress = false;
+        if (!this.planner.progress) {
+            var total_pages = 0;
+            this.pages.forEach(function(page) {
+                if (! page.hide_mark_as_done) {
+                    total_pages++;
+                }
+            });
+            initial_progress = parseInt(( 1 / (total_pages + 1)) * 100, 10);
         }
-
-        this.set('progress', this.planner.progress); // set progress to trigger initial UI update
+        this.set('progress', initial_progress || this.planner.progress);
     },
     _render_done_page: function (page) {
         var mark_as_done_button = this.$('.mark_as_done')
@@ -393,11 +396,7 @@ var PlannerDialog = Widget.extend({
                 done_pages++;
             }
         });
-
-        var percent = parseInt((done_pages / total_pages) * 100, 10);
-        if (percent === 0) {
-            percent = 5;
-        }
+        var percent = parseInt(( (done_pages + 1) / (total_pages + 1)) * 100, 10);
         this.set('progress', percent);
 
         this.planner.progress = percent;
