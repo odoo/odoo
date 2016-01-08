@@ -281,7 +281,7 @@ class website(orm.Model):
             sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         else:
             sale_order_id = None
-        pricelist_id = request.session.get('website_sale_current_pl')
+        pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist(cr, uid, context=context).id
 
         if force_pricelist and self.pool['product.pricelist'].search_count(cr, uid, [('id', '=', force_pricelist)], context=context):
             pricelist_id = force_pricelist
