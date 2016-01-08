@@ -1142,6 +1142,7 @@ class product_product(osv.osv):
                     ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
+
         result = self.name_get(cr, user, ids, context=context)
         return result
 
