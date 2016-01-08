@@ -399,6 +399,13 @@ class Channel(models.Model):
         return False
 
     @api.model
+    def channel_get_and_minimize(self, partners_to):
+        channel = self.channel_get(partners_to)
+        if channel:
+            self.channel_minimize(channel['uuid'])
+        return channel
+
+    @api.model
     def channel_fold(self, uuid, state=None):
         """ Update the fold_state of the given session. In order to syncronize web browser
             tabs, the change will be broadcast to himself (the current user channel).

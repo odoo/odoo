@@ -16,6 +16,7 @@ var preview_msg_max_size = 350;  // optimal for native english speakers
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
 var UserModel = new Model('res.users', session.context);
+var PartnerModel = new Model('res.partner', session.context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -621,7 +622,7 @@ function on_chat_session_notification (chat_session) {
 }
 
 function on_presence_notification (data) {
-    var dm = _.findWhere(channels, {direct_partner_id: data.id});
+    var dm = chat_manager.get_dm_from_partner_id(data.id);
     if (dm) {
         dm.status = data.im_status;
         chat_manager.bus.trigger('update_dm_presence', dm);
@@ -748,6 +749,10 @@ var chat_manager = {
         return _.findWhere(channels, {id: id});
     },
 
+    get_dm_from_partner_id: function (partner_id) {
+        return _.findWhere(channels, {direct_partner_id: partner_id});
+    },
+
     all_history_loaded: function (channel, domain) {
         return get_channel_cache(channel, domain).all_history_loaded;
     },
@@ -824,6 +829,9 @@ var chat_manager = {
         }
         return channel_defs[channel_id];
     },
+    open_and_detach_dm: function (partner_id) {
+        return ChannelModel.call('channel_get_and_minimize', [[partner_id]]).then(add_channel);
+    },
 
     unsubscribe: function (channel) {
         var def;
@@ -840,11 +848,14 @@ var chat_manager = {
         var channel = this.get_channel(channel_id);
         ChannelModel.call("channel_fold", [], {uuid : channel.uuid, state : "closed"});
     },
-    fold_channel: function (channel_id) {
-        var channel = this.get_channel(channel_id);
-        return ChannelModel.call("channel_fold", [], {uuid : channel.uuid}).then(function () {
-            channel.is_folded = !channel.is_folded;
-        });
+    fold_channel: function (channel_id, folded) {
+        var args = {
+            uuid: this.get_channel(channel_id).uuid,
+        };
+        if (_.isBoolean(folded)) {
+            args.state = folded ? 'folded' : 'open';
+        }
+        return ChannelModel.call("channel_fold", [], args);
     },
     /**
      * Special redirection handling for given model and id
@@ -917,6 +928,20 @@ var chat_manager = {
     },
     get_message_body_preview: function (message_body) {
         return parse_and_transform(message_body, inline);
+    },
+
+    search_partner: function (search_val) {
+        return PartnerModel.call('im_search', [search_val, 20]).then(function(result) {
+            var values = [];
+            _.each(result, function(user) {
+                var escaped_name = _.escape(user.name);
+                values.push(_.extend(user, {
+                    'value': escaped_name,
+                    'label': escaped_name,
+                }));
+            });
+            return values;
+        });
     },
 };
 

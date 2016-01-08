@@ -272,9 +272,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
             source: function(request, response) {
                 self.last_search_val = _.escape(request.term);
-                self.do_search_partner(self.last_search_val).done(function(result){
-                    response(result);
-                });
+                chat_manager.search_partner(self.last_search_val).done(response);
             },
             select: function(event, ui) {
                 var partner_id = ui.item.id;
@@ -311,21 +309,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             _.each(result, function(channel){
                 var escaped_name = _.escape(channel.name);
                 values.push(_.extend(channel, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
-            });
-            return values;
-        });
-    },
-
-    do_search_partner: function (search_val) {
-        var Partner = new Model("res.partner");
-        return Partner.call('im_search', [search_val, 20]).then(function(result){
-            var values = [];
-            _.each(result, function(user){
-                var escaped_name = _.escape(user.name);
-                values.push(_.extend(user, {
                     'value': escaped_name,
                     'label': escaped_name,
                 }));

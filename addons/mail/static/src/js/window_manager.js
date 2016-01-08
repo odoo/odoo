@@ -2,18 +2,20 @@ odoo.define('mail.window_manager', function (require) {
 "use strict";
 
 var chat_manager = require('mail.chat_manager');
-var ChatWindow = require('mail.ChatWindow');
+var ExtendedChatWindow = require('mail.ExtendedChatWindow');
 
 var core = require('web.core');
 var utils = require('web.utils');
 var web_client = require('web.web_client');
 
+var _t = core._t;
 var QWeb = core.qweb;
 
 // chat window management
 //----------------------------------------------------------------
 var CHAT_WINDOW_WIDTH = 300 + 5;  // 5 pixels between windows
 var chat_sessions = [];
+var new_chat_session;
 var display_state = {
     hidden_sessions: [],
     hidden_unread_counter: 0,  // total number of unread msgs in hidden chat windows
@@ -22,14 +24,24 @@ var display_state = {
     windows_dropdown_is_open: false,  // used to keep dropdown open when closing chat windows
 };
 
+function add_chat_session (chat_session) {
+    // adds chat_session such that it will be the left-most visible window
+    compute_available_slots(chat_sessions.length+1);
+    chat_sessions.splice(display_state.nb_slots-1, 0, chat_session);
+}
+
 function open_chat (session) {
+    if (!session) {
+        open_chat_without_session();
+        return;
+    }
     var chat_session = _.findWhere(chat_sessions, {id: session.id});
     if (!chat_session) {
         chat_session = {
             id: session.id,
             uuid: session.uuid,
             name: session.name,
-            window: new ChatWindow(web_client, session.id, session.name, session.is_folded, session.unread_counter),
+            window: new ExtendedChatWindow(web_client, session.id, session.name, session.is_folded, session.unread_counter),
         };
         chat_session.window.on("close_chat_session", null, function () {
             close_chat(chat_session);
@@ -39,8 +51,8 @@ function open_chat (session) {
             chat_manager.toggle_star_status(message_id);
         });
 
-        chat_session.window.on("fold_channel", null, function (channel_id) {
-            chat_manager.fold_channel(channel_id);
+        chat_session.window.on("fold_channel", null, function (channel_id, folded) {
+            chat_manager.fold_channel(channel_id, folded);
         });
 
         chat_session.window.on("post_message", null, function (message, channel_id) {
@@ -64,13 +76,17 @@ function open_chat (session) {
             }
         });
 
-        // insert chat_session such that it will be the right-most visible window
-        compute_available_slots(chat_sessions.length+1);
-        chat_sessions.splice(display_state.nb_slots-1, 0, chat_session);
+        var remove_new_chat = false;
+        if (new_chat_session && new_chat_session.partner_id && new_chat_session.partner_id === session.direct_partner_id) {
+            chat_sessions[_.indexOf(chat_sessions, new_chat_session)] = chat_session;
+            remove_new_chat = true;
+        } else {
+            add_chat_session(chat_session);
+        }
 
         chat_session.window.appendTo($('body'))
-            .then(reposition_windows)
             .then(function () {
+                reposition_windows({remove_new_chat: remove_new_chat});
                 return chat_manager.get_messages({channel_id: chat_session.id});
             }).then(function (messages) {
                 chat_session.window.render(messages);
@@ -88,19 +104,60 @@ function open_chat (session) {
     }
 }
 
-function close_chat (chat_session) {
-    var session = _.find(chat_sessions, {id: chat_session.id});
-    if (session) {
-        chat_sessions = _.without(chat_sessions, session);
-        session.window.destroy();
-        reposition_windows();
+function open_chat_without_session () {
+    if (!new_chat_session) {
+        new_chat_session = {
+            id: '_open',
+            window: new ExtendedChatWindow(web_client, undefined, _t('New message'), false, 0, {thread_less: true}),
+        };
+        new_chat_session.window.on("close_chat_session", null, close_new_chat);
+        new_chat_session.window.on('open_dm_session', null, function (partner_id) {
+            new_chat_session.partner_id = partner_id;
+            var dm = chat_manager.get_dm_from_partner_id(partner_id);
+            if (!dm) {
+                chat_manager.open_and_detach_dm(partner_id);
+            } else {
+                var dm_session = _.findWhere(chat_sessions, {id: dm.id});
+                if (!dm_session) {
+                    chat_manager.detach_channel(dm);
+                } else {
+                    close_chat(dm_session);
+                    dm.is_folded = false;
+                    open_chat(dm);
+                }
+            }
+        });
+        add_chat_session(new_chat_session);
+        new_chat_session.window.appendTo($('body')).then(reposition_windows);
+    } else {
+        if (new_chat_session.window.is_hidden) {
+            make_session_visible(new_chat_session);
+        } else if (new_chat_session.window.folded) {
+            new_chat_session.window.toggle_fold(false);
+        }
     }
+}
+
+function close_chat (chat_session) {
+    chat_sessions = _.without(chat_sessions, chat_session);
+    chat_session.window.destroy();
+    reposition_windows();
+}
+
+function close_new_chat () {
+    chat_sessions = _.without(chat_sessions, new_chat_session);
+    reposition_windows({remove_new_chat: true});
+}
+
+function destroy_new_chat () {
+    new_chat_session.window.destroy();
+    new_chat_session = undefined;
 }
 
 function toggle_fold_chat (channel) {
     var session = _.find(chat_sessions, {id: channel.id});
     if (session) {
-        session.window.toggle_fold();
+        session.window.toggle_fold(channel.is_folded);
     }
 }
 
@@ -116,7 +173,10 @@ function compute_available_slots (nb_windows) {
     display_state.space_left = space_left;
 }
 
-var reposition_windows = _.debounce(function () {
+var reposition_windows = function (options) {
+    if (options && options.remove_new_chat) {
+        destroy_new_chat();
+    }
     compute_available_slots(chat_sessions.length);
     var hidden_sessions = [];
     var hidden_unread_counter = 0;
@@ -161,7 +221,7 @@ var reposition_windows = _.debounce(function () {
             }
         });
     }
-}, 100);
+};
 
 function make_session_visible (session) {
     utils.swap(chat_sessions, session, chat_sessions[display_state.nb_slots-1]);
@@ -205,7 +265,12 @@ function update_sessions (message, scrollBottom) {
 
 core.bus.on('web_client_ready', null, function () {
     chat_manager.bus.on('open_chat', null, open_chat);
-    chat_manager.bus.on('close_chat', null, close_chat);
+    chat_manager.bus.on('close_chat', null, function (channel) {
+        var session = _.find(chat_sessions, {id: channel.id});
+        if (session) {
+            close_chat(session);
+        }
+    });
     chat_manager.bus.on('channel_toggle_fold', null, toggle_fold_chat);
 
     chat_manager.bus.on('new_message', null, function (message) {
@@ -265,7 +330,38 @@ core.bus.on('web_client_ready', null, function () {
         }
     });
 
-    core.bus.on('resize', null, reposition_windows);
+    core.bus.on('resize', null, _.debounce(reposition_windows, 100));
+});
+
+});
+
+// FIXME: move this to its own file in master
+odoo.define('mail.ExtendedChatWindow', function (require) {
+"use strict";
+
+var chat_manager = require('mail.chat_manager');
+var ChatWindow = require('mail.ChatWindow');
+
+return ChatWindow.extend({
+    template: "mail.ExtendedChatWindow",
+    start: function () {
+        var self = this;
+        return this._super().then(function () {
+            if (self.options.thread_less) {
+                self.$el.addClass('o_thread_less');
+                self.$('.o_chat_search_input input')
+                    .autocomplete({
+                        source: function(request, response) {
+                            chat_manager.search_partner(request.term).done(response);
+                        },
+                        select: function(event, ui) {
+                            self.trigger('open_dm_session', ui.item.id);
+                        },
+                    })
+                    .focus();
+            }
+        });
+    },
 });
 
 });

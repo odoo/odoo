@@ -107,8 +107,8 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        this.trigger("fold_channel", this.channel_id);
         this.toggle_fold();
+        this.trigger("fold_channel", this.channel_id, this.folded);
     },
 });
 
