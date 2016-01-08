@@ -143,7 +143,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.options = options || {};
         this.channels_scrolltop = {};
         this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
-        this.notification_bar = (window.Notification.permission === "default");
+        this.notification_bar = (window.Notification && window.Notification.permission === "default");
     },
 
     willStart: function () {
