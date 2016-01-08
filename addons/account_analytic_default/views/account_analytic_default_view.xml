@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_account_analytic_default_tree" model="ir.ui.view">
             <field name="name">account.analytic.default.tree</field>
             <field name="model">account.analytic.default</field>
@@ -74,33 +73,6 @@
             <field name="res_model">account.analytic.default</field>
             <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
         </record>
-        <record model="ir.ui.view" id="product_form_view_default_analytic_button">
-            <field name="name">product.product.stock.move</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name= "%(action_product_default_list)d" type="action" 
-                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
-                        <field string="Analytic Rules" name="rules_count" widget="statinfo" />
-                    </button>
-                </div>
-            </field>
-        </record>
-        
-        <record model="ir.ui.view" id="product_template_view_default_analytic_button">
-            <field name="name">product.template.stock.move</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name= "action_view_rules" type="object" 
-                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
-                        <field string="Analytic Rules" name="rules_count" widget="statinfo" />
-                    </button>
-                </div>
-            </field>
-        </record>
 
         <act_window
             name="Entries"
@@ -110,9 +82,8 @@
             context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"
             />
 
-        <menuitem
+        <menuitem id="menu_analytic_default_list"
             action="action_analytic_default_list"
-            id="menu_analytic_default_list"
             parent="account.menu_analytic_accounting"/>
 
 
@@ -131,6 +102,4 @@
             src_model="res.users"
             context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
             groups="analytic.group_analytic_accounting"/>
-
-    </data>
-</openerp>
+</odoo>
