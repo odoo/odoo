@@ -22,6 +22,7 @@ var MessagingMenu = Widget.extend({
         events: {
             "click": "on_click",
             "click .o_filter_button": "on_click_filter_button",
+            "click .o_new_message": "on_click_new_message",
             "click .o_mail_channel_preview": "on_click_channel",
             "click .o_redirect_to_discuss": "on_click_redirect_to_discuss",
         },
@@ -98,6 +99,9 @@ var MessagingMenu = Widget.extend({
             $target.addClass('o_selected');
             this.filter = $target.data('filter');
             this.render_channels_preview();
+        },
+        on_click_new_message: function () {
+            chat_manager.bus.trigger('open_chat');
         },
         on_click_channel: function (event) {
             var channel_id = $(event.currentTarget).data('channel_id');
