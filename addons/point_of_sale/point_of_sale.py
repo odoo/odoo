@@ -195,7 +195,6 @@ class pos_config(osv.osv):
 
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        print company_id
         return company_id
 
     def _get_default_nomenclature(self, cr, uid, context=None):

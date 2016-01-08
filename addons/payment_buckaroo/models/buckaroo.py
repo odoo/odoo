@@ -106,7 +106,7 @@ class AcquirerBuckaroo(osv.Model):
             'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
             'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
             'Brq_culture': (values.get('partner_lang') or 'en_US').replace('_', '-'),
-            'add_returndata': {'return_url': '%s' % buckaroo_tx_values.pop('return_url')} if buckaroo_tx_values.get('return_url') else ''
+            'add_returndata': buckaroo_tx_values.pop('return_url', '') or '',
         })
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign(acquirer, 'in', buckaroo_tx_values)
         return buckaroo_tx_values

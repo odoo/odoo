@@ -26,9 +26,6 @@ class BuckarooController(http.Controller):
         """ Buckaroo."""
         _logger.info('Buckaroo: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.registry['payment.transaction'].form_feedback(request.cr, SUPERUSER_ID, post, 'buckaroo', context=request.context)
-        return_url = post.pop('return_url', '')
-        if not return_url:
-            data ='' + post.pop('ADD_RETURNDATA', '{}').replace("'", "\"")
-            custom = json.loads(data)
-            return_url = custom.pop('return_url', '/')
+        post = dict((key.upper(), value) for key, value in post.items())
+        return_url = post.get('ADD_RETURNDATA') or '/'
         return werkzeug.utils.redirect(return_url)
