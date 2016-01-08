@@ -41,7 +41,9 @@ except ImportError:
 def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
     context = dict(context or {})
     if tz:
-        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['context_tz'])['context_tz'] or "UTC"
+        if tz is True:
+            tz = pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['context_tz'])['context_tz'] or "UTC"
+        context['tz'] = tz
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
     ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
