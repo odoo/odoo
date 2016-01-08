@@ -174,7 +174,7 @@ class Forum(models.Model):
                 else:
                     # check if user have Karma needed to create need tag
                     user = User.sudo().browse(self._uid)
-                    if user.exists() and user.karma >= self.karma_retag and len(tag.strip('_').strip()) > 0:
+                    if user.exists() and user.karma >= self.karma_retag and len(tag) and len(tag[1:].strip()):
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
