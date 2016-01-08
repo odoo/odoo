@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-02 20:50+0000\n"
+"PO-Revision-Date: 2016-01-02 21:05+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +37,7 @@ msgid ""
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε ένα τιμοκατάλογο παράδοσης για μια συγκεκριμένη περιοχή.\n              </p><p>\n                Ο τιμοκατάλογος παράδοσης σας επιτρέπει να υπολογίσετε το κόστος και\n                την τιμή πώλησης της παράδοσης σύμφωνα με το βάρος των  \n                προϊόντων και άλλα κριτήρια. Μπορείτε να καθορίσετε διαφορετικούς  τιμοκατάλογους\n                για κάθε μέθοδο παράδοσης: ανά χώρα ή ανά ζώνη σε μια συγκεκριμένη\n                χώρα καθορισμένη από ένα εύρος ταχυδρομικών κωδικών.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να δημιουργήσετε ένα τιμοκατάλογο παράδοσης για μια συγκεκριμένη περιοχή.\n              </p><p>\n                Ο τιμοκατάλογος παράδοσης σας επιτρέπει να υπολογίσετε το κόστος και\n                την τιμή πώλησης της παράδοσης σύμφωνα με το βάρος των  \n                προϊόντων και άλλα κριτήρια. Μπορείτε να καθορίσετε διαφορετικούς  τιμοκατάλογους\n                για κάθε μέθοδο παράδοσης: ανά χώρα ή ανά ζώνη σε μια συγκεκριμένη\n                χώρα καθορισμένη από ένα εύρος ταχυδρομικών κωδικών.\n              </p>\n            "
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -53,7 +54,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να ορίσετε μια νέα μέθοδο παράδοσης.\n</p><p>\nΚάθε μεταφορέας (π.χ. UPS) μπορεί να έχει διάφορες μεθόδους παράδοσης (π.χ.\nUPS Express, UPS Standard) με ένα σύνολο κανόνων τιμολόγησης που συνδέονται\nσε κάθε μέθοδο.\n</p><p>\nΟι μέθοδοι αυτές επιτρέπουν τον αυτόματο υπολογισμό της τιμής παράδοσης\nσύμφωνα με τις ρυθμίσεις σας, στην παραγγελία (με βάση την\nπροσφορά) ή το τιμολόγιο (με βάση τα δελτία αποστολής).\n</p>"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -109,19 +110,19 @@ msgstr "Μεταφορέας"
 #. module: delivery
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "Πληροφορίες Μεταφορέα"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr "Παραπομπή Ιχνήλασης Μεταφορέα"
+msgstr "Παραπομπή Ιχνηλάτησης Μεταφορέα"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr "Επιλέξτε αυτό το πεδίο εάν θέλετε να διαχειρίζεστε τιμές παράδοσης οι οποίες εξαρτόνται από τον προορισμό, το βάρος, το σύνολο της παραγγελίας, κλπ."
+msgstr "Επιλέξτε αυτό το πεδίο εάν θέλετε να διαχειρίζεστε τιμές παράδοσης οι οποίες εξαρτώνται από τον προορισμό, το βάρος, το σύνολο της παραγγελίας, κλπ."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -171,17 +172,17 @@ msgstr "Παράδοση"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Πλέγμα Παραδόσεων"
+msgstr "Δίκτυο Παράδοσης"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Οι γραμμές Παράδοσης του πλέγματος"
+msgstr "Γραμμές Δικτύου Παράδοσης"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Πλέγμα Παράδοσης"
+msgstr "Δίκτυα Παράδοσης"
 
 #. module: delivery
 #: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
@@ -216,7 +217,7 @@ msgstr "Παράδοση μέσω Ταχυδρομείου"
 #: view:delivery.grid:delivery.view_delivery_grid_form
 #: view:delivery.grid:delivery.view_delivery_grid_tree
 msgid "Delivery grids"
-msgstr "Πλέγματα Παραδόσεων"
+msgstr "Δίκτυα Παράδοσης"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -248,39 +249,39 @@ msgstr "Γενικές Πληροφορίες"
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "Δίνει τη σειρά της αλληλουχίας κατά τον υπολογισμό του δικτύου διανομής."
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Δίνει την ακολουθία της εντολής όταν εμφανίζει μία λίστα από πλέγματας παράδοσης"
+msgstr "Δίνει την ακολουθία της εντολής όταν εμφανίζει μία λίστα από δίκτυα παράδοσης"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Πλέγμα"
+msgstr "Δίκτυο"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Γραμμή Πλέγματος"
+msgstr "Γραμμή Δικτύου"
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
 msgid "Grid Lines"
-msgstr "Γραμμές Πλέγματος"
+msgstr "Γραμμές Δικτύου"
 
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Όνομα Πλέγματος"
+msgstr "Όνομα Δικτύου"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 #: view:delivery.grid:delivery.view_delivery_grid_form
 msgid "Grid definition"
-msgstr "Ορισμός πλέγματος"
+msgstr "Ορισμός Δικτύου"
 
 #. module: delivery
 #: field:delivery.carrier,id:0 field:delivery.grid,id:0
@@ -300,7 +301,7 @@ msgstr "Εάν το ενεργό πεδίο είναι ρυθμισμένο στ
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr "Εάν το ενεργό πεδίο είναι ορισμένο στο Ψευδές, θα σας επιτρέψει να κρύψετε το πλέγμα παράδοσης χωρίς να το αφαιρέσετε."
+msgstr "Εάν το ενεργό πεδίο είναι ορισμένο ως Ψευδές, θα σας επιτρέψει να κρύψετε το δίκτυο παράδοσης χωρίς να το αφαιρέσετε."
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -319,12 +320,12 @@ msgstr "Εάν δεν κάνεις 'Πρόσθεση στην Προσφορά',
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Είναι μια Παράδοση"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "Είναι δυνατή η μέθοδος μεταφοράς με την τρέχουσα εντολή."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
@@ -368,13 +369,13 @@ msgstr "Καθαρό βάρος"
 #: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "Μη διαθέσιμο Δίκτυο!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "Δεν βρέθηκε δίκτυο για αυτόν τον μεταφορέα!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -395,7 +396,7 @@ msgstr "Χειριστής"
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "Η Εντολή δεν σε Πρόχειρη κατάσταση!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -442,7 +443,7 @@ msgstr "Τιμή Πώλησης"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Εντολή Πώλησης"
+msgstr "Παραγγελίες"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -455,7 +456,7 @@ msgstr "Γραμμή Παραγγελίας Πώλησης"
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
-msgstr ""
+msgstr "Το επιλεγμένο προϊόν με τον τρόπο παράδοσης δεν πληροί κανένα κριτήριο από το/τα δίκτυο(α) διανομής."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
@@ -482,7 +483,7 @@ msgstr "Κίνηση Αποθέματος"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Ο μεταφορέας %s (κωδ: %d) δεν έχει πλέγμα παραδόσεων!"
+msgstr "Ο μεταφορέας %s (κωδ: %d) δεν έχει δίκτυο παραδόσεων!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:74
@@ -514,7 +515,7 @@ msgstr "Μεταφορική Εταιρία"
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "Δεν είναι δυνατή η ανάκτηση της μεθόδου παράδοσης!"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
@@ -571,7 +572,7 @@ msgstr "Βάρος * Όγκος"
 #. module: delivery
 #: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr ""
+msgstr "Θα τιμολογηθεί σε:"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -581,4 +582,4 @@ msgstr "ΤΚ"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "σε Λειτουργία του"

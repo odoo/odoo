@@ -2566,6 +2566,15 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this.on("change:effective_readonly", this, function () {
             this.display_field();
         });
+        if (this.options.model_field){
+            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
+                if (self.view && self.view.onchanges_mutex){
+                    self.view.onchanges_mutex.def.then(function(){
+                        self.display_field();
+                    });
+                }
+            });
+        }
         this.display_field();
         return this._super();
     },
@@ -2582,7 +2591,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var domain = instance.web.pyeval.eval('domain', this.get('value'));
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain, self.build_context()]).then(function (results) {
-                $('.oe_domain_count', self.$el).text(results + ' records selected');
+                $('.oe_domain_count', self.$el).text(results + _t(' records selected'));
                 if (self.get('effective_readonly')) {
                     $('button span', self.$el).text(' See selection');
                 }
@@ -4350,7 +4359,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 });
 
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
-    template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
         this.registry = this.registry.extend({
@@ -4376,7 +4384,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
                 });
             },
             write_function: function(id, data, options) {
-                return self.o2m.dataset.write(id, data, {}).done(function() {
+                return self.o2m.dataset.write(id, data, options).done(function() {
                     self.o2m.reload_current_view();
                 });
             },
@@ -4496,8 +4504,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
-            write_function: function(id, data) {
-                return self.o2m.dataset.write(id, data, {}).done(function() {
+            write_function: function(id, data, options) {
+                return self.o2m.dataset.write(id, data, options).done(function() {
                     self.o2m.reload_current_view();
                 });
             },
@@ -4597,7 +4605,14 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.dataset.evict_record(record.get('id'));
 
         return this._super(record);
-    }
+    },
+    reload_content: function () {
+        this.page = Math.max(0, Math.min(
+            this.page,
+            Math.ceil(this.dataset.size() / this.limit()) - 1
+        ));
+        return this._super.apply(this, arguments);
+    },
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
     setup_resequence_rows: function () {
@@ -5115,7 +5130,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             pop.show_element(self.field.relation, id, self.build_context(), {
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
-                    return self.dataset.write(id, data, {}).done(function() {
+                    return self.dataset.write(id, data, options).done(function() {
                         self.render_value();
                     });
                 },

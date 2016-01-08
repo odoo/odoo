@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-11-13 15:39+0000\n"
+"PO-Revision-Date: 2015-12-17 13:53+0000\n"
 "Last-Translator: Tina Rittmüller <tr@ife.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -4725,7 +4725,7 @@ msgid ""
 "         login once with a valid LDAP user, let OpenERP create a blank local\n"
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
-msgstr ""
+msgstr "Fügt Unterstützung zur Authentifizierung durch LDAP-Server hinzu.\n========================================================\nDieses Modul erlaubt es Benutzern sich mit deren LDAP-Benutzerzugangs anzumelden und legt ggf. automatisch OpenERP-Benutzerkonten an.\n\n**Hinweis:** Dieses Modul funktioniert nur auf Servern mit installierter Pythonbibliothek \"LDAP\".\n\nKonfiguration:\n--------------\nNach der Installation dieses Moduls müssen Sie die LDAP-Parameter in den Unternehmenseinstellungen anpassen. Jedes Unternehmen kann unterschiedliche LDAP-Server nutzen, solange diese (auch Unternehmensübergreifend) eindeutige Benutzernamen haben.\n\nAnonyme LDAP-Bindung wird ebenfalls unterstützt, sofern der LDAP-Server dies unterstützt. Hierzu wird lediglich das LDAP-Benutzer- und Passwortfeld in den LDAP-Einstellungen leer gelassen.\nDies erlaubt nicht die anonyme Anmeldung durch Benutzer, sondern dient lediglich der Prüfung, ob ein LDAP-Konto eines Benutzers bereits besteht bevor die Authentifizierung durchgeführt wird.\n\nDie Sicherung der Verbindung zum LDAP-Server kann über STARTTLS eingerichtet werden, sofern der LDAP-Server dies unterstützt, indem TLS in den Einstellungen aktiviert wird.\n\nZu weiteren LDAP-Einstellungen konsultieren Sie bitte die ldap.conf man page: manpage:'ldap.conf(5)'.\n\nSicherheitsbetrachtungen:\n--------------------------\nLDAP-Benutzerpassworte werden niemals in der OpenERP-Datenbank gespeichert, es wird immer der LDAP-Server bei Authentifizierungen abgefragt. Es gibt keine Duplizierung von Zugangsdaten, diese werden nur an einer Stelle gepflegt.\n\nOpenERP verwaltet keine Passwortänderungen im LDAP, diese müssen (für LDAP-Benutzer) im LDAP-Verzeichnis vorgenommen werden.\n\nEs ist auch möglich lokale Benutzer in OpenERP parallel zu LDAP-Benutzern zu pflagen (der Administrator ist hierfür ein offensichtliches Beispiel).\n\nUnd so funktioniert es:\n-----------------------\n    * Das System versucht den Benutzer gegen die lokale OpenERP-Datenbank zu authentifizieren;\n    * Wenn die Authentifizierung fehlschlägt (z. B. weil der Benutzer kein lokales Passwort besitzt) wird versucht gegen den LDAP-Server zu authentifizieren;\n\nDa LDAP-Benutzer per Vorgabe kein lokales Passwort haben, scheitert der erste Schritt in der Regel und die Authentifizierung gegen den LDAP-Server wird versucht.\n\nDurch Aktivierung von STARTTLS wird sichergestellt, dass die Authentifizierungsanfrage verschlüsselt übertragen wird.\n\nBenutzervorlage:\n----------------\nIn den LDAP-Einstellungen zum Unternehmen ist es möglich eine Benutzervorlage einzustellen. Wenn festgelegt, wird dieser bei erster Anmeldung eine LDAP-Benutzers als Vorlage zur Anlage des lokalen Benutzers herangezogen und somit die Gruppen und Menüs bei Erstanmeldungen vorbelegt.\n\n**Hinweis:** Wenn Sie in dieser Benutzervorlage ein Passwort vorgeben, wird dieses Passwort jedem neuen LDAP-Benutzer quasi als \"Masterpasswort\" zugewiesen (bis es ggf. geändert wird). Dies werden Sie regelmäßig nicht wollen. \nEin einfacher Weg einen Vorlagebenutzer anzulegen, liegt darin sich mit einem gültigen LDAP-Benutzer anzumelden und OpenERP einen lokalen Benutzer dieses Namens (und leerem Passwort) erstellen zu lassen. Diesen lokalen Benutzer bennen Sie um auf einen im LDAP nicht vorhandenen Benutzer und legen Gruppen und Menüs nach Bedarf fest.\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -8245,7 +8245,7 @@ msgstr "Georgien"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Georgian / ქართული ენა"
-msgstr ""
+msgstr "Georgisch / ქართული ენა"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9240,7 +9240,7 @@ msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the"
 " direction)"
-msgstr ""
+msgstr "Fehler bei Spezifikation des \"Auftrags\". Eine gültige Spezifikation für einen \"Auftrag\" ist eine komma separierte Liste gültiger Feldbezeichnungen (optional erweitert durch die Angabe einer auf-/absteigenden Sortierung)."
 
 #. module: base
 #: code:addons/models.py:1543
@@ -10174,7 +10174,7 @@ msgid ""
 " line and then delete it through the button that appeared. Items can be "
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
-msgstr ""
+msgstr "Verwaltung und Anpassung der Anzeige von Einträgen im Systemmenü. Sie können einen Eintrag durch Aktivieren zu Beginn jeder Zeile und durch Klick auf den Button löschen. Einträge können bestimmten Gruppen zugewiesen werden, um Nutzern Berechtigungen und Zugriff zu geben."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -10444,13 +10444,13 @@ msgstr "Fehlender SMTP Server"
 #: code:addons/models.py:6067
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
-msgstr ""
+msgstr "Ein erforderlicher Wert für das Feld '%s' fehlt."
 
 #. module: base
 #: code:addons/models.py:6064
 #, python-format
 msgid "Missing required value for the field '%s'."
-msgstr ""
+msgstr "Ein erforderlicher Wert für das Feld '%s' fehlt."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -10631,7 +10631,7 @@ msgstr "Modulabhängigkeiten"
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
-msgstr ""
+msgstr "Laden des Moduls %s fehlgeschlagen: Datei %s konnte nicht verarbeitet werden:\n%s"
 
 #. module: base
 #: code:addons/base/module/module.py:681
@@ -10956,7 +10956,7 @@ msgstr "Es gibt keinen definierten Wechselkurs für die Währung  '%s' in der Pe
 #: code:addons/models.py:1543
 #, python-format
 msgid "No default view of type '%s' could be found !"
-msgstr ""
+msgstr "Keine Standardansicht vom Typ '%s' konnte gefunden werden!"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -11154,7 +11154,7 @@ msgstr "Bürobedarf"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Personalsachbearbeiter"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -11199,7 +11199,7 @@ msgstr "Abhängigkeiten many2one Felder"
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr ""
+msgstr "Eines der Dokumente, auf das Sie versuchen zuzugreifen, wurde gelöscht. Bitte versuchen Sie es erneut nach einer Aktualisierung."
 
 #. module: base
 #: code:addons/models.py:3892
@@ -11207,7 +11207,7 @@ msgstr ""
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr ""
+msgstr "Ein Datensatz der modifiziert werden sollte, wurde bereits gelöscht (Belegart : %s)."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
@@ -11903,7 +11903,7 @@ msgstr "Lagerportal"
 msgid ""
 "Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
-msgstr ""
+msgstr "Portalbenutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln und eingeschränkte Menuzugriffe).\nGewöhnlicherweise sind sie nicht Mitglieder in internen OpenERP Gruppen."
 
 #. module: base
 #: model:res.country,name:base.pt
@@ -12102,7 +12102,7 @@ msgstr "Öffentliche Projekte"
 msgid ""
 "Public users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
-msgstr ""
+msgstr "Portalbenutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln und eingeschränkte Menuzugriffe).\nGewöhnlicherweise sind sie nicht Mitglieder in internen OpenERP Gruppen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
@@ -12362,7 +12362,7 @@ msgstr "Rekursion in Kind-Server-Aktionen gefunden"
 #: code:addons/models.py:3995
 #, python-format
 msgid "Recursivity Detected."
-msgstr ""
+msgstr "Rekursive Einträge entdeckt"
 
 #. module: base
 #: report:ir.module.reference:0
@@ -12588,7 +12588,7 @@ msgstr "Einschränken"
 #. module: base
 #: field:ir.actions.act_window,multi:0
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Auf Listen einschränken"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -12952,7 +12952,7 @@ msgstr "Alle möglichen Werte anzeigen"
 #: code:addons/common.py:50
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "Siehe http://openerp.com"
 
 #. module: base
 #: help:multi_company.default,field_id:0
@@ -13096,7 +13096,7 @@ msgstr "Serialisierungs-Feld"
 #: code:addons/models.py:418
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "Serialisierungsfeld `%s` für Ersatzfeld `%s` nicht  gefunden!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -13355,7 +13355,7 @@ msgstr "Entschuldigen Sie, Sie sind nicht berechtigt dieses Dokument zu ändern.
 #: code:addons/models.py:4618
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Das Sortierfeld %s wurde im Modell %s nicht gefunden"
 
 #. module: base
 #: field:ir.translation,source:0
@@ -13826,7 +13826,7 @@ msgstr "TGZ Archiv"
 msgid ""
 "TGZ format: this is a compressed archive containing a PO file, directly suitable\n"
 "                                for uploading to Odoo's translation platform,"
-msgstr ""
+msgstr "TGZ Format: Dies ist ein komprimiertes Archiv mit einer PO-Datei, die direkt für\n                               das  Hochladen auf die OpenERP Übersetzungs-Plattform geeignet ist."
 
 #. module: base
 #: code:addons/base/res/res_company.py:167 field:res.partner,vat:0
@@ -14160,7 +14160,7 @@ msgstr ""
 msgid ""
 "The model that will receive the workflow signal. Note that it should have a "
 "workflow associated with it."
-msgstr ""
+msgstr "Das Objekt, dass das Workflowsignal empfangen soll (muss einen zugeordneten Workflow haben)"
 
 #. module: base
 #: help:ir.model.fields,model_id:0
@@ -14211,7 +14211,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr ""
+msgstr "Die Aktion kann nicht fertiggestellt werden, wahrscheinlich aufgrund einer der folgenden Fehler:\n- Löschen: Sie versuchen einen Datensatz zu löschen, auf den noch andere Datensätze referenzieren\n- Neu/Aktualisierung: Ein Pflicht-Feld wurde nicht oder nicht richtig ausgefüllt"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -14286,7 +14286,7 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Der gewünschte Vorgang kann aufgrund von Sicherheitsbeschränkungen nicht ausgeführt werden. Bitte kontaktieren Sie den Systemadministrator.\n\n(Dokumenten Typ: %s, Vorgang: %s)"
 
 #. module: base
 #: code:addons/fields.py:913
@@ -14751,7 +14751,7 @@ msgstr "Typ der Bedingung: 'f' für Fremdschlüssel, 'u' für andere Bedingungen
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae
 msgid "U.A.E. - Accounting"
-msgstr ""
+msgstr "Vereinigte Arabische Emirate Buchführung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
@@ -15527,14 +15527,14 @@ msgid ""
 " node or arrow, you can only change fields that are empty or set to the "
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
-msgstr ""
+msgstr "Stellen Sie beim Anpassen eines Arbeitsablaufes sicher, dass Sie nicht einen vorhandenen Knoten oder Pfeil ändern, sondern einen neuen Knoten oder Pfeil hinzufügen. Wenn Sie unbedingt einen Knoten oder Pfeil ändern müssen, können Sie nur Felder ändern, die leer sind oder den Standard-Wert enthalten. Wenn Sie das nicht tun, wird Ihre Anpassung beim nächsten Upgrade oder beim Upgrade zu einer zukünftigen Version von OpenERP einfach überschrieben wird."
 
 #. module: base
 #: help:ir.actions.server,sequence:0
 msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
-msgstr ""
+msgstr "Wichtig beim Umgang mit mehreren Aktionen. Die Reihenfolge der Ausführung erfolgt nach aufsteigenden Nummern."
 
 #. module: base
 #: help:ir.mail_server,sequence:0
@@ -15727,7 +15727,7 @@ msgstr "Jemen"
 msgid ""
 "You are creating a new user. After saving, the user will receive an invite "
 "email containing a link to set its password."
-msgstr ""
+msgstr "Sie erstellen einen neuen Nutzer. Nach dem speichern erhält der Nutzer eine Einladungsemail mit dem Link zum Setzen seines Passwortes."
 
 #. module: base
 #: code:addons/base/res/res_partner.py:562
@@ -15753,7 +15753,7 @@ msgstr "Sie können nicht zwei Schriftarten mit dem selben Namen registrieren"
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
-msgstr ""
+msgstr "Sie können den Admin User nicht entfernen, da er intern für openERP Ressourcen benötigt wird (Updates, Modulinstallation etc.)"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -16217,40 +16217,40 @@ msgstr "test_convert"
 #. module: base
 #: model:res.groups,comment:base.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "Der Benutzer wird Dokumente validieren können, die von Mitarbeiter erzeugt wurden."
 
 #. module: base
 #: model:res.groups,comment:base.group_user
 msgid ""
 "the user will be able to manage his own human resources stuff (leave "
 "request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
+msgstr "Der Benutzer ist in der Lage, seine eigenen Personalvorgänge (Urlaubsanfragen, Zeiterfassung,...) zu verwalten, wenn er hierzu mit einem Mitarbeiter im System verbunden wird."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman_all_leads
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr ""
+msgstr "der Benutzer wird Zugriff auf alle Datensätze in der Verkaufsanwendung erhalten."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr ""
+msgstr "der Benutzer hat Zugriff auf seine eigenen Daten in der Verkaufsanwendung."
 
 #. module: base
 #: model:res.groups,comment:base.group_hr_manager
 msgid ""
 "the user will have an access to the human resources configuration as well as"
 " statistic reports."
-msgstr ""
+msgstr "der Benutzer erhält den Zugriff auf die Konfiguration des Personals wie auch auf die zugehörigen Berichte."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_manager
 msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
-msgstr ""
+msgstr "der Benutzer erhält den Zugriff auf die Konfiguration des Verkaufs wie auch auf die zugehörigen Berichte."
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form

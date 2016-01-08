@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-28 08:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-30 06:38+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +96,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>您好 ${object.partner_id.name},</p>\n\n    <p>你有一张新发票： </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;发票号码: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;发票总额: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;发票日期: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;您的联络方式: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>也可以直接Paypal支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>如您有任何疑问，请直接与我们联系。</p>\n    <p>谢谢您一如既往的支持 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -351,7 +351,7 @@ msgid ""
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个客户退款。\n              </p><p>\n                可以进行全部退款或者部分退款。\n              </p><p>\n               除了可以手工创建退款，您还可以直接通过关联的客户的发票创建退款。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个客户退款。\n              </p><p>\n                可以进行全部退款或者部分退款。\n              </p><p>\n               除了可以手工创建退款，您还可以从相关的客户发票生成它。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -1628,14 +1628,14 @@ msgstr "仅应用于有增值税编码的业务伙伴"
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "应用于当运输或开票的国家和地区是包括在此国家群组，但并没有相匹配的国家和地区的时候。"
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "应用于当运输或开票国家相匹配时。在国家群组中优先匹配。"
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -5516,7 +5516,7 @@ msgstr "发票已付"
 #: code:addons/account/account_invoice.py:1195
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr "发票已经支付：%s%s ，总额： %s%s (剩余：%s%s )。"
+msgstr "发票已部分支付：%s%s ，总额： %s%s (剩余：%s%s )。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1642
@@ -6796,7 +6796,7 @@ msgstr "在计算月天数前加入的天数, 如日期为01/15, 天数是22, �
 msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
-msgstr "部分总额可以加起来作为找到的平衡点来强制填充自动对账"
+msgstr "部分金额的数量，它能组合起来发现一个平衡点，能被选择作为自动调节的幂数。"
 
 #. module: account
 #. openerp-web
@@ -6909,7 +6909,7 @@ msgstr "开启为调节"
 #. module: account
 #: view:account.move.line.unreconcile.select:account.view_account_move_line_unreconcile_select
 msgid "Open for Unreconciliation"
-msgstr "开启为反调节"
+msgstr "开启为取消调节"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -7598,7 +7598,7 @@ msgstr "已登帐的分录"
 #. module: account
 #: field:account.automatic.reconcile,power:0
 msgid "Power"
-msgstr "Power"
+msgstr "幂数"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -8128,12 +8128,12 @@ msgstr "参考计量单位"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr "相关单据生成此发票报告"
+msgstr "生成此发票报告的单据参考"
 
 #. module: account
 #: help:account.invoice,origin:0 help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr "发票上产品的关联单据"
+msgstr "产生此发票的单据参考"
 
 #. module: account
 #: field:account.invoice,name:0
@@ -8269,7 +8269,7 @@ msgstr "报告类型"
 #: field:account.financial.report,account_report_id:0
 #: selection:account.financial.report,type:0
 msgid "Report Value"
-msgstr "报告数值"
+msgstr "报告"
 
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
@@ -8372,7 +8372,7 @@ msgstr "每行舍入"
 #: code:addons/account/account_bank_statement.py:899
 #, python-format
 msgid "Rounding error from currency conversion"
-msgstr ""
+msgstr "货币换算时，圆整出错。"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9670,14 +9670,14 @@ msgstr "为这张发票在分类账分录中使用的商业实体"
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "选择的汇兑损益科目不属性对应的公司科目。"
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "选择的汇兑损益科目不属性对应的公司科目。"
 
 #. module: account
 #: help:account.tax,type:0
@@ -9711,7 +9711,7 @@ msgstr "替换规则确定业务伙伴的税替换和科目替换。"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "The fiscal year is created when installing a Chart of Account."
-msgstr ""
+msgstr "在安装会计科目表时相应的会计年已自动创建。"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -9819,7 +9819,7 @@ msgstr "找不到产生开帐分录的期间。"
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr "这个发票的编号由供应商提供。"
+msgstr "供应商提供的发票参考"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -10740,7 +10740,7 @@ msgstr "未实现收入和损失"
 #: view:account.unreconcile:account.account_unreconcile_view
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
 msgid "Unreconcile"
-msgstr "反调节"
+msgstr "未调节"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -11135,7 +11135,7 @@ msgstr "您选择了应收应付科目。\n\n如果要继续处理，您需要�
 #: code:addons/account/static/src/js/account_widgets.js:1050
 #, python-format
 msgid "last"
-msgstr ""
+msgstr "最后的"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -11156,7 +11156,7 @@ msgstr "不能添加/修改分录在关闭的期间 %s 分类账%s."
 msgid ""
 "You can not cancel closing entries if the 'End of Year Entries Journal' "
 "period is closed."
-msgstr ""
+msgstr "当年度结束帐簿会计期间关闭时，不能再取消里面的数据。"
 
 #. module: account
 #: code:addons/account/account.py:1057
@@ -11223,7 +11223,7 @@ msgstr "可以在凭证模版的名称上使用年月日变量\n\n%(year)s：本
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr "已部分付款的发票，不能取消。请先撤销相关的付款调节。"
+msgstr "已部分付款的发票，不能取消。请先反调节相关的付款分录。"
 
 #. module: account
 #: code:addons/account/account.py:691

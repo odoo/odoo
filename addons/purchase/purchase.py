@@ -1253,9 +1253,13 @@ class purchase_order_line(osv.osv):
             else:
                 price = product.standard_price
 
-        taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
+        if uid == SUPERUSER_ID:
+            company_id = self.pool['res.users'].browse(cr, uid, [uid]).company_id.id
+            taxes = product.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id)
+        else:
+            taxes = product.supplier_taxes_id
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
-        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes, context=context)
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
@@ -1408,7 +1412,7 @@ class procurement_order(osv.osv):
         qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
         if seller_qty:
             qty = max(qty, seller_qty)
-        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, {'uom': uom_id})[pricelist_id]
+        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, dict(context, uom=uom_id))[pricelist_id]
 
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
@@ -1420,7 +1424,7 @@ class procurement_order(osv.osv):
         fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
         if fiscal_position_id:
             fiscal_position = acc_pos_obj.browse(cr, uid, fiscal_position_id, context=context)
-        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids)
+        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids, context=context)
         name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
@@ -1491,14 +1495,15 @@ class procurement_order(osv.osv):
         linked_po_ids = []
         sum_po_line_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
-            partner = self._get_product_supplier(cr, uid, procurement, context=context)
+            ctx_company = dict(context or {}, force_company=procurement.company_id.id)
+            partner = self._get_product_supplier(cr, uid, procurement, context=ctx_company)
             if not partner:
                 self.message_post(cr, uid, [procurement.id], _('There is no supplier associated to product %s') % (procurement.product_id.name))
                 res[procurement.id] = False
             else:
                 schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
-                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
+                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=ctx_company)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),

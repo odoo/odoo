@@ -1406,7 +1406,8 @@ class stock_picking(osv.osv):
     def do_enter_transfer_details(self, cr, uid, picking, context=None):
         if not context:
             context = {}
-
+        else:
+            context = context.copy()
         context.update({
             'active_model': self._name,
             'active_ids': picking,
@@ -3930,7 +3931,7 @@ class stock_package(osv.osv):
         quant_obj = self.pool.get('stock.quant')
         for package in self.browse(cr, uid, ids, context=context):
             quant_ids = [quant.id for quant in package.quant_ids]
-            quant_obj.write(cr, uid, quant_ids, {'package_id': package.parent_id.id or False}, context=context)
+            quant_obj.write(cr, SUPERUSER_ID, quant_ids, {'package_id': package.parent_id.id or False}, context=context)
             children_package_ids = [child_package.id for child_package in package.children_ids]
             self.write(cr, uid, children_package_ids, {'parent_id': package.parent_id.id or False}, context=context)
         #delete current package since it contains nothing anymore

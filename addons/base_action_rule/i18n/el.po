@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-22 15:45+0000\n"
+"PO-Revision-Date: 2015-12-17 11:04+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +32,7 @@ msgid ""
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nΕπιλέξτε για να ρυθμίσετε ένα νέο αυτοματοποιημένο κανόνα ενέργειας. \n</p><p>\nΧρησιμοποιείστε αυτοματοποιημένες ενέργειες για να πυροδοτήσετε αυτόματα ενέργειες για \nδιάφορες οθόνες. Παράδειγμα: η σύσταση που δημιουργείται από συγκεκριμένο χρήστη μπορεί\nνα οριστεί αυτόματα σε μια συγκεκριμένη ομάδα πώλησης, ή μια\nευκαιρία η οποία έχει ακόμη το στάδιο Εκρεμμής μετά από 14 μέρεςθα μπορούσε\nνα πυροδοτήσει ένα αυτόματο email υπενθύμισης.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να ρυθμίσετε ένα νέο αυτοματοποιημένο κανόνα ενέργειας. \n</p><p>\nΧρησιμοποιείστε αυτοματοποιημένες ενέργειες για να πυροδοτήσετε αυτόματα ενέργειες για \nδιάφορες οθόνες. Παράδειγμα: η σύσταση που δημιουργείται από συγκεκριμένο χρήστη μπορεί\nνα οριστεί αυτόματα σε μια συγκεκριμένη ομάδα πώλησης, ή μια\nευκαιρία η οποία έχει ακόμη το στάδιο Εκρεμμής μετά από 14 μέρεςθα μπορούσε\nνα πυροδοτήσει ένα αυτόματο email υπενθύμισης.\n</p>\n            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -68,12 +69,12 @@ msgstr "Αυτοματοποιημένες ενέργειες"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "Με βάση Χρονική Συνθήκη"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr "Φίλτρο πριν την Αναβάθμιση"
+msgstr "Φίλτρο πριν την Ενημέρωση"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -177,14 +178,14 @@ msgstr "Κωδικός"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "Εάν υπάρχει, η προϋπόθεση αυτή πρέπει να ικανοποιείται πριν από την εκτέλεση του κανόνα δράσης."
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr "Εάν παρουσιαστεί, αυτή η κατάσταση πρέπει να εκπληρωθεί πριν την αναβάθμιση της εγγραφής"
+msgstr "Εάν παρουσιαστεί, αυτή η κατάσταση πρέπει να εκπληρωθεί πριν την ενημέρωση της εγγραφής"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -218,13 +219,13 @@ msgstr "Τελευταία εκτέλεση"
 #: field:base.action.rule,write_uid:0
 #: field:base.action.rule.lead.test,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: base_action_rule
 #: field:base.action.rule,write_date:0
 #: field:base.action.rule.lead.test,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -259,7 +260,7 @@ msgstr "Στην Δημιουργία & Ενημέρωση"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Update"
-msgstr "Κατά την ενημέρωση"
+msgstr "Κατά την Ενημέρωση"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -317,7 +318,7 @@ msgstr "Ορισμός Υπεύθυνου"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,state:0
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
@@ -337,21 +338,21 @@ msgstr "Ημερομηνία Πυροδότησης"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_calendar_id:0
 msgid "Use Calendar"
-msgstr ""
+msgstr "Χρήση Ημερολογίου"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_calendar_id:0
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "Κατά τον υπολογισμό μιας χρονικής συνθήκης με βάση την ημέρα, είναι δυνατόν να χρησιμοποιήσει ένα ημερολόγιο για να υπολογιστεί η ημερομηνία με βάση τις εργάσιμες ημέρες."
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr "Όταν θα πρέπει να πυροδοτηθεί ο όρος. Εάν υπάρχει, θα ελεχθεί από τον προγραμματιστή. Εάν είναι κενό, θα ελεγχθεί στη δημιουργία και την αναβάθμιση."
+msgstr "Όταν θα πρέπει να πυροδοτηθεί ο όρος. Εάν υπάρχει, θα ελεγχθεί από τον προγραμματιστή. Εάν είναι κενό, θα ελεγχθεί στη δημιουργία και την ενημέρωση."
 
 #. module: base_action_rule
 #: field:base.action.rule,kind:0
