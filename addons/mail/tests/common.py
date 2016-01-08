@@ -77,11 +77,17 @@ class TestMail(common.SavepointCase):
         cls.user_admin = cls.env.user
 
         # Test Data for Partners
-        cls.partner_1 = cls.env['res.partner'].create({
+        cls.partner_1 = cls.env['res.partner'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+        }).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
             'notify_email': 'always'})
-        cls.partner_2 = cls.env['res.partner'].create({
+        cls.partner_2 = cls.env['res.partner'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+        }).create({
             'name': 'Valid Poilvache',
             'email': 'valid.other@gmail.com',
             'notify_email': 'always'})

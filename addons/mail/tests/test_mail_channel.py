@@ -70,11 +70,13 @@ class TestMailGroup(TestMail):
         # Employee can create a private group
         self.env['mail.channel'].sudo(self.user_employee).create({'name': 'Test', 'public': 'private'})
 
-        # Employee update employee-based group: ok
-        self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
+        # Employee update employee-based group: ko (only private groups for employees)
+        with self.assertRaises(except_orm):
+            self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
 
-        # Employee unlink employee-based group: ok
-        self.group_pigs.sudo(self.user_employee).unlink()
+        # Employee unlink employee-based group: ko (only private groups for employees)
+        with self.assertRaises(except_orm):
+            self.group_pigs.sudo(self.user_employee).unlink()
 
         # Employee cannot read a private group
         with self.assertRaises(except_orm):
