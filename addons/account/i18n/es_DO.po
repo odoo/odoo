@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-02 07:26+0000\n"
+"PO-Revision-Date: 2016-01-08 18:44+0000\n"
 "Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -1098,7 +1098,7 @@ msgstr "Cuenta destinada a facturas. Dejar vacío para utilizar la cuenta de gas
 msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
-msgstr "Establece la cuenta por defecto en las líneas de impuesto para las facturas rectificativas. Déjelo vacío para usar la cuenta de gastos."
+msgstr "Establece la cuenta por defecto en las líneas de impuesto para las notas de crédito. Déjelo vacío para usar la cuenta de gastos."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1458,6 +1458,7 @@ msgstr "Le permite usar la contabilidad analítica"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1920,7 +1921,7 @@ msgstr "Fecha"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill Refund"
-msgstr "Factura rectificativa"
+msgstr "Nota de crédito"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2070,7 +2071,7 @@ msgstr "Cancelar las facturas seleccionadas"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr "Cancelar: crea la factura rectificativa y concilia"
+msgstr "Cancelar: Crea la Nota de crédito y concilia"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2298,7 +2299,7 @@ msgstr "Marque esta casilla si la compañía es una entidad legal."
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " refunds made from this journal"
-msgstr "Marque esta casilla si no quiere compartir la misma secuencia para facturas y facturas rectificativas hechas desde este diario"
+msgstr "Marque esta casilla si no quiere compartir la misma secuencia para facturas y notas de crédito hechas desde este diario"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -2723,7 +2724,7 @@ msgstr "Cree clientes"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Create Refund"
-msgstr "Crear factura rectificativa"
+msgstr "Crear Nota de crédito"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2740,7 +2741,7 @@ msgstr "Crear descuadre"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr "Crear una factura rectificativa borrador"
+msgstr "Crear una Nota de Crédito en Borrador"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:227
@@ -2891,7 +2892,7 @@ msgstr "Haber"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr "Abono"
+msgstr "Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -3022,7 +3023,7 @@ msgstr "Plazo de pago de cliente"
 #: code:addons/account/models/account_payment.py:445
 #, python-format
 msgid "Customer Refund"
-msgstr "Factura rectificativa de cliente"
+msgstr "Nota de crédito de cliente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
@@ -3134,7 +3135,7 @@ msgstr "Diciembre"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr "Secuencia de factura rectificativa dedicada"
+msgstr "Secuencia de notas de crédito dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -3447,7 +3448,7 @@ msgstr "Facturas borrador"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Refund"
-msgstr "Borrador de factura rectificativa"
+msgstr "Borrador de Nota de crédito"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4623,7 +4624,7 @@ msgstr "Referencia factura"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "Abono factura"
+msgstr "Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
@@ -4649,7 +4650,7 @@ msgstr "Factura pagada"
 #: code:addons/account/wizard/account_invoice_refund.py:113
 #, python-format
 msgid "Invoice refund"
-msgstr "Factura rectificativa"
+msgstr "Nota de crédito"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1291
@@ -6946,12 +6947,12 @@ msgstr "Referencia/Descripción"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Refund"
-msgstr "Abono"
+msgstr "Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Refund Date"
-msgstr "Fecha de abono"
+msgstr "Fecha Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -6962,12 +6963,12 @@ msgstr "Secuencia de asiento rectificativo"
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Refund Invoice"
-msgstr "Factura rectificativa"
+msgstr "Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_filter_refund
 msgid "Refund Method"
-msgstr "Método de abono"
+msgstr "Método Nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund_filter_refund
@@ -7588,6 +7589,7 @@ msgstr "Movimientos destino"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
