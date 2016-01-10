@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-12-21 13:55+0000\n"
+"POT-Creation-Date: 2016-01-06 07:13+0000\n"
+"PO-Revision-Date: 2016-01-06 17:42+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +70,7 @@ msgstr "Πρόσκληση της ${object.company_id.name} για σύνδεσ�
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης γι 'αυτόν τον χρήστη. Ένα email που περιέχει τον παρακάτω σύνδεσμο έχει αποσταλεί:</ strong>"
+msgstr "<strong>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης γι 'αυτόν τον χρήστη. Ένα email που περιέχει τον παρακάτω σύνδεσμο έχει αποσταλεί:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -84,13 +85,19 @@ msgid "Allow external users to sign up"
 msgstr "Να επιτρέπετε η εγγραφή εξωτερικών χρηστών"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Έχει αποσταλεί ένα email με διαπιστευτήρια για να επαναφέρετε τον κωδικό πρόσβασής σας"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Κάποιος άλλος χρήστης έχει ήδη εγγραφεί χρησιμοποιώντας αυτό το email."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr "Ο έλεγχος ταυτότητας απέτυχε."
@@ -123,7 +130,13 @@ msgid "Connected"
 msgstr "Συνδέθηκε"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr "Δεν μπορεί να δημιουργηθεί νέος λογαριασμός."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr "Δεν ήταν δυνατή η επαναφορά του κωδικού πρόσβασής σας"
@@ -165,17 +178,12 @@ msgid "Password reset"
 msgstr "Επαναφορά Κωδικού"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
-msgid "Private Profile"
-msgstr "Ιδιωτικό Προφίλ"
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "Επαναφορά Κωδικού"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Επαναφορά Κωδικού Πρόσβασης: Λανθασμένο όνομα χρήστη ή email "
@@ -237,11 +245,6 @@ msgid "Template user for new users created through signup"
 msgstr "Πρότυπο χρήστη για νέους χρήστες που δημιουργήθηκαν μέσω Εγγραφής"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Η πλήρης διεύθυνση (URL) για την πρόσβαση στο έγγραφο μέσω του ιστοτόπου."
-
-#. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr "Αυτό επιτρέπει στους χρήστες να ξεκινήσουν την επαναφορά του κωδικού πρόσβασης από τη σελίδα σύνδεσης."
@@ -250,41 +253,6 @@ msgstr "Αυτό επιτρέπει στους χρήστες να ξεκινή�
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "Χρήστες"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "Ορατό στον Ιστότοπο"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr "Πλήρης Περιγραφή Συνεργάτη για Ιστότοπο"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr "Σύντομη Περιγραφή Συνεργάτη για Ιστότοπο"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr "Διεύθυνση URL Ιστότοπου"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr "Μετά περιγραφή Ιστότοπου"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Μετά λέξεις-κλειδιά"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr "Μετά τίτλος Ιστότοπου"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -306,8 +274,3 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "π.χ. Κώστας Γουτούδης"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "unknown"
-msgstr "άγνωστο"
