@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:47+0000\n"
+"PO-Revision-Date: 2016-01-06 14:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -185,14 +185,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
