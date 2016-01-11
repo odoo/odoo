@@ -1226,7 +1226,6 @@ function remove_table_content(r) {
                 node.parentNode && !$(node.parentNode).hasClass('o_editable'));
         }
     }
-    event.preventDefault();
     return false;
 }
 
