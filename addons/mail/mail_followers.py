@@ -186,7 +186,7 @@ class mail_notification(osv.Model):
         message = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
 
         # compute partners
-        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=None)
+        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=context)
         if not email_pids:
             return True
 
