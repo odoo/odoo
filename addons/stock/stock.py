@@ -1722,6 +1722,8 @@ class StockMove(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _quantity_normalize(self):
         for m in self:
+            if not m.product_uom:
+                m.product_uom = m.product_id.uom_id
             m.product_qty = self.env['product.uom']._compute_qty_obj(m.product_uom, m.product_uom_qty, m.product_id.uom_id)
 
     @api.multi
@@ -2011,7 +2013,35 @@ class StockMove(models.Model):
                         move.move_dest_id.write(propagated_changes_dict)
         return super(StockMove, self).write(vals)
 
-    @api.onchange('product_id', 'location_id', 'location_dest_id', 'partner_id')
+    @api.onchange('product_uom_qty')
+    def onchange_quantity(self):
+        """ On change of product quantity finds UoM
+        @param product_id: Product id
+        @param product_qty: Changed Quantity of product
+        @param product_uom: Unit of measure of product
+        @return: Dictionary of values
+        """
+        warning = {}
+        # result = {}
+
+        # if (not product_id) or (product_qty <= 0.0):
+        #     result['product_qty'] = 0.0
+        #     return {'value': result}
+
+        # product_obj = self.pool.get('product.product')
+        # Warn if the quantity was decreased
+        if self.ids:
+            for move in self.read(['product_uom_qty']):
+                if self.product_uom_qty < move['product_uom_qty']:
+                    warning.update({
+                        'title': _('Information'),
+                        'message': _("By changing this quantity here, you accept the "
+                                "new quantity as complete: Odoo will not "
+                                "automatically generate a back order.")})
+                break
+        return {'warning': warning}
+
+    @api.onchange('product_id')
     def onchange_product_id(self):
         """ On change of product id, if finds UoM, quantity
         """
