@@ -79,5 +79,18 @@
         <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>
 
+    <record id="crm_activity_report_rule_all_activities" model="ir.rule">
+        <field name="name">All Activities</field>
+        <field ref="model_crm_activity_report" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="crm_activity_report_rule_personal_activities" model="ir.rule">
+        <field name="name">Personal Activities</field>
+        <field ref="model_crm_activity_report" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+    </record>
 </data>
 </openerp>
