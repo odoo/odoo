@@ -210,7 +210,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.extended_composer.on('post_message', this, this.on_post_message);
         this.extended_composer.on('input_focused', this, this.on_composer_input_focused);
 
-        var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
+        var def1 = this.thread.appendTo(this.$('.o_mail_chat_content'));
         var def2 = this.basic_composer.appendTo(this.$('.o_mail_chat_content'));
         var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
         var def4 = this.searchview.appendTo($("<div>"));
