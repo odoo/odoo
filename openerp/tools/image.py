@@ -8,7 +8,7 @@ except ImportError:
 
 from PIL import Image
 from PIL import ImageEnhance
-from random import randint
+from random import randrange
 
 # ----------------------------------------
 # Image resizing
@@ -213,7 +213,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
-        color = (randint(32, 224), randint(32, 224), randint(32, 224))
+        color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
     image.paste(color)
     image.paste(original, mask=original)
     # return the new image
