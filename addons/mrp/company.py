@@ -10,5 +10,5 @@ class company(osv.osv):
             help="Security days for each manufacturing operation."),
     }
     _defaults = {
-        'manufacturing_lead': lambda *a: 1.0,
+        'manufacturing_lead': lambda *a: 0.0,
     }

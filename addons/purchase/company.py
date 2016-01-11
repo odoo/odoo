@@ -10,7 +10,7 @@ class company(models.Model):
         help="Margin of error for vendor lead times. When the system "
              "generates Purchase Orders for procuring products, "
              "they will be scheduled that many days earlier "
-             "to cope with unexpected vendor delays.", default=1.0)
+             "to cope with unexpected vendor delays.", default=0.0)
 
     po_double_validation = fields.Selection([
         ('one_step', 'Confirm purchase orders in one step'),
