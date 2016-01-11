@@ -33,7 +33,6 @@ return Widget.extend({
         this.is_hidden = false;
     },
     start: function () {
-        this.$content = this.$('.o_chat_content');
         this.$input = this.$('.o_chat_input input');
 
         this.thread = new ChatThread(this, {
@@ -48,7 +47,7 @@ return Widget.extend({
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
         }
-        var def = this.thread.appendTo(this.$content);
+        var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
     },
     render: function (messages) {
@@ -59,9 +58,6 @@ return Widget.extend({
         this.unread_msgs = counter;
         this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
     },
-    scrollBottom: function () {
-        this.$content.scrollTop(this.$content[0].scrollHeight);
-    },
     fold: function () {
         this.$el.animate({
             height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
@@ -70,8 +66,7 @@ return Widget.extend({
     toggle_fold: function (fold) {
         this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
-            this.unread_msgs = 0;
-            this.trigger('messages_read');
+            this.thread.scroll_to();
         }
         this.fold();
     },

@@ -38,11 +38,12 @@ function open_chat (session) {
     }
     var chat_session = _.findWhere(chat_sessions, {id: session.id});
     if (!chat_session) {
+        var prefix = !session.is_chat ? "#" : "";
         chat_session = {
             id: session.id,
             uuid: session.uuid,
             name: session.name,
-            window: new ExtendedChatWindow(web_client, session.id, session.name, session.is_folded, session.unread_counter),
+            window: new ExtendedChatWindow(web_client, session.id, prefix + session.name, session.is_folded, session.unread_counter),
         };
         chat_session.window.on("close_chat_session", null, function () {
             close_chat(chat_session);
@@ -58,7 +59,11 @@ function open_chat (session) {
 
         chat_session.window.on("post_message", null, function (message, channel_id) {
             message.content = _.escape(message.content);
-            chat_manager.post_message(message, {channel_id: channel_id});
+            chat_manager
+                .post_message(message, {channel_id: channel_id})
+                .then(function () {
+                    chat_session.window.thread.scroll_to();
+                });
         });
         chat_session.window.on("messages_read", null, function () {
             chat_manager.mark_channel_as_seen(session);
@@ -91,7 +96,14 @@ function open_chat (session) {
                 return chat_manager.get_messages({channel_id: chat_session.id});
             }).then(function (messages) {
                 chat_session.window.render(messages);
-                chat_session.window.scrollBottom();
+                chat_session.window.thread.scroll_to();
+                setTimeout(function () {
+                    chat_session.window.thread.$el.on("scroll", null, _.debounce(function () {
+                        if (chat_session.window.thread.is_at_bottom()) {
+                            chat_manager.mark_channel_as_seen(session);
+                        }
+                    }, 100));
+                }, 0); // setTimeout to prevent to execute handler on first scroll_to, which is asynchronous
                 if (!session.is_folded) {
                     chat_manager.mark_channel_as_seen(session);
                 }
@@ -230,8 +242,8 @@ var reposition_windows = function (options) {
 
 function make_session_visible (session) {
     utils.swap(chat_sessions, session, chat_sessions[display_state.nb_slots-1]);
-    session.window.toggle_fold(false);
     reposition_windows();
+    session.window.toggle_fold(false);
 }
 
 function render_hidden_sessions_dropdown () {
@@ -254,13 +266,14 @@ function reposition_hidden_sessions_dropdown () {
 function update_sessions (message, scrollBottom) {
     _.each(chat_sessions, function (session) {
         if (_.contains(message.channel_ids, session.id)) {
-            if (!session.window.folded && !session.window.is_hidden) {
+            var message_visible = !session.window.folded && !session.window.is_hidden && session.window.thread.is_at_bottom();
+            if (message_visible) {
                 chat_manager.mark_channel_as_seen(chat_manager.get_channel(session.id));
             }
             chat_manager.get_messages({channel_id: session.id}).then(function (messages) {
                 session.window.render(messages);
-                if (scrollBottom) {
-                    session.window.scrollBottom();
+                if (scrollBottom && message_visible) {
+                    session.window.thread.scroll_to();
                 }
             });
         }
@@ -288,7 +301,7 @@ core.bus.on('web_client_ready', null, function () {
 
     chat_manager.bus.on('anyone_listening', null, function (channel, query) {
         _.each(chat_sessions, function (session) {
-            if (channel.id === session.id) {
+            if (channel.id === session.id && session.window.thread.is_at_bottom()) {
                 query.is_displayed = true;
             }
         });

@@ -443,8 +443,8 @@ var BasicComposer = Widget.extend({
     /**
      * Send the message on ENTER, but go to new line on SHIFT+ENTER
      */
-    prevent_send: function (event) {
-        return event.shiftKey;
+    should_send: function (event) {
+        return !event.shiftKey;
     },
 
     on_keydown: function (event) {
@@ -465,9 +465,12 @@ var BasicComposer = Widget.extend({
             case $.ui.keyCode.ENTER:
                 if (this.mention_manager.is_open()) {
                     event.preventDefault();
-                } else if (!this.prevent_send(event)) {
-                    event.preventDefault();
-                    this.send_message();
+                } else {
+                    var send_message = event.ctrlKey || this.should_send(event);
+                    if (send_message) {
+                        event.preventDefault();
+                        this.send_message();
+                    }
                 }
                 break;
         }
@@ -667,8 +670,8 @@ var ExtendedComposer = BasicComposer.extend({
         });
     },
 
-    prevent_send: function () {
-        return true;
+    should_send: function () {
+        return false;
     },
 });
 

@@ -53,7 +53,7 @@ bus.on("window_focus", null, function() {
 function notify_incoming_message (msg, options) {
     var title = _t('New message');
     if (msg.author_id[1]) {
-        title += _t(' from ') + _.escape(msg.author_id[1]);
+        title = _.escape(msg.author_id[1]);
     }
     var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
 
@@ -68,7 +68,7 @@ function notify_incoming_message (msg, options) {
 
         if (Notification && Notification.permission === "granted") {
             if (bus.is_master) {
-                new Notification(title, {body: content, icon: "/web/static/src/img/odoo.png", silent: false});
+                new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png", silent: false});
             }
         } else {
             web_client.do_notify(title, content);
@@ -325,6 +325,8 @@ function make_channel (data, options) {
         channel.status = data.direct_partner[0].im_status;
         pinned_dm_partners.push(channel.direct_partner_id);
         bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
+    } else if ('anonymous_name' in data) {
+        channel.name = data.anonymous_name;
     }
     channel.is_chat = !channel.type.match(/^(public|private|static)$/);
     if (data.message_unread_counter) {
@@ -735,7 +737,7 @@ var chat_manager = {
         return MessageModel.call('mark_as_unread', [message_ids, [channel.id]]);
     },
     mark_channel_as_seen: function (channel) {
-        if (channel.unread_counter > 0) {
+        if (channel.unread_counter > 0 && channel.type !== 'static') {
             update_channel_unread_counter(channel, 0);
             channel_seen(channel);
         }
