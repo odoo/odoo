@@ -158,7 +158,7 @@
             <field name="name">hr.expense.pivot</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <pivot string="Expenses Analysis" disable_linking="True">
+                <pivot string="Expenses Analysis">
                     <field name="employee_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
                     <field name="total_amount" type="measure"/>
