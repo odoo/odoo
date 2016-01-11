@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data noupdate="0">
+<odoo>
 
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">User: Own Leads Only</field>
@@ -41,7 +40,6 @@
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
 
-</data>
 
 <data noupdate="1">
 
@@ -80,4 +78,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

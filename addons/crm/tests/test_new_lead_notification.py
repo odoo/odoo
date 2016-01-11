@@ -9,9 +9,9 @@ class NewLeadNotification(TestCrm):
         """ Test newly create leads like from the website. People and channels
         subscribed to the sales team shoud be notified. """
         # subscribe a partner and a channel to the sales team with new lead subtype
-        subtype = self.env.ref("crm.mt_salesteam_lead")
-        self.sales_team_1.message_subscribe(partner_ids=[self.user_salesman_all.partner_id.id], subtype_ids=[subtype.id])
-        self.sales_team_1.message_subscribe(channel_ids=[self.group_pigs.id], subtype_ids=[subtype.id])
+        subtype_id = self.ref("crm.mt_salesteam_lead")
+        self.sales_team_1.message_subscribe(partner_ids=[self.user_salesman_all.partner_id.id], subtype_ids=[subtype_id])
+        self.sales_team_1.message_subscribe(channel_ids=[self.group_pigs.id], subtype_ids=[subtype_id])
 
         # Imitate what happens in the controller when somebody creates a new
         # lead from the website form
