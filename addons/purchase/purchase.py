@@ -182,7 +182,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def unlink(self):
         for order in self:
-            if order.state not in ['draft', 'cancel']:
+            if not order.state == 'cancel':
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
         return super(PurchaseOrder, self).unlink()
 
