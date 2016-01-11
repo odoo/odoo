@@ -62,7 +62,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để tạo một thành phần cho một công thức sản xuất.\n"
+"                Bấm để tạo một thành phần cho một định mức nguyên vật liệu.\n"
 "              </p><p>\n"
 "                Thành phần của Định mức nguyên liệu là các thành phần và các sản phẩm\n"
 "                được sử dụng để tạo ra Định mức nguyên liệu chính. Sử dụng trình đơn này để\n"
@@ -82,10 +82,10 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để tạo một năng lực sản xuất.\n"
+"                Bấm để tạo một năng lực sản xuất (Work Center).\n"
 "              </p><p>\n"
 "                Năng lực sản xuất cho phép bạn tạo và quản lý các đơn vị sản xuất\n"
-"                Chúng bao gồm công nhân và/hoặc máy mà được xem như là đơn vị \n"
+"                Chúng bao gồm công nhân và/hoặc máy móc mà được xem như là đơn vị \n"
 "                được phân công tác vụ cũng như năng lực và dự báo kế hoạch. \n"
 "              </p>\n"
 "            "
@@ -167,7 +167,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 "              </p><p>\n"
 "                Các lệnh sản xuất thường được đề xuất tự động dựa trên\n"
 "                yêu cầu của khách hàng hoặc theo các quy tắc tự động như\n"
-"                quy tắc tồn kho tối thiểu.\n"
+"                quy tắc tồn kho tối thiểu, quy tắc tái cung ứng.\n"
 "              </p>\n"
 "            "
 
@@ -263,7 +263,7 @@ msgstr "Có hiệu lực"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr "Active Id not found"
+msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -292,8 +292,8 @@ msgid "Allows to manage all product repairs.\n"
 "* Repair quotation report\n"
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
-msgstr "Allows to manage all product repairs.\n"
-"* Add/remove products in the reparation\n"
+msgstr "Cho phép quản lý tất cả hoạt động sửa chữa sản phẩm.\n"
+"* Thêm/Gỡ các sản phẩm đang sửa chữa\n"
 "* Impact for stocks\n"
 "* Invoicing (products and/or services)\n"
 "* Warranty concept\n"
@@ -349,7 +349,7 @@ msgstr "Tên BOM"
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
-msgstr "BOM Product Variants needed form apply this line."
+msgstr ""
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -365,7 +365,7 @@ msgstr "Cấu trúc BOM"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr "BOM lines of the referred bom"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -424,28 +424,28 @@ msgstr "BoM"
 #: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
+msgstr "BoM \"%s\" chứa một dòng với sản phẩm đệ quy: \"%s\"."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:344
 #, python-format
 msgid "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have any BoM defined."
-msgstr "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have any BoM defined."
+msgstr "BoM \"%s\" chứa một dòng phantom BoM nhưng sản phẩm \"%s\" chưa có BoM tương ứng được định nghĩa."
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr "BoM Line Type"
+msgstr "Kiểu dòng BoM"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr "BoM Lines"
+msgstr "Chi tiết BoM"
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "Loại BoM"
+msgstr "Kiểu BoM"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:267
@@ -569,7 +569,7 @@ msgstr "Chi phí thành phần của %s %s"
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
-msgstr "Components suppliers"
+msgstr "Nhà cung cấp thành phần"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -605,13 +605,13 @@ msgstr "Tiêu thụ & Sản xuất"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr "Consume Lines"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr "Consume Move"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -635,13 +635,13 @@ msgstr "Sản phẩm đã tiêu thụ"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr "Tiêu thụ cho"
+msgstr "Được tiêu thụ cho"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr "Giá vốn trên đơn vị đo lường"
+msgstr "Giá vốn theo Đơn vị Đo lường"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:148
@@ -734,7 +734,7 @@ msgstr "Ngày qua ngày"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr "Đơn vị đo lường mặc định"
+msgstr "Đơn vị Đo lường mặc định"
 
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
@@ -794,7 +794,7 @@ msgstr "Thông tin thêm"
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid "Fill this only if you want automatic analytic accounting entries on production orders."
-msgstr "Chỉ điền nó nếu bạn muốn bút toán kế toán quản trị tự động trên lệnh sản xuất."
+msgstr "Chỉ điền nó nếu bạn muốn bút toán kế toán quản trị tự động được tạo khi sản xuất."
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -877,7 +877,7 @@ msgstr "Nhóm theo..."
 #: help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -912,19 +912,19 @@ msgstr "Chi phí hàng giờ"
 #: field:report.workcenter.load,id:0
 #: field:stock.move.consume,id:0
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
 msgid "If a product variant is defined the BOM is available only for this product."
-msgstr "Nếu một biến thể sản phẩm được xác định một BOM chỉ khả dụng cho sản phẩm này."
+msgstr "Nếu một biến thể sản phẩm được xác định, BoM này chỉ khả dụng cho sản phẩm này."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0
 #: help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr "Nếu đánh dấu, các thông điệp mới sẽ bắt buộc sự có mặt của bạn"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -1034,12 +1034,12 @@ msgstr "Địa điểm"
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr "Địa điểm nơi mà hệ thống sẽ tìm kiếm các thành phần."
+msgstr "Địa điểm kho mà hệ thống sẽ tìm kiếm các thành phần (nguyên vật liệu)."
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "Địa điểm lưu trữ thành phẩm."
+msgstr "Địa điểm kho để lưu trữ thành phẩm."
 
 #. module: mrp
 #: field:mrp.product.produce,lot_id:0
@@ -1051,12 +1051,12 @@ msgstr "Lô"
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_tree_parent_view
 msgid "MRP BoMs"
-msgstr "MRP BoMs"
+msgstr ""
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "Quản lý quy trình sản xuất"
+msgstr "Quản lý Quy trình sản xuất (Routing)"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
@@ -1151,17 +1151,17 @@ msgstr "Lệnh sản xuất chờ sản phẩm"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr "Lệnh sản xuất đang diễn ra"
+msgstr "Lệnh sản xuất đang thực hiện"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr "Các lệnh sản xuất mà đang trong trạng thái đang sản xuất."
+msgstr "Các lệnh sản xuất mà trong trạng thái đang sản xuất."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr "Lệnh sản xuất sẵn sàng để bắt đầu sẳn xuất."
+msgstr "Lệnh sản xuất mà sẵn sàng để bắt đầu sẳn xuất."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1172,12 +1172,12 @@ msgstr "Lệnh sản xuất đang chờ nguyên liệu thô."
 #: code:addons/mrp/mrp.py:787
 #, python-format
 msgid "Manufacturing order cancelled."
-msgstr "Manufacturing order cancelled."
+msgstr "Lệnh sản xuất bị hủy"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr "Đánh dấu là bắt đầu"
+msgstr "Đánh dấu là Đã bắt đầu"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
@@ -1187,7 +1187,7 @@ msgstr "Định mức nguyên liệu chính"
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Master Data"
-msgstr "Master Data"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,message_ids:0
@@ -1238,7 +1238,7 @@ msgstr "Không có BoM tồn tại trên sản phẩm này!"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Cycles"
-msgstr "Số vòng đời"
+msgstr "SL Chu kỳ"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1272,7 +1272,7 @@ msgstr "Ghi chú"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 #: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
-msgstr "Số Chu kỳ"
+msgstr "Số lượng Chu kỳ"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1329,7 +1329,7 @@ msgstr "Quy trình sản xuất cha"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr "Tham chiếu:"
+msgstr "Tham chiếu đối tác:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1349,7 +1349,7 @@ msgstr "Mỗi tuần"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr "Phantom"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1392,12 +1392,12 @@ msgstr "Mức độ ưu tiên"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Procurement"
+msgstr "Cung ứng"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Procurement Rule"
+msgstr "Quy tắc cung ứng"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1456,7 +1456,7 @@ msgstr "Sản xuất sản phẩm"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr "Product Produce Consume lines"
+msgstr ""
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1480,7 +1480,7 @@ msgstr "Làm tròn sản phẩm"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr "Mẫu sản phẩm"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1491,17 +1491,17 @@ msgstr "Đơn vị bán sản phẩm"
 #. module: mrp
 #: help:mrp.bom.line,product_uos:0
 msgid "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."
-msgstr "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."
+msgstr "Đơn vị bán sản phẩm (UoS - Unit of Sale) là đơn vị đo lường được sử dụng để xuất hóa đơn bán hàng và promotion of stock."
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr "Product UOS Qty"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr "Product UOS Quantity"
+msgstr "Số lượng theo đơn vị bán (UoS)"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1520,7 +1520,7 @@ msgstr "Đơn vị bán sản phẩm"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Quantity"
-msgstr "Product UoS Quantity"
+msgstr "Số lượng theo đơn vị bán (UoS)"
 
 #. module: mrp
 #: field:mrp.bom,product_id:0
@@ -1552,7 +1552,7 @@ msgstr "Lệnh sản xuất"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Production Order N° :"
-msgstr "Số lệnh sản xuất :"
+msgstr "Mã số Lệnh sản xuất:"
 
 #. module: mrp
 #: field:stock.move,production_id:0
@@ -1567,7 +1567,7 @@ msgstr "Lệnh sản xuất cho nguyên liệu thô"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr "Production Scheduled Product"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1728,12 +1728,12 @@ msgstr "Reference to a position in an external plan."
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr "Nguồn lực"
+msgstr "Nguồn lực / Tài nguyên"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr "Resource Leaves"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
@@ -1800,7 +1800,7 @@ msgstr "Ngày theo kế hoạch"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr "Scheduled Date by Month"
+msgstr "Ngày kế hoạch theo Tháng"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1857,7 +1857,7 @@ msgstr "Tìm kiếm năng lực sản xuất"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "Security days for each manufacturing operation."
+msgstr "Ngày an toàn cho mỗi hoạt động sản xuất."
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -1975,7 +1975,7 @@ msgstr "Đơn vị đo lường sản phẩm mà bạn chọn có một nhóm kh
 #. module: mrp
 #: constraint:mrp.workcenter:0
 msgid "The capacity per cycle must be strictly positive."
-msgstr "The capacity per cycle must be strictly positive."
+msgstr "Công suất mỗi chu kỳ bắt buộc phải là một số dương."
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1997,7 +1997,7 @@ msgstr "Việc lựa chọn Định mức nguyên liệu chính xác để sử 
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "Cho phép thêm trạng thái (state), ngày bắt đầu (date_start), ngày kết thúc (date_stop) vào các hoạt động sản xuất (trong tab \"Năng lực sản xuất\")."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -2027,27 +2027,27 @@ msgstr "Thời gian trước sản xuất."
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr "Thời gian cho một vòng đời (giờ)"
+msgstr "Thời gian cho một chu kỳ (giờ)"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr "Thời gian tính theo giờ để hoàn thành một vòng đời."
+msgstr "Thời gian tính theo giờ để hoàn thành một chu kỳ."
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
-msgstr "Thời gian tính theo giờ để dọn dẹp."
+msgstr "Thời gian tính theo giờ để dọn dẹp / làm sạch."
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr "Thời gian tính theo giờ để chuẩn bị."
+msgstr "Thời gian tính theo giờ để chuẩn bị sản xuất."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid "Time in hours for this Work Center to achieve the operation of the specified routing."
-msgstr "Thời gian tính theo giờ cho năng lực sản xuất này để đạt được các hoạt động của một quy trình sản xuất cụ thể."
+msgstr "Thời gian tính theo giờ cho năng lực sản xuất (Work Center) này để đạt được các hoạt động của một quy trình sản xuất cụ thể."
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -2109,7 +2109,7 @@ msgstr "Đơn vị đo lường"
 #: help:mrp.bom,product_uom:0
 #: help:mrp.bom.line,product_uom:0
 msgid "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"
-msgstr "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,message_unread:0
@@ -2161,13 +2161,13 @@ msgstr "Hợp lệ đến"
 #: help:mrp.bom.line,date_start:0
 #: help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr "Validity of component. Keep empty if it's always valid."
+msgstr "Sự hợp lệ của thành phần. Để trống nếu nó luôn hợp lệ."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr "Validity of this BoM. Keep empty if it's always valid."
+msgstr "Sự hợp lệ của BoM này. Để trống nếu nó luôn hợp lệ"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2210,14 +2210,14 @@ msgstr "Cảnh báo!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr "Website Messages"
+msgstr "Thông điệp Website"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr "Website communication history"
+msgstr "Lịch sử thông điệp website"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2234,7 +2234,7 @@ msgstr "Biến động giá trị tồn kho hàng tuần"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation enables you to track the stock value evolution linked to manufacturing activities, receipts of products and delivery orders."
-msgstr "Weekly Stock Value Variation enables you to track the stock value evolution linked to manufacturing activities, receipts of products and delivery orders."
+msgstr "Biến động giá trị tồn kho hàng tuần cho phép bạn theo dõi tình hình giá trị tồn kho liên quan đến các hoạt động sản xuất, giao hàng, nhận hàng."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
@@ -2288,12 +2288,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr ""
+msgstr "Các hoạt động sản xuất"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr "Work Center Product"
+msgstr "Sản phẩm Năng lực sản xuất"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
