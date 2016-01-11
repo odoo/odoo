@@ -169,7 +169,7 @@ class product_product(osv.osv):
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
         res = {}
-        for product in self.browse(cr, uid, ids, context=context):
+        for product in self.browse(cr, uid, ids, context={'prefetch_fields': False}):
             id = product.id
             qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
             incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
