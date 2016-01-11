@@ -5,6 +5,7 @@ import datetime
 from lxml import etree
 import math
 import pytz
+import threading
 import urlparse
 
 import openerp
@@ -303,6 +304,9 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
+            return False
+
         img_path = openerp.modules.get_module_resource(
             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
