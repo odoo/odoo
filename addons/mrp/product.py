@@ -30,7 +30,7 @@ class product_template(osv.osv):
     }
 
     _defaults = {
-        'produce_delay': 1,
+        'produce_delay': 0,
     }
     
     
