@@ -262,11 +262,23 @@
 
 // Navbar icon and dropdown (FIXME: move to systray.less)
 .o_mail_navbar_item {
+    > a {
+        opacity: 1;
+        > i {
+            font-size: larger;
+        }
+    }
+    &.o_no_notification > a {
+        opacity: 0.5;
+        .o_notification_counter {
+            display: none;
+        }
+    }
+
     &.open .o_mail_navbar_dropdown {
         .o-flex-display();
         .o-flex-flow(column, nowrap);
     }
-
     .o_mail_navbar_dropdown {
         width: 350px;
         padding: 0;
