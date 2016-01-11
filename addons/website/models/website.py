@@ -347,7 +347,8 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = rule.methods or ['GET']
+        methods = endpoint.routing.get('method') or ['GET']
+
         converters = rule._converters.values()
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
