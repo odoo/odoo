@@ -332,19 +332,23 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
+    var state_options = $("select[name='state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var $select = $("select[name='state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='state_id']");
+        state_options.detach();
+        var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='country_id']").change();
 
+    var shipping_state_options = $("select[name='shipping_state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='shipping_country_id']", function () {
-        var $select = $("select[name='shipping_state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='shipping_state_id']");
+        shipping_state_options.detach();
+        var displayed_state = shipping_state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });
