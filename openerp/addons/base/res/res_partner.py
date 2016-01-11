@@ -370,14 +370,15 @@ class res_partner(osv.Model, format_address):
         default['name'] = _('%s (copy)') % self.name
         return super(res_partner, self).copy(default)
 
-    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
+    def onchange_parent_id(self, cr, uid, ids, parent_id, contact_type=None, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-        if not parent_id or not ids:
+        if not parent_id:
             return {'value': {}}
-        if parent_id:
-            result = {}
+        result = {}
+        partner = None
+        if ids:
             partner = self.browse(cr, uid, ids[0], context=context)
             if partner.parent_id and partner.parent_id.id != parent_id:
                 result['warning'] = {
@@ -386,14 +387,15 @@ class res_partner(osv.Model, format_address):
                                  'was never correctly set. If an existing contact starts working for a new '
                                  'company then a new contact should be created under that new '
                                  'company. You can use the "Discard" button to abandon this change.')}
+        # keep compatibility with having ids and partner, and use partner.type instead of contact_type in that case
+        if parent_id and (partner and partner.type == 'contact' or contact_type == 'contact'):
             # for contacts: copy the parent address, if set (aka, at least
             # one value is set in the address: otherwise, keep the one from
             # the contact)
-            if partner.type == 'contact':
-                parent = self.browse(cr, uid, parent_id, context=context)
-                address_fields = self._address_fields(cr, uid, context=context)
-                if any(parent[key] for key in address_fields):
-                    result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            parent = self.browse(cr, uid, parent_id, context=context)
+            address_fields = self._address_fields(cr, uid, context=context)
+            if any(parent[key] for key in address_fields):
+                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
         return result
 
     @api.multi
