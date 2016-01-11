@@ -5565,10 +5565,12 @@ class BaseModel(object):
         else:
             return self.browse(map(itemgetter('id'), sorted(self, key=key, reverse=reverse)))
 
+    @api.multi
     def update(self, values):
-        """ Update record `self[0]` with ``values``. """
-        for name, value in values.iteritems():
-            self[name] = value
+        """ Update the records in ``self`` with ``values``. """
+        for record in self:
+            for name, value in values.iteritems():
+                record[name] = value
 
     #
     # New records - represent records that do not exist in the database yet;
