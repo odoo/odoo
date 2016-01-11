@@ -337,7 +337,6 @@ class BaseModel(object):
     _inherit_fields = {}
 
     _table = None
-    _log_create = False
     _sql_constraints = []
 
     # model dependencies, for models backed up by sql views:
@@ -4312,13 +4311,6 @@ class BaseModel(object):
 
             # recompute new-style fields
             recs.recompute()
-
-        if self._log_create and recs.env.recompute and context.get('recompute', True):
-            message = self._description + \
-                " '" + \
-                self.name_get(cr, user, [id_new], context=context)[0][1] + \
-                "' " + _("created.")
-            self.log(cr, user, id_new, message, True, context=context)
 
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
         self.create_workflow(cr, user, [id_new], context=context)
