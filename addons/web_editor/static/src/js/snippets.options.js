@@ -489,7 +489,7 @@ var many2one = Option.extend({
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.qweb.field.contact',
             method: 'get_record_to_html',
-            args: [[this.ID]],
+            args: [this.ID],
             kwargs: {
                 options: options,
                 context: base.get_context(),
