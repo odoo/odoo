@@ -131,6 +131,7 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
+                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}" groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
@@ -610,7 +611,7 @@
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"

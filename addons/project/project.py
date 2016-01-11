@@ -846,9 +846,18 @@ class task(osv.osv):
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
+
+    def _compute_project_count(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0)
+        for account in self.browse(cr, uid, ids, context=context):
+            result[account.id] = len(account.project_ids)
+        return result
+
     _columns = {
         'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
+        'project_ids': fields.one2many('project.project', 'analytic_account_id', 'Projects'),
+        'project_count': fields.function(_compute_project_count, 'Project Count', type='integer')
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
@@ -917,6 +926,25 @@ class account_analytic_account(osv.osv):
             return self.name_get(cr, uid, project_ids, context=context)
 
         return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+
+    def projects_action(self, cr, uid, ids, context=None):
+        accounts = self.browse(cr, uid, ids, context=context)
+        project_ids = sum([account.project_ids.ids for account in accounts], [])
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "project.project",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [["id", "in", project_ids]],
+            "context": {"create": False},
+            "name": "Projects",
+        }
+        if len(project_ids) == 1:
+            result['views'] = [(False, "form")]
+            result['res_id'] = project_ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
 
 
 class project_project(osv.osv):

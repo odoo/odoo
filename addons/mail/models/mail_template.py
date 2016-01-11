@@ -25,6 +25,16 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
 
     ts = openerp.osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
 
+    # Babel allows to format datetime in a specific language without change locale
+    # So month 1 = January in English, and janvier in French
+    # Be aware that the default value for format is 'medium', instead of 'short'
+    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
+    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
+    if context.get('use_babel'):
+        # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
+        from babel.dates import format_datetime
+        return format_datetime(ts, format or 'medium', locale=context.get("lang") or 'en_US')
+
     if format:
         return ts.strftime(format)
     else:
@@ -38,7 +48,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         format_date = lang_params.get("date_format", '%B-%d-%Y')
         format_time = lang_params.get("time_format", '%I-%M %p')
 
-        fdate = ts.strftime(format_date)
+        fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time)
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 

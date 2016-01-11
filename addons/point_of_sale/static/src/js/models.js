@@ -337,7 +337,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.journal',
-        fields: [],
+        fields: ['type', 'sequence'],
         domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
         loaded: function(self, journals){
             var i;
@@ -1092,10 +1092,11 @@ exports.Orderline = Backbone.Model.extend({
     clone: function(){
         var orderline = new exports.Orderline({},{
             pos: this.pos,
-            order: null,
+            order: this.order,
             product: this.product,
             price: this.price,
         });
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;

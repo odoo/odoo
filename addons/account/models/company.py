@@ -54,7 +54,7 @@ Best Regards,''')
         self = self[0]
         last_month = self.fiscalyear_last_month
         last_day = self.fiscalyear_last_day
-        if (date.month < last_month or (date.month == last_month and date.date <= last_day)):
+        if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
             date = date.replace(month=last_month, day=last_day)
         else:
             date = date.replace(month=last_month, day=last_day, year=date.year + 1)

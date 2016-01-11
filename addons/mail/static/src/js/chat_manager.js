@@ -11,7 +11,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var LIMIT = 100;
-var preview_msg_max_size = 50;
+var preview_msg_max_size = 350;  // optimal for native english speakers
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
@@ -28,8 +28,9 @@ var needaction_counter = 0;
 var mention_partner_suggestions = [];
 var discuss_ids = {};
 var global_unread_counter = 0;
+var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 
-// Window focus/unfocus, beep and title
+// Utils: Window focus/unfocus, beep, tab title, parsing html strings
 //----------------------------------------------------------------------------------
 var beep = (function () {
     if (typeof(Audio) === "undefined") {
@@ -43,25 +44,66 @@ var beep = (function () {
 
 bus.on("window_focus", null, function() {
     global_unread_counter = 0;
-    notify();
+    web_client.set_title_part("_chat");
 });
 
-function increment_global_unread_counter () {
-    if (!bus.is_odoo_focused()) {
+function notify_incoming_message (msg, options) {
+    var title = _t('New message');
+    if (msg.author_id[1]) {
+        title += _t(' from ') + _.escape(msg.author_id[1]);
+    }
+    var content = $(msg.body).text().substr(0, preview_msg_max_size);
+
+    if (bus.is_odoo_focused()) {
+        if (!options.is_displayed) {
+            web_client.do_notify(title, content);
+        }
+    } else {
         global_unread_counter++;
-        notify(bus.is_master);
+        var tab_title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
+        web_client.set_title_part("_chat", tab_title);
+
+        if (Notification && Notification.permission === "granted") {
+            if (bus.is_master) {
+                new Notification(title, {body: content, icon: "/web/static/src/img/odoo.png", silent: false});
+            }
+        } else {
+            web_client.do_notify(title, content);
+            if (bus.is_master) {
+                beep();
+            }
+        }
     }
 }
 
-function notify (play_sound) {
-    var title;
-    if (global_unread_counter > 0) {
-        title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
-        if (play_sound) {
-            beep();
-        }
+function parse_and_transform(html_string, transform_function) {
+    var open_token = "OPEN" + Date.now();
+    var string = html_string.replace(/&lt;/g, open_token);
+    var children = $('<div>').html(string).contents();
+    return _parse_and_transform(children, transform_function)
+                .replace(new RegExp(open_token, "g"), "&lt;");
+}
+
+function _parse_and_transform(nodes, transform_function) {
+    return _.map(nodes, function (node) {
+        return transform_function(node, function () {
+            return _parse_and_transform(node.childNodes, transform_function);
+        });
+    }).join("");
+}
+
+// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
+var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+function add_link (node, transform_children) {
+    if (node.nodeType === 3) {  // text node
+        return node.data.replace(url_regexp, function (url) {
+            var href = (!/^(f|ht)tps?:\/\//i.test(url)) ? "http://" + url : url;
+            return '<a href="' + href + '">' + url + '</a>';
+        });
     }
-    web_client.set_title_part("_chat", title);
+    if (node.tagName === "A") return node.outerHTML;
+    node.innerHTML = transform_children();
+    return node.outerHTML;
 }
 
 // Message and channel manipulation helpers
@@ -92,22 +134,10 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if (is_chat && options.show_notification) {
-                var query = { is_displayed: false };
+            if (is_chat && options.show_notification && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
+                var query = {is_displayed: false};
                 chat_manager.bus.trigger('anyone_listening', channel, query);
-                if (!query.is_displayed) {
-                    var title = _t('New message');
-                    if (msg.author_id[1]) {
-                        title += _t(' from ') + _.escape(msg.author_id[1]);
-                    }
-                    var trunc_text = function (t, limit) {
-                        return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
-                    };
-                    web_client.do_notify(title, trunc_text(msg.body, preview_msg_max_size));
-                }
-            }
-            if (is_chat && options.increment_unread && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
-                increment_global_unread_counter();
+                notify_incoming_message(msg, query);
             }
         });
         if (!options.silent) {
@@ -207,6 +237,9 @@ function make_message (data) {
         msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
     }
 
+    // add anchor tags to urls
+    msg.body = parse_and_transform(msg.body, add_link);
+
     // Compute url of attachments
     _.each(msg.attachment_ids, function(a) {
         a.url = '/web/content/' + a.id + '?download=true';
@@ -274,8 +307,23 @@ function make_channel (data, options) {
         channel.name = data.direct_partner[0].name;
         channel.direct_partner_id = data.direct_partner[0].id;
         channel.status = data.direct_partner[0].im_status;
+        pinned_dm_partners.push(channel.direct_partner_id);
+        bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
     }
     return channel;
+}
+
+function remove_channel (channel) {
+    if (!channel) { return; }
+    if (channel.type === 'dm') {
+        var index = pinned_dm_partners.indexOf(channel.direct_partner_id);
+        if (index > -1) {
+            pinned_dm_partners.splice(index, 1);
+            bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
+        }
+    }
+    channels = _.without(channels, channel);
+    delete channel_defs[channel.id];
 }
 
 function get_channel_cache (channel, domain) {
@@ -434,7 +482,7 @@ function on_channel_notification (message) {
 
 function on_partner_notification (data) {
     if (data.info === "unsubscribe") {
-        channels = _.without(channels, chat_manager.get_channel(data.id));
+        remove_channel(chat_manager.get_channel(data.id));
         chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
     } else if (data.type === 'toggle_star') {
         on_toggle_star_notification(data);
@@ -552,6 +600,9 @@ var chat_manager = {
             body: _.str.trim(data.content),
             attachment_ids: data.attachment_ids,
         };
+        if ('subject' in data) {
+            msg.subject = data.subject;
+        }
         if ('channel_id' in options) {
             // post a message in a channel
             return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
@@ -741,8 +792,7 @@ var chat_manager = {
             def = ChannelModel.call('channel_pin', [channel.uuid, false]);
         }
         return def.then(function () {
-            channels = _.without(channels, channel);
-            delete channel_defs[channel.id];
+            remove_channel(channel);
         });
     },
     close_chat_session: function (channel_id) {

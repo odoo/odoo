@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
+var session = require('web.session');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
@@ -65,7 +66,9 @@ var PlannerDialog = Widget.extend({
     willStart: function() {
         var self = this;
         var res = this._super.apply(this, arguments).then(function() {
-            return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]);
+            return (new Model('web.planner')).call('render',
+                [self.planner.view_id[0], self.planner.planner_application],
+                {context: session.user_context});
         }).then(function(template) {
             self.$res = $(template);
         });
@@ -113,6 +116,13 @@ var PlannerDialog = Widget.extend({
             self.trigger('planner_progress_changed', self.get('progress'));
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
+
+        // re-apply the minimal value of 5 percent if the user manually undid every page
+        if (this.planner.progress === 0 && this.get('progress') === 0) {
+            this.planner.progress = 5;
+            this.set('progress', 5);
+        }
+
         this.set('progress', this.planner.progress); // set progress to trigger initial UI update
     },
     _render_done_page: function (page) {
@@ -385,7 +395,11 @@ var PlannerDialog = Widget.extend({
         });
 
         var percent = parseInt((done_pages / total_pages) * 100, 10);
+        if (percent === 0) {
+            percent = 5;
+        }
         this.set('progress', percent);
+
         this.planner.progress = percent;
         // save data and progress in database
         this._save_planner_data();
@@ -410,52 +424,8 @@ var PlannerDialog = Widget.extend({
     }
 });
 
-var PlannerHelpMixin = {
-
-    on_menu_help: function(ev) {
-        ev.preventDefault();
-
-        var menu = $(ev.currentTarget).data('menu');
-        if (menu === 'about') {
-            if (!odoo.db_info) {
-                var self = this;
-                this.rpc("/web/webclient/version_info", {}).done(function(db_info) {
-                    self.on_menu_help_about(db_info);
-                });
-            } else {
-                this.on_menu_help_about(odoo.db_info);
-            }
-        } else if (menu === 'documentation') {
-            window.open('https://www.odoo.com/documentation/user', '_blank');
-        } else if (menu === 'planner') {
-            if (this.dialog) this.show_dialog();
-        } else if (menu === 'support') {
-            if (odoo.db_info && odoo.db_info.server_version_info[5] === 'c') {
-                window.open('https://www.odoo.com/buy', '_blank');
-            } else {
-                window.location.href = 'mailto:help@odoo.com';
-            }
-        }
-    },
-
-    on_menu_help_about: function(db_info) {
-        var $help = $(QWeb.render("PlannerLauncher.about", {db_info: db_info}));
-        $help.find('a.oe_activate_debug_mode').click(function (e) {
-            e.preventDefault();
-            window.location = $.param.querystring( window.location.href, 'debug');
-        });
-        new Dialog(this, {
-            size: 'medium',
-            dialogClass: 'o_act_window',
-            title: _t("About"),
-            $content: $help
-        }).open();
-    },
-};
-
 return {
     PlannerDialog: PlannerDialog,
-    PlannerHelpMixin: PlannerHelpMixin,
 };
 
 });
