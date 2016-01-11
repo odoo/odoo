@@ -116,3 +116,7 @@ class TestInherit(common.TransactionCase):
         # check method overriding
         self.assertEqual(parent.stuff(), 'P1P2')
         self.assertEqual(child.stuff(), 'P1P2C1')
+
+        # check properties memoized on model
+        self.assertEqual(len(parent._constraint_methods), 1)
+        self.assertEqual(len(child._constraint_methods), 1)

@@ -140,3 +140,7 @@ class Parent2(models.AbstractModel):
 
     def stuff(self):
         return super(Parent2, self).stuff() + 'P2'
+
+    @api.constrains('foo')
+    def _check_foo(self):
+        pass
