@@ -275,9 +275,9 @@ LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 class BaseModel(object):
-    """ Base class for OpenERP models.
+    """ Base class for Odoo models.
 
-    OpenERP models are created by inheriting from this class' subclasses:
+    Odoo models are created by inheriting:
 
     *   :class:`Model` for regular database-persisted models
 
@@ -285,7 +285,7 @@ class BaseModel(object):
         automatically vacuumed every so often
 
     *   :class:`AbstractModel` for abstract super classes meant to be shared by
-        multiple inheriting model
+        multiple inheriting models
 
     The system automatically instantiates every model once per database. Those
     instances represent the available models on each database, and depend on
@@ -303,8 +303,10 @@ class BaseModel(object):
     attribute may be set to False.
     """
     __metaclass__ = MetaModel
-    _auto = True # create database backend
-    _register = False # Set to false if the model shouldn't be automatically discovered.
+    _auto = False               # don't create any database backend
+    _register = False           # not visible in ORM registry
+    _transient = False          # not transient
+
     _name = None
     _columns = {}
     _constraints = []
@@ -324,9 +326,6 @@ class BaseModel(object):
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
     _group_by_full = {}
-
-    # Transience
-    _transient = False # True in a TransientModel
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -6197,10 +6196,13 @@ class RecordCache(MutableMapping):
         """ Return the number of fields with a regular value in cache. """
         return sum(1 for name in self)
 
-class Model(BaseModel):
-    """Main super-class for regular database-persisted OpenERP models.
 
-    OpenERP models are created by inheriting from this class::
+AbstractModel = BaseModel
+
+class Model(AbstractModel):
+    """ Main super-class for regular database-persisted Odoo models.
+
+    Odoo models are created by inheriting from this class::
 
         class user(Model):
             ...
@@ -6208,36 +6210,21 @@ class Model(BaseModel):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
     """
-    _auto = True
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = False # True in a TransientModel
+    _auto = True                # automatically create database backend
+    _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _transient = False          # not transient
 
-class TransientModel(BaseModel):
-    """Model super-class for transient records, meant to be temporarily
-       persisted, and regularly vacuum-cleaned.
+class TransientModel(AbstractModel):
+    """ Model super-class for transient records, meant to be temporarily
+    persisted, and regularly vacuum-cleaned.
 
-       A TransientModel has a simplified access rights management,
-       all users can create new records, and may only access the
-       records they created. The super-user has unrestricted access
-       to all TransientModel records.
+    A TransientModel has a simplified access rights management, all users can
+    create new records, and may only access the records they created. The super-
+    user has unrestricted access to all TransientModel records.
     """
-    _auto = True
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = True
-
-class AbstractModel(BaseModel):
-    """Abstract Model super-class for creating an abstract class meant to be
-       inherited by regular models (Models or TransientModels) but not meant to
-       be usable on its own, or persisted.
-
-       Technical note: we don't want to make AbstractModel the super-class of
-       Model or BaseModel because it would not make sense to put the main
-       definition of persistence methods such as create() in it, and still we
-       should be able to override them within an AbstractModel.
-       """
-    _auto = False # don't create any database backend for AbstractModels
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = False
+    _auto = True                # automatically create database backend
+    _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _transient = True           # transient
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning
