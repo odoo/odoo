@@ -782,6 +782,10 @@ class BaseModel(object):
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
 
+        # reset properties memoized on cls
+        cls._constraint_methods = BaseModel._constraint_methods
+        cls._onchange_methods = BaseModel._onchange_methods
+
     @property
     def _constraint_methods(self):
         """ Return a list of methods implementing Python constraints. """
