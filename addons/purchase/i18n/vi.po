@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Vu Khanh Thuy <vukhanhthuy@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
+"PO-Revision-Date: 2016-01-05 16:34+0000\n"
+"Last-Translator: Vu Khanh Thuy <vukhanhthuy@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,7 +164,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr "* Trạng thái dự thảo được thiết lập dự động khi đơn hàng trong tình trạng dự thảo.                                        \n* Trạng thái 'Đã xác nhận' được thiết lập tự động khi đơn hàng được xác nhận.                                        \n* Trạng thái 'Hoàn thành' được thiết lập tự động khi quy trình mua hàng (purchase workflow) kết thúc.                                        \n* Trạng thái 'Đã hủy' được thiết lập tự động khi người dùng hủy đơn hàng."
+msgstr "* Trạng thái 'Dự thảo' được thiết lập dự động khi đơn hàng trong tình trạng dự thảo.                                        \n* Trạng thái 'Đã xác nhận' được thiết lập tự động khi đơn hàng được xác nhận.                                        \n* Trạng thái 'Hoàn thành' được thiết lập tự động khi quy trình mua hàng (purchase workflow) kết thúc.                                        \n* Trạng thái 'Đã hủy' được thiết lập tự động khi người dùng hủy đơn hàng."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
@@ -180,7 +181,7 @@ msgstr "# Mua hàng"
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr "# Hóa đơn nhà cung cấp"
+msgstr "# Hóa đơn NCC"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
@@ -190,17 +191,17 @@ msgstr "Số lượng dòng"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr "# của đơn hàng"
+msgstr "# của Đơn hàng"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Đặt hàng (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Đặt hàng (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -219,7 +220,7 @@ msgid ""
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Nhấp chuột để ghi nhận một hóa đơn nhà cung cấp.\n                </p><p>\n                    Hóa đơn nhà cung cấp có thể được tạo lại dựa trên đơn hàng hoặc phiếu nhập kho\n                    Điều này cho phép bạn kiểm soát hóa đơn mà bạn nhận được từ nhà cung cấp.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn vào đây để ghi nhận một hóa đơn NCC.\n</p><p>\nHóa đơn NCC có thể được tạo trước dựa trên đơn hàng hoặc\nphiếu nhập kho. Điều này cho phép bạn kiểm soát hóa đơn\nmà bạn nhận được từ NCC.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -232,7 +233,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Nhà cung cấp này không có đơn hàng. Nhấp chuột để tạo mới một Yêu cầu chào giá.\n                </p><p>\n                    Một yêu cầu chào giá là bước đầu tiên của quy trình mua hàng. Khi nó được\n                    chuyển thành một đơn hàng, bạn có thể kiểm soát việc nhận hàng và hóa đơn nhà cung cấp.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNCC này chưa có đơn hàng. Nhấn để tạo một YCCG mới.\n</p><p>\nYêu cầu chào giá (YCCG) là bước đầu tiên của quy trình mua\nhàng. Khi nó được chuyển thành một đơn hàng, bạn có thể\nkiểm soát việc nhận hàng và hóa đơn NCC.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -246,7 +247,7 @@ msgid ""
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để thêm một phiên bản bảng giá.\n              </p><p>\n                Có thể có nhiều hơn một phiên bản của một bảng giá, mỗi\n                phiên bản phải hợp lệ trong khoảng thời gian.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấp chuột để thêm một phiên bản bảng giá.\n</p><p>\nCó thể có nhiều hơn một phiên bản của một bảng giá, mỗi\nphiên bản phải hợp lệ trong khoảng thời gian. Ví dụ: Bảng giá 2016, Bảng giá mùa hè, .v.v.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -260,7 +261,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để tạo hàng sắp về.\n              </p><p> \n                Tại đây bạn có thể theo dõi tất cả sản phẩm nhận được từ đơn hàng\n                mà được xuất hóa đơn \"Dựa trên hàng sắp về\",\n                và chưa nhận được hóa đơn từ nhà cung cấp.\n                Bạn có thể tạo hóa đơn nhà cung cấp dựa trên các phiếu nhập kho này.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn để tạo một lô hàng sắp về.\n</p><p> \nTại đây bạn có thể theo dõi tất cả sản phẩm nhận được từ đơn\nhàng được xuất hóa đơn \"Dựa trên hàng sắp về\", và chưa nhận\nđược hóa đơn từ NCC. Bạn có thể tạo hóa đơn NCC dựa trên\ncác phiếu nhập kho này.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -274,7 +275,7 @@ msgid ""
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để tạo một báo giá mà sẽ được chuyển thành đơn hàng. \n              </p><p>\n                Sử dụng trình đơn này để tìm kiếm đơn hàng theo tham chiếu\n                nhà cung cấp, sản phẩm,... Mỗi đơn hàng, bạn có thể theo dõi\n                các thảo luận liên quan tới nhà cung cấp, kiểm soát sản phẩm nhận được\n                cũng như hóa đơn nhà cung cấp.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn để tạo một bảng giá mà nó sẽ được chuyển thành đơn hàng.\n</p><p>\nSử dụng trình đơn này để tìm kiếm trong các đơn hàng theo\ntham chiếu, NCC, sản phẩm,... Với mỗi đơn hàng, bạn có thể\ntheo dõi các thảo luận liên quan tới nhà cung cấp, kiểm soát\nsản phẩm nhận được và hóa đơn NCC.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -290,7 +291,7 @@ msgid ""
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để tạo một yêu cầu chào giá.\n              </p><p>\n                Yêu cầu chào giá bao gồm lịch sử thảo luận/đàm phán\n                giữa bạn và nhà cung cấp. Khi nó được xác nhận, một yêu cầu chào giá\n               được chuyển thành một đơn hàng.\n              </p>            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn để tạo một yêu cầu chào giá.\n</p><p>\nYêu cầu chào giá bao gồm lịch sử thảo luận/đàm phán\ngiữa bạn và NCC. Khi được xác nhận, yêu cầu chào giá\nđược chuyển thành một đơn hàng.\n</p><p>\nHầu hết đề xuất của đơn hàng được tạo tự động dựa trên\nnhu cầu vật tư\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -306,7 +307,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Nhấp chuột để tạo một hóa đơn dự thảo.\n          </p><p>\n            Sử dụng trình đơn này để kiểm soát hóa đơn nhận được từ nhà cung cấp\n            Hệ thống tạo hóa đơn dự thảo từ đơn hàng hoặc phiếu nhập kho, tùy theo cấu hình của bạn\n          </p><p>\n            Khi bạn nhận được một hóa đơn nhà cung cấp, bạn có thể đối chiếu với\n            hóa đơn dự thảo này và xác nhận nó.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn để tạo một hóa đơn dự thảo.\n</p><p>\nSử dụng trình đơn này để kiểm soát hóa đơn sẽ nhận từ NCC\nHệ thống tạo hóa đơn dự thảo từ đơn hàng hoặc phiếu nhập\nkho, tùy theo cấu hình của bạn\n</p><p>\nKhi bạn nhận được một hóa đơn NCC, bạn có thể đối chiếu với\nhóa đơn dự thảo này và hợp thức nó.\n</p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -323,7 +324,7 @@ msgid ""
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Nhấp chuột để định nghĩa một sản phẩm mới.\n          </p><p>\n            Bạn phải định nghĩa một sản phẩm cho mọi thứ mà bạn mua, cho dù\n            nó là sản phẩm sờ thấy được, một sản phẩm có thể tiêu thụ hay là dịch vụ\n            mà bạn mua từ nhà thầu phụ.\n          </p><p>\n            Form sản phẩm bao gồm thông tin chi tiết để cải thiện tiến trình\n            mua hàng: giá cả, cung ứng, dữ liệu kế toán,...,\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNhấn để định nghĩa một sản phẩm mới.\n</p><p>\nBạn phải định nghĩa một sản phẩm cho mọi thứ mà bạn mua,\ncho dù nó là sản phẩm sờ thấy được, một sản phẩm có thể\ntiêu thụ hay là dịch vụ mua từ nhà thầu phụ.\n</p><p>\nBiểu mẫu sản phẩm bao gồm thông tin chi tiết để cải thiện\nquy trình mua hàng: giá cả, cung ứng, dữ liệu kế toán, NCC \nsẵn có, v.v.\n</p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -335,7 +336,7 @@ msgid ""
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Tại đây bạn có thể theo dõi tất cả hạng mục của đơn hàng mà\n                xuất hóa đơn \"Dựa trên Hạng mục của đơn hàng\", và chưa nhận được hóa đơn từ nhà cung cấp\n                Bạn có thể tạo một hóa đơn nhà cung cấp dự thảo dựa trên các hạng mục từ danh sách này.\n              </p>\n            "
+msgstr "<p>\nTại đây bạn có thể theo dõi tất cả hạng mục của đơn hàng có\nhóa đơn được xuất \"Dựa trên Hạng mục của đơn hàng\", và \nchưa nhận được hóa đơn từ NCC. Bạn có thể tạo một hóa đơn\n</p>\n            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -345,12 +346,12 @@ msgstr "Sổ địa chỉ"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Quy trình đấu thầu nâng cao"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr "Cảnh báo bởi sản phẩm hoặc nhà cung cấp"
+msgstr "Cảnh báo bởi sản phẩm hoặc NCC"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -366,14 +367,14 @@ msgstr "Cho phép cấu hình thông báo trên sản phẩm và kích hoạt ch
 msgid ""
 "Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr "Cho phép người dùng duy trì một vài kế hoạch quản trị. Chúng giúp bạn chia từng hạng mực trên đơn hàng thành một vài tài khoản quản trị và kế hoạch quản trị.\n-Việc này sẽ cài đặt phân hệ purchase_analytic_plans."
+msgstr "Cho phép người dùng duy trì một vài kế hoạch quản trị. Chúng giúp bạn chia từng hạng mục trên đơn hàng thành một vài tài khoản quản trị và kế hoạch quản trị.\n- Việc này sẽ cài đặt phân hệ purchase_analytic_plans."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr "Cho phép quản lý giá khác nhau dựa trên quy tắc trên nhóm Nhà cung cấp.\nVí dụ: 10% cho khách lẻ, thêm 5000 vnđ trên sản phẩm này,..."
+msgstr "Cho phép quản lý giá khác nhau dựa trên quy tắc trên nhóm Nhà cung cấp.\nVí dụ: 10% cho khách lẻ, giảm giá 5.000 đồng trên sản phẩm này, v.v."
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
@@ -390,7 +391,7 @@ msgstr "Cho phép bạn lựa chọn và duy trì đơn vị tính khác nhau tr
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr "Cho phép bạn chỉ ra một tài khoản quản trị trên hợp đồng bán hàng."
+msgstr "Cho phép bạn chỉ ra một tài khoản quản trị cho các đơn hàng."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -482,17 +483,17 @@ msgstr "Dựa trên hạng mục của đơn hàng"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr "Nhận thầu"
+msgstr "Đã nhận HS thầu"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "Nhận thầu trên"
+msgstr "Đã nhận HS thầu vào"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "HS thầu hợp lệ đến"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -1742,7 +1743,7 @@ msgstr "Ngày dự kiến"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Tìm kiếm Đơn hàng"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -1898,13 +1899,13 @@ msgstr "Sản phẩm \"%s\" được xác định với công ty của bạn nh�
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
+msgstr "NCC này chỉ bán với số lượng tối thiểu là %s %s, bạn không nên đặt hàng ít hơn."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1130
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "NCC được lựa chọn chỉ bán sản phẩm này theo %s"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1939,7 +1940,7 @@ msgstr "Không có nhà cung cấp liên kết tới sản phẩm %s"
 msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
-msgstr ""
+msgstr "Đây là ngày dự kiến ngắn nhất cho tất cả hàng hóa của đơn hàng này."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -2014,7 +2015,7 @@ msgstr "Đơn giá"
 #. module: purchase
 #: field:purchase.report,quantity:0
 msgid "Unit Quantity"
-msgstr ""
+msgstr "Số lượng"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -2091,7 +2092,7 @@ msgstr "Chờ phê duyệt"
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Chờ NCC phản hồi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -2132,7 +2133,7 @@ msgstr "Bạn không thể xác nhận một đơn hàng mà không có bất k�
 #: code:addons/purchase/purchase.py:695
 #, python-format
 msgid "You have already received some goods for it.  "
-msgstr ""
+msgstr "Bạn đã nhận vài mục của đơn hàng này"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:701

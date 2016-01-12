@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-01 15:40+0000\n"
+"PO-Revision-Date: 2016-01-08 16:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,7 @@ msgid ""
 "</pre>\n"
 "\n"
 "            "
-msgstr ""
+msgstr "\nDobrý deň ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n<tr>\n<th>Zákazník</th>\n<th>Zmluva</th>\n<th>Dátumy</th>\n<th>Predplatené jednotky</th>\n<th>Kontakt</th>\n</tr>\n% pre partnera, účty v hodnotách:\n% na účet v účtoch:\n<tr>\n<td>${partner.name}</td>\n<td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n<td>${account.date_start} to ${account.date and account.date or '???'}</td>\n<td>\n% if account.quantity_max != 0.0:\n${account.remaining_hours}/${account.quantity_max} units\n% endif\n</td>\n<td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n</tr>\n% endfor\n% endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n<h2>Nasledujúce zmluvy práve vypršali: </h2>\n${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n<h2>Nasledujúce vypršané zmluvy ešte nie sú spracované: </h2>\n${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n<h2>Nasledujúce zmluvy vypršia za menej ako mesiac: </h2>\n${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\nMôžete skontrolovať všetky zmluvy, ktoré majú byť obnovené pomocou menu:\n</p>\n<ul>\n<li>Predaj / Fakturácia / Zmluvy na obnovenie</li>\n</ul>\n<p>\nVďaka,\n</p>\n\n<pre>\n-- \nOdoo automatický email\n</pre>"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
@@ -164,7 +164,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Account Manager"
-msgstr ""
+msgstr "Manažér účtu"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
@@ -197,7 +197,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "Zrušiť zmluvy"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -207,7 +207,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed contracts"
-msgstr ""
+msgstr "Zavreté zmluvy"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -260,7 +260,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "Pripomienka vypršania zmluvy ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -282,12 +282,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contracts not assigned"
-msgstr ""
+msgstr "Nepridelené zmluvy"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "Zmluvy ktoré nie sú pridelené manažérovi účtu."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -323,7 +323,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Dátum ďalšej faktúry"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -343,12 +343,12 @@ msgstr "Popis"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Mesiac ukončenia"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End date is in the next month"
-msgstr ""
+msgstr "Dátum ukončenia je budúci mesiac"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -387,7 +387,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Expiring soon"
-msgstr ""
+msgstr "Čoskoro vyprší"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
@@ -453,7 +453,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_rule_type:0
 msgid "Invoice automatically repeat at specified interval"
-msgstr ""
+msgstr "Faktúru automaticky opakovať v špecifikovanom intervale"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -509,7 +509,7 @@ msgstr "Mesiac"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Mesiac(e)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
@@ -571,13 +571,13 @@ msgstr "Partner"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Pending contracts"
-msgstr ""
+msgstr "Čakajúce zmluvy"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:682
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr ""
+msgstr "Prosím definujte predajnú účtovnú knihu pre spoločnosť \"%s\"."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -607,7 +607,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Opakovanie"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -640,7 +640,7 @@ msgstr "Opakovať každé"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Opakovať každý (deň/týždeň/mesiac/rok)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -672,7 +672,7 @@ msgstr "Stav"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Medzisúčet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -687,7 +687,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Template"
-msgstr ""
+msgstr "Šablóna"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -719,7 +719,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "To Invoice"
-msgstr ""
+msgstr "Na vyfaktúrovanie"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -818,7 +818,7 @@ msgstr "Používateľ"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Týždeň(ne)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -832,7 +832,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Rok(y)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
