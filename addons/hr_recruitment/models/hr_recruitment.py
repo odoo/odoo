@@ -289,11 +289,6 @@ class Applicant(models.Model):
                 res = super(Applicant, self).write(vals)
         else:
             res = super(Applicant, self).write(vals)
-
-        # post processing: if stage changed, post a message in the chatter
-        if vals.get('stage_id'):
-            if self.stage_id.template_id:
-                self.message_post_with_template(self.stage_id.template_id.id, notify=True, composition_mode='mass_mail')
         return res
 
     @api.model
@@ -357,6 +352,15 @@ class Applicant(models.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
         return action
+
+    @api.multi
+    def _track_template(self, tracking):
+        res = super(Applicant, self)._track_template(tracking)
+        applicant = self[0]
+        changes, dummy = tracking[applicant.id]
+        if 'stage_id' in changes and applicant.stage_id.template_id:
+            res['stage_id'] = (applicant.stage_id.template_id, {'composition_mode': 'mass_mail'})
+        return res
 
     @api.multi
     def _track_subtype(self, init_values):

@@ -302,6 +302,15 @@ class project_issue(osv.Model):
     # Mail gateway
     # -------------------------------------------------------
 
+    @api.multi
+    def _track_template(self, tracking):
+        res = super(project_issue, self)._track_template(tracking)
+        test_issue = self[0]
+        changes, dummy = tracking[test_issue.id]
+        if 'stage_id' in changes and test_issue.stage_id.mail_template_id:
+            res['stage_id'] = (test_issue.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+        return res
+
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
         if 'kanban_state' in init_values and record.kanban_state == 'blocked':
