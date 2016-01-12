@@ -174,7 +174,7 @@ class Forum(models.Model):
                     existing_keep.append(int(tag_ids[0]))
                 else:
                     # check if user have Karma needed to create need tag
-                    if user.exists() and user.karma >= self.karma_tag_create:
+                    if user.exists() and user.karma >= self.karma_tag_create and len(tag) and len(tag[1:].strip()):
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
@@ -184,7 +184,7 @@ class Forum(models.Model):
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags]))
+        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
 
 
 class Post(models.Model):
