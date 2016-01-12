@@ -305,7 +305,7 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
             return False
 
         colorize, img_path, image = False, False, False
