@@ -556,7 +556,7 @@ class res_users(osv.osv):
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
-        uid = self.id if self else self.env.uid
+        uid = self.id or self.env.uid
         return self._has_group(self.env.cr, uid, group_ext_id)
 
     @api.noguess
