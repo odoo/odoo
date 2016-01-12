@@ -419,8 +419,10 @@ class Field(object):
         """ Determine field parameter attributes. """
         # determine all inherited field attributes
         attrs = {}
-        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
-            attrs.update(field.args)
+        if not (self.args.get('automatic') or self.args.get('manual')):
+            # magic and custom fields do not inherit from parent classes
+            for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+                attrs.update(field.args)
         attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
