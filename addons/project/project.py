@@ -18,6 +18,10 @@ class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
     _order = 'sequence'
+
+    def _get_mail_template_id_domain(self):
+        return [('model', '=', 'project.task')]
+
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -35,6 +39,11 @@ class project_task_type(osv.osv):
         'legend_normal': fields.char(
             'Kanban Ongoing Explanation', translate=True,
             help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
+        'mail_template_id': fields.many2one(
+            'mail.template',
+            string='Email Template',
+            domain=lambda self: self._get_mail_template_id_domain(),
+            help="If set an email will be sent to the customer when the task or issue reaches this step."),
         'fold': fields.boolean('Folded in Tasks Pipeline',
                                help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
@@ -712,6 +721,15 @@ class task(osv.osv):
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
+
+    @api.multi
+    def _track_template(self, tracking):
+        res = super(task, self)._track_template(tracking)
+        test_task = self[0]
+        changes, tracking_value_ids = tracking[test_task.id]
+        if 'stage_id' in changes and test_task.stage_id.mail_template_id:
+            res['stage_id'] = (test_task.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+        return res
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
