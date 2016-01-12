@@ -3,6 +3,7 @@ odoo.define('mail.ChatWindow', function (require) {
 
 var ChatThread = require('mail.ChatThread');
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
@@ -107,8 +108,10 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        this.toggle_fold();
-        this.trigger("fold_channel", this.channel_id, this.folded);
+        if (config.device.size_class !== config.device.SIZES.XS) {
+            this.toggle_fold();
+            this.trigger("fold_channel", this.channel_id, this.folded);
+        }
     },
 });
 

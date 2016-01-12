@@ -16,7 +16,11 @@
     z-index: 2;
 
     @media (max-width: @screen-xs-max) {
-        display:none;
+        width: 100%;
+        height: 100%!important;
+        &.o_folded {
+            display: none;
+        }
     }
 
     .o_chat_header {
@@ -25,6 +29,13 @@
         color: white;
         background-color: @odoo-brand-primary;
         padding: 5px;
+
+        @media (max-width: @screen-xs-max) {
+            height: @navbar-height;
+            .o_chat_title, .o_chat_window_close {
+                font-size: 22px;
+            }
+        }
 
         .o_chat_title {
             cursor: pointer;
@@ -77,6 +88,10 @@
     color: white;
     background-color: @odoo-brand-primary;
     cursor: pointer;
+
+    @media (max-width: @screen-xs-max) {
+        display: none;
+    }
 
     .o_chat_window_dropdown_toggler {
         padding: 5px;
