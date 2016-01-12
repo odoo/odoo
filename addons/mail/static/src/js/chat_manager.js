@@ -30,7 +30,7 @@ var discuss_ids = {};
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 
-// Window focus/unfocus, beep and title
+// Utils: Window focus/unfocus, beep, tab title, parsing html strings
 //----------------------------------------------------------------------------------
 var beep = (function () {
     if (typeof(Audio) === "undefined") {
@@ -74,6 +74,36 @@ function notify_incoming_message (msg, options) {
             }
         }
     }
+}
+
+function parse_and_transform(html_string, transform_function) {
+    var open_token = "OPEN" + Date.now();
+    var string = html_string.replace(/&lt;/g, open_token);
+    var children = $('<div>').html(string).contents();
+    return _parse_and_transform(children, transform_function)
+                .replace(new RegExp(open_token, "g"), "&lt;");
+}
+
+function _parse_and_transform(nodes, transform_function) {
+    return _.map(nodes, function (node) {
+        return transform_function(node, function () {
+            return _parse_and_transform(node.childNodes, transform_function);
+        });
+    }).join("");
+}
+
+// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
+var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+function add_link (node, transform_children) {
+    if (node.nodeType === 3) {  // text node
+        return node.data.replace(url_regexp, function (url) {
+            var href = (!/^(f|ht)tps?:\/\//i.test(url)) ? "http://" + url : url;
+            return '<a href="' + href + '">' + url + '</a>';
+        });
+    }
+    if (node.tagName === "A") return node.outerHTML;
+    node.innerHTML = transform_children();
+    return node.outerHTML;
 }
 
 // Message and channel manipulation helpers
@@ -206,6 +236,9 @@ function make_message (data) {
     } else {
         msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
     }
+
+    // add anchor tags to urls
+    msg.body = parse_and_transform(msg.body, add_link);
 
     // Compute url of attachments
     _.each(msg.attachment_ids, function(a) {

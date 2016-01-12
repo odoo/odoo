@@ -123,10 +123,9 @@
 #products_grid
     > table tr:not(:first-child) > td
         height: 100%
-    &.col-md-12 > table tr:not(:first-child)
-        height: 150px
-    &.col-md-9 > table tr:not(:first-child)
-        height: 140px
+    &.col-md-12, &.col-md-9
+        > table > tbody > tr > td:empty
+            height: 0
 
     &.col-md-12
         .oe-height-1
@@ -151,13 +150,11 @@
         .oe-height-8
             height: 560px
 
+    .oe_product.oe_grid .oe_subdescription
+        max-height: 40px
+
 @media (min-width: 992px)
     #products_grid
-        &.col-md-12 > table tr:not(:first-child)
-            height: 190px
-        &.col-md-9 > table tr:not(:first-child)
-            height: 144px
-
         &.col-md-12
             .oe-height-1
                 height: 95px
@@ -169,6 +166,9 @@
                 height: 570px
             .oe-height-8
                 height: 760px
+
+            .oe_product.oe_grid .oe_subdescription
+                max-height: 70px
         &.col-md-9
             .oe-height-1
                 height: 72px
@@ -183,11 +183,6 @@
 
 @media (min-width: 1200px)
     #products_grid
-        &.col-md-12 > table tr:not(:first-child)
-            height: 250px
-        &.col-md-9 > table tr:not(:first-child)
-            height: 190px
-
         &.col-md-12
             .oe-height-1
                 height: 125px
@@ -211,6 +206,8 @@
             .oe-height-8
                 height: 760px
 
+        .oe_product.oe_grid .oe_subdescription
+            max-height: 120px
 
 @media (max-width: 768px)
     #products_grid
@@ -221,8 +218,13 @@
         .oe_product
             float: left
             width: 100%
-            height: 300px
             display: inline-block
+            &.oe_grid
+                height: 400px
+            &.oe_grid section
+                background: rgba(100, 100, 100, 0.2)
+            .oe_subdescription
+                max-height: 200px
     .products_pager
         .pagination
             margin: 5px auto !important
@@ -230,9 +232,12 @@
 @media (max-width: 400px)
     #products_grid
         .oe_product
-            height: 270px
-            section
-                background: rgba(100, 100, 100, 0.2)
+            &.oe_grid
+                height: 270px
+            &.oe_list
+                height: 200px
+                section
+                    background: rgba(100, 100, 100, 0.2)
             .oe_product_image
                 top: 0
                 bottom: 65px
@@ -263,8 +268,6 @@
         td:last-child, td:nth-last-child(2)
             width: 15%
 @media (max-width: 500px)
-    .oe_website_sale .oe_website_spinner
-        margin: auto
     .oe_cart table, #modal_optional_products table
         display: inline-block
         thead
