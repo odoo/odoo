@@ -4,6 +4,7 @@ odoo.define('mail.window_manager', function (require) {
 var chat_manager = require('mail.chat_manager');
 var ExtendedChatWindow = require('mail.ExtendedChatWindow');
 
+var config = require('web.config');
 var core = require('web.core');
 var utils = require('web.utils');
 var web_client = require('web.web_client');
@@ -162,6 +163,10 @@ function toggle_fold_chat (channel) {
 }
 
 function compute_available_slots (nb_windows) {
+    if (config.device.size_class === config.device.SIZES.XS) {
+        display_state.nb_slots = 1; // one chat window full screen in mobile
+        return;
+    }
     var width = window.innerWidth;
     var nb_slots = Math.floor(width/CHAT_WINDOW_WIDTH);
     var space_left = width - (Math.min(nb_slots, nb_windows)*CHAT_WINDOW_WIDTH);

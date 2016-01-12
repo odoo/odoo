@@ -282,6 +282,15 @@
     .o_mail_navbar_dropdown {
         width: 350px;
         padding: 0;
+        @media (max-width: @screen-xs-max) {
+            background-color: white!important;
+            max-height: none!important;
+            position: fixed!important;
+            top: @navbar-height;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
 
         .o_spinner {
             .o-flex-display();
@@ -329,6 +338,10 @@
             max-height: 400px;
             min-height: 50px;
             overflow-y: auto;
+
+            @media (max-width: @screen-xs-max) {
+                max-height: none;
+            }
 
             .o_mail_channel_preview {
                 .o-flex-display();
