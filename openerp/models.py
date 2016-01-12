@@ -3056,7 +3056,9 @@ class BaseModel(object):
             cls._fields = {}
             cls._defaults = {}
             for name, field in getmembers(cls, Field.__instancecheck__):
-                self._add_field(name, field.new())
+                # do not retrieve magic, custom and inherited fields
+                if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
+                    self._add_field(name, field.new())
             self._add_magic_fields()
             cls._proper_fields = set(cls._fields)
 
