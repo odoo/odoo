@@ -85,7 +85,6 @@ class SaleOrder(models.Model):
         default_team_id = self.env['crm.team']._get_default_team_id()
         return self.env['crm.team'].browse(default_team_id)
 
-    @api.constrains('fiscal_position_id')
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
         """
@@ -326,7 +325,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_draft(self):
-        self.filtered(lambda s: s.state in ['cancel', 'sent']).write({'state': 'draft'})
+        orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
+        orders.write({
+            'state': 'draft',
+            'procurement_group_id': False,
+        })
+        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
@@ -577,7 +581,9 @@ class SaleOrderLine(models.Model):
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            if line.product_id.track_service in self._get_analytic_track_service() or line.product_id.invoice_policy in self._get_analytic_invoice_policy() and not line.order_id.project_id:
+            if (not line.order_id.project_id and
+                (line.product_id.track_service in self._get_analytic_track_service() or
+                 line.product_id.invoice_policy in self._get_analytic_invoice_policy())):
                 line.order_id._create_analytic_account()
             line._action_procurement_create()
 

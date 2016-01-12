@@ -25,7 +25,7 @@ class Planner(models.Model):
     name = fields.Char(string='Name', required=True)
     menu_id = fields.Many2one('ir.ui.menu', string='Menu', required=True)
     view_id = fields.Many2one('ir.ui.view', string='Template', required=True)
-    progress = fields.Integer(string="Progress Percentage", default=5)
+    progress = fields.Integer(string="Progress Percentage")
     # data field is used to store the data filled by user in planner(JSON Data)
     data = fields.Text(string='Data')
     tooltip_planner = fields.Html(string='Planner Tooltips', translate=True)

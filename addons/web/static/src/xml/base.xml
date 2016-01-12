@@ -1115,13 +1115,6 @@
     <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');
     </t>
-
-    <t t-jquery="td.oe-actions">
-        this.removeAttr('t-if');
-    </t>
-    <t t-jquery="td.oe-actions" t-operation="prepend">
-        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
-    </t>
 </t>
 
 <div t-name="SearchView" class="oe_searchview form-control input-sm">

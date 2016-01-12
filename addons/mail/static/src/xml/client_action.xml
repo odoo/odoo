@@ -4,14 +4,15 @@
     <!-- Client Action -->
     <t t-name="mail.client_action">
         <div class="o_mail_chat">
-            <t t-if="widget.notification_bar">
-                <div class="o_mail_annoying_notification_bar">
-                    <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
-                    <span class="fa fa-close"></span>
-                </div>
-            </t>
             <div class="o_mail_chat_sidebar"/>
-            <div class="o_mail_chat_content"/>
+            <div class="o_mail_chat_content">
+                <t t-if="widget.notification_bar">
+                    <div class="o_mail_annoying_notification_bar">
+                        <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
+                        <span class="fa fa-close"></span>
+                    </div>
+                </t>
+            </div>
         </div>
     </t>
     <t t-name="mail.chat.Sidebar">
