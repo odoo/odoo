@@ -50,7 +50,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name="message_follower_ids"/>
-                    <field name="message_is_follower"/>
+                    <field name="is_member"/>
                     <field name="message_needaction_counter"/>
                     <field name="description"/>
                     <field name="alias_id"/>
@@ -63,7 +63,7 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette oe_semantic_html_override">
+                            <div t-attf-class="{record.is_member.raw_value} oe_group_vignette oe_semantic_html_override">
                                 <div class="oe_group_image">
                                     <a type="open"><img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
@@ -81,8 +81,8 @@
                                         </t>
                                     </div>
                                     <div class="oe_group_button">
-                                        <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
-                                        <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Join Group</button>
+                                        <button t-if="record.is_member.raw_value" name="action_unfollow" type="object">Unfollow</button>
+                                        <button t-if="! record.is_member.raw_value" name="action_follow" type="object">Join Group</button>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
                                 <field name="name" default_focus="1" placeholder="Name" readonly="0"/>
                             </h1>
                         </div>
-                        <group>
+                        <group class="o_label_nowrap">
                             <field name="email_send"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
@@ -127,7 +127,7 @@
                         </group>
                         <notebook>
                             <page string="Privacy">
-                                <group>
+                                <group class="o_label_nowrap">
                                     <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
                                         attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
@@ -136,7 +136,7 @@
                                 </group>
                             </page>
                             <page string="Members">
-                                <field name="channel_partner_ids" mode="tree" readonly="1">
+                                <field name="channel_partner_ids" mode="tree">
                                     <tree string="members">
                                         <field name="name"/>
                                         <field name="email"/>
@@ -145,6 +145,9 @@
                                 </field>
                             </page>
                         </notebook>
+                        <div class="oe_chatter" groups="base.group_no_one">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                        </div>
                     </sheet>
                 </form>
             </field>

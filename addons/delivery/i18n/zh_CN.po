@@ -3,6 +3,7 @@
 # * delivery
 # 
 # Translators:
+# fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
 # Jonathon <jonathonli@gmail.com>, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-21 10:08+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"PO-Revision-Date: 2015-12-24 07:29+0000\n"
+"Last-Translator: fausthuang\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,7 +281,7 @@ msgstr "条件"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr "控制采购订单"
+msgstr "控制采购账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -429,7 +430,7 @@ msgstr "说明"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr "拣货描述"
+msgstr "分拣说明"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -460,7 +461,7 @@ msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
-msgstr "每一个货代（例如UPS）能有几种不同的运输方式（例如UPS快运, UPS 标准）\n并且每种方式都相应的一套价格规则"
+msgstr "每一个承运人(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n并且每种方式都相应的一套价格规则"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -578,7 +579,7 @@ msgstr "指定同一产品的多种包装方式。此处与分拣单并不冲突
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr "在计算发货货代的时候给出序列号"
+msgstr "在计算发货承运人的时候给出序列号"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
@@ -610,7 +611,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr "如果一个产品能够被不断的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
+msgstr "如果一个产品能够被永久的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录，在产品种类上设置的库存变变更科目的余额将代表目前的库存价值，而入库科目和出库科目将会是产品出入库的对应科目"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -674,7 +675,7 @@ msgstr "内部分类"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
 msgid "Internal Reference"
-msgstr "位置"
+msgstr "内部参考"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
@@ -694,7 +695,7 @@ msgstr "存货估值"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "在发票上发货"
+msgstr "发货发票"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -704,7 +705,7 @@ msgstr "发票状态"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr "发票开具策略"
+msgstr "开票策略"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -1112,7 +1113,7 @@ msgstr "选择事件类型，因此当我们在销售订单行使用这个产品
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
-msgstr "这个运输方式选出来的产品不能满足货代的标准"
+msgstr "这个运输方式选出来的产品不能满足承运人(们)的标准"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1134,7 +1135,7 @@ msgstr "设置价格"
 #: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-msgstr "带有跟踪号码 %s的货物发送给货代 %s，之后运输"
+msgstr "带有跟踪号码 %s的货物发送给承运人 %s，之后运输"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1175,7 +1176,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr "标准价格：在特定时期（通常是一年一次）在一个特定时期内，手动更新成本价。平均价格：成本价格在每次仓库进货时候重新计算，被用来产品的估值实际价格：显示的成本价格是最后出货产品的价格（例如，在仓库盘亏的时候使用）"
+msgstr "标准价格：在特定时期（通常是一年一次）在一个特定时期内，手动更新成本价。平均价格：成本价格在每次仓库进货时候重新计算，被用来产品的估值。实际价格：显示的成本价格是最后出货产品的价格（例如，在仓库盘亏的时候使用）"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1205,7 +1206,7 @@ msgstr "出库科目"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr "供应商发票成本价和数量的乘法"
+msgstr "供应商发票成本价和数量的相乘的总和"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
@@ -1216,7 +1217,7 @@ msgstr "客户发票的开票价格和数量相乘的汇总"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr "供应商发票发票价格和数量的乘积"
+msgstr "供应商发票成本价和数量的相乘的总和"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
@@ -1376,12 +1377,12 @@ msgstr "跟踪"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
 msgid "Transporter Company"
-msgstr "转运公司"
+msgstr "运输公司"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
@@ -1499,7 +1500,7 @@ msgstr "质保"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
-msgstr "重要性"
+msgstr "重量"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1564,12 +1565,12 @@ msgstr "当确认发票的时候，根据这个模板生成的邮件自动发送
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr "压缩于"
+msgstr "发送方的邮编"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr "压缩到"
+msgstr "目的地的邮编"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

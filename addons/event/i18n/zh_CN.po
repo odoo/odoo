@@ -5,15 +5,17 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
-# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# Gary Wei <Gary.wei@elico-corp.com>, 2015-2016
+# jeffery chen fan <jeffery9@gmail.com>, 2015
 # Rona Lin <ssauapw@qq.com>, 2015
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-12-03 06:43+0000\n"
+"PO-Revision-Date: 2016-01-06 09:02+0000\n"
 "Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +108,7 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>Hello ${object.name},</p>\n<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\nFor any further information please contact our event department.</p>\n<p>Thank you for your participation!</p>\n<p>Best regards</p>"
+msgstr "<p>您好${object.name},</p>\n<p>这是一个提醒邮件${object.event_id.name} 您的注册已经确认并且被保存从 ${object.event_id.date_begin_located} 到 ${object.event_id.date_end_located}.\n如想进一步咨询，请联系我们的活动相关部门</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -116,7 +118,7 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>Hello ${object.name},</p>\n<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\nPlease, Find your <b>Event Badge</b> attached with this mail.</p>\n<p>Thank you for your participation!</p>\n<p>Best regards</p>"
+msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n请查看本邮件相关附件<b>Event Badge</b> </p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -126,7 +128,7 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>Hello ${object.name},</p>\n<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\nYou will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n<p>Thank you for your participation!</p>\n<p>Best regards</p>"
+msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n你将自动的收到相关的邮件(例如计划,排程...) 在活动确认之后</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -140,7 +142,7 @@ msgid ""
 "        <strong>${object.event_id.organizer_id.name}</strong>\n"
 "    % endif\n"
 "</p>"
-msgstr "<p>Hello ${object.name},</p>\n<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n<br/><br/>\n    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n    % elif object.event_id.organizer_id:\n        <strong>${object.event_id.organizer_id.name}</strong>\n    % endif\n</p>"
+msgstr "<p>你好 ${object.name},</p>\n<p>非常感谢你能出息我们的活动${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>该 ${object.event_id.organizer_id.name} 团队</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -155,7 +157,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n                                                to \n                                            </span>"
+msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n到\n</span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -166,7 +168,7 @@ msgid ""
 "developers who need to grasp knowledge of the <strong>business applications "
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
-msgstr "<span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span>"
+msgstr "<span style=\"text-align: -webkit-center; \">本课程是专门为那些需要把握的 <strong>业务应用发展 </strong>工艺知识的开发者。本课程是针对新的开发人员，或者是专为专业人士，希望更多地了解技术方面的内容。</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -195,7 +197,7 @@ msgstr "<strong>目标:</strong>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
-msgstr "<strong>我们的订单包括:</strong>"
+msgstr "<strong>我们的价格包括:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -425,7 +427,7 @@ msgstr "类别"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
+msgstr "室内工程60，底特律红木苑，密48212(美国)"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1159,7 +1161,7 @@ msgstr "限制的"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
 msgid "Location"
-msgstr "位置"
+msgstr "地点"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1343,7 +1345,7 @@ msgstr "未读电子邮件的数量"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr "官方Odoo网站"
+msgstr "Odoo官方网站"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1383,7 +1385,7 @@ msgstr "参与者"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_name_registration
 msgid "Participant / Contact Name"
-msgstr "参与者/联系人名字"
+msgstr "参与者/联系人名称"
 
 #. module: event
 #: model:event.event,description:event.event_0

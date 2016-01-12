@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-13 19:44+0000\n"
+"PO-Revision-Date: 2015-12-31 15:15+0000\n"
 "Last-Translator: SV <svilij@yahoo.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -126,7 +126,7 @@ msgstr "Сумма заказа, чтобы воспользоваться бе�
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Тип Актива"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
@@ -242,7 +242,7 @@ msgstr "Отслеживание доставки перевозчиком"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "Категории Маршрутов"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
@@ -279,7 +279,7 @@ msgstr "Условие"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "Контроль Счетов Поставщика"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -381,7 +381,7 @@ msgstr "Единицы измерения по умолчанию для зак�
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Тип Дохода Будущих Периодов"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
@@ -514,7 +514,7 @@ msgstr "Счет расходов"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "Политика выставления Счет-фактур Расхода"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
@@ -545,7 +545,7 @@ msgstr "Подписчики (Партнеры)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Прогнозируемое Количество"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -554,7 +554,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Прогноз количества (рассчитывается как Количество в наличии - исходящий + входящий)\nВ контексте с одним Складским Расположением, сюда входят товары, хранящиеся в этом месте, или какой-либо из его детей.\nВ контексте с одного склада, это включает в себя товары, хранящиеся в Месте Расположение склада, или любого из его детей.\nВ противном случае, это включает в себя товары, хранящиеся на любых фондовых месте с \"внутренними\" типа."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -609,7 +609,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Если непрерывная оценка будет позволена для продукта, то система автоматически создаст записи журнала, соответствующие складским перемещениям, с ценой продукта, как определено в \"Метод Учета Затрат\". Счет изменения запасов на категории продукта, будет представлять текущую стоимость запасов, и поступление запаса и счет вывода запаса будут содержать встречные перемещения для входящих и исходящих продуктов."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -630,7 +630,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr ""
+msgstr "Если вы выставите счет по стоимости, то расходы будут фактурированы в заказе продаж по стоимости аналитической линии; если Вы выставите счет по продажной цене, то вместо этого будет использоваться цена продукта."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -892,7 +892,7 @@ msgstr "Контрагент"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Физическая Упаковка"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1166,7 +1166,7 @@ msgstr "Укажите , если продукт может быть выбра�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Определите, может ли продукт быть выбран в качестве расходов по персонала."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1174,7 +1174,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Стандартная Цена: Себестоимость обновляется вручную в конце определенного периода (обычно один раз в год) . \nСредняя Цена: Себестоимость вычисляется при каждом поступлении продукта и используется для оценки продукта.\nРеальная Цена: Показанная Себестоимость является ценой последнего исходящего продукта (будет использование в случае потери запасов, например)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1287,14 +1287,14 @@ msgstr ""
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур вместо стандартной стоимости затрат для текущего продукта."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Этот счет будет использоваться для счетов-фактур вместо стандартной оценки продаж для текущего продукта."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1470,7 +1470,7 @@ msgstr "Вендор"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Налоги Поставщика"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0

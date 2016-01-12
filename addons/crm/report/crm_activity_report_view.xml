@@ -6,7 +6,7 @@
             <field name="name">crm.activity.report.graph</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <graph string="Activities Analysis" type="pivot" stacked="True">
+                <graph string="Activities Analysis" stacked="True">
                     <field name="subtype_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </graph>
@@ -35,7 +35,7 @@
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <filter string="Lost" name="lost"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Salesperson"/>
                     <group expand="1" string="Group By">

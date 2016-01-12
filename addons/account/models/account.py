@@ -177,6 +177,16 @@ class AccountAccount(models.Model):
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
+    @api.multi
+    def action_open_reconcile(self):
+        # Open reconciliation view for this account
+        action_context = {'show_mode_selector': False, 'account_ids': [self.id,]}
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'manual_reconciliation_view',
+            'context': action_context,
+        }
+
 
 class AccountJournal(models.Model):
     _name = "account.journal"
@@ -638,7 +648,10 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            tax_amount = currency.round(tax_amount)
+            if company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_amount = round(tax_amount, prec)
+            else:
+                tax_amount = currency.round(tax_amount)
 
             if tax_amount:
                 if tax.price_include:
@@ -702,7 +715,7 @@ class AccountOperationTemplate(models.Model):
         ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('account_type', '=', 'normal')])
 
     second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
@@ -713,7 +726,7 @@ class AccountOperationTemplate(models.Model):
         ], string='Amount type', required=True, default='percentage')
     second_amount = fields.Float(string='Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('account_type', '=', 'normal')])
 
     @api.onchange('name')
     def onchange_name(self):

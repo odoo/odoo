@@ -1,5 +1,18 @@
-.o_composer .o_composer_input {
-    resize: none;
+.o_composer_subject {
+    .o-flex-display();
+    padding-bottom: 5px;
+
+    > input {
+        .o-flex(1, 1, auto);
+        padding: 5px;
+        margin-right: 30px;
+    }
+}
+
+.o_composer {
+    .o_composer_input {
+        resize: none;
+    }
 }
 
 .o_composer_attachments_list {

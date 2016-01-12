@@ -66,7 +66,7 @@ class ReportController(Controller):
         at the bottom of the output image
         """
         try:
-            width, height, humanreadable = int(width), int(height), bool(humanreadable)
+            width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
             barcode = createBarcodeDrawing(
                 type, value=value, format='png', width=width, height=height,
                 humanReadable = humanreadable

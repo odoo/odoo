@@ -487,7 +487,7 @@ class AccountInvoice(models.Model):
             self.date_due = self.date_due or self.date_invoice
         else:
             pterm = self.payment_term_id
-            pterm_list = pterm.compute(value=1, date_ref=date_invoice)[0]
+            pterm_list = pterm.with_context(currency_id=self.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
             self.date_due = max(line[0] for line in pterm_list)
 
     @api.multi
@@ -539,8 +539,11 @@ class AccountInvoice(models.Model):
         return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.v7
-    def assign_outstanding_credit(self, cr, uid, id, payment_id, context=None):
-        return self.browse(cr, uid, id, context).register_payment(self.pool.get('account.move.line').browse(cr, uid, payment_id, context))
+    def assign_outstanding_credit(self, cr, uid, id, credit_aml_id, context=None):
+        credit_aml = self.pool.get('account.move.line').browse(cr, uid, credit_aml_id, context=context)
+        if credit_aml.payment_id:
+            credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
+        return self.browse(cr, uid, id, context=context).register_payment(credit_aml)
 
     @api.multi
     def action_date_assign(self):
@@ -691,7 +694,7 @@ class AccountInvoice(models.Model):
 
             name = inv.name or '/'
             if inv.payment_term_id:
-                totlines = inv.with_context(ctx).payment_term_id.compute(total, date_invoice)[0]
+                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=inv.currency_id.id).compute(total, date_invoice)[0]
                 res_amount_currency = total_currency
                 ctx['date'] = date_invoice
                 for i, t in enumerate(totlines):
@@ -1083,12 +1086,19 @@ class AccountInvoiceLine(models.Model):
         return accounts['expense']
 
     def _set_taxes(self):
-        """ Used in on_change to set taxes """
+        """ Used in on_change to set taxes and price."""
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
             taxes = self.product_id.taxes_id or self.account_id.tax_ids
         else:
             taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
-        self.invoice_line_tax_ids = self.invoice_id.fiscal_position_id.map_tax(taxes)
+        self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes)
+
+        fix_price = self.env['account.tax']._fix_tax_included_price
+        if type in ('in_invoice', 'in_refund'):
+            if not self.price_unit or self.price_unit == self.product_id.standard_price:
+                self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
+        else:
+            self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -1126,11 +1136,9 @@ class AccountInvoiceLine(models.Model):
             self._set_taxes()
 
             if type in ('in_invoice', 'in_refund'):
-                self.price_unit = self.price_unit or product.standard_price
                 if product.description_purchase:
                     self.name += '\n' + product.description_purchase
             else:
-                self.price_unit = product.lst_price
                 if product.description_sale:
                     self.name += '\n' + product.description_sale
 
@@ -1140,8 +1148,6 @@ class AccountInvoiceLine(models.Model):
 
             if company and currency:
                 if company.currency_id != currency:
-                    if type in ('in_invoice', 'in_refund'):
-                        self.price_unit = product.standard_price
                     self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
@@ -1156,7 +1162,7 @@ class AccountInvoiceLine(models.Model):
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
             self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids).ids
-        else:
+        elif not self.price_unit:
             self._set_taxes()
 
     @api.onchange('uom_id')
@@ -1224,7 +1230,11 @@ class AccountPaymentTerm(models.Model):
         date_ref = date_ref or fields.Date.today()
         amount = value
         result = []
-        prec = self.company_id.currency_id.decimal_places
+        if self.env.context.get('currency_id'):
+            currency = self.env['res.currency'].browse(self.env.context['currency_id'])
+        else:
+            currency = self.env.user.company_id.currency_id
+        prec = currency.decimal_places
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)

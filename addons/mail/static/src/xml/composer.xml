@@ -2,17 +2,29 @@
 <templates xml:space="preserve">
 
      <div t-name="mail.ChatComposer" class="o_chat_composer">
-        <div class="o_composer_attachments_list"/>
-        <div class="o_composer">
-            <textarea class="o_composer_input" placeholder="Write something..."/>
-            <div class="btn-group o_composer_buttons">
-                <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
-                <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
-                <button class="btn btn-sm btn-primary o_composer_button_send" type="button">Send</button> 
-            </div>
-        </div>
+         <div class="o_composer_attachments_list"/>
+         <t t-if="widget.extended">
+             <div class="o_composer_subject">
+                 <input type="text" placeholder="Subject"></input>
+                 <div class="btn-group o_composer_buttons">
+                    <button class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
+                    <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                    <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                 </div>
+             </div>
+         </t>
+         <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
+             <textarea class="o_composer_input" placeholder="Write something..."/>
+             <t t-if="!widget.extended">
+                 <div class="btn-group o_composer_buttons">
+                    <button class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
+                    <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                    <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                 </div>
+             </t>
+         </div>
 
-        <span class="hide">
+         <span class="hide">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
@@ -20,8 +32,8 @@
                 <input type="hidden" name="id" value="0"/>
                 <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
             </t>
-        </span>
-        <span class="o_composer_emoji"></span>
+         </span>
+         <span class="o_composer_emoji"></span>
     </div>
 
     <t t-name="mail.ChatComposer.emojis">

@@ -337,7 +337,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.journal',
-        fields: [],
+        fields: ['type', 'sequence'],
         domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
         loaded: function(self, journals){
             var i;
@@ -1092,10 +1092,11 @@ exports.Orderline = Backbone.Model.extend({
     clone: function(){
         var orderline = new exports.Orderline({},{
             pos: this.pos,
-            order: null,
+            order: this.order,
             product: this.product,
             price: this.price,
         });
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
@@ -1259,9 +1260,8 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_display_price: function(){
-        return this.get_base_price();
         if (this.pos.config.iface_tax_included) {
-            return this.get_all_prices().priceWithTax;
+            return this.get_price_with_tax();
         } else {
             return this.get_base_price();
         }

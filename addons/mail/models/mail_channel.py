@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from email.utils import formataddr
+
 import datetime
-import time
 import uuid
 
 from openerp import _, api, fields, models, modules, tools
@@ -47,11 +48,12 @@ class Channel(models.Model):
         'Channel Type', default='channel')
     description = fields.Text('Description')
     uuid = fields.Char('UUID', size=50, select=True, default=lambda self: '%s' % uuid.uuid4())
-    email_send = fields.Boolean('Email Sent', default=False)
+    email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
+    is_member = fields.Boolean('Is a member', compute='_compute_is_member')
     # access
     public = fields.Selection([
         ('public', 'Everyone'),
@@ -83,6 +85,16 @@ class Channel(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
+
+    @api.multi
+    def _compute_is_member(self):
+        memberships = self.env['mail.channel.partner'].sudo().search([
+            ('channel_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])
+        membership_ids = memberships.mapped('channel_id')
+        for record in self:
+            record.is_member = record in membership_ids
 
     @api.one
     @api.depends('image')
@@ -170,6 +182,17 @@ class Channel(models.Model):
         return result
 
     @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ All recipients of a message on a channel are considered as partners.
+        This means they will receive a minimal email, without a link to access
+        in the backend. Mailing lists should indeed send minimal emails to avoid
+        the noise. """
+        for recipient in recipients:
+            group_data['partner'] |= recipient
+            done_ids.add(recipient.id)
+        return super(Channel, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+
+    @api.multi
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
         res = super(Channel, self).message_get_email_values(notif_mail=notif_mail)
@@ -192,6 +215,16 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         res['headers'] = repr(headers)
         return res
+
+    @api.multi
+    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+        # real mailing list: multiple recipients (hidden by X-Forge-To)
+        if self.alias_domain and self.alias_name:
+            return {
+                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
+                'recipient_ids': [],
+            }
+        return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -499,9 +532,14 @@ class Channel(models.Model):
         """
         if not domain:
             domain = []
-        domain += [('channel_type', '=', 'channel'), ('channel_partner_ids', 'not in', [self.env.user.partner_id.id])]
+        domain = expression.AND([
+            [('channel_type', '=', 'channel')],
+            [('channel_partner_ids', 'not in', [self.env.user.partner_id.id])],
+            [('public', '!=', 'private')],
+            domain
+        ])
         if name:
-            domain.append(('name', 'ilike', '%'+name+'%'))
+            domain = expression.AND([domain, [('name', 'ilike', '%'+name+'%')]])
         return self.search(domain).read(['name', 'public', 'uuid', 'channel_type'])
 
     @api.multi

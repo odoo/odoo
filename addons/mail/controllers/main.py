@@ -18,7 +18,7 @@ class MailController(http.Controller):
 
     def _redirect_to_messaging(self):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web?%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/receive', type='json', auth='none')
@@ -164,7 +164,7 @@ class MailController(http.Controller):
             return self._redirect_to_messaging()
         Model = request.env[model]
         try:
-            Model.browse(res_id).message_unsubscribe_users()
+            Model.browse(res_id).sudo().message_unsubscribe_users([request.uid])
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))

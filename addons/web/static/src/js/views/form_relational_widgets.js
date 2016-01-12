@@ -969,7 +969,10 @@ var X2ManyListView = ListView.extend({
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
+                var tmp = field.no_rerender;
+                field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
+                field.no_rerender = tmp;
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
@@ -1430,7 +1433,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     get_render_data: function(ids){
         var self = this;
         return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
             return self.dataset.read_ids(ids, fields);
         });
     },

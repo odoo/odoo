@@ -602,7 +602,7 @@ class ir_translation(osv.osv):
                         FROM res_lang l
                         WHERE l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
                         UPDATE ir_translation SET src=%(src)s
                         WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s;
@@ -673,12 +673,13 @@ class ir_translation(osv.osv):
         return ir_translation_import_cursor(cr, uid, self, context=context)
 
     def load_module_terms(self, cr, modules, langs, context=None):
-        context = dict(context or {}) # local copy
+        context_template = dict(context or {}) # local copy
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
+                context = dict(context_template)
                 lang_code = tools.get_iso_codes(lang)
                 base_lang_code = None
                 if '_' in lang_code:

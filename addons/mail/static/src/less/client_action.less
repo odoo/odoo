@@ -1,27 +1,55 @@
 // ------------------------------------------------------------------
 // Layout
 // ------------------------------------------------------------------
+@mail-chat-sidebar-width: 250px;
 .o_mail_chat {
     .o-position-absolute(0, 0, 0, 0);
     height: 100%;
 
     @media (max-width: @screen-xs-max) {
         height: auto;
-        flex-direction: column;
-
     }
 
-    .o-flex-display();
-    .o-flex-flow(row, nowrap);
+    .o_mail_annoying_notification_bar {
+        height: 40px;
+        background-color: #DFA941;
+        color: white;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+        .o-flex-display();
+        border-bottom: 1px solid @odoo-main-color-muted;
+
+        .o_mail_request_permission {
+            .o-flex-display();
+            justify-content: center;
+            .o-flex(1,1, auto);
+        }
+        > span {
+            font-size: 16px;
+            line-height: 40px;
+            > a {
+                color: white;
+                margin-left: 5px;
+                text-decoration: underline;
+            }
+
+            &.fa-close {
+                margin-right: 10px;
+                cursor: pointer;
+            }
+        }
+    }
 
     .o_mail_chat_sidebar {
-        .o-flex(0, 0, 220px);
+        width: @mail-chat-sidebar-width;
+        height: 100%;
+        float: left;
         overflow: auto;
         padding: 8px 0;
         font-weight: 300;
 
         @media (max-width: @screen-xs-max) {
-            flex: none;
+            width: 100%;
+            float: none;
             display: none;
         }
 
@@ -70,11 +98,15 @@
     }
 
     .o_mail_chat_content {
-        .o-flex(1, 1, 100%);
         .o-flex-display();
         .o-flex-flow(column, nowrap);
         height: 100%;
+        margin-left: @mail-chat-sidebar-width;
         position: relative;
+
+        @media (max-width: @screen-xs-max) {
+            margin-left: 0;
+        }
 
         .o_mail_thread {
             .o-flex(1, 0, 0);
@@ -100,9 +132,15 @@
                     margin-right: 5px;
                     border: none;
                 }
+                &.o_extended_composer .o_composer_input {
+                    margin-right: 0;
+                }
+            }
 
-                .o_composer_buttons {
-                    .o-flex(0, 0, auto);
+            .o_composer_buttons {
+                .o-flex(0, 0, auto);
+                .o_composer_button_send {
+                    float: right;
                 }
             }
         }
@@ -161,16 +199,6 @@
                 font-weight: bold;
             }
 
-            .o_user_status {
-                font-size: 10px;
-                position: relative;
-                bottom: 1px;
-                margin-right: 3px;
-                &.fa-circle {
-                    color: @odoo-brand-optional;
-                }
-            }
-
             > .badge {
                 color: white;
                 background-color: @odoo-brand-optional;
@@ -215,5 +243,19 @@
                 }
             }
         }
+    }
+}
+
+// User status bullet (in Discuss sidebar and Invite dialog)
+.o_mail_user_status {
+    font-size: 10px;
+    position: relative;
+    bottom: 1px;
+    margin-right: 3px;
+    &.o_user_online {
+        color: @odoo-brand-optional;
+    }
+    &.o_user_idle {
+        color: orange;
     }
 }

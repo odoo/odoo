@@ -2,7 +2,7 @@ odoo.define('mail.chat_client_action', function (require) {
 "use strict";
 
 var chat_manager = require('mail.chat_manager');
-var ChatComposer = require('mail.ChatComposer');
+var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
 
 var config = require('web.config');
@@ -15,7 +15,6 @@ var Model = require('web.Model');
 
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -52,9 +51,9 @@ var PartnerInviteDialog = Dialog.extend({
             width: '100%',
             allowClear: true,
             multiple: true,
-            formatResult: function(item){
-                var css_class = "fa-circle" + (item.im_status === 'online' ? "" : "-o");
-                return $('<span class="fa">').addClass(css_class).text(item.text);
+            formatResult: function(item) {
+                var status = QWeb.render('mail.chat.UserStatus', {status: item.im_status});
+                return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
                 self.PartnersModel.call('im_search', [query.term, 20]).then(function(result){
@@ -76,7 +75,7 @@ var PartnerInviteDialog = Dialog.extend({
             var ChannelModel = new Model('mail.channel');
             return ChannelModel.call('channel_invite', [], {ids : [this.channel_id], partner_ids: _.pluck(data, 'id')})
                 .then(function(){
-                    var names = _.pluck(data, 'text').join(', ');
+                    var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
                     self.do_notify(_t('New people'), notification);
                 });
@@ -117,10 +116,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.undo_mark_as_read(msgs_ids, channel);
             });
         },
+        "click .o_mail_annoying_notification_bar .fa-close": function (event) {
+            this.$(".o_mail_annoying_notification_bar").slideUp();
+        },
+        "click .o_mail_request_permission": function (event) {
+            event.preventDefault();
+            this.$(".o_mail_annoying_notification_bar").slideUp();
+            window.Notification.requestPermission();
+        },
     },
 
     on_attach_callback: function () {
-        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        if (this.channel) {
+            this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+        }
     },
     on_detach_callback: function () {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
@@ -133,6 +142,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.action = action;
         this.options = options || {};
         this.channels_scrolltop = {};
+        this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
+        this.notification_bar = (window.Notification && window.Notification.permission === "default");
     },
 
     willStart: function () {
@@ -160,9 +171,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.composer = new ChatComposer(this);
+        this.basic_composer = new composer.BasicComposer(this);
+        this.extended_composer = new composer.ExtendedComposer(this);
         this.thread = new ChatThread(this, {
-            display_help: true
+            display_help: true,
+            shorten_messages: false,
         });
 
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
@@ -192,16 +205,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
         });
-        this.composer.on('post_message', this, this.on_post_message);
-        this.composer.on('input_focused', this, this.on_composer_input_focused);
+        this.basic_composer.on('post_message', this, this.on_post_message);
+        this.basic_composer.on('input_focused', this, this.on_composer_input_focused);
+        this.extended_composer.on('post_message', this, this.on_post_message);
+        this.extended_composer.on('input_focused', this, this.on_composer_input_focused);
 
-        var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
-        var def2 = this.composer.appendTo(this.$('.o_mail_chat_content'));
-        var def3 = this.searchview.appendTo($("<div>"));
+        var def1 = this.thread.appendTo(this.$('.o_mail_chat_content'));
+        var def2 = this.basic_composer.appendTo(this.$('.o_mail_chat_content'));
+        var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
+        var def4 = this.searchview.appendTo($("<div>"));
 
         this.render_sidebar();
 
-        return $.when(def1, def2, def3)
+        return $.when(def1, def2, def3, def4)
             .then(this.set_channel.bind(this, default_channel))
             .then(function () {
                 chat_manager.bus.on('new_message', self, self.on_new_message);
@@ -210,9 +226,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
-                chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
-                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
+                chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
             });
     },
 
@@ -291,9 +308,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Channel.call('channel_search_to_join', [search_val]).then(function(result){
             var values = [];
             _.each(result, function(channel){
+                var escaped_name = _.escape(channel.name);
                 values.push(_.extend(channel, {
-                    'value': channel.name,
-                    'label': channel.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;
@@ -305,9 +323,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return Partner.call('im_search', [search_val, 20]).then(function(result){
             var values = [];
             _.each(result, function(user){
+                var escaped_name = _.escape(user.name);
                 values.push(_.extend(user, {
-                    'value': user.name,
-                    'label': user.name,
+                    'value': escaped_name,
+                    'label': escaped_name,
                 }));
             });
             return values;
@@ -362,7 +381,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .find('.o_mail_chat_button_unstar_all')
                 .toggle(channel.id === "channel_starred");
 
-            self.$('.o_chat_composer').toggle(channel.type !== 'static');
+            self.basic_composer.toggle(channel.type !== 'static' && !channel.mass_mailing);
+            self.extended_composer.toggle(channel.type !== 'static' && channel.mass_mailing);
 
             self.$('.o_mail_chat_channel_item')
                 .removeClass('o_active')
@@ -370,15 +390,23 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .removeClass('o_unread_message')
                 .addClass('o_active');
 
-            self.thread.scroll_to({offset: new_channel_scrolltop});
+            var $new_messages_separator = self.$('.o_thread_new_messages_separator');
+            if ($new_messages_separator.length) {
+                self.thread.$el.scrollTo($new_messages_separator);
+            } else {
+                self.thread.scroll_to({offset: new_channel_scrolltop});
+            }
+
+            // Update control panel before focusing the composer, otherwise focus is on the searchview
+            self.update_cp();
             if (!config.device.touch) {
-                self.composer.focus();
+                var composer = channel.mass_mailing ? self.extended_composer : self.basic_composer;
+                composer.focus();
             }
             if (config.device.size_class === config.device.SIZES.XS) {
                 self.$('.o_mail_chat_sidebar').hide();
             }
 
-            self.update_cp();
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,
@@ -539,7 +567,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_composer_input_focused: function () {
         var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
-        this.composer.mention_set_prefetched_partners(suggestions);
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
+        composer.mention_set_prefetched_partners(suggestions);
     },
 
     on_click_button_invite: function () {

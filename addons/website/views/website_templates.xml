@@ -645,7 +645,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
+                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>

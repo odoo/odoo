@@ -336,7 +336,8 @@ var ActionManager = Widget.extend({
                 return action.title;
             }
         }
-        return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
+        var last_breadcrumb = _.last(this.get_breadcrumbs());
+        return last_breadcrumb ? last_breadcrumb.title : "";
     },
     get_action_stack: function () {
         return this.action_stack;
@@ -500,7 +501,7 @@ var ActionManager = Widget.extend({
                 res_model: state.model,
                 res_id: state.id,
                 type: 'ir.actions.act_window',
-                views: [[false, 'form']]
+                views: [[_.isNumber(state.view_id) ? state.view_id : false, 'form']]
             };
             action_loaded = this.do_action(action);
         } else if (state.sa) {
@@ -608,7 +609,7 @@ var ActionManager = Widget.extend({
             var form = _.str.startsWith(action.view_mode, 'form');
             action.flags = _.defaults(action.flags || {}, {
                 views_switcher : !popup && !inline,
-                search_view : !popup && !inline,
+                search_view : !(popup && form) && !inline,
                 action_buttons : !popup && !inline,
                 sidebar : !popup && !inline,
                 pager : (!popup || !form) && !inline,

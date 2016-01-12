@@ -73,7 +73,7 @@ class AccountMove(models.Model):
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]}, default=_get_default_journal)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True)
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, string="Currency")
     rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of', help="Technical field used to keep track of the origin of journal entries created in case of fluctuation of the currency exchange rate. This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
@@ -212,6 +212,10 @@ class AccountMove(models.Model):
             reversed_moves.post()
             return [x.id for x in reversed_moves]
         return True
+
+    @api.multi
+    def open_reconcile_view(self):
+        return self.line_ids.open_reconcile_view()
 
 
 class AccountMoveLine(models.Model):
@@ -421,6 +425,7 @@ class AccountMoveLine(models.Model):
             # Note : this short-circuiting is better for performances, but also required
             # since postgresql doesn't implement empty list (so 'AND id in ()' is useless)
             return []
+        res_ids = res_ids and tuple(res_ids)
 
         assert res_type in ('partner', 'account')
         assert account_type in ('payable', 'receivable', None)
@@ -447,21 +452,22 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
+                        AND l.company_id = {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            {6}
+                            {7}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY {7} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                    GROUP BY {8} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
                     ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
             WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
@@ -472,6 +478,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
+                self.env.user.company_id.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
@@ -1141,6 +1148,18 @@ class AccountMoveLine(models.Model):
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
 
+    @api.multi
+    def open_reconcile_view(self):
+        model, action_id = self.pool['ir.model.data'].get_object_reference(self._cr, self._uid, 'account', "action_account_moves_all_a")
+        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        ids = []
+        for aml in self:
+            if aml.account_id.reconcile:
+                ids.extend([r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for r in aml.matched_credit_ids])
+                ids.append(aml.id)
+        action['domain'] = [('id', 'in', ids)]
+        return action
+
 
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
@@ -1175,7 +1194,16 @@ class AccountPartialReconcile(models.Model):
                     if not self.company_id.expense_currency_exchange_account_id.id:
                         raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     amount_diff = rec.company_id.currency_id.round(rec.amount_currency * rate_diff)
-                    move = rec.env['account.move'].create({'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id})
+                    move_vals = {'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id}
+
+                    # The move date should be the maximum date between payment and invoice (in case
+                    # of payment in advance). However, we should make sure the move date is not
+                    # recorded after the end of year closing.
+                    move_date = max(rec.debit_move_id.date, rec.credit_move_id.date)
+                    if move_date > rec.company_id.fiscalyear_lock_date:
+                        move_vals['date'] = move_date
+
+                    move = rec.env['account.move'].create(move_vals)
                     line_to_reconcile = rec.env['account.move.line'].with_context(check_move_validity=False).create({
                         'name': _('Currency exchange rate difference'),
                         'debit': amount_diff < 0 and -amount_diff or 0.0,
@@ -1183,6 +1211,7 @@ class AccountPartialReconcile(models.Model):
                         'account_id': rec.debit_move_id.account_id.id,
                         'move_id': move.id,
                         'currency_id': rec.currency_id.id,
+                        'amount_currency': 0.0,
                     })
                     rec.env['account.move.line'].create({
                         'name': _('Currency exchange rate difference'),

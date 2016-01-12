@@ -3,6 +3,7 @@
 # * calendar
 # 
 # Translators:
+# fausthuang, 2015
 # liulixia <liu.lixia@elico-corp.com>, 2015
 # Rona Lin <ssauapw@qq.com>, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-26 09:05+0000\n"
-"PO-Revision-Date: 2015-12-02 07:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-24 07:29+0000\n"
+"Last-Translator: fausthuang\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -393,13 +394,13 @@ msgstr "${object.event_id.name} - 提醒"
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
-msgstr ""
+msgstr "%s at %s To\n %s at %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:773
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s at (%s To %s) (%s)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -522,7 +523,7 @@ msgstr "日历"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr "日历报警"
+msgstr "日历警报"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -537,7 +538,7 @@ msgstr "点击去计划一个新的会议"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
 msgid "Color index of creator"
-msgstr "造物的颜色指数"
+msgstr "创建者的颜色指数"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_cn
@@ -832,7 +833,7 @@ msgstr "查看是否有需要留意的新信息。"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "确认后, 会出现新消息."
+msgstr "如果勾选此项，有新消息会提醒你"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_active
@@ -1379,7 +1380,7 @@ msgstr "未确认"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
 msgid "Unit"
-msgstr "单件"
+msgstr "单位"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_unread

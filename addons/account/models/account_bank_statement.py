@@ -26,7 +26,7 @@ class AccountCashboxLine(models.Model):
     coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
     number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
-    cashbox_id = fields.Many2one('account.bank.statement.cashbox')
+    cashbox_id = fields.Many2one('account.bank.statement.cashbox', string="Cashbox")
 
 
 class AccountBankStmtCashWizard(models.Model):
@@ -77,6 +77,11 @@ class AccountBankStatement(models.Model):
         self.total_entry_encoding = sum([line.amount for line in self.line_ids])
         self.balance_end = self.balance_start + self.total_entry_encoding
         self.difference = self.balance_end_real - self.balance_end
+
+    @api.multi
+    def _is_difference_zero(self):
+        for bank_stmt in self:
+            bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, bank_stmt.currency_id.decimal_places)
 
     @api.one
     @api.depends('journal_id')
@@ -132,7 +137,7 @@ class AccountBankStatement(models.Model):
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency')
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
@@ -146,9 +151,9 @@ class AccountBankStatement(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'statement_id', string='Entry lines', states={'confirm': [('readonly', True)]})
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled')
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
-    cashbox_start_id = fields.Many2one('account.bank.statement.cashbox')
-    cashbox_end_id = fields.Many2one('account.bank.statement.cashbox')
-
+    cashbox_start_id = fields.Many2one('account.bank.statement.cashbox', string="Starting Cashbox")
+    cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
+    is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):

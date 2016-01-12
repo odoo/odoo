@@ -78,7 +78,7 @@ class Alias(models.Model):
         help="Policy to post a message on the document using the mailgateway.\n"
              "- everyone: everyone can post\n"
              "- partners: only authenticated partners\n"
-             "- followers: only followers of the related document\n")
+             "- followers: only followers of the related document or members of following channels\n")
 
     _sql_constraints = [
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')

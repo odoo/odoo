@@ -772,6 +772,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     fn_detach.call(this, oLayoutInfo, options);
+    oLayoutInfo.editable().off('mousedown');
     oLayoutInfo.editor().off("dragstart");
     oLayoutInfo.editor().off('click');
     $(document).off('mousedown', summernote_mousedown);

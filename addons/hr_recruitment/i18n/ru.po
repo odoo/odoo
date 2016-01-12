@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-14 09:26+0000\n"
+"PO-Revision-Date: 2015-12-28 17:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n        <p>Поздравляю! Мы заинтересовались Вашим резюме!\n        Я скоро позвоню Вам, чтобы провести 10 минутное интервю по телефону и спланировать первую встречу.</p>\n        <p>Если мы не сможем найти Вас, или если Вы пропустите наш звонок, не стесняйтесь, перезвоните мне по телефону 001 312 349 3030\n        Если я не отвечу, пожалуйста, отправьте мне сообщение, когда Вам можно перезвонить.</p>\n        <p>С уважением,</p>\n        <br/>\n         ${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.applicant_refuse
@@ -112,7 +112,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n        <p>Мы благодарны за Ваш интерес к нашей компании.\n        К сожалению, Ваш профайл не соответствует нашим потребностям или или наша кампания\n        по набору сотрудников уже закончилась.</p>\n        <p>Если Вы хотите узнать больше подробностей, можете связаться с нами по телефону.</p>\n        <p>С Уважением,</p>\n        <br/>\n         ${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -198,7 +198,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
@@ -557,7 +557,7 @@ msgstr "Дата создания"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Creation Week"
-msgstr ""
+msgstr "Неделя создания"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_last_post

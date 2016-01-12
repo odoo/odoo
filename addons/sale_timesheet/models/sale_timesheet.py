@@ -70,33 +70,17 @@ class AccountAnalyticLine(models.Model):
         if result.get('is_timesheet') or self.is_timesheet:
             if result.get('amount'):
                 return result
-
             unit_amount = result.get('unit_amount', 0.0) or self.unit_amount
-            user_id = result.get('user_id', False) or self.user_id.id
+            user_id = result.get('user_id') or self.user_id.id
+            user = self.env['res.users'].browse([user_id])
             emp = self.env['hr.employee'].search([('user_id', '=', user_id)], limit=1)
-
-            if emp and emp.timesheet_cost:
-                # Most common case: cost obtained on employee
-                result.update({
-                    'amount': -unit_amount * emp.timesheet_cost,
-                    'product_uom_id': emp.user_id.company_id.project_time_mode_id.id,
-                })
-            elif result.get('product_id'):
-                # Only useful for _get_sale_order_line since it can add a product_id.
-                product = self.env['product.product'].browse([result.get('product_id')])
-                result.update({
-                    'amount': -unit_amount * product.standard_price,
-                    'product_uom_id': product.uom_id.id,
-                })
-            elif self.product_id:
-                # Only use case where this should be useful:
-                #    - no cost on employee
-                #    - modification of the unit amount of an existing entry
-                result.update({
-                    'amount': -unit_amount * self.product_id.standard_price,
-                    'product_uom_id': self.product_id.uom_id.id,
-                })
-
+            cost = emp and emp.timesheet_cost or 0.0
+            uom = (emp or user).company_id.project_time_mode_id
+            # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
+            result.update(
+                amount=(-unit_amount * cost),
+                product_uom_id=uom.id
+            )
         return result
 
     @api.multi
@@ -174,6 +158,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_analytic(self, domain=None):
         if not domain:
+            # To filter on analyic lines linked to an expense
             domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('is_timesheet', '=', True)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 

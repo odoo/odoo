@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from openerp import api, fields, models
 
+from openerp.addons.bus.models.bus_presence import AWAY_TIMER
+from openerp.addons.bus.models.bus_presence import DISCONNECTION_TIMER
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -9,16 +13,19 @@ class ResPartner(models.Model):
     @api.multi
     def _compute_im_status(self):
         self.env.cr.execute("""
-            SELECT P.id as id, B.status as im_status
+            SELECT
+                U.partner_id as id,
+                CASE WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                     WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
+                     ELSE 'online'
+                END as status
             FROM bus_presence B
                 JOIN res_users U ON B.user_id = U.id
-                JOIN res_partner P ON P.id = U.partner_id
-            WHERE P.id IN %s AND U.active = 't'
-        """, (tuple(self.ids),))
-        fetch_result = self.env.cr.dictfetchall()
-        result = dict(((user_presence['id'], user_presence['im_status']) for user_presence in fetch_result))
+            WHERE U.partner_id IN %s AND U.active = 't'
+        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
+        res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
         for partner in self:
-            partner.im_status = result.get(partner.id, 'offline')
+            partner.im_status = res.get(partner.id, 'offline')
 
     @api.model
     def im_search(self, name, limit=20):
@@ -30,7 +37,15 @@ class ResPartner(models.Model):
         name = '%' + name + '%'
         excluded_partner_ids = [self.env.user.partner_id.id]
         self.env.cr.execute("""
-            SELECT U.id as user_id, P.id as id, P.name as name, COALESCE(B.status, 'offline') as im_status
+            SELECT
+                U.id as user_id,
+                P.id as id,
+                P.name as name,
+                CASE WHEN B.last_poll IS NULL THEN 'offline'
+                     WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                     WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
+                     ELSE 'online'
+                END as im_status
             FROM res_users U
                 JOIN res_partner P ON P.id = U.partner_id
                 LEFT JOIN bus_presence B ON B.user_id = U.id
@@ -38,6 +53,5 @@ class ResPartner(models.Model):
                 AND P.id NOT IN %s
                 AND U.active = 't'
             LIMIT %s
-        """, (name, tuple(excluded_partner_ids), limit))
-        result = self.env.cr.dictfetchall()
-        return result
+        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+        return self.env.cr.dictfetchall()

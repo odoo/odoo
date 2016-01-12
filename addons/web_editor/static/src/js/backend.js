@@ -97,23 +97,29 @@ var FieldTextHtmlSimple = widget.extend({
         if (value.match(/^\s*$/)) {
             value = '<p><br/></p>';
         } else {
-            value = "<p>"+value.split(/<br\/?>/).join("</p><p>")+"</p>";
-            value = value.replace('<p><p>', '<p>').replace('</p></p>', '</p>');
+            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('</p></p>', '</p>');
         }
         return value;
     },
     focus: function() {
-        var input = !this.get("effective_readonly") && this.$textarea;
-        return input ? input.focus() : false;
+        if (this.get("effective_readonly")) {
+            return false;
+        }
+        // on IE an error may occur when creating range on not displayed element
+        try {
+            return this.$content.focusInEnd();
+        } catch (e) {
+            return this.$content.focus();
+        };
     },
     render_value: function() {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
-        // on ie an error may occur when creating range on not displayed element
-        try {
-            this.$content.focusInEnd();
-        } catch (e) {}
+        if (this.$content.is(document.activeElement)) {
+            this.focus();
+        }
         var history = this.$content.data('NoteHistory');
         if (history && history.recordUndo()) {
             this.$('.note-toolbar').find('button[data-event="undo"]').attr('disabled', false);
@@ -188,7 +194,7 @@ var FieldTextHtml = widget.extend({
         return def;
     },
     get_url: function (_attr) {
-        var src = this.options.editor_url ? this.options.editor_url+"?" : "/web_editor/field/html?";
+        var src = this.options.editor_url || "/web_editor/field/html";
         var datarecord = this.view.get_fields_values();
 
         var attr = {
@@ -205,6 +211,9 @@ var FieldTextHtml = widget.extend({
         if (this.options.snippets) {
             attr.snippets = this.options.snippets;
         }
+        if (this.options.template) {
+            attr.template = this.options.template;
+        }
         if (!this.get("effective_readonly")) {
             attr.enable_editor = 1;
         }
@@ -219,6 +228,10 @@ var FieldTextHtml = widget.extend({
 
         for (var k in _attr) {
             attr[k] = _attr[k];
+        }
+
+        if (src.indexOf('?') === -1) {
+            src += "?";
         }
 
         for (var k in attr) {

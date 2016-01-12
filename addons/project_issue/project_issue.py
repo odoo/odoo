@@ -124,7 +124,7 @@ class project_issue(osv.Model):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -397,7 +397,7 @@ class project_issue(osv.Model):
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         email_list = self.email_split(cr, uid, [res_id], msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
 
@@ -405,7 +405,7 @@ class project_issue(osv.Model):
         """ Override to update the issue according to the email. """
 
         email_list = self.email_split(cr, uid, ids, msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, ids, email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
