@@ -1261,7 +1261,7 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
-                                    <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                     <field name="name"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal')]"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
