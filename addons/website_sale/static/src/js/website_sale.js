@@ -5,7 +5,7 @@ var base = require('web_editor.base');
 var core = require('web.core');
 var _t = core._t;
 
-var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
+var shopping_cart_link = $('ul#top_menu li a[href$="/shop/cart"]');
 var shopping_cart_link_counter;
 shopping_cart_link.popover({
     trigger: 'manual',
