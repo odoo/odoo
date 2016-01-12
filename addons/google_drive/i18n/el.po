@@ -3,13 +3,13 @@
 # * google_drive
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-28 00:17+0000\n"
+"PO-Revision-Date: 2016-01-03 01:25+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgid ""
 "                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
-msgstr ""
+msgstr "<b>Για να δημιουργήσετε ένα νέο φίλτρο:</b><br/>\n- Πηγαίνετε στο έγγραφο Odoo που θέλετε να φιλτράρετε. Για παράδειγμα, πηγαίνετε στις Ευκαιρίες και κάντε αναζήτηση στο Τμήμα Πωλήσεων.<br/>\n- Σε αυτήν την προβολή 'Αναζήτησης', επιλέξτε την επιλογή 'Αποθήκευση τρέχοντος Φίλτρου' και πληκτρολογήστε ένα όνομα (π.χ.: Τμήμα Πωλήσεων)<br/>\n- Εάν επιλέξετε 'Κοινή χρήση με όλους τους χρήστες', ο σύνδεσμος του εγγράφου Google στις επιλογές 'Περισσότερα'  θα εμφανιστεί για όλους τους χρήστες στις Ευκαιρίες του Τμήματος Πωλήσεων.<br/>\n- Εάν δεν επιλέξετε 'Κοινή χρήση με όλους τους χρήστες', ο σύνδεσμος του εγγράφου Google στις επιλογές 'Περισσότερα' ΔΕΝ θα εμφανιστεί για όλους τους χρήστες στις Ευκαιρίες του Τμήματος Πωλήσεων.<br/>\n- Εάν το φίλτρο δεν έχει καθοριστεί, ο σύνδεσμος του εγγράφου Google θα εμφανιστεί στις επιλογές 'Περισσότερα' για όλους τους χρήστες για όλες τις ευκαιρίες."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -38,7 +38,7 @@ msgstr "Ενεργό"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Τουλάχιστον ένα κλειδί δεν μπορεί να βρεθεί στο Google Drive μοτίβο όνομά σας"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -50,12 +50,12 @@ msgstr "Authorization Code"
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Επιλέξτε πως θα ονομάζεται τον νέο google drive, από την πλευρά της google. Π.χ. gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Κάντε κλικ για να προσθέσετε ένα νέο πρότυπο."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -161,7 +161,7 @@ msgid ""
 "spreadsheet to control the quality of your product or review the delivery "
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
-msgstr ""
+msgstr "Συνδέστε τα δικά σας πρότυπα Google Drive σε οποιοδήποτε εγγραφή Odoo. Εάν έχετε πολύ συγκεκριμένα έγγραφα που θέλετε οι συνεργάτες σας να συμπληρώσουν, π.χ. χρησιμοποίηση ενός υπολογιστικού φύλλου για τον έλεγχο της ποιότητας του προϊόντος σας ή για την επεξεργασία λίστας των σημείων παράδοσης για κάθε παραγγελία σε μια ξένη χώρα, ... Είναι πολύ εύκολο να διαχειριστείτε τα έγγραφα, να τα συνδέσετε με το Odoo και να τα χρησιμοποιήσετε σε συνεργασία με τους υπαλλήλους σας."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -228,7 +228,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Το όνομα του συνημμένου εγγράφου μπορεί να χρησιμοποιήσει σταθερά ή μεταβλητά δεδομένα. Για να γίνει διάκριση μεταξύ των εγγράφων στο Google Drive, χρησιμοποιήστε σταθερές λέξεις και πεδία. Για παράδειγμα, στο παραπάνω παράδειγμα, εάν γράψατε Agrolait_%(name)s_Sales στο πεδίο του ονόματος του Google Drive, το έγγραφο στο Google Drive σας και ως συνημμένο στο Odoo θα ονομάζεται 'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -236,7 +236,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Η άδεια 'ανάγνωση' για 'ο οποιοσδήποτε έχει τον σύνδεσμο' δεν έχει γραφτεί στο έγγραφο."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri

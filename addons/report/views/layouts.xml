@@ -57,6 +57,9 @@
 
 <template id="external_layout">
     <!-- Multicompany -->
+    <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+    </t>
     <t t-if="o and 'company_id' in o">
         <t t-set="company" t-value="o.company_id"></t>
     </t>

@@ -111,9 +111,15 @@
                                     <span>View</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action">
-                                        <span t-if="journal_type == 'sale'">Invoices &amp; Refunds</span>
-                                        <span t-if="journal_type == 'purchase'">Bills &amp; Refunds</span>
+                                    <a type="object" name="open_action" context="{'use_domain': [('type','in',('out_invoice','in_invoice'))]}">
+                                        <span t-if="journal_type == 'sale'">Invoices</span>
+                                        <span t-if="journal_type == 'purchase'">Bills</span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a type="object" name="open_action" context="{'use_domain': [('type','in',('out_refund','in_refund'))]}">
+                                        <span t-if="journal_type == 'sale'">Refunds</span>
+                                        <span t-if="journal_type == 'purchase'">Refunds</span>
                                     </a>
                                 </div>
                                 <div>
