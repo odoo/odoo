@@ -1681,7 +1681,6 @@ class stock_picking(models.Model):
         return self.do_transfer(cr, uid, picking_ids, context=ctx)
 
     def put_in_pack(self, cr, uid, ids, context=None):
-        stock_move_obj = self.pool["stock.move"]
         stock_operation_obj = self.pool["stock.pack.operation"]
         package_obj = self.pool["stock.quant.package"]
         package_id = False
