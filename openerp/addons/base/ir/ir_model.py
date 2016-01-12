@@ -275,9 +275,9 @@ class IrModelFields(models.Model):
         if self.state == 'manual' and self.related:
             field = self._related_field()
             if field.type != self.ttype:
-                raise UserError(_("Related field '%s' does not have type '%s'") % (self.related, self.ttype))
+                raise ValidationError(_("Related field '%s' does not have type '%s'") % (self.related, self.ttype))
             if field.relational and field.comodel_name != self.relation:
-                raise UserError(_("Related field '%s' does not have comodel '%s'") % (self.related, self.relation))
+                raise ValidationError(_("Related field '%s' does not have comodel '%s'") % (self.related, self.relation))
 
     @api.onchange('related')
     def _onchange_related(self):

@@ -2,7 +2,7 @@
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from openerp.exceptions import ValidationError
 from openerp.osv import fields as old_fields
 
 
@@ -128,7 +128,7 @@ class event_ticket(models.Model):
     @api.constrains('registration_ids', 'seats_max')
     def _check_seats_limit(self):
         if self.seats_max and self.seats_available < 0:
-            raise UserError(_('No more available seats for the ticket'))
+            raise ValidationError(_('No more available seats for the ticket'))
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -150,7 +150,7 @@ class event_registration(models.Model):
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         if self.event_ticket_id.seats_max and self.event_ticket_id.seats_available < 0:
-            raise UserError(_('No more available seats for this ticket'))
+            raise ValidationError(_('No more available seats for this ticket'))
 
     @api.multi
     def _check_auto_confirmation(self):

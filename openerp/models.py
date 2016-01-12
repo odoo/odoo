@@ -109,9 +109,9 @@ def raise_on_invalid_object_name(name):
 def check_pg_name(name):
     """ Check whether the given name is a valid PostgreSQL identifier name. """
     if not regex_pg_name.match(name):
-        raise ValueError("Invalid characters in table name %r" % name)
+        raise ValidationError("Invalid characters in table name %r" % name)
     if len(name) > 63:
-        raise ValueError("Table name %r is too long" % name)
+        raise ValidationError("Table name %r is too long" % name)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',

@@ -4,7 +4,7 @@ import time
 from collections import OrderedDict
 from openerp import api, fields, models, _
 from openerp.osv import expression
-from openerp.exceptions import RedirectWarning, UserError
+from openerp.exceptions import RedirectWarning, UserError, ValidationError
 from openerp.tools.misc import formatLang
 from openerp.tools import float_is_zero, float_compare
 from openerp.tools.safe_eval import safe_eval
@@ -386,14 +386,14 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.account_id.currency_id:
                 if not line.currency_id or line.currency_id.id != line.account_id.currency_id.id:
-                    raise UserError(_('The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
+                    raise ValidationError(_('The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
 
     @api.multi
     @api.constrains('currency_id', 'amount_currency')
     def _check_currency_and_amount(self):
         for line in self:
             if (line.amount_currency and not line.currency_id):
-                raise UserError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
+                raise ValidationError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
 
     @api.multi
     @api.constrains('amount_currency')
@@ -401,7 +401,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
-                    raise UserError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
+                    raise ValidationError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
 
     ####################################################
     # Reconciliation interface methods
