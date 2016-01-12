@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-01 15:40+0000\n"
+"PO-Revision-Date: 2016-01-08 19:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -115,26 +115,26 @@ msgstr "# z množ."
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# objednávok predaja"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(aktualizácia)"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -227,7 +227,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Adresy v objednávkach predaja"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -365,12 +365,12 @@ msgstr ""
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Umožňuje vám vybrať a udržiavať rôzne merné jednotky pre produkty."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Umožňuje vám špecifikovať analytický účet na objednávkach predaja,"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -387,12 +387,12 @@ msgstr "Analytický účet"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Analytické účtovníctvo pre Predaje"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Analytické účtovníctvo pre predaje"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -410,17 +410,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Podľa produktu"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Podľa predajcov"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Podľa predajcu"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -484,7 +484,7 @@ msgstr ""
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Zaškrtnite pre spravovanie cenových ponúk v tomto tíme predaja."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -529,7 +529,7 @@ msgstr "Chyba konfigurácie!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Potvrdiť predaj"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -647,7 +647,7 @@ msgstr "Dátum objednávky"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Dátum objednávky:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -662,7 +662,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "Dátum vytvorenia objednávky predaja."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -672,12 +672,12 @@ msgstr ""
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Predvolené pojmy a podmienky"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Predvolené pojmy & podmienky..."
 
 #. module: sale
 #: help:res.company,sale_note:0
@@ -694,7 +694,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Adresa dodania"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -704,7 +704,7 @@ msgstr "Dni dodania"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Adresa dodania pre aktuálnu objednávku predaja."
 
 #. module: sale
 #: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
@@ -724,7 +724,7 @@ msgstr "Zľava (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Zľava na riadkoch"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -752,7 +752,7 @@ msgstr "Návrh"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Koncept cenovej ponuky"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -768,7 +768,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Sprievodca zostavovaním emailov"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -976,17 +976,17 @@ msgstr "Položky faktúry"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "Faktúra objednávky"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Faktúra objednávky predaja"
 
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Cieľ faktúry"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1050,12 +1050,12 @@ msgstr "Faktúry"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Analýza faktúr"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Štatistiky faktúr"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -1127,7 +1127,7 @@ msgstr "Môj predaj"
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Moje riadky objednávky predaja"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1162,7 +1162,7 @@ msgstr ""
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Počet dní medzi potvrdením objednávky a odoslania produktu zákazníkovi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Otvorť menu predaja"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1217,12 +1217,12 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Mesiac objednávky"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Číslo objednávky"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1242,7 +1242,7 @@ msgstr ""
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Stav objednávky"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1252,7 +1252,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "Objednaný dátum objednávky predaja"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1293,7 +1293,7 @@ msgstr ""
 #: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Prosím definujte príjmový účet pre tento produkt: \"%s\" (id:%d)."
 
 #. module: sale
 #: code:addons/sale/sale.py:391
@@ -1314,7 +1314,7 @@ msgstr "Cena"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "Cenové zníženie"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1384,7 +1384,7 @@ msgstr "Projekt"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Vlastnosti na riadkoch"
 
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
@@ -1417,12 +1417,12 @@ msgstr "Cenová ponuka / Objednávka"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Dátum cenovej ponuky:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Číslo cenovej ponuky"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1432,17 +1432,17 @@ msgstr "Cenová ponuka č."
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Cenovú ponuku poslať"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Cenová ponuka poslaná"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Cenová ponuka potvrdená"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
@@ -1454,7 +1454,7 @@ msgstr ""
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Cenová ponuka poslaná"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1469,12 +1469,12 @@ msgstr "Cenové ponuky"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Analýza cenových ponúk"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Cenové ponuky a Predaje"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
@@ -1499,7 +1499,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Odkaz na dokument, ktorý vytvoril túto požiadavku objednávky predaja."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1524,7 +1524,7 @@ msgstr ""
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Riadok objednávky predaja"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1564,7 +1564,7 @@ msgstr "Analýza predaja"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Lievik predaja"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1585,7 +1585,7 @@ msgstr "Objednávka predaja"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Objednávka predaja potvrdená"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1603,12 +1603,12 @@ msgstr "Položky objednávky"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Riadky objednávky predaja pripravené na fakturáciu"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Riadky objednávok predaja týkajúce sa mojich objednávok predaja"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1640,7 +1640,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "Objednávky predaja ktoré ešte neboli potvrdené"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1727,7 +1727,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Poslať emailom"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1799,7 +1799,7 @@ msgstr "Dane"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Pojmy a podmienky"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1917,7 +1917,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Tento report vykonáva analýzu vašich cenových ponúk. Report analyzuje tržby a triediť ich môžete podľa rôznych skupín kritérií (obchodník, partner, produkt, atď.). Report analyzuje predaj, ktorý nebol zatiaľ fakturovaný. Ak chcete analyzovať svoj obrat, mali by ste použiť analýzu faktúr v module účtovníctvo."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1927,7 +1927,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Tento výkaz vykonáva analýzu vašich objednávok predaja. Analyzuje vaše zisky z predaja a triedi ich podľa rôznych skupín kritérií (predajca, partner, preodkt, atď.)Použite tento výkaz na vykonanie analýzy na predajoch ktoré ešte neboli vyfaktúrované. Ak chcete analyzovať svoj obrat, mali by ste použiť výkaz Analýza faktúr v module Účtovníctvo."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1938,7 +1938,7 @@ msgstr "Zostáva"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr ""
+msgstr "Na vyfaktúrovanie"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -2047,12 +2047,12 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Použite cenníky pre prispôsobenie svojej ceny za zákazníkov"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "DPH:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2095,7 +2095,7 @@ msgstr "Hmotnosť"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Čo chcete faktúrovať?"
 
 #. module: sale
 #: code:addons/sale/sale.py:990
