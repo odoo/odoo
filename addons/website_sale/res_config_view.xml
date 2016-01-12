@@ -31,12 +31,12 @@
                         <field name="module_sale_ebay" widget="upgrade_boolean"/>
                         <label for="module_sale_ebay"/>
                     </div>
-                    <label string="Default Sales Team" for="salesteam_id"/>
-                    <div>
+                    <label string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
+                    <div groups="base.group_no_one">
                         <field name="salesteam_id" class="oe_inline"/>
                     </div>
-                    <label string="Default Salesperson" for="salesperson_id"/>
-                    <div>
+                    <label string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
+                    <div groups="base.group_no_one">
                         <field name="salesperson_id" class="oe_inline"/>
                     </div>
                 </group>
