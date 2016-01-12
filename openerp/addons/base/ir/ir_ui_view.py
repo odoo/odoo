@@ -53,7 +53,7 @@ def keep_query(*keep_params, **additional_params):
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
-                params[param] = ','.join(request.httprequest.args.getlist(param))
+                params[param] = request.httprequest.args.getlist(param)
     return werkzeug.urls.url_encode(params)
 
 class view_custom(osv.osv):

@@ -257,6 +257,13 @@
     </t>
 </template>
 
+<template id="default_page">
+    <t t-call="website.layout">
+        <div class="oe_structure oe_empty"/>
+    </t>
+</template>
+
+
 <template id="event_details">
     <t t-call="website_event.layout">
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">

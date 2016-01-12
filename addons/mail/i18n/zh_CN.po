@@ -3,18 +3,20 @@
 # * mail
 # 
 # Translators:
-# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# Gary Wei <Gary.wei@elico-corp.com>, 2015-2016
 # jeffery chen fan <jeffery9@gmail.com>, 2015
+# lttlsnk tsai <lttlsnk@gmail.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 # 厦门-许舟 <windedge99@gmail.com>, 2015
+# 大漠 <zhylninc@gmail.com>, 2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-10 13:38+0000\n"
-"PO-Revision-Date: 2015-12-30 15:04+0000\n"
-"Last-Translator: 厦门-许舟 <windedge99@gmail.com>\n"
+"PO-Revision-Date: 2016-01-08 14:25+0000\n"
+"Last-Translator: 大漠 <zhylninc@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +130,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:50
 #, python-format
 msgid " from "
-msgstr ""
+msgstr "从"
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -183,7 +185,7 @@ msgstr "(没有电子邮件地址)"
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is use to substitute text with another text"
-msgstr ""
+msgstr "* 笑脸仅用于HTML代码以显示图像 * 文本 (默认值) 是用来与其他文本代替文本"
 
 #. module: mail
 #. openerp-web
@@ -239,21 +241,21 @@ msgid ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n<strong>电子邮件群发邮件</strong> 在\n<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">选定的记录</span>\n<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">当前搜索筛选器</span>.\n</span>\n<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">文档的追随者和</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">添加</span>\n<span class=\"o_stat_text\">上下文行动</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">移除</span>\n<span class=\"o_stat_text\">上下文行动</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -267,14 +269,14 @@ msgid ""
 "                                    not only the ids selected in the list view.</strong><br/>\n"
 "                                If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
-msgstr ""
+msgstr "<strong>所有记录匹配你当前搜索筛选器将被邮寄,\n不只是在列表视图中已选的那些ID.</strong><br/>\n如果你只想让那些已选的ID管用，请取消选中列表头上的复选框."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
-msgstr ""
+msgstr "<strong>此外，如果你想发送大量的电子邮件，我们建议你使用群发邮件模块</strong>. <br/>\n确认该向导将可能需要几分钟的时间来锁定您的浏览器."
 
 #. module: mail
 #. openerp-web
@@ -497,7 +499,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "messagethrough this field."
-msgstr ""
+msgstr "附件是通过模型 / res_id连接于文档并通过此字段链接到信息。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -565,7 +567,7 @@ msgstr "自动整理HTML内容"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_chatter_needaction_auto
 msgid "Automatically set needaction as Read"
-msgstr ""
+msgstr "自动设置needaction为已读"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
@@ -637,7 +639,7 @@ msgstr "更改"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "变化的字段"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -714,7 +716,7 @@ msgstr "选择一个样例"
 #: code:addons/mail/models/mail_thread.py:308
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
-msgstr ""
+msgstr "点击此处添加新的%(document)s或者给%(email_link)s发送邮件"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:324
@@ -821,7 +823,7 @@ msgstr "内容"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_fold_state
 msgid "Conversation Fold State"
-msgstr ""
+msgstr "会话状态"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
@@ -969,7 +971,7 @@ msgstr "将为该子模型的消息添加注解。如为空，则添加名称。
 #: code:addons/mail/static/src/xml/client_action.xml:107
 #, python-format
 msgid "Detach"
-msgstr ""
+msgstr "分离"
 
 #. module: mail
 #. openerp-web
@@ -1158,7 +1160,7 @@ msgstr "当与保障服务器通信时发生错误。"
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
-msgstr ""
+msgstr "无异常错误。可能是由于没有计算收件人发送电子邮件。"
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -1174,7 +1176,7 @@ msgstr "错误，合作伙伴不能遵循相同的对象两次。"
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
-msgstr ""
+msgstr "错误：一个关注者必须是一个业务伙伴或者一个渠道(但不是同时两者)"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1213,7 +1215,7 @@ msgstr "失败原因"
 msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
-msgstr ""
+msgstr "失败原因。这通常是通过电子邮件服务器抛出的异常，存储到缓解邮件问题的调试中。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred_partner_ids
@@ -1499,7 +1501,7 @@ msgstr "错误的表达式，必须是 python 字典定义，例如： \"{'field
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
 "single-record recordset"
-msgstr ""
+msgstr "无效的记录集：应为模型(无记录)或记录的记录单"
 
 #. module: mail
 #. openerp-web
@@ -1623,12 +1625,12 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_seen_message_id
 msgid "Last Seen"
-msgstr ""
+msgstr "最近一次露面"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Last Seen Many2many"
-msgstr ""
+msgstr "最后一次见到 Many2many"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_uid
@@ -1666,7 +1668,7 @@ msgstr "最近更新时间"
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
-msgstr ""
+msgstr "将被添加为当前文档的侦听器的通道列表。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
@@ -1715,12 +1717,12 @@ msgstr "记录内部备注"
 msgid ""
 "Log an internal note which will not be sent to followers, but which can be read\n"
 "                    by users accessing this document."
-msgstr ""
+msgstr "记录一个内部的说明，它不会被发送给跟随者，但它可以被用户访问此文档读取。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
-msgstr ""
+msgstr "邮件渠道表单"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:306
@@ -1977,7 +1979,7 @@ msgstr "整数值"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
 msgid "New Value Monetary"
-msgstr ""
+msgstr "新价值货币"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
@@ -2004,14 +2006,14 @@ msgstr "新建消息"
 #: code:addons/mail/static/src/xml/thread.xml:25
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "新消息出现在这里"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:81
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "新用户"
 
 #. module: mail
 #. openerp-web
@@ -2032,14 +2034,14 @@ msgstr "无法匹配"
 #: code:addons/mail/static/src/xml/thread.xml:17
 #, python-format
 msgid "No message matches your search. Try to change your search filters."
-msgstr ""
+msgstr "找不到与你查找相匹配的。试着更改搜索过滤"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "没有主角信息"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -2058,7 +2060,7 @@ msgstr "备注"
 #: code:addons/mail/static/src/xml/thread.xml:48
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "备注"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2105,7 +2107,7 @@ msgid ""
 "Odoo helps you easily track all activities related to\n"
 "            a customer; discussions, history of business opportunities,\n"
 "            documents, etc."
-msgstr ""
+msgstr "Odoo帮助您轻松地跟踪有关一个客户所有的活动，会谈，商业机会历史，文档等。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_char
@@ -2130,7 +2132,7 @@ msgstr "旧整数值"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
 msgid "Old Value Monetary"
-msgstr ""
+msgstr "旧价值货币"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_text
@@ -2312,7 +2314,7 @@ msgstr "没有要求排除在邮件群发活动之外的业务伙伴"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "需要相关活动的业务伙伴"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
@@ -2367,7 +2369,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
-msgstr ""
+msgstr "策略是通过邮件网关在文档上提交一个消息\n- everyone: 任何人都可以提交\n- partners: 只有认证过的合作伙伴\n- followers: 只有相关文件或下列频道成员的跟随者\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -2597,7 +2599,7 @@ msgstr "从相关单据模型中选择目标字段。\n如果这是个关系型�
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "选择用户组"
 
 #. module: mail
 #. openerp-web
@@ -2837,7 +2839,7 @@ msgstr "关联这个群组的email地址。收到新的email将自动创建一�
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The excaped html code replacing the shortcut"
-msgstr ""
+msgstr "丢失的html代码替换快捷方式"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
@@ -2888,7 +2890,7 @@ msgstr "由于安全限制，请求的操作不能被完成。请联系你的系
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replace in the Chat Messages"
-msgstr ""
+msgstr "在Chat Messages中的快捷方式必须被替换掉"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2909,7 +2911,7 @@ msgstr "这个字段保存的图片作为群组的照片，限制为  1024x1024p
 msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
-msgstr ""
+msgstr "这个小组是由非成员可见。非可见小组可以通过邀请按钮添加成员。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -3050,7 +3052,7 @@ msgstr "未读消息计数器"
 #: code:addons/mail/static/src/xml/client_action.xml:109
 #, python-format
 msgid "Unstar all"
-msgstr ""
+msgstr "取关所有"
 
 #. module: mail
 #. openerp-web
@@ -3121,7 +3123,7 @@ msgstr "视图"
 msgid ""
 "Warning! \n"
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
-msgstr ""
+msgstr "警告! \n如果你删除了一个粉丝，任何电子邮件或在此文档之上的讨论都不再通知这个粉丝了。你真的想要删除这个粉丝吗 ?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -3147,7 +3149,7 @@ msgstr "无论消息是内部记录（只适用评论模式）"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr ""
+msgstr "谁能跟进群的活动?"
 
 #. module: mail
 #. openerp-web
@@ -3168,7 +3170,7 @@ msgstr "昨天"
 #: code:addons/mail/static/src/js/client_action.js:80
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
-msgstr ""
+msgstr "您添加了 <b>%s</b> 到对话。"
 
 #. module: mail
 #. openerp-web
@@ -3176,7 +3178,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
-msgstr ""
+msgstr "你可以给所有的消息加星号，然后它就会显示在这个渠道中"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:47
@@ -3200,14 +3202,14 @@ msgstr "你不能删除这些群组，因为整个公司群组被其它模块引
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
 "%(email_link)s."
-msgstr ""
+msgstr "你可以通过发送邮件给%(email_link)s.来增加新的%(document)s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:478
 #, python-format
 msgid "You have been invited to: "
-msgstr ""
+msgstr "你被邀请："
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -3229,13 +3231,13 @@ msgstr "你不再订阅<b>%s</b>。"
 msgid ""
 "Your template does not defined the email address of the sender. Please "
 "update your template."
-msgstr ""
+msgstr "你的模板没有定义发件人的邮件地址，请更新你的模板"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:32
 #, python-format
 msgid "Your template should define email_from"
-msgstr ""
+msgstr "你的模板需要定义email_from"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
@@ -3245,7 +3247,7 @@ msgstr "base.config.settings"
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
 msgid "board-meetings"
-msgstr ""
+msgstr "董事会议"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3297,7 +3299,7 @@ msgstr "成员"
 #: code:addons/mail/static/src/xml/client_action.xml:97
 #, python-format
 msgid "mention(s) marked as read."
-msgstr ""
+msgstr "标记为已读"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -3334,7 +3336,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -3344,7 +3346,7 @@ msgstr "记录："
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
 msgid "sales"
-msgstr ""
+msgstr "销售"
 
 #. module: mail
 #. openerp-web

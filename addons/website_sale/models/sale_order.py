@@ -133,32 +133,6 @@ class sale_order_line(osv.Model):
         'discounted_price': fields.function(_fnct_get_discounted_price, string='Discounted price', type='float', digits_compute=dp.get_precision('Product Price')),
     }
 
-class sale_order_line(osv.Model):
-    _inherit = "sale.order.line"
-
-    def _fnct_get_discounted_price(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = (line.price_unit * (1.0 - (line.discount or 0.0) / 100.0))
-        return res
-
-    _columns = {
-        'discounted_price': fields.function(_fnct_get_discounted_price, string='Discounted price', type='float', digits_compute=dp.get_precision('Product Price')),
-    }
-
-class sale_order_line(osv.Model):
-    _inherit = "sale.order.line"
-
-    def _fnct_get_discounted_price(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = (line.price_unit * (1.0 - (line.discount or 0.0) / 100.0))
-        return res
-
-    _columns = {
-        'discounted_price': fields.function(_fnct_get_discounted_price, string='Discounted price', type='float', digits_compute=dp.get_precision('Product Price')),
-    }
-
 
 class website(orm.Model):
     _inherit = 'website'
@@ -281,7 +255,7 @@ class website(orm.Model):
             sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         else:
             sale_order_id = None
-        pricelist_id = request.session.get('website_sale_current_pl')
+        pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist(cr, uid, context=context).id
 
         if force_pricelist and self.pool['product.pricelist'].search_count(cr, uid, [('id', '=', force_pricelist)], context=context):
             pricelist_id = force_pricelist

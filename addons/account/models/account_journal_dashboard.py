@@ -292,6 +292,7 @@ class account_journal(models.Model):
         model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account', action_name)
         action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
         action['context'] = ctx
+        action['domain'] = self._context.get('use_domain', [])
         return action
 
     @api.multi
