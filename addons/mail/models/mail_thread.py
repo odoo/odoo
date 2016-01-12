@@ -417,6 +417,24 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.multi
+    def _track_template(self, tracking):
+        return dict()
+
+    @api.multi
+    def _message_track_post_template(self, tracking):
+        if not any(change for rec_id, (change, tracking_value_ids) in tracking.iteritems()):
+            return True
+        templates = self._track_template(tracking)
+        for field_name, (template, post_kwargs) in templates.iteritems():
+            if not template:
+                continue
+            if isinstance(template, basestring):
+                self.message_post_with_view(template, **post_kwargs)
+            else:
+                self.message_post_with_template(template.id, **post_kwargs)
+        return True
+
+    @api.multi
     def _message_track_get_changes(self, tracked_fields, initial_values):
         """ Batch method of _message_track. """
         result = dict()
@@ -487,6 +505,8 @@ class MailThread(models.AbstractModel):
                 record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
             elif tracking_value_ids:
                 record.message_post(tracking_value_ids=tracking_value_ids)
+
+        self._message_track_post_template(tracking)
 
         return True
 
@@ -1756,21 +1776,48 @@ class MailThread(models.AbstractModel):
         return new_message
 
     @api.multi
+    def message_post_with_view(self, views_or_xmlid, **kwargs):
+        """ Helper method to send a mail / post a message using a view_id to
+        render using the ir.qweb engine. This method is stand alone, because
+        there is nothing in template and composer that allows to handle
+        views in batch. This method should probably disappear when templates
+        handle ir ui views. """
+        values = kwargs.pop('values', None) or dict()
+        try:
+            from openerp.addons.website.models.website import slug
+            values['slug'] = slug
+        except ImportError:
+            values['slug'] = lambda self: self.id
+        if isinstance(views_or_xmlid, basestring):
+            views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
+        else:
+            views = views_or_xmlid
+        if not views:
+            return
+        for record in self:
+            values['object'] = record
+            rendered_template = views.render(values, engine='ir.qweb')
+            kwargs['body'] = rendered_template
+            record.message_post_with_template(False, **kwargs)
+
+    @api.multi
     def message_post_with_template(self, template_id, **kwargs):
         """ Helper method to send a mail with a template
             :param template_id : the id of the template to render to create the body of the message
             :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
         """
         # Get composition mode, or force it according to the number of record in self
-        composition_mode = kwargs.get('composition_mode')
-        if not composition_mode:
-            composition_mode = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        if not kwargs.get('composition_mode'):
+            kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        if not kwargs.get('message_type'):
+            kwargs['message_type'] = 'notification'
         res_id = self.ids[0] or 0
+
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
             active_ids=self.ids,
             active_model=self._name,
-            default_composition_mode=composition_mode,
+            default_composition_mode=kwargs['composition_mode'],
             default_model=self._name,
             default_res_id=self.ids[0] or 0,
             default_template_id=template_id,
@@ -1778,7 +1825,7 @@ class MailThread(models.AbstractModel):
         # Simulate the onchange (like trigger in form the view) only
         # when having a template in single-email mode
         if template_id:
-            update_values = composer.onchange_template_id(template_id, composition_mode, self._name, res_id)['value']
+            update_values = composer.onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
             composer.write(update_values)
         return composer.send_mail()
 
