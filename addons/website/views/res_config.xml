@@ -12,7 +12,9 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" on_change="on_change_website_id(website_id)"/>
+                        <div attrs="{'invisible':[('is_multi_website','=',False)]}">
+                            <field name="website_id" on_change="on_change_website_id(website_id)"/>
+                        </div>
                         <group string="Domain">
                             <field name="website_name" />
                             <label for="google_analytics_key"/>
@@ -83,7 +85,7 @@
                                 </div>
                             </div>
                         </group>
-                        <group string="Menu" groups="base.group_no_one">
+                        <group string="Menu" groups="base.group_no_one" attrs="{'invisible':[('is_multi_website','=',False)]}">
                             <button type="action"
                                 name="%(website.action_website_menu)d"
                                 string="Configure website menus" class="oe_link"/>
@@ -98,6 +100,10 @@
                                 <div>
                                     <field name="module_website_version" widget="upgrade_boolean"/>
                                     <label for="module_website_version"/>
+                                </div>
+                                <div>
+                                    <field name="is_multi_website"/>
+                                    <label for="is_multi_website"/>
                                 </div>
                             </div>
                             <label for="id" string="Speed"/>

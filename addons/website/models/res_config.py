@@ -8,6 +8,7 @@ class website_config_settings(osv.osv_memory):
     _columns = {
         'website_id': fields.many2one('website', string="website", required=True),
         'website_name': fields.related('website_id', 'name', type="char", string="Website Name"),
+        'is_multi_website': fields.boolean("Use Multiple Websites (not available for SAAS users)"),
 
         'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
         'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
@@ -47,5 +48,6 @@ class website_config_settings(osv.osv_memory):
         return config_id
 
     _defaults = {
+        'is_multi_website': False,
         'website_id': lambda self,cr,uid,c: self.pool.get('website').search(cr, uid, [], context=c)[0],
     }
