@@ -125,8 +125,11 @@
 }
 
 // Edit subtypes in dialog
-.modal .modal-body > li.o_subtype {
-    list-style: none;
+.modal .modal-body > ul {
+    padding-left: 0;
+    > li.o_subtype {
+        list-style: none;
+    }
 }
 
 @media print {

@@ -183,7 +183,7 @@ class WebsiteForum(http.Controller):
     def tags(self, forum, tag_char=None, **post):
         # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
         first_char_tag = forum.get_tags_first_char()
-        first_char_list = [(t, t.lower()) for t in first_char_tag]
+        first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
         first_char_list.insert(0, (_('All'), 'all'))
         # get active first char tag
         active_char_tag = first_char_list[1][1] if len(first_char_list) > 1 else 'all'
@@ -193,7 +193,7 @@ class WebsiteForum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         order_by = 'name'
         if active_char_tag and active_char_tag != 'all':
-            domain.append(('name', '=ilike', active_char_tag+'%'))
+            domain.append(('name', '=ilike', tools.escape_psql(active_char_tag)+'%'))
             order_by = 'posts_count DESC'
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
@@ -204,7 +204,6 @@ class WebsiteForum(http.Controller):
             'active_char_tag': active_char_tag,
         })
         return request.website.render("website_forum.tag", values)
-
 
     @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
     def edit_welcome_message(self, forum, **kw):

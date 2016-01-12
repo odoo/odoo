@@ -508,6 +508,10 @@ var RTE = Widget.extend({
         var $target = $(event.target);
         var $editable = $target.closest('.o_editable');
 
+        if (!$editable.size()) {
+            return;
+        }
+
         if ($target.is('a')) {
             $target.attr('contenteditable', true);
             setTimeout(function () {
@@ -516,10 +520,6 @@ var RTE = Widget.extend({
         } else if ($editable.attr('contenteditable') === 'false') {
             $target.removeAttr('contenteditable');
             $editable.attr('contenteditable', true);
-        }
-
-        if (!$editable.size()) {
-            return;
         }
 
         if (this && this.$last && (!$editable.size() || this.$last[0] != $editable[0])) {
