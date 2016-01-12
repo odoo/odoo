@@ -111,6 +111,10 @@
                 color: gray;
             }
 
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
+            }
+
             > p {
                 margin: 0 0 9px; // Required by the old design to override a general rule on p's
                 &:last-child {
