@@ -137,6 +137,12 @@ def constrains(*args):
 
     Should raise :class:`~openerp.exceptions.ValidationError` if the
     validation failed.
+
+    .. warning::
+
+        ``@constrains`` only supports simple field names, dotted names
+        (fields of relational fields e.g. ``partner_id.customer``) are not
+        supported and will be ignored
     """
     return lambda method: decorate(method, '_constrains', args)
 
@@ -162,6 +168,12 @@ def onchange(*args):
                 'warning': {'title': "Warning", 'message': "What is this?"},
             }
 
+
+        .. warning::
+
+            ``@onchange`` only supports simple field names, dotted names
+            (fields of relational fields e.g. ``partner_id.tz``) are not
+            supported and will be ignored
     """
     return lambda method: decorate(method, '_onchange', args)
 
