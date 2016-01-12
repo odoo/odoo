@@ -4,7 +4,7 @@ import datetime
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, ValidationError
 
 
 class LunchOrder(models.Model):
@@ -95,7 +95,7 @@ class LunchOrder(models.Model):
         date_order = datetime.datetime.strptime(self.date, '%Y-%m-%d')
         date_today = datetime.datetime.strptime(fields.Date.context_today(self), '%Y-%m-%d')
         if (date_order < date_today):
-            raise UserError(_('The date of your order is in the past.'))
+            raise ValidationError(_('The date of your order is in the past.'))
 
     @api.one
     @api.depends('order_line_ids.state')

@@ -5,7 +5,7 @@ import re
 import unicodedata
 
 from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp.exceptions import UserError
+from openerp.exceptions import ValidationError
 from openerp.modules.registry import RegistryManager
 from openerp.tools import ustr
 from openerp.tools.safe_eval import safe_eval as eval
@@ -96,7 +96,7 @@ class Alias(models.Model):
         try:
             dict(eval(self.alias_defaults))
         except Exception:
-            raise UserError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):

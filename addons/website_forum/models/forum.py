@@ -15,7 +15,7 @@ from openerp import modules
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -139,7 +139,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
+            raise ValidationError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -414,7 +414,7 @@ class Post(models.Model):
         if (self.post_type == 'question' and not self.forum_id.allow_question) \
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise UserError(_('This forum does not allow %s') % self.post_type)
+            raise ValidationError(_('This forum does not allow %s') % self.post_type)
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)

@@ -3,7 +3,7 @@
 import pytz
 
 from openerp import _, api, fields, models
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, UserError, ValidationError
 
 class event_type(models.Model):
     """ Event Type """
@@ -196,13 +196,13 @@ class event_event(models.Model):
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
         if self.seats_availability == 'limited' and self.seats_max and self.seats_available < 0:
-            raise UserError(_('No more available seats.'))
+            raise ValidationError(_('No more available seats.'))
 
     @api.one
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
         if self.date_end < self.date_begin:
-            raise UserError(_('Closing Date cannot be set before Beginning Date.'))
+            raise ValidationError(_('Closing Date cannot be set before Beginning Date.'))
 
     @api.model
     def create(self, vals):
@@ -296,7 +296,7 @@ class event_registration(models.Model):
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         if self.event_id.seats_availability == 'limited' and self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
-            raise UserError(_('No more seats available for this event.'))
+            raise ValidationError(_('No more seats available for this event.'))
 
     @api.multi
     def _check_auto_confirmation(self):

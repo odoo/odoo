@@ -93,7 +93,7 @@ class AccountAccount(models.Model):
     def _check_reconcile(self):
         for account in self:
             if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
-                raise ValueError(_('You cannot have a receivable/payable account that is not reconciliable. (account code: %s)') % account.code)
+                raise ValidationError(_('You cannot have a receivable/payable account that is not reconciliable. (account code: %s)') % account.code)
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
@@ -265,9 +265,9 @@ class AccountJournal(models.Model):
     def _check_currency(self):
         if self.currency_id:
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency_id.id:
-                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
+                raise ValidationError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency_id.id:
-                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
+                raise ValidationError(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
 
     @api.one
     @api.constrains('type', 'bank_account_id')
@@ -530,7 +530,7 @@ class AccountTax(models.Model):
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
-            raise UserError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
+            raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
     def copy(self, default=None):
