@@ -700,7 +700,12 @@ var AbstractManyField = common.AbstractField.extend({
     destroy: function () {
         this.view.off("load_record", this, this._on_load_record);
         this._super();
-    }
+    },
+    _get_onchange_fields: function () {
+        var fields_name = this._super();
+        fields_name[this.name + '.display_name'] = "";
+        return fields_name;
+    },
 });
 
 var FieldX2Many = AbstractManyField.extend({
@@ -881,6 +886,31 @@ var FieldX2Many = AbstractManyField.extend({
             return view.controller.is_valid();
         }
         return true;
+    },
+    _get_onchange_fields: function () {
+        var self = this;
+        var fields_name = this._super();
+
+        _.each(this.field.views, function (view) {
+            _.each(view.fields, function (field, key) {
+                key = self.name + '.' + key;
+                if (!fields_name[key]) {
+                    fields_name[key] = "";
+                }
+            });
+        });
+
+        var controller = this.viewmanager.views.list.controller;
+        var fields = _.extend({}, controller.columns, controller.editor.form.fields);
+        _.each(fields, function(field) {
+            if ('store' in field) {
+                _.each(field._get_onchange_fields(), function(v, k) {
+                    fields_name[self.name + '.' + k] = v;
+                });
+            }
+        });
+
+        return fields_name;
     },
 });
 
@@ -1513,7 +1543,14 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             tag.addClass('o_tag_color_' + color);
         });
     },
-
+    _get_onchange_fields: function () {
+        var fields_name = this._super();
+        fields_name[this.name + '.name'] = '';
+        if (this.field_manager.fields.color) {
+            fields_name[this.name + '.color'] = '';
+        }
+        return fields_name;
+    }
 });
 
 /**

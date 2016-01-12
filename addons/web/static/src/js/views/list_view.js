@@ -563,7 +563,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             _.each(values, function (value, key) {
                 if (fields[key] && fields[key].type === 'many2many')
                     record.set(key + '__display', false, {silent: true});
-                record.set(key, value, {silent: true});            
+                record.set(key, value, {silent: true});
             });
             record.trigger('change', record);
 
@@ -1899,6 +1899,9 @@ var Column = Class.extend({
     _format: function (row_data, options) {
         return _.escape(formats.format_value(
             row_data[this.id].value, this, options.value_if_empty));
+    },
+    _get_onchange_fields: function () {
+        return _.object([this.name], [0]);
     }
 });
 
@@ -2045,6 +2048,9 @@ var ColumnMany2Many = Column.extend({
             row_data[this.id] = row_data[this.id + '__display'];
         }
         return this._super(row_data, options);
+    },
+    _get_onchange_fields: function () {
+        return _.object([this.name, this.name + '.name', this.name + '.display_name'], [0, 0, 0]);
     }
 });
 

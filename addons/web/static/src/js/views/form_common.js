@@ -659,6 +659,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field_desc(this.name);
+        this.type = this.field.type;
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
         this.options = pyeval.py_eval(this.node.attrs.options || '{}');
@@ -782,6 +783,24 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     },
     commit_value: function() {
         return $.when();
+    },
+
+    _get_onchange_fields: function () {
+        var self = this;
+        var fields_name = {};
+        var fields = [this.node];
+        while (fields.length) {
+            var node = fields.pop();
+            if (!node) {
+                continue;
+            }
+            if (node.tag === 'field' && node.attrs.name === this.name) {
+                fields_name[this.name] = node.attrs.on_change || "";
+                break;
+            }
+            fields = _.union(fields, node.children);
+        }
+        return fields_name;
     },
 });
 
