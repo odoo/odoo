@@ -248,6 +248,8 @@ class ir_attachment(osv.osv):
         mimetype = 'application/octet-stream'
         if values.get('datas_fname'):
             mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if values.get('url'):
+            mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
             mimetype = guess_mimetype(values['datas'].decode('base64'))
         return mimetype

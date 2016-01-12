@@ -28,7 +28,6 @@ var PlannerLauncher = Widget.extend({
             self.$el.on('click', self, self.show_dialog.bind(self));
             return self.fetch_application_planner();
         }).then(function(apps) {
-            self.$el.hide();  // hidden by default
             self.$('.progress').tooltip({html: true, placement: 'bottom', delay: {'show': 500}});
             self.planner_apps = apps;
             return apps;

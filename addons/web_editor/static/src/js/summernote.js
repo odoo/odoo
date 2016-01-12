@@ -144,13 +144,13 @@ dom.mergeFilter = function (prev, cur, parent) {
         return true;
     }
     if (prev && !dom.isBR(prev) && dom.isEqual(prev, cur) &&
-        ((prev.tagName && window.getComputedStyle(prev).display === "inline" &&
-          cur.tagName && window.getComputedStyle(cur).display === "inline"))) {
+        ((prev.tagName && dom.getComputedStyle(prev).display === "inline" &&
+          cur.tagName && dom.getComputedStyle(cur).display === "inline"))) {
         return true;
     }
     if (dom.isEqual(parent, cur) &&
-        ((parent.tagName && window.getComputedStyle(parent).display === "inline" &&
-          cur.tagName && window.getComputedStyle(cur).display === "inline"))) {
+        ((parent.tagName && dom.getComputedStyle(parent).display === "inline" &&
+          cur.tagName && dom.getComputedStyle(cur).display === "inline"))) {
         return true;
     }
     if (parent && cur.tagName === "FONT" && (!cur.firstChild || (!cur.attributes.getNamedItem('style') && !cur.className.length))) {
@@ -377,7 +377,7 @@ dom.removeSpace = function (node, begin, so, end, eo) {
 
             if (cur === begin) add = true;
 
-            if (cur.tagName && cur.tagName !== "SCRIPT" && cur.tagName !== "STYLE" && window.getComputedStyle(cur).whiteSpace !== "pre") {
+            if (cur.tagName && cur.tagName !== "SCRIPT" && cur.tagName !== "STYLE" && dom.getComputedStyle(cur).whiteSpace !== "pre") {
                 __remove_space(cur);
             }
 
@@ -592,7 +592,7 @@ dom.scrollIntoViewIfNeeded = function (node) {
                 // get if a parent have a scrollbar
                 parent = node.parentNode;
                 while (parent != offsetParent &&
-                    (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(parent).overflowY) === -1)) {
+                    (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(dom.getComputedStyle(parent).overflowY) === -1)) {
                     parent = parent.parentNode;
                 }
                 node = parent;
@@ -605,7 +605,7 @@ dom.scrollIntoViewIfNeeded = function (node) {
                 offsetParent = node.offsetParent;
             }
 
-            if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(node).overflowY) !== -1) &&
+            if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(dom.getComputedStyle(node).overflowY) !== -1) &&
                 (node.scrollTop + node.clientHeight) < (elY + elH)) {
                 node.scrollTop = (elY + elH) - node.clientHeight;
             }
@@ -710,7 +710,7 @@ dom.orderStyle = function (node) {
  * @return {String} className
  */
 dom.orderClass = function (node) {
-    var className = node.getAttribute('class');
+    var className = node.getAttribute && node.getAttribute('class');
     if (!className) return null;
     className = className.replace(/[\s\n\r]+/, ' ').replace(/^ | $/g, '').replace(/ +/g, ' ');
     if (!className.length) {
@@ -752,6 +752,11 @@ dom.moveContent = function (from, to) {
     }
   }
 };
+
+dom.getComputedStyle = function (node) {
+    return node.nodeType == Node.COMMENT_NODE ? {} : window.getComputedStyle(node);
+};
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1221,7 +1226,6 @@ function remove_table_content(r) {
                 node.parentNode && !$(node.parentNode).hasClass('o_editable'));
         }
     }
-    event.preventDefault();
     return false;
 }
 
@@ -1351,7 +1355,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
         r = range.create(temp2, 0);
         r.select();
 
-        if ((dom.isText(temp) || window.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || window.getComputedStyle(temp2).display === "inline")) {
+        if ((dom.isText(temp) || dom.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || dom.getComputedStyle(temp2).display === "inline")) {
             if (dom.isText(temp2)) {
                 temp2.textContent = temp2.textContent.replace(/^\s*\S/, '');
             } else {
@@ -1498,7 +1502,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         r = range.create(temp2, temp2.textContent.length, temp2, temp2.textContent.length);
         r.select();
 
-        if ((dom.isText(temp) || window.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || window.getComputedStyle(temp2).display === "inline")) {
+        if ((dom.isText(temp) || dom.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || dom.getComputedStyle(temp2).display === "inline")) {
             if (dom.isText(temp2)) {
                 temp2.textContent = temp2.textContent.replace(/\S\s*$/, '');
             } else {
@@ -2022,7 +2026,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
         if (size) {
           font.style.fontSize = "inherit";
-          if (!isNaN(size) && Math.abs(parseInt(window.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
+          if (!isNaN(size) && Math.abs(parseInt(dom.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
             font.style.fontSize = size + "px";
           }
         }
@@ -2294,124 +2298,16 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function summernote_paste (event) {
-
-    // keep norma feature if copy a picture
-    var clipboardData = event.originalEvent.clipboardData;
-    if (!_.isEmpty(clipboardData.items)) {
-        var item = list.last(clipboardData.items);
-        var isClipboardImage = item.kind === 'file' && item.type.indexOf('image/') !== -1;
-        if (isClipboardImage) {
-            return true;
-        }
-    }
-
-    if (["INPUT", "TEXTAREA"].indexOf(event.target.tagName) !== -1) {
-        return;
-    }
-
-    $(event.target).trigger('content_changed');
-
-    var r = range.create();
-    if (!r.isCollapsed()) {
-        r = r.deleteContents();
-        r.select();
-    }
-
-    var html = clipboardData.getData("text/html");
-    var $node = $('<div/>').html(html);
-    // if copying source did not provide html, default to plain text
-    if(!html) {
-      $node.text(clipboardData.getData("text/plain")).html(function(_, html){
-          return html.replace(/\r?\n/g,'<br>');
-      });
-    }
-
-    /* 
-        remove undesirable tag
-        filter classes and style attributes
-        remove undesirable attributes
-    */
-    $node.find('meta, script, style').remove();
-    $node.find('*').each(function() {
-        var $node = $(this);
-
-        if ($node.attr('style')) {
-            var style = _.filter($node.attr('style').split(/\s*;\s*/), function (style) {
-                    return /width|height|color|background-color|font-weight|text-align|font-style|text-decoration/i.test(style) && $node.css(style.split(':')[0]) !== $('body').css(style.split(':')[0]);
-                }).join(';');
-            if (style.length) {
-                $node.attr('style', style);
-            } else {
-                $node.removeAttr('style');
-            }
-        }
-
-        if ($node.attr('class')) {
-            var classes = _.filter($node.attr('class').split(/\s+/), function (style) {
-                    return /(^|\s)(fa|pull|text|bg)(\s|-|$)/.test(style);
-                }).join(' ');
-            if (classes.length) {
-                $node.attr('class', classes);
-            } else {
-                $node.removeAttr('class');
-            }
-        }
-    }).removeAttr('title', 'alt', 'id', 'contenteditable');
-
-    /*
-        remove unless span
-    */
-    $node.find('span:not([class]):not([style])').each(function () {
-        $(this).replaceWith($(this).contents());
-    });
-    $node.find('span + span').each(function () {
-        if ($(this).attr('class') === $(this).prev().attr('class') && $(this).attr('style') === $(this).prev().attr('style')) {
-            $(this).prev().append($(this).contents());
-            $(this).remove();
-        }
-    });
-
-    /*
-        reset architecture HTML node and add <p> tag
-    */
-    var $arch = $('<div><p/></div>');
-    var $last = $arch.find('p');
-    $node.contents().each(function () {
-        if (dom.isBR(this)) {
-            $(this).remove();
-            $last = $('<p/>');
-            $arch.append($last);
-        } else if (/h[0-9]+|li|table|p/i.test(this.tagName)) {
-            $last = $('<p/>');
-            $arch.append(this).append($last);
-        } else {
-            $last.append(this);
-        }
-    });
-    $last.filter(':empty').remove();
-
-    /*
-        insert content
-    */
-    window.document.execCommand('insertHTML', false,  $arch.html());
-
-    event.preventDefault();
-    return false;
-}
-
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_attach.call(this, oLayoutInfo, options);
-    $(document).off("paste", summernote_paste).on("paste",'[contenteditable]', summernote_paste);
     $editable.on("scroll", summernote_table_scroll);
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_detach.call(this, oLayoutInfo, options);
-    $(document).off("paste", summernote_paste);
     $editable.off("scroll", summernote_table_scroll);
     $('.o_table_handler').remove();
 };

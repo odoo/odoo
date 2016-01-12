@@ -160,10 +160,10 @@ class website_slides(http.Controller):
             self._set_viewed_slide(slide, 'slide')
         return request.website.render('website_slides.slide_detail_view', values)
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/pdf_content', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas.decode('base64')
+        response.data = slide.datas and slide.datas.decode('base64') or ''
         response.mimetype = 'application/pdf'
         return response
 
