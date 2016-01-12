@@ -14,14 +14,18 @@
     except Exception,e:
         pass
 -
+  I delete a cancelled order.
+-
+  !python {model: purchase.order}: |
+    from openerp.exceptions import UserError
+    try:
+        self.unlink(cr, uid, [ref("purchase_order_7")])
+    except UserError:
+        pass
+-
   I delete a draft order.
 -
   !python {model: purchase.order}: |
     self.unlink(cr, uid, [ref("purchase_order_5")])
--
-  I delete a cancelled order.
--
-  !python {model: purchase.order}: |
-    self.unlink(cr, uid, [ref("purchase_order_7")])
 
 
