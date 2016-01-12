@@ -4,7 +4,7 @@
 # 
 # Translators:
 # BT_astauder <andreas.stauder@brain-tec.ch>, 2015
-# Anja Funk <anja.funk@afimage.de>, 2015
+# Anja Funk <anja.funk@afimage.de>, 2015-2016
 # aNj <anj2j@yahoo.de>, 2015
 # BT_astauder <andreas.stauder@brain-tec.ch>, 2015
 # Christopher Westburry <cricsus99@gmail.com>, 2015
@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-02 19:11+0000\n"
+"PO-Revision-Date: 2016-01-09 22:06+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -288,7 +288,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Customer follow-up</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <strong>Kundenbetreuung</strong>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n<strong>Kundenbetreuung</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -785,7 +785,7 @@ msgstr "Eine Liste der häufigsten Steuern und ihre Steuersätze."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and suppler payment terms."
-msgstr "Eine Liste Ihrer Kunden und Zahlungsbedingungen Ihrer Lieferanten."
+msgstr "Eine Liste von Zahlungsbedingungen Ihrer Kunden und Lieferanten."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1470,6 +1470,7 @@ msgstr "Buchen auf Kostenstellen aktivieren"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -2730,7 +2731,7 @@ msgstr "Land des Geschäftspartners"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Customers"
-msgstr "Erstelle Käufer"
+msgstr "Kunden anlegen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -3022,7 +3023,7 @@ msgstr "Ausgangsrechnungen"
 #: code:addons/account/models/account_payment.py:443
 #, python-format
 msgid "Customer Payment"
-msgstr ""
+msgstr "Kundenzahlung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
@@ -3039,7 +3040,7 @@ msgstr "Kundengutschrift"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
 msgid "Customer Taxes"
-msgstr "Umsatzsteuern"
+msgstr "Steuern (Verkauf)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3290,7 +3291,7 @@ msgstr "Direkte Kosten"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Direct connection to your bank"
-msgstr ""
+msgstr "Direkte Verbindung zu Ihrer Bank"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -3410,7 +3411,7 @@ msgstr "Dieses Bankkonto in der Fusszeile von gedruckten Dokumenten wie Rechnung
 msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
-msgstr ""
+msgstr "Dokument: Kundenkontoauszug<br/>\nDatum:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3428,7 +3429,7 @@ msgstr "Erledigt"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Download the"
-msgstr ""
+msgstr "Downloade"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7600,6 +7601,7 @@ msgstr "Filter Buchungen"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
@@ -8590,7 +8592,7 @@ msgstr "Gesamtschulden dieses Kunden"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Gesamtsumme zahlbar an Lieferant."
+msgstr "Gesamtbetrag der offenen Zahlungen an diesen Lieferant."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -8958,7 +8960,7 @@ msgstr "Zahlungsbedingungen des Lieferanten"
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Vendor Reference"
-msgstr "Verkäuferreferenz"
+msgstr "Lieferantenreferenz"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -8972,7 +8974,7 @@ msgstr "Lieferantengutschrift"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Steuern des Lieferanten"
+msgstr "Steuern (Einkauf)"
 
 #. module: account
 #. openerp-web
@@ -8980,7 +8982,7 @@ msgstr "Steuern des Lieferanten"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
-msgstr "Lieferant"
+msgstr "Lieferanten"
 
 #. module: account
 #: selection:account.financial.report,type:0

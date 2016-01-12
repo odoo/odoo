@@ -180,8 +180,11 @@ class Website(openerp.addons.web.controllers.main.Home):
     # Edit
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False, add_menu=None):
-        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+    def pagenew(self, path, noredirect=False, add_menu=None, template=False):
+        if template:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, template=template, context=request.context)
+        else:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
             request.registry['website.menu'].create(
                 request.cr, request.uid, {
