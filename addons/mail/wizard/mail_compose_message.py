@@ -216,8 +216,8 @@ class MailComposer(models.TransientModel):
             if wizard.template_id:
                 # template user_signature is added when generating body_html
                 # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete, mail_server_id=wizard.template_id.mail_server_id.id)
-                ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False)
+                Mail = Mail.with_context(mail_notify_user_signature=False, mail_server_id=wizard.template_id.mail_server_id.id)
+                ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
             if wizard.composition_mode == 'mass_post':
@@ -288,8 +288,8 @@ class MailComposer(models.TransientModel):
                 # always keep a copy, reset record name (avoid browsing records)
                 mail_values.update(notification=True, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
-                if 'mail_auto_delete' in self._context:
-                    mail_values['auto_delete'] = self._context.get('mail_auto_delete')
+                if self.template_id and self.template_id.auto_delete:
+                    mail_values['auto_delete'] = True
                 # rendered values using template
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
