@@ -416,7 +416,20 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.multi
+    def _message_track_get_changes(self, tracked_fields, initial_values):
+        """ Batch method of _message_track. """
+        result = dict()
+        for record in self:
+            result[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+        return result
+
+    @api.multi
     def _message_track(self, tracked_fields, initial):
+        """ For a given record, fields to check (tuple column name, column info)
+        and initial values, return a structure that is a tuple containing :
+
+         - a set of updated column names
+         - a list of changes (initial value, new value, column name, column info) """
         self.ensure_one()
         changes = set()
         tracking_value_ids = []
@@ -437,11 +450,16 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_track(self, tracked_fields, initial_values):
+        """ Track updated values. Comparing the initial and current values of
+        the fields given in tracked_fields, it generates a message containing
+        the updated values. This message can be linked to a mail.message.subtype
+        given by the ``_track_subtype`` method. """
         if not tracked_fields:
             return True
 
+        tracking = self._message_track_get_changes(tracked_fields, initial_values)
         for record in self:
-            changes, tracking_value_ids = record._message_track(tracked_fields, initial_values[record.id])
+            changes, tracking_value_ids = tracking[record.id]
             if not changes:
                 continue
 
