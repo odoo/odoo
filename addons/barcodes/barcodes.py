@@ -180,7 +180,7 @@ class barcode_rule(models.Model):
     @api.model
     def _encoding_selection_list(self):
         return [
-                ('any', 'Any'),
+                ('any', _('Any')),
                 ('ean13', 'EAN-13'),
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),

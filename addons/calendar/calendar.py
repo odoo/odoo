@@ -260,7 +260,7 @@ class calendar_attendee(osv.Model):
         meeting_obj = self.pool['calendar.event']
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has accepted invitation") % (attendee.cn),
                                      subtype="calendar.subtype_invitation", context=context)
 
         return res
@@ -275,7 +275,7 @@ class calendar_attendee(osv.Model):
         meeting_obj = self.pool['calendar.event']
         res = self.write(cr, uid, ids, {'state': 'declined'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has declined invitation") % (attendee.cn)), subtype="calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has declined invitation") % (attendee.cn), subtype="calendar.subtype_invitation", context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):

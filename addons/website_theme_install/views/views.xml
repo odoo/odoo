@@ -40,6 +40,11 @@
         </field>
     </record>
 
+    <!-- Make sure the category Theme/Hidden is created -->
+    <record model="ir.module.category" id="base.module_category_theme_hidden">
+        <field name="name">Hidden</field>
+    </record>
+
     <!-- Actions to list themes with custom kanban (launched on module installation) -->
     <record id="theme_install_kanban_action" model="ir.actions.act_window"> 
         <field name="name">Choose Your Theme</field>
@@ -47,10 +52,10 @@
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
-        <field name="domain">[
-            '|', ('category_id', '!=', 'Hidden'), ('name', '=', 'theme_default'),
-            '|', ('category_id', '=', 'Theme'), ('category_id.parent_id', '=', 'Theme')
-        ]</field>
+        <field name="domain" eval="[
+            '|', ('category_id', 'not in', [ref('base.module_category_hidden'), ref('base.module_category_theme_hidden')]), ('name', '=', 'theme_default'),
+            '|', ('category_id', '=', ref('base.module_category_theme')), ('category_id.parent_id', '=', ref('base.module_category_theme'))
+        ]"/>
     </record>
     <record id="theme_install_todo_action" model="ir.actions.server">
         <field name="name">Choose Your Theme Todo Action</field>
