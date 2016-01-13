@@ -137,13 +137,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
-
-    @api.one
-    @api.constrains('allow_link', 'allow_question', 'allow_discussion', 'default_post_type')
-    def _check_default_post_type(self):
-        if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
-            raise Warning(_('Post type in "Default post" must be activated'))
+            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
