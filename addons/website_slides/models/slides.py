@@ -455,10 +455,14 @@ class Slide(models.Model):
 
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        for slide in self.filtered(lambda slide: slide.website_published):
+        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
-            slide.channel_id.message_post(body=html_body, subtype='website_slides.mt_channel_slide_published')
+            subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
+            slide.channel_id.message_post(
+                subject=subject,
+                body=html_body,
+                subtype='website_slides.mt_channel_slide_published')
         return True
 
     @api.one
