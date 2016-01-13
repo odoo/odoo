@@ -13,7 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: survey
 #: model:email.template,body_html:survey.email_template_survey
@@ -132,6 +133,14 @@ msgid "Add list of existing contacts..."
 msgstr "Thêm danh mục các liên hệ có sẵn..."
 
 #. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Đồng ý"
+
+#. module: survey
 #: view:website:survey.result_number
 msgid "All Data"
 msgstr "Toàn bộ Dữ liệu"
@@ -162,8 +171,7 @@ msgid "Answer Choices"
 msgstr "Các lựa chọn trả lời"
 
 #. module: survey
-#: field:survey.user_input,type:0
-#: field:survey.user_input_line,answer_type:0
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
 msgid "Answer Type"
 msgstr "Kiểu câu trả lời"
 
@@ -215,6 +223,11 @@ msgstr "Nội dung HTML được làm sạch tự động"
 #: view:website:survey.result_number
 msgid "Average"
 msgstr "Trung bình"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -305,6 +318,11 @@ msgid "Composition mode"
 msgstr "Chế độ soạn thảo"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Đồ thuật cấu hình có sẵn cho từng thiết lập quan trọng"
+
+#. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Constraints"
 msgstr "Các ràng buộc"
@@ -332,10 +350,8 @@ msgstr "Ngày tạo"
 #. module: survey
 #: field:survey.label,create_uid:0
 #: field:survey.mail.compose.message,create_uid:0
-#: field:survey.page,create_uid:0
-#: field:survey.question,create_uid:0
-#: field:survey.stage,create_uid:0
-#: field:survey.survey,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
 #: field:survey.user_input,create_uid:0
 #: field:survey.user_input_line,create_uid:0
 msgid "Created by"
@@ -433,10 +449,33 @@ msgid "Design"
 msgstr "Thiết kế"
 
 #. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "Không đồng ý"
+
+#. module: survey
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,display_mode:0
 msgid "Display mode"
 msgstr "Chế độ hiện thị"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr ""
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -451,7 +490,7 @@ msgstr "E-mail"
 #. module: survey
 #: view:survey.survey:survey.survey_form
 msgid "Edit Pages and Questions"
-msgstr "Edit Pages and Questions"
+msgstr "Sửa Trang và Câu hỏi"
 
 #. module: survey
 #: selection:survey.mail.compose.message,type:0
@@ -472,7 +511,7 @@ msgstr "Email của người gửi. Trường này được thiết lập khi kh
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr "Email composition wizard for Survey"
+msgstr "Đồ thuật soạn email cho Khảo sát"
 
 #. module: survey
 #: field:survey.question,constr_error_msg:0
@@ -524,7 +563,7 @@ msgstr "Chữ tự do"
 #. module: survey
 #: field:survey.user_input_line,value_free_text:0
 msgid "Free Text answer"
-msgstr "Free Text answer"
+msgstr "Câu trả lời với chữ tự do"
 
 #. module: survey
 #: field:survey.mail.compose.message,email_from:0
@@ -553,17 +592,75 @@ msgstr "Nhóm theo"
 
 #. module: survey
 #: help:survey.survey,message_summary:0
-msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: survey
-#: field:survey.label,id:0
-#: field:survey.mail.compose.message,id:0
-#: field:survey.page,id:0
-#: field:survey.question,id:0
-#: field:survey.stage,id:0
-#: field:survey.survey,id:0
-#: field:survey.user_input,id:0
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Ressources"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Launchpad, like all official Odoo projects"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr ""
+
+#. module: survey
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
 #: field:survey.user_input_line,id:0
 msgid "ID"
 msgstr "ID"
@@ -571,7 +668,7 @@ msgstr "ID"
 #. module: survey
 #: field:survey.user_input,token:0
 msgid "Identification token"
-msgstr "Identification token"
+msgstr "Token định danh"
 
 #. module: survey
 #: help:survey.survey,message_unread:0
@@ -586,10 +683,23 @@ msgstr "Nếu đánh dấu kiểm, người dùng có thể quay trở lại tra
 #. module: survey
 #: help:survey.stage,closed:0
 msgid "If closed, people won't be able to answer to surveys in this column."
-msgstr "If closed, people won't be able to answer to surveys in this column."
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:649
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, precise:"
 msgstr "Nếu khác, vui lòng mô tả chi tiết:"
@@ -607,7 +717,7 @@ msgstr "Đang thực hiện"
 #. module: survey
 #: help:survey.mail.compose.message,parent_id:0
 msgid "Initial thread message."
-msgstr "Initial thread message."
+msgstr ""
 
 #. module: survey
 #: field:survey.question,validation_email:0
@@ -627,12 +737,42 @@ msgstr "Là một Người dõi theo"
 #. module: survey
 #: field:survey.survey,designed:0
 msgid "Is designed?"
-msgstr "Is designed?"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr ""
 
 #. module: survey
 #: field:survey.label,sequence:0
 msgid "Label Sequence order"
-msgstr "Label Sequence order"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
@@ -647,12 +787,9 @@ msgstr "Ngày của thông điệp cuối cùng"
 
 #. module: survey
 #: field:survey.label,write_uid:0
-#: field:survey.mail.compose.message,write_uid:0
-#: field:survey.page,write_uid:0
-#: field:survey.question,write_uid:0
-#: field:survey.stage,write_uid:0
-#: field:survey.survey,write_uid:0
-#: field:survey.user_input,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
 #: field:survey.user_input_line,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
@@ -660,10 +797,8 @@ msgstr "Cập nhật lần cuối bởi"
 #. module: survey
 #: field:survey.label,write_date:0
 #: field:survey.mail.compose.message,write_date:0
-#: field:survey.page,write_date:0
-#: field:survey.question,write_date:0
-#: field:survey.stage,write_date:0
-#: field:survey.survey,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
 #: field:survey.user_input,write_date:0
 #: field:survey.user_input_line,write_date:0
 msgid "Last Updated on"

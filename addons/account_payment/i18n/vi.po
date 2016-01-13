@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-08 06:56+0000\n"
 "PO-Revision-Date: 2014-09-08 14:14+0700\n"
@@ -13,9 +13,9 @@ msgstr ""
 "com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +23,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -61,15 +60,16 @@ msgstr "Địa chỉ của Đối tác chính"
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr "Address of the Ordering Customer."
+msgstr "Địa chỉ của Khách đặt hàng"
 
 #. module: account_payment
-#: view:False:0 view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:website:account_payment.report_paymentorder
 msgid "Amount"
 msgstr "Tổng tiền"
 
 #. module: account_payment
-#: view:payment.line:0
+#: view:payment.line:account_payment.view_payment_line_tree
 msgid "Amount Total"
 msgstr "Tổng số tiền"
 
@@ -84,12 +84,12 @@ msgid "Amount in Partner Currency"
 msgstr "Tổng tiền theo tiền tệ đối tác"
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 msgid "Are you sure you want to make payment?"
 msgstr "Bạn chắc chắn muốn tạo thanh toán?"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Bank Account"
 msgstr "Tài khoản ngân hàng"
 
@@ -114,13 +114,15 @@ msgid "Bank statement line"
 msgstr "Giao dịch trên sổ phụ ngân hàng"
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0 view:payment.order.create:0
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Cancel Payments"
 msgstr "Hủy bỏ thanh toán"
 
@@ -167,17 +169,18 @@ msgid "Company Currency"
 msgstr "Tiền tệ công ty"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Company Currency:"
 msgstr "Tiền tệ công ty:"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Confirm Payments"
 msgstr "Xác nhân thanh toán"
 
 #. module: account_payment
-#: view:payment.order:0 selection:payment.order,state:0
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Đã xác nhận"
 
@@ -185,6 +188,22 @@ msgstr "Đã xác nhận"
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Đã tạo"
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_uid:0
+#: field:account.payment.populate.statement,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_date:0
+#: field:account.payment.populate.statement,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
+#: field:payment.order.create,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -197,17 +216,18 @@ msgid "Currency"
 msgstr "Tiền tệ"
 
 #. module: account_payment
-#: view:payment.line:0
+#: view:payment.line:account_payment.view_payment_line_tree
 msgid "Currency Amount Total"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
+#: view:payment.line:account_payment.view_payment_line_form
 msgid "Desitination Account"
 msgstr "Tài khoản đích"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0 view:payment.order:0
+#: field:payment.line,info_partner:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Destination Account"
 msgstr "Tài khoản đích"
 
@@ -222,12 +242,14 @@ msgid "Directly"
 msgstr "Trực tiếp"
 
 #. module: account_payment
-#: view:payment.order:0 selection:payment.order,state:0
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
 msgid "Done"
 msgstr "Hoàn tất"
 
 #. module: account_payment
-#: view:payment.order:0 selection:payment.order,state:0
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Dự thảo"
 
@@ -247,12 +269,14 @@ msgid "Effective Date"
 msgstr "Ngày hiệu lực"
 
 #. module: account_payment
-#: view:payment.order.create:0 field:payment.order.create,entries:0
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Bút toán"
 
 #. module: account_payment
-#: view:payment.line:0 view:payment.order:0
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Entry Information"
 msgstr "Thông tin bút toán"
 
@@ -280,7 +304,7 @@ msgid "Execution Date"
 msgstr "Ngày thực thi"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Execution:"
 msgstr "Thực thi:"
 
@@ -295,14 +319,16 @@ msgid "Free"
 msgstr "Tự do"
 
 #. module: account_payment
-#: view:payment.line:0 view:payment.order:0
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "General Information"
 msgstr "Thông tin chung"
 
 #. module: account_payment
-#: view:payment.mode:0 view:payment.order:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Group By"
+msgstr "Nhóm theo"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -314,17 +340,18 @@ msgstr ""
 "directly"
 
 #. module: account_payment
-#: view:account.bank.statement:0
+#: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Lines"
 msgstr "Import Lines"
 
 #. module: account_payment
-#: view:account.bank.statement:0
+#: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Payment Lines"
 msgstr "Import Payment Lines"
 
 #. module: account_payment
-#: view:payment.line:0 view:payment.order:0
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Information"
 msgstr "Thông tin"
 
@@ -339,7 +366,7 @@ msgid "Invoice Effective Date"
 msgstr "Ngày hóa đơn có hiệu lực"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Invoice Ref"
 msgstr "Tham chiếu hóa đơn"
 
@@ -349,12 +376,13 @@ msgid "Invoice Ref."
 msgstr "Tham chiếu hóa đơn"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Invoices"
 msgstr "Hóa đơn"
 
 #. module: account_payment
-#: view:payment.mode:0 field:payment.mode,journal:0
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Sổ nhật ký"
 
@@ -365,12 +393,29 @@ msgstr "Phát sinh"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
+#: field:account.payment.make.payment,write_uid:0
+#: field:account.payment.populate.statement,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_date:0
+#: field:account.payment.populate.statement,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Thực hiện thanh toán"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Make Payments"
 msgstr "Thực hiện thanh toán"
 
@@ -400,13 +445,15 @@ msgid "Order"
 msgstr "Order"
 
 #. module: account_payment
-#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
+#: view:payment.line:account_payment.view_payment_line_form
+#: field:payment.line,info_owner:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Owner Account"
 msgstr "Tài khoản chủ sở hữu"
 
 #. module: account_payment
-#: view:False:0 field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
+#: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "Đối tác"
 
@@ -416,8 +463,9 @@ msgid "Partner Currency"
 msgstr "Tiền tệ đối tác"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
-#: view:payment.order:0
+#: model:ir.ui.menu,name:account_payment.menu_main_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Payment"
 msgstr "Thanh toán"
 
@@ -428,8 +476,10 @@ msgstr "Ngày thanh toán"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
-#: view:payment.order:0
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Payment Line"
 msgstr "Chi tiết thanh toán"
 
@@ -442,19 +492,24 @@ msgstr "Chi tiết thanh toán"
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
+#: view:payment.mode:account_payment.view_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.mode:account_payment.view_payment_mode_tree
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Hình thức thanh toán"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
 #: model:ir.model,name:account_payment.model_payment_order
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_search
 msgid "Payment Order"
 msgstr "Lệnh thanh toán"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Payment Order / Payment"
 msgstr "Lệnh thanh toán / Thanh toán"
 
@@ -468,7 +523,7 @@ msgstr "Lệnh Thanh toán"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr "Payment Populate statement"
+msgstr ""
 
 #. module: account_payment
 #: view:False:0
@@ -491,7 +546,8 @@ msgid "Payment lines"
 msgstr "Chi tiết thanh toán"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_tree
 msgid "Payment order"
 msgstr "Lệnh thanh toán"
 
@@ -501,17 +557,18 @@ msgid "Populate Payment"
 msgstr "Populate Payment"
 
 #. module: account_payment
-#: view:account.payment.populate.statement:0
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
 msgid "Populate Statement:"
-msgstr "Populate Statement:"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: view:False:0 field:payment.order,reference:0
+#: field:payment.order,reference:0
+#: view:website:account_payment.report_paymentorder
 msgid "Reference"
 msgstr "Tham chiếu"
 
@@ -526,17 +583,18 @@ msgid "Scheduled Date"
 msgstr "Ngày theo kế hoạch"
 
 #. module: account_payment
-#: view:payment.order.create:0
+#: view:payment.order.create:account_payment.view_create_payment_order
 msgid "Search"
 msgstr "Tìm kiếm"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_search
 msgid "Search Payment Orders"
 msgstr "Tìm kiếm lệnh thanh toán"
 
 #. module: account_payment
-#: view:payment.order.create:0
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "Search Payment lines"
 msgstr "Tìm kiếm chi tiết thanh toán"
 
@@ -551,14 +609,15 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Chọn hình thức thanh toán sẽ được áp dụng."
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Set to draft"
 msgstr "Thiết lập thành dự thảo"
 
 #. module: account_payment
-#: view:payment.order:0 field:payment.order,state:0
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,state:0
 msgid "Status"
-msgstr "Trạng thái"
+msgstr "Tình thái"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -596,27 +655,29 @@ msgstr ""
 "customer."
 
 #. module: account_payment
-#: view:False:0 field:payment.order,total:0
+#: field:payment.order,total:0
+#: view:website:account_payment.report_paymentorder
 msgid "Total"
 msgstr "Tổng"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Total (Currency)"
 msgstr "Tổng (Tiền tệ)"
 
 #. module: account_payment
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Total in Company Currency"
 msgstr "Tổng tiền theo tiền tệ công ty"
 
 #. module: account_payment
-#: view:payment.line:0 view:payment.order:0
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
 msgid "Transaction Information"
 msgstr "Thông tin giao dịch"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Used Account:"
 msgstr "Tài khoản được sử dụng:"
 
@@ -630,9 +691,9 @@ msgstr ""
 "'What do you want to say to the recipient about this order ?'"
 
 #. module: account_payment
-#: view:False:0
+#: view:website:account_payment.report_paymentorder
 msgid "Value Date"
-msgstr "Value Date"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.order,state:0
@@ -646,7 +707,7 @@ msgstr ""
 " Then the order is paid the status is 'Done'."
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 msgid "Yes"
 msgstr "Có"
 
@@ -657,8 +718,8 @@ msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
 msgstr ""
-"You cannot cancel an invoice which has already been imported in a payment "
-"order. Remove it from the following payment order : %s."
+"Bạn không thể hủy một hóa đơn mà đã được nhập vào Lệnh thanh toán (Ủy nhiệm chi)."
+"Gỡ nó ra khỏi Lệnh thanh toán: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -666,22 +727,14 @@ msgid "Your Reference"
 msgstr "Tham chiếu của bạn"
 
 #. module: account_payment
-#: view:payment.order.create:0
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "_Add to payment order"
-msgstr "_Add to payment order"
+msgstr ""
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0 view:payment.order.create:0
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "or"
 msgstr "hoặc"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_order_create
-msgid "payment.order.create"
-msgstr "payment.order.create"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_report_account_payment_report_paymentorder
-msgid "report.account_payment.report_paymentorder"
-msgstr "report.account_payment.report_paymentorder"

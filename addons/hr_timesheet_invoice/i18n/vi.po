@@ -1,10 +1,10 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet_invoice
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-13 06:59+0000\n"
 "PO-Revision-Date: 2014-09-13 14:20+0700\n"
@@ -13,24 +13,19 @@ msgstr ""
 "com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
 msgid "50%"
-msgstr "50%"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
 msgid "80%"
-msgstr "80%"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
-msgid "90%"
-msgstr "90%"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -38,11 +33,9 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new type of invoicing.\n"
 "              </p><p>\n"
-"                OpenERP allows you to create default invoicing types. You "
-"might\n"
+"                Odoo allows you to create default invoicing types. You might\n"
 "                have to regularly assign discounts because of a specific\n"
-"                contract or agreement with a customer. From this menu, you "
-"can\n"
+"                contract or agreement with a customer. From this menu, you can\n"
 "                create additional types of invoicing to speed up your\n"
 "                invoicing.\n"
 "              </p>\n"
@@ -61,14 +54,14 @@ msgstr ""
 "            "
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Account"
 msgstr "Tài khoản"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
-msgstr "Tổng tiền"
+msgstr "Thành tiền"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
@@ -82,7 +75,7 @@ msgstr "Tài khoản quản trị"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:187
 #, python-format
 msgid "Analytic Account Incomplete!"
-msgstr "Analytic Account Incomplete!"
+msgstr "Tài khoản quản trị chưa hoàn thiện!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
@@ -90,13 +83,16 @@ msgid "Analytic Line"
 msgstr "Phát sinh quản trị"
 
 #. module: hr_timesheet_invoice
-#: view:report.account.analytic.line.to.invoice:0
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
 msgid "Analytic Lines"
 msgstr "Phát sinh quản trị"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_form
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_graph
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_tree
 msgid "Analytic Lines to Invoice"
 msgstr "Phát sinh quản trị cần xuất hóa đơn"
 
@@ -140,34 +136,35 @@ msgid "Balance"
 msgstr "Cân đối"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid "Billing Data"
 msgstr "Dữ liệu thanh toán"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0 view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Cancel Contract"
 msgstr "Hủy hợp đồng"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Close Contract"
 msgstr "Đóng hợp đồng"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:261
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
 msgid "Configuration Error!"
 msgstr "Lỗi cấu hình!"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
 #, python-format
 msgid "Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr "Hợp đồng không đầy đủ. Vui lòng nhập trường Khách hàng và Bảng giá."
@@ -175,8 +172,9 @@ msgstr "Hợp đồng không đầy đủ. Vui lòng nhập trường Khách hà
 #. module: hr_timesheet_invoice
 #: view:False:0 field:hr.timesheet.invoice.create,price:0
 #: field:hr.timesheet.invoice.create.final,price:0
-#: view:report.timesheet.line:0 field:report.timesheet.line,cost:0
-#: field:report_timesheet.user,cost:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+#: field:report.timesheet.line,cost:0 field:report_timesheet.user,cost:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Cost"
 msgstr "Chi phí"
 
@@ -187,14 +185,15 @@ msgid "Costs to invoice"
 msgstr "Chi phí cần xuất hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0 view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
 msgid "Create Invoice"
 msgstr "Tạo hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid "Create Invoices"
 msgstr "Tạo hóa đơn"
 
@@ -209,7 +208,23 @@ msgid "Create invoice from timesheet final"
 msgstr "Tạo hóa đơn từ bảng chấm công cuối cùng"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: field:hr.timesheet.analytic.profit,create_uid:0
+#: field:hr.timesheet.invoice.create,create_uid:0
+#: field:hr.timesheet.invoice.create.final,create_uid:0
+#: field:hr_timesheet_invoice.factor,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,create_date:0
+#: field:hr.timesheet.invoice.create,create_date:0
+#: field:hr.timesheet.invoice.create.final,create_date:0
+#: field:hr_timesheet_invoice.factor,create_date:0
+msgid "Created on"
+msgstr "Tạo trên"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Currency:"
 msgstr "Tiền tệ:"
 
@@ -219,15 +234,18 @@ msgid "Daily Timesheet by Account"
 msgstr "Bảng chấm công hàng ngày theo tài khoản"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.account.date:0
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_form
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
 msgid "Daily timesheet by account"
 msgstr "Bảng chấm công hàng ngày theo tài khoản"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph_account
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_tree
 msgid "Daily timesheet per account"
-msgstr "Bảng chấm công hàng ngày trên tài khoản"
+msgstr "Bảng chấm công hàng ngày theo tài khoản"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,date:0
@@ -237,7 +255,8 @@ msgid "Date"
 msgstr "Ngày tháng"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0 field:report.timesheet.line,day:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,day:0
 msgid "Day"
 msgstr "Ngày"
 
@@ -291,22 +310,22 @@ msgid "Display time in the history of works"
 msgstr "Hiển thị thời gian trong lịch sử làm việc"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Do you want to show details of each activity to your customer?"
 msgstr "Bạn có muốn hiển thị chi tiết của từng hoạt động cho khách hàng?"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid "Do you want to show details of work in invoice?"
 msgstr "Bạn có muốn hiển thị chi tiết làm việc trên hóa đơn?"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
 msgid "Duration"
 msgstr "Khoảng thời gian"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Eff."
 msgstr "Eff."
 
@@ -318,12 +337,14 @@ msgstr "Lỗi!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
-#: view:report.analytic.account.close:0
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_form
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_tree
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_graph
 msgid "Expired analytic accounts"
 msgstr "Tài khoản quản trị đã hết hạn"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Extended Filters..."
 msgstr "Bộ lọc mở rộng..."
 
@@ -351,14 +372,19 @@ msgid "Force Product"
 msgstr "Sản phẩm"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Force to use a special product"
 msgstr "Cưỡng bức để sử dụng một sản phẩm cụ thể"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid "Force to use a specific product"
 msgstr "Cưỡng bức để sử dụng một sản phẩm cụ thể"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Free of charge"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
@@ -368,17 +394,31 @@ msgstr "Từ"
 #. module: hr_timesheet_invoice
 #: field:report.timesheet.line,general_account_id:0
 msgid "General Account"
-msgstr "Tài khoản kế toán tài chính"
+msgstr "Tài khoản kế toán tổng hợp"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Group By"
+msgstr "Nhóm theo"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: field:hr.timesheet.analytic.profit,id:0
+#: field:hr.timesheet.invoice.create,id:0
+#: field:hr.timesheet.invoice.create.final,id:0
+#: field:hr_timesheet_invoice.factor,id:0
+#: field:report.account.analytic.line.to.invoice,id:0
+#: field:report.analytic.account.close,id:0
+#: field:report.hr_timesheet_invoice.report_analyticprofit,id:0
+#: field:report.timesheet.line,id:0 field:report_timesheet.account,id:0
+#: field:report_timesheet.account.date,id:0
+#: field:report_timesheet.invoice,id:0 field:report_timesheet.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Income"
-msgstr "Doanh thu"
+msgstr "Lợi nhuận"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
@@ -394,7 +434,7 @@ msgstr "Tên nội bộ"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
 #: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Invoice"
 msgstr "Hóa đơn"
 
@@ -404,7 +444,7 @@ msgid "Invoice Rate"
 msgstr "Invoice Rate"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Invoice contract"
 msgstr "Hóa đơn hợp đồng"
 
@@ -415,14 +455,14 @@ msgid "Invoice is already linked to some of the analytic line(s)!"
 msgstr "Hóa đơn đã sẵn sàng liên kết tới một vài phát sinh quản trị!"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Invoice on Timesheets Options"
 msgstr "Tùy chọn hóa đơn trên bảng chấm công"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Invoice rate by user"
-msgstr "Invoice rate by user"
+msgstr "Tỷ suất hóa đơn theo người dùng"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
@@ -430,7 +470,8 @@ msgid "Invoiceable"
 msgstr "Có thể xuất hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0 view:hr.analytic.timesheet:0
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
 msgstr "Đã xuất hóa đơn"
@@ -448,7 +489,7 @@ msgid "Invoices"
 msgstr "Hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:hr.analytic.timesheet:0
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.hr_timesheet_line_form
 msgid "Invoicing"
 msgstr "Hóa đơn"
 
@@ -478,7 +519,7 @@ msgstr "Sổ nhật ký"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr "Phát sinh"
+msgstr "Phát sinh KT"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -506,12 +547,20 @@ msgstr "Để trống nếu hợp đồng này không bị giới hạn một t�
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
-msgstr "Label for the customer"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,write_uid:0
+#: field:hr.timesheet.invoice.create,write_uid:0
+#: field:hr.timesheet.invoice.create.final,write_uid:0
+#: field:hr_timesheet_invoice.factor,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
 msgid "Log of Activity"
-msgstr "Log of Activity"
+msgstr "Nhật ký hoạt động"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -548,8 +597,8 @@ msgstr "Tháng 5"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
-#: view:report.timesheet.line:0 field:report.timesheet.line,month:0
-#: field:report_timesheet.account,month:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,month:0 field:report_timesheet.account,month:0
 #: field:report_timesheet.account.date,month:0
 #: field:report_timesheet.user,month:0
 msgid "Month"
@@ -567,7 +616,7 @@ msgid "No record(s) found for this report."
 msgstr "Không có bản ghi được tìm thấy cho báo cáo này."
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Non Assigned timesheets to users"
 msgstr "Chưa gán bảng chấm công cho người dùng."
 
@@ -595,7 +644,7 @@ msgid "Partner"
 msgstr "Đối tác"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Period from startdate:"
 msgstr "Chu kỳ bắt đầu từ ngày:"
 
@@ -605,7 +654,7 @@ msgid "Period to enddate:"
 msgstr "Chu kỳ kết thúc tạo ngày:"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:261
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr "Vui lòng xác định tài khoản doanh thu cho sản phẩm '%s'."
@@ -616,7 +665,7 @@ msgid "Pricelist"
 msgstr "Bảng giá"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
 msgid "Print"
 msgstr "In"
 
@@ -628,12 +677,13 @@ msgstr "In lợi nhuân chấm công"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,product:0
 #: field:report.account.analytic.line.to.invoice,product_id:0
-#: view:report.timesheet.line:0 field:report.timesheet.line,product_id:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,product_id:0
 msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Profit"
 msgstr "Lợi nhuận"
 
@@ -643,7 +693,8 @@ msgid "Project"
 msgstr "Dự án"
 
 #. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity:0 view:report.timesheet.line:0
+#: field:report.analytic.account.close,quantity:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
 msgid "Quantity"
 msgstr "Số lượng"
 
@@ -662,7 +713,7 @@ msgid "September"
 msgstr "Tháng 9"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Set In Progress"
 msgstr "Thiết lập đang chạy"
 
@@ -710,7 +761,7 @@ msgid "The time of each work done will be displayed on the invoice"
 msgstr "Thời gian của từng công việc đã làm sẽ được hiển thị trên hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Theorical"
 msgstr "Lý thuyết"
 
@@ -742,12 +793,13 @@ msgstr "Timesheet Invoicing Ratio"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_graph
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
 msgid "Timesheet Line"
 msgstr "Chi tiết chấm công"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.action_report_analytic_profit
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
@@ -770,40 +822,49 @@ msgid "Timesheet by User"
 msgstr "Bảng chấm công theo người dùng"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0 view:report_timesheet.account.date:0
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_form
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_search
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
 msgid "Timesheet by account"
 msgstr "Bảng chấm công theo tài khoản"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_form
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_graph
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_search
 msgid "Timesheet by invoice"
 msgstr "Bảng chấm công theo hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0 view:report_timesheet.user:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_form
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_graph
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_tree
 msgid "Timesheet by user"
 msgstr "Bảng chấm công theo người dùng"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.user:0
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
 msgid "Timesheet by users"
 msgstr "Bảng chấm công theo người dùng"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
-#: view:report_timesheet.account:0
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_graph
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_tree
 msgid "Timesheet per account"
-msgstr "Bảng chấm công trên tài khoản"
+msgstr "Bảng chấm công theo tài khoản"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
 msgid "Timesheet per day"
-msgstr "Bảng chấm công trên ngày"
+msgstr "Bảng chấm công theo ngày"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
 msgid "Timesheets per account"
-msgstr "Bảng chấm công trên tài khoản"
+msgstr "Bảng chấm công theo tài khoản"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
@@ -811,7 +872,7 @@ msgid "Timesheets per day"
 msgstr "Bảng chấm công trên ngày"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_tree
 msgid "Timesheets to invoice"
 msgstr "Bảng chấm công cần xuất hóa đơn"
 
@@ -821,13 +882,14 @@ msgid "To"
 msgstr "Tới"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0 view:hr.analytic.timesheet:0
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "Cần xuất hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "To Renew"
 msgstr "Cần gia hạn"
 
@@ -842,14 +904,15 @@ msgid "Total invoiced"
 msgstr "Tổng đã xuất hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Totals:"
 msgstr "Tổng:"
 
 #. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_form
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_search
 msgid "Type of invoicing"
-msgstr "Loại hóa đơn"
+msgstr "Kiểu xuất hóa đơn"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -858,7 +921,7 @@ msgid "Types of Invoicing"
 msgstr "Loại hóa đơn"
 
 #. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_tree
 msgid "Types of invoicing"
 msgstr "Loại hóa đơn"
 
@@ -868,13 +931,15 @@ msgid "Unit of Measure"
 msgstr "Đơn vị đo lường"
 
 #. module: hr_timesheet_invoice
-#: view:False:0 field:report.account.analytic.line.to.invoice,unit_amount:0
+#: field:report.account.analytic.line.to.invoice,unit_amount:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Units"
 msgstr "Đơn vị"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,employee_ids:0
-#: view:report.timesheet.line:0 field:report.timesheet.line,user_id:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
 #: field:report_timesheet.account.date,user_id:0
 #: field:report_timesheet.invoice,user_id:0
@@ -883,7 +948,7 @@ msgid "User"
 msgstr "Người dùng"
 
 #. module: hr_timesheet_invoice
-#: view:False:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "User or Journal Name"
 msgstr "Tên người dùng hoặc sổ nhật ký"
 
@@ -894,12 +959,12 @@ msgid "Warning!"
 msgstr "Cảnh báo!"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid ""
-"When reinvoicing costs, the amount on the invoice lines is given by the sale "
-"price of the corresponding product (if any, and if its sale price is not 0). "
-"You can use the following field to enforce the use of a single product for "
-"all the chosen lines in the future invoices."
+"When reinvoicing costs, the amount on the invoice lines is given by the sale"
+" price of the corresponding product (if any, and if its sale price is not "
+"0). You can use the following field to enforce the use of a single product "
+"for all the chosen lines in the future invoices."
 msgstr ""
 "Khi xuất lại hóa đơn chi phí, tổng tiền trên một hạng mục của hóa đơn sẽ "
 "được chỉ ra bởi giá bán của sản phẩm tương ứng (nếu không và nếu giá bán "
@@ -908,8 +973,8 @@ msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
-#: view:report.timesheet.line:0 field:report.timesheet.line,name:0
-#: field:report_timesheet.account,name:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,name:0 field:report_timesheet.account,name:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Year"
@@ -941,12 +1006,8 @@ msgstr ""
 "80%."
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0 view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "or"
 msgstr "hoặc"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_hr_timesheet_invoice_report_analyticprofit
-msgid "report.hr_timesheet_invoice.report_analyticprofit"
-msgstr "report.hr_timesheet_invoice.report_analyticprofit"

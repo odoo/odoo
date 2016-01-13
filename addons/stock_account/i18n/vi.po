@@ -13,7 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -44,7 +45,7 @@ msgstr "Thông tin kế toán"
 #: code:addons/stock_account/wizard/stock_change_standard_price.py:76
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr "Active ID is not set in Context."
+msgstr ""
 
 #. module: stock_account
 #: help:stock.config.settings,group_stock_inventory_valuation:0
@@ -189,9 +190,9 @@ msgid "Destination Journal"
 msgstr "Sổ nhật ký đích"
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:88
-#: code:addons/stock_account/product.py:121
-#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:107
+#: code:addons/stock_account/product.py:83
+#: code:addons/stock_account/product.py:116
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
 #, python-format
 msgid "Error!"
 msgstr "Lỗi!"
@@ -217,23 +218,28 @@ msgid "Group by partner"
 msgstr "Nhóm theo đối tác"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
-msgid "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+msgid ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr "Nếu giá vốn tăng, tài khoản biến động kho sẽ ghi nợ và tài khoản xuất kho ghi tăng với giá trị = (số tiền chênh lệch * số lượng khả dụng).\n"
 "Nếu giá vốn giảm, tài khoản biến động kho sẽ ghi có và tài khoản nhập kho sẽ ghi nợ."
 
 #. module: stock_account
 #: help:product.template,valuation:0
-msgid "If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
 msgstr "Nếu phương pháp xác định giá theo thời gian thực được kích hoạt cho một sản phẩm, hệ thống sẽ tự động tạo bút toán tương ứng với dịch chuyển kho với giá được chỉ định bởi 'Phương pháp giá vốn'. Tài khoản biến động tồn kho được thiết lập trên nhóm sản phẩm sẽ đai diện cho giá trị tồn kho hiện tại, tài khoản nhập kho và xuất kho sẽ bao gồm các dịch chuyển đối ứng với hàng xuất và nhập"
 
 #. module: stock_account
@@ -263,8 +269,7 @@ msgid "Inventory Value"
 msgstr "Giá trị tồn kho"
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Kiểm soát Hóa đơn"
@@ -655,8 +660,3 @@ msgstr "_Áp dụng"
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "or"
 msgstr "hoặc"
-
-#. module: stock_account
-#: view:stock.picking:stock_account.view_picking_inherit_form2
-msgid "{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"
-msgstr "{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"

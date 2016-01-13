@@ -4359,7 +4359,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 });
 
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
-    template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
         this.registry = this.registry.extend({
@@ -4606,7 +4605,14 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.dataset.evict_record(record.get('id'));
 
         return this._super(record);
-    }
+    },
+    reload_content: function () {
+        this.page = Math.max(0, Math.min(
+            this.page,
+            Math.ceil(this.dataset.size() / this.limit()) - 1
+        ));
+        return this._super.apply(this, arguments);
+    },
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
     setup_resequence_rows: function () {

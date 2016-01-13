@@ -1,10 +1,10 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-12 09:48+0000\n"
 "PO-Revision-Date: 2014-09-12 17:09+0700\n"
@@ -12,9 +12,9 @@ msgstr ""
 "Language-Team: T.V.T Marine Automation (TVMTA) <support@ma.tvtmarine.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -55,10 +55,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to register new expenses. \n"
 "              </p><p>\n"
-"                OpenERP will ensure the whole process is followed; the "
-"expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                Odoo will ensure the whole process is followed; the expense\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
@@ -81,34 +79,40 @@ msgid "Accepted"
 msgstr "Được chấp thuận"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Accounting"
 msgstr "Kế toán"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Accounting Data"
 msgstr "Dữ liệu kế toán"
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Ticket"
+msgstr "Vé Máy bay"
+
+#. module: hr_expense
+#: field:hr.expense.line,analytic_account:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Tài khoản quản trị"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Approve"
 msgstr "Phê duyệt"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
 msgstr "Được phê duyệt"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Approved Expenses"
 msgstr "Chi phí được phê duyệt"
 
@@ -138,23 +142,29 @@ msgid "Cancelled"
 msgstr "Đã hủy"
 
 #. module: hr_expense
-#: view:False:0
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: view:website:hr_expense.report_expense
 msgid "Certified honest and conform,"
 msgstr "Certified honest and conform,"
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Công ty"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_editable_expenses_tree
 msgid "Confirm"
 msgstr "Xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Confirm Expenses"
 msgstr "Xác nhận chi phí"
 
@@ -165,12 +175,28 @@ msgid "Confirmation Date"
 msgstr "Ngày xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Confirmed Expenses"
 msgstr "Chi phí được xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+msgid "Create Month"
+msgstr "Tháng tạo"
+
+#. module: hr_expense
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: hr_expense
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
+
+#. module: hr_expense
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+#: field:hr.expense.report,create_date:0
 msgid "Creation Date"
 msgstr "Ngày tạo"
 
@@ -181,8 +207,8 @@ msgid "Currency"
 msgstr "Tiền tệ"
 
 #. module: hr_expense
-#: view:False:0 field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
+#: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "Ngày"
 
@@ -208,10 +234,10 @@ msgstr "Ngày xác nhận bảng chi phí. Nó được điền khi ấn nút 'X
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Ngày của thông điệp gần nhất trên một bản ghi."
+msgstr "Ngày của thông điệp gần nhất trên bản ghi này."
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Date:"
 msgstr "Ngày:"
 
@@ -251,29 +277,32 @@ msgid "Delay to Valid"
 msgstr "Trì hoãn xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+#: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Phòng ban"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Miêu tả"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Description:"
 msgstr "Miêu tả"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 selection:hr.expense.report,state:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+#: selection:hr.expense.report,state:0
 msgid "Done"
 msgstr "Hoàn thành"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Done Expenses"
 msgstr "Hoàn hành chi phí"
 
@@ -283,8 +312,8 @@ msgid "Draft"
 msgstr "Dự thảo"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
+#: field:hr.expense.expense,employee_id:0
 msgid "Employee"
 msgstr "Nhân viên"
 
@@ -294,28 +323,29 @@ msgid "Employee's Name"
 msgstr "Tên nhân viên"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Employee:"
 msgstr "Nhân viên:"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:173
-#: code:addons/hr_expense/hr_expense.py:238
-#: code:addons/hr_expense/hr_expense.py:240
-#: code:addons/hr_expense/hr_expense.py:353
-#: code:addons/hr_expense/hr_expense.py:357
+#: code:addons/hr_expense/hr_expense.py:167
+#: code:addons/hr_expense/hr_expense.py:230
+#: code:addons/hr_expense/hr_expense.py:232
+#: code:addons/hr_expense/hr_expense.py:344
+#: code:addons/hr_expense/hr_expense.py:348
 #, python-format
 msgid "Error!"
 msgstr "Lỗi!"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
+#: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
 msgstr "Chi phí"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:382
+#: code:addons/hr_expense/hr_expense.py:373
 #, python-format
 msgid "Expense Account Move"
 msgstr "Bút toán chi phí"
@@ -327,7 +357,7 @@ msgid "Expense Categories"
 msgstr "Nhóm chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Expense Date"
 msgstr "Ngày chi phí"
 
@@ -337,8 +367,9 @@ msgid "Expense Line"
 msgstr "Chi tiết chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
-#: view:hr.expense.line:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
+#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.line:hr_expense.view_expenses_line_tree
 msgid "Expense Lines"
 msgstr "Chi tiết chi phí"
 
@@ -363,7 +394,9 @@ msgid "Expense refused"
 msgstr "Chi phí bị từ chối"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_editable_expenses_tree
+#: view:hr.expense.expense:hr_expense.view_expenses_tree
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
@@ -372,19 +405,20 @@ msgid "Expenses"
 msgstr "Chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_graph
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
 msgid "Expenses Analysis"
 msgstr "Phân tích Chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses Month"
-msgstr "Expenses Month"
+msgstr "Tháng chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Expenses Sheet"
 msgstr "Bảng chi phí"
 
@@ -394,17 +428,17 @@ msgid "Expenses Statistics"
 msgstr "Thống kê chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses by Month"
 msgstr "Chi phí theo tháng"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses to Invoice"
 msgstr "Chí phí cần xuất hóa đơn"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Extended Filters..."
 msgstr "Bộ lọc mở rộng..."
 
@@ -424,12 +458,12 @@ msgid "Force Journal"
 msgstr "Sổ nhật ký cưỡng bức"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Free Notes"
 msgstr "Ghi chú tự do"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Generate Accounting Entries"
 msgstr "Tạo bút toán kế toán"
 
@@ -439,9 +473,10 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách chi tiết chi phí."
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+msgid "Group By"
+msgstr "Nhóm theo"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -449,7 +484,7 @@ msgid "HR Expense"
 msgstr "Chi phí nhân sự"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "HR Expenses"
 msgstr "Chi phí nhân sự"
 
@@ -463,9 +498,20 @@ msgstr ""
 "directly in html format in order to be inserted in kanban views."
 
 #. module: hr_expense
+#: model:product.template,name:hr_expense.hotel_rent_product_template
+msgid "Hotel Accommodation"
+msgstr "Phòng nghỉ khách sạn"
+
+#. module: hr_expense
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
+#: field:hr.expense.report,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
@@ -480,7 +526,7 @@ msgstr "Tháng 1"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr "Phát sinh"
+msgstr "Phát sinh KT"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -528,27 +574,28 @@ msgid "Month"
 msgstr "Tháng"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
-msgstr "Chi phí của bạn"
+msgstr "Chi phí của tôi"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Name"
 msgstr "Tên"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
+#: selection:hr.expense.expense,state:0
 msgid "New"
 msgstr "Mới"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "New Expense"
 msgstr "Chi phí mới"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:167
 #, python-format
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
@@ -558,7 +605,7 @@ msgstr ""
 "ký với loại là 'mua hàng' đã được cấu hình."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:353
+#: code:addons/hr_expense/hr_expense.py:344
 #, python-format
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
@@ -573,7 +620,7 @@ msgid "Note"
 msgstr "Ghi chú"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Notes"
 msgstr "Ghi chú"
 
@@ -588,7 +635,7 @@ msgid "October"
 msgstr "Tháng 10"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Open Accounting Entries"
 msgstr "Open Accounting Entries"
 
@@ -598,7 +645,7 @@ msgid "Paid"
 msgstr "Đã trả"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:357
+#: code:addons/hr_expense/hr_expense.py:348
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -608,12 +655,13 @@ msgstr ""
 "`property_account_expense_categ`."
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Price"
 msgstr "Giá"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,product_id:0
 msgid "Product"
 msgstr "Sản phẩm"
@@ -624,12 +672,12 @@ msgid "Product Template"
 msgstr "Mẫu sản phẩm"
 
 #. module: hr_expense
-#: view:product.product:0
+#: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Products"
 msgstr "Sản phẩm"
 
 #. module: hr_expense
-#: view:False:0 field:hr.expense.report,product_qty:0
+#: view:website:hr_expense.report_expense
 msgid "Qty"
 msgstr "Số lượng"
 
@@ -639,7 +687,7 @@ msgid "Quantities"
 msgstr "Số lượng"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Ref."
 msgstr "Tham chiếu"
 
@@ -649,7 +697,8 @@ msgid "Reference"
 msgstr "Tham chiếu"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_editable_expenses_tree
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Refuse"
 msgstr "Từ chối"
 
@@ -662,14 +711,14 @@ msgstr "Bị từ chối"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
 msgid "Review Your Expenses Products"
-msgstr "Review Your Expenses Products"
+msgstr "Xem xét các sản phẩm kiểu chi phí"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:455
+#: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
 msgstr ""
 "Đơn vị đo lường đã chọn không thuộc cùng nhóm với đơn vị đo lường sản phẩm"
 
@@ -684,7 +733,7 @@ msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Set to Draft"
 msgstr "Thiết lập thành Dự thảo"
 
@@ -699,15 +748,16 @@ msgid "Specify if the product can be selected in an HR expense line."
 msgstr "Specify if the product can be selected in an HR expense line."
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0 view:hr.expense.report:0
+#: field:hr.expense.expense,state:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,state:0
 msgid "Status"
 msgstr "Trạng thái"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Submit to Manager"
-msgstr "Gửi tới Quản lý"
+msgstr "Đề trình cho Quản lý"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
@@ -715,13 +765,13 @@ msgid "Summary"
 msgstr "Tóm tắt"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:230
 #, python-format
 msgid "The employee must have a home address."
-msgstr "Nhân viên phải có một địa chỉ nhà."
+msgstr "Nhân viên phải có một địa chỉ nhà (là đối tượng đối tác - res.partner)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:232
 #, python-format
 msgid "The employee must have a payable account set on his home address."
 msgstr ""
@@ -733,29 +783,31 @@ msgid "The journal used when the expense is done."
 msgstr "Sổ nhật ký được sử dụng khi chi phí được hoàn thành"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr "This document must be dated and signed for reimbursement."
+msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
-msgstr "Cần phê duyệt"
+msgstr "Chờ phê duyệt"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
+#: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "To Pay"
-msgstr "Cần trả"
+msgstr "Phải thanh toán"
 
 #. module: hr_expense
-#: view:False:0 view:hr.expense.expense:0 view:hr.expense.line:0
-#: field:hr.expense.line,total_amount:0
+#: view:hr.expense.expense:hr_expense.view_expenses_form
+#: view:hr.expense.line:hr_expense.view_expenses_line_tree
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "Tổng"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,amount:0
+#: view:hr.expense.expense:hr_expense.view_expenses_tree
+#: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Tổng tiền"
 
@@ -765,12 +817,13 @@ msgid "Total Price"
 msgstr "Tổng giá"
 
 #. module: hr_expense
-#: view:False:0 field:hr.expense.line,unit_amount:0
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "Đơn giá"
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0 view:product.product:0
+#: field:hr.expense.line,uom_id:0
+#: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Unit of Measure"
 msgstr "Đơn vị đo lường"
 
@@ -785,7 +838,7 @@ msgid "User"
 msgstr "Người dùng"
 
 #. module: hr_expense
-#: view:False:0
+#: view:website:hr_expense.report_expense
 msgid "Validated By:"
 msgstr "Xác nhận bởi:"
 
@@ -800,12 +853,13 @@ msgid "Validation Date"
 msgstr "Ngày xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,user_id:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
+#: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Người xác nhận"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Waiting"
 msgstr "Chờ"
 
@@ -825,13 +879,13 @@ msgid "Waiting confirmation"
 msgstr "Chờ xác nhận"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:455
+#: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid "Warning"
 msgstr "Cảnh báo"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:122
+#: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
 msgstr "Cảnh báo!"
@@ -839,22 +893,20 @@ msgstr "Cảnh báo!"
 #. module: hr_expense
 #: field:hr.expense.expense,website_message_ids:0
 msgid "Website Messages"
-msgstr "Website Messages"
+msgstr "Thông điệp Website"
 
 #. module: hr_expense
 #: help:hr.expense.expense,website_message_ids:0
 msgid "Website communication history"
-msgstr "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
 "Chi một chi phí yêu cầu được tạo, trạng thái là 'Dự thảo'.\n"
 " Nó được xác nhận bởi người dùng và yeu cầu được gửi tới quản lý, trạng thái "

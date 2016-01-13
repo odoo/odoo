@@ -6,7 +6,7 @@
 # eden.chen <ccskysea@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # glovebx <ruinning@163.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-12-02 07:35+0000\n"
+"PO-Revision-Date: 2016-01-06 08:11+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid ""
 "    增加小企业会计科目表\n"
 "    \n"
 "    "
-msgstr "\n\n    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n\n    添加中文省份数据\n\n    增加小企业会计科目表\n    \n    "
+msgstr "\n\n    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n\n    增加中文省份数据\n\n    增加小企业会计科目表\n    \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -119,7 +119,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n概览:\n---------\n\n* 日本公司会计科目表和税务模板。\n* 本模板大概不会设置到一个公司所有必须的科目。基于模板，你需要自行增加/删除/修改科目。\n\n备注:\n-----\n\n* 增加会计结构 '内税' 和 '外税'，用来处理POS实施中可能会碰到的一些问题。 [1] 正常情况下你不会用到这些。\n\n[1] 访问 https://github.com/odoo/odoo/pull/6470 查看更多细节。"
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -163,7 +163,7 @@ msgid ""
 "generated if no algorithm is specified on the Partner record. \n"
 "\n"
 "    "
-msgstr "\n    \nBelgian localization for in- and outgoing invoices (prereq to account_coda):\n============================================================================\n    - Rename 'reference' field labels to 'Communication'\n    - Add support for Belgian Structured Communication\n\nA Structured Communication can be generated automatically on outgoing invoices according to the following algorithms:\n---------------------------------------------------------------------------------------------------------------------\n    1) Random : +++RRR/RRRR/RRRDD+++\n        **R..R =** Random Digits, **DD =** Check Digits\n    2) Date : +++DOY/YEAR/SSSDD+++\n        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  \n        \nThe preferred type of Structured Communication and associated Algorithm can be\nspecified on the Partner records. A 'random' Structured Communication will\ngenerated if no algorithm is specified on the Partner record. \n\n    "
+msgstr "\n\n    \n\n在外部发票中进行比利时本土化 (前提条件是在账户尾部):\n\n============================================================================\n\n    - 重命名“参考”字段标签来“通信”\n\n    - 添加支持比利时的结构化通信\n\n\n\n一个结构化的通信可以根据以下算法对外部发票自动生成:\n\n---------------------------------------------------------------------------------------------------------------------\n\n    1) 随机 : +++RRR/RRRR/RRRDD+++\n\n        **R..R =** 随机数字, **DD =** 校验数字\n\n    2) 日期 : +++DOY/YEAR/SSSDD+++\n\n        **DOY =** 年中的一天, **SSS =** 序列号, **DD =** 校验数字\n\n    3) 客户参考 : +++RRR/RRRR/SSSDDD+++\n\n        **R..R =** 客户参考而非数字字符, **SSS =** 序列号, **DD =** 校验数字  \n\n        \n\n结构化通信的首选类型和相关的算法可以\n\n在合作伙伴指定的记录。如果没有算法在伙伴指定的记录\n\n将会生成一个“随机”的结构化通信。\n\n\n\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -206,7 +206,7 @@ msgid ""
 "    Will be removed from Saas-6 and will be put in procurement_jit\n"
 "    over there, where procurement_jit will depend on stock\n"
 "    "
-msgstr ""
+msgstr "\n   如果您安装本模块，不仅包括运输，\n即其包括分拣-包装-运输一条龙，\n (这将极大地提高性能)。\n\n    注意此模块将从 Saas-6 中移除掉，并且将置入到 procurement_jit\n    模块中，模块procurement_jit 依赖于 stock\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -914,7 +914,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n欧盟迷你一站式店铺(MOSS) 的广播电子电信VAT增值税\n=============================================================================================\n\nAs of January 1rst, 2015, telecommunications, broadcasting\nand electronic services sold within the European Union\nhave to be always taxed in the country where the customer\nbelongs. In order to simplify the application of this EU\ndirective, the Mini One Stop Shop (MOSS) registration scheme\nallows businesses to make a unique tax declaration.\n\nThis module makes it possible by helping with the creation\nof the required EU fiscal positions and taxes in order to\nautomatically apply and record the required taxes.\n\nThis module installs a wizard to help setup fiscal positions\nand taxes for selling electronic services inside EU.\n\nThe wizard lets you select:\n - the EU countries to which you are selling these\n   services\n - your national VAT tax for services, to be mapped\n   to the target country's tax\n - optionally: a template fiscal position, in order\n   to copy the account mapping. Should be your\n   existing B2C Intra-EU fiscal position. (defaults\n   to no account mapping)\n - optionally: an account to use for collecting the\n   tax amounts (defaults to the account used by your\n   national VAT tax for services)\n\nIt creates the corresponding fiscal positions and taxes,\nautomatically applicable for EU sales with a customer\nin the selected countries.\nThe wizard can be run again for adding more countries.\n\nThe wizard creates a separate Chart of Taxes for collecting the\nVAT amounts of the MOSS declaration, so extracting the MOSS\ndata should be easy.\nLook for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\nTaxes Report menu (Generic Accounting Report).\n\n参考\n++++++++++\n- Directive 2008/8/EC\n- Council Implementing Regulation (EU) No 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -1075,7 +1075,7 @@ msgid ""
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
 "    "
-msgstr ""
+msgstr "\n生成 XML格式的内部申报报表\n基于发票。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -1811,7 +1811,7 @@ msgid ""
 "This initially includes chart of accounts of USA translated to Arabic.\n"
 "\n"
 "In future this module will include some payroll rules for ME .\n"
-msgstr ""
+msgstr "\nOdoo中面向大多数阿拉伯及沙乌地阿拉伯等国家或地区的本地化。\n\n此会计科目以美国会计科目为蓝本翻译为阿拉伯会计科目。\n\n对于本人而言，预计将来会包含一些工资规则。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -2744,7 +2744,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr ""
+msgstr "\n这是个用来管理卢森堡的科目表的基础模块.\n======================================================================\n\n    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n    * the Tax Code Chart for Luxembourg\n    * the main taxes used in Luxembourg\n    * default fiscal position for local, intracom, extracom\n\nNotes:\n    * the 2015 chart of taxes is implemented to a large extent,\n      see the first sheet of tax.xls for details of coverage\n    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3888,7 +3888,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\n源讯 SIPS 在线电子支付\n\n基于源讯 Worldline keys  2.0版本, 包含了源讯 SIPS的收支电子支付。"
 
 #. module: base
 #: code:addons/base/res/res_company.py:68
@@ -4008,7 +4008,7 @@ msgstr "%s (副本)"
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
 "an o2m."
-msgstr ""
+msgstr "模型 %s 可能在当前的 '%s'中，又或者相同的字段名在o2m中。"
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4332,7 +4332,7 @@ msgstr "一个模块卸载特性进行测试。"
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
 msgid "A module to verify the inheritance using _inherits."
-msgstr ""
+msgstr "一个用于测试继承性的using _inherits模块。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
@@ -5119,7 +5119,7 @@ msgstr "作者"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Authorize.Net 付款方式"
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -5358,7 +5358,7 @@ msgstr "基础视图"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Basque / Euskara"
-msgstr ""
+msgstr "Basque / Euskara"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -5373,7 +5373,7 @@ msgstr "白俄罗斯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "比利时交货核对证明"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -6914,7 +6914,7 @@ msgstr "数据库结构"
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
-msgstr ""
+msgstr "数据库读取不到 ids ({}) 与extra ids ({})，可能是因为上个请求的类型不一致所造成的"
 
 #. module: base
 #: help:ir.values,res_id:0
@@ -6989,7 +6989,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "亲爱的先生/女士,\n    我们的记录表明，您的到期帐款尚未支付。请看下面的明细信息。\n    如果这些金额已经支付，请忽略本次提醒。否则，请向我们说明如下金额。\n    如果有任何关于账单的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7362,7 +7362,7 @@ msgstr "ESC/POS 硬件驱动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr ""
+msgstr "欧盟的一站式迷你商店 (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -7828,7 +7828,7 @@ msgstr "字段 `%(field_name)s`不存在！"
 #: code:addons/models.py:1268
 #, python-format
 msgid "Field(s) `%s` failed against a constraint: %s"
-msgstr ""
+msgstr "Field(s) `%s` 违反约束: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -8908,7 +8908,7 @@ msgid ""
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "             "
-msgstr "这个视图是否继承父视图，\n* 如果是真的,那么这个视图会一直继承其父视图* 如果不是，那么这个视图不能继承父视图，但可以被其他视图继承"
+msgstr "这个视图是否继承的，\n* 如果是真的,那么这个视图会一直继承其父视图* 如果不是，那么这个视图不能继承父视图，但可以被其他视图继承"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -9087,7 +9087,7 @@ msgstr "继承"
 #. module: base
 #: field:ir.ui.view,inherit_id:0
 msgid "Inherited View"
-msgstr "继承的视图"
+msgstr "继承视图"
 
 #. module: base
 #: view:ir.ui.view:base.view_view_form
@@ -9466,7 +9466,7 @@ msgstr "日本"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr ""
+msgstr "日本会计科目表"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9526,12 +9526,12 @@ msgstr "及时（JIT）生产计划管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement_jit_stock
 msgid "Just In Time Scheduling with Stock"
-msgstr ""
+msgstr "JIT即时仓储排程"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Kabyle / Taqbaylit"
-msgstr ""
+msgstr "卡比尔语/ taqbaylit"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -9608,12 +9608,12 @@ msgstr "吉尔吉斯斯坦"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "LGPL Version 3"
-msgstr ""
+msgstr "LGPL 第3版"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.res_partner_address_report
 msgid "Labels"
-msgstr "标签打印"
+msgstr "Labels"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -10451,7 +10451,7 @@ msgstr "缺少 SMTP 服务器"
 #: code:addons/models.py:6067
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
-msgstr ""
+msgstr "找不到字段 '%s' (%s)所需的值"
 
 #. module: base
 #: code:addons/models.py:6064
@@ -10638,7 +10638,7 @@ msgstr "模块依赖"
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
-msgstr ""
+msgstr "模块加载 %s 失败: 文件 %s 无法处理:\n %s"
 
 #. module: base
 #: code:addons/base/module/module.py:681
@@ -10963,7 +10963,7 @@ msgstr "对货币  '%s' 在给定的期间没有指定汇率"
 #: code:addons/models.py:1543
 #, python-format
 msgid "No default view of type '%s' could be found !"
-msgstr ""
+msgstr "无默认视图的 '%s' 类型可以找到 !"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -11206,7 +11206,7 @@ msgstr "多对一（many2one）字段的 on delete 属性"
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr ""
+msgstr "一个你试图访问的单据已经被删除，请刷新后重试。"
 
 #. module: base
 #: code:addons/models.py:3892
@@ -11666,7 +11666,7 @@ msgstr "付款托收：Adyen实现"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr ""
+msgstr "付款托收：Authorize.net实现"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
@@ -11691,7 +11691,7 @@ msgstr "付款托收：转移实现"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_sales_followup
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "应收款跟进"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
@@ -12023,7 +12023,7 @@ msgstr "追溯产品的销售和采购"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Products"
-msgstr ""
+msgstr "产品"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -12332,7 +12332,7 @@ msgstr "记录现在不能修改"
 #: code:addons/models.py:4894
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "记录不存在或已删除"
 
 #. module: base
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
@@ -12545,7 +12545,7 @@ msgstr "经销商"
 #: code:addons/models.py:1085
 #, python-format
 msgid "Resolve other errors first"
-msgstr ""
+msgstr "先解决其它错误"
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -12852,7 +12852,7 @@ msgstr "沙特阿拉伯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr ""
+msgstr "沙特阿拉伯会计"
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
@@ -13103,7 +13103,7 @@ msgstr "序列化字段"
 #: code:addons/models.py:418
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "sparse field `%s` 中未找到Serialization field `%s` !"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -13362,7 +13362,7 @@ msgstr "对不起，您未被允许修改此单据。"
 #: code:addons/models.py:4618
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "模块 %s 中未找到Sorting field %s "
 
 #. module: base
 #: field:ir.translation,source:0
@@ -13955,7 +13955,7 @@ msgstr "技术指南"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Telecom sector"
-msgstr "电信部门"
+msgstr "电子信息部门"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14344,7 +14344,7 @@ msgstr "用户的这个过滤器是私有的。留空的话，这个过滤器是
 #: code:addons/models.py:6079
 #, python-format
 msgid "The value for the field '%s' already exists."
-msgstr ""
+msgstr "该字段的值 '%s' 已存在."
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:97
@@ -14806,7 +14806,7 @@ msgstr "乌克兰/ українська"
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr ""
+msgstr "不能删除该单据，因为它被作为默认属性使用"
 
 #. module: base
 #: code:addons/base/module/module.py:372
@@ -14884,7 +14884,7 @@ msgstr "未知的数据库标识符 '%s'"
 #: code:addons/models.py:1083
 #, python-format
 msgid "Unknown error during import:"
-msgstr ""
+msgstr "导入时发生未知错误:"
 
 #. module: base
 #: code:addons/report_sxw.py:392
@@ -14915,7 +14915,7 @@ msgstr "未满足依赖!"
 #, python-format
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
-msgstr ""
+msgstr "无法识别的扩展名后缀名: 规定为 .csv, 或.po, 或 .tgz格式的后续名扩展名 (公认的 .%s)."
 
 #. module: base
 #: view:ir.translation:base.view_translation_search
@@ -15671,7 +15671,7 @@ msgstr "工作项"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr ""
+msgstr "欧洲源讯的在线电子支付SIPS"
 
 #. module: base
 #: view:ir.model.access:base.ir_access_view_search
@@ -16080,7 +16080,7 @@ msgstr "ltd"
 #: code:addons/loading.py:292
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
-msgstr ""
+msgstr "base模块加载失败！ (友情提醒：请您检查模块路径 addons-path 是否正确)"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:346
@@ -16104,7 +16104,7 @@ msgstr "no"
 #: code:addons/amount_to_text_en.py:116
 #, python-format
 msgid "no translation function found for lang: '%s'"
-msgstr ""
+msgstr "待译术语: '%s'"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16199,7 +16199,7 @@ msgstr "test-inherit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits

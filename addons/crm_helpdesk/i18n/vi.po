@@ -1,10 +1,10 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_helpdesk
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-09 07:16+0000\n"
 "PO-Revision-Date: 2014-09-09 14:38+0700\n"
@@ -13,9 +13,9 @@ msgstr ""
 "com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
@@ -24,8 +24,8 @@ msgstr "Số lượng email"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
-msgid "# of Cases"
-msgstr "# of Cases"
+msgid "# of Requests"
+msgstr "SL Yêu cầu"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
@@ -35,11 +35,9 @@ msgid ""
 "              </p><p>\n"
 "                Helpdesk and Support allow you to track your interventions.\n"
 "              </p><p>\n"
-"                Use the OpenERP Issues system to manage your support\n"
-"                activities. Issues can be connected to the email gateway: "
-"new\n"
-"                emails may create issues, each of them automatically gets "
-"the\n"
+"                Use the Odoo Issues system to manage your support\n"
+"                activities. Issues can be connected to the email gateway: new\n"
+"                emails may create issues, each of them automatically gets the\n"
 "                history of the conversation with the customer.\n"
 "              </p>\n"
 "            "
@@ -61,12 +59,12 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk,active:0
 msgid "Active"
-msgstr "Kích hoạt"
+msgstr "Có hiệu lực"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "All pending Helpdesk Request"
-msgstr "Tất cả các yêu cầu chăm sóc khách hàng đang chờ"
+msgstr "Tất cả các yêu cầu chăm sóc khách hàng đang treo"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -74,7 +72,7 @@ msgid "April"
 msgstr "Tháng 4"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Assigned to Me or My Sales Team(s)"
 msgstr "Được gán cho bạn hoặc đội ngũ bán hàng của bạn"
 
@@ -94,7 +92,7 @@ msgid "Categories"
 msgstr "Nhóm"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Categorization"
 msgstr "Phân loại"
 
@@ -110,18 +108,20 @@ msgid "Channel"
 msgstr "Kênh"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0 field:crm.helpdesk.report,date_closed:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,date_closed:0
 msgid "Close Date"
 msgstr "Ngày đóng"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,date_closed:0 selection:crm.helpdesk,state:0
-#: view:crm.helpdesk.report:0 selection:crm.helpdesk.report,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: selection:crm.helpdesk.report,state:0
 msgid "Closed"
 msgstr "Đã đóng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Communication"
 msgstr "Thông tin liên lạc"
 
@@ -131,7 +131,8 @@ msgid "Communication channel."
 msgstr "Kênh thông tin liên lạc."
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,company_id:0 view:crm.helpdesk.report:0
+#: field:crm.helpdesk,company_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,company_id:0
 msgid "Company"
 msgstr "Công ty"
@@ -151,7 +152,8 @@ msgid "Creation Date"
 msgstr "Ngày tạo"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,date:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: field:crm.helpdesk,date:0 field:crm.helpdesk.report,date:0
 msgid "Date"
 msgstr "Ngày tháng"
 
@@ -166,7 +168,7 @@ msgid "Date of the last message posted on the record."
 msgstr "Ngày của thông điệp cuối cùng được ghi nhận trên một bản ghi"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Dates"
 msgstr "Ngày tháng"
 
@@ -176,7 +178,8 @@ msgid "Day"
 msgstr "Ngày"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,date_deadline:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,date_deadline:0
 #: field:crm.helpdesk.report,date_deadline:0
 msgid "Deadline"
 msgstr "Hạn chót"
@@ -189,7 +192,7 @@ msgstr "Tháng 12"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
 msgid "Delay to Close"
-msgstr "Delay to Close"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
@@ -223,22 +226,22 @@ msgid "Error!"
 msgstr "Lỗi!"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Escalate"
 msgstr "Leo thang"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Estimates"
 msgstr "Dự kiến"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Extended Filters..."
 msgstr "Bộ lọc mở rộng..."
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Extra Info"
 msgstr "Thông tin thêm"
 
@@ -253,14 +256,15 @@ msgid "Followers"
 msgstr "Người dõi theo"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "General"
 msgstr "Tổng quát"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 view:crm.helpdesk.report:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Group By"
+msgstr "Nhóm theo"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
@@ -274,7 +278,7 @@ msgstr ""
 "trả lời, email đã gửi và chi phí."
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_graph
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
 msgid "Helpdesk"
@@ -297,17 +301,17 @@ msgid "Helpdesk Requests"
 msgstr "Yêu cầu chăm sóc khách hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Helpdesk Support"
 msgstr "Hỗ trợ chắm sóc khách hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
 msgid "Helpdesk Support Tree"
 msgstr "Helpdesk Support Tree"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_helpdesk_calendar_view
 msgid "Helpdesk Supports"
 msgstr "Hỗ trợ chắm sóc khách hàng"
 
@@ -322,7 +326,7 @@ msgid "Helpdesk report after Sales Services"
 msgstr "Báo cáo chăm sóc khách hàng sau bán hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid ""
 "Helpdesk requests that are assigned to me or to one of the sale teams I "
 "manage"
@@ -350,7 +354,7 @@ msgstr ""
 "directly in html format in order to be inserted in kanban views."
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,id:0
+#: field:crm.helpdesk,id:0 field:crm.helpdesk.report,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -395,6 +399,11 @@ msgid "Last Message Date"
 msgstr "Ngày thông điệp gần nhất"
 
 #. module: crm_helpdesk
+#: field:crm.helpdesk,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0 selection:crm.helpdesk.report,priority:0
 msgid "Low"
 msgstr "Thấp"
@@ -425,32 +434,32 @@ msgid "Messages and communication history"
 msgstr "Lịch sử thông điệp và liên lạc"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Misc"
 msgstr "Khác"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0 field:crm.helpdesk.report,month:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Month"
 msgstr "Tháng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Month of helpdesk requests"
 msgstr "Tháng yêu cầu chắm sóc khách hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Case(s)"
 msgstr "My Case(s)"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Company"
 msgstr "Công ty của bạn"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Sales Team(s)"
 msgstr "Đội ngũ bán hàng của bạn"
 
@@ -465,13 +474,14 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 selection:crm.helpdesk,state:0
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "New"
 msgstr "Mới"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "New Helpdesk Request"
 msgstr "Yêu cầu chăm sóc khách hàng mới"
 
@@ -492,7 +502,7 @@ msgid "Normal"
 msgstr "Thông thường"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Notes"
 msgstr "Ghi chú"
 
@@ -507,13 +517,14 @@ msgid "October"
 msgstr "Tháng 10"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 view:crm.helpdesk.report:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: selection:crm.helpdesk.report,state:0
 msgid "Open"
 msgstr "Mở"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Open Helpdesk Request"
 msgstr "Mở yêu cầu chăm sóc khách hàng"
 
@@ -523,14 +534,17 @@ msgid "Overpassed Deadline"
 msgstr "Vượt quá hạn chót"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,partner_id:0
-#: view:crm.helpdesk.report:0 field:crm.helpdesk.report,partner_id:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,partner_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,partner_id:0
 msgid "Partner"
 msgstr "Đối tác"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: selection:crm.helpdesk,state:0 selection:crm.helpdesk.report,state:0
 msgid "Pending"
 msgstr "Đang chờ"
 
@@ -545,8 +559,10 @@ msgid "Planned Revenue"
 msgstr "Doanh thu dự kiến"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,priority:0
-#: view:crm.helpdesk.report:0 field:crm.helpdesk.report,priority:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,priority:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,priority:0
 msgid "Priority"
 msgstr "Mức độ ưu tiên"
 
@@ -556,7 +572,9 @@ msgid "Probability (%)"
 msgstr "Xác suất (%)"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Query"
 msgstr "Truy vấn"
 
@@ -571,27 +589,28 @@ msgid "Reference 2"
 msgstr "Tham chiếu 2"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "References"
 msgstr "Tham chiếu"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Date by Month"
 msgstr "Ngày yêu cầu theo tháng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Month"
 msgstr "Tháng yêu cầu"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,user_id:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,user_id:0
 msgid "Responsible"
 msgstr "Người phụ trách"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Responsible User"
 msgstr "Người phụ trách"
 
@@ -605,23 +624,24 @@ msgstr ""
 "gateway."
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,section_id:0
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,section_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Sales Team"
 msgstr "Đội ngũ bán hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Salesperson"
 msgstr "Nhân viên bán hàng"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Search"
 msgstr "Tìm kiếm"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Search Helpdesk"
 msgstr "Tìm kiếm"
 
@@ -636,7 +656,9 @@ msgid "September"
 msgstr "Tháng 9"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0 field:crm.helpdesk,state:0 view:crm.helpdesk.report:0
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,state:0
 msgid "Status"
 msgstr "Tình trạng"
@@ -649,21 +671,11 @@ msgstr "Tóm tắt"
 #. module: crm_helpdesk
 #: help:crm.helpdesk,state:0
 msgid ""
-"The status is set to 'Draft', when a case is "
-"created.                                  \n"
-"If the case is in progress the status is set to "
-"'Open'.                                  \n"
-"When the case is over, the status is set to "
-"'Done'.                                  \n"
+"The status is set to 'Draft', when a case is created.                                  \n"
+"If the case is in progress the status is set to 'Open'.                                  \n"
+"When the case is over, the status is set to 'Done'.                                  \n"
 "If the case needs to be reviewed then the status is set to 'Pending'."
 msgstr ""
-"The status is set to 'Draft', when a case is "
-"created.                                  \n"
-"If the case is in progress the status is set to "
-"'Open'.                                  \n"
-"When the case is over, the status is set to "
-"'Done'.                                  \n"
-"If the case needs to be reviewed then the status is set to 'Pending'."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,email_cc:0
@@ -702,9 +714,19 @@ msgid "Year"
 msgstr "Năm"
 
 #. module: crm_helpdesk
+#: field:crm.helpdesk,website_message_ids:0
+msgid "Website Messages"
+msgstr "Thông điệp Website"
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "Year of helpdesk requests"
-msgstr "Year of helpdesk requests"
+msgstr ""
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,website_message_ids:0
+msgid "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: crm_helpdesk
 #: code:addons/crm_helpdesk/crm_helpdesk.py:117
@@ -713,5 +735,5 @@ msgid ""
 "You can not escalate, you are already at the top level regarding your sales-"
 "team category."
 msgstr ""
-"Ban không thể nâng cấp lên được nữa, bạn đã ở mức cao nhât của nhóm đội ngũ "
+"Ban không thể leo thang thêm được nữa, bạn đã ở mức cao nhât của nhóm Đội "
 "bán hàng của bạn."

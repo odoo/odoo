@@ -1537,12 +1537,6 @@
         </t>
     </a>
 </t>
-
-<t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
-    </t>
-</t>
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
         <button type="button" class="oe_button oe_form_button_create">Add</button>

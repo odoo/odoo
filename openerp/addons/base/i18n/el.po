@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-12-19 00:00+0000\n"
+"PO-Revision-Date: 2016-01-02 21:42+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -270,7 +270,7 @@ msgid ""
 "    * Requested Date (will be used as the expected date on pickings)\n"
 "    * Commitment Date\n"
 "    * Effective Date\n"
-msgstr "\nΠροσθέτει επιπλέον ενημέρωση ημερομηνιών στις εντολές πώλησης .\n===================================================\n\nΜπορείτε να προσθέσετε τις παρακάτω επιπλέον ημερομηνίες στις εντολές πώλησης:\n------------------------------------------------------------\n    * Ζητούμενη Ημερομηνία (θα χρησιμοποιηθεί σαν η ημερομηνία αναμονής στην συλλογή)\n    * Ημερομηνία Συμφωνίας\n    * Ημερομηνία Ισχύος\n"
+msgstr "\nΠροσθέτει επιπλέον ενημέρωση ημερομηνιών στις παραγγελίες.\n===================================================\n\nΜπορείτε να προσθέσετε τις παρακάτω επιπλέον ημερομηνίες στις παραγγελίες:\n------------------------------------------------------------\n    * Ζητούμενη Ημερομηνία (θα χρησιμοποιηθεί σαν η ημερομηνία αναμονής στην συλλογή)\n    * Ημερομηνία Συμφωνίας\n    * Ημερομηνία Ισχύος\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -368,7 +368,7 @@ msgid ""
 "\n"
 "You can define your own carrier and delivery grids for prices. When creating \n"
 "invoices from picking, OpenERP is able to add and compute the shipping line.\n"
-msgstr "\nΕπιτρέπει να προσθέσετε μεθόδους παράδοσης σε εντολές πωλήσεων και συλλογής.\n==============================================================\n\nΜπορείτε να καθορίσετε την δική σας μεταφορική και το πλέγμα παραδόσεων για τιμές. Όταν δημιουργείτε \nτιμολόγια από συλλογή, το OpenERP έχει την δυνατότητα να προσθέσει και να υπολογίσει την γραμμή φορτωτικών.\n"
+msgstr "\nΕπιτρέπει να προσθέσετε μεθόδους παράδοσης σε παραγγελίες και συλλογής.\n==============================================================\n\nΜπορείτε να καθορίσετε την δική σας μεταφορική και το πλέγμα παραδόσεων για τιμές. Όταν δημιουργείτε \nτιμολόγια από συλλογή, το Odoo έχει την δυνατότητα να προσθέσει και να υπολογίσει την γραμμή φορτωτικών.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -443,7 +443,7 @@ msgid ""
 "is updated accordingly. For example, if this procurement corresponds to a sale\n"
 "order line, the sale order line will be considered delivered when the task is\n"
 "completed.\n"
-msgstr "\nΑυτόματα δημιουργεί εργασίες για έργα από γραμμές προμηθειών\n===========================================================\n\nΑυτό το άρθρωμα θα δημιουργήσει αυτόματα μια νέα εργασία για κάθε γραμμή εντολής προμήθειας\n(π.χ. για  γραμμές εντολών πώλησης), εάν τα αντίστοιχα προιόντα έχουν τα παρακάτω \nχαρακτηριστικά:\n\n    * Τύπος Προιόντος = Υπηρεσία\n    * Μέθοδος Προμήθειας  (Εκπλήρωση Παραγγελίας) = MTO (Make to Order)\n    * Ανεφοδιασμόςy/Μέθοδος Προμήθειας = Παραγωγή\n\nΕάν πάνω από όλα αυτά ένα έργο αναφέρεται στην φόρμα του προιόντος  (στην καρτέλα\nΠρομήθεια), τότε η νέα εργασία θα δημιουργηθεί σε αυτό το συγκεκριμένο έργο. Αλλιώς, η\nνέα εργασία δεν θα ανήκει σε κανένα έργο, και μπορεί να προστεθεί σε ένα έργο χειροκίνητα\nαργότερα.\n\nΌταν η εργασία του έργο ολοκληρώνεται ή ακυρώνεται, η αντίστοιχη προμήθεια\nενημερώνεται για να συμφωνήσει . Για παράδειγμα, εάν η προμήθεια αντιστοιχεί σε μία γραμμή\nεντολής πώλησης, η εντολή πώλησης θα θεωρηθεί παρεδομένη όταν η εργασία\nολοκληρωθεί.\n"
+msgstr "\nΑυτόματα δημιουργεί εργασίες για έργα από γραμμές προμηθειών\n===========================================================\n\nΑυτό το άρθρωμα θα δημιουργήσει αυτόματα μια νέα εργασία για κάθε γραμμή εντολής προμήθειας\n(π.χ. για  γραμμές παραγγελίας), εάν τα αντίστοιχα προιόντα έχουν τα παρακάτω \nχαρακτηριστικά:\n\n    * Τύπος Προιόντος = Υπηρεσία\n    * Μέθοδος Προμήθειας  (Εκπλήρωση Παραγγελίας) = MTO (Make to Order)\n    * Ανεφοδιασμόςy/Μέθοδος Προμήθειας = Παραγωγή\n\nΕάν πάνω από όλα αυτά ένα έργο αναφέρεται στην φόρμα του προιόντος  (στην καρτέλα\nΠρομήθεια), τότε η νέα εργασία θα δημιουργηθεί σε αυτό το συγκεκριμένο έργο. Αλλιώς, η\nνέα εργασία δεν θα ανήκει σε κανένα έργο, και μπορεί να προστεθεί σε ένα έργο χειροκίνητα\nαργότερα.\n\nΌταν η εργασία του έργο ολοκληρώνεται ή ακυρώνεται, η αντίστοιχη προμήθεια\nενημερώνεται για να συμφωνήσει . Για παράδειγμα, εάν η προμήθεια αντιστοιχεί σε μία γραμμή\nπαραγγελίας, η εντολή πώλησης θα θεωρηθεί παρεδομένη όταν η εργασία\nολοκληρωθεί.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scale
@@ -1096,7 +1096,7 @@ msgid ""
 "    * Monthly Payroll Register\n"
 "    * Integrated with Holiday Management\n"
 "    "
-msgstr "\nΓενικό Σύστημα Μισθοδοσίας.\n=======================\n\n    * Employee Details\n    * Employee Contracts\n    * Passport based Contract\n    * Allowances/Deductions\n    * Allow to configure Basic/Gross/Net Salary\n    * Employee Payslip\n    * Monthly Payroll Register\n    * Integrated with Holiday Management\n    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_analytics
@@ -1553,7 +1553,7 @@ msgid ""
 "With this module you can personnalize the sale order and invoice report with\n"
 "separators, page-breaks or subtotals.\n"
 "    "
-msgstr "\nΔιαχείριση των αναφορών πώλησης\n=========================\nΜε αυτό το άρθρωμα μπορείτε να προσαρμόσετε την εντολή πώλησης και την αναφορά τιμολογίου με\nδιαχωριστές, διάσπαση σελίδων ή υποσύνολα.\n    "
+msgstr "\nΔιαχείριση των αναφορών πώλησης\n=========================\nΜε αυτό το άρθρωμα μπορείτε να προσαρμόσετε την παραγγελία και την αναφορά τιμολογίου με\nδιαχωριστές, διάσπαση σελίδων ή υποσύνολα.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_mass_mailing
@@ -1765,7 +1765,7 @@ msgid ""
 "Warning messages can be displayed for objects like sale order, purchase order,\n"
 "picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
-msgstr "\nΆρθρωμα για να δώσει έναυσμα προειδοποιήσεων σε  OpenERP αντικείμενα.\n==============================================\n\nΜηνύματα προειδοποίησης μπορούν να εμφανιστούν για αντικείμενα όπως εντολή πώλησης, εντολή αγοράς,\nσυλλογή και τιμολόγηση. Το μήνυμα πυροδοτείται από την φόρμα σε αλλαγή του γεγονότος\n    "
+msgstr "\nΆρθρωμα για να δώσει έναυσμα προειδοποιήσεων σε  OpenERP αντικείμενα.\n==============================================\n\nΜηνύματα προειδοποίησης μπορούν να εμφανιστούν για αντικείμενα όπως η παραγγελία, εντολή αγοράς,\nσυλλογή και τιμολόγηση. Το μήνυμα πυροδοτείται από το γεγονός onchange της φόρμας"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -2462,7 +2462,7 @@ msgid ""
 "\n"
 "Using this module you will be able to link analytic accounts to sales orders.\n"
 "    "
-msgstr "\nΑυτό το βασικό άρθρωμα είναι για διαχειριστούμε αναλυτική διακίνηση και εντολές πωλήσεων.\n=================================================================\n\nΧρησιμοποιώντας αυτό το άρθρωμα θα μπορέσετε να συνδέσετε λογαριασμούς αναλυτικής με εντολές πωλήσεων.\n    "
+msgstr "\nΑυτό το βασικό άρθρωμα είναι για διαχειριστούμε αναλυτική διακίνηση και παραγγελίες.\n=================================================================\n\nΧρησιμοποιώντας αυτό το άρθρωμα θα μπορέσετε να συνδέσετε λογαριασμούς αναλυτικής με παραγγελίες.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -4185,7 +4185,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε μια επαφή στο βιβλίο διευθύνσεων σας.\n              </p><p>\n                Το Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με\n                ένα πελάτη: συζητήσεις, ιστορικότητα των επιχειρηματικών ευκαιριών,\n                έγγραφα, κλπ.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να προσθέσετε μια επαφή στο βιβλίο διευθύνσεών σας.\n</p><p>\nΤο Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με ένα πελάτη: συζητήσεις, ιστορικότητα των επιχειρηματικών ευκαιριών, έγγραφα, κλπ.</p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -4198,7 +4198,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να πρσθέσετε μια επαφή στο βιβλίο διευθύνσεων σας.\n              </p><p>\n                Το Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με\n                ένα πελάτη: συζητήσεις, ιστορικότητα των επιχειρηματικών ευκαιριών\n                έγγραφα, κλπ.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να πρσθέσετε μια επαφή στο βιβλίο διευθύνσεων σας.</p><p>\nΤο Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με ένα πελάτη: συζητήσεις, ιστορικότητα των επιχειρηματικών ευκαιριών, έγγραφα, κλπ.</p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -4211,7 +4211,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να προσθέσετε μια επαφή στο βιβλίο διευθύνσεων σας\n              </p><p>\n                 Το Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με\n                ένα προμηθευτή: συζητήσεις, ιστορικότητα των αγορών,\n                έγγραφα, κλπ.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να προσθέσετε μια επαφή στο βιβλίο διευθύνσεών σας\n</p><p>\nΤο Odoo σας βοηθά να παρακολουθήσετε εύκολα όλες τις δραστηριότητες σχετικά με ένα προμηθευτή: συζητήσεις, ιστορικότητα των αγορών,  έγγραφα, κλπ.</p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -4578,7 +4578,7 @@ msgstr "Ενέργειες"
 #: view:workflow.instance:base.view_workflow_instance_search
 #: view:workflow.workitem:base.view_workflow_workitem_search
 msgid "Active"
-msgstr "Ενεργό"
+msgstr "Ενεργή"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_activity_form
@@ -6350,12 +6350,12 @@ msgstr "Λεξικό περιεχόμενου ως έκφραση της Python,
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_analysis
 msgid "Contracts Management"
-msgstr "Διαχείριση Συμβολαίων"
+msgstr "Διαχείριση Συμβάσεων"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_contract_hr_expense
 msgid "Contracts Management: hr_expense link"
-msgstr "Διαχείριση Συμβολαίων: hr_expense link"
+msgstr "Διαχείριση Συμβάσεων: hr_expense link"
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -6941,7 +6941,7 @@ msgstr "Ημερομηνία-Ώρα"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr "Ημερομηνίες σε Εντολές Πώλησης"
+msgstr "Ημερομηνίες σε Παραγγελίες"
 
 #. module: base
 #: view:ir.logging:base.ir_logging_search_view
@@ -7211,7 +7211,7 @@ msgstr "Προβολή στις Εκτυπώσεις"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "Εμφανίζει αυτόν το λογαριασμό τράπεζας στο υποσέλιδο των εκτυπωμένων εγγράφων όπως τιμολόγια και εντολές πώλησης."
+msgstr "Εμφανίζει αυτόν τον λογαριασμό τράπεζας στο υποσέλιδο των εκτυπωμένων εγγράφων όπως τιμολόγια και παραγγελίες."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_certification
@@ -9806,12 +9806,12 @@ msgstr "Οδηγός Βοηθός Διαμόρφωσης Γεύματος"
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Manually"
-msgstr "Γεύματα Χειροκίνητα"
+msgstr "Χειροκίνητη Εκκίνηση"
 
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Manually Once"
-msgstr "Γεύματα Χειροκίνητα Μια φορά"
+msgstr "Για μία φορά Χειροκίνητη Εκκίνηση"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -10213,7 +10213,7 @@ msgid ""
 "Manual: Launched manually.\n"
 "Automatic: Runs whenever the system is reconfigured.\n"
 "Launch Manually Once: after having been launched manually, it sets automatically to Done."
-msgstr "Χειροκίνητα: Ξεκινάει χειροκίνητα.\nΑυτοματοποιημένα: Τρέχει όταν το σύστημα ρυθμίζεται εκ νέου.\nΕκκινήστε Χειροκίνητα Άπαξ: μετά την χειροκίνητη εκκίνηση, ορίζεται αυτοματοποιημένα σε Ολοκληρώθηκε."
+msgstr "Χειροκίνητα: Ξεκινάει με το χέρι.\nΑυτοματοποιημένα: Τρέχει όταν το σύστημα ρυθμίζεται εκ νέου.\nΕκκίνηση Χειροκίνητα για μία φορά: μετά την χειροκίνητη εκκίνηση, ορίζεται αυτοματοποιημένα σε Ολοκληρώθηκε."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
@@ -10258,7 +10258,7 @@ msgstr "Markup Προιόντων"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr "Markup στις Εντολές Πώλησης"
+msgstr "Περιθώρια σε Παραγγελίες"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -10301,7 +10301,7 @@ msgstr "Martinique (French)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Mass Mailing Campaigns"
-msgstr "Εκστρατείες Μαζικών Μέιλ"
+msgstr "Εκστρατείες Μαζικών emails"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -11950,7 +11950,7 @@ msgstr "Προτιμήσεις"
 #. module: base
 #: field:ir.sequence,prefix:0
 msgid "Prefix"
-msgstr "Prefix"
+msgstr "Πρόθεμα"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -12201,7 +12201,7 @@ msgstr "Υποψήφιος"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr "Προσφορά, Εντολές παραγγελιών, Έλεγχος Παράδοσης & Τιμολόγησης"
+msgstr "Προσφορά, Παραγγελία, Έλεγχος Παράδοσης & Τιμολόγησης"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
@@ -14825,7 +14825,7 @@ msgstr ""
 #. module: base
 #: view:ir.ui.view:base.view_view_search
 msgid "Unactive"
-msgstr "Ανενεργό"
+msgstr "Ανενεργός"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -16029,7 +16029,7 @@ msgstr "πάρε"
 #: selection:base.language.install,state:0
 #: selection:base.module.update,state:0
 msgid "init"
-msgstr ""
+msgstr "προετοιμασία"
 
 #. module: base
 #: selection:ir.ui.menu,action:0
@@ -16138,7 +16138,7 @@ msgstr "ή"
 msgid ""
 "partner_name = obj.name + '_code'\n"
 "                                                self.pool[\"res.partner\"].create(cr, uid, {\"name\": partner_name}, context=context)"
-msgstr ""
+msgstr "partner_name = obj.name + '_code'\nself.pool[\"res.partner\"].create(cr, uid, {\"name\": partner_name}, context=context)"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form

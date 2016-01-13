@@ -1,7 +1,9 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* mrp
-#
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
@@ -13,10 +15,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:270
+#: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
 msgstr " Sản xuất"
@@ -27,8 +30,7 @@ msgid "# Bill of Material"
 msgstr "SL Định mức nguyên liệu"
 
 #. module: mrp
-#: field:product.product,mo_count:0
-#: field:product.template,mo_count:0
+#: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
 msgstr "SL Lệnh sản xuất"
 
@@ -46,14 +48,16 @@ msgstr "%s đã sản xuất"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
-msgid "'Consume only' mode will only consume the products with the quantity selected.\n"
+msgid ""
+"'Consume only' mode will only consume the products with the quantity selected.\n"
 "'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
 msgstr "Cơ chế 'Chỉ tiêu thụ' sẽ chỉ tiêu thụ sản phẩm với số lượng đã chọn.\n"
 "Cơ chế 'Tiêu thụ & Sản xuất' sẽ tiêu thụ cũng như sản xuất sản phẩm với số lượng đã chọn và nó sẽ kết thúc lệnh sản xuất khi tổng số lượng sản phẩm đã sản xuất xong."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
 "                Bills of materials components are components and by-products\n"
@@ -72,7 +76,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a work center.\n"
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
@@ -92,7 +97,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
 "                Bills of Materials allow you to define the list of required raw\n"
@@ -117,7 +123,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
 "                Define specific property groups that can be assigned to your\n"
@@ -148,7 +155,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a manufacturing order. \n"
 "              </p><p>\n"
 "                A manufacturing order, based on a bill of materials, will\n"
@@ -173,7 +181,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new property.\n"
 "              </p><p>\n"
 "                The Properties in Odoo are used to select the right bill of\n"
@@ -199,7 +208,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
@@ -220,7 +230,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to start a new manufacturing order. \n"
 "              </p><p>\n"
 "                A manufacturing order, based on a bill of materials, will\n"
@@ -267,7 +278,8 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
-msgid "All product quantities must be greater than 0.\n"
+msgid ""
+"All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr "Tất cả giá trị ở trường Số lượng sản phẩm phải lớn hơn 0.\n"
 "Bạn nên cài phân hệ mrp_byproduct nếu bạn muốn quản lý phụ phẩm trong BoMs !"
@@ -284,7 +296,8 @@ msgstr "Cho phép nhiều Định mức nguyên liệu trên sản phẩm sử d
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
-msgid "Allows to manage all product repairs.\n"
+msgid ""
+"Allows to manage all product repairs.\n"
 "* Add/remove products in the reparation\n"
 "* Impact for stocks\n"
 "* Invoicing (products and/or services)\n"
@@ -314,7 +327,7 @@ msgstr "Tổng giá trị tính theo tháng"
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr "Amount measuring unit"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -333,7 +346,9 @@ msgstr "Phê duyệt"
 
 #. module: mrp
 #: help:product.template,produce_delay:0
-msgid "Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."
+msgid ""
+"Average delay in days to produce this product. In the case of multi-level "
+"BOM, the manufacturing lead times of the components will be added.""
 msgstr "Thời gian chậm trễ trung bình tính theo ngày để sản xuất sản phẩm này. Trong trường hợp đa cấp Định mức nguyên liệu, thời gian sản xuất của các thành phần sẽ được công thêm vào."
 
 #. module: mrp
@@ -381,8 +396,7 @@ msgid "Bill Of Material"
 msgstr "Định mức Nguyên liệu"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Định mức Nguyên liệu"
@@ -421,15 +435,17 @@ msgid "BoM"
 msgstr "BoM"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:318
+#: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr "BoM \"%s\" chứa một dòng với sản phẩm đệ quy: \"%s\"."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:344
+#: code:addons/mrp/mrp.py:315
 #, python-format
-msgid "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have any BoM defined."
+msgid ""
+"BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
+"any BoM defined."
 msgstr "BoM \"%s\" chứa một dòng phantom BoM nhưng sản phẩm \"%s\" chưa có BoM tương ứng được định nghĩa."
 
 #. module: mrp

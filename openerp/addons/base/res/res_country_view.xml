@@ -65,8 +65,10 @@
             <field name="model">res.country.group</field>
             <field name="arch" type="xml">
                 <form string="Country Group">
-                    <field name="name"/>
-                    <field name="country_ids" widget="many2many_tags"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="country_ids" />
+                    </group>
                 </form>
             </field>
         </record>
