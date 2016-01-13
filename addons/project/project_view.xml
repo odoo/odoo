@@ -436,8 +436,8 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks"/>
-                    <label for="use_tasks"/>
+                    <field name="use_tasks" groups="base.group_no_one"/>
+                    <label for="use_tasks" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button class="oe_stat_button" type="object" name="projects_action" 
