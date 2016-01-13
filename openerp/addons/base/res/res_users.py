@@ -655,14 +655,16 @@ class groups_implied(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         originals = {}
         for x in self.browse(cr, uid, ids, context=context):
-            originals.update({x.id: x})
+            originals.update({x.id: {'users': list(x.users),
+                                     'implied_ids': list(x.implied_ids)}
+                              })
         res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for g in self.browse(cr, uid, ids):
                 origin = originals.get(g.id, False)
-                if origin and (origin.implied_ids != g.implied_ids or
-                               origin.users != g.users):
+                if origin and (origin.get('implied_ids') != list(g.implied_ids) or
+                               origin.get('users') != list(g.users)):
                     gids = map(int, g.trans_implied_ids)
                     vals = {'users': [(4, u.id) for u in g.users]}
                     super(groups_implied, self).write(cr, uid, gids, vals, context)
