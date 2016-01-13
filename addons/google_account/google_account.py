@@ -34,8 +34,8 @@ class google_service(osv.osv_memory):
             req = urllib2.Request("https://accounts.google.com/o/oauth2/token", data, headers)
             content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
-            error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
+            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
+            raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
 
         content = json.loads(content)
         return content.get('refresh_token')
@@ -95,8 +95,8 @@ class google_service(osv.osv_memory):
 
             st, res, ask_time = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
         except urllib2.HTTPError:
-            error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid"
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
+            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
+            raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
         return res
 
     def _refresh_google_token_json(self, cr, uid, refresh_token, service, context=None):  # exchange_AUTHORIZATION vs Token (service = calendar)
@@ -125,8 +125,8 @@ class google_service(osv.osv_memory):
                     self.pool['res.users'].write(cur, uid, [uid], {'google_%s_rtoken' % service: False}, context=context)
             error_key = json.loads(e.read()).get("error", "nc")
             _logger.exception("Bad google request : %s !" % error_key)
-            error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]" % error_key
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
+            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
+            raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
         return res
 
     def _do_request(self, cr, uid, uri, params={}, headers={}, type='POST', preuri="https://www.googleapis.com", context=None):
