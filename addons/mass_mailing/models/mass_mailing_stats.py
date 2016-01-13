@@ -52,8 +52,8 @@ class MailMailStats(osv.Model):
         'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null', select=True),
         'mail_mail_id_int': fields.integer(
             'Mail ID (tech)',
-            help='ID of the related mail_mail. This field is an integer field because'
-                 'the related mail_mail can be deleted separately from its statistics.'
+            help='ID of the related mail_mail. This field is an integer field because '
+                 'the related mail_mail can be deleted separately from its statistics. '
                  'However the ID is needed for several action and controllers.'
         ),
         'message_id': fields.char('Message-ID'),

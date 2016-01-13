@@ -6,19 +6,10 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
-                    <button name="action_quotation_send" string="Send by Email" type="object"
-                        groups="base.group_user"
-                        attrs="{'invisible': ['|',('quote_viewed','=',True),('state','!=', 'draft')]}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" groups="base.group_user"
-                        class="oe_highlight"
-                        attrs="{'invisible': ['|',('quote_viewed','=',False),('state','!=', 'draft')]}"/>
+                <xpath expr="//header/button[@name='action_confirm'][1]" position="after">
                     <button name="open_quotation" type="object" 
-                        class="oe_highlight o_open_quotation" string="View Online Quotation"
+                        class="o_open_quotation" string="Preview"
                         attrs="{'invisible': [('template_id', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//header/button[@name='print_quotation'][1]" position="replace">
-                    <button name="print_quotation" string="Print" type="object" states="draft" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/.." position="after">
                     <page string="Suggested Products">
@@ -39,7 +30,9 @@
                 <xpath expr="//field[@name='project_id']" position="before">
                     <label for="template_id"/>
                     <div>
-                        <field name="template_id" context="{'company_id': company_id}" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"/>
+                        <field name="template_id" context="{'company_id': company_id}"
+                            on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"
+                            options="{'no_create': True, 'no_open': True}"/>
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">

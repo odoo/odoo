@@ -23,5 +23,5 @@ class goal_manual_wizard(osv.TransientModel):
                 'to_update': False,
             }
             goal_obj.write(cr, uid, [wiz.goal_id.id], towrite, context=context)
-            goal_obj.update(cr, uid, [wiz.goal_id.id], context=context)
+            goal_obj.update_goal(cr, uid, [wiz.goal_id.id], context=context)
         return {}

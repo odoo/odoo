@@ -82,8 +82,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
@@ -149,8 +148,8 @@ class SaleOrder(models.Model):
     @api.multi
     def unlink(self):
         for order in self:
-            if order.state != 'draft':
-                raise UserError(_('You can only delete draft quotations!'))
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
         return super(SaleOrder, self).unlink()
 
     @api.multi
@@ -794,8 +793,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
 

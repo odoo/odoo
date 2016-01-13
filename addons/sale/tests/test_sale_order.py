@@ -73,22 +73,33 @@ class TestSaleOrder(TestSale):
             'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in self.products.iteritems()],
             'pricelist_id': self.env.ref('product.list0').id,
         })
-        # only quotations are deletable
-        with self.assertRaises(UserError):
-            so.action_confirm()
-            so.unlink()
+
+        # SO in state 'draft' can be deleted
         so_copy = so.copy()
         with self.assertRaises(AccessError):
             so_copy.sudo(self.user).unlink()
         self.assertTrue(so_copy.sudo(self.manager).unlink(), 'Sale: deleting a quotation should be possible')
 
-        # cancelling and setting to done, you should not be able to delete any SO ever
-        so.action_cancel()
-        self.assertTrue(so.state == 'cancel', 'Sale: cancelling SO should always be possible')
+        # SO in state 'cancel' can be deleted
+        so_copy = so.copy()
+        so_copy.action_confirm()
+        self.assertTrue(so_copy.state == 'sale', 'Sale: SO should be in state "sale"')
+        so_copy.action_cancel()
+        self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
+        with self.assertRaises(AccessError):
+            so_copy.sudo(self.user).unlink()
+        self.assertTrue(so_copy.sudo(self.manager).unlink(), 'Sale: deleting a cancelled SO should be possible')
+
+        # SO in state 'sale' or 'done' cannot be deleted
+        so.action_confirm()
+        self.assertTrue(so.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
             so.sudo(self.manager).unlink()
+
         so.action_done()
-        self.assertTrue(so.state == 'done', 'Sale: SO not done')
+        self.assertTrue(so.state == 'done', 'Sale: SO should be in state "done"')
+        with self.assertRaises(UserError):
+            so.sudo(self.manager).unlink()
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """

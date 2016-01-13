@@ -4,3 +4,4 @@
 import res_users
 import sale_crm
 import crm_lead
+import account_invoice

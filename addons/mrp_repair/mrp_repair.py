@@ -575,10 +575,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                     ('confirmed', 'Confirmed'),
                     ('done', 'Done'),
                     ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
-                    help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
-                        \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
-                        \n* The \'Done\' status is set automatically when repair order is completed.\
-                        \n* The \'Cancelled\' status is set automatically when user cancel repair order.'),
+                    help='The status of a repair line is set automatically to the one of the linked repair order.'),
     }
     _defaults = {
         'state': lambda *a: 'draft',

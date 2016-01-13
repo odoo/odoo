@@ -127,7 +127,7 @@
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_google_adwords"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -148,7 +148,7 @@
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_banner"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -170,7 +170,7 @@
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref=""/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="description"></field>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
@@ -208,7 +208,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref=""/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -303,7 +303,7 @@ ESM Expert<br />]]></field>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -337,7 +337,7 @@ Andrew</p>]]></field>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref=""/>
-            <field name="stage_id" ref="crm_stage_2_1"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_direct"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -415,7 +415,7 @@ Andrew</p>]]></field>
             <field name="title_action">Send Catalog by Email</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.crm_stage_2_1"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -555,7 +555,7 @@ Andrew</p>]]></field>
             <field name="title_action">Send our service pricelist</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.crm_stage_2_2"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -590,7 +590,7 @@ Andrew</p>]]></field>
             <field name="title_action">Call to get training needs</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.crm_stage_2_2"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="1" name="active"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -702,7 +702,7 @@ Andrew</p>]]></field>
             <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="stage_id" ref="crm.crm_stage_2_2"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -720,7 +720,7 @@ Andrew</p>]]></field>
             <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.crm_stage_2_3"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_fall_drive"/>
             <field name="medium_id" ref="utm.utm_medium_direct"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -740,7 +740,7 @@ Andrew</p>]]></field>
             <field name="date_action" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="stage_id" ref="crm.crm_stage_2_3"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -766,7 +766,7 @@ Andrew</p>]]></field>
             <field name="title_action">Conf call with technical service</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
@@ -791,7 +791,7 @@ Andrew</p>]]></field>
             <field name="title_action">Send Catalog by Email</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.crm_stage_2_3"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
@@ -817,7 +817,7 @@ Andrew</p>]]></field>
             <field name="title_action">Send Catalog by Email</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
         </record>
 
         <!-- Call Function to set some opportunities as Won -->

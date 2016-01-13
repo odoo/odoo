@@ -28,7 +28,7 @@ class hr_employee(models.Model):
         self.ensure_one()
         IrModelData = self.env['ir.model.data']
         channel_all_employees = IrModelData.xmlid_to_object('mail.channel_all_employees')
-        template_new_employee = IrModelData.xmlid_to_object('hr_recruitment.hr_welcome_new_employee')
+        template_new_employee = IrModelData.xmlid_to_object('hr_recruitment.email_template_data_applicant_employee')
         if template_new_employee:
             MailTemplate = self.env['mail.template']
             body_html = MailTemplate.render_template(template_new_employee.body_html, 'hr.employee', self.id)

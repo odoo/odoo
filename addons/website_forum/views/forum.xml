@@ -86,6 +86,8 @@
                                         <field name="karma_post"/>
                                         <field name="karma_flag"/>
                                         <field name="karma_moderate"/>
+                                        <field name="karma_edit_retag"/>
+                                        <field name="karma_tag_create"/>
                                     </group>
                                 </group>
                             </page>
@@ -93,7 +95,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -167,7 +169,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -217,6 +219,46 @@
         </record>
 
         <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>
+
+        <!-- TAG VIEWS -->
+        <record id="forum_tag_view_list" model="ir.ui.view">
+            <field name="name">forum.tag.list</field>
+            <field name="model">forum.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tag">
+                    <field name="name"/>
+                    <field name="forum_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="forum_tag_view_form" model="ir.ui.view">
+            <field name="name">forum.tag.form</field>
+            <field name="model">forum.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="forum_id"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="forum_tag_action" model="ir.actions.act_window">
+            <field name="name">Tag</field>
+            <field name="res_model">forum.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_forum_tag" parent="menu_website_forum" name="Tag" action="forum_tag_action" sequence="30"/>
 
     </data>
 </openerp>

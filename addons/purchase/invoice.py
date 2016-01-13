@@ -115,52 +115,51 @@ class AccountInvoice(models.Model):
         """
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id
-        if i_line.product_id and i_line.product_id.valuation == 'real_time':
-            if i_line.product_id.type in ('product', 'consu'):
-                # get the fiscal position
-                fpos = i_line.invoice_id.fiscal_position_id
-                # get the price difference account at the product
-                acc = i_line.product_id.property_account_creditor_price_difference
-                if not acc:
-                    # if not found on the product get the price difference account at the category
-                    acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ
-                acc = fpos.map_account(acc).id
-                # reference_account_id is the stock input account
-                reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
-                diff_res = []
-                account_prec = inv.company_id.currency_id.decimal_places
-                # calculate and write down the possible price difference between invoice price and product price
-                for line in res:
-                    if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
-                        valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, i_line.product_id.standard_price, i_line.uom_id.id)
-                        if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
-                            #for average/fifo/lifo costing method, fetch real cost price from incomming moves
-                            stock_move_obj = self.env['stock.move']
-                            valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1)
-                            if valuation_stock_move:
-                                valuation_price_unit = valuation_stock_move[0].price_unit
-                        if inv.currency_id.id != company_currency.id:
+        if i_line.product_id and i_line.product_id.valuation == 'real_time' and i_line.product_id.type == 'product':
+            # get the fiscal position
+            fpos = i_line.invoice_id.fiscal_position_id
+            # get the price difference account at the product
+            acc = i_line.product_id.property_account_creditor_price_difference
+            if not acc:
+                # if not found on the product get the price difference account at the category
+                acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ
+            acc = fpos.map_account(acc).id
+            # reference_account_id is the stock input account
+            reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
+            diff_res = []
+            account_prec = inv.company_id.currency_id.decimal_places
+            # calculate and write down the possible price difference between invoice price and product price
+            for line in res:
+                if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
+                    valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, i_line.product_id.standard_price, i_line.uom_id.id)
+                    if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
+                        #for average/fifo/lifo costing method, fetch real cost price from incomming moves
+                        stock_move_obj = self.env['stock.move']
+                        valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1)
+                        if valuation_stock_move:
+                            valuation_price_unit = valuation_stock_move[0].price_unit
+                    if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id)
-                        if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
-                            # price with discount and without tax included
-                            price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
-                            if line['tax_ids']:
-                                #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
-                                taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
-                                price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
-                            line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
-                            diff_res.append({
-                                'type': 'src',
-                                'name': i_line.name[:64],
-                                'price_unit': round(price_unit - valuation_price_unit, account_prec),
-                                'quantity': line['quantity'],
-                                'price': round((price_unit - valuation_price_unit) * line['quantity'], account_prec),
-                                'account_id': acc,
-                                'product_id': line['product_id'],
-                                'uom_id': line['uom_id'],
-                                'account_analytic_id': line['account_analytic_id'],
-                                })
-                return diff_res
+                    if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                        # price with discount and without tax included
+                        price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
+                        if line['tax_ids']:
+                            #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
+                            taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
+                            price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                        line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
+                        diff_res.append({
+                            'type': 'src',
+                            'name': i_line.name[:64],
+                            'price_unit': round(price_unit - valuation_price_unit, account_prec),
+                            'quantity': line['quantity'],
+                            'price': round((price_unit - valuation_price_unit) * line['quantity'], account_prec),
+                            'account_id': acc,
+                            'product_id': line['product_id'],
+                            'uom_id': line['uom_id'],
+                            'account_analytic_id': line['account_analytic_id'],
+                            })
+            return diff_res
         return []
 
 

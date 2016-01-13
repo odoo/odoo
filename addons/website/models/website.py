@@ -150,6 +150,14 @@ class website(osv.osv):
             res[id] = menu_ids and menu_ids[0] or False
         return res
 
+    def _active_languages(self, cr, uid, context=None):
+        return self.pool['res.lang'].search(cr, uid, [], context=context)
+
+    def _default_language(self, cr, uid, context=None):
+        lang_code = self.pool['ir.values'].get_default(cr, uid, 'res.partner', 'lang')
+        def_langs = self.pool['res.lang'].search(cr, uid, [('code', '=', lang_code)], context=context)
+        return def_langs[0] if def_langs else self._active_languages(cr, uid, context=context)[0]
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -181,6 +189,8 @@ class website(osv.osv):
         'cdn_activated': False,
         'cdn_url': '//localhost:8069/',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
+        'language_ids': _active_languages,
+        'default_lang_id': _default_language,
     }
 
     # cf. Wizard hack in website_views.xml

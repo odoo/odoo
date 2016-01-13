@@ -18,6 +18,10 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('stock.group_stock_manager'))]"/>
+    </record>
+
     <record id="group_production_lot" model="res.groups">
         <field name="name">Manage Lots / Serial Numbers</field>
         <field name="category_id" ref="base.module_category_hidden"/>

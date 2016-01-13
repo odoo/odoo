@@ -262,16 +262,10 @@ class res_users(osv.osv):
         return False
 
     def _get_group(self,cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        result = []
-        try:
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
-            result.append(group_id)
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
-            result.append(group_id)
-        except ValueError:
-            # If these groups does not exists anymore
-            pass
+        default_user = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'base.default_user')
+        if not default_user:
+            return []
+        result = default_user.groups_id.ids
         return result
 
     _defaults = {
@@ -346,9 +340,9 @@ class res_users(osv.osv):
         if values.get('active') == False:
             for current_id in ids:
                 if current_id == SUPERUSER_ID:
-                    raise UserError(_("You cannot unactivate the admin user."))
+                    raise UserError(_("You cannot deactivate the admin user."))
                 elif current_id == uid:
-                    raise UserError(_("You cannot unactivate the user you're currently logged in as."))
+                    raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if ids == [uid]:
             for key in values.keys():
@@ -875,20 +869,6 @@ class users_view(osv.osv):
         values = super(users_view, self).default_get(cr, uid, fields1, context)
         self._add_reified_groups(group_fields, values)
 
-        # add "default_groups_ref" inside the context to set default value for group_id with xml values
-        if 'groups_id' in fields and isinstance(context.get("default_groups_ref"), list):
-            groups = []
-            ir_model_data = self.pool.get('ir.model.data')
-            for group_xml_id in context["default_groups_ref"]:
-                group_split = group_xml_id.split('.')
-                if len(group_split) != 2:
-                    raise UserError(_('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
-                try:
-                    temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
-                except ValueError:
-                    group_id = False
-                groups += [group_id]
-            values['groups_id'] = groups
         return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):

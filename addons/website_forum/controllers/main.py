@@ -198,6 +198,7 @@ class WebsiteForum(http.Controller):
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
+
         values.update({
             'tags': tags,
             'pager_tag_chars': first_char_list,

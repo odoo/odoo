@@ -9,6 +9,7 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -841,6 +842,24 @@ class task(osv.osv):
                 reason = _('Customer Email') if data.partner_id.email else _('Customer')
                 data._message_add_suggested_recipient(recipients, partner=data.partner_id, reason=reason)
         return recipients
+
+    def message_get_email_values(self, cr, uid, ids, notif_mail=None, context=None):
+        res = super(task, self).message_get_email_values(cr, uid, ids, notif_mail=notif_mail, context=context)
+        current_task = self.browse(cr, uid, ids[0], context=context)
+        headers = {}
+        if res.get('headers'):
+            try:
+                headers.update(eval(res['headers']))
+            except Exception:
+                pass
+        if current_task.project_id:
+            current_objects = filter(None, headers.get('X-Odoo-Objects', '').split(','))
+            current_objects.insert(0, 'project.project-%s, ' % current_task.project_id.id)
+            headers['X-Odoo-Objects'] = ','.join(current_objects)
+        if current_task.tag_ids:
+            headers['X-Odoo-Tags'] = ','.join([tag.name for tag in current_task.tag_ids])
+        res['headers'] = repr(headers)
+        return res
 
 
 class account_analytic_account(osv.osv):

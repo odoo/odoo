@@ -7,7 +7,11 @@
             <field name="subject">Welcome to the Odoo Partner Channel!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_html">Hello, you will receive your welcome pack via email shortly.</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>You will receive your welcome pack via email shortly.</p>
+<p>Thank you,</p>
+]]></field>
         </record>
         <record id="email_template_2" model="mail.template">
             <field name="name">congrats silver partner</field>
@@ -15,7 +19,11 @@
             <field name="subject">Congratulations! You are now a Silver Partner!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_html">Hi, we are delighted to welcome you among our Silver Partners as of today!</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We are delighted to welcome you among our Silver Partners as of today!</p>
+<p>Thank you,</p>
+]]></field>
         </record>
 
         <record id="email_template_3" model="mail.template">
@@ -24,7 +32,11 @@
             <field name="subject">Congratulations! You are now one of our Gold Partners!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_html">Hi, we are delighted to let you know that you have entered the select circle of our Gold Partners</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>
+<p>Thank you,</p>
+]]></field>
         </record>
 
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
 from openerp import api, models
 from openerp.osv import fields, osv
 from openerp.exceptions import UserError
@@ -37,11 +36,6 @@ class procurement_order(osv.osv):
             #create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
-
-    def _check(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context):
-            return procurement.task_id and procurement.task_id.stage_id.closed or False
-        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
         product_uom = self.pool.get('product.uom')
@@ -97,22 +91,6 @@ class procurement_order(osv.osv):
                 procurement.sale_line_id.order_id.message_post(body=body)
 
 
-class ProjectTaskStageMrp(osv.Model):
-    """ Override project.task.type model to add a 'closed' boolean field allowing
-        to know that tasks in this stage are considered as closed. Indeed since
-        OpenERP 8.0 status is not present on tasks anymore, only stage_id. """
-    _name = 'project.task.type'
-    _inherit = 'project.task.type'
-
-    _columns = {
-        'closed': fields.boolean('Is a close stage', help="Tasks in this stage are considered as closed."),
-    }
-
-    _defaults = {
-        'closed': False,
-    }
-
-
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
@@ -120,21 +98,6 @@ class project_task(osv.osv):
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
-
-    def _validate_subflows(self, cr, uid, ids, context=None):
-        proc_obj = self.pool.get("procurement.order")
-        for task in self.browse(cr, uid, ids, context=context):
-            if task.procurement_id:
-                proc_obj.check(cr, SUPERUSER_ID, [task.procurement_id.id], context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        """ When closing tasks, validate subflows. """
-        res = super(project_task, self).write(cr, uid, ids, values, context=context)
-        if values.get('stage_id'):
-            stage = self.pool.get('project.task.type').browse(cr, uid, values.get('stage_id'), context=context)
-            if stage.closed:
-                self._validate_subflows(cr, uid, ids, context=context)
-        return res
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:

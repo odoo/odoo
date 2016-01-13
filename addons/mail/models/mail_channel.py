@@ -23,7 +23,7 @@ class ChannelPartner(models.Model):
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
-    is_minimized = fields.Boolean("Conversation is minimied")
+    is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
 
 
@@ -85,6 +85,13 @@ class Channel(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
+    is_subscribed = fields.Boolean(
+        'Is Subscribed', compute='_compute_is_subscribed')
+
+    @api.one
+    @api.depends('channel_partner_ids')
+    def _compute_is_subscribed(self):
+        self.is_subscribed = self.env.user.partner_id in self.channel_partner_ids
 
     @api.multi
     def _compute_is_member(self):

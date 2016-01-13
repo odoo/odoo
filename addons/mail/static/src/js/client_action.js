@@ -124,6 +124,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.$(".o_mail_annoying_notification_bar").slideUp();
             window.Notification.requestPermission();
         },
+        "click .o_mail_open_channels": function () {
+            this.do_action({
+                name: _t('Public Channels'),
+                type: 'ir.actions.act_window',
+                res_model: "mail.channel",
+                views: [[false, 'kanban'], [false, 'form']],
+                domain: [['public', '!=', 'private']],
+            }, {
+                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
+            });
+        },
     },
 
     on_attach_callback: function () {

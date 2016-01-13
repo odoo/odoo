@@ -3,7 +3,7 @@
     'name': 'Mail Tips',
     'category': 'Usability',
     'description': """
-OpenERP link module for web tips.
+Odoo link module for web tips.
 =================================
 
 """,

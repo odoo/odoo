@@ -38,6 +38,8 @@ class sale_report(osv.osv):
                 ('done', 'Sales Done'),
                 ('cancel', 'Cancelled'),
             ], string='Status', readonly=True),
+        'weight': fields.float('Gross Weight', readonly=True),
+        'volume': fields.float('Volume', readonly=True),
     }
     _order = 'date desc'
 
@@ -74,7 +76,9 @@ class sale_report(osv.osv):
                     s.team_id as team_id,
                     p.product_tmpl_id,
                     partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id
+                    partner.commercial_partner_id as commercial_partner_id,
+                    sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
+                    sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
         """
         return select_str
 

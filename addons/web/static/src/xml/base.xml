@@ -410,12 +410,20 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
+        <div class="oe_list_buttons">
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
+            <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
+                Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
+                Discard
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -451,16 +459,6 @@
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
-            Discard
-        </button>
-    </t>
-</t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
@@ -712,7 +710,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
-            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+            /><img class="oe_field_translate oe_input_icon" t-if="_t.database.multi_lang and widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
             <span class="oe_form_char_content"></span>
@@ -770,7 +768,7 @@
                 t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
                 t-att-maxlength="widget.field.size"
             ></textarea><img class="oe_field_translate oe_input_icon"
-                            t-if="widget.field.translate and !widget.get('effective_readonly')"
+                            t-if="_t.database.multi_lang and widget.field.translate and !widget.get('effective_readonly')"
                             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
             />
         </t>
@@ -1492,6 +1490,23 @@
     <t t-if="!widget.get_value()">
         <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
         <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
+    </t>
+</t>
+
+<t t-name="notification-box">
+    <div t-att-class="'alert alert-dismissible alert-' + type" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" class="fa fa-times"></span>
+        </button>
+    </div>
+</t>
+
+<t t-name="translation-alert">
+    <t t-foreach="fields" t-as="field">
+        <div>
+            You have updated <strong><t t-esc="field.string"/></strong> (<t t-esc="lang"/>).
+            <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
+        </div>
     </t>
 </t>
 

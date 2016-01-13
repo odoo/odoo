@@ -212,8 +212,7 @@ class MixedModel(models.Model):
 
     @api.model
     def _get_lang(self):
-        langs = self.env['res.lang'].search([])
-        return [(lang.code, lang.name) for lang in langs]
+        return self.env['res.lang'].get_installed()
 
     @api.model
     def _reference_models(self):
