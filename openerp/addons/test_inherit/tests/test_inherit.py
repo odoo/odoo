@@ -117,6 +117,12 @@ class TestInherit(common.TransactionCase):
         self.assertEqual(parent.stuff(), 'P1P2')
         self.assertEqual(child.stuff(), 'P1P2C1')
 
+        # check inferred model attributes
+        self.assertEqual(parent._table, 'test_inherit_parent')
+        self.assertEqual(child._table, 'test_inherit_child')
+        self.assertEqual(len(parent._sql_constraints), 1)
+        self.assertEqual(len(child._sql_constraints), 1)
+
         # check properties memoized on model
         self.assertEqual(len(parent._constraint_methods), 1)
         self.assertEqual(len(child._constraint_methods), 1)

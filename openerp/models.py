@@ -639,50 +639,54 @@ class BaseModel(object):
             else:
                 bases.add(parent_class)
                 parent_class._inherit_children.add(name)
-        ModelClass.__bases__ = bases = tuple(bases)
+        ModelClass.__bases__ = tuple(bases)
 
         # determine the attributes of the model's class
-        description = None
-        table = None
-        sequence = None
-        log_access = ModelClass._auto
-        inherits = {}
-        depends = {}
-        constraints = {}
-        sql_constraints = []
-
-        for base in reversed(bases):
-            if not getattr(base, 'pool', None):
-                # the following attributes are not taken from model classes
-                description = base._description or description
-                table = base._table or table
-                sequence = base._sequence or sequence
-                log_access = getattr(base, '_log_access', log_access)
-
-            inherits.update(base._inherits)
-
-            for mname, fnames in base._depends.iteritems():
-                depends[mname] = depends.get(mname, []) + fnames
-
-            for cons in base._constraints:
-                # cons may override a constraint with the same function name
-                constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
-
-            sql_constraints += base._sql_constraints
-
-        ModelClass._description = description or name
-        ModelClass._table = table or name.replace('.', '_')
-        ModelClass._sequence = sequence or (ModelClass._table + '_id_seq')
-        ModelClass._log_access = log_access
-        ModelClass._inherits = inherits
-        ModelClass._depends = depends
-        ModelClass._constraints = constraints.values()
-        ModelClass._sql_constraints = sql_constraints
+        ModelClass._build_model_attributes(pool)
 
         # instantiate the model, and initialize it
         model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
+
+    @classmethod
+    def _build_model_attributes(cls, pool):
+        """ Initialize base model attributes. """
+        cls._description = cls._name
+        cls._table = cls._name.replace('.', '_')
+        cls._sequence = None
+        cls._log_access = cls._auto
+        cls._inherits = {}
+        cls._depends = {}
+        cls._constraints = {}
+        cls._sql_constraints = []
+
+        for base in reversed(cls.__bases__):
+            if not getattr(base, 'pool', None):
+                # the following attributes are not taken from model classes
+                cls._description = base._description or cls._description
+                cls._table = base._table or cls._table
+                cls._sequence = base._sequence or cls._sequence
+                cls._log_access = getattr(base, '_log_access', cls._log_access)
+
+            cls._inherits.update(base._inherits)
+
+            for mname, fnames in base._depends.iteritems():
+                cls._depends[mname] = cls._depends.get(mname, []) + fnames
+
+            for cons in base._constraints:
+                # cons may override a constraint with the same function name
+                cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
+
+            cls._sql_constraints += base._sql_constraints
+
+        cls._sequence = cls._sequence or (cls._table + '_id_seq')
+        cls._constraints = cls._constraints.values()
+
+        # recompute attributes of children models
+        for child_name in cls._inherit_children:
+            child_class = type(pool[child_name])
+            child_class._build_model_attributes(pool)
 
     @classmethod
     def _init_function_fields(cls, pool, cr):
