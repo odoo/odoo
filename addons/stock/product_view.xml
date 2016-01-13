@@ -83,10 +83,6 @@
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="after">
-                    <separator/>
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                    <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
                     <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
@@ -136,18 +132,6 @@
         </record>
 
         <!-- Product Variant -->
-
-        <record id="product_search_form_view_stock" model="ir.ui.view">
-            <field name="name">product.search.stock.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
-            <field name="arch" type="xml">
-                <field name="pricelist_id" position="before">
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                </field>
-            </field>
-        </record>
 
         <record model="ir.ui.view" id="product_kanban_stock_view">
             <field name="name">Product Kanban Stock</field>
