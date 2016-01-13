@@ -677,6 +677,9 @@ class website_sale(http.Controller):
 
         self.checkout_form_save(values["checkout"])
 
+        if not int(post.get('shipping_id', 0)):
+            order.partner_shipping_id = order.partner_invoice_id
+
         request.session['sale_last_order_id'] = order.id
 
         request.website.sale_get_order(update_pricelist=True, context=context)
