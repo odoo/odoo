@@ -20,6 +20,11 @@
         <!--
         Payment term
         -->
+        <record id="account_payment_term_paid" model="account.payment.term">
+            <field name="name">Already Paid</field>
+            <field name="note">Payment term: Already Paid</field>
+        </record>
+
         <record id="account_payment_term_immediate" model="account.payment.term">
             <field name="name">Immediate Payment</field>
             <field name="note">Payment term: Immediate Payment</field>
