@@ -764,7 +764,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
         .add(oLayoutInfo.handle())
         .add(oLayoutInfo.popover())
         .add(custom_toolbar)
-        .on('click keyup', function () {
+        .on('click content_changed', function () {
             $('button[data-event="undo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasUndo());
             $('button[data-event="redo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasRedo());
         });

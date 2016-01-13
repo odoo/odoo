@@ -680,7 +680,7 @@ class BaseModel(object):
                     (fnct, fields2, order) = spec
                     length = None
                 else:
-                    raise UserError(_('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (fname, cls._name)))
+                    raise UserError(_('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.') % (fname, cls._name))
                 pool._store_function.setdefault(model, [])
                 t = (cls._name, fname, fnct, tuple(fields2) if fields2 else None, order, length)
                 if t not in pool._store_function[model]:
@@ -1273,7 +1273,7 @@ class BaseModel(object):
                     res_msg = trans._get_source(self._name, 'constraint', self.env.lang, msg)
                 if extra_error:
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
-                errors.append(_(res_msg))
+                errors.append(res_msg)
         if errors:
             raise ValidationError('\n'.join(errors))
 

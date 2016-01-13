@@ -737,11 +737,11 @@ class gamification_challenge(osv.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished." % challenge.name)
+                message_body = _("The challenge %s is finished.") % challenge.name
 
                 if rewarded_users:
                     user_names = self.pool['res.users'].name_get(cr, uid, rewarded_users, context=context)
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names])))
+                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names]))
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 

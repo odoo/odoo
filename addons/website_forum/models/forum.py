@@ -137,13 +137,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
-
-    @api.one
-    @api.constrains('allow_link', 'allow_question', 'allow_discussion', 'default_post_type')
-    def _check_default_post_type(self):
-        if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
-            raise Warning(_('Post type in "Default post" must be activated'))
+            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -380,7 +374,7 @@ class Post(models.Model):
         if (self.post_type == 'question' and not self.forum_id.allow_question) \
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise UserError(_('This forum does not allow %s' % self.post_type))
+            raise UserError(_('This forum does not allow %s') % self.post_type)
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -479,26 +473,20 @@ class Post(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for post in self:
             if post.state == 'active' and post.parent_id:
-                body = _(
-                    '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
-                    (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
-                )
+                body = _('<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>') % \
+                        (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
                 post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
             elif post.state == 'active' and not post.parent_id:
-                body = _(
-                    '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-                )
+                body = _('<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>') % \
+                        (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
                 post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
                 partners = post.sudo().message_partner_ids.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
                 note_subtype = self.sudo().env.ref('mail.mt_note')
-                body = _(
-                    '<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-                )
+                body = _('<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>') % \
+                        (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
                 post.message_post(subject=post.name, body=body, subtype_id=note_subtype.id, partner_ids=partners.ids)
         return True
 
