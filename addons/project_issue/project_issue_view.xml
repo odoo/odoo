@@ -296,8 +296,8 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_issues"/>
-                    <label for="use_issues"/>
+                    <field name="use_issues" groups="base.group_no_one"/>
+                    <label for="use_issues" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>

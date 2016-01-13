@@ -43,7 +43,6 @@ class account_analytic_account(models.Model):
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
-    # FIXME: we reused account_type to implement the closed accounts (feature removed by mistake on release of v9) without modifying the schemas on already released v9, but it would be more clean to rename it
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_account_tag_rel', 'account_id', 'tag_id', string='Tags', copy=True)
