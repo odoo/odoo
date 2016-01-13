@@ -8,9 +8,9 @@
     'description': """Buckaroo Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/buckaroo.xml',
+        'views/buckaroo_templates.xml',
         'views/payment_acquirer.xml',
-        'data/buckaroo.xml',
+        'data/buckaroo_data.xml',
     ],
     'installable': True,
 }
