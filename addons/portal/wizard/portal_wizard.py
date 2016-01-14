@@ -167,6 +167,8 @@ class wizard_user(osv.osv_memory):
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,
+            'company_id': wizard_user.partner_id.company_id.id,
+            'company_ids': [(6, 0, [wizard_user.partner_id.company_id.id])],
             'groups_id': [(6, 0, [])],
         }
         return res_users.create(cr, uid, values, context=create_context)
