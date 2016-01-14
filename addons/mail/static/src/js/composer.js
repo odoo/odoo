@@ -354,6 +354,10 @@ var BasicComposer = Widget.extend({
             model: 'mail.channel',
             redirect_classname: 'o_channel_redirect',
         });
+
+        // Emojis
+        this.emoji_container_classname = 'o_composer_emoji';
+
         this.PartnerModel = new Model('res.partner');
         this.ChannelModel = new Model('mail.channel');
     },
@@ -386,7 +390,7 @@ var BasicComposer = Widget.extend({
                 return self.$emojis;
             },
             html: true,
-            container: '.o_composer_emoji',
+            container: '.' + self.emoji_container_classname,
             trigger: 'focus',
         });
 
@@ -651,8 +655,9 @@ var ExtendedComposer = BasicComposer.extend({
         options = _.defaults(options || {}, {
             input_min_height: 120,
         });
+        this._super(parent, options);
         this.extended = true;
-        return this._super(parent, options);
+        this.emoji_container_classname = 'o_extended_composer_emoji';
     },
 
     start: function () {
