@@ -294,6 +294,16 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             }
             return notifications
         },
+        update_click_handlers: function(editing){
+            var self = this;
+            this.$el.off('mouseup touchend touchcancel click dragend');
+
+            if (editing) {
+                this.$el.on('mouseup touchend touchcancel', function(event){ self.click_handler(event,$(this)); });
+            } else {
+                this.$el.on('click dragend', function(event){ self.click_handler(event,$(this)); });
+            }
+        },
         renderElement: function(){
             var self = this;
             this.order_count    = this.pos.get_table_orders(this.table).length;
@@ -302,9 +312,8 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             this.notifications  = this.get_notifications();
             this._super();
 
-            this.$el.on('mouseup',      function(event){ self.click_handler(event,$(this)); });
-            this.$el.on('touchend',     function(event){ self.click_handler(event,$(this)); });
-            this.$el.on('touchcancel',  function(event){ self.click_handler(event,$(this)); });
+            this.update_click_handlers();
+
             this.$el.on('dragstart', function(event,drag){ self.dragstart_handler(event,$(this),drag); });
             this.$el.on('drag',      function(event,drag){ self.dragmove_handler(event,$(this),drag); });
             this.$el.on('dragend',   function(event,drag){ self.dragend_handler(event,$(this),drag); });
@@ -525,9 +534,19 @@ openerp.pos_restaurant.load_floors = function(instance,module){
         toggle_editing: function(){
             this.editing = !this.editing;
             this.update_toolbar();
+            this.update_table_click_handlers();
 
             if (!this.editing) {
                 this.deselect_tables();
+            }
+        },
+        update_table_click_handlers: function(){
+            for (var i = 0; i < this.table_widgets.length; ++i) {
+                if (this.editing) {
+                    this.table_widgets[i].update_click_handlers("editing");
+                } else {
+                    this.table_widgets[i].update_click_handlers();
+                }
             }
         },
         update_toolbar: function(){
