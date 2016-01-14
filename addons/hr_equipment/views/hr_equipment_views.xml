@@ -16,7 +16,7 @@
                 <separator/>
                 <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
                                     <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
@@ -345,7 +345,7 @@
                 <separator/>
                 <filter string="My Equipments" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>

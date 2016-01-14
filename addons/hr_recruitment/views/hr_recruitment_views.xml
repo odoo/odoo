@@ -217,7 +217,7 @@
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <separator/>
-                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
@@ -314,7 +314,7 @@
                                 </div>
                                 <div class="oe_kanban_bottom_left oe_margin_top_4">
                                     <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                     <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
                                 </div>
@@ -371,7 +371,7 @@
         <field name="arch" type="xml">
             <field name="department_id" positon="after">
                 <separator/>
-                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
             </field>
         </field>
     </record>
