@@ -144,9 +144,9 @@ define([
       filter_tag($node.find('*'), $editable).removeAttr('title', 'alt', 'id', 'contenteditable');
 
       /*
-          remove unless span
+          remove unless span and unwant font
       */
-      $node.find('span:not([class]):not([style])').each(function () {
+      $node.find('span, font').filter(':not([class]):not([style])').each(function () {
         $(this).replaceWith($(this).contents());
       });
       $node.find('span + span').each(function () {
@@ -169,6 +169,9 @@ define([
         } else if (/h[0-9]+|li|table|p/i.test(this.tagName)) {
           $last = $('<p/>');
           $arch.append(this).append($last);
+        } else if ($arch.is(':empty') && dom.isText(this)) {
+          $last = $('<p/>').append(this);
+          $arch.append($last);
         } else if (this.nodeType !== Node.COMMENT_NODE) {
           $last.append(this);
         }
