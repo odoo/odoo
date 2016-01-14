@@ -975,7 +975,7 @@ function init () {
     var load_emojis = session.rpc("/mail/chat_init").then(function (result) {
         emojis = result.emoji;
         _.each(emojis, function(emoji) {
-            emoji_substitutions[emoji.source] = emoji.substitution;
+            emoji_substitutions[_.escape(emoji.source)] = emoji.substitution;
         });
     });
 
