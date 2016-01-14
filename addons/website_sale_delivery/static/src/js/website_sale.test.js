@@ -2,7 +2,7 @@
     'use strict';
 
     openerp.Tour.register({
-        id:   'shop_test_test',
+        id:   'shop_buy_delivery',
         name: "Customize the page and search a product",
         path: '/shop',
         mode: 'test',
@@ -35,6 +35,10 @@
             {
                 title:     "step 5 add to chart from the full view for ipad",
                 element:   'form[action^="/shop/cart/update"] .btn',
+            },
+            {
+                title:     "click in modal on 'Proceed to checkout' button",
+                element:   '.modal a:contains("Proceed to checkout")',
             },
             {
                 title:     "step 6 go to checkout",
@@ -79,8 +83,13 @@
             },
             {
                 title:     "Pay Now",
-                waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
                 element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+                onload: function (tour) {
+                    $('#payment_method label:has(img[title="Wire Transfer"]) input').on( "click", function() {
+                        $('#payment_method label:has(img[title="Wire Transfer"]) input').prop('checked', true);
+                    });
+                    $('#payment_method label:has(img[title="Wire Transfer"]) input').trigger( "click" );
+                }
             },
             {
                 title:     "finish",
