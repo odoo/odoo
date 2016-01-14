@@ -50,6 +50,13 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
         result[k] = ', '.join(sorted(installed_modules & set(xml_id.split('.')[0] for xml_id in v)))
     return result
 
+#
+# IMPORTANT: this must be the first model declared in the module
+#
+class Base(models.AbstractModel):
+    """ The base model, which is implicitly inherited by all models. """
+    _name = 'base'
+
 class unknown(models.AbstractModel):
     """
     Abstract model used as a substitute for relational fields with an unknown

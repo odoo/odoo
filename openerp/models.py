@@ -612,6 +612,10 @@ class BaseModel(object):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
+        # all models except 'base' implicitly inherit from 'base'
+        if name != 'base':
+            parents = list(parents) + ['base']
+
         # create or retrieve the model's class
         if name in parents:
             if name not in pool:
