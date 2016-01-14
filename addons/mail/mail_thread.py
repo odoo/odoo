@@ -1267,7 +1267,7 @@ class mail_thread(osv.AbstractModel):
             self.write(cr, uid, ids, update_vals, context=context)
         return True
 
-    def _message_extract_payload(self, message, save_original=False):
+    def _message_extract_payload(self, message, save_original=False, preserve=True):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
         body = u''
@@ -1286,7 +1286,7 @@ class mail_thread(osv.AbstractModel):
             body = tools.ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
-                body = tools.append_content_to_html(u'', body, preserve=True)
+                body = tools.append_content_to_html(u'', body, preserve=preserve)
         else:
             alternative = False
             mixed = False
@@ -1335,7 +1335,7 @@ class mail_thread(osv.AbstractModel):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
         return body, attachments
 
-    def message_parse(self, cr, uid, message, save_original=False, context=None):
+    def message_parse(self, cr, uid, message, save_original=False, preserve=True, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
@@ -1417,7 +1417,7 @@ class mail_thread(osv.AbstractModel):
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original, preserve=preserve)
         return msg_dict
 
     #------------------------------------------------------
