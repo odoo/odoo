@@ -118,9 +118,14 @@ class MailComposer(models.TransientModel):
     subject = fields.Char(default=False)
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
+    auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
+    auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     template_id = fields.Many2one(
         'mail.template', 'Use template', select=True,
         domain="[('model', '=', model)]")
+    # mail_message updated fields
+    message_type = fields.Selection(default="comment")
+    subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
 
     @api.multi
     def check_access_rule(self, operation):
@@ -235,6 +240,13 @@ class MailComposer(models.TransientModel):
             batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
             sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
 
+            if wizard.composition_mode == 'mass_mail' or wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+                subtype_id = False
+            elif wizard.subtype_id:
+                subtype_id = wizard.subtype_id.id
+            else:
+                subtype_id = self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id
+
             for res_ids in sliced_res_ids:
                 batch_mails = Mail
                 all_mail_values = wizard.get_mail_values(res_ids)
@@ -242,10 +254,10 @@ class MailComposer(models.TransientModel):
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails |= Mail.create(mail_values)
                     else:
-                        subtype = 'mail.mt_comment'
-                        if wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
-                            subtype = False
-                        ActiveModel.browse(res_id).message_post(message_type='comment', subtype=subtype, **mail_values)
+                        ActiveModel.browse(res_id).message_post(
+                            message_type=wizard.message_type,
+                            subtype_id=subtype_id,
+                            **mail_values)
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
@@ -285,10 +297,10 @@ class MailComposer(models.TransientModel):
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                # always keep a copy, reset record name (avoid browsing records)
-                mail_values.update(notification=True, model=self.model, res_id=res_id, record_name=False)
+                # keep a copy unless specifically requested, reset record name (avoid browsing records)
+                mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
-                if self.template_id and self.template_id.auto_delete:
+                if self.auto_delete or self.template_id.auto_delete:
                     mail_values['auto_delete'] = True
                 # rendered values using template
                 email_dict = rendered_values[res_id]
