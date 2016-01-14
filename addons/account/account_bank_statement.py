@@ -777,7 +777,7 @@ class account_bank_statement_line(osv.osv):
         statement_currency = st_line.journal_id.currency or company_currency
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
-        if st_line.currency_id and statement_currency == company_currency.id and st_line_currency_rate:
+        if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
             debit_at_current_rate = currency_obj.round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
             credit_at_current_rate = currency_obj.round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
         elif st_line.currency_id and st_line_currency_rate:
