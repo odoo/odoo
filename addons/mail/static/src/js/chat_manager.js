@@ -142,17 +142,19 @@ function add_message (data, options) {
                 if (options.domain && options.domain !== []) {
                     add_to_cache(msg, options.domain);
                 }
-                if (options.increment_unread) {
-                    update_channel_unread_counter(channel, channel.unread_counter+1);
-                }
                 if (channel.hidden) {
                     channel.hidden = false;
                     chat_manager.bus.trigger('new_channel', channel);
                 }
-                if (channel.is_chat && options.show_notification && (!msg.author_id || msg.author_id[0] !== session.partner_id)) {
-                    var query = {is_displayed: false};
-                    chat_manager.bus.trigger('anyone_listening', channel, query);
-                    notify_incoming_message(msg, query);
+                if (!msg.author_id || msg.author_id[0] !== session.partner_id) {
+                    if (options.increment_unread) {
+                        update_channel_unread_counter(channel, channel.unread_counter+1);
+                    }
+                    if (channel.is_chat && options.show_notification) {
+                        var query = {is_displayed: false};
+                        chat_manager.bus.trigger('anyone_listening', channel, query);
+                        notify_incoming_message(msg, query);
+                    }
                 }
             }
         });
