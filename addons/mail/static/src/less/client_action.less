@@ -259,3 +259,136 @@
         color: orange;
     }
 }
+
+// Navbar icon and dropdown (FIXME: move to systray.less)
+.o_mail_navbar_item {
+    > a {
+        opacity: 1;
+        > i {
+            font-size: larger;
+        }
+    }
+    &.o_no_notification > a {
+        opacity: 0.5;
+        .o_notification_counter {
+            display: none;
+        }
+    }
+
+    &.open .o_mail_navbar_dropdown {
+        .o-flex-display();
+        .o-flex-flow(column, nowrap);
+    }
+    .o_mail_navbar_dropdown {
+        width: 350px;
+        padding: 0;
+        @media (max-width: @screen-xs-max) {
+            background-color: white!important;
+            max-height: none!important;
+            position: fixed!important;
+            top: @navbar-height;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .o_spinner {
+            .o-flex-display();
+            .o-align-items(center);
+            .o-justify-content(center);
+            height: 50px;
+        }
+
+        .o_filter_button,
+        .o_new_message,
+        .o_redirect_to_discuss {
+            .btn-link;
+            padding: 5px;
+        }
+
+        .o_mail_navbar_dropdown_top {
+            .o-flex-display();
+            .o-flex(0, 0, auto);
+            justify-content: space-between;
+            border-bottom: 1px solid lightgray;
+
+            .o_filter_button {
+                color: @odoo-main-color-muted;
+                &:hover, &.o_selected {
+                    color: @odoo-brand-optional;
+                }
+                &.o_selected {
+                    cursor: default;
+                    font-weight: bold;
+                }
+            }
+        }
+        .o_mail_navbar_dropdown_bottom {
+            .o-flex(0, 0, auto);
+            border-top: 1px solid lightgray;
+            height: 35px;
+            .o_redirect_to_discuss {
+                height: 100%;
+                width: 100%;
+            }
+        }
+
+        .o_mail_navbar_dropdown_channels {
+            .o-flex(0, 1, auto);
+            max-height: 400px;
+            min-height: 50px;
+            overflow-y: auto;
+
+            @media (max-width: @screen-xs-max) {
+                max-height: none;
+            }
+
+            .o_mail_channel_preview {
+                .o-flex-display();
+                height: 50px;
+                align-items: center;
+                padding: 5px;
+                cursor: pointer;
+                font-size: 12px;
+                &~.o_mail_channel_preview {
+                    border-top: 1px solid lightgray;
+                }
+                &.o_channel_unread {
+                    background-color: lighten(lightgray, 10%);
+                }
+                &:hover {
+                    background-color: lighten(lightgray, 5%);
+                }
+
+                .o_channel_image {
+                    .o-flex(0, 0, 36px);
+                    max-height: 36px;
+                }
+                .o_channel_info {
+                    .o-flex(1, 1, 100%);
+                    margin-left: 5px;
+                    overflow: hidden;
+
+                    .o_channel_title {
+                        .o-flex-display();
+                        .o_channel_name {
+                            .o-flex(1, 1, auto);
+                            .o-text-overflow();
+                        }
+                        .o_last_message_date {
+                            .o-flex(0, 0, auto);
+                            padding-top: 3px;
+                            font-size: xx-small;
+                            color: @odoo-main-color-muted;
+                        }
+                    }
+                    .o_last_message_preview {
+                        width: 100%;
+                        color: @odoo-main-color-muted;
+                        .o-text-overflow();
+                    }
+                }
+            }
+        }
+    }
+}
