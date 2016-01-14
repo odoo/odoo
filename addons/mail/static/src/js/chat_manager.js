@@ -101,7 +101,7 @@ function add_link (node, transform_children) {
     if (node.nodeType === 3) {  // text node
         return node.data.replace(url_regexp, function (url) {
             var href = (!/^(f|ht)tps?:\/\//i.test(url)) ? "http://" + url : url;
-            return '<a href="' + href + '">' + url + '</a>';
+            return '<a target="_blank" href="' + href + '">' + url + '</a>';
         });
     }
     if (node.tagName === "A") return node.outerHTML;
