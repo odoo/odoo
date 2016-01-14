@@ -178,9 +178,16 @@ class _column(object):
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
-            ('copy', self.copy),
+            ('automatic', False),
+            ('inherited', False),
+            ('store', True),
             ('index', self.select),
             ('manual', self.manual),
+            ('copy', self.copy),
+            ('compute', None),
+            ('inverse', None),
+            ('search', None),
+            ('related', None),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),
