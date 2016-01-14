@@ -218,12 +218,13 @@ class Partner(osv.osv):
         today = time.strftime('%Y-%m-%d')
         for id in ids:
             partner_data = self.browse(cr, uid, id, context=context)
-            if partner_data.membership_cancel and today > partner_data.membership_cancel:
-                res[id] = 'canceled'
-                continue
-            if partner_data.membership_stop and today > partner_data.membership_stop:
-                res[id] = 'old'
-                continue
+            if not partner_data.free_member:
+                if partner_data.membership_cancel and today > partner_data.membership_cancel:
+                    res[id] = 'canceled'
+                    continue
+                if partner_data.membership_stop and today > partner_data.membership_stop:
+                    res[id] = 'old'
+                    continue
             s = 4
             if partner_data.member_lines:
                 for mline in partner_data.member_lines:
