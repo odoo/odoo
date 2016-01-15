@@ -307,10 +307,11 @@ class res_partner(osv.Model):
             meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
         for partner in self.browse(cr, uid, ids, context=context):
             data = self.name_get(cr, uid, [partner.id], context)[0]
+            data = [data[0], data[1], False, partner.color]
             if meeting:
                 for attendee in meeting.attendee_ids:
                     if attendee.partner_id.id == partner.id:
-                        data = (data[0], data[1], attendee.state)
+                        data[2] = attendee.state
             datas.append(data)
         return datas
 
