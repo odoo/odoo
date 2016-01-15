@@ -3,9 +3,13 @@
 
 from lxml import etree
 
+import logging
+
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 class ProjectTaskType(models.Model):
@@ -23,6 +27,11 @@ class ProjectTaskType(models.Model):
     name = fields.Char(string='Stage Name', required=True, translate=True)
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
+    active = fields.Boolean(
+        'Active', default=True,
+        help='Set to False to archive this column and all its content. It will'
+             'not be included in search result, unless specifically asked through'
+             'the active_test = False domain part.')
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids)
     legend_priority = fields.Char(
@@ -44,6 +53,39 @@ class ProjectTaskType(models.Model):
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+
+    @api.multi
+    def archive(self, archive, project_ids=None, archive_only_content=False):
+        """ As project is an umbrella for several items like tasks or issues
+        this method exists to be inherited and improved in future addons that
+        enhance projects. """
+        if not project_ids and self._context.get('default_project_id'):
+            if isinstance(self._context['default_project_id'], (int, long)):
+                project_ids = [self._context['default_project_id']]
+            elif isinstance(self._context['default_project_id'], (list, tuple)):
+                project_ids = self._context['default_project_id']
+
+        if not archive_only_content:
+            # archive stages only if no active items in other projects
+            if archive and project_ids:
+                active_items = self.env['project.task'].search_count([('project_id', 'not in', project_ids), ('stage_id', 'in', self.ids)])
+                if active_items:
+                    # TDE FIXME
+                    _logger.warning('Cannot archive columns as there are active items in other projects. Fallback on archive items only.')
+                    archive_only_content = True
+        if not archive_only_content:
+            self.write({'active': not archive})
+        if project_ids:
+            domain = [('project_id', 'in', project_ids), ('stage_id', 'in', self.ids)]
+        else:
+            domain = [('stage_id', 'in', self.ids)]
+        self.env['project.task'].with_context(active_test=False).search(domain).write({'active': not archive})
+        return True
+
+    @api.multi
+    def toggle_active(self):
+        for record in self:
+            record.archive(record.active)
 
 
 class Project(models.Model):
@@ -262,8 +304,7 @@ class Project(models.Model):
             ], limit=1).id
         res = super(Project, self).write(vals)
         if 'active' in vals:
-            # archiving/unarchiving a project does it on its tasks, too
-            self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
+            self.archive_stages(not vals['active'])
         return res
 
     @api.multi
@@ -278,6 +319,32 @@ class Project(models.Model):
         # Project User has no write access for project.
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+
+    def archive_stages(self, archive, stage_ids=None):
+        """ Archive columns belonging to some projects.
+
+        :param archive: if True, archive aka set active=False. If False, unarchive
+                        aka set active=True.
+        :param stage_ids: archive some specific columns of the project. tasks
+                          belonging to those columns are archived. Stages are
+                          archived if not used by other projects.
+        """
+        if stage_ids:
+            domain = ['&', ('project_ids', 'in', self.ids), ('id', 'in', stage_ids)]
+        else:
+            domain = [('project_ids', 'in', self.ids)]
+        stages = self.env['project.task.type'].with_context(active_test=False).search(domain)
+
+        # filter only stages used in the current project - as the 'in' operator
+        # of the ORM gives stages containing at least the selection but not a
+        # a subset, we do it manually
+        if archive:
+            shared_stages = stages.filtered(lambda stage: stage.project_ids > self)
+            shared_stages.archive(archive, project_ids=self.ids, archive_only_content=True)
+            (stages - shared_stages).archive(archive, project_ids=self.ids, archive_only_content=False)
+        else:
+            stages.archive(archive, project_ids=self.ids, archive_only_content=False)
+        return True
 
     @api.multi
     def close_dialog(self):

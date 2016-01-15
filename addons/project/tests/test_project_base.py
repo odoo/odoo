@@ -44,18 +44,17 @@ class TestProjectBase(TestMail):
             'project_id': cls.project_pigs.id})
 
         # Test 'Goats' project, same as 'Pigs', but with 2 stages
+        cls.stage_0 = cls.env['project.task.type'].create({
+            'name': 'Stage1',
+            'sequence': 1,
+        })
+        cls.stage_1 = cls.env['project.task.type'].create({
+            'name': 'Stage2',
+            'sequence': 10,
+        })
         cls.project_goats = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Goats',
             'privacy_visibility': 'followers',
             'alias_name': 'project+goats',
             'partner_id': cls.partner_1.id,
-            'type_ids': [
-                (0, 0, {
-                    'name': 'New',
-                    'sequence': 1,
-                }),
-                (0, 0, {
-                    'name': 'Won',
-                    'sequence': 10,
-                })]
-            })
+            'type_ids': [(4, cls.stage_0.id), (4, cls.stage_1.id)]})
