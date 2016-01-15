@@ -454,8 +454,9 @@ class Field(object):
                 if 'default' in field.args:
                     # take the value, and adapt it for model._defaults
                     value = field.args['default']
-                    self.default = default_new_to_new(self, value)
-                    model._defaults[name] = default_new_to_old(self, value)
+                    if value is not None:
+                        self.default = default_new_to_new(self, value)
+                        model._defaults[name] = default_new_to_old(self, value)
                     return
 
             defaults = klass.__dict__.get('_defaults') or {}
