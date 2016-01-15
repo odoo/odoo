@@ -156,11 +156,20 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.searchview.do_search();
             });
         }
-        return $.when(view.created, this.active_search).then(function () {
+        var switched = $.when(view.created, this.active_search).then(function () {
             return self._display_view(view_options, old_view).then(function () {
                 self.trigger('switch_mode', view_type, no_store, view_options);
             });
         });
+        switched.fail(function(e) {
+            if (!(e && e.code === 200 && e.data.exception_type)) {
+                self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+            }
+            // Restore internal state
+            self.active_view = old_view;
+            self.view_stack.pop();
+        });
+        return switched;
     },
     _display_view: function (view_options, old_view) {
         var self = this;
