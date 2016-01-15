@@ -2005,3 +2005,13 @@ class MailThread(models.AbstractModel):
         msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
         msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
         return True
+
+    # ------------------------------------------------------
+    # Mass mailing
+    # ------------------------------------------------------
+
+    def message_mass_mailing_enabled(self):
+        if self._mail_mass_mailing:
+            # TODO master properly translate
+            # the _mail_mass_mailing is evaluted at code start so not translated
+            return _(self._mail_mass_mailing)
