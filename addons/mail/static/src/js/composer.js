@@ -315,7 +315,7 @@ var BasicComposer = Widget.extend({
     template: "mail.ChatComposer",
 
     events: {
-        "keydown .o_composer_input": "on_keydown",
+        "keydown .o_composer_input textarea": "on_keydown",
         "keyup .o_composer_input": "on_keyup",
         "change input.o_form_input_file": "on_attachment_change",
         "click .o_composer_button_send": "send_message",
@@ -367,7 +367,7 @@ var BasicComposer = Widget.extend({
 
         this.$attachment_button = this.$(".o_composer_button_add_attachment");
         this.$attachments_list = this.$('.o_composer_attachments_list');
-        this.$input = this.$('.o_composer_input');
+        this.$input = this.$('.o_composer_input textarea');
         this.$input.focus(function () {
             self.trigger('input_focused');
         });
