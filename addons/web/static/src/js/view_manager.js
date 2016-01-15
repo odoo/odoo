@@ -130,8 +130,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var view = this.views[view_type];
         var old_view = this.active_view;
 
-        if (!view) {
+        if (!view || this.currently_switching) {
             return $.Deferred().reject();
+        } else {
+            this.currently_switching = true;  // prevent overlapping switches
         }
 
         if (view.multi_record) {
@@ -168,6 +170,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             // Restore internal state
             self.active_view = old_view;
             self.view_stack.pop();
+        });
+        switched.always(function () {
+            self.currently_switching = false;
         });
         return switched;
     },
@@ -248,7 +253,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     select_view: function (index) {
         var view_type = this.view_stack[index].type;
-        this.view_stack.splice(index);
         return this.switch_mode(view_type);
     },
     /**
@@ -271,10 +275,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             });
 
             // Add onclick event listener
-            this.control_elements.$switch_buttons.siblings('button').click(function(event) {
+            this.control_elements.$switch_buttons.siblings('button').click(_.debounce(function(event) {
                 var view_type = $(event.target).data('view-type');
                 self.switch_mode(view_type);
-            });
+            }, 200, true));
         }
     },
     /**
