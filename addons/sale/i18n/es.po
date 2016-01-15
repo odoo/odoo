@@ -3,16 +3,18 @@
 # * sale
 # 
 # Translators:
-# Antonio Trueba, 2015
-# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2015
+# Antonio Trueba, 2015-2016
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2015-2016
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Denis Ledoux <dle@odoo.com>, 2016
 # Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-12-31 19:22+0000\n"
-"Last-Translator: Antonio Trueba\n"
+"PO-Revision-Date: 2016-01-14 14:38+0000\n"
+"Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +148,7 @@ msgstr "<span groups=\"sale.group_discount_per_so_line\">Desc.(%)</span>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Posici&oacute;n fiscal:</strong>"
+msgstr "<strong>Posición fiscal:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -156,7 +158,7 @@ msgstr "<strong>Término de Pago:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "<stong>Comercial:</strong>"
+msgstr "<strong>Comercial:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -798,7 +800,7 @@ msgstr "Líneas de factura"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "Líneas a facturar (deducir pagos por adelantado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -873,7 +875,7 @@ msgstr "La dirección de facturación y envío es siempre la misma (Ejemplo: com
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
+msgstr "Ratio Facturación/Meta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_is_follower
@@ -982,7 +984,7 @@ msgstr "Tenga en cuenta que una vez que un presupuesto se convierte en\npedido d
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
-msgstr ""
+msgstr "Tenga en cuenta que una vez que un presupuesto se convierte en\npedido de venta, será movido desde la lista de presupuestos a la\nde pedidos de venta."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1112,12 +1114,12 @@ msgstr "Empresa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "País del Asociado"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "País del Asociado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1128,7 +1130,7 @@ msgstr "Plazo de pago"
 #: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "Por favor, defina un diario contable de ventas para esta compañía."
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1136,7 +1138,7 @@ msgstr ""
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
-msgstr ""
+msgstr "Por favor defina la cuenta de entrada de existencias para este producto: \"%s\" (id:%d) o su categoría: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1601,7 +1603,7 @@ msgstr "Subtotal"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
-msgstr ""
+msgstr "Objetivo de ingresos por facturación para el mes actual. Éste es el importe que el equipo de ventas estima es capaz de facturar este mes."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -1614,7 +1616,7 @@ msgstr "Impuestos"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "Impuestos usados para depósitos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -1652,7 +1654,7 @@ msgstr "Los informes impresos mostrarán los incoterms para los pedidos de venta
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr ""
+msgstr "El producto usado para facturar un adelanto de pago debe de ser de tipo 'Servicio'. Por favor use otro producto o actualice éste."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:122
@@ -1661,7 +1663,7 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr ""
+msgstr "El producto usado para facturar un adelanto de pago debe tener una política de facturación configurada como \"Cantidad pedida\". Por favor actualice su producto para poder crear la factura de depósito."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
@@ -1675,7 +1677,7 @@ msgstr "El valor del importe por adelantado debe ser positivo."
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
-msgstr ""
+msgstr "No existe una cuenta de ingresos definida para este producto: \"%s\". Puede que necesite instalar un plan contable desde la aplicación de Contabilidad, menú de configuración."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1715,7 +1717,7 @@ msgstr "Este informe realiza el análisis de sus pedidos de venta. El análisis 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on contract"
-msgstr ""
+msgstr "Parte de horas del contrato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1748,7 +1750,7 @@ msgstr "Total impuestos incluidos"
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Seguimiento del Servicio"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -1786,13 +1788,13 @@ msgstr "Base imponible"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
-msgstr ""
+msgstr "Upselling"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "Oportunidad de upselling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -1807,12 +1809,12 @@ msgstr "CIF/NIF:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensajes del sitio web"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1839,7 +1841,7 @@ msgstr "Valor introducido no válido"
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr ""
+msgstr "No puede eliminar una línea de peido de venta.\nDescarte los cambios e intente establecer la cantidad a 0."
 
 #. module: sale
 #: code:addons/sale/sale.py:153
@@ -1862,7 +1864,7 @@ msgstr "Sus próximas acciones deberían fluir de forma eficiente: confirmar\nel
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr ""
+msgstr "Sus próximas acciones deberían fluir de forma eficiente: confirmar\nel Presupuesto a un Pedido de Venta, luego generar la Factura y\nrecibir el Pago."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
