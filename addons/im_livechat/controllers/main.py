@@ -30,8 +30,7 @@ class LivechatController(http.Controller):
         username = kwargs.get("username", _("Visitor"))
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
         info = request.env['im_livechat.channel'].get_livechat_info(channel.id, username=username)
-        js = request.render('im_livechat.loader', {'info': info, 'web_session_required': True})
-        return request.make_response(js, headers=[('Content-Type', 'application/javascript')])
+        return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}, headers=[('Content-Type', 'application/javascript')])
 
     @http.route('/im_livechat/init', type='json', auth="public")
     def livechat_init(self, channel_id):
