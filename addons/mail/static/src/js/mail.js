@@ -75,7 +75,7 @@ openerp.mail = function (session) {
          * TDE note : should be done server-side, in Python -> use mail.compose.message ?
          */
         get_text2html: function (text) {
-            return text
+            return _.str.escapeHTML(text)
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
                 .replace(/[\n\r]/g,'<br/>')                
         },
