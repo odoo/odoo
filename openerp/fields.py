@@ -23,6 +23,8 @@ EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
+Default = object()                      # default value for __init__() methods
+
 class SpecialValue(object):
     """ Encapsulates a value in the cache in place of a normal value. """
     def __init__(self, value):
@@ -327,9 +329,9 @@ class Field(object):
         'related_field': None,          # corresponding related field
     }
 
-    def __init__(self, string=None, **kwargs):
+    def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
-        args = {key: val for key, val in kwargs.iteritems() if val is not None}
+        args = {key: val for key, val in kwargs.iteritems() if val is not Default}
         self.args = args or EMPTY_DICT
         self.setup_full_done = False
 
@@ -1065,7 +1067,7 @@ class Float(Field):
         'group_operator': None,         # operator for aggregating values
     }
 
-    def __init__(self, string=None, digits=None, **kwargs):
+    def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
     @property
@@ -1109,7 +1111,7 @@ class Monetary(Field):
         'group_operator': None,         # operator for aggregating values
     }
 
-    def __init__(self, string=None, currency_field=None, **kwargs):
+    def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
     _related_currency_field = property(attrgetter('currency_field'))
@@ -1431,7 +1433,7 @@ class Selection(Field):
         'selection': None,              # [(value, string), ...], function or method name
     }
 
-    def __init__(self, selection=None, string=None, **kwargs):
+    def __init__(self, selection=Default, string=Default, **kwargs):
         if callable(selection):
             from openerp import api
             selection = api.expected(api.model, selection)
@@ -1630,7 +1632,7 @@ class Many2one(_Relational):
         'delegate': False,              # whether self implements delegation
     }
 
-    def __init__(self, comodel_name=None, string=None, **kwargs):
+    def __init__(self, comodel_name=Default, string=Default, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
     def _setup_attrs(self, model, name):
@@ -1831,7 +1833,7 @@ class One2many(_RelationalMulti):
         'copy': False,                  # o2m are not copied by default
     }
 
-    def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
+    def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
         super(One2many, self).__init__(
             comodel_name=comodel_name,
             inverse_name=inverse_name,
@@ -1903,8 +1905,8 @@ class Many2many(_RelationalMulti):
         'limit': None,                  # optional limit to use upon read
     }
 
-    def __init__(self, comodel_name=None, relation=None, column1=None, column2=None,
-                 string=None, **kwargs):
+    def __init__(self, comodel_name=Default, relation=Default, column1=Default,
+                 column2=Default, string=Default, **kwargs):
         super(Many2many, self).__init__(
             comodel_name=comodel_name,
             relation=relation,
