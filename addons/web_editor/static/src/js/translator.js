@@ -319,7 +319,7 @@ if (edit_translations) {
             this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
         });
 
-        $('title').html($('title').html().replace(/&lt;span data-oe-translation-id.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
+        $('title').html($('title').html().replace(/&lt;span data-oe-model.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
     });
 }
 

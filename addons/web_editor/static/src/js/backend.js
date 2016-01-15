@@ -64,7 +64,7 @@ var FieldTextHtmlSimple = widget.extend({
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<div class="note-editable"/>');
+            this.$textarea.hide().after('<div class="note-editable o_readonly"/>');
         } else {
             this.$textarea.summernote(this._config());
 

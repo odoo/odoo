@@ -315,7 +315,7 @@ var BasicComposer = Widget.extend({
     template: "mail.ChatComposer",
 
     events: {
-        "keydown .o_composer_input": "on_keydown",
+        "keydown .o_composer_input textarea": "on_keydown",
         "keyup .o_composer_input": "on_keyup",
         "change input.o_form_input_file": "on_attachment_change",
         "click .o_composer_button_send": "send_message",
@@ -354,6 +354,10 @@ var BasicComposer = Widget.extend({
             model: 'mail.channel',
             redirect_classname: 'o_channel_redirect',
         });
+
+        // Emojis
+        this.emoji_container_classname = 'o_composer_emoji';
+
         this.PartnerModel = new Model('res.partner');
         this.ChannelModel = new Model('mail.channel');
     },
@@ -363,7 +367,7 @@ var BasicComposer = Widget.extend({
 
         this.$attachment_button = this.$(".o_composer_button_add_attachment");
         this.$attachments_list = this.$('.o_composer_attachments_list');
-        this.$input = this.$('.o_composer_input');
+        this.$input = this.$('.o_composer_input textarea');
         this.$input.focus(function () {
             self.trigger('input_focused');
         });
@@ -386,7 +390,7 @@ var BasicComposer = Widget.extend({
                 return self.$emojis;
             },
             html: true,
-            container: '.o_composer_emoji',
+            container: '.' + self.emoji_container_classname,
             trigger: 'focus',
         });
 
@@ -443,8 +447,8 @@ var BasicComposer = Widget.extend({
     /**
      * Send the message on ENTER, but go to new line on SHIFT+ENTER
      */
-    prevent_send: function (event) {
-        return event.shiftKey;
+    should_send: function (event) {
+        return !event.shiftKey;
     },
 
     on_keydown: function (event) {
@@ -465,9 +469,12 @@ var BasicComposer = Widget.extend({
             case $.ui.keyCode.ENTER:
                 if (this.mention_manager.is_open()) {
                     event.preventDefault();
-                } else if (!this.prevent_send(event)) {
-                    event.preventDefault();
-                    this.send_message();
+                } else {
+                    var send_message = event.ctrlKey || this.should_send(event);
+                    if (send_message) {
+                        event.preventDefault();
+                        this.send_message();
+                    }
                 }
                 break;
         }
@@ -648,8 +655,9 @@ var ExtendedComposer = BasicComposer.extend({
         options = _.defaults(options || {}, {
             input_min_height: 120,
         });
+        this._super(parent, options);
         this.extended = true;
-        return this._super(parent, options);
+        this.emoji_container_classname = 'o_extended_composer_emoji';
     },
 
     start: function () {
@@ -667,8 +675,8 @@ var ExtendedComposer = BasicComposer.extend({
         });
     },
 
-    prevent_send: function () {
-        return true;
+    should_send: function () {
+        return false;
     },
 });
 

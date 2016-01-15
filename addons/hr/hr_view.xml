@@ -124,7 +124,7 @@
                     <field name="department_id"/>
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <field name="job_id" />
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
@@ -155,7 +155,7 @@
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
                             <div class="o_employee_summary_icons">
                                 <t t-if="record.message_needaction_counter.raw_value">
-                                    <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                    <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                 </t>
                                 <span title='Messages'><i class='fa fa-comments'/><t t-esc="record.message_ids.raw_value.length"/></span>
                                 <span title='Followers'><i class='fa fa-users'/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
@@ -362,7 +362,7 @@
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <separator/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
@@ -457,7 +457,7 @@
                 <search string="Departments">
                     <field name="name" string="Department"/>
                     <field name="manager_id" />
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 </search>
              </field>
         </record>

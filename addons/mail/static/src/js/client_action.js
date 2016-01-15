@@ -191,6 +191,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             chat_manager.mark_all_as_read();
         });
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
+        this.$buttons.on('click', '.o_mail_chat_button_new_message', this.on_click_new_message);
 
         this.thread.on('redirect', this, function (res_model, res_id) {
             chat_manager.redirect(res_model, res_id, this.set_channel.bind(this));
@@ -224,12 +225,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('update_message', self, self.on_update_message);
                 chat_manager.bus.on('new_channel', self, self.on_new_channel);
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
-                    query.is_displayed = query.is_displayed || channel.id === self.channel.id;
+                    query.is_displayed = query.is_displayed || (channel.id === self.channel.id && self.thread.is_at_bottom());
                 });
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
                 chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
+                self.thread.$el.on("scroll", null, _.debounce(function () {
+                    if (self.thread.is_at_bottom()) {
+                        chat_manager.mark_channel_as_seen(self.channel);
+                    }
+                }, 100));
             });
     },
 
@@ -271,9 +277,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
             source: function(request, response) {
                 self.last_search_val = _.escape(request.term);
-                self.do_search_partner(self.last_search_val).done(function(result){
-                    response(result);
-                });
+                chat_manager.search_partner(self.last_search_val).done(response);
             },
             select: function(event, ui) {
                 var partner_id = ui.item.id;
@@ -318,21 +322,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    do_search_partner: function (search_val) {
-        var Partner = new Model("res.partner");
-        return Partner.call('im_search', [search_val, 20]).then(function(result){
-            var values = [];
-            _.each(result, function(user){
-                var escaped_name = _.escape(user.name);
-                values.push(_.extend(user, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
-            });
-            return values;
-        });
-    },
-
     set_channel: function (channel) {
         var self = this;
         // Store scroll position of previous channel
@@ -369,13 +358,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             // Hide 'detach' button in static channels
             self.$buttons
                 .find('.o_mail_chat_button_detach')
-                .toggle(channel.type !== "static");
+                .toggle(channel.type !== "static" && !channel.mass_mailing);
             // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
             self.$buttons
                 .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
                 .toggle(channel.type !== "dm" && channel.type !== 'static');
             self.$buttons
-                .find('.o_mail_chat_button_mark_read')
+                .find('.o_mail_chat_button_mark_read, .o_mail_chat_button_new_message')
                 .toggle(channel.id === "channel_inbox");
             self.$buttons
                 .find('.o_mail_chat_button_unstar_all')
@@ -522,9 +511,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_post_message: function (message) {
+        var self = this;
         var options = {channel_id: this.channel.id};
         chat_manager
             .post_message(message, options)
+            .then(function() {
+                self.thread.scroll_to();
+            })
             .fail(function () {
                 // todo: display notification
             });
@@ -532,11 +525,15 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     on_new_message: function (message) {
         var self = this;
         if (_.contains(message.channel_ids, this.channel.id)) {
-            if (this.channel.type !== 'static') {
+            if (this.channel.type !== 'static' && this.thread.is_at_bottom()) {
                 chat_manager.mark_channel_as_seen(this.channel);
             }
+
+            var should_scroll = this.thread.is_at_bottom();
             this.fetch_and_render_thread().then(function () {
-                self.thread.scroll_to({id: message.id});
+                if (should_scroll) {
+                    self.thread.scroll_to({id: message.id});
+                }
             });
         }
         // Re-render sidebar to indicate that there is a new message in the corresponding channels
@@ -572,7 +569,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_click_button_invite: function () {
-        var title = _.str.sprintf(_t('Invite people to %s'), this.channel.name);
+        var title = _.str.sprintf(_t('Invite people to #%s'), this.channel.name);
         new PartnerInviteDialog(this, title, this.channel.id).open();
     },
     on_click_button_detach: function () {
@@ -589,6 +586,16 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             res_id: this.channel.id,
             views: [[false, 'form']],
             target: 'current'
+        });
+    },
+    on_click_new_message: function () {
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.compose.message',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            target: 'new',
         });
     },
 });

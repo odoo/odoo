@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-
     <t t-name="mail.ChatWindow">
         <div class="o_chat_window">
             <div class="o_chat_header">
-                <span class="o_chat_title">
-                    <t t-esc="widget.title"/>
-                </span>
-                <span>
-                    <a href="#" class="o_chat_window_close fa fa-close"></a>
-                </span>
+                <t t-call="mail.ChatWindowHeaderContent">
+                    <t t-set="title" t-value="widget.title"/>
+                    <t t-set="unread_counter" t-value="widget.unread_msgs"/>
+                </t>
             </div>
             <div class="o_chat_content">
             </div>
@@ -18,6 +15,49 @@
                 <input t-att-placeholder="widget.placeholder"/>
             </div>
         </div>
+    </t>
+
+    <!-- FIXME: move this to its own file in master -->
+    <t t-name="mail.ExtendedChatWindow" t-extend="mail.ChatWindow">
+        <t t-jquery=".o_chat_header" t-operation="after">
+            <div t-if="widget.options.thread_less" class="o_chat_search_input">
+                <span> To: </span>
+                <input type="text"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.ChatWindowsDropdown">
+        <div t-attf-class="o_chat_window o_chat_window_dropdown dropup #{open ? 'open' : ''}">
+            <span class="o_chat_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-comments-o"/> <t t-esc="sessions.length"/>
+                <span class="o_total_unread_counter">
+                    <t t-if="unread_counter"><t t-esc="unread_counter"/></t>
+                </span>
+            </span>
+            <ul class="dropdown-menu">
+                <t t-foreach="sessions" t-as="session">
+                    <li class="o_chat_header" t-att-data-session-id="session.id">
+                        <t t-call="mail.ChatWindowHeaderContent">
+                            <t t-set="title" t-value="session.window.title"/>
+                            <t t-set="unread_counter" t-value="session.window.unread_msgs"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="mail.ChatWindowHeaderContent">
+        <span class="o_chat_title">
+            <t t-esc="title"/>
+            <span class="o_unread_counter">
+                <t t-if="unread_counter">(<t t-esc="unread_counter"/>)</t>
+            </span>
+        </span>
+        <span>
+            <a href="#" class="o_chat_window_close fa fa-close"/>
+        </span>
     </t>
 
 </templates>
