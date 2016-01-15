@@ -141,7 +141,8 @@ class Field(object):
             default ``False``)
 
         :param default: the default value for the field; this is either a static
-            value, or a function taking a recordset and returning a value
+            value, or a function taking a recordset and returning a value; use
+            ``default=None`` to discard default values for the field
 
         :param states: a dictionary mapping state values to lists of UI attribute-value
             pairs; possible attributes are: 'readonly', 'required', 'invisible'.
