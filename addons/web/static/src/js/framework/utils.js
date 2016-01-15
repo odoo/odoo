@@ -475,10 +475,16 @@ function autoresize ($textarea, options) {
             top: -10000,
             left: -10000,
         });
-        $fixed_text_area.addClass($fixed_text_area[0].classList);
+        $fixed_text_area.addClass($textarea[0].className);
         $fixed_text_area.insertAfter($textarea);
     }
 
+    var style = window.getComputedStyle($textarea[0], null);
+    if (style.resize === 'vertical') {
+        $textarea[0].style.resize = 'none';
+    } else if (style.resize === 'both') {
+        $textarea[0].style.resize = 'horizontal';
+    }
     resize();
     if ($textarea.__auto_resized) {
         return;
@@ -499,7 +505,7 @@ function autoresize ($textarea, options) {
         } else {
             heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
         }
-        $fixed_text_area.width($textarea.outerWidth());
+        $fixed_text_area.width($textarea.width());
         $fixed_text_area.val($textarea.val());
         var height = $fixed_text_area[0].scrollHeight;
         $textarea.css({height: Math.max(height + heightOffset, min_height)});
