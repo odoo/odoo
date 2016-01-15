@@ -206,6 +206,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             headless: true,
             low_profile: true,
             display_title: false,
+            search_disable_custom_filters: true,
             list: {
                 selectable: false
             }
