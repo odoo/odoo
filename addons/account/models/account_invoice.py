@@ -99,6 +99,8 @@ class AccountInvoice(models.Model):
         digits_rounding_precision = self.currency_id.rounding
         if float_is_zero(self.residual, digits_rounding_precision):
             self.reconciled = True
+        else:
+            self.reconciled = False
 
     @api.one
     def _get_outstanding_info_JSON(self):
