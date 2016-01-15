@@ -374,10 +374,11 @@ class Cursor(object):
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
-            self.execute('RELEASE SAVEPOINT "%s"' % name)
-        except:
+        except Exception:
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
+        else:
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
 
     @check
     def __getattr__(self, name):
