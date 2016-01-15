@@ -64,15 +64,7 @@ Best Regards,''')
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
-        new_prefix_length = len(new_prefix)
-        # find index of first occurence of a digits different than 0 after the prefix
-        index = len(old_prefix)
-        for c in current_code[len(old_prefix):]:
-            if c != '0':
-                break
-            index += 1
-        number = current_code[index:]
-        return new_prefix + '0' * (digits - new_prefix_length - len(number)) + number
+        return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code, digits):
         accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
@@ -84,16 +76,7 @@ Best Regards,''')
     def reflect_code_digits_change(self, digits):
         accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
         for account in accounts:
-            if len(account.code) < digits:
-                account.write({'code': account.code + '0' * (digits - len(account.code))})
-            elif len(account.code) > digits:
-                # try removing extra zero from end of account code
-                code = account.code
-                while len(code) != digits:
-                    if code[len(code)-1] != '0':
-                        break
-                    code = code[:len(code)-1]
-                account.write({'code': code})
+            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
 
     @api.multi
     def write(self, values):
