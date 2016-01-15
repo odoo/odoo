@@ -9,6 +9,7 @@ odoo.define('point_of_sale.gui', function (require) {
 var core = require('web.core');
 var Model = require('web.DataModel');
 var formats = require('web.formats');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -336,7 +337,7 @@ var Gui = core.Class.extend({
         this.pos.push_order().then(function(){
             return new Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
             .pipe(function(res) {
-                window.location = '/web#action=' + res[0]['res_id'];
+                window.location = '/web' + ((session.debug)? '?debug' : '') + '#action=' + res[0]['res_id'];
             },function(err,event) {
                 event.preventDefault();
                 self.show_popup('error',{
