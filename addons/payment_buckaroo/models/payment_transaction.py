@@ -1,10 +1,11 @@
 # -*- coding: utf-'8' "-*-"
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.osv import osv
-from openerp.tools.float_utils import float_compare
-from openerp.tools.translate import _
+from odoo import api, models, _
+from odoo.tools.float_utils import float_compare
+from odoo.addons.payment.models.payment_acquirer import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -16,10 +17,10 @@ def normalize_keys_upper(data):
     convert everything to upper case to be able to easily detected the presence
     of a parameter by checking the uppercase key only
     """
-    return dict((key.upper(), val) for key, val in data.items())
+    return {key.upper(): value for key, value in data.iteritems()}
 
 
-class TxBuckaroo(osv.Model):
+class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     # buckaroo status
@@ -29,12 +30,12 @@ class TxBuckaroo(osv.Model):
     _buckaroo_error_tx_status = [490, 491, 492]
     _buckaroo_reject_tx_status = [690]
 
-
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def _buckaroo_form_get_tx_from_data(self, cr, uid, data, context=None):
+    @api.model
+    def _buckaroo_form_get_tx_from_data(self, data):
         """ Given a data dict coming from buckaroo, verify it and find the related
         transaction record. """
         origin_data = dict(data)
@@ -45,56 +46,65 @@ class TxBuckaroo(osv.Model):
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
-        tx_ids = self.search(cr, uid, [('reference', '=', reference)], context=context)
-        if not tx_ids or len(tx_ids) > 1:
+        tx = self.search([('reference', '=', reference)])
+        if len(tx) != 1:
             error_msg = _('Buckaroo: received data for reference %s') % (reference)
-            if not tx_ids:
+            if not tx:
                 error_msg += _('; no order found')
             else:
                 error_msg += _('; multiple order found')
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         #verify shasign
-        shasign_check = self.pool['payment.acquirer']._buckaroo_generate_digital_sign(tx.acquirer_id, 'out', origin_data)
+        shasign_check = tx.acquirer_id._buckaroo_generate_digital_sign('out', origin_data)
         if shasign_check.upper() != shasign.upper():
             error_msg = _('Buckaroo: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
-        return tx 
+        return tx
 
+    @api.cr_uid_records_context
     def _buckaroo_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        return tx._buckaroo_form_get_invalid_parameters(data)
+
+    @api.v8
+    def _buckaroo_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         data = normalize_keys_upper(data)
-        if tx.acquirer_reference and data.get('BRQ_TRANSACTIONS') != tx.acquirer_reference:
-            invalid_parameters.append(('Transaction Id', data.get('BRQ_TRANSACTIONS'), tx.acquirer_reference))
+        if self.acquirer_reference and data.get('BRQ_TRANSACTIONS') != self.acquirer_reference:
+            invalid_parameters.append(('Transaction Id', data.get('BRQ_TRANSACTIONS'), self.acquirer_reference))
         # check what is buyed
-        if float_compare(float(data.get('BRQ_AMOUNT', '0.0')), tx.amount, 2) != 0:
-            invalid_parameters.append(('Amount', data.get('BRQ_AMOUNT'), '%.2f' % tx.amount))
-        if data.get('BRQ_CURRENCY') != tx.currency_id.name:
-            invalid_parameters.append(('Currency', data.get('BRQ_CURRENCY'), tx.currency_id.name))
+        if float_compare(float(data.get('BRQ_AMOUNT', '0.0')), self.amount, 2) != 0:
+            invalid_parameters.append(('Amount', data.get('BRQ_AMOUNT'), '%.2f' % self.amount))
+        if data.get('BRQ_CURRENCY') != self.currency_id.name:
+            invalid_parameters.append(('Currency', data.get('BRQ_CURRENCY'), self.currency_id.name))
 
         return invalid_parameters
 
+    @api.cr_uid_records_context
     def _buckaroo_form_validate(self, cr, uid, tx, data, context=None):
+        return tx._buckaroo_form_validate(data)
+
+    @api.v8
+    def _buckaroo_form_validate(self, data):
         data = normalize_keys_upper(data)
-        status_code = int(data.get('BRQ_STATUSCODE','0'))
+        status_code = int(data.get('BRQ_STATUSCODE', '0'))
         if status_code in self._buckaroo_valid_tx_status:
-            tx.write({
+            self.write({
                 'state': 'done',
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return True
         elif status_code in self._buckaroo_pending_tx_status:
-            tx.write({
+            self.write({
                 'state': 'pending',
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return True
         elif status_code in self._buckaroo_cancel_tx_status:
-            tx.write({
+            self.write({
                 'state': 'cancel',
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
@@ -102,7 +112,7 @@ class TxBuckaroo(osv.Model):
         else:
             error = 'Buckaroo: feedback error'
             _logger.info(error)
-            tx.write({
+            self.write({
                 'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
