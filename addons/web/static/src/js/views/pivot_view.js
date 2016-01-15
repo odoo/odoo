@@ -62,6 +62,7 @@ var PivotView = View.extend({
         this.sorted_column = {};
 
         this.numbering = {};
+        this.widgets = [];
     },
     willStart: function () {
         var self = this;
@@ -139,6 +140,7 @@ var PivotView = View.extend({
             //noinspection FallThroughInSwitchStatementJS
             switch (field.attrs.type) {
             case 'measure':
+                self.widgets.push(field.attrs.widget || "");
                 self.active_measures.push(name);
                 break;
             case 'col':
@@ -628,6 +630,7 @@ var PivotView = View.extend({
         var measure_types = this.active_measures.map(function (name) {
             return self.measures[name].type;
         });
+        var widgets = this.widgets;
         for (i = 0; i < rows.length; i++) {
             $row = $('<tr>');
             $header = $('<td>')
@@ -638,7 +641,7 @@ var PivotView = View.extend({
             if (rows[i].indent > 0) $header.attr('title', groupby_labels[rows[i].indent - 1]);
             $header.appendTo($row);
             for (j = 0; j < length; j++) {
-                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures]});
+                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures], widget: widgets[j % nbr_measures]});
                 $cell = $('<td>')
                             .data('id', rows[i].id)
                             .data('col_id', rows[i].col_ids[Math.floor(j / nbr_measures)])
