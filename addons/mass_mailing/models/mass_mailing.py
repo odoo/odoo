@@ -431,7 +431,10 @@ class MassMailing(osv.Model):
         for model_name in self.pool:
             model = self.pool[model_name]
             if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
-                res.append((model._name, getattr(model, '_mail_mass_mailing')))
+                if getattr(model, 'message_mass_mailing_enabled'):
+                    res.append((model._name, model.message_mass_mailing_enabled()))
+                else:
+                    res.append((model._name, model._mail_mass_mailing))
         res.append(('mail.mass_mailing.contact', _('Mailing List')))
         return res
 
