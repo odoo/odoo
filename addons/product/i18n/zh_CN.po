@@ -6,7 +6,7 @@
 # fausthuang, 2015
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # wxb <bd5dml@gmail.com>, 2015
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-24 13:20+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -687,6 +687,12 @@ msgstr "一体机"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "电脑"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1414,14 +1420,14 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品图片规格(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -1500,7 +1506,7 @@ msgstr "是否关注者"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr "是一个多规格产品"
+msgstr "是一个产品变型"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1671,7 +1677,7 @@ msgstr "管理产品包装形式"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品规格"
+msgstr "管理产品变型"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -2211,7 +2217,7 @@ msgstr "计量单位"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
@@ -2219,7 +2225,7 @@ msgstr "产品系列"
 #: model:ir.ui.menu,name:product.menu_products
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "系列产品"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2500,6 +2506,12 @@ msgstr "序号"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "服务器"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -3093,36 +3105,36 @@ msgstr "值"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Extra Price"
-msgstr "规格附加价格"
+msgstr "变型附加价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr "系列图片"
+msgstr "变型图片"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr "系列信息"
+msgstr "变型信息"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr "系列价格"
+msgstr "变型价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr "系列值"
+msgstr "变型值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "系列"
+msgstr "变型"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3224,7 +3236,7 @@ msgstr "一个播放列表是不够的。"
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "当此字段填写，供应商的数据只适用于变体。"
+msgstr "当此字段填写，供应商的数据只适用于变型。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

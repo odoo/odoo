@@ -467,6 +467,10 @@ var ChatterComposer = composer.BasicComposer.extend({
         return $.when(this._super.apply(this, arguments), this.message_get_suggested_recipients());
     },
 
+    should_send: function () {
+        return false;
+    },
+
     preprocess_message: function () {
         var self = this;
         var def = $.Deferred();

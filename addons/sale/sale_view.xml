@@ -366,7 +366,7 @@
                     <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]"/>
                     <filter string="Upselling" domain="[('invoice_status','=','upselling')]"/>
                     <separator/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter name="customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>

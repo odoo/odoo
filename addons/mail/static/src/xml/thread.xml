@@ -122,7 +122,7 @@
                         </div>
                     </t>
                     <t t-if="!options.shorten_messages || !message.body_short">
-                        <t t-raw="message.body"/>
+                        <div><t t-raw="message.body"/></div>
                     </t>
                 </t>
                 <t t-foreach="message.attachment_ids" t-as="attachment">
