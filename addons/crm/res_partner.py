@@ -16,7 +16,7 @@ class res_partner(osv.osv):
                     operator = 'child_of'
                 else:
                     operator = '='
-                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', operator, partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')], context=context)
+                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', operator, partner.id), ('type', '=', 'opportunity')], context=context)
                 res[partner.id] = {
                     'opportunity_count': len(opp_ids),
                     'meeting_count': len(partner.meeting_ids),
