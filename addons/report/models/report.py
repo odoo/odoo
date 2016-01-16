@@ -33,6 +33,12 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
+    if os.name == 'nt':
+        for spath in  [os.getenv("ProgramFiles"), os.getenv("ProgramFiles(x86)")]:
+            testExist = os.path.join(spath,'wkhtmltopdf','bin','wkhtmltopdf.exe')
+            if os.access(testExist,os.X_OK):
+                webkit_path=testExist
+                return webkit_path    
     return find_in_path('wkhtmltopdf')
 
 
