@@ -17,6 +17,7 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     """,
     'depends': ['base'],
     'data': [
+        'data/res_company_data.xml',
         'gengo_sync_schedular_data.xml',
         'ir_translation.xml',
         'res_company_view.xml',

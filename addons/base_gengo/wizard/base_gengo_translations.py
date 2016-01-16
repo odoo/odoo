@@ -9,7 +9,7 @@ import time
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, RedirectWarning
 
 _logger = logging.getLogger(__name__)
 
@@ -60,7 +60,9 @@ class base_gengo_translations(osv.osv_memory):
         '''
         user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
-            return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+            msg = _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`.")
+            raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         try:
             gengo = Gengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
@@ -71,7 +73,9 @@ class base_gengo_translations(osv.osv_memory):
             return (True, gengo)
         except Exception, e:
             _logger.exception('Gengo connection failed')
-            return (False, _("Gengo connection failed with this message:\n``%s``") % e)
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+            msg = _("Gengo connection failed with this message:\n``%s``") % e
+            raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
 
     def act_update(self, cr, uid, ids, context=None):
         '''
