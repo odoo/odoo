@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # matt.cai <cysnake4713@gmail.com>, 2015
@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-30 06:38+0000\n"
+"PO-Revision-Date: 2016-01-14 09:31+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -250,7 +250,7 @@ msgstr "30天"
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr "预付30%余款30天后的月底"
+msgstr "预收30%，余款30天后的月底"
 
 #. module: account
 #: view:website:account.report_generalledger
@@ -319,7 +319,7 @@ msgid ""
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多币种交易时，由于汇率的变化，可能会产生汇兑收益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多币种交易时，由于兑换汇率的变化，可能会产生兑换增益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -4271,7 +4271,7 @@ msgstr "错误！\n不能创建递归的科目。"
 #. module: account
 #: field:account.account,exchange_rate:0
 msgid "Exchange Rate"
-msgstr "汇率"
+msgstr "兑换汇率"
 
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
@@ -4722,7 +4722,7 @@ msgstr "将来"
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr "汇率收益科目"
+msgstr "增益兑换汇率科目"
 
 #. module: account
 #: selection:account.analytic.journal,type:0 selection:account.journal,type:0
@@ -6252,7 +6252,7 @@ msgstr "损失科目（费用）"
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr "汇率损失科目"
+msgstr "损失兑换汇率科目"
 
 #. module: account
 #: code:addons/account/account.py:3198
@@ -9670,14 +9670,14 @@ msgstr "为这张发票在分类账分录中使用的商业实体"
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr "选择的汇兑损益科目不属性对应的公司科目。"
+msgstr "选择的增益兑换汇率科目不属性对应的公司科目。"
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr "选择的汇兑损益科目不属性对应的公司科目。"
+msgstr "选择的损失兑换汇率科目不属性对应的公司科目。"
 
 #. module: account
 #: help:account.tax,type:0
@@ -11462,7 +11462,7 @@ msgstr "你必须在分类账定义中为对账定义银行账户"
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
-msgstr "必须提供一个科目用来记录销账/汇兑差异的分录。"
+msgstr "必须提供一个科目用来记录销账/兑换差异的分录。"
 
 #. module: account
 #: code:addons/account/account.py:3531
@@ -11499,7 +11499,7 @@ msgstr "至少选择1个记录。"
 #: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr "您必须定义一个类型为 '%s'的成本分类账！"
+msgstr "您必须定义一个类型为 '%s'的分析分类账！"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
@@ -11546,7 +11546,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "您应该在会计配置配置“增益汇率帐户”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "您应该在会计配置配置“增益兑换汇率科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:686
@@ -11555,7 +11555,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "您应该在会计配置配置“亏损汇率帐户”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "您应该在会计配置配置“损失兑换汇率科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57

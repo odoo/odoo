@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-09 14:14+0000\n"
+"PO-Revision-Date: 2016-01-14 09:22+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -262,7 +262,7 @@ msgstr "会计信息"
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
 msgid "Accounting journal used to post sales entries."
-msgstr "会计日记簿用来记录销售交易记录"
+msgstr "会计日记账用来登录销售分录。"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_search
@@ -313,7 +313,7 @@ msgstr "总额"
 #. module: point_of_sale
 #: field:account.journal,amount_authorized_diff:0
 msgid "Amount Authorized Difference"
-msgstr "授权的金额差"
+msgstr "授权的差异金额"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_tree
@@ -326,7 +326,7 @@ msgstr "总额合计"
 #: code:addons/point_of_sale/static/src/js/screens.js:1310
 #, python-format
 msgid "An anonymous order cannot be invoiced"
-msgstr "不能给一张匿名订单开发票。"
+msgstr "匿名订单不能开发票。"
 
 #. module: point_of_sale
 #: help:pos.config,name:0
@@ -509,17 +509,17 @@ msgstr "现金"
 #. module: point_of_sale
 #: field:pos.session,details_ids:0
 msgid "Cash Control"
-msgstr "现金控制"
+msgstr "现金管理"
 
 #. module: point_of_sale
 #: field:pos.session,cash_journal_id:0
 msgid "Cash Journal"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
 msgid "Cash Journals"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
@@ -933,7 +933,7 @@ msgstr "创建人"
 #: field:pos.order,create_date:0 field:pos.session,create_date:0
 #: field:pos.session.opening,create_date:0
 msgid "Created on"
-msgstr "创建"
+msgstr "创建时间"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -964,7 +964,7 @@ msgstr "货币"
 #. module: point_of_sale
 #: field:pos.session,currency_id:0
 msgid "Currnecy"
-msgstr "流通"
+msgstr "货币"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1061,7 +1061,7 @@ msgstr "删除未发送订单？"
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr "反对"
+msgstr "废弃"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_receipt
@@ -1668,7 +1668,7 @@ msgstr "内部备注"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:846
 #, python-format
 msgid "Invalid Ean"
-msgstr "无效的条码"
+msgstr "无效的EAN条码"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
@@ -1698,7 +1698,7 @@ msgstr "发票"
 #. module: point_of_sale
 #: field:pos.config,iface_invoicing:0
 msgid "Invoicing"
-msgstr "发票"
+msgstr "开票"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_jonagold_product_template
@@ -1851,7 +1851,7 @@ msgstr "POS明细"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr "收款机清单"
+msgstr "现金出纳机清单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2951,7 +2951,7 @@ msgstr "销售详情"
 #. module: point_of_sale
 #: field:pos.config,journal_id:0 field:pos.order,sale_journal:0
 msgid "Sale Journal"
-msgstr "销售分类账"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -2968,7 +2968,7 @@ msgstr "销售明细"
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr "销售账簿"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -3205,7 +3205,7 @@ msgstr "设为无效"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:934
 #, python-format
 msgid "Shop:"
-msgstr "门店"
+msgstr "商店"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3894,7 +3894,7 @@ msgstr "未知条形码"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:914
 #, python-format
 msgid "Unknown Customer"
-msgstr "未知客户"
+msgstr "未知顾客"
 
 #. module: point_of_sale
 #. openerp-web

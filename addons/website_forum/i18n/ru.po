@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-19 15:04+0000\n"
+"PO-Revision-Date: 2016-01-16 08:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -43,12 +43,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Здравствуйте ${object.name},\n</p>\n<p>\n    Это письмо отправлено для проверки Вашего почтового ящика, чтобы открыть Вам доступ к \"${object.company_id.name}\" Форума Q/A.\n</p>\n<p>\n    Для проверки Вашей почты кликните на следующую ссылку:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Проверка моего аккаунта \"${object.company_id.name}\" Форума Q/A</a></li>\n</ul>\n<p>\n    Спасибо,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} проверка форума"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -162,7 +162,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Ответ принят"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
@@ -333,7 +333,7 @@ msgstr "Город"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Кликните тут, чтобы отправить письмо с подтверждением, позволяющее участвовать в форуме. "
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
@@ -495,7 +495,7 @@ msgstr "Дата последнего сообщения размещенног�
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Удалить все сообщения"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
@@ -537,7 +537,7 @@ msgstr "Редактировать ваш предыдущий ответ"
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Редактировать все сообщения"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
