@@ -1,6 +1,7 @@
 @mail-thread-avatar-size: 36px;
 @mail-thread-icon-opacity: 0.6;
 @mail-thread-side-date-opacity: 0.6;
+@mail-thread-note: @gray-lighter;
 
 .o_mail_thread {
     .o_thread_show_more {
@@ -97,6 +98,10 @@
         .o_thread_message_core {
             .o-flex(1, 1, auto);
 
+            &.o_mail_note {
+                background-color: @gray-lighter;
+            }
+
             .o_mail_subject {
                 font-style: italic;
             }
@@ -104,6 +109,10 @@
             .o_mail_notification {
                 font-style: italic;
                 color: gray;
+            }
+
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
             }
 
             > p {

@@ -73,7 +73,7 @@ class PaypalController(http.Controller):
         self.paypal_validate_data(**post)
         return werkzeug.utils.redirect(return_url)
 
-    @http.route('/payment/paypal/cancel', type='http', auth="none")
+    @http.route('/payment/paypal/cancel', type='http', auth="none", csrf=False)
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         cr, uid, context = request.cr, SUPERUSER_ID, request.context

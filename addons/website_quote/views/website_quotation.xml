@@ -138,7 +138,7 @@
                               <a t-if="order_valid" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Accept Order
                               </a>
-                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block">
+                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
                                   Contact us for new quote.
                               </a>
@@ -227,9 +227,10 @@
                       </div>
                       <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                          This order has already been 
-                            <t t-if="quotation.state=='cancel'">cancelled</t>
-                            <t t-if="quotation.state not in ('cancel','draft')">validated</t>
+                          This order 
+                            <t t-if="quotation.state=='draft'">has not yet been sent</t>
+                            <t t-if="quotation.state=='cancel'">has already been cancelled</t>
+                            <t t-if="quotation.state not in ('cancel','draft')">has already been validated</t>
                           ! You can <a href="#discussion">contact us</a> for
                           any question.
                       </div>

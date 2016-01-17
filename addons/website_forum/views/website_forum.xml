@@ -25,7 +25,7 @@
 <template id="header_footer_custom" inherit_id="website.footer_default"
     name="Footer Questions Link">
     <xpath expr="//ul[@id='products']" position="inside">
-        <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;A</a></li>
+        <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;amp;A</a></li>
         <li><a href="/forum">Forums</a></li>
     </xpath>
 </template>
@@ -42,6 +42,12 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
+        <t groups="base.group_website_designer" t-set="is_designer" t-value="True"/>
+        <t t-if="not is_designer">
+            <t t-set="head">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
+        </t>
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -1075,18 +1081,16 @@
             <ul class="pagination mt0 mb0">
                 <li class="disabled"><a><i class="fa fa-filter"></i></a></li>
                 <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{tuple_char[1]}"><t t-esc="tuple_char[0]"/></a></li>
+                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}"><t t-esc="tuple_char[0]"/></a></li>
                 </t>
             </ul>
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
+                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times'/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
                     <span t-field="tag.name"/>
                 </a>
-                <span>
-                    X <t t-esc="tag.posts_count"/>
-                </span>
             </div>
         </div>
     </t>

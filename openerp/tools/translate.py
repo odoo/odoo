@@ -215,7 +215,7 @@ class XMLTranslator(object):
         if (
             isinstance(node, SKIPPED_ELEMENT_TYPES) or
             node.tag in SKIPPED_ELEMENTS or
-            node.get("translation", "").strip() == "off" or
+            node.get("t-translation", "").strip() == "off" or
             node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS
         ):
             # do not translate the contents of the node
@@ -664,7 +664,7 @@ def trans_export(lang, modules, buffer, format, cr):
 
         else:
             raise Exception(_('Unrecognized extension: must be one of '
-                '.csv, .po, or .tgz (received .%s).' % format))
+                '.csv, .po, or .tgz (received .%s).') % format)
 
     translations = trans_generate(lang, modules, cr)
     modules = set(t[0] for t in translations)

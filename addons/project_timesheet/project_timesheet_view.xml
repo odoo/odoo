@@ -31,8 +31,8 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
-                <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic Account/Project"/>
+                <field name="account_id"  position="attributes">
+                   <attribute name="string">Analytic Account/Project</attribute>
                 </field>
             </field>
         </record>
@@ -66,7 +66,7 @@
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
                     <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id, 'default_is_timesheet' : 1}">
-                        <tree editable="bottom" string="Timesheet Activities">
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" required="1"/>
                             <field name="name"/>

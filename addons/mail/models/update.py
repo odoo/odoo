@@ -56,7 +56,9 @@ class publisher_warranty_contract(AbstractModel):
             "apps": [app['name'] for app in apps],
             "enterprise_code": enterprise_code,
         }
-        msg.update(self.pool.get("res.company").read(cr, uid, [1], ["name", "email", "phone"])[0])
+        if user.partner_id.company_id:
+            company_id = user.partner_id.company_id.id
+            msg.update(self.pool["res.company"].read(cr, uid, [company_id], ["name", "email", "phone"])[0])
         return msg
 
     def _get_sys_logs(self, cr, uid):
@@ -107,8 +109,8 @@ class publisher_warranty_contract(AbstractModel):
                     pass
             if result.get('enterprise_info'):
                 # Update expiration date
-                self.pool['ir.config_parameter'].set_param(cr, uid, 'database.expiration_date', result.get('enterprise_info').get('expiration_date'))
-                self.pool['ir.config_parameter'].set_param(cr, uid, 'database.expiration_reason', result.get('enterprise_info').get('expiration_reason'))
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_date', result.get('enterprise_info').get('expiration_date'), ['base.group_user'])
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_reason', result.get('enterprise_info').get('expiration_reason', 'trial'), ['base.group_system'])
 
         except Exception:
             if cron_mode:

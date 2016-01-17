@@ -4,15 +4,20 @@
 # 
 # Translators:
 # fausthuang, 2015
+# fausthuang, 2015
+# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
+# wxb <bd5dml@gmail.com>, 2015
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-13 03:05+0000\n"
-"Last-Translator: fausthuang\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,13 +104,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr "2.7GHz的四核Intel Corei5\n睿频加速可达3.2GHz\n8GB(二4GB) 内存\n1TB硬盘\n英特尔Iris 显卡"
+msgstr "2.7GHz的四核Intel Corei5\n可睿频加速到3.2GHz\n8GB(2*4GB) 内存\n1TB硬盘\n英特尔Iris 显卡"
 
 #. module: product
 #: model:product.product,name:product.product_product_52
 #: model:product.template,name:product.product_product_52_product_template
 msgid "30m RJ45 wire"
-msgstr "30米 RJ45 缆线"
+msgstr "30米 RJ45 网线"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -273,7 +278,7 @@ msgstr "有效"
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
-msgstr "全选"
+msgstr "All"
 
 #. module: product
 #: code:addons/product/pricelist.py:283
@@ -338,7 +343,7 @@ msgstr "应用于"
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "存档"
+msgstr "归档"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -573,7 +578,7 @@ msgstr "特点"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr "收费的iPod/iPhone"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -682,6 +687,12 @@ msgstr "一体机"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "电脑"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1409,14 +1420,14 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品图片规格(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -1434,7 +1445,7 @@ msgstr "开发中"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
-msgstr "单独校准真正的贴近生活的色彩。"
+msgstr "单独校准逼真的色彩。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1473,7 +1484,7 @@ msgstr "内部分类"
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr "位置"
+msgstr "内部参考"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1495,7 +1506,7 @@ msgstr "是否关注者"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr "是一个多规格产品"
+msgstr "是一个产品变型"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1628,7 +1639,7 @@ msgstr "行"
 #: model:product.product,name:product.product_product_50
 #: model:product.template,name:product.product_product_50_product_template
 msgid "Linutop"
-msgstr ""
+msgstr "Linutop"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1660,13 +1671,13 @@ msgstr "管理价格表项"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "管理产品包装"
+msgstr "管理产品包装形式"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品规格"
+msgstr "管理产品变型"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1896,7 +1907,7 @@ msgstr "包装类型"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr "包装"
+msgstr "包装形式"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -2206,7 +2217,7 @@ msgstr "计量单位"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
@@ -2214,7 +2225,7 @@ msgstr "产品系列"
 #: model:ir.ui.menu,name:product.menu_products
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "系列产品"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2295,7 +2306,7 @@ msgstr "数量"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity by Package"
-msgstr "包装数量"
+msgstr "每包裹的数量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2464,7 +2475,7 @@ msgid ""
 "                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
 "                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
+msgstr "说你听到一首歌，你的爱和你想呆在⏎心情。只是天才。发现其他歌曲iPod-nano去杰出的一起让一个天才的播放列表。更多的歌曲组合你不会想到自己，创造天才混合在iTunes和同步那些你喜欢iPod-nano。然后点击天才料和重新发现的歌曲你好久没听到或发现音乐你忘了你曾经。"
 
 #. module: product
 #: model:product.public.category,name:product.Screen
@@ -2497,6 +2508,12 @@ msgid "Server"
 msgstr "服务器"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2522,7 +2539,7 @@ msgid ""
 "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr ""
+msgstr "在你实例中把产品定义为公司间分享\n选择：产品队每个公司可见，即便是某个公司只针对某一个业务伙伴不选择：每个公司只能看到自己的产品（定义产品的公司）。但是没有关联到某一公司的产品对全部的公司都是可见的"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2555,7 +2572,7 @@ msgstr "小于参考计量单位"
 msgid ""
 "Soft covers are available separately in blue, green or orange. Pick a color "
 "to match your style."
-msgstr ""
+msgstr "软盖有蓝色，绿色，或者橙色。你可以选你喜欢的颜色"
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -2657,7 +2674,7 @@ msgstr "24 口交换机"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "同步到你的内心"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2669,7 +2686,7 @@ msgid ""
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
+msgstr "要播放你最喜欢的歌曲。或整张专辑。或一个艺术家的一切。你甚至可以浏览风格或作曲家。翻你的音乐：在大屏幕上，专辑艺术看起来很棒。为了保持新鲜，给iPod-nano摇一摇，它将在你的音乐库里的另一首歌。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
@@ -2686,7 +2703,7 @@ msgid ""
 "                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
 "                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
-msgstr ""
+msgstr "耳戴式耳机中的苹果，在大幅度的“下”，提供了一种真实的身临其境的体验减少外部噪音。柔软的硅胶耳塞，它舒适地在你的耳朵里，创造一个密封，使你的音乐从你的环境中分离。三个不同大小的耳朵提示，所以你可以找到一个完美的适合每个耳朵。也包括一个方便的耳朵尖和电缆控制的情况下，以方便携带的情况下，因为耳机本身。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2696,7 +2713,7 @@ msgid ""
 "                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    experience music just about anywhere."
-msgstr ""
+msgstr "玻色®soundlink®Mini是玻色-最小的便携式蓝牙音箱。它的超紧凑的尺寸适合在\n你的手掌，却给了你充分的，自然的声音以无线方式从您的iPhone或iPod，ipad。抓住它，去\n功能齐全。它可以做任何事情和\n体验音乐就在任何地方。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2707,7 +2724,7 @@ msgid ""
 "                                        Its low profile lets you place it almost anywhere and\n"
 "                                        provides a low center of gravity that makes it nearly\n"
 "                                        impossible to tip over."
-msgstr ""
+msgstr "soundlink®迷你音箱是足够小和轻把你的袋子塞进口袋里。它的重量仅为1.5磅它的低姿态让你把它放在任何地方提供了一个低重心，使它接近不可能给小费。"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2760,7 +2777,7 @@ msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
 "                                    which makes it compatible with iPad. And you’re free to type wherever\n"
 "                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr ""
+msgstr "难以置信的苹果无线键盘采用蓝牙技术，这使得它兼容ipad。而且你可以自由地在任何地方随意你喜欢在你的ipad的前面或在你的膝盖上的键盘。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
@@ -2768,7 +2785,7 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr ""
+msgstr "从供应商采购的最小数量的计量单位在产品的供应商信息中有维护，如果没有维护，那么计量单位就是产品中默认设置的"
 
 #. module: product
 #: code:addons/product/product.py:329
@@ -2776,7 +2793,7 @@ msgstr ""
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr ""
+msgstr "该动作不能完成：要删除已经被参照为某个产品型号对应的属性"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2791,14 +2808,14 @@ msgid ""
 "The product form contains information to simplify the sale\n"
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
-msgstr ""
+msgstr "产品表单中的信息可以简化销售流程:\n价格，询价单中的注释，会计信息，补货方式等等"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
-msgstr ""
+msgstr "产品表单中的信息可以简化销售流程:\n价格，询价单中的注释，会计信息，补货方式等等"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2807,7 +2824,7 @@ msgid ""
 "The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
 "                                    And at home, you can listen even longer—the charging cradle lets\n"
 "                                    you listen while it charges."
-msgstr ""
+msgstr "锂离子充电电池提供长达七小时的游戏时间。而在家里，你能听的更久了充电的摇篮让我们的你听着，而这收费。"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2826,12 +2843,12 @@ msgid ""
 "                                    smartphone, iPad® or other Bluetooth device.\n"
 "                                    And it remembers the most recent six devices you've used,\n"
 "                                    so reconnecting is even simpler."
-msgstr ""
+msgstr "演讲者有30英尺的距离，这样你就可以享受了没有电线的声音。它对你的智能手机，ipad®或其他蓝牙设备。它还记得你最近使用的六个设备，所以连接就更简单了。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can put by pallet or box."
-msgstr "您可以放入货板或箱子的产品数量。"
+msgstr "您可以放入托盘或箱子的产品数量。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2843,7 +2860,7 @@ msgstr "这体积是m3"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr "以 Kg（公斤）表示内容物重量，不包含任何的包装等。"
+msgstr "以 Kg（公斤）表示内容物重量，不包含任何的包装形式等。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2873,7 +2890,7 @@ msgid ""
 "                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
 "                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
 "                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr ""
+msgstr "还有一个很好的方法在IPod上混合音乐：让天才来完成它\n激活电脑上itunes的天才。它会自动找到一些听起来很美妙的音乐，\n然后它创建天才混音，你可以轻易的同步到你的ipos，这是重新发现你从来都没有听到过的音乐的完美方式"
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2961,7 +2978,7 @@ msgstr "类型"
 #: model:product.product,name:product.product_product_53
 #: model:product.template,name:product.product_product_53_product_template
 msgid "TypeMatrix Dvorak Keyboard"
-msgstr "TypeMatrix德沃夏克键盘"
+msgstr "TypeMatrix Dvorak 键盘"
 
 #. module: product
 #: model:product.product,name:product.product_product_48
@@ -3038,7 +3055,7 @@ msgid ""
 "                converted between each others. For example, in the category\n"
 "                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days."
-msgstr ""
+msgstr "统一类别的计量单位之间可以转换。例如<i>'时间'</i>类别中，你可以有以下的计量单位：\n小时，天。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3056,7 +3073,7 @@ msgid ""
 "                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
 "                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
 "                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr ""
+msgstr "不像许多小耳机，每一个入耳式苹果耳机包含两个高性能的驱动器－一个处理低音的低音和中音以及高频率的扬声器。这些特定的驱动能够保证整个声波频道的精确，精细的声音结果就是：你沉浸在音乐中，听到你从未听到过的细致的音乐，即使是在听你喜欢的老的音乐，你还是会感觉到就像第一次听到一样"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread
@@ -3073,7 +3090,7 @@ msgstr "未读消息计数器"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "有效"
+msgstr "确认"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3088,36 +3105,36 @@ msgstr "值"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Extra Price"
-msgstr "规格附加价格"
+msgstr "变型附加价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr "系列图片"
+msgstr "变型图片"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr "系列信息"
+msgstr "变型信息"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr "系列价格"
+msgstr "变型价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr "系列值"
+msgstr "变型值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "变动"
+msgstr "变型"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3199,7 +3216,7 @@ msgstr "网络摄像头"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr "重要性"
+msgstr "重量"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3219,7 +3236,7 @@ msgstr "一个播放列表是不够的。"
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "当此字段填写，供应商的数据只适用于变体。"
+msgstr "当此字段填写，供应商的数据只适用于变型。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3266,7 +3283,7 @@ msgid ""
 "                                   cellular data networks around the world, iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
-msgstr ""
+msgstr "先进的Wi‑Fi比之前的Ipad的网速快两倍，用它可以链接到世界上的蜂窝状网络\niPad mini可以让我们以惊人的速度下载内容，视频和浏览网页"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
@@ -3285,7 +3302,7 @@ msgstr "工作时间"
 msgid ""
 "You must define a conversion rate between several Units of\n"
 "                Measure within the same category."
-msgstr ""
+msgstr "必须定义同一种类不同计量单位之间的转换"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3295,14 +3312,14 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr ""
+msgstr "所有你要卖的东西都要定义为产品，不管是实体，消耗品或者你能提供给客户的服务"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to  customers."
-msgstr ""
+msgstr "所有你要卖的东西都要定义为产品，不管是实体，消耗品或者你能提供给客户的服务"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3315,7 +3332,7 @@ msgid ""
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
 "                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
+msgstr "可能你在你的itunes上有很多播放列表。\n一个在路上，一个在健身房，同步这些播放列表到ipod，你可以混合播放任何能打动你的音乐\nVoiceOver会告诉你每个播放列表的名称，"
 
 #. module: product
 #: model:product.product,name:product.product_product_43
@@ -3492,7 +3509,7 @@ msgstr "夸脱"
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr ""
+msgstr "raid 1 \n            512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_59
@@ -3500,7 +3517,7 @@ msgstr ""
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr ""
+msgstr "raid 10 \n            2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist

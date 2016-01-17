@@ -106,6 +106,7 @@ class view(osv.osv):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
             [view_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context) or [None]
             if not view_id:
+                _logger.warning("Could not find view object with xml_id '%s'" % (xml_id))
                 raise ValueError('View %r in website %r not found' % (xml_id, context['website_id']))
         else:
             view_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
@@ -126,7 +127,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            if not qcontext.get('translatable'):
+            if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
                     context = dict(context, inherit_branding=True)
                 elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):

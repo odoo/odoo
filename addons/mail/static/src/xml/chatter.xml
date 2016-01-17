@@ -6,7 +6,7 @@
     -->
     <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
         <!-- Insert information before the composer -->
-        <t t-jquery=".o_composer_mentioned_partners" t-operation="before">
+        <t t-jquery=".o_composer_attachments_list" t-operation="before">
             <!-- Internal note composer -->
             <t t-if="widget.options.is_log">
                 <span class="o_chatter_composer_info">
@@ -53,7 +53,7 @@
         </t>
 
         <!-- Add a button to open the full composer dialog -->
-        <t t-jquery=".o_composer_buttons" t-operation="append">
+        <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
             <button class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
         </t>
     </t>
@@ -154,7 +154,13 @@
             <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
                 <t t-esc="record.name"/>
             </span>
+            <i t-if="display_warning" class="fa fa-warning text-warning"/>
         </li>
+    </t>
+    <t t-name="mail.Followers.subtypes.warning">
+        <span class="text-warning">
+            <i class="fa fa-warning"/> Be careful with channels following internal notifications
+        </span>
     </t>
 
 </templates>

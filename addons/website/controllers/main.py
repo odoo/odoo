@@ -38,9 +38,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
-                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
                     return request.redirect(first_menu.url)
-                if first_menu.url.startswith('/page/'):
+                if first_menu.url and first_menu.url.startswith('/page/'):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
         r = super(Website, self).web_login(redirect=redirect, *args, **kw)
-        if request.params['login_success'] and not redirect:
+        if not redirect and request.params['login_success']:
             if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
@@ -180,8 +180,11 @@ class Website(openerp.addons.web.controllers.main.Home):
     # Edit
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False, add_menu=None):
-        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+    def pagenew(self, path, noredirect=False, add_menu=None, template=False):
+        if template:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, template=template, context=request.context)
+        else:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
             request.registry['website.menu'].create(
                 request.cr, request.uid, {

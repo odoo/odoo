@@ -18,7 +18,7 @@ class MailController(http.Controller):
 
     def _redirect_to_messaging(self):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web?%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/receive', type='json', auth='none')
@@ -44,6 +44,7 @@ class MailController(http.Controller):
             result.append({
                 'id': follower.id,
                 'name': follower.partner_id.name or follower.channel_id.name,
+                'email': follower.partner_id.email if follower.partner_id else None,
                 'res_model': 'res.partner' if follower.partner_id else 'mail.channel',
                 'res_id': follower.partner_id.id or follower.channel_id.id,
                 'is_editable': is_editable,
@@ -163,7 +164,7 @@ class MailController(http.Controller):
             return self._redirect_to_messaging()
         Model = request.env[model]
         try:
-            Model.browse(res_id).message_unsubscribe_users()
+            Model.browse(res_id).sudo().message_unsubscribe_users([request.uid])
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
@@ -240,7 +241,7 @@ class MailController(http.Controller):
     def mail_client_action(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
-            'chatter_needaction_auto': request.env.user.chatter_needaction_auto,
-            'channel_slots': request.env['mail.channel'].channel_fetch_slot()
+            'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
+            'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
         }
         return values

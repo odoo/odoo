@@ -121,6 +121,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
 
         lead_obj = self.pool['crm.lead']
+        partner_obj = self.pool['res.partner']
 
         w = self.browse(cr, uid, ids, context=context)[0]
         opp_ids = [o.id for o in w.opportunity_ids]
@@ -144,6 +145,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead_ids = context.get('active_ids', [])
             vals.update({'lead_ids': lead_ids, 'user_ids': [w.user_id.id]})
             self._convert_opportunity(cr, uid, ids, vals, context=context)
+            for lead in lead_obj.browse(cr, uid, lead_ids, context=context):
+                if lead.partner_id and lead.partner_id.user_id != lead.user_id:
+                    partner_obj.write(cr, uid, [lead.partner_id.id], {'user_id': lead.user_id.id}, context=context)
 
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 

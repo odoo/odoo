@@ -15,6 +15,7 @@ var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
+var dom_utils = require('web.dom_utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -80,7 +81,6 @@ var WidgetButton = common.FormWidget.extend({
     },
     on_confirmed: function() {
         var self = this;
-
         var context = this.build_context();
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
@@ -88,6 +88,8 @@ var WidgetButton = common.FormWidget.extend({
                 if (!_.isObject(reason)) {
                     self.view.recursive_reload();
                 }
+            }).fail(function () {
+                self.view.recursive_reload();
             });
     },
     check_disable: function() {
@@ -437,12 +439,12 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
             var domain = pyeval.eval('domain', this.get('value'));
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + ' selected records');
+                self.$('.o_count').text(results + _t(' selected records'));
                 if (self.get('effective_readonly')) {
-                    self.$('button').text('See selection ');
+                    self.$('button').text(_t('See selection '));
                 }
                 else {
-                    self.$('button').text('Change selection ');
+                    self.$('button').text(_t('Change selection '));
                 }
                 self.$('button').append($("<span/>").addClass('fa fa-arrow-right'));
             });
@@ -451,9 +453,9 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$('.o_debug_input').val(this.get('value'));
             }
         } else {
-            this.$('.o_count').text('No selected record');
+            this.$('.o_count').text(_t('No selected record'));
             var $arrow = this.$('button span').detach();
-            this.$('button').text('Select records ').append($("<span/>").addClass('fa fa-arrow-right'));
+            this.$('button').text(_('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
         }
     },
     on_click: function(event) {
@@ -463,7 +465,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         var dialog = new common.DomainEditorDialog(this, {
             res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
             default_domain: this.get('value'),
-            title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+            title: this.get('effective_readonly') ? _t('Selected records') : _t('Select records...'),
             readonly: this.get('effective_readonly'),
             disable_multiple_selection: this.get('effective_readonly'),
             no_create: this.get('effective_readonly'),
@@ -573,16 +575,8 @@ var FieldText = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     render_value: function() {
         if (! this.get("effective_readonly")) {
             var show_value = formats.format_value(this.get('value'), this, '');
-            if (show_value === '') {
-                this.$textarea.css('height', parseInt(this.default_height, 10)+"px");
-            }
             this.$textarea.val(show_value);
-            if (! this.auto_sized) {
-                this.auto_sized = true;
-                autosize(this.$textarea);
-            } else {
-                this.$textarea.trigger("autosize");
-            }
+            dom_utils.autoresize(this.$textarea, {parent: this, min_height: parseInt(this.default_height)});
         } else {
             var txt = this.get("value") || '';
             this.$(".oe_form_text_content").text(txt);

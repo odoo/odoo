@@ -9,7 +9,7 @@
              <pivot string="Sales Analysis" disable_linking="True">
                  <field name="team_id" type="col"/>
                  <field name="date" interval="month" type="row"/>
-                 <field name="price_total" type="measure"/>
+                 <field name="price_subtotal" type="measure"/>
              </pivot>
          </field>
     </record>
@@ -20,7 +20,7 @@
          <field name="arch" type="xml">
              <graph string="Sales Analysis">
                  <field name="date" type="row"/>
-                 <field name="price_total" type="measure"/>
+                 <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
     </record>
@@ -31,7 +31,7 @@
         <field name="model_id">sale.report</field>
         <field name="domain">['&amp;', ('date','&lt;=', time.strftime('%%Y-12-31')), '&amp;', ('date','&gt;=',time.strftime('%%Y-01-01')), ('state','not in',('cancel',))]</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['state'], 'measures': ['price_total']}</field>
+        <field name="context">{'group_by': ['state'], 'measures': ['price_subtotal']}</field>
     </record>
     <record id="filter_sale_report_salespersons" model="ir.filters">
         <field name="name">By Salespersons</field>

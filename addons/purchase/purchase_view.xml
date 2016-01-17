@@ -251,6 +251,8 @@
                                 <group>
                                     <field name="date_planned"/>
                                     <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
+                                    <field name="dest_address_id" groups="stock.group_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
+                                    <field name="default_location_dest_id_usage" invisible="1"/>
                                     <field name="incoterm_id"/>
                                 </group>
                                 <group>
@@ -562,8 +564,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
-                       type="action" icon="fa-shopping-cart"
-                       groups="base.group_no_one">
+                       type="action" icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </div>

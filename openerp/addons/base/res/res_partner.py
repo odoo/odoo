@@ -5,6 +5,7 @@ import datetime
 from lxml import etree
 import math
 import pytz
+import threading
 import urlparse
 
 import openerp
@@ -260,7 +261,7 @@ class res_partner(osv.Model, format_address):
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
-        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users', auto_join=True),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields
@@ -303,13 +304,16 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
+            return False
+
         img_path = openerp.modules.get_module_resource(
             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
         # colorize user avatars
-        if not is_company:
+        if not is_company and colorize:
             image = tools.image_colorize(image)
 
         return tools.image_resize_image_big(image.encode('base64'))

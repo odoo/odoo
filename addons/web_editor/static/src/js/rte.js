@@ -512,6 +512,24 @@ var RTE = Widget.extend({
             return;
         }
 
+        if ($target.is('a')) {
+            // add contenteditable on link to improve its editing behaviour
+            $target.attr('contenteditable', true);
+            setTimeout(function () {
+                $editable.attr('contenteditable', false);
+            });
+            // once clicked outside, remove contenteditable on link
+            var reactive_editable = function(e){
+                if($target.is(e.target)) {
+                    return;
+                }
+                $target.removeAttr('contenteditable');
+                $editable.attr('contenteditable', true);
+                $(document).off('mousedown', reactive_editable);
+            }
+            $(document).on('mousedown', reactive_editable);
+        }
+
         if (this && this.$last && (!$editable.size() || this.$last[0] != $editable[0])) {
             var $destroy = this.$last;
             history.splitNext();

@@ -8,6 +8,7 @@ var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
+var session = require('web.session');
 var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
 
@@ -246,12 +247,26 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
 
         function process_data(data) {
             return _.map(data, function(d) {
-                return _.object(['id', 'name', 'status'], d);
+                return _.object(['id', 'display_name', 'status'], d);
             });
         }
     }
 });
 
+function showCalendarInvitation(db, action, id, view, attendee_data) {
+    session.session_bind(session.origin).then(function () {
+        if (session.session_is_valid(db) && session.username !== "anonymous") {
+            window.location.href = _.str.sprintf('/web?db=%s#id=%s&view_type=form&model=calendar.event', db, id);
+        } else {
+            $("body").prepend(QWeb.render('CalendarInvitation', {attendee_data: JSON.parse(attendee_data)}));
+        }
+    });
+}
+
 core.form_widget_registry.add('many2manyattendee', Many2ManyAttendee);
+
+return {
+    showCalendarInvitation: showCalendarInvitation,
+};
 
 });

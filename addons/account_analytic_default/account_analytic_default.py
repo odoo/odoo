@@ -13,7 +13,7 @@ class account_analytic_default(osv.osv):
     _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of analytic distribution"),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Select a product which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)"),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', help="Select a partner which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade', help="Select a user which will use analytic account specified in analytic default."),
@@ -113,7 +113,6 @@ class product_template(osv.Model):
     _inherit = 'product.template'
     
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
-        Analytic = self.pool['account.analytic.default']
         res = {}
         for product_tmpl_id in self.browse(cr, uid, ids, context=context):
             res[product_tmpl_id.id] = sum([p.rules_count for p in product_tmpl_id.product_variant_ids])
@@ -131,3 +130,17 @@ class product_template(osv.Model):
         # Remove context so it is not going to filter on product_id with active_id of template
         result['context'] = "{}"
         return result
+
+
+class stock_move(osv.Model):
+    _inherit = 'stock.move'
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        # It will set the default analtyic account on the invoice line
+        partner_id = self.pool['account.invoice'].browse(cr, uid, invoice_line_vals.get('invoice_id'), context=context).partner_id.id
+        if 'account_analytic_id' not in invoice_line_vals or not invoice_line_vals.get('account_analytic_id'):
+            rec = self.pool['account.analytic.default'].account_get(cr, uid, move.product_id.id, partner_id, uid, time.strftime('%Y-%m-%d'), company_id=move.company_id.id, context=context)
+            if rec:
+                invoice_line_vals.update({'account_analytic_id': rec.analytic_id.id})
+        res = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        return res

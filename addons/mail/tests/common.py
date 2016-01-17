@@ -36,8 +36,12 @@ class TestMail(common.SavepointCase):
         def send_email(self, cr, uid, message, *args, **kwargs):
             return message['Message-Id']
 
+        def mail_group_message_get_recipient_values(self, cr, uid, ids, notif_message=None, recipient_ids=None, context=None):
+            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, ids, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+
         cls.env['ir.mail_server']._patch_method('build_email', build_email)
         cls.env['ir.mail_server']._patch_method('send_email', send_email)
+        cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
 
         # User groups
         user_group_employee = cls.env.ref('base.group_user')
@@ -118,4 +122,5 @@ class TestMail(common.SavepointCase):
         # Remove mocks
         cls.env['ir.mail_server']._revert_method('build_email')
         cls.env['ir.mail_server']._revert_method('send_email')
+        cls.env['mail.channel']._revert_method('message_get_recipient_values')
         super(TestMail, cls).tearDownClass()

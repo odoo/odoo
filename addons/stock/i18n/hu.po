@@ -5,13 +5,14 @@
 # Translators:
 # Kisrobert <kisrobi@gmail.com>, 2015
 # Kovács Tibor <kovika@gmail.com>, 2015
-# Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
+# Martin Trigaux, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-07 17:55+0000\n"
+"POT-Creation-Date: 2016-01-13 09:40+0000\n"
+"PO-Revision-Date: 2016-01-14 11:12+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +276,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Kézzel létehozva</strong><br/>\n                                        <span class=\"small\">< 50 beszállító</span>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Kézzel létehozva</strong><br/>\n                                        <span class=\"small\">&lt; 50 beszállító</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1293,6 +1294,14 @@ msgid "Corridor (X)"
 msgstr "X pozíció"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_immediate_transfer.py:31
+#, python-format
+msgid ""
+"Could not reserve all requested products. Please use the 'Mark as Todo' "
+"button to handle the reservation manually."
+msgstr "Nem tudja lefoglalni az összes igényelt árut. Kérem használja a 'Megjelölés feladatként' gombot a foglalás kézzel történő elvégzéséhez."
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
 msgstr "Újrarendelés létrehozás"
@@ -1422,7 +1431,7 @@ msgstr "Létrehozás dátuma"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
 msgid "Creates"
-msgstr ""
+msgstr "Szállításra kerülő csomagok"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -3361,12 +3370,6 @@ msgstr "Maximális mennyiség"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_ids
 msgid "Messages"
 msgstr "Üzenetek"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_message_ids
-#: model:ir.model.fields,help:stock.field_stock_production_lot_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -5486,6 +5489,12 @@ msgid "Stockable"
 msgstr "Készletezhető"
 
 #. module: stock
+#: code:addons/stock/product.py:400
+#, python-format
+msgid "Stockable Product"
+msgstr "Raktározható termék"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
 msgstr "Ellátott raktárépület"
@@ -6098,6 +6107,11 @@ msgstr "Nyomonkövetés"
 #, python-format
 msgid "Transfer"
 msgstr "Átvitel"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
+msgid "Transfer Destination Address"
+msgstr "Transzfer célállomás címek"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -6940,7 +6954,7 @@ msgstr "mozgás mely a vissza mozgatást hozta létre"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
 msgid "of"
-msgstr ""
+msgstr "ebből"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form

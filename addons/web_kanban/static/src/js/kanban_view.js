@@ -136,6 +136,12 @@ var KanbanView = View.extend({
         var deferred = this.grouped ? this.load_groups() : this.load_records();
         return deferred.then(function (data) {
             self.data = data;
+            if (self.grouped) {
+                var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                    return group.dataset.ids;
+                }));
+                self.dataset.alter_ids(new_ids);
+            }
         });
     },
 
@@ -364,6 +370,7 @@ var KanbanView = View.extend({
             this.$el.addClass('o_kanban_grouped');
             this.render_grouped(fragment);
         } else if (this.data.is_empty) {
+            this.$el.addClass('o_kanban_ungrouped');
             this.render_no_content(fragment);
         } else {
             this.$el.addClass('o_kanban_ungrouped');
@@ -620,7 +627,7 @@ var KanbanView = View.extend({
                 self.reload_record(record);
                 self.resequence_column(column);
             }
-        });
+        }).fail(this.do_reload);
     },
 
     update_record: function(event) {
@@ -699,6 +706,7 @@ var KanbanView = View.extend({
         return this.load_records(offset, column.dataset).then(function (result) {
             _.each(result.records, function (r) {
                 column.add_record(r, {no_update: true});
+                self.dataset.add_ids([r.id]);
             });
             column.offset += self.limit;
             column.remaining = Math.max(column.remaining - self.limit, 0);

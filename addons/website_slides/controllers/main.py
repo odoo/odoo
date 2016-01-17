@@ -160,10 +160,10 @@ class website_slides(http.Controller):
             self._set_viewed_slide(slide, 'slide')
         return request.website.render('website_slides.slide_detail_view', values)
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/pdf_content', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas.decode('base64')
+        response.data = slide.datas and slide.datas.decode('base64') or ''
         response.mimetype = 'application/pdf'
         return response
 
@@ -282,11 +282,11 @@ class website_slides(http.Controller):
             return preview
         existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
         if existing_slide:
-            preview['error'] = _('This video already exists in this channel <a target="_blank" href="/slides/slide/%s">click here to view it </a>' % existing_slide.id)
+            preview['error'] = _('This video already exists in this channel <a target="_blank" href="/slides/slide/%s">click here to view it </a>') % existing_slide.id
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
-            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s' % values['error'])
+            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s') % values['error']
             return preview
         return values
 
@@ -318,7 +318,7 @@ class website_slides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s' % e.message)}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------

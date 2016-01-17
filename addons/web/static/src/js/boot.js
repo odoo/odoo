@@ -51,7 +51,6 @@
         testing: typeof QUnit === "object",
         debug: debug,
         remaining_jobs: jobs,
-        version: "community",
 
         __DEBUG__: {
             get_dependencies: function (name, transitive) {

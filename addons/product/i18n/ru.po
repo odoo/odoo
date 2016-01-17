@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Denis Trepalin <zekarious@gmail.com>, 2015
+# Gennady Marchenko <gennadym@gmail.com>, 2016
+# SV <svilij@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-13 19:44+0000\n"
-"Last-Translator: Denis Trepalin <zekarious@gmail.com>\n"
+"PO-Revision-Date: 2016-01-15 19:47+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +41,7 @@ msgstr "%s %% скидка"
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% скидки и %s надбавки"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -135,7 +137,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
-msgstr ""
+msgstr "8-портовый коммутатор"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -553,13 +555,13 @@ msgstr "Тип категории"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Название категории"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Категория:  %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -594,12 +596,12 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "Нажмите, чтобы добавить новую единицу  измерения."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Нажмите, чтобы создать прайс-лист."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -608,12 +610,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Нажмите, чтобы определить новый продукт."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "Коды"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -657,7 +659,7 @@ msgstr "Компоненты"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Вычислить Стоимость"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -680,6 +682,12 @@ msgstr "Компьютер всё-в-одном"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Компьютеры"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1097,7 +1105,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Фиксированная Цена"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1664,7 +1672,7 @@ msgstr "Управление упаковкой товаров"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Управление Вариантами Продукта"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1747,7 +1755,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "More features."
-msgstr ""
+msgstr "Больше Возможностей"
 
 #. module: product
 #: model:product.product,name:product.product_product_21
@@ -1889,12 +1897,12 @@ msgstr "Упаковка"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Packaging Type"
-msgstr ""
+msgstr "Тип Упаковки"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr ""
+msgstr "Упаковка"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1926,17 +1934,17 @@ msgstr "Флешка, SP-4"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Процент (скидки)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Процент Цены"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Материальный"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2076,7 +2084,7 @@ msgstr "Прайс-листы"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Прайс-листы на Продукты"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -2493,6 +2501,12 @@ msgstr "Нумерация"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "Сервер"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -3071,7 +3085,7 @@ msgstr "Счетчик непрочтённых сообщений"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "Период действия"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name

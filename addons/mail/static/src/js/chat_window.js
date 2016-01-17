@@ -3,10 +3,14 @@ odoo.define('mail.ChatWindow', function (require) {
 
 var ChatThread = require('mail.ChatThread');
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
 var _t = core._t;
+
+var HEIGHT_OPEN = '400px';
+var HEIGHT_FOLDED = '28px';
 
 return Widget.extend({
     template: "mail.ChatWindow",
@@ -16,7 +20,7 @@ return Widget.extend({
         "click .o_chat_title": "on_click_fold",
     },
 
-    init: function (parent, channel_id, title, is_folded, options) {
+    init: function (parent, channel_id, title, is_folded, unread_msgs, options) {
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
@@ -25,64 +29,72 @@ return Widget.extend({
         this.options = _.defaults(options || {}, {
             display_stars: true,
         });
-        this.unread_msgs = -1;
+        this.unread_msgs = unread_msgs || 0;
+        this.is_hidden = false;
     },
     start: function () {
-        this.$content = this.$('.o_chat_content');
         this.$input = this.$('.o_chat_input input');
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
-            display_avatar: false,
             display_needactions: false,
             display_stars: this.options.display_stars,
         });
-        this.thread.on('toggle_star_status', this, function (message_id) {
-            this.trigger('toggle_star_status', message_id);
-        });
+        this.thread.on('toggle_star_status', null, this.trigger.bind(this, 'toggle_star_status'));
+        this.thread.on('redirect_to_channel', null, this.trigger.bind(this, 'redirect_to_channel'));
+        this.thread.on('redirect', null, this.trigger.bind(this, 'redirect'));
 
-        this.fold();
-        var def = this.thread.appendTo(this.$content);
+        if (this.folded) {
+            this.$el.css('height', HEIGHT_FOLDED);
+        }
+        var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
     },
     render: function (messages) {
-        if (this.folded) {
-            this.unread_msgs++;
-        }
-        this.update_header();
+        this.update_unread(this.unread_msgs);
         this.thread.render(messages, {display_load_more: false});
     },
-    update_header: function () {
-        var title = this.unread_msgs > 0 ?
-            this.title + ' (' + this.unread_msgs + ')' : this.title;
-        this.$('.o_chat_title').text(title);
-    },
-    scrollBottom: function () {
-        this.$content.scrollTop(this.$content[0].scrollHeight);
+    update_unread: function (counter) {
+        this.unread_msgs = counter;
+        this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
     },
     fold: function () {
-        this.update_header();
         this.$el.animate({
-            height: this.folded ? "28px" : "333px"
+            height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
         });
     },
-    toggle_fold: function () {
-        this.folded = !this.folded;
+    toggle_fold: function (fold) {
+        this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
-            this.unread_msgs = 0;
+            this.thread.scroll_to();
         }
         this.fold();
     },
+    do_show: function () {
+        this.is_hidden = false;
+        this._super.apply(this, arguments);
+    },
+    do_hide: function () {
+        this.is_hidden = true;
+        this._super.apply(this, arguments);
+    },
+    do_toggle: function (display) {
+        this.is_hidden = _.isBoolean(display) ? !display : !this.is_hidden;
+        this._super.apply(this, arguments);
+    },
     on_keydown: function (event) {
-        if (event.which === $.ui.keyCode.ENTER) {
+        // ENTER key (avoid requiring jquery ui for external livechat)
+        if (event.which === 13) {
+            var content = _.str.trim(this.$input.val());
             var message = {
-                content: this.$input.val(),
+                content: content,
                 attachment_ids: [],
                 partner_ids: [],
-                channel_id: this.channel_id,
             };
             this.$input.val('');
-            this.trigger('post_message', message);
+            if (content) {
+                this.trigger('post_message', message, this.channel_id);
+            }
         }
     },
     on_click_close: function (event) {
@@ -91,8 +103,10 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        this.trigger("fold_channel", this.channel_id);
-        this.toggle_fold();
+        if (config.device.size_class !== config.device.SIZES.XS) {
+            this.toggle_fold();
+            this.trigger("fold_channel", this.channel_id, this.folded);
+        }
     },
 });
 
