@@ -36,7 +36,7 @@ class test_inherits(common.TransactionCase):
         # the field daughter.name must have required=False and "Baz" as default
         field = daughter._fields['name']
         self.assertFalse(field.required)
-        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(field.default(daughter), "Baz")
         self.assertEqual(daughter._defaults.get('name'), "Baz")
         self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
 

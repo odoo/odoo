@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-01-06 08:11+0000\n"
+"PO-Revision-Date: 2016-01-15 02:40+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1622,7 +1622,7 @@ msgid ""
 "totally independently. So, you can enter various different analytic operations\n"
 "that have no counterpart in the general financial accounts.\n"
 "    "
-msgstr "\n用于定义财务分析项目的模块。\n================================================\n\n在OpenERP中，财务分析虽与常规财务相连，但却是\n完全独立的。因此，可以使用许多不同的分析操作，\n即使在常规财务会计模块中没有对应功能。\n    "
+msgstr "\n用于定义分析会计对象的模块。\n================================================\n\n在OpenERP中，分析会计虽与常规财务相连，但却是\n完全独立的。因此，可以使用许多不同的分析操作，\n即使在常规财务会计模块中没有对应功能。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -5343,12 +5343,12 @@ msgstr "基础导入 模块"
 #. module: base
 #: help:ir.actions.server,model_id:0
 msgid "Base model on which the server action runs."
-msgstr "服务活动运行的基本模块。"
+msgstr "服务器动作运行的基本模型。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
 msgid "Base module holding website-related stuff for partner model"
-msgstr "为合作伙伴模块执行基于网站任务的基础模块"
+msgstr "为合作伙伴模型执行基于网站任务的基础模块"
 
 #. module: base
 #: selection:ir.ui.view,mode:0
@@ -6521,12 +6521,12 @@ msgstr "创建菜单"
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in another model"
-msgstr "在另外的模块里将创建一条新记录。"
+msgstr "在其他模型里创建一条新记录。"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in the Base Model"
-msgstr "在基本模块中创建新记录"
+msgstr "在基本模型中创建新记录"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -7257,7 +7257,7 @@ msgstr "文档管理系统"
 #: code:addons/base/ir/ir_model.py:793 code:addons/base/ir/ir_model.py:796
 #, python-format
 msgid "Document model"
-msgstr "文档模型"
+msgstr "单据模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
@@ -9506,7 +9506,7 @@ msgstr "工作, 部门, 员工 详情"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Jobs, Recruitment, Applications, Job Interviews, Surveys"
-msgstr "工作，招聘，应聘，面谈，调查"
+msgstr "工作，招聘，应聘，面试，调查"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
@@ -10171,7 +10171,7 @@ msgstr "销售团队管理"
 #. module: base
 #: model:res.groups,name:base.group_website_designer
 msgid "Manage Website and qWeb view"
-msgstr "网站和qWeb视图管理"
+msgstr "管理网站和qWeb视图"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -10559,7 +10559,7 @@ msgstr "方法所在的模型名称，如'res.partner'"
 #: code:addons/base/ir/ir_ui_view.py:576 code:addons/base/ir/ir_ui_view.py:790
 #, python-format
 msgid "Model not found: %(model)s"
-msgstr "没有找到模块: %(model)s"
+msgstr "没有找到模型: %(model)s"
 
 #. module: base
 #: help:ir.values,model:0
@@ -11982,7 +11982,7 @@ msgstr "展示你的团队"
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "Preview Header/Footer"
-msgstr "预览 页首/页脚"
+msgstr "预览页首/页脚"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_report
@@ -15025,7 +15025,7 @@ msgstr "使用公司地址"
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
 msgid "Use a relation field on the base model"
-msgstr "在基础模块中使用关系字段"
+msgstr "在基础模型中使用关系字段"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -15040,7 +15040,7 @@ msgstr "人力资源使用的游戏化过程s.\n\n人力资源高级职员现在
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
 msgid "Use the base model of the action"
-msgstr "使用活动的基本模块"
+msgstr "使用活动的基本模型"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:209 code:addons/base/ir/ir_fields.py:242
@@ -15234,7 +15234,7 @@ msgstr "视图:"
 #: field:ir.ui.view,arch:0 view:ir.ui.view.custom:base.view_view_custom_form
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
-msgstr "视图架构"
+msgstr "视图结构"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_view_editor
@@ -15517,14 +15517,14 @@ msgstr "西撒哈拉"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr "如果首先选择了一个关系型字段，这个字段可用于选择目标单据类型的目标字段。"
+msgstr "如果首先选择了一个关系型字段，这个字段可用于选择目标单据模型的目标字段。"
 
 #. module: base
 #: help:ir.actions.server,sub_object:0
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的单据类型。"
+msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的单据模型。"
 
 #. module: base
 #: view:workflow:base.view_workflow_diagram
@@ -15696,7 +15696,7 @@ msgstr "编写将运行的Python代码。可以使用有限的特定变量，详
 msgid ""
 "Write a python expression, beginning with object, that gives the record to "
 "update. An expression builder is available in the help tab. Examples:"
-msgstr "从对象那写一个python表达式，以规定记录更新。例如："
+msgstr "Write a python expression, beginning with object, that gives the record to update. An expression builder is available in the help tab. Examples:"
 
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
@@ -16028,7 +16028,7 @@ msgstr "假"
 msgid ""
 "file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
-msgstr "文件编码，请确信使用相同的编码查看和编辑。"
+msgstr "文件编码，请使用相同的编码方式查看和编辑。"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -16110,7 +16110,7 @@ msgstr "待译术语: '%s'"
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
-msgstr "object or obj:当动作触发时浏览的记录。"
+msgstr "object或obj: 触发动作的记录的browse_record"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16169,7 +16169,7 @@ msgstr "res_config_contents"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr "self: 触发活动的ORM模块记录"
+msgstr "self: 触发动作的记录的ORM模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
