@@ -3,13 +3,13 @@
 # * account_asset
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-10-23 17:03+0000\n"
+"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"PO-Revision-Date: 2016-01-16 10:55+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -133,6 +133,7 @@ msgstr "Eszköz kezdő dátum"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
 msgstr "Eszköz típus"
 
@@ -394,6 +395,7 @@ msgstr "Késleltetett bevételi számla"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
 msgstr "Késleltetett bevétel típus"
 
@@ -493,13 +495,13 @@ msgstr "Név megjelenítése"
 #: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Move"
-msgstr "Megsemmisítési mozgatás"
+msgstr "Vagyoni eszköz mozgatása megsemmisítésre"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:277
 #, python-format
 msgid "Disposal Moves"
-msgstr "Megsemmisítési mozgatások"
+msgstr "Vagyoni eszközök mozgatása megsemmisítésre"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:468
@@ -721,11 +723,6 @@ msgstr "Lineáris"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
 msgid "Messages"
 msgstr "Üzenetek"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -1027,16 +1024,6 @@ msgstr "Olvasatlan üzenetek számlálója"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
 msgstr "Kereskedő"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
