@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-26 09:05+0000\n"
-"PO-Revision-Date: 2015-11-27 08:49+0000\n"
+"PO-Revision-Date: 2016-01-15 07:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -391,13 +391,13 @@ msgstr "${object.event_id.name} - تذكير"
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
-msgstr ""
+msgstr "%s في %s إلى\n %s في %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:773
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s في (%s إلى %s) (%s)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -520,7 +520,7 @@ msgstr "التقويم"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "تنبيه الرزنامة"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -837,12 +837,7 @@ msgstr "عند التفعيل، توجد رسالة جديدة"
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
-
-#. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
-msgid "Important Messages"
-msgstr "رسائل مهمة"
+msgstr "إذا أزلت تحديد الحقل نشط، سيسمح لك هذا إخفاء تنبيه الحدث ومعلوماته دون حذفه من النظام."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1381,6 +1376,7 @@ msgstr "وحدة القياس"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_unread
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "رسائل غير مقروءة"
 
