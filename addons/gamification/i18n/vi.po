@@ -6,20 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-30 04:14+0000\n"
-"PO-Revision-Date: 2015-03-30 04:14+0000\n"
+"POT-Creation-Date: 2016-01-17 04:44+0000\n"
+"PO-Revision-Date: 2016-01-17 04:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: \n"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_badge_received
-msgid ""
-"\n"
+msgid "\n"
 "        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
 "                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
@@ -208,19 +206,19 @@ msgid "<="
 msgstr "<="
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:756
+#: code:addons/gamification/models/challenge.py:760
 #, python-format
 msgid "<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge."
 msgstr "<br/>Không có ai đạt được hết các tiêu chí, không có huy chương nào được trao cho thử thách này."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:754
+#: code:addons/gamification/models/challenge.py:758
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr "<br/>Phần thưởng (huy chương %s) dành cho những người thành công đã đươc gửi đến %s."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:763
+#: code:addons/gamification/models/challenge.py:767
 #, python-format
 msgid "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
 msgstr "<br/>Những phần thưởng đặc biết đã được gửi đến những người có năng lực cạnh tranh cao nhất. Thứ hạng cho thử thách này là:"
@@ -341,7 +339,7 @@ msgstr "Chấp thuận"
 #. module: gamification
 #: field:gamification.goal.definition,action_id:0
 msgid "Action"
-msgstr "Action"
+msgstr "Hành động"
 
 #. module: gamification
 #: field:gamification.badge,active:0
@@ -356,27 +354,27 @@ msgstr "Các tùy chọn nâng cao"
 #. module: gamification
 #: field:gamification.badge,rule_auth:0
 msgid "Allowance to Grant"
-msgstr "Allowance to Grant"
+msgstr "Cho phép trao"
 
 #. module: gamification
 #: help:gamification.challenge,user_domain:0
 msgid "Alternative to a list of users"
-msgstr "Alternative to a list of users"
+msgstr "Thay thế cho một danh sách người dùng"
 
 #. module: gamification
 #: field:gamification.challenge,category:0
 msgid "Appears in"
-msgstr "Appears in"
+msgstr "Xuất hiện ở"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr "Assign Challenge To"
+msgstr "Giao Thử thách cho"
 
 #. module: gamification
 #: field:gamification.badge,rule_auth_user_ids:0
 msgid "Authorized Users"
-msgstr "Authorized Users"
+msgstr "Người dùng có thẩm quyền"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -669,7 +667,7 @@ msgstr "Mô tả thử thách: nó làm gì, hướng đến ai, tại sao nó q
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Mô tả cái mà họ đã làm và tại sao nó quan trọng (sẽ mang tính công cộng)"
+msgstr "Mô tả cái chúng làm và tại sao nó quan trọng (sẽ mang tính công cộng)"
 
 #. module: gamification
 #: field:gamification.badge,description:0
@@ -719,7 +717,7 @@ msgid "End Date"
 msgstr "Ngày kết thúc"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:561
+#: code:addons/gamification/models/challenge.py:565
 #: code:addons/gamification/models/goal.py:148
 #: code:addons/gamification/models/goal.py:457
 #, python-format
@@ -945,7 +943,7 @@ msgstr "Được trao bởi"
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Granting"
-msgstr "Granting"
+msgstr "Trao tặng"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1254,10 +1252,10 @@ msgstr "Không giới hạn gửi hàng tháng"
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "No one, assigned through challenges"
-msgstr "No one, assigned through challenges"
+msgstr "Không ai, được gán (cấu hình) ở form thử thách"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:766
+#: code:addons/gamification/models/challenge.py:770
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr "Không ai đáp ứng được các điều kiện để nhận các huy chương đặc biệt."
@@ -1315,7 +1313,7 @@ msgstr "Participating"
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "People having some badges"
-msgstr "People having some badges"
+msgstr "Người đã có Huy chương"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1433,7 +1431,7 @@ msgid "Responsible"
 msgstr "Chịu trách nhiệm"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:561
+#: code:addons/gamification/models/challenge.py:565
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr "Retrieving progress for personal challenge without user information"
@@ -1638,7 +1636,7 @@ msgid "The action that will be called to update the goal value."
 msgstr "Hành động mà sẽ được gọi để cập nhật giá trị của chỉ tiêu."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:750
+#: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "Thử thách %s được kết thúc."
@@ -2000,3 +1998,4 @@ msgstr ""
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "this month"
 msgstr "tháng này"
+
