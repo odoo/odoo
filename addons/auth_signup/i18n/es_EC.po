@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-16 13:15+0000\n"
-"PO-Revision-Date: 2015-12-17 08:25+0000\n"
+"PO-Revision-Date: 2016-01-15 04:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-8/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Le han invitado conectarse a \"${object.company_id.name}\"  para tener acceso a sus documentos en Odoo.\n                    </p>\n                    <p>\n                        Para aceptar la invitación haga clic en el siguiente enlace:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Aceptar la invitación de \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Gracias,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -61,7 +61,7 @@ msgstr ""
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Invitación de ${object.company_id.name} para conectar a Odoo"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -78,13 +78,13 @@ msgstr ""
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Permitir ingresar a usuarios externos"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Se ha enviado un correo electrónico con las credenciales para restablecer su contraseña"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -97,7 +97,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:58
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Otro usuario se ha registrado usando este dirección de correo electrónico"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:130
@@ -119,40 +119,40 @@ msgstr ""
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Confirmar contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "No se ha podido crear una cuenta nueva."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "No se puede restablecer su contraseña"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Habilitar restablecimiento de la contraseña desde la página de inicio de sesión"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Si no está marcado, sólo los usuarios invitados pueden ingresar."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Palabra de ingreso no válida"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Nunca conectado"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -167,12 +167,12 @@ msgstr "Contraseña"
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Restablecer contraseña"
 
 #. module: auth_signup
 #: view:website:web.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Restablecer contraseña"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
@@ -183,47 +183,47 @@ msgstr ""
 #: code:addons/auth_signup/res_users.py:267
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Restablecimiento de contraseña: usuario o correo electrónico no válido"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Enviar instrucciones de restablecimiento de la contraseña"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Enviar un correo de invitación"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
-msgstr ""
+msgstr "Registrarse"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Expiración del ingreso"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Palabra de ingreso"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Tipo de la palabra de ingreso"
 
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "La palabra de ingreso es válida"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "URL de ingreso"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -233,12 +233,12 @@ msgstr "Estado"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Plantilla de usuario para los nuevos usuarios creados a través del ingreso"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "Esto permite a los usuarios lanzar un restablecimiento de la contraseña desde la página de inicio de sesión."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -248,14 +248,14 @@ msgstr "Usuarios"
 #. module: auth_signup
 #: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Su correo electrónico"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Su nombre"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "Por ejemplo, JJohn Smith"
