@@ -129,7 +129,6 @@ class ir_translation_import_cursor(object):
         find_expr = """
                 irt.lang = ti.lang
             AND irt.type = ti.type
-            AND irt.module = ti.module
             AND irt.name = ti.name
             AND (
                     (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
