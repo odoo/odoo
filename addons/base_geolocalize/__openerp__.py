@@ -4,7 +4,6 @@
     'name': 'Partners Geolocation',
     'version': '2.0',
     'category': 'Customer Relationship Management',
-    'author': 'Odoo SA',
     'description': """
 Partners Geolocation
 ========================

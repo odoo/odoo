@@ -290,7 +290,7 @@ def load_information_from_description_file(module, mod_path=None):
             # default values for descriptor
             info = {
                 'application': False,
-                'author': 'Odoo SA',
+                'author': 'Odoo S.A.',
                 'auto_install': False,
                 'category': 'Uncategorized',
                 'depends': [],
@@ -301,7 +301,7 @@ def load_information_from_description_file(module, mod_path=None):
                 'post_load': None,
                 'version': '1.0',
                 'web': False,
-                'website': 'http://www.odoo.com',
+                'website': 'https://www.odoo.com',
                 'sequence': 100,
                 'summary': '',
             }

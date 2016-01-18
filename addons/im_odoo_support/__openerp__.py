@@ -4,7 +4,6 @@
     'summary': 'Chat with the Odoo collaborators',
     'category': 'Tools',
     'complexity': 'medium',
-    'website': 'https://www.odoo.com/',
     'description':
         """
 Odoo Live Support

@@ -3,7 +3,6 @@
 {
     'name' : 'Fleet Management',
     'version' : '0.1',
-    'author' : 'OpenERP S.A.',
     'sequence': 165,
     'category': 'Managing vehicles and contracts',
     'website' : 'https://www.odoo.com/page/fleet',
