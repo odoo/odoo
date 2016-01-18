@@ -152,7 +152,7 @@ class project_task(osv.osv):
             "res_model": "sale.order",
             "views": [[False, "form"]],
             "res_id": task.sale_line_id.order_id.id,
-            "context": {"create": False},
+            "context": {"create": False, "show_sale": True},
         }
 
 
