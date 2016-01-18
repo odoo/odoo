@@ -169,7 +169,7 @@ var class_to_style = function ($editable) {
         var css = getMatchedCSSRules(this);
         var style = $target.attr("style") || "";
         _.each(css, function (v,k) {
-            if (style.indexOf(k) === -1) {
+            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+":"+v+";"+style;
             }
         });
@@ -187,7 +187,7 @@ var style_to_class = function ($editable) {
         var css = getMatchedCSSRules(this);
         var style = "";
         _.each(css, function (v,k) {
-            if (style.indexOf(k) === -1) {
+            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+":"+v+";"+style;
             }
         });
