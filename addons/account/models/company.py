@@ -18,6 +18,7 @@ class ResCompany(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Tax Cash Basis Journal")
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
