@@ -5,6 +5,7 @@
 # Translators:
 # Kontor Consulting <p.becker@kontor.consulting>, 2015
 # Pascal <paesce@gentlemansclub.de>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2015
 # Wolfgang Taferner, 2016
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-15 04:14+0000\n"
+"PO-Revision-Date: 2016-01-16 11:08+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -289,7 +290,7 @@ msgstr "Nach Verkaufsteam"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "Kann gelieferte Zeilen ändern"
+msgstr "Kann gelieferte Auftragszeilen anpassen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -529,7 +530,7 @@ msgstr "Rabatt auf Auftragspositionen"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr "Zeige 3 Felder auf Verkausaufträgen: Kunde, Rechnungsadresse, Lieferadresse"
+msgstr "Zeige 3 Felder auf Verkaufsaufträgen: Kunde, Rechnungsadresse, Lieferadresse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -685,11 +686,6 @@ msgstr "Als zu erledigen markieren"
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Falls markiert, brauchen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Wichtige Mitteilung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1129,7 +1125,7 @@ msgstr "Zahlungsbedingung"
 #: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr "Definieren sie bitte ein Finanzverkaufsjournal für dieses Unternehmen."
+msgstr "Definieren Sie bitte ein Finanzverkaufsjournal für dieses Unternehmen."
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1362,7 +1358,7 @@ msgstr "Auftragspositionen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Verkausauftragsänderung"
+msgstr "Verkaufsauftragsänderung"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1552,7 +1548,7 @@ msgstr "Setze auf Angebot"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr "Setzen sie Geschäftsbedingungen in ihren Unternehmenseinstellungen."
+msgstr "Setzen Sie Geschäftsbedingungen in Ihren Unternehmenseinstellungen."
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1771,6 +1767,7 @@ msgstr "Maßeinheiten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 
