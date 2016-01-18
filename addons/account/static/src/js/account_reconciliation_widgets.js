@@ -157,7 +157,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.analytic.account",
                     string: _t("Analytic Acc."),
                     type: "many2one",
-                    domain: [['account_type', '=', 'normal']],
                 },
             },
         };
