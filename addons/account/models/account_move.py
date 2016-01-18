@@ -253,7 +253,7 @@ class AccountMoveLine(models.Model):
             #computing the `reconciled` field. As we book exchange rate difference on each partial matching,
             #we can only check the amount in company currency
             reconciled = False
-            digits_rounding_precision = line.company_id.currency_id.rounding
+            digits_rounding_precision = line.company_id.currency_id.decimal_places
             if float_is_zero(amount, digits_rounding_precision) and (line.debit or line.credit):
                 reconciled = True
             line.reconciled = reconciled
