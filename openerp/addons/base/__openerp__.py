@@ -10,9 +10,6 @@
 The kernel of Odoo, needed for all installation.
 ===================================================
 """,
-    'author': 'Odoo SA',
-    'maintainer': 'Odoo SA',
-    'website': 'http://www.openerp.com',
     'depends': [],
     'data': [
         'res/res.lang.csv',

@@ -14,7 +14,6 @@ This module set the right product on all timesheet lines
 according to the order/contract you work on. This allows to
 have real delivered quantities in sales orders.
 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['sale', 'hr_timesheet'],
     'data': ['views/sale_timesheet_view.xml',

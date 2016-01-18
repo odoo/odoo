@@ -11,7 +11,6 @@ This is the base module to manage the generic accounting chart in Odoo.
 
 Install some generic chart of accounts.
     """,
-    'author': 'Odoo',
     'depends': [
         'account',
     ],

@@ -8,7 +8,6 @@ Odoo Contact Form
 ====================
 
         """,
-    'author': 'Odoo SA',
     'depends': ['website_form','project_issue'],
     'data': [
         'data/website_issue_data.xml',

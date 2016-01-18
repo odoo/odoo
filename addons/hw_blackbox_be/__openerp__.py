@@ -14,7 +14,6 @@ Fiscal Data Module Hardware Driver
 This module allows a Point Of Sale client to communicate with a
 connected Belgian Fiscal Data Module.
 """,
-    'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
     'test': [
