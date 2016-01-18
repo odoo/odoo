@@ -59,6 +59,9 @@ var getMatchedCSSRules = function (a) {
                 var style_obj = {};
                 for (var k=0, len=style.length; k<len; k++) {
                     style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
+                    if (new RegExp(style[k] + '\s*:[^:;]+!important' ).test(style.cssText)) {
+                        style_obj[style[k]] += ' !important';
+                    }
                 }
                 rulesCache[r].style = style = style_obj;
             }
@@ -85,6 +88,12 @@ var getMatchedCSSRules = function (a) {
                 style[k] = v;
             }
         });
+    });
+
+    _.each(style, function (v,k) {
+        if (v.indexOf('important') !== -1) {
+            style[k] = v.slice(0, v.length-11);
+        }
     });
 
     if (style.display === 'block') {
