@@ -265,7 +265,7 @@ class sale_order(osv.osv):
             return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % quote.id,
+            'url': '/web/login?redirect=%%2Fquote%%2F%s' % quote.id,
             'target': 'self',
             'res_id': quote.id,
         }
