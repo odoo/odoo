@@ -62,9 +62,15 @@ var FieldTextHtmlSimple = widget.extend({
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
+        this.$content = $();
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<div class="note-editable o_readonly"/>');
+            this.$textarea.hide().after('<iframe class="o_readonly"/>');
+            setTimeout(function () {
+                self.$content = $("body", self.$('iframe').contents()[0]);
+                self.$content.html(self.text_to_html(self.get('value')));
+                self.resize();
+            });
         } else {
             this.$textarea.summernote(this._config());
 
@@ -77,8 +83,10 @@ var FieldTextHtmlSimple = widget.extend({
             var reset = _.bind(this.reset_history, this);
             this.view.on('load_record', this, reset);
             setTimeout(reset, 0);
+
+            this.$content = this.$('.note-editable:first');
+            transcoder.style_to_class(this.$content);
         }
-        this.$content = this.$('.note-editable:first');
 
         $(".oe-view-manager-content").on("scroll", function () {
             $('.o_table_handler').remove();
@@ -113,10 +121,18 @@ var FieldTextHtmlSimple = widget.extend({
             return this.$content.focus();
         };
     },
+    resize: function() {
+        this.$('iframe').css('height', '0px').css('height', Math.max(180, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+    },
     render_value: function() {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
+        if (this.get("effective_readonly")) {
+            this.resize();
+        } else {
+            transcoder.style_to_class(this.$content);
+        }
         if (this.$content.is(document.activeElement)) {
             this.focus();
         }
