@@ -90,6 +90,11 @@ var KanbanView = View.extend({
 
         this.fields_keys = _.keys(this.fields_view.fields);
 
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.default_order;
+        if (!this.dataset._sort.length && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
         // add qweb templates
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
