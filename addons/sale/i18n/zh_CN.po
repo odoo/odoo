@@ -4,14 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 开阖—gilbert <gilbert@osbzr.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-02 04:42+0000\n"
+"PO-Revision-Date: 2016-01-13 00:14+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -234,35 +234,35 @@ msgstr "在销售订单中的地址"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr "预付款"
+msgstr "预收"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "预付款总额"
+msgstr "预收总额"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
-msgstr "预付款发票"
+msgstr "预收发票"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr "预付款产品"
+msgstr "预收产品"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
-msgstr "%s%% 的预付款"
+msgstr "%s%% 的预收"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
-msgstr "预付款：%s %s"
+msgstr "预收：%s %s"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -276,7 +276,7 @@ msgstr "点击“显示要开票的行”"
 msgid ""
 "All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales order form if you prefer."
-msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预付款）开票。"
+msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预收）开票。"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -327,7 +327,7 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr "允许定义你的客户合同条款：开票方法(固定价格，根据计工单，预付款发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n你讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
+msgstr "允许定义你的客户合同条款：开票方法(固定价格，根据计工单，预收发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n你讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -1552,7 +1552,7 @@ msgstr "销售"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "销售预付款发票"
+msgstr "销售预收付款发票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1716,7 +1716,7 @@ msgstr "查找未开票明细"
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
 "                You may have to create it and set it as a default value on this field."
-msgstr "选择一个叫做“预付款产品”的服务类型的产品，。你可以在这个字段创建并且设置默认值。"
+msgstr "选择一个叫做“预收产品”的服务类型的产品，。你可以在这个字段创建并且设置默认值。"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1811,7 +1811,7 @@ msgstr "条款和条件 ..."
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr "预付款发票金额"
+msgstr "预收发票金额"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1842,7 +1842,7 @@ msgstr "总金额。"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr "定金必须是正的"
+msgstr "预收总额的数值必须是正数。"
 
 #. module: sale
 #: code:addons/sale/sale.py:952
@@ -2026,7 +2026,7 @@ msgid ""
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
 "                Use Some Order Lines to invoice a selection of the sales order lines."
-msgstr "用销售订单来生成最终的发票。\n    按总额百分比开具发票。\n    按预设固定量开具固定价格发票。\n    按选择的销售订单开具发票。"
+msgstr "使用整个销售订单开票来生成最终的发票。\n    使用百分比来做总额的百分比票开票。\n    使用固定价格来做固定金额预收开票。\n    使用销售订来做订单行选择开票。"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config

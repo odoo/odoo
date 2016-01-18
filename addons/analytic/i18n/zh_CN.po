@@ -1,21 +1,23 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-17 01:07+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-01-13 00:14+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-18 07:28+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -26,17 +28,17 @@ msgstr "%s (副本)"
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr "树"
+msgstr "账户层级"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr "科目管理员"
+msgstr "账户管理员"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr "客户/合约的名称"
+msgstr "账户/合约的名称"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
@@ -49,27 +51,27 @@ msgstr "金额"
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "辅助核算"
+msgstr "分析会计"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr "辅助核算条目"
+msgstr "分析条目"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "辅助核算明细"
+msgstr "分析明细"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr "解析视图"
+msgstr "分析视图"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -91,7 +93,7 @@ msgstr "已取消"
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "子科目"
+msgstr "子账户"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -174,7 +176,7 @@ msgstr "贷方"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr "货币"
+msgstr "币别"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -216,7 +218,7 @@ msgstr "错误！"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr "错误！你不能循环创建辅助核算项"
+msgstr "错误！不能创建循环的分析账户"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -241,10 +243,9 @@ msgid ""
 msgstr "保存聊天摘要（消息数，...）。本摘要是直接使用HTML格式，以便插入到看板视图。"
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "标识"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
@@ -254,26 +255,19 @@ msgstr "如果要求你关注新消息，勾选此项"
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "如果选择类型’视图‘，这就意味着你将不允许通过此账户创建分类账分录。\n类型'分析账户'表示这是仅用作记账的账户.\n如果选择’合同或项目‘，它将能管理这个账户有效性和开票选项.\n类型’合同模板‘，允许定义一个模板，这样可以容易地使用默认数据。"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
-msgstr ""
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
+msgstr "如果你设置一个公司，选择的货币必须与公司货币一致。\n针对视图类型的分析账户，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的分析账户合并起来。"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -288,19 +282,19 @@ msgstr "是一个关注者"
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最后信息日期"
 
 #. module: analytic
 #: field:account.analytic.account,write_uid:0
 #: field:account.analytic.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新"
 
 #. module: analytic
 #: field:account.analytic.account,write_date:0
 #: field:account.analytic.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后一次更新"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -321,20 +315,17 @@ msgstr "新建"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
+msgstr "一旦合同结束日期已过，或已达到最大服务次数（如支持合同）时，将通过电子邮件通知客户经理与客户续签合同。"
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr "上级辅助核算项"
+msgstr "父分析账户"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
@@ -356,7 +347,7 @@ msgstr "数量"
 #: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr "不允许快速客户创建"
+msgstr "快速账户创建不允许"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -373,7 +364,7 @@ msgstr "续约"
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
+msgstr "设置协议的工作时间上限，基于时间表（比如，有限支持协议的小时数）"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -419,7 +410,7 @@ msgstr "要续签的"
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr "科目的类型"
+msgstr "账户类型"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -440,4 +431,4 @@ msgstr "警告"
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr "你不能在视图类型的科目上创建解析行"
+msgstr "不能在视图账户创建分析行"
