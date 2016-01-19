@@ -38,7 +38,7 @@ class account_voucher(osv.osv):
     _columns = {
         'amount_in_word' : fields.char("Amount in Word", readonly=True, states={'draft':[('readonly',False)]}),
         'allow_check' : fields.related('journal_id', 'allow_check_writing', type='boolean', string='Allow Check Writing'),
-        'number': fields.char('Number', readonly=True),
+        'number': fields.char('Number', readonly=True, copy=False),
     }
 
     def _amount_to_text(self, cr, uid, amount, currency_id, context=None):
