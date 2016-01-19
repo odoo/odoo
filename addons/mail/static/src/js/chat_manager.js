@@ -118,7 +118,7 @@ function strip_html (node, transform_children) {
 function inline (node, transform_children) {
     if (node.nodeType === 3) return node.data;
     if (node.tagName === "BR") return " ";
-    if (node.tagName.match(/^(A|P|DIV)$/)) return transform_children();
+    if (node.tagName.match(/^(A|P|DIV|PRE)$/)) return transform_children();
     node.innerHTML = transform_children();
     return node.outerHTML;
 }
@@ -573,7 +573,7 @@ function on_mark_as_read_notification (data) {
         _.each(data.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
-                channel.needaction_counter -= data.message_ids.length;
+                channel.needaction_counter = Math.max(channel.needaction_counter - data.message_ids.length, 0);
             }
         });
     } else { // if no channel_ids specified, this is a 'mark all read' in the inbox
@@ -581,7 +581,7 @@ function on_mark_as_read_notification (data) {
             channel.needaction_counter = 0;
         });
     }
-    needaction_counter -= data.message_ids.length;
+    needaction_counter = Math.max(needaction_counter - data.message_ids.length, 0);
     chat_manager.bus.trigger('update_needaction', needaction_counter);
 }
 
@@ -948,8 +948,8 @@ var chat_manager = {
         return parse_and_transform(message_body, inline);
     },
 
-    search_partner: function (search_val) {
-        return PartnerModel.call('im_search', [search_val, 20]).then(function(result) {
+    search_partner: function (search_val, limit) {
+        return PartnerModel.call('im_search', [search_val, limit || 20]).then(function(result) {
             var values = [];
             _.each(result, function(user) {
                 var escaped_name = _.escape(user.name);
