@@ -16,7 +16,7 @@ from werkzeug import url_encode
 from dateutil.relativedelta import relativedelta
 
 from openerp.exceptions import UserError, AccessError
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -592,7 +592,8 @@ class hr_employee(osv.Model):
 
     def _get_leave_status(self, cr, uid, ids, name, args, context=None):
         holidays_obj = self.pool.get('hr.holidays')
-        holidays_id = holidays_obj.search(cr, uid,
+        #Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
+        holidays_id = holidays_obj.search(cr, SUPERUSER_ID,
            [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
@@ -604,7 +605,7 @@ class hr_employee(osv.Model):
                 'leave_date_from':False,
                 'leave_date_to':False,
             }
-        for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+        for holiday in self.pool.get('hr.holidays').browse(cr, SUPERUSER_ID, holidays_id, context=context):
             result[holiday.employee_id.id]['leave_date_from'] = holiday.date_from
             result[holiday.employee_id.id]['leave_date_to'] = holiday.date_to
             result[holiday.employee_id.id]['current_leave_state'] = holiday.state

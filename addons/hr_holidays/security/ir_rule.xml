@@ -4,7 +4,7 @@
     <record id="property_rule_holidays_employee" model="ir.rule">
         <field name="name">Employee Holidays</field>
         <field name="model_id" ref="model_hr_holidays"/>
-        <field name="domain_force">['|', ('employee_id.user_id','=',user.id), ('state', '=', 'validate')]</field>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>
