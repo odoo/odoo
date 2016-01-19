@@ -134,7 +134,7 @@ if(!$('.o_website_quote').length) {
                     case "h1":
                         var id = self.setElementId('quote_header_', el);
                         var text = self.extractText($(el));
-                        last_li = $("<li>").html('<a href="#'+id+'">'+text+'</a>').appendTo(self.$el);
+                        last_li = $("<li>").append($('<a href="#'+id+'"/>').text(text)).appendTo(self.$el);
                         last_ul = false;
                         break;
                     case "h2":
@@ -144,7 +144,7 @@ if(!$('.o_website_quote').length) {
                             if (!last_ul) {
                                 last_ul = $("<ul class='nav'>").appendTo(last_li);
                             }
-                            $("<li>").html('<a href="#'+id+'">'+text+'</a>').appendTo(last_ul);
+                            $("<li>").append($('<a href="#'+id+'"/>').text(text)).appendTo(last_ul);
                         }
                         break;
                 }
