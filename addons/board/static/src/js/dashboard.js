@@ -213,6 +213,7 @@ var DashBoard = form_common.FormWidget.extend({
             headless: true,
             low_profile: true,
             display_title: false,
+            search_disable_custom_filters: true,
             list: {
                 selectable: false
             }

@@ -130,8 +130,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var view = this.views[view_type];
         var old_view = this.active_view;
 
-        if (!view) {
+        if (!view || this.currently_switching) {
             return $.Deferred().reject();
+        } else {
+            this.currently_switching = true;  // prevent overlapping switches
         }
 
         if (view.multi_record) {
@@ -156,11 +158,23 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.searchview.do_search();
             });
         }
-        return $.when(view.created, this.active_search).then(function () {
+        var switched = $.when(view.created, this.active_search).then(function () {
             return self._display_view(view_options, old_view).then(function () {
                 self.trigger('switch_mode', view_type, no_store, view_options);
             });
         });
+        switched.fail(function(e) {
+            if (!(e && e.code === 200 && e.data.exception_type)) {
+                self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+            }
+            // Restore internal state
+            self.active_view = old_view;
+            self.view_stack.pop();
+        });
+        switched.always(function () {
+            self.currently_switching = false;
+        });
+        return switched;
     },
     _display_view: function (view_options, old_view) {
         var self = this;
@@ -239,7 +253,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     select_view: function (index) {
         var view_type = this.view_stack[index].type;
-        this.view_stack.splice(index);
         return this.switch_mode(view_type);
     },
     /**
@@ -262,10 +275,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             });
 
             // Add onclick event listener
-            this.control_elements.$switch_buttons.siblings('button').click(function(event) {
+            this.control_elements.$switch_buttons.siblings('button').click(_.debounce(function(event) {
                 var view_type = $(event.target).data('view-type');
                 self.switch_mode(view_type);
-            });
+            }, 200, true));
         }
     },
     /**
