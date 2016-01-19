@@ -337,6 +337,8 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
+        if company_id:
+            context['force_company'] = company_id
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
 
         procurement_obj = self.pool.get('procurement.order')
