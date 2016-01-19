@@ -105,7 +105,7 @@ if(!$('.o_website_links_chart').length) {
                 var chart = nv.models.pieChart()
                     .x(function(d) { return d.label; })
                     .y(function(d) { return d.value; })
-                    .showLabels(true);
+                    .showLabels(false);
 
                 d3.select(self.$element + ' svg')
                     .datum(processed_data)
