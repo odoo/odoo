@@ -193,6 +193,15 @@ class product_pricelist(osv.osv):
                     if rule.product_id and product.id != rule.product_id.id:
                         continue
 
+                if rule.categ_id:
+                    cat = product.categ_id
+                    while cat:
+                        if cat.id == rule.categ_id.id:
+                            break
+                        cat = cat.parent_id
+                    if not cat:
+                        continue
+
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
                     price_tmp = self._price_get_multi(cr, uid, rule.base_pricelist_id, [(product, qty, partner)], context=context)[product.id]
                     ptype_src = rule.base_pricelist_id.currency_id.id
