@@ -214,7 +214,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def1 = this.thread.appendTo(this.$('.o_mail_chat_content'));
         var def2 = this.basic_composer.appendTo(this.$('.o_mail_chat_content'));
         var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
-        var def4 = this.searchview.appendTo($("<div>"));
+        var def4 = this.searchview.appendTo($("<div>")).then(function () {
+            self.$searchview_buttons = self.searchview.$buttons.contents();
+        });
 
         this.render_sidebar();
 
@@ -486,7 +488,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             cp_content: {
                 $buttons: this.$buttons,
                 $searchview: this.searchview.$el,
-                $searchview_buttons: this.searchview.$buttons.contents(),
+                $searchview_buttons: this.$searchview_buttons,
             },
             searchview: this.searchview,
         });
