@@ -115,7 +115,7 @@ class calendar_attendee(osv.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         return {'value': {'email': partner.email}}
 
-    def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, context=None):
+    def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, force_send=False, context=None):
         """
         Send mail for event invitation to event attendees.
         """
@@ -140,11 +140,11 @@ class calendar_attendee(osv.Model):
         if not isinstance(ids, (tuple, list)):
             ids = [ids]
 
-        dummy, template_id = data_pool.get_object_reference(cr, uid, 'calendar', template_xmlid)
-        dummy, act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_calendar_event_calendar")
+        template_id = data_pool.xmlid_to_res_id(cr, uid, template_xmlid)
+        calendar_view_id = data_pool.xmlid_to_res_id(cr, uid, 'calendar.view_calendar_event_calendar')
         local_context.update({
             'color': color,
-            'action_id': self.pool['ir.actions.act_window'].search(cr, uid, [('view_id', '=', act_id)], context=context)[0],
+            'action_id': self.pool['ir.actions.act_window'].search(cr, uid, [('view_id', '=', calendar_view_id)], context=context)[0],
             'dbname': cr.dbname,
             'base_url': self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         })
@@ -169,7 +169,7 @@ class calendar_attendee(osv.Model):
             mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
             mail_ids.append(mail_id)
 
-        if mail_ids:
+        if force_send and mail_ids:
             res = mail_pool.send(cr, uid, mail_ids, context=context)
 
         return res
@@ -469,9 +469,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 cr,
                 uid,
                 [att.id for att in event.attendee_ids],
-                email_from=event.user_id.partner_id.email,
-                template_xmlid='calendar_template_meeting_reminder',
-                force=True,
+                'calendar.calendar_template_meeting_reminder',
                 context=context
             )
 
@@ -1023,7 +1021,7 @@ class calendar_event(osv.Model):
                 new_att_partner_ids.append(partner.id)
 
                 if not current_user.email or current_user.email != partner.email:
-                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, 'calendar_template_meeting_invitation', context=context)
+                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, 'calendar.calendar_template_meeting_invitation', context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
@@ -1337,7 +1335,7 @@ class calendar_event(osv.Model):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
             if current_user.email:
-                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], calendar_template_meeting_invitation, context=context)
+                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], 'calendar.calendar_template_meeting_invitation', context=context)
         return
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -1540,7 +1538,7 @@ class calendar_event(osv.Model):
 
                 if mail_to_ids:
                     current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, 'calendar_template_meeting_changedate', context=context)
+                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, 'calendar.calendar_template_meeting_changedate', context=context)
         return res or True and False
 
     def create(self, cr, uid, vals, context=None):
