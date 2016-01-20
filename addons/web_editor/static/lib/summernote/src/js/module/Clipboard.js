@@ -156,6 +156,12 @@ define([
         }
       });
 
+      // remove empty table row and td
+      var $tdr;
+      while(($tdr = $node.find('tr:empty, td:empty, th:empty, tbody:empty, t-head:empty, table:empty')) && $tdr.length) {
+        $tdr.remove();
+      }
+
       /*
           reset architecture HTML node and add <p> tag
       */
