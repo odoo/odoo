@@ -34,7 +34,7 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Product" filter_domain="['|','|',('default_code','ilike',self),('name','ilike',self),('barcode','ilike',self)]"/>
                     <field name="categ_id" domain="[('categ_id', 'child_of', self)]"/>
                     <separator/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
