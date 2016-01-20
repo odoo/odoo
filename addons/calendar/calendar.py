@@ -1682,7 +1682,7 @@ class calendar_event(osv.Model):
         except ImportError:
             return res
 
-        for event in self.brows(cr, uid, ids, context=context):
+        for event in self.browse(cr, uid, ids, context=context):
             cal = vobject.iCalendar()
             event = cal.add('vevent')
             if not event.start or not event.stop:
