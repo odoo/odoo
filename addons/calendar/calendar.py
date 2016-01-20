@@ -1124,7 +1124,8 @@ class calendar_event(osv.Model):
         if r_date:
             sort_fields['sort_start'] = r_date.strftime("%Y%m%d%H%M%S")
         else:
-            sort_fields['sort_start'] = browse_event['display_start'].replace(' ', '').replace('-', '')
+            display_start = browse_event['display_start']
+            sort_fields['sort_start'] = display_start and display_start.replace(' ', '').replace('-', '') or False
         return sort_fields
 
     def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
