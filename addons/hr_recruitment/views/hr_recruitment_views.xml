@@ -58,10 +58,10 @@
           <form string="Jobs - Recruitment Form">
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                        class="oe_highlight" attrs="{'invisible': [('emp_id', '!=', False)]}"/>
+                        class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
                 <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
-                <button string="Reset Application" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
-                <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
+                <button string="Reopen Application" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -108,7 +108,8 @@
                         <field name="employee_name" widget="statinfo" string="Employee"/>
                     </button>
                     <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive">
+                            class="oe_stat_button" icon="fa-archive"
+                            attrs="{'invisible': [('active', '=', True)]}">
                         <field name="active" widget="boolean_button"
                             options='{"terminology": "archive"}'/>
                     </button>
@@ -299,7 +300,6 @@
                                     <field name="categ_ids"/>
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
-                                    <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                     <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
