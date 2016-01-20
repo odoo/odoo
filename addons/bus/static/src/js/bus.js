@@ -66,7 +66,7 @@ bus.Bus = Widget.extend({
         }
         var data = {channels: self.channels, last: self.last, options: options};
         session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
-            self._notification_receive(result);
+            self.on_notification(result);
             if(!self.stop){
                 self.poll();
             }
@@ -77,14 +77,15 @@ bus.Bus = Widget.extend({
             setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
         });
     },
-    _notification_receive: function(notifications){
-        _.each(notifications, this.on_notification);
-    },
-    on_notification: function(notification) {
-        if (notification.id > this.last) {
-            this.last = notification.id;
-        }
-        this.trigger("notification", [notification.channel, notification.message]);
+    on_notification: function(notifications) {
+        var self = this;
+        var notifs = _.map(notifications, function (notif) {
+            if (notif.id > self.last) {
+                self.last = notif.id;
+            }
+            return [notif.channel, notif.message];
+        });
+        this.trigger("notification", notifs);
     },
     add_channel: function(channel){
         this.channels.push(channel);
@@ -173,7 +174,7 @@ var CrossTabBus = bus.Bus.extend({
             this._super.apply(this, arguments);
         }
      },
-    _notification_receive: function(notifications){
+    on_notification: function(notifications){
         if(this.is_master) { // broadcast to other tabs
             var last = getItem('bus.last', -1);
             var max_id = Math.max(last, 0);
@@ -199,7 +200,7 @@ var CrossTabBus = bus.Bus.extend({
         // notifications changed
         if(e.key === 'bus.notification'){
             var notifs = JSON.parse(value);
-            _.each(notifs, this.on_notification);
+            this.on_notification(notifs);
         }
         // update channels
         if(e.key === 'bus.channels'){
