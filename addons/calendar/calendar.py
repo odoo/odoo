@@ -115,10 +115,9 @@ class calendar_attendee(osv.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         return {'value': {'email': partner.email}}
 
-    def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, force=False, context=None):
+    def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, context=None):
         """
         Send mail for event invitation to event attendees.
-        @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
 
@@ -155,19 +154,20 @@ class calendar_attendee(osv.Model):
         ics_files = self.pool['calendar.event'].get_ics_file(cr, uid, event_ids, context=context)
 
         for attendee in attendees:
-            if attendee.email and email_from and (attendee.email != email_from or force):
-                ics_file = ics_files[attendee.event_id.id]
-                mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
+            if not attendee.email and not attendee.partner_id.email:
+                continue
+            ics_file = ics_files[attendee.event_id.id]
+            mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
-                vals = {}
-                if ics_file:
-                    vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
-                                                      'datas_fname': 'invitation.ics',
-                                                      'datas': str(ics_file).encode('base64')})]
-                vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
-                the_mailmess = mail_pool.browse(cr, uid, mail_id, context=context).mail_message_id
-                mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
-                mail_ids.append(mail_id)
+            vals = {}
+            if ics_file:
+                vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
+                                                  'datas_fname': 'invitation.ics',
+                                                  'datas': str(ics_file).encode('base64')})]
+            vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+            the_mailmess = mail_pool.browse(cr, uid, mail_id, context=context).mail_message_id
+            mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
+            mail_ids.append(mail_id)
 
         if mail_ids:
             res = mail_pool.send(cr, uid, mail_ids, context=context)
