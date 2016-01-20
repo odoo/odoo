@@ -115,8 +115,7 @@ class calendar_attendee(osv.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         return {'value': {'email': partner.email}}
 
-    def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
-                                template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
+    def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, force=False, context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
@@ -1027,7 +1026,7 @@ class calendar_event(osv.Model):
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
                     if not context.get('no_email'):
-                        self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context)
+                        self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, 'calendar_template_meeting_invitation', context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
@@ -1341,7 +1340,7 @@ class calendar_event(osv.Model):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
             if current_user.email:
-                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from=current_user.email, context=context)
+                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], calendar_template_meeting_invitation, context=context)
         return
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -1544,7 +1543,7 @@ class calendar_event(osv.Model):
 
                 if mail_to_ids:
                     current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context)
+                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, 'calendar_template_meeting_changedate', context=context)
         return res or True and False
 
     def create(self, cr, uid, vals, context=None):
