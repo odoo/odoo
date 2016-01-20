@@ -187,9 +187,6 @@ class Applicant(models.Model):
         access_rights_uid = access_rights_uid or self.env.uid
         Stage = self.env['hr.recruitment.stage']
         order = Stage._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
         search_domain = [('job_id', '=', False)]
