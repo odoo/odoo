@@ -133,7 +133,7 @@ function add_message (data, options) {
 
     if (!msg) {
         msg = make_message(data);
-        // Keep the array ordered by date when inserting the new message
+        // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
@@ -805,6 +805,21 @@ var chat_manager = {
     },
     get_chat_unread_counter: function () {
         return chat_unread_counter;
+    },
+
+    get_last_seen_message: function (channel) {
+        if (channel.last_seen_message_id) {
+            var messages = channel.cache['[]'].messages;
+            var msg = _.findWhere(messages, {id: channel.last_seen_message_id});
+            if (msg) {
+                var i = _.sortedIndex(messages, msg, 'id') + 1;
+                while (i < messages.length && messages[i].author_id && messages[i].author_id[0] === session.partner_id) {
+                    msg = messages[i];
+                    i++;
+                }
+                return msg;
+            }
+        }
     },
 
     get_discuss_ids: function () {

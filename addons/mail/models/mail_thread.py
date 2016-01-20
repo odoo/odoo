@@ -169,6 +169,7 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_unread(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        partner_id = self.env.user.partner_id.id
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
@@ -176,8 +177,8 @@ class MailThread(models.AbstractModel):
                              ON rel.mail_message_id = msg.id
                              RIGHT JOIN mail_channel_partner cp
                              ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND (cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s""",
-                         (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+                             WHERE msg.model = %s AND msg.res_id in %s AND msg.author_id != %s""",
+                         (partner_id, self._name, tuple(self.ids), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
