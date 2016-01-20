@@ -464,21 +464,35 @@ var channel_seen = _.throttle(function (channel) {
 
 // Notification handlers
 // ---------------------------------------------------------------------------------
-function on_notification (notification) {
-    var model = notification[0][1];
-    if (model === 'ir.needaction') {
-        // new message in the inbox
-        on_needaction_notification(notification[1]);
-    } else if (model === 'mail.channel') {
-        // new message in a channel
-        on_channel_notification(notification[1]);
-    } else if (model === 'res.partner') {
-        // channel joined/left, message marked as read/(un)starred, chat open/closed
-        on_partner_notification(notification[1]);
-    } else if (model === 'bus.presence') {
-        // update presence of users
-        on_presence_notification(notification[1]);
+function on_notification (notifications) {
+    // sometimes, the web client receives unsubscribe notification and an extra
+    // notification on that channel.  This is then followed by an attempt to
+    // rejoin the channel that we just left.  The next few lines remove the
+    // extra notification to prevent that situation to occur.
+    var unsubscribed_notif = _.find(notifications, function (notif) {
+        return notif[1].info === "unsubscribe";
+    });
+    if (unsubscribed_notif) {
+        notifications = _.reject(notifications, function (notif) {
+            return notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
+        });
     }
+    _.each(notifications, function (notification) {
+        var model = notification[0][1];
+        if (model === 'ir.needaction') {
+            // new message in the inbox
+            on_needaction_notification(notification[1]);
+        } else if (model === 'mail.channel') {
+            // new message in a channel
+            on_channel_notification(notification[1]);
+        } else if (model === 'res.partner') {
+            // channel joined/left, message marked as read/(un)starred, chat open/closed
+            on_partner_notification(notification[1]);
+        } else if (model === 'bus.presence') {
+            // update presence of users
+            on_presence_notification(notification[1]);
+        }
+    });
 }
 
 function on_needaction_notification (message) {
