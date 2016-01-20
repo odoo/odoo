@@ -779,7 +779,8 @@ class website_sale(http.Controller):
                     order.pricelist_id.currency_id.id,
                     values={
                         'return_url': '/shop/payment/validate',
-                        'partner_id': shipping_partner_id
+                        'partner_id': shipping_partner_id,
+                        'billing_partner_id': order.partner_invoice_id.id,
                     },
                     context=render_ctx)
 
