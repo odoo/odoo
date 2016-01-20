@@ -45,6 +45,13 @@ KanbanRecord.include({
                         $cover_modal.remove();
                     });
             });
+        } else if (this.model === 'project.task' && $(ev.currentTarget).data('type') === 'remove_cover') {
+            ev.preventDefault();
+            self.update_record({
+                data : {
+                    displayed_image_id: false,
+                }
+            });
         } else {
             this._super.apply(this, arguments, ev);
         }
