@@ -118,7 +118,6 @@ class calendar_attendee(osv.Model):
     def _send_mail_to_attendees(self, cr, uid, ids, template_xmlid, force=False, context=None):
         """
         Send mail for event invitation to event attendees.
-        @param email_from: email address for user sending the mail
         @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
@@ -1024,7 +1023,6 @@ class calendar_event(osv.Model):
                 new_att_partner_ids.append(partner.id)
 
                 if not current_user.email or current_user.email != partner.email:
-                    mail_from = current_user.email or tools.config.get('email_from', False)
                     self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, 'calendar_template_meeting_invitation', context=context)
 
             if new_attendees:
