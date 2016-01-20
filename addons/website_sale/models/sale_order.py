@@ -267,7 +267,12 @@ class website(orm.Model):
         """
         partner = self.get_partner(cr, uid)
         sale_order_obj = self.pool['sale.order']
-        sale_order_id = request.session.get('sale_order_id') or (partner.last_website_so_id.id if partner.last_website_so_id and partner.last_website_so_id.state == 'draft' else False)
+        sale_order_id = request.session.get('sale_order_id')
+        if not sale_order_id:
+            last_order = partner.last_website_so_id
+            available_pricelists = self.get_pricelist_available(cr, uid, context=context)
+            # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
+            sale_order_id = last_order and last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
 
         sale_order = None
         # Test validity of the sale_order_id
