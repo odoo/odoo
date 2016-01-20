@@ -124,10 +124,10 @@ var FieldTextHtmlSimple = widget.extend({
             return this.$content.focusInEnd();
         } catch (e) {
             return this.$content.focus();
-        };
+        }
     },
     resize: function() {
-        this.$('iframe').css('height', '0px').css('height', Math.max(180, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function() {
         var value = this.get('value');
