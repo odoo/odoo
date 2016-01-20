@@ -421,7 +421,7 @@ class hr_holidays(osv.osv):
                 if record.user_id and record.user_id.partner_id:
                     meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
 
-                ctx_no_email = dict(context or {}, no_email=True)
+                ctx_no_email = dict(context or {}, no_mail_to_attendees=True)
                 meeting_id = meeting_obj.create(cr, uid, meeting_vals, context=ctx_no_email)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
