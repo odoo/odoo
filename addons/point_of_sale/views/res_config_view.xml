@@ -9,6 +9,15 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <group string="Importable Point of Sales Data">
+                        <label for="div" string="Beverages"/>
+                        <div>
+                            <div>
+                                <field name="module_pos_data_drinks"/>
+                                <label for="module_pos_data_drinks"/>
+                            </div>
+                        </div>
+                    </group>
                     <group string="Point of Sale">
                         <field name="module_pos_restaurant" widget="radio"/>
                         <field name="module_pos_discount" widget="radio"/>

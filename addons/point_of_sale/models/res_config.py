@@ -29,3 +29,4 @@ class PosConfiguration(models.TransientModel):
         (0, "No reprint"),
         (1, "Allow cashier to reprint receipts")
     ], string="Reprints")
+    module_pos_data_drinks = fields.Boolean(string="Import common drinks data")
