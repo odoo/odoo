@@ -1684,23 +1684,23 @@ class calendar_event(osv.Model):
 
         for event in self.browse(cr, uid, ids, context=context):
             cal = vobject.iCalendar()
-            event = cal.add('vevent')
+            cal_event = cal.add('vevent')
             if not event.start or not event.stop:
                 raise UserError(_("First you have to specify the date of the invitation."))
-            event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-            event.add('dtstart').value = ics_datetime(event.start, event.allday)
-            event.add('dtend').value = ics_datetime(event.stop, event.allday)
-            event.add('summary').value = event.name
+            cal_event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            cal_event.add('dtstart').value = ics_datetime(event.start, event.allday)
+            cal_event.add('dtend').value = ics_datetime(event.stop, event.allday)
+            cal_event.add('summary').value = event.name
             if event.description:
-                event.add('description').value = event.description
+                cal_event.add('description').value = event.description
             if event.location:
-                event.add('location').value = event.location
+                cal_event.add('location').value = event.location
             if event.rrule:
-                event.add('rrule').value = event.rrule
+                cal_event.add('rrule').value = event.rrule
 
             if event.alarm_ids:
                 for alarm in event.alarm_ids:
-                    valarm = event.add('valarm')
+                    valarm = cal_event.add('valarm')
                     interval = alarm.interval
                     duration = alarm.duration
                     trigger = valarm.add('TRIGGER')
@@ -1714,7 +1714,7 @@ class calendar_event(osv.Model):
                     trigger.value = delta
                     valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
             for attendee in event.attendee_ids:
-                attendee_add = event.add('attendee')
+                attendee_add = cal_event.add('attendee')
                 attendee_add.value = 'MAILTO:' + (attendee.email or '')
             res[event.id] = cal.serialize()
         return res
