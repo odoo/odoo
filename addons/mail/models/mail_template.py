@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import copy
 import datetime
 import dateutil.relativedelta as relativedelta
 import logging
@@ -94,6 +95,8 @@ try:
         # is needed, apparently.
         'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
     })
+    mako_safe_template_env = copy.copy(mako_template_env)
+    mako_safe_template_env.autoescape = False
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
 
@@ -339,7 +342,8 @@ class MailTemplate(models.Model):
 
         # try to load the template
         try:
-            template = mako_template_env.from_string(tools.ustr(template_txt))
+            mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
+            template = mako_env.from_string(tools.ustr(template_txt))
         except Exception:
             _logger.info("Failed to load template %r", template_txt, exc_info=True)
             return multi_mode and results or results[res_ids[0]]
@@ -460,6 +464,7 @@ class MailTemplate(models.Model):
             if template.lang:
                 Template = Template.with_context(lang=template._context.get('lang'))
             for field in fields:
+                Template = Template.with_context(safe=field in {'subject'})
                 generated_field_values = Template.render_template(
                     getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'))
