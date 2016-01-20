@@ -1664,6 +1664,7 @@ class procurement_order(osv.osv):
                 'location_id': procurement.location_id.id,
                 'picking_type_id': procurement.rule_id.picking_type_id.id,
                 'pricelist_id': partner.property_product_pricelist_purchase.id,
+                'currency_id': partner.property_product_pricelist_purchase.currency_id.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': fp,
