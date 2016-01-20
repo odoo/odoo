@@ -4,7 +4,6 @@
 
 {
     'name': 'Recurring Documents',
-    'version': '1.0',
     'category': 'Tools',
     'description': """
 Create recurring documents.
@@ -16,14 +15,12 @@ e.g. To have an invoice generated automatically periodically:
 -------------------------------------------------------------
     * Define a document type based on Invoice object
     * Define a subscription whose source document is the document defined as
-      above. Specify the interval information and partner to be invoice.
+      above. Specify the interval information and partner to be invoiced.
     """,
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
-        'subscription_view.xml'
+        'views/subscription_view.xml'
     ],
-    'demo': ['subscription_demo.xml',],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['data/subscription_demo.xml'],
 }
