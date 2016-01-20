@@ -219,16 +219,33 @@ class website(orm.Model):
         """
         :returns: The current pricelist record
         """
-        pl_id = request.session.get('website_sale_current_pl')
-        if pl_id:
-            return self.pool['product.pricelist'].browse(cr, uid, [pl_id], context=context)[0]
+        # The list of available pricelists for this user.
+        # If the user is signed in, and has a pricelist set different than the public user pricelist
+        # then this pricelist will always be considered as available
+        available_pricelists = self.get_pricelist_available(cr, uid, context=context)
+        if request.session.get('website_sale_current_pl'):
+            # `website_sale_current_pl` is set only if the user specifically chose it:
+            #  - Either, he chose it from the pricelist selection
+            #  - Either, he entered a coupon code
+            return self.pool['product.pricelist'].browse(cr, uid, [request.session['website_sale_current_pl']], context=context)[0]
         else:
-            available_pricelists = self.get_pricelist_available(cr, uid, context=context)
-            if available_pricelists:
+            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            # If the user has a saved cart, it take the pricelist of this cart, except if
+            # the order is no longer draft (It has already been confirmed, or cancelled, ...)
+            pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+            if not pl:
+                # The pricelist of the user set on its partner form.
+                # If the user is not signed in, it's the public user pricelist
+                pl = partner.property_product_pricelist
+            if available_pricelists and pl not in available_pricelists:
+                # If there is at least one pricelist in the available pricelists
+                # and the chosen pricelist is not within them
+                # it then choose the first available pricelist.
+                # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
+                # If the user is signed in, and has a special pricelist (different than the public user pricelist),
+                # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
-            else:
-                pl = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.property_product_pricelist
-            request.session['website_sale_current_pl'] = pl.id
+
             return pl
 
     def sale_product_domain(self, cr, uid, ids, context=None):
