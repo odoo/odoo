@@ -150,6 +150,14 @@ define([
         $(this).replaceWith($(this).contents());
       });
       $node.find('span + span').each(function () {
+
+        if (dom.isText(this.previousSibling)) {
+          if (dom.isVisibleText(this.previousSibling)) {
+            return;
+          } else { // keep space between 2 tags, but can merge the both tags
+            $(this).prev().append(this.previousSibling);
+          }
+        }
         if ($(this).attr('class') === $(this).prev().attr('class') && $(this).attr('style') === $(this).prev().attr('style')) {
           $(this).prev().append($(this).contents());
           $(this).remove();
