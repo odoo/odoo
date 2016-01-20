@@ -115,64 +115,6 @@ class calendar_attendee(osv.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         return {'value': {'email': partner.email}}
 
-    def get_ics_file(self, cr, uid, event_obj, context=None):
-        """
-        Returns iCalendar file for the event invitation.
-        @param event_obj: event object (browse record)
-        @return: .ics file content
-        """
-        res = None
-
-        def ics_datetime(idate, allday=False):
-            if idate:
-                if allday:
-                    return openerp.fields.Date.from_string(idate)
-                else:
-                    return openerp.fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
-            return False
-
-        try:
-            # FIXME: why isn't this in CalDAV?
-            import vobject
-        except ImportError:
-            return res
-
-        cal = vobject.iCalendar()
-        event = cal.add('vevent')
-        if not event_obj.start or not event_obj.stop:
-            raise UserError(_("First you have to specify the date of the invitation."))
-        event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        event.add('dtstart').value = ics_datetime(event_obj.start, event_obj.allday)
-        event.add('dtend').value = ics_datetime(event_obj.stop, event_obj.allday)
-        event.add('summary').value = event_obj.name
-        if event_obj.description:
-            event.add('description').value = event_obj.description
-        if event_obj.location:
-            event.add('location').value = event_obj.location
-        if event_obj.rrule:
-            event.add('rrule').value = event_obj.rrule
-
-        if event_obj.alarm_ids:
-            for alarm in event_obj.alarm_ids:
-                valarm = event.add('valarm')
-                interval = alarm.interval
-                duration = alarm.duration
-                trigger = valarm.add('TRIGGER')
-                trigger.params['related'] = ["START"]
-                if interval == 'days':
-                    delta = timedelta(days=duration)
-                elif interval == 'hours':
-                    delta = timedelta(hours=duration)
-                elif interval == 'minutes':
-                    delta = timedelta(minutes=duration)
-                trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
-        for attendee in event_obj.attendee_ids:
-            attendee_add = event.add('attendee')
-            attendee_add.value = 'MAILTO:' + (attendee.email or '')
-        res = cal.serialize()
-        return res
-
     def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
                                 template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
         """
@@ -210,9 +152,13 @@ class calendar_attendee(osv.Model):
             'base_url': self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         })
 
-        for attendee in self.browse(cr, uid, ids, context=context):
+        attendees = self.browse(cr, uid, ids, context=context)
+        event_ids = [attendee.event_id.id for attendee in attendees]
+        ics_files = self.pool['calendar.event'].get_ics_file(cr, uid, event_ids, context=context)
+
+        for attendee in attendees:
             if attendee.email and email_from and (attendee.email != email_from or force):
-                ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
+                ics_file = ics_files[attendee.event_id.id]
                 mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
                 vals = {}
@@ -1719,6 +1665,64 @@ class calendar_event(osv.Model):
             for id_to_exclure in ids_to_exclure:
                 res = self.write(cr, uid, id_to_exclure, {'active': False}, context=context)
 
+        return res
+
+    def get_ics_file(self, cr, uid, ids, context=None):
+        """
+        Returns iCalendar file for the given events
+        @return: .ics file content
+        """
+        res = dict.fromkeys(ids, False)
+
+        def ics_datetime(idate, allday=False):
+            if idate:
+                if allday:
+                    return openerp.fields.Date.from_string(idate)
+                else:
+                    return openerp.fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
+            return False
+
+        try:
+            # FIXME: why isn't this in CalDAV?
+            import vobject
+        except ImportError:
+            return res
+
+        for event in self.brows(cr, uid, ids, context=context):
+            cal = vobject.iCalendar()
+            event = cal.add('vevent')
+            if not event.start or not event.stop:
+                raise UserError(_("First you have to specify the date of the invitation."))
+            event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            event.add('dtstart').value = ics_datetime(event.start, event.allday)
+            event.add('dtend').value = ics_datetime(event.stop, event.allday)
+            event.add('summary').value = event.name
+            if event.description:
+                event.add('description').value = event.description
+            if event.location:
+                event.add('location').value = event.location
+            if event.rrule:
+                event.add('rrule').value = event.rrule
+
+            if event.alarm_ids:
+                for alarm in event.alarm_ids:
+                    valarm = event.add('valarm')
+                    interval = alarm.interval
+                    duration = alarm.duration
+                    trigger = valarm.add('TRIGGER')
+                    trigger.params['related'] = ["START"]
+                    if interval == 'days':
+                        delta = timedelta(days=duration)
+                    elif interval == 'hours':
+                        delta = timedelta(hours=duration)
+                    elif interval == 'minutes':
+                        delta = timedelta(minutes=duration)
+                    trigger.value = delta
+                    valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
+            for attendee in event.attendee_ids:
+                attendee_add = event.add('attendee')
+                attendee_add.value = 'MAILTO:' + (attendee.email or '')
+            res[event.id] = cal.serialize()
         return res
 
 
