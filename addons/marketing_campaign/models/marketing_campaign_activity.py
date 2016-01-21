@@ -61,7 +61,9 @@ class MarketingCampaignActivity(models.Model):
         segment_id = self.env.context.get('segment_id')
         if segment_id:
             segment = self.env['marketing.campaign.segment'].browse(segment_id)
-            return segment.campaign_id.activity_ids
+            context = dict(self.env.context)  # To avoid recursion, we need to remove segment_id from context
+            context.pop('segment_id')
+            return segment.campaign_id.with_context(context).activity_ids
         return super(MarketingCampaignActivity, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
     def _get_action_types(self):
