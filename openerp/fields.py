@@ -539,8 +539,9 @@ class Field(object):
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
             if not record.id:
-                # draft record, do not switch to another environment
-                other = record
+                # draft records: copy record's cache to other's cache first
+                for name, value in record._cache.iteritems():
+                    other[name] = value
             # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
                 other = other[name][:1]
