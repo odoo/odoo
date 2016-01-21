@@ -32,7 +32,6 @@
                         </group>
                         <group>
                             <separator string="Cost Lines" colspan="4"/>
-                            <group>
                                 <field name="cost_lines" nolabel="1">
                                     <form string="Cost Lines">
                                         <group>
@@ -57,10 +56,9 @@
                                         <field name="price_unit"/>
                                     </tree>
                                 </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_total" widget="monetary"/>
                             </group>
-                        </group>
-                        <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total" widget="monetary"/>
                         </group>
                         <group>
                             <group>
@@ -69,34 +67,30 @@
                             <group states='draft'>
                                 <button name="compute_landed_cost" string="Compute" type="object" class="oe_right"/>
                             </group>
-                        </group>
-                        <group>
-                            <group>
-                                <field name="valuation_adjustment_lines" nolabel="1">
-                                    <form string="Valuation Adjustments">
+                            <field name="valuation_adjustment_lines" nolabel="1">
+                                <form string="Valuation Adjustments">
+                                    <group>
                                         <group>
-                                            <group>
-                                                <field name="product_id"/>
-                                                <field name="quantity"/>
-                                            </group>
-                                            <group>
-                                                <field name="former_cost"/>
-                                                <field name="additional_landed_cost"/>
-                                            </group>
+                                            <field name="product_id"/>
+                                            <field name="quantity"/>
                                         </group>
-                                    </form>
-                                    <tree string="Valuation Adjustments" editable="bottom" create="0">
-                                        <field name="cost_line_id" readonly="1"/>
-                                        <field name="product_id" readonly="1"/>
-                                        <field name="weight" readonly="1"/>
-                                        <field name="volume" readonly="1"/>
-                                        <field name="quantity" readonly="1"/>
-                                        <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
-                                        <field name="former_cost" readonly="1"/>
-                                        <field name="additional_landed_cost"/>
-                                    </tree>
-                                </field>
-                            </group>
+                                        <group>
+                                            <field name="former_cost"/>
+                                            <field name="additional_landed_cost"/>
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Valuation Adjustments" editable="bottom" create="0">
+                                    <field name="cost_line_id" readonly="1"/>
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="weight" readonly="1"/>
+                                    <field name="volume" readonly="1"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
+                                    <field name="former_cost" readonly="1"/>
+                                    <field name="additional_landed_cost"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
