@@ -457,9 +457,7 @@ function update_channel_unread_counter (channel, counter) {
 }
 
 var channel_seen = _.throttle(function (channel) {
-    return ChannelModel.call('channel_seen', [[channel.id]]).then(function (last_seen_message_id) {
-        channel.last_seen_message_id = last_seen_message_id;
-    });
+    return ChannelModel.call('channel_seen', [[channel.id]]);
 }, 3000);
 
 // Notification handlers
@@ -609,8 +607,11 @@ function on_mark_as_unread_notification (data) {
 
 function on_channel_seen_notification (data) {
     var channel = chat_manager.get_channel(data.id);
-    if (channel && channel.unread_counter) {
-        update_channel_unread_counter(channel, 0);
+    if (channel) {
+        channel.last_seen_message_id = data.last_message_id;
+        if (channel.unread_counter) {
+            update_channel_unread_counter(channel, 0);
+        }
     }
 }
 
