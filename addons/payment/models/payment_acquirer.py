@@ -123,7 +123,7 @@ class PaymentAcquirer(osv.Model):
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
-        'environment': 'prod',
+        'environment': 'test',
         'website_published': False,
         'auto_confirm': 'at_pay_confirm',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
@@ -307,6 +307,13 @@ class PaymentAcquirer(osv.Model):
             method = getattr(self, cust_method_name)
             return method(cr, uid, id, data, context=context)
         return True
+
+    def toggle_enviroment_value(self, cr, uid, ids, context=None):
+        acquirers = self.browse(cr, uid, ids, context=context)
+        prod_ids = [acquirer.id for acquirer in acquirers if acquirer.environment == 'prod']
+        test_ids = [acquirer.id for acquirer in acquirers if acquirer.environment == 'test']
+        self.write(cr, uid, prod_ids, {'environment': 'test'}, context=context)
+        self.write(cr, uid, test_ids, {'environment': 'prod'}, context=context)
 
 
 class PaymentTransaction(osv.Model):
