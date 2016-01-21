@@ -10,6 +10,7 @@ from openerp.tools.float_utils import float_is_zero, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError, AccessError
 
+
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -480,6 +481,10 @@ class PurchaseOrderLine(models.Model):
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
     procurement_ids = fields.One2many('procurement.order', 'purchase_line_id', string='Associated Procurements', copy=False)
 
+    def _get_product_price_precision(self):
+        (total, decimal) = dp.get_precision('Product Price')(self.env.cr)
+        return decimal;
+
     @api.multi
     def _create_stock_moves(self, picking):
         moves = self.env['stock.move']
@@ -488,7 +493,8 @@ class PurchaseOrderLine(models.Model):
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
+                # Override default tax precision for product units
+                price_unit = line.taxes_id.compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0, precision=self._get_product_price_precision())['total_excluded']
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
