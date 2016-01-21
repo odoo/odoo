@@ -457,7 +457,7 @@ function update_channel_unread_counter (channel, counter) {
 }
 
 var channel_seen = _.throttle(function (channel) {
-    return ChannelModel.call('channel_seen', [[channel.id]]);
+    return ChannelModel.call('channel_seen', [[channel.id]], {}, {shadow: true});
 }, 3000);
 
 // Notification handlers
@@ -782,7 +782,7 @@ var chat_manager = {
         }
         if (!channel.members_deferred) {
             channel.members_deferred = ChannelModel
-                .call("channel_fetch_listeners", [channel.uuid])
+                .call("channel_fetch_listeners", [channel.uuid], {}, {shadow: true})
                 .then(function (members) {
                     var suggestions = [];
                     _.each(mention_partner_suggestions, function (partners) {
@@ -828,7 +828,7 @@ var chat_manager = {
     },
 
     detach_channel: function (channel) {
-        return ChannelModel.call("channel_minimize", [channel.uuid, true]);
+        return ChannelModel.call("channel_minimize", [channel.uuid, true], {}, {shadow: true});
     },
     remove_chatter_messages: function (model) {
         messages = _.reject(messages, function (message) {
@@ -880,7 +880,7 @@ var chat_manager = {
     },
     close_chat_session: function (channel_id) {
         var channel = this.get_channel(channel_id);
-        ChannelModel.call("channel_fold", [], {uuid : channel.uuid, state : "closed"});
+        ChannelModel.call("channel_fold", [], {uuid : channel.uuid, state : "closed"}, {shadow: true});
     },
     fold_channel: function (channel_id, folded) {
         var args = {
@@ -889,7 +889,7 @@ var chat_manager = {
         if (_.isBoolean(folded)) {
             args.state = folded ? 'folded' : 'open';
         }
-        return ChannelModel.call("channel_fold", [], args);
+        return ChannelModel.call("channel_fold", [], args, {shadow: true});
     },
     /**
      * Special redirection handling for given model and id
@@ -965,7 +965,7 @@ var chat_manager = {
     },
 
     search_partner: function (search_val, limit) {
-        return PartnerModel.call('im_search', [search_val, limit || 20]).then(function(result) {
+        return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
             var values = [];
             _.each(result, function(user) {
                 var escaped_name = _.escape(user.name);
@@ -1010,8 +1010,8 @@ function init () {
     });
 
     var ir_model = new Model("ir.model.data");
-    var load_menu_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"]);
-    var load_action_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"]);
+    var load_menu_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"], {}, {shadow: true});
+    var load_action_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"], {}, {shadow: true});
 
     bus.on('notification', null, on_notification);
 
