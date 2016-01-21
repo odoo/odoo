@@ -791,7 +791,7 @@ var chat_manager = {
                         }));
                     });
 
-                    return [members].concat(suggestions);
+                    return [members];
                 });
         }
         return channel.members_deferred;

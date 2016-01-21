@@ -171,8 +171,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.basic_composer = new composer.BasicComposer(this);
-        this.extended_composer = new composer.ExtendedComposer(this);
+        this.basic_composer = new composer.BasicComposer(this, {mention_partners_restricted: true});
+        this.extended_composer = new composer.ExtendedComposer(this, {mention_partners_restricted: true});
         this.thread = new ChatThread(this, {
             display_help: true,
             shorten_messages: false,
