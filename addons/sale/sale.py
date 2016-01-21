@@ -845,6 +845,11 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service', default='manual')
 
+    @api.onchange('track_service')
+    def onchange_track_service(self):
+        if self.invoice_policy == 'cost' and self.track_service == 'manual':
+            self.track_service = 'timesheet'
+
     @api.multi
     @api.depends('product_variant_ids.sales_count')
     def _sales_count(self):
