@@ -68,6 +68,7 @@ class AccountInvoice(models.Model):
             if account:
                 data['account_id'] = account.id
             new_line = new_lines.new(data)
+            new_line._set_additional_fields(self)
             new_lines += new_line
 
         self.invoice_line_ids += new_lines
