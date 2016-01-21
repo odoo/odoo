@@ -908,9 +908,12 @@ class Binary(http.Controller):
         elif status != 200:
             response = request.not_found()
         else:
-            content_base64 = base64.b64decode(content)
-            headers.append(('Content-Length', len(content_base64)))
-            response = request.make_response(content_base64, headers)
+            try:
+                content = base64.b64decode(content)
+            except:
+                pass
+            headers.append(('Content-Length', len(content)))
+            response = request.make_response(content, headers)
         if token:
             response.set_cookie('fileToken', token)
         return response
