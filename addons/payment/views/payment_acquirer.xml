@@ -23,8 +23,21 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer">
+                    <field name="environment" invisible='1'/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button attrs="{'invisible': [('environment', '=', 'test')]}" class="oe_stat_button" name="toggle_enviroment_value" type="object" icon="fa-play">
+                                <div class="o_stat_info o_form_field">
+                                    <span  class="text-success">Production</span>
+                                    <span class="o_stat_text">Environment</span>
+                                </div>
+                            </button>
+                            <button attrs="{'invisible': [('environment', '=', 'prod')]}" class="oe_stat_button" name="toggle_enviroment_value" type="object" icon="fa-stop">
+                                <div class="o_stat_info o_form_field">
+                                    <span class="text-danger">Test</span>
+                                    <span class="o_stat_text">Environment</span>
+                                </div>
+                            </button>
                             <button class="oe_stat_button" name="%(payment_transaction_action_child)d"
                                 type="action" icon="fa-money" string="Payments">
                             </button>
@@ -37,7 +50,6 @@
                         </div>
                         <group name="acquirer_base" col="2">
                             <group name="acquirer_left">
-                                <field name="environment" groups="base.group_no_one"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             </group>
                         </group>
