@@ -99,15 +99,33 @@
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
             </head>
-            <div class='well' t-if="not is_rated">
-                <h1>Thanks for voting !</h1>
-                <div class="oe_right">
-                    <p>Your vote has been taken into account.</p>
-                    <p>It was <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
+            <div class="container">
+                <div clas="row" t-if="not is_rated and not is_public">
+                    <h1 class="text-center">Thanks for voting !</h1>
+                    <h4 class="text-center">Your vote has been taken into account.</h4>
+                    <h4 class="text-center">It was <img t-attf-src='/rating/static/src/img/rating_#{rating}.png'/></h4>
+                    <form class="form-horizontal" t-attf-action="/rating/#{token}/feedback" method="post">
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <h5>Do you want to give additional explanation? (Optional)</h5>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <textarea class="form-control" name="feedback" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="submit" class="btn btn-primary"></input>
+                                <a t-attf-href="/rating/#{token}/cancel" class="btn btn-default">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div class='well' t-if="is_rated">
-                <h1>Sorry you have already voted !</h1>
+                <div clas="row" t-if="is_rated">
+                    <h1 class="text-center">Sorry you have already voted !</h1>
+                </div>
+                <div clas="row" t-if="is_public">
+                    <h1 class="text-center">Thank you !</h1>
+                </div>
             </div>
         </template>
 
