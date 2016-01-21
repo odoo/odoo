@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jasper Torlitz <jtorlitz@me.com>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2015
 # Thomas Lengyel <lexustec_fn@yahoo.de>, 2015
 # Wolfgang Taferner, 2015-2016
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2016-01-16 19:33+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
+"PO-Revision-Date: 2016-01-19 05:48+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -339,7 +340,7 @@ msgstr "Gruppiere nach"
 msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
-msgstr "Unterstützt bei der Abwicklung Ihrer Mahlzeiten Bestellung. Als Mahlzeiten Manager müssen Sie berechtigt sein, Produkte anzulegen, Barzahlungen zu erfassen und Bestellungen zu erteilen bzw. zu stornieren."
+msgstr "Unterstützt bei der Abwicklung Ihrer Mahlzeitenbestellungen. Als Mahlzeiten Manager müssen Sie berechtigt sein, Produkte anzulegen, Barzahlungen zu erfassen und Bestellungen zu erteilen bzw. zu stornieren."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -444,13 +445,13 @@ msgstr "Mittagessen"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr "Mahlzeit Alarmierung"
+msgstr "Mahlzeit Benachrichtigung"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:223
 #, python-format
 msgid "Lunch Cashmove"
-msgstr "Lunch Bezahlung"
+msgstr "Mittagessen-Bezahlung"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:62
@@ -519,7 +520,7 @@ msgstr "Neuer Auftrag"
 #: code:addons/lunch/wizard/lucky_order.py:37
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr "Kein Produkt stimmt mit ihrer Anfrage überein. Nun werden sie verhungern."
+msgstr "Kein Produkt stimmt mit Ihrer Anfrage überein. Nun werden Sie verhungern."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -543,7 +544,7 @@ msgstr "Auftrag"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Order Month"
-msgstr "Auftragsdatum"
+msgstr "Auftragsmonat"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -610,7 +611,7 @@ msgstr "Produkt"
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr "Produkte Kategorien"
+msgstr "Produktkategorien"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_category_id
@@ -643,7 +644,7 @@ msgstr "Produkte Formular"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr "Produkt Suche"
+msgstr "Produkte (Baumansicht)"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -670,7 +671,7 @@ msgstr "Häufigkeit"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr "Erfasse Kasseneinzahlung"
+msgstr "Kasseneinzahlung erfassen"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
@@ -680,7 +681,7 @@ msgstr "Samstag"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule Date"
-msgstr "Geplante Zeit"
+msgstr "Geplantes Datum"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
