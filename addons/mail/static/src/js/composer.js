@@ -331,6 +331,7 @@ var BasicComposer = Widget.extend({
             input_max_height: 150,
             input_min_height: 28,
             mention_fetch_limit: 8,
+            mention_partners_restricted: false, // set to true to only suggest prefetched partners
             send_text: _('Send'),
         });
         this.context = this.options.context;
@@ -620,7 +621,7 @@ var BasicComposer = Widget.extend({
                     }
                 }
             });
-            if (!suggestions.length) {
+            if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
                 var kwargs = {
                     limit: limit,
