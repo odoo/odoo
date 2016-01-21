@@ -3,12 +3,14 @@
 # * subscription
 # 
 # Translators:
+# Alejandro Santana <alejandrosantana@anubia.es>, 2015
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-12-16 17:44+0000\n"
+"PO-Revision-Date: 2016-01-20 12:32+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +31,7 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_uid
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_uid
 msgid "Created by"
-msgstr "Creado por:"
+msgstr "Creado por"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_create_date
@@ -37,17 +39,17 @@ msgstr "Creado por:"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_date
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_date
 msgid "Created on"
-msgstr "Creado"
+msgstr "Creado en"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_cron_id
 msgid "Cron Job"
-msgstr ""
+msgstr "Tarea (planificador)"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "Current Date"
-msgstr "Fecha Actual"
+msgstr "Fecha actual"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_date
@@ -67,12 +69,12 @@ msgstr "Valor por defecto"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
+msgstr "Se tiene en cuenta el valor por defecto del campo cuando se genera un nuevo documento."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Descripción o resumen de la suscripción."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_display_name
@@ -80,13 +82,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Mostrar nombre"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Documents created"
-msgstr ""
+msgstr "Documentos creados"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -101,7 +103,7 @@ msgstr "Borrador"
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_field
@@ -116,7 +118,7 @@ msgstr "Campos"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_date_init
 msgid "First Date"
-msgstr ""
+msgstr "Primera Fecha"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
@@ -129,32 +131,32 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_id
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_id
 msgid "ID"
-msgstr "ID"
+msgstr "ID (identificación)"
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr ""
+msgstr "Si el campo activo se desmarca, permite ocultar el documento de suscripción sin eliminarlo."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr ""
+msgstr "Si el campo activo se desmarca, permite ocultar la suscripción sin eliminarla."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
-msgstr "Internal Notes"
+msgstr "Notas internas"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
 msgid "Interval Qty"
-msgstr ""
+msgstr "Período: Cantidad de tiempo"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -167,7 +169,7 @@ msgstr "Unidad de intervalo"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
 msgid "Last Modified on"
-msgstr "Fecha de modificación"
+msgstr "Última modificación en"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
@@ -175,7 +177,7 @@ msgstr "Fecha de modificación"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_uid
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_uid
 msgid "Last Updated by"
-msgstr "Ultima Actualización por"
+msgstr "Última actualización de"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_date
@@ -183,7 +185,7 @@ msgstr "Ultima Actualización por"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_date
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_date
 msgid "Last Updated on"
-msgstr "Actualizado en"
+msgstr "Última actualización en"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -205,7 +207,7 @@ msgstr "Notas"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
 msgid "Number of documents"
-msgstr ""
+msgstr "Número de documentos"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
@@ -224,7 +226,7 @@ msgstr "Empresa"
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr ""
+msgstr "Por favor provea otro documento fuente.\nEl actual no existe."
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -235,13 +237,13 @@ msgstr "Procesar"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "Recurring Documents"
-msgstr "Documentos recurrentes"
+msgstr "Documentos Recurrentes"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Recurring Types"
-msgstr ""
+msgstr "Tipos de recurrencia"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
@@ -252,12 +254,12 @@ msgstr "En proceso"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_cron_id
 msgid "Scheduler which runs on subscription"
-msgstr ""
+msgstr "Planificador que ejecuta la suscripción."
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Search Subscription"
-msgstr ""
+msgstr "Buscar suscripción"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -268,7 +270,7 @@ msgstr "Cambiar a borrador"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_document_id
 msgid "Source Document"
-msgstr "Doc. Fuente"
+msgstr "Documento origen"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_state
@@ -279,14 +281,14 @@ msgstr "Estado"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Stop"
-msgstr "Stop"
+msgstr "Parar"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_subscription_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
-msgstr "Subscripción"
+msgstr "Suscripción"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -295,36 +297,36 @@ msgstr "Subscripción"
 #: model:ir.ui.view,arch_db:subscription.document_tree
 #: model:ir.ui.view,arch_db:subscription.view_subscription_document_filter
 msgid "Subscription Document"
-msgstr ""
+msgstr "Documento de suscripción"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: model:ir.ui.view,arch_db:subscription.document_fields_form
 #: model:ir.ui.view,arch_db:subscription.document_fields_tree
 msgid "Subscription Document Fields"
-msgstr ""
+msgstr "Campos de documento de suscripción"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_form
 #: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_tree
 msgid "Subscription History"
-msgstr ""
+msgstr "Historial de documentos periódicos"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
 msgid "Subscription history"
-msgstr ""
+msgstr "Historial de documentos periódicos"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 #: model:ir.ui.view,arch_db:subscription.view_subscription_tree
 msgid "Subscriptions"
-msgstr "Suscripciones"
+msgstr "Documentos periódicos"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Subsription Data"
-msgstr ""
+msgstr "Datos de la suscripción"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
@@ -336,7 +338,7 @@ msgstr "Usuario"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr ""
+msgstr "El usuario puede seleccionar el documento original sobre el cual quiere crear los documentos."
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -347,4 +349,4 @@ msgstr "Semanas"
 #: code:addons/subscription/subscription.py:128
 #, python-format
 msgid "You cannot delete an active subscription!"
-msgstr ""
+msgstr "No puede borrar una suscripción activa"

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-14 23:46+0000\n"
+"PO-Revision-Date: 2016-01-20 22:37+0000\n"
 "Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -146,7 +146,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>Observación de Posición Fiscal:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -207,7 +207,7 @@ msgstr "Las direcciones de Ordenes de Venta"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:126
 #, python-format
 msgid "Advance: %s"
-msgstr ""
+msgstr "Avanzar: %s"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -242,7 +242,7 @@ msgstr "Le permite seleccionar y mantener diferentes unidades de medida de los p
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_config_settings_group_analytic_account_for_sales
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Permitirle especificar una cuenta analítica en ordenes de venta."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
@@ -686,11 +686,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Importar Mensajes"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Ingreso de la cuenta"
@@ -843,6 +838,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturación"
@@ -1770,6 +1766,7 @@ msgstr "Unidades de medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin leer"
 
