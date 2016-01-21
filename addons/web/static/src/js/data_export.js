@@ -61,14 +61,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
             });
         }).change();
 
-        var got_domain = this.getParent().get_active_domain().then(function (domain) {
-            if (domain === undefined) {
+        var got_domain = this.getParent().get_active_search_data().then(function (search_data) {
+            if (search_data === undefined) {
                 self.ids_to_export = self.getParent().get_selected_ids();
                 self.domain = self.dataset.domain;
+                self.context = self.dataset.context;
             }
             else {
                 self.ids_to_export = false;
-                self.domain = domain;
+                self.domain = search_data.domain;
+                self.context = search_data.context;
             }
             self.on_show_domain();
         });
@@ -407,7 +409,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: this.dataset.context,
+                context: this.context,
                 import_compat: !!this.$el.find("#import_compat").val(),
             })},
             complete: instance.web.unblockUI,

@@ -835,6 +835,20 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * search results, and then adding the dataset domain (i.e. action domain).
      */
     get_active_domain: function () {
+        return this.get_active_search_data().then(function(search_data) {
+            if(search_data) {
+                return search_data.context;
+            }
+        });
+    },
+    get_active_context: function () {
+        return this.get_active_search_data().then(function(search_data) {
+            if(search_data) {
+                return search_data.context;
+            }
+        });
+    },
+    get_active_search_data: function () {
         var self = this;
         if (this.$('.oe_list_record_selector').prop('checked')) {
             var search_view = this.getParent().searchview;
@@ -844,11 +858,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 contexts: search_data.contexts,
                 group_by_seq: search_data.groupbys || []
             }).then(function (results) {
-                var domain = self.dataset.domain.concat(results.domain || []);
-                return domain
+                return {
+                    domain: self.dataset.domain.concat(results.domain || []),
+                    context: _.extend(self.dataset.context, results.context || {}),
+                }
             });
         }
-        else {
+        else
+        {
             return $.Deferred().resolve();
         }
     },
