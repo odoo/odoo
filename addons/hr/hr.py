@@ -317,17 +317,18 @@ class hr_department(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        ctx = context is None and {} or dict(context)
-        ctx['mail_create_nosubscribe'] = True
+        if context is None:
+            context = {}
+        context = dict(context, mail_create_nosubscribe=True)
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
         manager_id = vals.get("manager_id")
-        new_id = super(hr_department, self).create(cr, uid, vals, context=ctx)
+        new_id = super(hr_department, self).create(cr, uid, vals, context=context)
         if manager_id:
-            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=ctx)
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
             if employee.user_id:
-                self.message_subscribe_users(cr, uid, [new_id], user_ids=[employee.user_id.id], context=ctx)
+                self.message_subscribe_users(cr, uid, [new_id], user_ids=[employee.user_id.id], context=context)
         return new_id
 
     def write(self, cr, uid, ids, vals, context=None):
