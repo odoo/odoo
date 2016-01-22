@@ -48,7 +48,7 @@ class Partner(models.Model):
         if message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
         elif message.author_id:
-            signature = "<p>--<br />%s</p>" % message.author_id.name
+            signature = "<p>--&nbsp;<br />%s</p>" % message.author_id.name
 
         # compute Sent by
         if message.author_id and message.author_id.user_ids:
@@ -151,7 +151,10 @@ class Partner(models.Model):
         if message.model:
             base_template = self.env.ref('mail.mail_template_data_notification_email_%s' % message.model.replace('.', '_'), raise_if_not_found=False)
         if not base_template:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
+            if message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'):
+                base_template = self.env.ref('mail.mail_template_data_notification_discussion_default')
+            else:
+                base_template = self.env.ref('mail.mail_template_data_notification_email_default')
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:

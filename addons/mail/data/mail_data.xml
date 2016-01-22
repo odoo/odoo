@@ -157,8 +157,81 @@
             </tr>
         </tbody>
     </table>
-</div>]]></field>
-        </record>
+</div>]]>
+        </field>
+    </record>
+
+        <!--Default Notification Email template -->
+        <record id="mail_template_data_notification_discussion_default" model="mail.template">
+            <field name="name">Discussion Notification Email</field>
+            <field name="subject">${object.subject or (object.record_name and 'Re: %s' % object.record_name) or (object.parent_id and object.parent_id.subject and 'Re: %s' % object.parent_id.subject) or (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}</field>
+            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div itemscope itemtype="http://schema.org/EmailMessage">
+    <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+        <link itemprop="target" href="${ctx['button_access']['url']}"/>
+        <link itemprop="url" href="${ctx['button_access']['url']}"/>
+        <meta itemprop="name" content="View ${ctx['model_name']}"/>
+    </div>
+</div>
+<div>
+    ${object.body | safe}
+    % if ctx.get('tracking'):
+        <ul>
+        % for tracking in ctx['tracking']
+            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+        % endfor
+        </ul>
+    % endif
+</div>
+<div>
+    <strong>Sent by</strong>
+    % if ctx.get('website_url'):
+    <a href="${ctx['website_url']}">
+    % endif
+    <strong>${ctx.get('company_name')}</strong>
+    % if ctx.get('website_url'):
+    </a>
+    % endif
+    <strong>using</strong>
+    <a href="www.odoo.com"><strong>Odoo</strong></a>
+</div>
+<div>
+   <p>
+        % if ctx.get('actions'):
+        % for action in ctx['actions']:
+        <a href="${action['url']}">${action['title']}</a>
+        % endfor
+        % endif
+
+        % if ctx.get('button_follow'):
+        % if ctx.get('actions'):
+           |
+        % endif
+        <a href="${ctx['button_follow']['url']}"><strong>${ctx['button_follow']['title']}</strong></a>
+        % elif ctx.get('button_unfollow'):
+        % if ctx.get('actions'):
+           |
+        % endif
+        <a href="${ctx['button_unfollow']['url']}"><strong>${ctx['button_unfollow']['title']}</strong></a>
+        % endif
+
+        % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):
+        % if ctx.get('actions'):
+           |
+        % endif
+        <a href="${ctx['button_access']['url']}"><strong>${ctx['button_access']['title']}</strong></a>
+        % endif
+    </p>
+</div>
+<div>
+    % if ctx.get('signature'):
+    ${ctx['signature'] | safe}
+    % endif
+</div>]]>
+        </field>
+    </record>
 
     </data>
 </openerp>
