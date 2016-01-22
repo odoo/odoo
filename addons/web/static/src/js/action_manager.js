@@ -787,10 +787,14 @@ var ActionManager = Widget.extend({
             });
         });
     },
-    ir_actions_act_url: function (action) {
+    ir_actions_act_url: function (action, options) {
         if (action.target === 'self') {
             framework.redirect(action.url);
         } else {
+            if (!this.dialog) {
+                options.on_close();
+            }
+            this.dialog_stop();
             window.open(action.url, '_blank');
         }
         return $.when();
