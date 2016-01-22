@@ -53,7 +53,7 @@
                                 <div attrs="{'invisible':[('compute_price', '!=', 'fixed')]}">
                                     <field name="fixed_price" nolabel= "1" widget='monetary' options="{'currency_field': 'currency_id'}"/></div>
                                 <div attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
-                                    <field name="percent_price" nolabel="1" class="oe_inline"/>%%
+                                    <field name="percent_price" nolabel="1" class="oe_inline"/>%
                                 </div>
                             </div>
                         </group>
@@ -72,7 +72,7 @@
                         <label for="price_discount"/>
                         <div class="o_row">
                             <field name="price_discount"/>
-                            <span>%%</span>
+                            <span>%</span>
                         </div>
                         <label string=" + " for="price_surcharge"/>
                         <field name="price_surcharge" nolabel="1"/>
