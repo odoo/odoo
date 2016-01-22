@@ -550,7 +550,7 @@
           <h3>Suggested alternatives:</h3>
           <div class='row mt16' style="">
           <t t-foreach="product.alternative_product_ids" t-as="product">
-              <div class='col-md-2 thumbnail' style='width: 170px; height:130px; float:left; display:inline; margin-right: 10px;'>
+              <div class='col-md-2 thumbnail' style='width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;'>
                   <div class='mt16 text-center'>
                       <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow" }'/>
                       <h5>
