@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Sergey <naviserg1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-26 09:05+0000\n"
-"PO-Revision-Date: 2015-11-27 08:49+0000\n"
+"POT-Creation-Date: 2016-01-20 13:58+0000\n"
+"PO-Revision-Date: 2016-01-21 10:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -388,7 +389,7 @@ msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - Напоминание"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:775
+#: code:addons/calendar/calendar.py:776
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -396,9 +397,21 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:773
+#: code:addons/calendar/calendar.py:774
 #, python-format
 msgid "%s at (%s To %s) (%s)"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:263
+#, python-format
+msgid "%s has accepted invitation"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:278
+#, python-format
+msgid "%s has declined invitation"
 msgstr ""
 
 #. module: calendar
@@ -408,7 +421,7 @@ msgid "<span> hours</span>"
 msgstr "<span> часы</span>"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1620
+#: code:addons/calendar/calendar.py:1613
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr "На электронную почту было отправлено письмо с целью оповещения, что дата была изменена !"
@@ -523,6 +536,13 @@ msgstr "Календарь"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "Календарь Будильник"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:43
+#, python-format
+msgid "Calendar Invitation"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -842,11 +862,6 @@ msgid ""
 msgstr "Если поле «Активен» имеет значение Истина, можно будет скрыть информацию об уведомлении о событии не удаляя её."
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
-msgid "Important Messages"
-msgstr "Важные сообщения"
-
-#. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
 msgstr "Приглашение"
@@ -992,11 +1007,6 @@ msgid "Messages"
 msgstr "Сообщения"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
-
-#. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
 msgstr "Минута(ы)"
@@ -1042,6 +1052,13 @@ msgstr "Название"
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
 msgstr "Требует действия"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#, python-format
+msgid "No I'm not going."
+msgstr ""
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1383,6 +1400,7 @@ msgstr "Ед."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_unread
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "Непрочитанные"
 
@@ -1439,9 +1457,37 @@ msgid "Weekday"
 msgstr "День недели"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:48
+#, python-format
+msgid "When"
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:52
+#, python-format
+msgid "Where"
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:56
+#, python-format
+msgid "Who"
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Год (а)"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:35
+#, python-format
+msgid "Yes I'm going."
+msgstr ""
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:106
