@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-20 08:43+0000\n"
+"PO-Revision-Date: 2016-01-21 01:30+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgstr "子规则"
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr "子工资规则"
+msgstr "子薪资规则"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,children_ids:0
@@ -305,7 +305,7 @@ msgstr "创建人"
 #: field:hr.salary.rule.category,create_date:0
 #: field:payslip.lines.contribution.register,create_date:0
 msgid "Created on"
-msgstr "创建"
+msgstr "创建时间"
 
 #. module: hr_payroll
 #: field:hr.payslip,credit_note:0 field:hr.payslip.run,credit_note:0
@@ -366,13 +366,13 @@ msgstr "指定"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Details By Salary Rule Category"
-msgstr "按工资规则类别分组的明细"
+msgstr "按薪资规则类别分组的明细"
 
 #. module: hr_payroll
 #: field:hr.payslip,details_by_salary_rule_category:0
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
-msgstr "按工资规则类别分组的明细"
+msgstr "按薪资规则类别分组的明细"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -459,7 +459,7 @@ msgstr "错误!"
 #. module: hr_payroll
 #: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "偶然第三方参与的员工薪酬支付"
+msgstr "偶然第三方参与的员工薪资支付"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
@@ -534,7 +534,7 @@ msgstr "如果勾选了这一项，表示这里生成的工资条是退还的工
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
-msgstr "如果去掉了“激活”这个字段上的勾，你可以不必删除就停用这个工资规则。"
+msgstr "如果去掉了“激活”这个字段上的勾，你可以不必删除就停用这个薪资规则。"
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
@@ -584,7 +584,7 @@ msgstr "用于计算。例如，某个规则是销售员每卖一件产品得到
 #: field:hr.salary.rule,write_uid:0 field:hr.salary.rule.category,write_uid:0
 #: field:payslip.lines.contribution.register,write_uid:0
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_date:0
@@ -596,24 +596,24 @@ msgstr "最后更新"
 #: field:hr.salary.rule.category,write_date:0
 #: field:payslip.lines.contribution.register,write_date:0
 msgid "Last Updated on"
-msgstr "最后一次更新"
+msgstr "最后更新时间"
 
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr "连接你的工资单到会计系统"
+msgstr "连接工资表到会计系统"
 
 #. module: hr_payroll
 #: help:hr.salary.rule.category,parent_id:0
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
-msgstr "工资类别的父级类别只用于报表"
+msgstr "薪资类别的父级类别只用于报告目的"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
 msgid "Made Payment Order ? "
-msgstr "新建付款单？ "
+msgstr "建立付款单？ "
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_max:0
@@ -630,7 +630,7 @@ msgstr "最小范围"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Miscellaneous"
-msgstr "其它"
+msgstr "杂项"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -683,7 +683,7 @@ msgstr "父级"
 #: field:hr.payslip.line,parent_rule_id:0
 #: field:hr.salary.rule,parent_rule_id:0
 msgid "Parent Salary Rule"
-msgstr "父级工资规则"
+msgstr "父级薪资规则"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
@@ -744,7 +744,7 @@ msgstr "工资表"
 #. module: hr_payroll
 #: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
-msgstr "付薪结构"
+msgstr "工资表结构"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -934,13 +934,13 @@ msgstr "退还"
 #: code:addons/hr_payroll/hr_payroll.py:334
 #, python-format
 msgid "Refund Payslip"
-msgstr "退回工资单"
+msgstr "退还工资单"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:324
 #, python-format
 msgid "Refund: "
-msgstr "冲销 "
+msgstr "退还："
 
 #. module: hr_payroll
 #: field:hr.contribution.register,register_line_ids:0
@@ -950,7 +950,7 @@ msgstr "记录明细"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Register Name:"
-msgstr "登记名称："
+msgstr "记录名称："
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -965,12 +965,12 @@ msgstr "规则"
 #. module: hr_payroll
 #: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
-msgstr "工资类别"
+msgstr "薪资类别"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
-msgstr "计算薪酬"
+msgstr "薪资计算"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree
@@ -979,26 +979,26 @@ msgstr "计算薪酬"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr "工资规则分类"
+msgstr "薪资规则分类"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr "工资规则类别树"
+msgstr "薪资规则类别层级"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Salary Rule Category"
-msgstr "工资规则分类"
+msgstr "薪资规则分类"
 
 #. module: hr_payroll
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr "工资规则输入"
+msgstr "薪薪资规则输入项"
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
@@ -1010,7 +1010,7 @@ msgstr "工资规则输入"
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 msgid "Salary Rules"
-msgstr "工资规则"
+msgstr "薪资规则"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:658
@@ -1025,19 +1025,19 @@ msgstr "工资条：%s %s"
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_tree
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
 msgid "Salary Structure"
-msgstr "薪酬结构"
+msgstr "薪资结构"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr "工资结构"
+msgstr "薪资结构"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
 msgid "Salary Structures Hierarchy"
-msgstr "工资结构树"
+msgstr "薪资结构层级"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
@@ -1062,7 +1062,7 @@ msgstr "查找工资单"
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
 msgid "Search Salary Rule"
-msgstr "搜索工资规则"
+msgstr "搜索薪资规则"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1106,13 +1106,13 @@ msgstr "所有当期员工的合同工资合计"
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
-msgstr "工资规则的编号可以被其他规则的计算公式引用，这样的话，它是区分大小写的。"
+msgstr "薪资规则的编号可以被其他规则的计算公式引用，这样的话，它是区分大小写的。"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,code:0 help:hr.payslip.worked_days,code:0
 #: help:hr.rule.input,code:0
 msgid "The code that can be used in the salary rules"
-msgstr "可以在工资规则中使用的编号"
+msgstr "可以在薪资规则中使用的编号"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0 help:hr.salary.rule,amount_select:0
@@ -1164,7 +1164,7 @@ msgstr "合计"
 #. module: hr_payroll
 #: field:hr.employee,total_wage:0
 msgid "Total Basic Salary"
-msgstr "基本工资合计"
+msgstr "基本薪资合计"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -1180,7 +1180,7 @@ msgstr "使用预定的序列排列"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr "用于显示工资单的工资规则"
+msgstr "用于工资单显示薪资规则"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1202,7 +1202,7 @@ msgstr "每周"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Worked Day"
-msgstr "已工作天数"
+msgstr "工作天数"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
