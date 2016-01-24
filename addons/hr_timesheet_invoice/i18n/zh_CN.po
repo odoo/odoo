@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-19 10:53+0000\n"
-"Last-Translator: leangjia <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-01-21 01:16+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n单击添加新的开票类型�
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Account"
-msgstr "项"
+msgstr "账户"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -60,23 +61,23 @@ msgstr "金额"
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
 msgid "Analytic Account Incomplete!"
-msgstr "辅助分析科目不完整！"
+msgstr "分析账户不完整！"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "辅助核算明细"
+msgstr "分析行"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
 msgid "Analytic Lines"
-msgstr "辅助核算明细"
+msgstr "分析行"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
@@ -85,23 +86,23 @@ msgstr "辅助核算明细"
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_graph
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_tree
 msgid "Analytic Lines to Invoice"
-msgstr "辅助核算明细的发票"
+msgstr "待开票分析行"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
-msgstr "关闭辅助核算项"
+msgstr "待关闭的分析账户"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
-msgstr "辅助核算明细开出发票的报表"
+msgstr "分析行到发票报告"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -332,7 +333,7 @@ msgstr "错误！"
 #: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_tree
 #: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_graph
 msgid "Expired analytic accounts"
-msgstr "过期的辅助核算项"
+msgstr "过去的分析账户"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -441,7 +442,7 @@ msgstr "对合同开发票"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Invoice is already linked to some of the analytic line(s)!"
-msgstr "部分成本行已开发票"
+msgstr "部分分析行已开发票"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
@@ -976,7 +977,7 @@ msgstr "是 (100%)"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
-msgstr "你不能修改发票的成本行"
+msgstr "你不能修改发票的分析行"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0

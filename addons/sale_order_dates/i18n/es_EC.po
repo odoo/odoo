@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-28 17:40+0000\n"
+"PO-Revision-Date: 2016-01-23 05:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-8/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -28,19 +28,19 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr ""
+msgstr "Fecha en la que el cliente a solicitado el envío de los productos.\nCuando un pedido se confirma, la fecha estimada del envío se calculará en base a los días de seguridad configurados en la compañía.\nDeja este campo vacío si quieres que se procese el envío lo antes posible. En este caso la fecha estimada se calculara utilizando el método por defecto, basado en el tiempo de entrega del producto y los días de seguridad configurados en la compañía."
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "Fecha en la que se asegura que los productos estarán enviados. Esta es la fecha de compromiso con el cliente, basada en el tiempo de entrega."
 
 #. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Fecha en la que se ha creado el primer envío."
 
 #. module: sale_order_dates
 #: view:sale.order:sale_order_dates.view_sale_orderfor
@@ -55,13 +55,13 @@ msgstr "Fecha vencimiento"
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
-msgstr ""
+msgstr "Fecha solicitud"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "¡ La fecha requerida es demasiado pronto !"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -74,4 +74,4 @@ msgstr "Pedido de Venta"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "Fecha de pedido de venta"

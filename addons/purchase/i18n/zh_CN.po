@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-02 04:42+0000\n"
+"PO-Revision-Date: 2016-01-21 01:27+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -351,7 +351,7 @@ msgstr "地址簿"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr "高级投标流程"
+msgstr "提前招标程序"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -488,17 +488,17 @@ msgstr "基于采购订单行"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr "接收的投标"
+msgstr "出价已收到"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "投标被收到关于"
+msgstr "出价已收到于时间"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr "投标有效直至"
+msgstr "出价有效至"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -517,7 +517,7 @@ msgid ""
 "Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
 "            You can configure per product if you directly do a Request for Quotation\n"
 "            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
-msgstr "当你要从几个供应商给一组产品询价时，使用采购招标单。\n                可为每个产品进行配置，如果只有一个供应商就直接询价，如果有多个供应商，就要进行采购谈判。"
+msgstr "招标用在当你要从几个供应商给一组产品询价时。\n                假如直接从某个供应商询价，或者，使用招标来比较多个供应商的出价，可配置每个产品。"
 
 #. module: purchase
 #: view:product.template:purchase.product_template_search_view_purchase
@@ -572,7 +572,7 @@ msgstr "产品类别"
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Choose from several bids in a call for bids"
-msgstr "在一个投标请求的多个投标中进行选择。"
+msgstr "在招标的多个出价中选择。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -683,12 +683,12 @@ msgstr "采购订单审批日期"
 #. module: purchase
 #: help:purchase.order,bid_validity:0
 msgid "Date on which the bid expired"
-msgstr "投标到期日"
+msgstr "出价到期日"
 
 #. module: purchase
 #: help:purchase.order,bid_date:0
 msgid "Date on which the bid was received"
-msgstr "投标接收日期"
+msgstr "出价接收到的日期"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -907,7 +907,7 @@ msgstr "要删除采购订单，你必须先取消它"
 msgid ""
 "In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
-msgstr "在公开投标的流程中，你可以对招标行进行比较并为投标的产品选择\n           采购多少数量"
+msgstr "在公开招标流程中，你可以对出价行进行比较，并为每个招标的产品选择从相应的出价中购买相应的数量"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1086,7 +1086,7 @@ msgstr "请确认至少定义了一个入库分拣类型"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
-msgstr "管理投标请求"
+msgstr "管理招标"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
@@ -1602,7 +1602,7 @@ msgstr "询价单"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr "询价单和投标"
+msgstr "RFQ  & 出价"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1648,12 +1648,12 @@ msgstr "重新用电邮发送询价单"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Invoice"
-msgstr "接收发票"
+msgstr "收到发票"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Products"
-msgstr "收货"
+msgstr "收到货物"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -1690,7 +1690,7 @@ msgid ""
 "Reference of the sales order or bid sent by your supplier. It's mainly used "
 "to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr "你的供应商发给你的销售订单或询价单的参考单号。主要用于当你收到货物时，供应商有可能会把这个参考号写在他们的发货清单上，此时你可以用它来进行单号对照。"
+msgstr "销售订单的参考，或者供应商给出的出价。主要用于当你收到货物时，供应商有可能会把这个参考写在他们的交货单上，此时你可以用它来进行匹配。"
 
 #. module: purchase
 #: view:website:purchase.report_purchasequotation_document
