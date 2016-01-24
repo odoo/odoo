@@ -69,7 +69,7 @@ class AccountInvoice(models.Model):
             invoice_line_tax_ids = self.purchase_id.fiscal_position_id.map_tax(taxes)
             data = {
                 'purchase_line_id': line.id,
-                'name': line.name,
+                'name': self.purchase_id.name+': '+line.name,
                 'origin': self.purchase_id.origin,
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
