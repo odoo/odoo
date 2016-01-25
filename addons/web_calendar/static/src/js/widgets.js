@@ -53,7 +53,7 @@ var QuickCreate = Dialog.extend({
             return _t("Create");
         }
         var title = (_.isUndefined(parent.field_widget)) ?
-                (parent.string || parent.name) :
+                (parent.title || parent.string || parent.name) :
                 (parent.field_widget.string || parent.field_widget.name || '');
         return _t("Create: ") + title;
     },
