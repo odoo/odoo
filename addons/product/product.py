@@ -504,7 +504,7 @@ class product_template(osv.osv):
             'product.packaging', 'product_tmpl_id', 'Logistical Units',
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Vendor'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Vendors'),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
