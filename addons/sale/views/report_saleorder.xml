@@ -5,19 +5,20 @@
     <t t-call="report.external_layout">
         <div class="page">
             <div class="oe_structure"/>
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 180, 50)" style="width:180px;height:50px;"/>
             <div class="row">
                 <div class="col-xs-6">
                     <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
                     <strong t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address:</strong>
-                    <div t-field="o.partner_invoice_id" 
+                    <div t-field="o.partner_invoice_id"
                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                     <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                     <div t-if="o.partner_shipping_id != o.partner_invoice_id" class="mt8">
                         <strong>Shipping address:</strong>
-                        <div t-field="o.partner_shipping_id" 
+                        <div t-field="o.partner_shipping_id"
                             t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                         <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                    </div>                        
+                    </div>
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
                     <div t-field="o.partner_id"
