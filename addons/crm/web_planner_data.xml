@@ -121,10 +121,10 @@
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle">My Pipeline</t>
+                <t t-set="menu_categorytitle">Sale Flow</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-tag'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">My Pipeline</t>
+                    <t t-set="page_title">Pipeline</t>
                     <p class="text-muted">
                         Systematic organization is what makes the difference
                         between good and great salespeople! Setup a pipeline
@@ -260,84 +260,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Customizations</t>
-                    <p class="text-muted">
-                        <strong>Every business is different.</strong> Odoo allows to
-                        customize every application and it's usually a good
-                        advice to customize screens to fit your sales process.
-                        <strong>Customizations are done by Odoo experts.</strong>
-
-                    </p><p class="text-muted">
-                        Here are some of the <strong>customizations available</strong>:
-                    </p>
-                    <section  data-snippet-id="pricing">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="panel panel-success">
-                                    <div class="panel-heading">
-                                        <span class="panel-title">
-                                            <span class="fa fa-laptop"/>
-                                            <strong> Screen Customization</strong>
-                                        </span>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p>
-                                            We can add fields related to your business on any screen, for example
-                                        </p>
-                                        <li>Number of Rooms</li>
-                                        <li>Existing Tools</li>
-                                        <li>Licences</li>
-                                        <li>....</li>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="panel panel-success">
-                                    <div class="panel-heading">
-                                        <span class="panel-title">
-                                            <span class="fa fa-sitemap"/>
-                                            <strong> Workflow Customization</strong>
-                                        </span>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p>We can automate steps in your workflow, for example:</p>
-                                        <li>Send an email to all opportunities in the "Qualified" stage for more than 20 days</li>
-                                        <li>Set the sales manager as a follower of every opportunity above $20k</li>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="panel panel-success">
-                                    <div class="panel-heading">
-                                        <span class="panel-title">
-                                            <span class="fa fa-pencil-square-o"/>
-                                            <strong> Create Custom Reports</strong>
-                                        </span>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p>
-                                            We can implement custom reports for you based on your Word templates, for example:
-                                        </p>
-                                        <li> Attach a qualification form to every house opportunity</li>
-                                        <li> Change the layout of a quotation</li>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="well well-lg">
-                                    <span><strong>Contact us to customize your application:</strong><br/>
-                                    We have special options for unlimited number of customizations!
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </t>
-
-                <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Proposal</t>
+                    <t t-set="page_title">Proposal</t>
                     <p class="text-muted">
                         Odoo will help you create polished, professional quotations and contracts in minutes.
                         Tell us how you sell and we will tell you what
@@ -410,9 +333,71 @@
                         and upgrade later.
                     </div>
                 </t>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Deployment</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Incoming Emails</t>
+                    <p class="text-muted">
+                        There are several ways for your company to generate leads with Odoo CRM. 
+                        One of them is using your company's generic email address as a trigger 
+                        to create a new lead in the system. In Odoo, each one of your sales teams 
+                        is linked to its own email address from which prospects can reach them. 
+                        For example, if the personal email address of your Direct team is 
+                        direct@mycompany.example.com, every email sent when a new prospect 
+                        contacts you will automatically create a new opportunity into the sales team.
+
+                        That's the easiest way to integrate Odoo with third party apps.
+                    </p>
+                    <h4>The point of contact <strong>for all your prospects</strong></h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well well-sm text-center">
+                                <h4><span class="fa" data-icon="&#xe01e;"/><t t-if="alias_name and alias_domain"> <t t-esc="alias_name"/>@<t t-esc="alias_domain"/></t></h4>
+                            </div>
+                            <div class="well well-sm text-center relative">
+                                <p>
+                                    This email address has been preconfigured as the default
+                                    for your sales department.<br/>
+                                    <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">(you can change it here)</a>
+                                </p>
+                                <span class="arrow-down"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="well well-lg">
+                                <h4><span class="label label-default text-center odoo_purple">Incoming email</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Lead</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Opportunity</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Quotation</span></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="well well-lg">
+                                <p><strong>
+                                <h4><a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">Contact Us</a></h4>to setup your own domain
+                                 name (e.g. sales@yourcompany.com)</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        <p>Don't forget to change this address on:</p>
+                        <ul>
+                            <li>Your business cards</li>
+                            <li>Your document templates</li>
+                            <li>Your LinkedIn or social media pages</li>
+                            <li>Your website</li>
+                        </ul>
+                    </div>
+                </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Customers</t>
+                    <t t-set="page_title">Customers</t>
                     <p class="text-muted">
                         Unless you are starting a new business, you probably have a list of customers and vendors you'd like to import.
                     </p>
@@ -476,7 +461,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Products</t>
+                    <t t-set="page_title">Products</t>
                     <p>A product in Odoo is something you sell or buy. It could
                     be a goods, consumable or services. Choose how you want to
                     create your products:
@@ -533,7 +518,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Prices</t>
+                    <t t-set="page_title">Prices</t>
                     <p class="text-muted">
                     In Odoo, there are 3 different ways to manage your products prices.<br/>
                     </p>
@@ -611,60 +596,7 @@
                         </p>
                     </div>
                 </t>
-            </t>
-            <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle">Deployment</t>
-                <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
-                <t t-call="web_planner.page">
-                    <t t-set="page_title">Incoming Emails</t>
-                    <p class="text-muted">
-                        Incoming email create leads automatically when a new prospect contacts you.
-                        That's the easiest way to integrate Odoo with third party apps.
-                    </p>
-                    <h4>The point of contact <strong>for all your prospects</strong></h4>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="well well-sm text-center">
-                                <h4><span class="fa" data-icon="&#xe01e;"/><t t-if="alias_name and alias_domain"> <t t-esc="alias_name"/>@<t t-esc="alias_domain"/></t></h4>
-                            </div>
-                            <div class="well well-sm text-center relative">
-                                <p>
-                                    This email address has been preconfigured as the default
-                                    for your sales department.<br/>
-                                    <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">(you can change it here)</a>
-                                </p>
-                                <span class="arrow-down"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <div class="well well-lg">
-                                <h4><span class="label label-default text-center odoo_purple">Incoming email</span></h4>
-                                <span class="fa fa-angle-down fa-2x"></span>
-                                <h4><span class="label label-default text-center odoo_purple">Lead</span></h4>
-                                <span class="fa fa-angle-down fa-2x"></span>
-                                <h4><span class="label label-default text-center odoo_purple">Opportunity</span></h4>
-                                <span class="fa fa-angle-down fa-2x"></span>
-                                <h4><span class="label label-default text-center odoo_purple">Quotation</span></h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="well well-lg">
-                                <p><strong>
-                                <h4><a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">Contact Us</a></h4>to setup your own domain
-                                 name (e.g. sales@yourcompany.com)</strong></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="alert alert-info" role="alert">
-                        <p>Don't forget to change this address on:</p>
-                        <ul>
-                            <li>Your business cards</li>
-                            <li>Your document templates</li>
-                            <li>Your LinkedIn or social media pages</li>
-                            <li>Your website</li>
-                        </ul>
-                    </div>
-                </t>
+
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Reporting</t>
                     <h4><strong>Click on 'Reporting' in the main menu </strong>and browse statistics:</h4>
@@ -733,7 +665,85 @@
                         <li>Save filters or add any report to your dashboard with the Favorites menu.</li>
                     </div>
                 </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Customizations</t>
+                    <p class="text-muted">
+                        <strong>Every business is different.</strong> Odoo allows to
+                        customize every application and it's usually a good
+                        advice to customize screens to fit your sales process.
+                        <strong>Customizations are done by Odoo experts.</strong>
+
+                    </p><p class="text-muted">
+                        Here are some of the <strong>customizations available</strong>:
+                    </p>
+                    <section  data-snippet-id="pricing">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-laptop"/>
+                                            <strong> Screen Customization</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>
+                                            We can add fields related to your business on any screen, for example
+                                        </p>
+                                        <li>Number of Rooms</li>
+                                        <li>Existing Tools</li>
+                                        <li>Licences</li>
+                                        <li>....</li>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-sitemap"/>
+                                            <strong> Workflow Customization</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>We can automate steps in your workflow, for example:</p>
+                                        <li>Send an email to all opportunities in the "Qualified" stage for more than 20 days</li>
+                                        <li>Set the sales manager as a follower of every opportunity above $20k</li>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-pencil-square-o"/>
+                                            <strong> Create Custom Reports</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>
+                                            We can implement custom reports for you based on your Word templates, for example:
+                                        </p>
+                                        <li> Attach a qualification form to every house opportunity</li>
+                                        <li> Change the layout of a quotation</li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="well well-lg">
+                                    <span><strong>Contact us to customize your application:</strong><br/>
+                                    We have special options for unlimited number of customizations!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </t>
             </t>
+
             <t t-call="web_planner.category">
                 <t t-set="menu_categorytitle">Grow revenues</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
