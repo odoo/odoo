@@ -88,7 +88,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
             strip_prefix('messages.', field_onchange),
-            ['author', 'body', 'name', 'size'],
+            ['author', 'body', 'name', 'size', 'tags'],
         )
 
         # modify discussion name
@@ -104,6 +104,7 @@ class TestOnChange(common.TransactionCase):
                     'body': BODY,
                     'author': USER.id,
                     'size': len(BODY),
+                    'tags': [],
                 }),
             ],
         }
@@ -112,17 +113,20 @@ class TestOnChange(common.TransactionCase):
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
             (5,),
+            (4, message.id),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': message.body,
                 'author': message.author.name_get()[0],
                 'size': message.size,
+                'tags': [(5,)],
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
                 'size': len(BODY),
+                'tags': [(5,)],
             }),
         ])
 
@@ -153,11 +157,14 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = discussion.onchange(values, 'moderator', field_onchange)
 
+        participants_value = [(5,)]
+        for user in discussion.participants + demo:
+            participants_value.append((4, user.id))
+            participants_value.append((1, user.id, {'display_name': user.display_name}))
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(1, user.id, {'display_name': user.display_name})
-                      for user in discussion.participants + demo],
+            participants_value,
         )
 
     def test_onchange_one2many_value(self):

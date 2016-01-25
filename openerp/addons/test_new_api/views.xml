@@ -52,12 +52,14 @@
                                     <tree string="Messages">
                                         <field name="name"/>
                                         <field name="body"/>
+                                        <field name="tags" widget="many2many_tags"/>
                                     </tree>
                                     <form string="Message" version="7.0">
                                         <group>
                                             <field name="name"/>
                                             <field name="author"/>
                                             <field name="size"/>
+                                            <field name="tags" widget="many2many_tags"/>
                                         </group>
                                         <label for="body"/>
                                         <field name="body"/>
@@ -100,6 +102,7 @@
                                         <field name="author"/>
                                         <field name="body" required="1"/>
                                         <field name="size"/>
+                                        <field name="tags" widget="many2many_tags"/>
                                     </tree>
                                 </field>
                             </page>
@@ -148,6 +151,7 @@
                             <field name="name"/>
                             <field name="author"/>
                             <field name="size"/>
+                            <field name="tags" widget="many2many_tags"/>
                         </group>
                         <label for="body"/>
                         <field name="body"/>

@@ -58,7 +58,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this._onchange_specs = {};
         this.onchanges_mutex = new utils.Mutex();
         this.default_focus_field = null;
         this.default_focus_button = null;
@@ -83,7 +82,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.rendering_engine = new FormRenderingEngine(this);
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
-            self._build_onchange_specs();
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.check_actual_mode);
             self.on("change:actual_mode", self, self.toggle_buttons);
@@ -368,25 +366,29 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
+
+        self.on_form_changed();
+        self.rendering_engine.init_fields();
+        self.is_initialized.resolve();
+        self.do_update_pager(record.id === null || record.id === undefined);
+        if (self.sidebar) {
+           self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+        }
+        if (record.id) {
+            self.do_push_state({id:record.id});
+        } else {
+            self.do_push_state({});
+        }
+        self.$el.removeClass('oe_form_dirty');
+        self.autofocus();
+
         return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
-                // trigger onchanges
-                self.do_onchange(null);
+                _.defer(function() {
+                    // trigger onchanges
+                    self.do_onchange(null);
+                });
             }
-            self.on_form_changed();
-            self.rendering_engine.init_fields();
-            self.is_initialized.resolve();
-            self.do_update_pager(record.id === null || record.id === undefined);
-            if (self.sidebar) {
-               self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
-            }
-            if (record.id) {
-                self.do_push_state({id:record.id});
-            } else {
-                self.do_push_state({});
-            }
-            self.$el.removeClass('oe_form_dirty');
-            self.autofocus();
         });
     },
     /**
@@ -463,16 +465,13 @@ var FormView = View.extend(common.FieldManagerMixin, {
         };
 
         self._onchange_fields = [];
-        self._onchange_specs = {};
+        var _onchange_specs = {};
         _.each(this.fields, function(field, name) {
             self._onchange_fields.push(name);
-            self._onchange_specs[name] = find(name, field.node);
-            _.each(field.field.views, function(view) {
-                _.each(view.fields, function(_, subname) {
-                    self._onchange_specs[name + '.' + subname] = find(subname, view.arch);
-                });
-            });
+            _.extend(_onchange_specs, field._get_onchange_fields());
         });
+
+        return _onchange_specs;
     },
     _get_onchange_values: function() {
         var field_values = this.get_fields_values();
@@ -496,7 +495,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
     do_onchange: function(widget) {
         var self = this;
-        var onchange_specs = self._onchange_specs;
+        var onchange_specs = this._build_onchange_specs();
         try {
             var def = $.when({});
             var change_spec = widget ? onchange_specs[widget.name] : null;

@@ -770,10 +770,10 @@ var BufferedDataSet = DataSetStatic.extend({
             if (options.to_create !== undefined) cached.to_create = options.to_create;
             if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
         }
-        cached.values = _.extend({'id': id}, cached.from_read, cached.changes, cached.readonly_fields);
+        cached.values = _.extend({'id': id}, cached.from_read, cached.readonly_fields, cached.changes);
         return cached;
     },
-    create: function(data, options) {        
+    create: function(data, options) {
         var changes = _.extend({}, this.last_default_get, data);
         var cached = this._update_cache(_.uniqueId(this.virtual_id_prefix), _.extend({'changes': changes, 'to_create': true}, options));
         this.trigger("dataset_changed", data, options);
@@ -802,6 +802,19 @@ var BufferedDataSet = DataSetStatic.extend({
                     delete data[k];
                 }
             });
+
+            // prevent future changes to detect wrong development
+            if (self.debug_mode) {
+                (function freeze (obj) {
+                    Object.freeze(obj);
+                    _.each(obj, function (v, k) {
+                        if (_.isObject(v)) {
+                            freeze(v);
+                        }
+                    });
+                })(data);
+            }
+
             self._update_cache(id, options);
 
             if (dirty) {
@@ -843,7 +856,7 @@ var BufferedDataSet = DataSetStatic.extend({
         var self = this;
         var to_get = _.filter(ids, function(id) {
             var cache = self.get_cache(id);
-            return !cache.to_create && _.any(fields, function(x) {return cache.from_read[x] === undefined;});
+            return !cache.to_create && _.any(fields, function(x) {return cache.from_read[x] === undefined && cache.changes[x] === undefined;});
         });
         options = options || {};
 
@@ -942,11 +955,11 @@ var BufferedDataSet = DataSetStatic.extend({
         this.evict_record(id);
         return this._super(id, signal);
     },
-    alter_ids: function(n_ids) {
+    alter_ids: function(n_ids, options) {
         var dirty = !_.isEqual(this.ids, n_ids);
         this._super(n_ids);
         if (dirty) {
-            this.trigger("dataset_changed", n_ids);
+            this.trigger("dataset_changed", n_ids, options);
         }
     },
 });
