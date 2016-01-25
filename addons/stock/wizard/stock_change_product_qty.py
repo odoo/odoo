@@ -72,6 +72,9 @@ class stock_change_product_qty(osv.osv_memory):
             res['location_id'] = location_id
         return res
 
+    def _finalize_inventory_line(self, cr, uid, data, context=None):
+        return {}
+
     def change_product_qty(self, cr, uid, ids, context=None):
         """ Changes the Product Quantity by making a Physical Inventory.
         @param self: The object pointer.
@@ -116,6 +119,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'theoretical_qty': th_qty,
                 'prod_lot_id': data.lot_id.id
             }
+            line_data.update(self._finalize_inventory_line(cr, uid, data, context=context))
             inventory_line_obj.create(cr , uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
