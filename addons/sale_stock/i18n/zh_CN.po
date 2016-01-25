@@ -4,14 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-01 08:20+0000\n"
+"PO-Revision-Date: 2016-01-21 01:27+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -37,12 +37,12 @@ msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
-msgstr "允许您在销售订单和交货订单中添加送货方式。\n您可以定义自己的承运商和运输网的价格\n-这将安装delivery模块。"
+msgstr "允许您在销售订单和交货订单中添加交货方式。\n您可以定义自己的承运商和运输网络的价格\n-这将安装delivery模块。"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr "允许在销售订单行上选择一个送货路线"
+msgstr "允许在销售订单行上选择一个交货路线"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -95,28 +95,28 @@ msgstr "当所有商品可用后一次性送货"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "一次性送货"
+msgstr "一次性交货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "分批送货"
+msgstr "分批交货"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr "已送货"
+msgstr "已交货"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "待开票的送货"
+msgstr "待开票的交货"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "开启按送货单开票"
+msgstr "开启按交货单开票"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -126,7 +126,7 @@ msgstr "开启销售订单行上的路线"
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于送货单开票"
+msgstr "基于交货单开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -153,7 +153,7 @@ msgstr "库存路线"
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "基于送货单的发票"
+msgstr "基于交货单的发票"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -173,7 +173,7 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交付，以应对供应链中的意外延误。"
+msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交货，以应对供应链中的意外延误。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:347
@@ -201,7 +201,7 @@ msgstr "包装形式"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr "如果你允许部分交付， 选择‘每个产品可用时发运’"
+msgstr "如果你允许部分交货， 选择‘每个产品可用时交货’"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
@@ -247,7 +247,7 @@ msgstr "项目工时单"
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr "重建送货单"
+msgstr "重建交货单"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
@@ -332,12 +332,12 @@ msgstr "待开票"
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr "允许销售员 使用菜单“待开票的送货”  根据送货单开发票"
+msgstr "允许销售员 使用菜单“待开票的交货”  根据交货单开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "查看送货单"
+msgstr "查看交货单"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
@@ -354,7 +354,7 @@ msgstr "你可以根据销售订单或送货生成发票。"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr "你必须先取消附加到这个销售订单的所有送货单。"
+msgstr "你必须先取消附加到这个销售订单的所有交货单。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
