@@ -895,6 +895,25 @@ class ProductTemplate(models.Model):
         return []
 
     @api.multi
+    def action_view_purchases(self):
+        from pudb import set_trace; set_trace()
+        self.ensure_one()
+        action = self.env.ref('purchase.action_purchase_line_product_tree')
+        product_ids = self.product_variant_ids.ids
+
+        return {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'view_type': action.view_type,
+            'view_mode': action.view_mode,
+            'target': action.target,
+            'context': "{'search_default_product_id': " + ','.join(map(str, product_ids)) + ", 'default_product_id': " + str(product_ids[0]) + "}",
+            'res_model': action.res_model,
+            'domain': action.domain,
+        }
+
+    @api.multi
     def _purchase_count(self):
         for template in self:
             template.purchase_count = sum([p.purchase_count for p in template.product_variant_ids])
