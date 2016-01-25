@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-13 15:01+0000\n"
+"PO-Revision-Date: 2016-01-23 14:45+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -163,7 +163,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Offerte</spa
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
-msgstr "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Afspraken</span>\n                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Vergadering</span>"
+msgstr "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Afspraken</span>\n                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Afspraak</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -176,7 +176,7 @@ msgstr "<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', ('next_activit
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
-msgstr "<span class=\"oe_grey\"> aan </span>"
+msgstr "<span class=\"oe_grey\"> bij </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -779,7 +779,7 @@ msgstr "Maak automatisch een e-mail alias aan bij het aanmaken van een verkoopte
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Avg. of Probability"
-msgstr "Gemidd. waarschijnlijkheid"
+msgstr "Gemidd. kans"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1863,13 +1863,6 @@ msgstr "Indien u dit zelf wenst te doen:"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Import using the top left button in"
 msgstr "Importeer met de knop links bovenaan in"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2979,12 +2972,12 @@ msgstr "Toelichting bij het toekennen van prioriteiten"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
-msgstr "Waarschijnlijkheid"
+msgstr "Kans"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_probability
 msgid "Probability (%)"
-msgstr "Waarschijnlijkheid (%)"
+msgstr "Kans (%)"
 
 #. module: crm
 #: code:addons/crm/sales_team.py:31
@@ -3234,7 +3227,7 @@ msgstr "Maak de verkoopdirecteur een abonnee voor elke prospect boven 20k€"
 msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
-msgstr "Door deze fase in te stellen wordt de lead automatisch omgezet in een prospect."
+msgstr "Door deze fase in te stellen wordt de kans op de prospect automatisch gewijzigd."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3520,7 +3513,7 @@ msgstr "Het aanspreekpunt <strong>voor al uw prospects</strong>"
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr "De waarschijnlijkheid voor het sluiten van de opdracht moet liggen tussen de )% en 100%!"
+msgstr "De kans voor het sluiten van de opdracht moet liggen tussen de )% en 100%!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3690,6 +3683,9 @@ msgstr "U hebt waarschijnlijk een lijst met klanten en leveranciers die u wil im
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 

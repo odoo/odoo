@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# SV <svilij@yahoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-01-06 08:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-20 16:01+0000\n"
+"Last-Translator: SV <svilij@yahoo.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n       \n<p>\n${object.name},\n</p>\n<p>\nВы были приглашены присоединиться к \"${object.company_id.name}\" для доступа к вашим документам в Odoo.\n</p>\n<p>\nДля подтверждения приглашения пройдите по ссылке:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Принять приглашение \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nСпасибо,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>\n    \n    "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -56,12 +57,12 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Был запрошен сброс пароля для аккаунта Odoo  связанного с этим адресом эл.почты</p>\n\n<p>Вы можете сменить пароль, проследовав по <a href=\"${object.signup_url}\"> этой ссылке</a>, которая будет действовать в течение 24 часов.</p>\n\n<p>Примечание: если вы не запрашивали сброс пароля, просто проигнорируйте данное письмо</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} приглашение для подключения к Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view

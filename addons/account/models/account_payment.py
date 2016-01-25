@@ -87,10 +87,12 @@ class account_abstract_payment(models.AbstractModel):
         if all(inv.currency_id == payment_currency for inv in invoices):
             total = sum(invoices.mapped('residual_signed'))
         else:
-            total = sum(invoices.mapped('residual_company_signed'))
-            company_currency = self.company_id.currency_id if self.company_id else self.env.user.company_id.currency_id
-            if company_currency and company_currency != payment_currency:
-                total = company_currency.with_context(date=self.payment_date).compute(total, payment_currency)
+            total = 0
+            for inv in invoices:
+                if inv.company_currency_id != payment_currency:
+                    total += inv.company_currency_id.with_context(date=self.payment_date).compute(inv.residual_company_signed, payment_currency)
+                else:
+                    total += inv.residual_company_signed
         return abs(total)
 
 

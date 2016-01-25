@@ -550,11 +550,11 @@ var KanbanView = View.extend({
             dataset.read_ids(_.uniq(rel.ids), ['name', 'color']).done(function(result) {
                 result.forEach(function(record) {
                     // Does not display the tag if color = 0
-                    if (record['color']){
+                    if (record.color){
                         var $tag = $('<span>')
-                            .addClass('o_tag o_tag_color_' + record['color'])
-                            .attr('title', _.str.escapeHTML(record['name']));
-                        $(rel.elements[record['id']]).append($tag);
+                            .addClass('o_tag o_tag_color_' + record.color)
+                            .attr('title', _.str.escapeHTML(record.name));
+                        $(rel.elements[record.id]).append($tag);
                     }
                 });
                 // we use boostrap tooltips for better and faster display
@@ -718,7 +718,7 @@ var KanbanView = View.extend({
             column.offset += self.limit;
             column.remaining = Math.max(column.remaining - self.limit, 0);
             column.update_column();
-            self.postprocess_m2m_tags(column.records);
+            self.postprocess_m2m_tags(column.records.slice(column.offset));
         });
     },
 

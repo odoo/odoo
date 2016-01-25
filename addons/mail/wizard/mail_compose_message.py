@@ -188,7 +188,7 @@ class MailComposer(models.TransientModel):
     @api.multi
     def send_mail_action(self):
         # TDE/ ???
-        return self.send_mail()
+        return self.with_context(report_template_in_attachment=True).send_mail()
 
     @api.multi
     def send_mail(self, auto_commit=False):
@@ -346,6 +346,20 @@ class MailComposer(models.TransientModel):
             if template.user_signature and 'body_html' in values:
                 signature = self.env.user.signature
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
+            if template.report_template:
+                attachment = self.env['ir.attachment']
+                attach = self.generate_attachment_from_report(template_id, res_id)
+                for attach_fname, attach_datas in attach[res_id].pop('attachments', []):
+                    data_attach = {
+                        'name': attach_fname,
+                        'datas': attach_datas,
+                        'datas_fname': attach_fname,
+                        'res_model': 'mail.compose.message',
+                        'res_id': 0,
+                        'type': 'binary',
+                    }
+                values.setdefault('attachment_ids', list()).append(attachment.create(data_attach).id)
+
         elif template_id:
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -375,6 +389,13 @@ class MailComposer(models.TransientModel):
         values = self._convert_to_write(self._convert_to_cache(values))
 
         return {'value': values}
+
+    @api.multi
+    def generate_attachment_from_report(self, template_id, res_id):
+        fields = ['attachment_ids']
+        result = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email([res_id], fields=fields)
+        return result
+
 
     @api.multi
     def save_as_template(self):

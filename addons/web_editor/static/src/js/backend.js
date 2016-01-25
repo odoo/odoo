@@ -65,12 +65,17 @@ var FieldTextHtmlSimple = widget.extend({
         this.$content = $();
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<iframe class="o_readonly"/>');
-            setTimeout(function () {
-                self.$content = $("body", self.$('iframe').contents()[0]);
-                self.$content.html(self.text_to_html(self.get('value')));
-                self.resize();
-            });
+            if (this.options['style-inline']) {
+                this.$textarea.hide().after('<iframe class="o_readonly"/>');
+                setTimeout(function () {
+                    self.$content = $("body", self.$('iframe').contents()[0]);
+                    self.$content.html(self.text_to_html(self.get('value')));
+                    self.resize();
+                });
+            } else {
+                this.$content = $('<div class="note-editable o_readonly"/>');
+                this.$textarea.hide().after(this.$content);
+            }
         } else {
             this.$textarea.summernote(this._config());
 
@@ -119,10 +124,10 @@ var FieldTextHtmlSimple = widget.extend({
             return this.$content.focusInEnd();
         } catch (e) {
             return this.$content.focus();
-        };
+        }
     },
     resize: function() {
-        this.$('iframe').css('height', '0px').css('height', Math.max(180, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function() {
         var value = this.get('value');
