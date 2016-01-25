@@ -73,6 +73,7 @@ class WebsiteForm(http.Controller):
         'char': identity,
         'text': identity,
         'html': identity,
+        'date': identity,
         'datetime': identity,
         'many2one': integer,
         'one2many': one2many,
