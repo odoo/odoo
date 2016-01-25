@@ -4908,10 +4908,10 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule,self)._get_type_selection()) 
         types.update([
-            ('weight','Weighted Product'),
-            ('location','Location'),
-            ('lot','Lot'),
-            ('package','Package')
+            ('weight', _('Weighted Product')),
+            ('location', _('Location')),
+            ('lot', _('Lot')),
+            ('package', _('Package'))
         ])
         return list(types)
 
