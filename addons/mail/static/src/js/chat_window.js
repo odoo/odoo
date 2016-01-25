@@ -24,10 +24,10 @@ return Widget.extend({
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
-        this.placeholder = _t("Say something");
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
             display_stars: true,
+            placeholder: _t("Say something"),
         });
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
