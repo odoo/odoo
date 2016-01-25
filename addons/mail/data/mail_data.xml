@@ -229,16 +229,6 @@
         % if ctx.get('signature'):
         ${ctx['signature'] | safe}
         % endif
-    <strong style="color: #777777;">Sent by</strong>
-    % if ctx.get('website_url'):
-    <a href="${ctx['website_url']}">
-    % endif
-    <strong>${ctx.get('company_name')}</strong>
-    % if ctx.get('website_url'):
-    </a>
-    % endif
-    <strong style="color: #777777;">using</strong>
-    <a href="www.odoo.com"><strong>Odoo</strong></a>
     </p>
 </div>]]>
         </field>
