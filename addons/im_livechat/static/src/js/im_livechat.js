@@ -64,14 +64,17 @@ var LivechatButton = Widget.extend({
                 this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
             }
         }
-        bus.on('notification', this, function (notification) {
-            if (this.channel && (notification[0] === this.channel.uuid)) {
-                this.add_message(notification[1]);
-                this.render_messages();
-                if (this.chat_window.folded || !this.chat_window.thread.is_at_bottom()) {
-                    this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+        bus.on('notification', this, function (notifications) {
+            var self = this;
+            _.each(notifications, function (notification) {
+                if (self.channel && (notification[0] === self.channel.uuid)) {
+                    self.add_message(notification[1]);
+                    self.render_messages();
+                    if (self.chat_window.folded || !self.chat_window.thread.is_at_bottom()) {
+                        self.chat_window.update_unread(self.chat_window.unread_msgs+1);
+                    }
                 }
-            }
+            });
         });
         return this._super();
     },

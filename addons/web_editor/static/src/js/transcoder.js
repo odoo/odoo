@@ -84,7 +84,7 @@ var getMatchedCSSRules = function (a) {
     var style = {};
     _.each(css, function (v,k) {
         _.each(v[1], function (v,k) {
-            if (k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
+            if (v && k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
                 style[k] = v;
             }
         });

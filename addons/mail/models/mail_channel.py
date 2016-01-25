@@ -312,7 +312,11 @@ class Channel(models.Model):
                 info['info'] = extra_info
             # add the partner for 'direct mesage' channel
             if channel.channel_type == 'chat':
-                info['direct_partner'] = channel.sudo().channel_partner_ids.filtered(lambda p: p.id != self.env.user.partner_id.id).read(['id', 'name', 'im_status'])
+                info['direct_partner'] = (channel.sudo()
+                                          .with_context(active_test=False)
+                                          .channel_partner_ids
+                                          .filtered(lambda p: p.id != self.env.user.partner_id.id)
+                                          .read(['id', 'name', 'im_status']))
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)

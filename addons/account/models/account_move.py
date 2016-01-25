@@ -706,11 +706,11 @@ class AccountMoveLine(models.Model):
         if len(new_mv_line_dicts) > 0:
             writeoff_lines = self.env['account.move.line']
             company_currency = self[0].account_id.company_id.currency_id
-            account_currency = self[0].account_id.currency_id or company_currency
+            writeoff_currency = self[0].currency_id or company_currency
             for mv_line_dict in new_mv_line_dicts:
-                if account_currency != company_currency:
-                    mv_line_dict['debit'] = account_currency.compute(mv_line_dict['debit'], company_currency)
-                    mv_line_dict['credit'] = account_currency.compute(mv_line_dict['credit'], company_currency)
+                if writeoff_currency != company_currency:
+                    mv_line_dict['debit'] = writeoff_currency.compute(mv_line_dict['debit'], company_currency)
+                    mv_line_dict['credit'] = writeoff_currency.compute(mv_line_dict['credit'], company_currency)
                 writeoff_lines += self._create_writeoff(mv_line_dict)
 
             (self + writeoff_lines).reconcile()
@@ -831,10 +831,11 @@ class AccountMoveLine(models.Model):
             vals['debit'] = amount < 0 and abs(amount) or 0.0
         vals['partner_id'] = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
         company_currency = self[0].account_id.company_id.currency_id
-        account_currency = self[0].account_id.currency_id or company_currency
-        if 'amount_currency' not in vals and account_currency != company_currency:
-            vals['currency_id'] = account_currency
-            vals['amount_currency'] = sum([r.amount_residual_currency for r in self])
+        writeoff_currency = self[0].currency_id or company_currency
+        if 'amount_currency' not in vals and writeoff_currency != company_currency:
+            vals['currency_id'] = writeoff_currency.id
+            sign = 1 if vals['debit'] > 0 else -1
+            vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))
 
         # Writeoff line in the account of self
         first_line_dict = vals.copy()
@@ -1103,7 +1104,7 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.compute(amount, self.currency_id) if self.currency_id else amount,
+            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.currency_id) if self.currency_id else amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
