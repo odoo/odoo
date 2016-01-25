@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="product_online_training_email_template" model="mail.template">
             <field name="name">Online Training</field>
             <field name="subject">Online Training</field>
@@ -8,13 +7,12 @@
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[ 
     <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;">
-            Online Training + Certification
+            Online Training
     </div>
      <div style="height:auto;text-left: center;font-size : 16px;color: #646464;margin-top:30px;margin-left:15px;margin-right:5px;">
         These courses feature the same high quality course content found in our traditional classroom trainings, supplemented with
         modular sessions and cloud-based labs. Many of our online learning courses also include dozens of recorded webinars and live
-        sessions by our senior instructors. At the end of the training, you can pass the Odoo Certification exam in one of the 5000+
-        Pearson VUE test centers worldwide.
+        sessions by our senior instructors.
     </div>
     <div style="height: auto;margin-top:30px;margin-bottom:10px;margin-left:20px;color: #646464;font-size:16px;">
         <strong>Your advantages</strong>
@@ -23,7 +21,6 @@
             <li>New interactive learning experience</li>
             <li>Lower training budget for the same quality courses</li>
             <li>Better comfort to facilitate your learning process</li>
-            <li>Odoo <a href="https://www.openerp.com/certification">Certification Exam</a> included (Pre-Ordered, available as of November 1st, 2013)</li>
         </ul>
     </div>
     <hr color="DCDCFB"/>
@@ -66,56 +63,26 @@
         Each day of the week is dedicated to specific applications in Odoo as per the following planning:
         <ul style="color: #6d57e0">
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Monday" style="text-decoration:none;" target=_new>Monday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Monday_1" style="text-decoration:none;" target=_new>Introduction</a>,
-                <a href="https://www.openerp.com/online-training#Monday_2" style="text-decoration:none;" target=_new>CRM</a>,
-                <a href="https://www.openerp.com/online-training#Monday_3" style="text-decoration:none;" target=_new>Sales Management</a>
+                <strong>Monday: </strong>
+                Introduction, CRM, Sales Management
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Tuesday" style="text-decoration:none;" target=_new>Tuesday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Tuesday_1" style="text-decoration:none;" target=_new>Access rights</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Purchase</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Sales &amp; Purchase management</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_4" style="text-decoration:none;" target=_new>Financial accounting</a>
+                <strong>Tuesday: </strong>
+                Access rights, Purchase, Sales &amp; Purchase management, Financial accounting
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Wednesday" style="text-decoration:none;" target=_new>Wednesday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Wednesday_1" style="text-decoration:none;" target=_new>Project management</a>,
-                <a href="https://www.openerp.com/online-training#Wednesday_2" style="text-decoration:none;" target=_new>Human resources</a>,
-                <a href="https://www.openerp.com/online-training#Wednesday_3" style="text-decoration:none;" target=_new>Contract management</a>
+                <strong>Wednesday: </strong>
+                Project management, Human resources, Contract management
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Thursday" style="text-decoration:none;" target=_new>Thursday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Thursday_1" style="text-decoration:none;" target=_new>Warehouse management</a>,
-                <a href="https://www.openerp.com/online-training#Thursday_2" style="text-decoration:none;" target=_new>Manufacturing (MRP) &amp; Sales</a>,
-                <a href="https://www.openerp.com/online-training#Thursday_4" style="text-decoration:none;" target=_new>Import/Export</a>
+                <strong>Thursday: </strong>
+                Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Friday" style="text-decoration:none;" target=_new>Friday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Friday_1" style="text-decoration:none;" target=_new>Pricelists</a>,
-                <a href="https://www.openerp.com/online-training#Friday_2" style="text-decoration:none;" target=_new>Point of Sale (POS)</a>,
-                <a href="https://www.openerp.com/online-training#Friday_3" style="text-decoration:none;" target=_new>Introduction to report customization</a>
+                <strong>Friday: </strong>
+                Pricelists, Point of Sale (POS), Introduction to report customization
             </li>
         </ul>
-    </div>
-    <div style="text-align: center;margin-top:30px;" >
-        <table cellspacing="5" align="center" cellpadding="5">
-            <tr style="font-size : 20px;color: #333333;margin-top:30px;">
-                <td>English</td></td>
-                <td>English</td></td>
-                <td>Spanish</td>
-            </tr>
-            <tr style="font-size : 10px;color: #646464;">
-                <td>Europe</td>
-                <td>USA & Canada</td>
-                <td>USA & Latin America</td>
-            </tr>
-            <tr style="font-size : 10px;color: #FFFFFF;background-color:#8b5bdd;">
-                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-            </tr>
-        </table>
     </div>
     <hr color="DCDCFB"/>
     <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:40px;font-weight: 300;">
@@ -642,5 +609,4 @@
             <field name="email_template_id" ref="product_online_training_email_template"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>
