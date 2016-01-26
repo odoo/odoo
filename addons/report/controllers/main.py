@@ -85,17 +85,8 @@ class ReportController(Controller):
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         """
-        if type == 'UPCA' and len(value) in (11, 12, 13):
-            type = 'EAN13'
-            if len(value) in (11, 12):
-                value = '0%s' % value
         try:
-            width, height, humanreadable = int(width), int(height), bool(humanreadable)
-            barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height,
-                humanReadable = humanreadable
-            )
-            barcode = barcode.asString('png')
+            barcode = request.registry['report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
 
