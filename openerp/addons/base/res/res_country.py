@@ -2,11 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import logging
+
 from openerp.osv import fields, osv
+from psycopg2 import IntegrityError
+
+_logger = logging.getLogger(__name__)
 
 
-def location_name_search(self, cr, user, name='', args=None, operator='ilike',
-                         context=None, limit=100):
+def location_name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
     if not args:
         args = []
 
@@ -93,9 +97,92 @@ class CountryState(osv.osv):
         'country_id': fields.many2one('res.country', 'Country', required=True),
         'name': fields.char('State Name', required=True,
                             help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
-        'code': fields.char('State Code', size=3,
-                            help='The state code in max. three chars.', required=True),
+        'code': fields.char('State Code', help='The state code.', required=True),
     }
     _order = 'code'
 
     name_search = location_name_search
+
+    def merge_states(self, cr, uid, ids=None, context=None):
+        Imd = self.pool['ir.model.data']
+        State = self.pool['res.country.state']
+
+        # def get_fk from migration
+        req_fk = """
+            SELECT cl1.relname as table,
+                  att1.attname as column
+            FROM  pg_constraint as con, pg_class as cl1, pg_class as cl2,
+                  pg_attribute as att1, pg_attribute as att2
+            WHERE con.conrelid = cl1.oid
+              AND con.confrelid = cl2.oid
+              AND array_lower(con.conkey, 1) = 1
+              AND con.conkey[1] = att1.attnum
+              AND att1.attrelid = cl1.oid
+              AND cl2.relname = %s
+              AND att2.attname = 'id'
+              AND array_lower(con.confkey, 1) = 1
+              AND con.confkey[1] = att2.attnum
+              AND att2.attrelid = cl2.oid
+              AND con.contype = 'f'
+        """
+        depends_fk = False
+
+        query = """
+            SELECT st.id, st.oldid, imd.id, imd.name, imd2.id, ids
+            FROM (
+                SELECT st.country_id, st.code, max(st.id) as id, min(st.id) as oldid, string_agg(cast(id as text), ',') as ids
+                FROM res_country_state st
+                GROUP BY st.country_id, st.code
+                HAVING count(*) > 1
+            ) st
+                LEFT JOIN ir_model_data imd on (imd.model = 'res.country.state' and imd.res_id = st.id)
+                LEFT JOIN ir_model_data imd2 on (imd2.model = 'res.country.state' and imd2.res_id = st.oldid)
+            WHERE imd.module = 'base';
+        """
+        cr.execute(query)
+
+        for st_id, st_oldid, imd_id, imd_name, imd2_id, ids in cr.fetchall():
+            duplicated_ids = set(map(int, ids.split(','))) - set([st_id, st_oldid])
+            values = dict(module=self._module)
+
+            if imd2_id:
+                # If duplicated record had already a xml_id we update the old xml_id and
+                # force to delete the new xml_id created to avoid constraint error
+                keepid = imd2_id
+                Imd.unlink(cr, uid, imd_id, context=context)
+                values.update(name=imd_name)
+            else:
+                # Else we point the new xml_id to the oldest duplicated state
+                keepid = imd_id
+                values.update(res_id=st_oldid)
+
+            Imd.write(cr, uid, keepid, values, context=context)
+            State.unlink(cr, uid, st_id, context=context)
+
+            if duplicated_ids:
+                if not depends_fk:
+                    cr.execute(req_fk, ('res_country_state',))
+                    depends_fk = cr.fetchall()
+                for table, field in depends_fk:
+                    for dup_id in duplicated_ids:
+                        merge_fk = "UPDATE %(table)s SET %(field)s=%%(newid)s WHERE %(field)s = %%(duplicated)s" % dict(table=table, field=field)
+                        with self.pool.cursor() as cr2:
+                            try:
+                                cr2.execute(merge_fk, dict(newid=st_oldid, duplicated=dup_id))
+                                State.unlink(cr, uid, dup_id, context=context)
+                            except IntegrityError, e:
+                                _logger.warning(e)
+                                pass
+
+        # Try to add constraint if not already created
+        check_constraint = """
+            SELECT COUNT(*) FROM pg_catalog.pg_constraint con, pg_class as cl1
+            WHERE con.conrelid = cl1.oid AND conname='res_country_state_name_code_uniq' and relname='res_country_state'
+        """
+        cr.execute(check_constraint)
+        if not cr.fetchone()[0]:
+            cr.execute('ALTER TABLE "res_country_state" ADD CONSTRAINT "res_country_state_name_code_uniq" unique(country_id, code)')
+
+    _sql_constraints = [
+        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state (by country) must be unique !')
+    ]
