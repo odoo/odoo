@@ -25,6 +25,7 @@ var channels = [];
 var channels_preview_def;
 var channel_defs = {};
 var chat_unread_counter = 0;
+var unread_conversation_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
@@ -146,7 +147,7 @@ function add_message (data, options) {
                     channel.hidden = false;
                     chat_manager.bus.trigger('new_channel', channel);
                 }
-                if (!msg.author_id || msg.author_id[0] !== session.partner_id) {
+                if (channel.type !== 'static' && !msg.is_author) {
                     if (options.increment_unread) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
@@ -176,6 +177,7 @@ function make_message (data) {
         date: moment(time.str_to_datetime(data.date)),
         message_type: data.message_type,
         subtype_description: data.subtype_description,
+        is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
         attachment_ids: data.attachment_ids,
         subject: data.subject,
@@ -240,11 +242,7 @@ function make_message (data) {
     }
 
     // Don't redirect on author clicked of self-posted messages
-    if (msg.author_id && msg.author_id[0] === session.partner_id) {
-        msg.author_redirect = false;
-    } else {
-        msg.author_redirect = true;
-    }
+    msg.author_redirect = !msg.is_author;
 
     // Compute the avatar_url
     if (msg.author_id && msg.author_id[0]) {
@@ -449,8 +447,13 @@ function fetch_document_messages (ids, options) {
 }
 
 function update_channel_unread_counter (channel, counter) {
+    if (channel.unread_counter > 0 && counter === 0) {
+        unread_conversation_counter = Math.max(0, unread_conversation_counter-1);
+    } else if (channel.unread_counter === 0 && counter > 0) {
+        unread_conversation_counter++;
+    }
     if (channel.is_chat) {
-        chat_unread_counter = chat_unread_counter - channel.unread_counter + counter;
+        chat_unread_counter = Math.max(0, chat_unread_counter - channel.unread_counter + counter);
     }
     channel.unread_counter = counter;
     chat_manager.bus.trigger("update_channel_unread_counter", channel);
@@ -807,6 +810,9 @@ var chat_manager = {
     get_chat_unread_counter: function () {
         return chat_unread_counter;
     },
+    get_unread_conversation_counter: function () {
+        return unread_conversation_counter;
+    },
 
     get_last_seen_message: function (channel) {
         if (channel.last_seen_message_id) {
@@ -814,7 +820,7 @@ var chat_manager = {
             var msg = _.findWhere(messages, {id: channel.last_seen_message_id});
             if (msg) {
                 var i = _.sortedIndex(messages, msg, 'id') + 1;
-                while (i < messages.length && messages[i].author_id && messages[i].author_id[0] === session.partner_id) {
+                while (i < messages.length && messages[i].is_author) {
                     msg = messages[i];
                     i++;
                 }

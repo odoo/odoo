@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
+    <t t-name="mail.chat.InboxItem">
+        <li class="o_mail_navbar_item">
+            <a href="#" title="Inbox">
+                <i class="fa fa-at"/> <span class="o_notification_counter"/>
+            </a>
+        </li>
+    </t>
+
     <t t-name="mail.chat.MessagingMenu">
         <li class="o_mail_navbar_item">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Messages" href="#">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
                 <i class="fa fa-comments"/> <span class="o_notification_counter"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
@@ -16,11 +24,6 @@
                     <button type="button" class="btn btn-sm o_new_message"> New message </button>
                 </li>
                 <li class="o_mail_navbar_dropdown_channels"/>
-                <li class="o_mail_navbar_dropdown_bottom">
-                     <button type="button" class="btn o_redirect_to_discuss">
-                        @Inbox <span class="o_inbox_counter"/>
-                    </button>
-                </li>
             </ul>
         </li>
     </t>

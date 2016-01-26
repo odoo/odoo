@@ -283,6 +283,9 @@
             display: none;
         }
     }
+    &.o_unread_chat > a > i {
+        color: @odoo-brand-optional;
+    }
 
     &.open .o_mail_navbar_dropdown {
         .o-flex-display();
@@ -308,19 +311,16 @@
             height: 50px;
         }
 
-        .o_filter_button,
-        .o_new_message,
-        .o_redirect_to_discuss {
-            .btn-link;
-            padding: 5px;
-        }
-
         .o_mail_navbar_dropdown_top {
             .o-flex-display();
             .o-flex(0, 0, auto);
             justify-content: space-between;
             border-bottom: 1px solid lightgray;
 
+            .o_filter_button, .o_new_message {
+                .btn-link;
+                padding: 5px;
+            }
             .o_filter_button {
                 color: @odoo-main-color-muted;
                 &:hover, &.o_selected {
@@ -330,15 +330,6 @@
                     cursor: default;
                     font-weight: bold;
                 }
-            }
-        }
-        .o_mail_navbar_dropdown_bottom {
-            .o-flex(0, 0, auto);
-            border-top: 1px solid lightgray;
-            height: 35px;
-            .o_redirect_to_discuss {
-                height: 100%;
-                width: 100%;
             }
         }
 
