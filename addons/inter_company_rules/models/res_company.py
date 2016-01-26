@@ -17,8 +17,8 @@ class res_company(models.Model):
         help="When a Sale Order or a Purchase Order is created by a multi company rule for this company, it will automatically validate it")
     intercompany_user_id = fields.Many2one("res.users", string="Inter Company User", default=SUPERUSER_ID,
         help="Responsible user for creation of documents triggered by intercompany rules.")
-    warehouse_id = fields.Many2one("stock.warehouse", string="Warehouse For Purchase Orders",
-        help="Default value to set on Purchase Orders that will be created based on Sale Orders made to this company")
+    warehouse_id = fields.Many2one("stock.warehouse", string="Warehouse For Purchase or Sale Orders",
+        help="Default value to set on Purchase Orders that will be created based on Sale Orders (and reciprocally) made to this company")
 
     @api.model
     def _find_company_from_partner(self, partner_id):
