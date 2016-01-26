@@ -517,7 +517,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_stock_manager"
+        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_warehouse_config" sequence="2"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -1709,12 +1709,6 @@
             id="stock_picking_type_menu"
             parent="menu_stock_root" sequence="0"
             name="Dashboard"/>
-
-        <menuitem
-            id="menu_pickingtype"
-            name="Types of Operation"
-            parent="stock.menu_stock_config_settings"
-            action="action_picking_type_list" />
 
 
         <!-- Order Point -->
