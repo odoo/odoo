@@ -437,6 +437,7 @@ var KanbanView = View.extend({
         this.$el.sortable({
             axis: 'x',
             items: '> .o_kanban_group',
+            handle: '.o_kanban_header',
             cursor: 'move',
             revert: 150,
             delay: 100,
