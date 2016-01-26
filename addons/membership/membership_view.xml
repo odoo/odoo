@@ -256,11 +256,16 @@
                                 <field name="state"/>
                             </tree>
                             <form string="Memberships">
-                                <field name="date"/>
-                                <field name="member_price"/>
-                                <field name="membership_id"/>
-                                <field name="account_invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
-                                <field name="state" colspan="4"/>
+                                <group name="membership-main">
+                                    <field name="date"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="date_cancel"/>
+                                    <field name="member_price"/>
+                                    <field name="membership_id"/>
+                                    <field name="account_invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
+                                    <field name="state"/>
+                                </group>
                             </form>
                         </field>
 
