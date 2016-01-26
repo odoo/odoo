@@ -23,14 +23,10 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='stage_id']" position="before">
-                        <button attrs="{'invisible': [('probability', '=', 0)]}" string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
+                    <xpath expr="//button[@name='action_set_won']" position="before">
+                        <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
                             context="{'search_default_partner_id': partner_id, 
                                       'default_partner_id': partner_id,
-                                      'default_team_id': team_id}"/>
-                        <button attrs="{'invisible': [('probability', '>', 0)]}" string="New Quotation" name="%(sale_action_quotations_new)d" type="action"
-                            context="{'search_default_partner_id': partner_id, 
-                                      'default_partner_id': partner_id, 
                                       'default_team_id': team_id}"/>
                     </xpath>
                     <div name="button_box" position="inside">
