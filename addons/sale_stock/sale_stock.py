@@ -217,7 +217,7 @@ class sale_order_line(osv.osv):
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
         'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
-        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template', readonly=True),
     }
 
     _defaults = {
