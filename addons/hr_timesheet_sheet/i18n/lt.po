@@ -1,52 +1,51 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_sheet
+# 
+# Translators:
+# Arminas Grigonis <arminas@versada.lt>, 2016
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-01-21 12:39+0000\n"
+"Last-Translator: Arminas Grigonis <arminas@versada.lt>\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:14+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.       "
-"          \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her "
-"senior."
-msgstr ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+msgstr " * Juodraščio statusas naudojamas tada, kai vartotojas dar tik pildo naują ir nepatvirtintą darbo laiko žiniaraštį.      \n* Patvirtintas statusas naudojamas tada, kai vartotojas patvirtinęs savo darbo laiko žiniaraštį.                \n* Atliktas statusas naudojamas tada, kai vartotojo darbo laiko žiniaraštis yra patvirtintas atsakingo darbuotojo."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "# Darbo laiko žiniaraščio nr"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
 msgid "# Total Attendance"
-msgstr ""
+msgstr "#Išviso išbūta darbe"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
 msgid "# Total Diff"
-msgstr ""
+msgstr "# Bendras skirtumas"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "# Išviso darbo laiko žiniaraščių."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -58,8 +57,7 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager.\n"
 "              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on "
-"the\n"
+"                Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
@@ -75,14 +73,14 @@ msgstr "Nėra darbo vietoje"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "Pridėti"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
 #, python-format
 msgid "Add a Line"
-msgstr ""
+msgstr "Pridėti eilutę"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
@@ -106,7 +104,7 @@ msgstr "Analitinė sąskaita"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analitinė eilutė"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -116,12 +114,12 @@ msgstr "Analitinės sąskaitos"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Approve"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Patvirtinta"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_attendance:0
@@ -140,31 +138,31 @@ msgstr "Lankomumas"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
+msgstr "Spausti, norint pridėti naują projektą, kontraktą ar analitinę sąskaitą."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Įmonės"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Klaida nustatymuose!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -175,24 +173,24 @@ msgstr "Patvirtinta"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "Patvirtinti darbo laiko žiniaraščiai"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_uid:0
 #: field:hr_timesheet_sheet.sheet,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Sukūrė"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_date:0
 #: field:hr_timesheet_sheet.sheet,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
-msgstr ""
+msgstr "Dabartinė būsena"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,name:0
@@ -208,7 +206,7 @@ msgstr "Data nuo"
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Paskutinės žinutės publikavimo data po šiuo įrašu."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date_to:0
@@ -228,12 +226,12 @@ msgstr "Diena"
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 #: field:hr_timesheet_sheet.sheet,department_id:0
 msgid "Department"
-msgstr ""
+msgstr "Padalinys"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Details"
-msgstr ""
+msgstr "Detalės"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
@@ -244,7 +242,7 @@ msgstr "Skirtumas"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "Skirtumai"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -262,18 +260,18 @@ msgstr "Juodraštis"
 #: field:hr_timesheet_sheet.sheet,employee_id:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Darbuotojas"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Employees"
-msgstr ""
+msgstr "Darbuotojai"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Klaida ! Po prisijungimo (atitinkamai atsijungimo) privalo būti atsijungimas (atitinkamai prisijungimas)"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -288,52 +286,51 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Klaida!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr ""
+msgstr "Išorinis darbo laiko žiniaraštis"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Prenumeratoriai"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr ""
+msgstr "Grupuoti pagal"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
-msgstr ""
+msgstr "Valandos"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,id:0
-#: field:hr_timesheet_sheet.sheet,id:0
+#: field:hr.timesheet.current.open,id:0 field:hr_timesheet_sheet.sheet,id:0
 #: field:hr_timesheet_sheet.sheet.account,id:0
 #: field:hr_timesheet_sheet.sheet.day,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
-msgstr ""
+msgstr "Juodraštis"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
@@ -342,44 +339,44 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
+msgstr "Norint sukurti darbo laiko žiniaraštį šiam darbuotojui, jūs privalote jam  priskirti analitinį žurnalą, pavyzdžiui \"Darbo laiko žurnalas\"."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a "
-"user."
-msgstr ""
+"In order to create a timesheet for this employee, you must link him/her to a"
+" user."
+msgstr "Norint sukurti darbo laiko žiniaraštį šiam darbuotojui, Jūs privalote priskirti šį darbuotoją atitinkamui sistemos vartotojui."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product, like 'Consultant'."
+msgstr "Norint sukurti darbo laiko žiniaraštį šiam darbuotojui, jūs privalote sujungti šį darbuotoją su produktu, pavyzdžiui \"Konsultantas\"."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
-msgstr ""
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product."
+msgstr "Norint sukurti darbo laiko žiniaraštį šiam darbuotojui, jūs privalote sujungti šį darbuotoją su produktu."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
+msgstr "Vidinis darbo laiko žiniaraštis"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Veiksmas negalimas!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
@@ -389,39 +386,39 @@ msgstr "Sąskaitos faktūros koeficientas"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ar prenumeratorius"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Atidarys Jūsų dabartinį darbo laiko žiniaraštį"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Paskutinės žinutės data"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,write_uid:0
 #: field:hr_timesheet_sheet.sheet,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Paskutini kartą atnaujino"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,write_date:0
 #: field:hr_timesheet_sheet.sheet,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Žinučių ir pranešimų istorija"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -439,7 +436,7 @@ msgstr "Mano dabartinis darbo laiko žiniaraštis"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr ""
+msgstr "Mano darbo laiko žiniaraštis"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -448,8 +445,8 @@ msgid ""
 "the system. From the same form, you can register your attendances (Sign "
 "In/Out) and describe the working hours made on the different projects. At "
 "the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
+"the user and can be validated by his manager. If required, as defined on the"
+" project, you can generate the invoices based on the timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -461,19 +458,19 @@ msgstr "Naujas"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
 msgid "Note"
-msgstr ""
+msgstr "Užrašinė"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr ""
+msgstr "Atidaryta"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "Atidaryti darbo laiko žiniaraštį"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -486,20 +483,20 @@ msgstr "Periodas"
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Periodiškumas, per kurį jūs patvirtinsite savo darbo laiko žiniaraščius"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Please create an employee and associate it with this user."
-msgstr ""
+msgstr "Prašome sukurti darbuotoją ir priskirkite jį vartotojui."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
+msgstr "Prašome patvirtinti, kad šio darbo laiko žiniaraščio bendras skirtumas yra maženis nei %.2f."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -509,7 +506,7 @@ msgstr "Yra darbo vietoje"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Projektas / Analitinė sąskaita"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -519,12 +516,12 @@ msgstr "Atmesti"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr ""
+msgstr "Ieškoti sąskaitos"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Ieškoti darbo laiko žiniaraščio"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -532,8 +529,7 @@ msgid "Set to Draft"
 msgstr "Nustatyti kaip juodraštį"
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -551,21 +547,20 @@ msgstr "Išsiregistruoti"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,state:0
-#: field:hr_timesheet_sheet.sheet,state:0
+#: field:hr.timesheet.report,state:0 field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr "Būsena"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Pateikti vadovui"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: field:hr_timesheet_sheet.sheet,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:62
@@ -573,7 +568,7 @@ msgstr ""
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
+msgstr "Darbo laiko žiniaraštis negali būti patvirtintas, nes nėra vienodo prisijungimų ir atsijungimų skaičiaus."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -587,7 +582,7 @@ msgstr "Darbo laiko žiniaraštis"
 #: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Darbo laiko žiniaraščio veikla"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -597,12 +592,12 @@ msgstr "Darbo laiko žiniaraščio eilutė"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
-msgstr ""
+msgstr "Darbo laiko žiniaraščio periodas"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
+msgstr "Darbo laiko žiniaraščio leidžiamas skirtumas(valandomis)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -613,12 +608,12 @@ msgstr "Darbo laiko žiniaraštis pagal sąskaitą"
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr ""
+msgstr "Darbo laiko žiniaraštis pagal sąskaitas"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr ""
+msgstr "Darbo laiko žiniaraštis pagal dieną"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
@@ -628,7 +623,7 @@ msgstr "Darbo laiko žiniaraščio eilutės"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr ""
+msgstr "Darbo laiko žiniaraščio diapozonas"
 
 #. module: hr_timesheet_sheet
 #: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
@@ -644,18 +639,18 @@ msgstr "Darbuotojo darbo laiko apskaitos žiniaraštis"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr ""
+msgstr "Darbo laiko žiniaraštis pagal periodą"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 msgid "Timesheets to Validate"
-msgstr ""
+msgstr "Darbo laiko žiniaraščiai, paruošti patvirtinimui"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "To Approve"
-msgstr ""
+msgstr "Reikia patvirtinti"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -675,12 +670,12 @@ msgstr "Bendras lankomumas"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Attendances"
-msgstr ""
+msgstr "Bendras lankomumas"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Difference"
-msgstr ""
+msgstr "Bendras skirtumas"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
@@ -698,12 +693,12 @@ msgstr "Bendras darbo laiko apskaitos žiniaraštis"
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: field:hr.timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "Sąskaitų išrašymo tipas"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neperžiūrėtos žinutės"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -720,39 +715,39 @@ msgstr "Naudotojas"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Naudotojo klaida!"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr ""
+msgstr "Patvirtinti darbo laiko žiniaraštį kiekvieną"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Laukiama patvirtinimo"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Perspėjimas!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Interneto svetainės pranešimai"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Interneto svetainės komunikacijos istorija"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -764,14 +759,14 @@ msgstr "Savaitė"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "Savaitę"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Jūs negalite įvesti darbo laiko įrašo, kuris yra už dabartinio darbo laiko žiniaraščio ribų."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -779,39 +774,39 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
+msgstr "Jūs negalite įvesti darbo laiko įrašo į patvirtintą darbo laiko žiniaraštį. Prašome kreiptis į valdytoją, norint atnaujinti žiniaraštį."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
+msgstr "Jūs negalite ištrinti darbo laiko žiniaraščio, kuriame jau yra įvesti įrašai."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
+msgstr "Jūs negalite ištrinti darbo laiko žiniaraščio, kuris yra jau patvirtintas."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr ""
+msgstr "Jūs negalite duplikuoti darbo laiko žiniaraščio."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Jūs negalite įvesti darbo laiko įrašo, kuris yra už dabartinio darbo laiko žiniaraščio ribų."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
+msgstr "Jūs negalite turėti 2 darbo laiko žiniaraščių, kurie iš dalies sutampa!\nPrašome naudoti meniu \"Mano dabartinis darbo laiko žiniaraštis\", norint išvengti šios problemos."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
@@ -819,24 +814,24 @@ msgstr ""
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
+msgstr "Jūs negalite turėti 2 darbo laiko žiniaraščių, kurie iš dalies sutampa!\nPrašome naudoti meniu \"Mano dabartinis darbo laiko žiniaraštis\", kad galėtumėt išvengti šios problemos."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
+msgstr "Jūs negalite modifikuoti patvirtinto darbo laiko žiniaraščio!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
+msgstr "Jūs negalite modifkuoti įrašo, kuris yra patvirtintame darbo laiko žiniaraštyje"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr ""
+msgstr "Jūs negalite modifkuoti įrašo, kuris yra patvirtintame darbo laiko žiniaraštyje."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -845,4 +840,14 @@ msgstr ""
 msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
-msgstr ""
+msgstr "Jūs galėsite registruoti savo išdirbtas valandas ir\nveiklas."
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+msgid "or"
+msgstr "arba"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "to"
+msgstr "iki"
