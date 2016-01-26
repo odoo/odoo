@@ -135,18 +135,12 @@
             <field name="context">{'search_default_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                 Click to create a Procurement order in exception state, or remove the filter on the search bar to display all the procurements.
-              </p>
-              <p>
-                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
-              </p>
-              <p>
-                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
-                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
-              </p>
               <p>
                 A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+              </p><p>
+                Most common exceptions are products to purchase without
+                having a vendor defined on the product, and products to
+                manufacture without having a bill of materials.
               </p>
             </field>
         </record>
@@ -161,7 +155,7 @@
             <field name="context">{'search_default_current':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click to create a procurement order.  
+                 Click to create a procurement order.
               </p>
               <p>
                 A <b>procurement order</b> is used to record a need for a specific
