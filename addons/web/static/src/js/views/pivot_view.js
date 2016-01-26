@@ -799,6 +799,10 @@ var PivotView = View.extend({
             nbr_measures: nbr_measures,
             title: this.title,
         };
+        if(table.measure_row.length + 1 > 256) {
+            c.show_message(_t("For Excel compatibility, data cannot be exported if there is more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+            return;
+        }
         session.get_file({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
