@@ -28,6 +28,7 @@ return Widget.extend({
         this.options = _.defaults(options || {}, {
             display_stars: true,
             placeholder: _t("Say something"),
+            input_less: false,
         });
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
