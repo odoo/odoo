@@ -564,7 +564,7 @@ class Field(object):
                 # draft records: copy record's cache to other's cache first
                 for name, value in record._cache.iteritems():
                     other[name] = value
-            other, field = self.traverse_related(other if record.id else record)
+            other, field = self.traverse_related(other)
             record[self.name] = other[field.name]
 
     def _inverse_related(self, records):
