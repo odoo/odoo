@@ -757,6 +757,9 @@ class ProcurementOrder(models.Model):
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
         taxes_id = fpos.map_tax(taxes).ids if fpos else []
+        if taxes_id:
+            companies = self.env['res.company'].search([('id', 'child_of', self.company_id.id)])
+            taxes_id = taxes_id.filtered(lambda x: x.company_id.id in companies).ids
 
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, taxes_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
@@ -802,6 +805,7 @@ class ProcurementOrder(models.Model):
             'partner_id': partner.id,
             'picking_type_id': self.rule_id.picking_type_id.id,
             'company_id': self.company_id.id,
+            'currency_id': partner.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id,
             'dest_address_id': self.partner_dest_id.id,
             'origin': self.origin,
             'payment_term_id': partner.property_supplier_payment_term_id.id,

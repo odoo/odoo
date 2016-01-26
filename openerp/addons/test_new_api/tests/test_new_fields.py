@@ -5,6 +5,7 @@ from datetime import date, datetime
 
 from openerp.exceptions import AccessError
 from openerp.tests import common
+from openerp.tools import mute_logger
 
 
 class TestNewFields(common.TransactionCase):
@@ -419,7 +420,31 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
         self.assertEqual(message.size, len(BODY))
 
-    def test_41_defaults(self):
+    @mute_logger('openerp.addons.base.ir.ir_model')
+    def test_41_new_related(self):
+        """ test the behavior of related fields on new records. """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        access = self.env.ref('test_new_api.access_discussion')
+
+        # make discussions unreadable for demo user
+        access.write({'perm_read': False})
+
+        # create an environment for demo user
+        demo_env = self.env(user=self.env.ref('base.user_demo'))
+        self.assertEqual(demo_env.user.login, "demo")
+
+        # create a new message as demo user
+        values = {'discussion': discussion.id}
+        message = demo_env['test_new_api.message'].new(values)
+        self.assertEqual(message.discussion, discussion)
+
+        # read the related field discussion_name
+        self.assertEqual(message.discussion.env, demo_env)
+        self.assertEqual(message.discussion_name, discussion.name)
+        with self.assertRaises(AccessError):
+            message.discussion.name
+
+    def test_50_defaults(self):
         """ test default values. """
         fields = ['discussion', 'body', 'author', 'size']
         defaults = self.env['test_new_api.message'].default_get(fields)
@@ -427,6 +452,13 @@ class TestNewFields(common.TransactionCase):
 
         defaults = self.env['test_new_api.mixed'].default_get(['number'])
         self.assertEqual(defaults, {'number': 3.14})
+
+    def test_50_search_many2one(self):
+        """ test search through a path of computed fields"""
+        messages = self.env['test_new_api.message'].search(
+            [('author_partner.name', '=', 'Demo User')])
+        self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
+
 
 
 class TestMagicFields(common.TransactionCase):
