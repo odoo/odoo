@@ -437,6 +437,14 @@
             <field name="context">{'show_sale': True}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p>
+                You will find here all orders that are ready to be invoiced.
+              </p><p>
+                You can select all orders and invoice them in batch, or check
+                every order and invoice them one by one.
+              </p>
+            </field>
         </record>
         <menuitem name="Invoicing"
             id="menu_sale_invoicing" parent="base.menu_base_partner"
@@ -454,6 +462,17 @@
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{'show_sale': True}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p>
+                Orders to upsell are orders having products with an invoicing
+                policy based on <i>ordered quantities</i> for which you have
+                delivered more than what have been ordered.
+              </p><p>
+                <i>Example: pre-paid service offers for which the customer have
+                to buy an extra pack of hours, because he used all his support
+                hours.</i>
+              </p>
+            </field>
         </record>
         <menuitem action="action_orders_upselling"
             id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
