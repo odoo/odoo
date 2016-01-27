@@ -445,7 +445,7 @@ class Channel(models.Model):
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
             self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id})
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id, 'last_message_id': last_message_id})
             return last_message_id
 
     @api.multi

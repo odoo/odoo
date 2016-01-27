@@ -171,8 +171,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.basic_composer = new composer.BasicComposer(this);
-        this.extended_composer = new composer.ExtendedComposer(this);
+        this.basic_composer = new composer.BasicComposer(this, {mention_partners_restricted: true});
+        this.extended_composer = new composer.ExtendedComposer(this, {mention_partners_restricted: true});
         this.thread = new ChatThread(this, {
             display_help: true,
             shorten_messages: false,
@@ -423,13 +423,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         // Compute position of the 'New messages' separator, only once when joining
         // a channel to keep it in the thread when new messages arrive
         if (_.isUndefined(this.messages_separator_position)) {
-            var msg_id = this.last_seen_message_id;
             if (!this.unread_counter) {
                 this.messages_separator_position = false; // no unread message -> don't display separator
-            } else if ((msg_id === false) || !_.findWhere(messages, {id: msg_id})) {
-                this.messages_separator_position = 'top'; // all displayed messages are unread
             } else {
-                this.messages_separator_position = msg_id; // last read message is msg_id
+                var msg = chat_manager.get_last_seen_message(this.channel);
+                this.messages_separator_position = msg ? msg.id : 'top';
             }
         }
         return {

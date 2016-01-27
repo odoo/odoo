@@ -24,7 +24,7 @@ class PaymentTransaction(orm.Model):
             tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
         if tx and tx.state == 'done' and tx.acquirer_id.auto_confirm == 'at_pay_confirm' and tx.sale_order_id and tx.sale_order_id.state in ['draft', 'sent']:
             self.pool['sale.order'].action_confirm(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=dict(context, send_email=True))
-        elif tx and tx.state not in ['cancel'] and tx.sale_order_id and tx.sale_order_id.state in ['draft']:
+        elif tx and tx.state not in ['cancel', 'error'] and tx.sale_order_id and tx.sale_order_id.state in ['draft']:
             self.pool['sale.order'].force_quotation_send(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=context)
 
         return res

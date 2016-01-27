@@ -149,6 +149,9 @@ class Message(models.Model):
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name')
+    author_partner = fields.Many2one(
+        'res.partner', compute='_compute_author_partner',
+        search='_search_author_partner')
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -193,6 +196,15 @@ class Message(models.Model):
         self.double_size = 0
         size = self.size
         self.double_size = self.double_size + size
+
+    @api.one
+    @api.depends('author', 'author.partner_id')
+    def _compute_author_partner(self):
+        self.author_partner = author.partner_id
+
+    @api.model
+    def _search_author_partner(self, operator, value):
+        return [('author.partner_id', operator, value)]
 
 
 class MixedModel(models.Model):
