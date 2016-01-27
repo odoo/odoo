@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-26 09:05+0000\n"
-"PO-Revision-Date: 2016-01-15 11:43+0000\n"
+"POT-Creation-Date: 2016-01-20 13:58+0000\n"
+"PO-Revision-Date: 2016-01-21 11:16+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -389,7 +389,7 @@ msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - Emlékeztető"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:775
+#: code:addons/calendar/calendar.py:776
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -397,10 +397,22 @@ msgid ""
 msgstr "%s ekkor %s Címzett\n %s ekkor %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:773
+#: code:addons/calendar/calendar.py:774
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s ekkor (%s Címzett %s) (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:263
+#, python-format
+msgid "%s has accepted invitation"
+msgstr "%s elfogadta a meghívást"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:278
+#, python-format
+msgid "%s has declined invitation"
+msgstr "%s elutasította a meghívást"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -409,7 +421,7 @@ msgid "<span> hours</span>"
 msgstr "<span> órák </span>"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1620
+#: code:addons/calendar/calendar.py:1613
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr "Egy email ki lett küldve a dátum változás részleteivel !"
@@ -524,6 +536,13 @@ msgstr "Naptár"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "Naptár riasztás"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:43
+#, python-format
+msgid "Calendar Invitation"
+msgstr "Meghívási naptár"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -988,11 +1007,6 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
 msgstr "Perc(ek)"
@@ -1038,6 +1052,13 @@ msgstr "Név"
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
 msgstr "Beavatkozás szükséges"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#, python-format
+msgid "No I'm not going."
+msgstr "Nem én nem veszek részt."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1436,9 +1457,37 @@ msgid "Weekday"
 msgstr "Hétköznap"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:48
+#, python-format
+msgid "When"
+msgstr "Mikor"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:52
+#, python-format
+msgid "Where"
+msgstr "Hol"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:56
+#, python-format
+msgid "Who"
+msgstr "Kivel"
+
+#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Év(ek)"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:35
+#, python-format
+msgid "Yes I'm going."
+msgstr "Igen én résztveszek."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:106

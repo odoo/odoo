@@ -83,8 +83,8 @@ base.ready().done(function () {
                 },
             },
             {
-                title:     "Check that the subtotal is 3,856.96",
-                element:   '#order_total_untaxed .oe_currency_value:contains("3,856.96")',
+                title:     "Check that the subtotal is 5,500.00",
+                element:   '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
             },
             {
                 title:     "Select `Wire Transfer` payment method",

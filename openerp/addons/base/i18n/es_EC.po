@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-01-21 00:10+0000\n"
+"PO-Revision-Date: 2016-01-23 10:34+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -722,7 +722,7 @@ msgid ""
 "    * Requested Date (will be used as the expected date on pickings)\n"
 "    * Commitment Date\n"
 "    * Effective Date\n"
-msgstr "\nAñade información de fechas para los pedidos de ventas\n======================================================\n\nPuede añadir las siguientes fechas a los pedidos de ventas\n----------------------------------------------------------\n    * Fecha de solicitud (se utilizará como la fecha prevista en movimientos de inventario)\n    * Fecha de recogida\n    * Fecha efectiva\n"
+msgstr "\nAñade información de fechas para los pedidos de ventas\n======================================================\n\nPuede añadir las siguientes fechas a los pedidos de ventas\n----------------------------------------------------------\n    * Fecha de solicitud (se utilizará como la fecha prevista en albaranes)\n    * Fecha de recogida\n    * Fecha efectiva\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -992,7 +992,7 @@ msgid ""
 "scanner, and is used by the posbox to provide barcode scanner support to the\n"
 "point of sale module. \n"
 "\n"
-msgstr "\nControlador para el lector de código de barras\n====================================\n\nEste módulo permite al cliente web tener acceso remotamente al lector del código de barras. y es usado a través del PosBox para proveer al TPV de soporte para el lector de código de barras. \n\n"
+msgstr "\nControlador para el lector de código de barras\n====================================\n\nEste módulo permite al cliente web tener acceso remotamente al lector del código de barras. y es usado a través del PosBox para proveer al POS de soporte para el lector de código de barras. \n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -1395,7 +1395,7 @@ msgid ""
 "to open ESC/POS controlled cashdrawers in the point of sale and other modules\n"
 "that would need such functionality.\n"
 "\n"
-msgstr "\nControlador de dispositivos ESC/POS\n=============================\n\nEste módulo permite a Odoo imprimir con impresoras compatibles con el protocolo ESC/POS y \nabrir cajones controlados por ESC/POS en el TPV y en otros módulos que requieran de esa \nfuncionalidad.\n\n"
+msgstr "\nControlador de dispositivos ESC/POS\n=============================\n\nEste módulo permite a Odoo imprimir con impresoras compatibles con el protocolo ESC/POS y \nabrir cajones controlados por ESC/POS en el POS y en otros módulos que requieran de esa \nfuncionalidad.\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -1714,7 +1714,7 @@ msgid ""
 "=======================\n"
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
-msgstr "\nGestión de costes en destino\n============================\n\nEste módulo le permite añadir fácilmente costes extra en los movimientos de inventario y decidir el reparto de estos costes entre los movimientos de existencia para tenerlo en cuenta en la valoración de existencias.\n    "
+msgstr "\nGestión de costes en destino\n============================\n\nEste módulo le permite añadir fácilmente costes extra en los albaranes y decidir el reparto de estos costes entre los movimientos de existencia para tenerlo en cuenta en la valoración de existencias.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_project_issue
@@ -1754,7 +1754,7 @@ msgid ""
 "going through the retailer's warehouse. In this case no\n"
 "internal transfer document is needed.\n"
 "\n"
-msgstr "\nGestionar pedidos drop shipping\n===============================\n\nEste módulo añade un tipo de movimiento de inventario preconfigurado llamado Dropshipping,\nasí como una ruta de abastecimiento, que permite configurar productos y \npedidos drop shippings \n\nCuando se utiliza dropshipping, los bienes se transfieren directamente desde\nlos proveedores a los clientes (envío directo) sin pasar por el almacén del\ndistribuidor. En este caso, no se requiere de un documento de transferencia\ninterna.\n\n"
+msgstr "\nGestionar pedidos drop shipping\n===============================\n\nEste módulo añade un tipo de albarán preconfigurado llamado Dropshipping,\nasí como una ruta de abastecimiento, que permite configurar productos y \npedidos drop shippings \n\nCuando se utiliza dropshipping, los bienes se transfieren directamente desde\nlos proveedores a los clientes (envío directo) sin pasar por el almacén del\ndistribuidor. En este caso, no se requiere de un documento de transferencia\ninterna.\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -1898,7 +1898,7 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 "    "
-msgstr "\nGestiona presupuestos y pedidos de venta\n==================================\n\nEsta aplicación permite gestionar los objetivos de venta de una manera eficiente y eficaz siguiendo todos los pedidos de venta y su historial.\n\nManeja el flujo completo de ventas:\n\n* **Presupuesto** -> **Pedido de venta** -> **Factura**\n\nPreferencias (sólo con la gestión de almacenes instalada)\n-----------------------------------------------------------------------------------------\n\nSi también tiene instalada la gestión de bodegas, puede gestionar las siguientes preferencias:\n\n* Envío: Elección de envío total o parcial\n* Facturación: Escoja cómo serán pagadas las facturas\n* Incoterms: Términos de comercio internacional\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el movimiento de inventario (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n\nEl tablero para el responsable de compras incluye\n----------------------------------------------------------------------------\n* Mis presupuestos\n* Volumen de negocios mensual (Gráfico)\n    "
+msgstr "\nGestiona presupuestos y pedidos de venta\n==================================\n\nEsta aplicación permite gestionar los objetivos de venta de una manera eficiente y eficaz siguiendo todos los pedidos de venta y su historial.\n\nManeja el flujo completo de ventas:\n\n* **Presupuesto** -> **Pedido de venta** -> **Factura**\n\nPreferencias (sólo con la gestión de almacenes instalada)\n-----------------------------------------------------------------------------------------\n\nSi también tiene instalada la gestión de almacenes, puede gestionar las siguientes preferencias:\n\n* Envío: Elección de envío total o parcial\n* Facturación: Escoja cómo serán pagadas las facturas\n* Incoterms: Términos de comercio internacional\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el albarán (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n\nEl tablero para el responsable de compras incluye\n----------------------------------------------------------------------------\n* Mis presupuestos\n* Volumen de negocios mensual (Gráfico)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -1920,7 +1920,7 @@ msgid ""
 "* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
 "* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
-msgstr "\nGestione presupuestos y pedidos de venta\n==================================\n\nEste módulo enlaza las aplicaciones de ventas y gestión de bodegas.\n\nPreferencias\n----------------------\n* Envío: Elección de envío total o parcial\n* Facturación: escoja cómo serán pagadas las facturas\n* Incoterms: Formas de pago internacionales\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el movimiento de inventario (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n"
+msgstr "\nGestione presupuestos y pedidos de venta\n==================================\n\nEste módulo enlaza las aplicaciones de ventas y gestión de almacenes.\n\nPreferencias\n----------------------\n* Envío: Elección de envío total o parcial\n* Facturación: escoja cómo serán pagadas las facturas\n* Incoterms: Formas de pago internacionales\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el albarán (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_uos
@@ -2935,7 +2935,7 @@ msgid ""
 "-------------------------------\n"
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
-msgstr "\nEl genérico de Odoo para la gestión de relaciones con el cliente CRM\n============================================================\n\nEsta aplicación permite que grupo de personas gestione iniciativas de forma inteligente y eficaz, oportunidades, reuniones y llamadas.\n\nGestiona tareas claves como la comunicación, identificación, priorización, asignación, resolución y notificación.\n\nOdoo se asegura de que todos los casos están satisfactoriamente seguidos por los usuarios, clientes y proveedores. Puede automáticamente enviar recordatorios, escalar las solicitudes, lanzar funciones específicas y muchas otras acciones basadas en sus propias reglas empresariales.\n\nLo mejor de este sistema es que los usuarios no necesitan hacer nada especial. El módulo de CRM tiene una plataforma de email que sincroniza los emails con Odoo. De esta manera, los usuarios pueden simplemente enviar emails para el seguimiento de la solicitud.\n\nOdoo se encargará de dar las gracias por su mensaje, automáticamente dirigiéndolo al personal apropiado y asegurándose de que toda la futura correspondencia quede en el lugar adecuado.\n\n\nTablero CRM que incluye:\n-------------------------------\n* Ingresos planificados por etapa y usuario (gráfico)\n* Oportunidades por etapa (gráfico)\n"
+msgstr "\nEl módulo genérico de Odoo para la gestión de relaciones con el cliente CRM\n====================================================================\n\nEsta aplicación permite que grupo de personas gestione iniciativas de forma inteligente y eficaz, oportunidades, reuniones y llamadas.\n\nGestiona tareas claves como la comunicación, identificación, priorización, asignación, resolución y notificación.\n\nOdoo se asegura de que todos los casos están satisfactoriamente seguidos por los usuarios, clientes y proveedores. Puede automáticamente enviar recordatorios, escalar las solicitudes, lanzar funciones específicas y muchas otras acciones basadas en sus propias reglas empresariales.\n\nLo mejor de este sistema es que los usuarios no necesitan hacer nada especial. El módulo de CRM tiene una plataforma de email que sincroniza los emails con Odoo. De esta manera, los usuarios pueden simplemente enviar emails para el seguimiento de la solicitud.\n\nOdoo se encargará de dar las gracias por su mensaje, automáticamente dirigiéndolo al personal apropiado y asegurándose de que toda la futura correspondencia quede en el lugar adecuado.\n\n\nTablero CRM que incluye:\n-------------------------------\n* Ingresos planificados por etapa y usuario (gráfico)\n* Oportunidades por etapa (gráfico)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -3588,7 +3588,7 @@ msgid ""
 "This module adds the picking wave option in warehouse management.\n"
 "=================================================================\n"
 "    "
-msgstr "\nEste módulo añade la opción de grupos de Movimientos de Inventario en la gestión de la bodega\n========================================================================================\n    "
+msgstr "\nEste módulo añade la opción de grupos de albaranes en la gestión de almacén\n===========================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -3607,7 +3607,7 @@ msgstr "\nEste módulo permite gestionar la asistencia de los empleados.\n======
 msgid ""
 "\n"
 "This module allows a customer to give rating on Project Issue.\n"
-msgstr ""
+msgstr "\nThis module Allows a customer to give rating on Project.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -4157,7 +4157,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\nMódulo de contabilidad del SGA\n==============================\nEste módulo sirve de puente entre los módulos 'stock' y 'account' y le permite crear asientos contables para valorar los movimientos de existencias.\n\nCaracterísticas clave\n------------\n* Valoración de existencias (periódica o automática)\n* Facturación desde movimientos de inventario\n\nEl tablero / los informes para la gestión de almacén incluye:\n-------------------------------------------------------------\n* Valoración de existencias en una fecha dada (soporta fechas en el pasado)\n    "
+msgstr "\nMódulo de contabilidad del SGA\n==============================\nEste módulo sirve de puente entre los módulos 'stock' y 'account' y le permite crear asientos contables para valorar los movimientos de existencias.\n\nCaracterísticas clave\n------------\n* Valoración de existencias (periódica o automática)\n* Facturación desde albarán\n\nEl tablero / los informes para la gestión de almacén incluye:\n-------------------------------------------------------------\n* Valoración de existencias en una fecha dada (soporta fechas en el pasado)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -5208,7 +5208,7 @@ msgid ""
 "         login once with a valid LDAP user, let OpenERP create a blank local\n"
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
-msgstr ""
+msgstr "Añade soporte para la autenticación por un servidor LDAP.\n=========================================================\n\nEste módulo permite a los usuarios acceder al sistema con su usuario y contraseña \nLDAP, y creará automáticamente usuarios OpenERP para ellos.\n\n**Nota:** Este módulo sólo funcionará en servidores que tengan el módulo Python\n``ldap`` instalado.\n\nConfiguración:\n--------------\nDespués de instalar este módulo, es necesario configurar los parámetros de LDAP en la\nFicha Configuración de la compañía. Diferentes empresas pueden tener diferentes\nServidores LDAP, siempre y cuando que tienen nombres de usuario únicos (nombres de usuario que tenga que ser único en Odoo, incluso a través de múltiples empresas).\n\nEl LDAP cnónimo  vincula a otros servidores que lo soporte (para servidores LDAP que lo permiten), por simplemente mantener el usuario LDAP y contraseña vacía en la configuración de LDAP.\n\nEsto no permite la autenticación anónima para los usuarios, es sólo para la cuenta\nLDAP de administrador que se utiliza para verificar si existe un usuario antes de intentar\nautenticarlo.\n\nAsegurar la conexión con STARTTLS está disponible para servidores LDAP \nal permitir la opción TLS en la configuración de LDAP.\n\nPara más opciones de configuración de los ajustes de LDAP, consulte las páginas\nde ayuda de ldap.conf: página de manual: 'ldap.conf (5)'.\n\nConsideraciones de Seguridad\n-----------------------------------------------\n\nLas contraseñas LDAP de los usuarios no se almacenan en la base de datos de OpenERP, el servidor LDAP se consulta cada vez que un usuario necesita ser autenticado. \nNo se produce la duplicación de la contraseña y las contraseñas se gestionan en un solo lugar.\n\nOdoo no gestiona los cambios de contraseña en el LDAP, por lo que cualquier cambio de contraseña debe llevarse a cabo por otros medios en el directorio LDAP directamente (para usuarios de LDAP).\n\nTambién es posible tener los usuarios de Odoo locales en la base de datos junto con\nUsuarios de LDAP-autenticado (la cuenta de administrador es un ejemplo obvio).\n\nAsí es como funciona:\n----------------------------------\n    * El sistema primero intenta autenticar a los usuarios en contra de la base de datos local Odoo;\n    * Si esto falla la autenticación (por ejemplo porque el usuario no tiene contraseña\nlocales), el sistema intenta autenticar contra LDAP;\n\nComo usuarios de LDAP tienen contraseñas en blanco por defecto en la base de datos local de OpenERP (que significa que no hay acceso), el primer paso siempre falla y el servidor LDAP es consultado para hacer la autenticación.\n\nLa habilitación STARTTLS asegura que la consulta de autenticación con el servidor LDAP es\ncifrada.\n\nPlantilla de usuario:\n-------------------------------\nEn la configuración de LDAP en el formulario de la empresa, es posible seleccionar una Plantilla de Usuario**. Si se establece, este usuario se utilizará como plantilla para crear los usuarios locales cada vez que alguien se autentica por primera vez a través de la autenticación LDAP. Esto permite pre-configuración de los grupos predeterminados y menús de los usuarios por primera vez.\n\n** Advertencia: ** si establece una contraseña para la plantilla de usuario, la contraseña será\nasignada como contraseña local para cada nuevo usuario LDAP, estableciendo de manera efectiva una * contraseña maestra * para estos usuarios (hasta que sean cambiadas manualmente). Usted por lo general no quieren esto. Una manera fácil de configurar un usuario de la plantilla es iniciar sesión una vez con un usuario LDAP válida, vamos a crear en la base local de Odoo un uusario en blanco  con el mismo nombre de usuario (y una contraseña en blanco), a continuación, cambiar el nombre de este nuevo usuario a un nombre de usuario que no existe en LDAP y configurar sus grupos.\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -5653,7 +5653,7 @@ msgstr "Nombre del autor"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.Net Payment Acquirer"
+msgstr "Procesador de Pagos Authorize.Net"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -8192,7 +8192,7 @@ msgstr "Controlador ESC/POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr "EU Mini One Stop Shop (MOSS)"
+msgstr "EU Mini Tienda Una Parada (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -8924,25 +8924,25 @@ msgstr ""
 msgid ""
 "For more details about translating Odoo in your language, please refer to "
 "the"
-msgstr ""
+msgstr "Para más detalles sobre la traducción de Odoo en su idioma, por favor consulte la"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation_field
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr ""
+msgstr "Para los campos one2many, el campo en el modelo de destino que implementar la relación many2one opuesta"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "Para campos relacionales, el nombre técnico del modelo objetivo"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:446
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "¡Para los campos de selección, las opciones de selección deben ser escritas!"
 
 #. module: base
 #: code:addons/models.py:3540
@@ -9216,7 +9216,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
 msgid "Glue module holding mail improvements for website."
-msgstr "Módulo Glue que mantiene las mejoras del módulo mail para los sitios web."
+msgstr "Módulo pegamento que mantiene las mejoras del módulo mail para los sitios web."
 
 #. module: base
 #: code:addons/base/res/res_config.py:715
@@ -9445,7 +9445,7 @@ msgstr "Driver para lectores de código de barras"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
-msgstr ""
+msgstr "Controlador de hardware para ESC / POS Impresoras y Cajones de Dinero"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scale
@@ -9512,7 +9512,7 @@ msgstr "Ayuda a manejar sus proformas, ordenes de venta y facturación."
 #. module: base
 #: model:ir.module.category,description:base.module_category_lead_automation
 msgid "Helps you manage lead of your marketing campaigns step by step."
-msgstr ""
+msgstr "Le ayuda a manejar las campañas de marketing en sus iniciativas paso a paso."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_event_management
@@ -9584,7 +9584,7 @@ msgstr "Hindú / India"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "History"
-msgstr "Historia"
+msgstr "Historial"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -9609,7 +9609,7 @@ msgstr "Honduras"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
-msgstr "Honduras - Accounting"
+msgstr "Honduras - Contabilidad"
 
 #. module: base
 #: model:res.country,name:base.hk
@@ -9672,12 +9672,12 @@ msgstr "Húngaro / Magyar"
 #. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
-msgstr "Hungaro"
+msgstr "Hungría"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
 msgid "IBAN Bank Accounts"
-msgstr "Cuentas Bancarias IBAN"
+msgstr "Cuentas bancarias IBAN"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown_id
@@ -9817,7 +9817,7 @@ msgstr "Código ISO"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
 msgid "IT Services"
-msgstr "Servicios IT"
+msgstr "Servicios de Informática"
 
 #. module: base
 #: model:res.country,name:base.is
@@ -9832,7 +9832,7 @@ msgstr "Icono"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_icon
 msgid "Icon URL"
-msgstr "URL Icono"
+msgstr "URL del icono"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_multi
@@ -9856,7 +9856,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_property_res_id
 msgid "If not set, acts as a default value for new resources"
-msgstr ""
+msgstr "Si no se establece, actúa como un valor predeterminado para los nuevos recursos"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_multi
@@ -9864,7 +9864,7 @@ msgstr ""
 msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
-msgstr ""
+msgstr "Si se establece en Verdadero, la acción no se mostrará en la barra de herramientas a la derecha de una vista de formulario."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_company_id
@@ -10546,7 +10546,7 @@ msgstr "Jersey"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Job Descriptions And Application Forms"
-msgstr ""
+msgstr "Descripción y formularios de aplicación de trabajo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_function
@@ -10562,7 +10562,7 @@ msgstr "Puestos de trabajo, departamentos, Detalles de Empleados"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Jobs, Recruitment, Applications, Job Interviews, Surveys"
-msgstr ""
+msgstr "Empleo, Contrataciones, Aplicaciones, Entrevistas de trabajo, Encuestas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_join_mode
@@ -11383,7 +11383,7 @@ msgstr "Administra los títulos del contacto que desea tener disponible en su si
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
 msgid "Manage your debts and credits thanks to simple sale/purchase receipts"
-msgstr ""
+msgstr "Administra sus créditos y débito gracias a recibos de compras y ventas"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_manager
@@ -11481,12 +11481,12 @@ msgstr "Campañas de Mercadeo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
 msgid "Maroc - Accounting"
-msgstr ""
+msgstr "Marruecos - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_reports
 msgid "Maroc - Accounting Reports"
-msgstr ""
+msgstr "Marruecos - Reportes Contables"
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -11541,7 +11541,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Imagen mediana de este contacto. Se redimensiona automáticamente a 128x128 px, con el ratio de aspecto preservado. Se usa este campo en las vistas los formularios y en algunas vistas de kanban."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_association
@@ -11678,7 +11678,7 @@ msgstr "Valor requerido para el campo '%s' (%s)"
 #: code:addons/models.py:6145
 #, python-format
 msgid "Missing required value for the field '%s'."
-msgstr ""
+msgstr "Valor requerido para el campo '%s' no existe"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -11781,7 +11781,7 @@ msgstr "Nombre del modelo del objeto a abrir en la ventana de la vista."
 #: model:ir.model.fields,help:base.field_ir_cron_model
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
-msgstr ""
+msgstr "Nombre del modelo en el que el método llamado se encuentra, ejemplo: 'res.partner'."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:685 code:addons/base/ir/ir_ui_view.py:863
@@ -11792,7 +11792,7 @@ msgstr "Modelo no encontrado: %(model)s"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_model
 msgid "Model to which this entry applies"
-msgstr ""
+msgstr "Modelo al que se aplica esta entrada"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_model_id
@@ -12398,7 +12398,7 @@ msgstr "Oficial"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr ""
+msgstr "Procesador de Pagos Ogone"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -12445,7 +12445,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr ""
+msgstr "Tickets para eventos en línea"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
@@ -12672,7 +12672,7 @@ msgstr "Archivo PO"
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "PO(T) format: you should edit it with a PO editor such as"
-msgstr ""
+msgstr "PO(T) Formato: usted debe editarlo con un editor de PO como "
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -13191,7 +13191,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr
 msgid "Present Your Team"
-msgstr ""
+msgstr "Presentar su Equipo de Trabajo"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_rml_report
@@ -13885,7 +13885,7 @@ msgstr "Restaurante"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Extensión para restarurantes para el TPV "
+msgstr "Extensión para restarurantes para el POS "
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -14170,7 +14170,7 @@ msgstr "Gestión de Ventas y MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock
 msgid "Sales and Warehouse Management"
-msgstr "Gestión de Ventas y Bodegas"
+msgstr "Gestión de Ventas y Almacén"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_user_id
@@ -14543,7 +14543,7 @@ msgstr "¡La configuración de contraseñas vacías no se permite por razones de
 #: model:ir.ui.menu,name:base.menu_sale_general_settings
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "Configuración"
+msgstr "Configuración"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -15911,7 +15911,7 @@ msgstr ""
 msgid ""
 "This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
-msgstr ""
+msgstr "Este archivo se generó usando la codificación universal <strong> Unicode / UTF-8 </ string>  de archivos, por favor asegúrese de ver y editarlo\nusando la misma codificación."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_views
@@ -16076,13 +16076,13 @@ msgstr "Interfaz táctil para Tiendas"
 #. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
-msgstr ""
+msgstr "Entrenamientos, conferencias, reuniones, exposiciones, inscripciones"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Transfer Payment Acquirer"
-msgstr ""
+msgstr "Procesador de Pagos a través de Transferencias"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_search

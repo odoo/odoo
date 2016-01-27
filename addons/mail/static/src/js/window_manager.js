@@ -343,8 +343,10 @@ core.bus.on('web_client_ready', null, function () {
         var chat_session = _.findWhere(chat_sessions, {id: channel.id});
         if (!chat_session || chat_session.window.folded) {
             chat_manager.detach_channel(channel);
-        } else if (chat_session && chat_session.window.is_hidden) {
+        } else if (chat_session.window.is_hidden) {
             make_session_visible(chat_session);
+        } else {
+            chat_session.window.focus_input();
         }
     });
 
@@ -370,7 +372,7 @@ return ChatWindow.extend({
                 self.$('.o_chat_search_input input')
                     .autocomplete({
                         source: function(request, response) {
-                            chat_manager.search_partner(request.term).done(response);
+                            chat_manager.search_partner(request.term, 10).done(response);
                         },
                         select: function(event, ui) {
                             self.trigger('open_dm_session', ui.item.id);
