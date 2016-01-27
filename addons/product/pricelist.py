@@ -148,7 +148,7 @@ class product_pricelist(osv.osv):
             'AND (categ_id IS NULL OR categ_id = any(%s)) '
             'AND (pricelist_id = %s) '
             'AND ((i.date_start IS NULL OR i.date_start<=%s) AND (i.date_end IS NULL OR i.date_end>=%s))'
-            'ORDER BY sequence, applied_on, min_quantity desc',
+            'ORDER BY applied_on, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, pricelist.id, date, date))
 
         item_ids = [x[0] for x in cr.fetchall()]
@@ -191,6 +191,15 @@ class product_pricelist(osv.osv):
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
                         continue
                     if rule.product_id and product.id != rule.product_id.id:
+                        continue
+
+                if rule.categ_id:
+                    cat = product.categ_id
+                    while cat:
+                        if cat.id == rule.categ_id.id:
+                            break
+                        cat = cat.parent_id
+                    if not cat:
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
@@ -251,7 +260,7 @@ class product_pricelist(osv.osv):
 class product_pricelist_item(osv.osv):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "sequence, applied_on, min_quantity desc"
+    _order = "applied_on, min_quantity desc"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):

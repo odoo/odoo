@@ -14,7 +14,9 @@
              </div>
          </t>
          <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
-             <textarea class="o_composer_input" placeholder="Write something..."/>
+             <div class="o_composer_input">
+                 <textarea placeholder="Write something..."/>
+             </div>
              <t t-if="!widget.extended">
                  <div class="btn-group o_composer_buttons">
                     <button class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
@@ -33,7 +35,7 @@
                 <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
             </t>
          </span>
-         <span class="o_composer_emoji"></span>
+         <span t-att-class="widget.emoji_container_classname"></span>
     </div>
 
     <t t-name="mail.ChatComposer.emojis">

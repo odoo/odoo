@@ -5,13 +5,14 @@
 # Translators:
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2015-2016
+# Gonzalo Tagliabue <zaphalo@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-01-02 12:16+0000\n"
-"Last-Translator: Antonio Trueba\n"
+"PO-Revision-Date: 2016-01-21 17:57+0000\n"
+"Last-Translator: Gonzalo Tagliabue <zaphalo@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,9 +90,14 @@ msgid "Able to see Remaining Leaves"
 msgstr "Puede ver ausencias disponibles"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
-msgstr ""
+msgstr "Ausentes del día"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -107,7 +113,7 @@ msgstr "Ausente hoy"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
 msgid "Action Needed"
-msgstr "Necesaria acción"
+msgstr "Se necesita acción"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
@@ -266,7 +272,7 @@ msgstr "Por empleado: peticiones/asignaciones por cada empleado individualmente.
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
 msgid "Can reset"
-msgstr ""
+msgstr "Puede resetear"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
@@ -557,11 +563,6 @@ msgid ""
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
 msgstr "Si marca esta casilla, el sistema permitirá a los empleados coger más ausencias que las disponibles para este tipo y no tendrá en cuenta el campo \"Ausencias legales restantes\" definidas en el formulario de empleado."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Important Messages"
-msgstr "Mensajes importantes"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
@@ -1242,6 +1243,7 @@ msgstr "Impagada"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin leer"
 

@@ -169,7 +169,7 @@ class AccountBankStatementImport(models.TransientModel):
                 unique_import_id = line_vals.get('unique_import_id')
                 if unique_import_id:
                     sanitized_account_number = sanitize_account_number(account_number)
-                    line_vals['unique_import_id'] = (sanitized_account_number and sanitized_account_number + '-' or '') + unique_import_id
+                    line_vals['unique_import_id'] = (sanitized_account_number and sanitized_account_number + '-' or '') + str(journal.id) + '-' + unique_import_id
 
                 if not line_vals.get('bank_account_id'):
                     # Find the partner and his bank account or create the bank account. The partner selected during the

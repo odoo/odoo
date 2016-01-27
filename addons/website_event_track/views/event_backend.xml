@@ -74,7 +74,7 @@
                     <field name="location_id"/>
                     <field name="state"/>
                     <field name="speaker_ids"/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
