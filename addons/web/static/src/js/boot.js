@@ -203,23 +203,28 @@
 
             function process_job (job) {
                 var require = make_require(job);
+
+                var job_exec;
+                var def = $.Deferred();
                 try {
-                    var def = $.Deferred();
-                    $.when(job.factory.call(null, require)).then(
-                        function (data) {
-                            services[job.name] = data;
-                            clearTimeout(time);
-                            time = _.defer(odoo.process_jobs, jobs, services);
-                            def.resolve();
-                        }, function (e) {
-                            job.rejected = e || true;
-                            jobs.push(job);
-                            def.resolve();
-                        });
+                    job_exec = job.factory.call(null, require);
                     jobs.splice(jobs.indexOf(job), 1);
                     job_deferred.push(def);
                 } catch (e) {
                     job.error = e;
+                }
+                if (!job.error) {
+                    $.when(job_exec).then(
+                        function (data) {
+                            services[job.name] = data;
+                            def.resolve();
+                            odoo.process_jobs(jobs, services);
+                        }, function (e) {
+                            job.rejected = e || true;
+                            jobs.push(job);
+                            def.resolve();
+                        }
+                    );
                 }
             }
 

@@ -24,6 +24,10 @@
             LLL : "D MMMM YYYY เวลา LT",
             LLLL : "วันddddที่ D MMMM YYYY เวลา LT"
         },
+        meridiemParse: /ก่อนเที่ยง|หลังเที่ยง/,
+        isPM: function (input) {
+            return input === 'หลังเที่ยง';
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 12) {
                 return "ก่อนเที่ยง";
