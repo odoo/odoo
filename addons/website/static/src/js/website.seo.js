@@ -12,10 +12,8 @@ var base = require('web_editor.base');
 var website = require('website.website');
 
 var _t = core._t;
-
 var qweb = core.qweb;
 
-ajax.loadXML('/website/static/src/xml/website.seo.xml', qweb);
 
     // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
     // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b

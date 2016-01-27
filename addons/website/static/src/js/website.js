@@ -10,7 +10,6 @@ odoo.define('website.website', function (require) {
 
     var qweb = core.qweb;
     var _t = core._t;
-    base.url_translations = '/website/translations';
 
     /* --- Set the browser into the dom for css selectors --- */
     var browser;
@@ -165,11 +164,7 @@ odoo.define('website.website', function (require) {
         form.submit();
     };
 
-    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb).then(function () {
-        ajax.loadXML('/website/static/src/xml/website.xml', qweb);
-    });
-
-    base.ready().then(function () {
+    setTimeout(function () {
         data.topBar = new TopBar();
         return data.topBar.attachTo($("#oe_main_menu_navbar"));
     });
@@ -206,7 +201,7 @@ odoo.define('website.website', function (require) {
             // retrieve the hash before the redirect
             var redirect = {
                 lang: self.data('lang'),
-                url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
+                url: encodeURIComponent(self.attr('href')),
                 hash: encodeURIComponent(location.hash)
             };
             location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
@@ -278,14 +273,10 @@ odoo.define('website.website', function (require) {
     });
 
     var data = {
-        prompt: prompt,
-        error: error,
-        form: form,
-        TopBar: TopBar,
-        ready: function () {
-            console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
-            return base.ready();
-        },
+        'prompt': prompt,
+        'error': error,
+        'form': form,
+        'TopBar': TopBar,
     };
     return data;
 });

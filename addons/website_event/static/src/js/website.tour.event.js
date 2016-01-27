@@ -9,7 +9,6 @@ odoo.define("website_event.tour", function (require) {
 
     tour.register("event", {
         url: "/",
-        wait_for: base.ready(),
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_event]",
         content: _t("Click here to create a new event."),

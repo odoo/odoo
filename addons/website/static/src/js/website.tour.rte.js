@@ -6,7 +6,6 @@ var base = require("web_editor.base");
 
 tour.register('rte_translator', {
     test: true,
-    wait_for: base.ready()
 },
     [
         {

@@ -11,8 +11,6 @@ var local_storage = require('web.local_storage');
 var qweb = core.qweb;
 var _t = core._t;
 
-ajax.loadXML('/web_editor/static/src/xml/ace.xml', qweb);
-
 function checkXML(xml) {
     if (typeof window.DOMParser != "undefined") {
         var xmlDoc = (new window.DOMParser()).parseFromString(xml, "text/xml");

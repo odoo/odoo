@@ -7,7 +7,6 @@ var base = require("web_editor.base");
 tour.register('shop_buy_product', {
     test: true,
     url: '/shop',
-    wait_for: base.ready()
 },
     [
         {

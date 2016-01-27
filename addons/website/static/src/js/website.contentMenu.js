@@ -12,7 +12,6 @@ var website = require('website.website');
 var _t = core._t;
 var qweb = core.qweb;
 
-ajax.loadXML('/website/static/src/xml/website.contentMenu.xml', qweb);
 
 var TopBarContent = Widget.extend({
     start: function () {

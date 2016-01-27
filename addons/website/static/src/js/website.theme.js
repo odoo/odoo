@@ -7,24 +7,7 @@ var session = require('web.session');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-
 var QWeb = core.qweb;
-
-ajax.jsonRpc('/web/dataset/call', 'call', {
-        'model': 'ir.ui.view',
-        'method': 'read_template',
-        'args': ['website.theme_customize', base.get_context()]
-    }).done(function (data) {
-    QWeb.add_template(data);
-});
-
-ajax.jsonRpc('/web/dataset/call', 'call', {
-        'model': 'ir.ui.view',
-        'method': 'read_template',
-        'args': ['web_editor.colorpicker', base.get_context()]
-    }).done(function (data) {
-    QWeb.add_template(data);
-});
 
 var Theme = Widget.extend({
     template: 'website.theme_customize',
@@ -293,14 +276,11 @@ function theme_customize() {
 
 website.TopBar.include({
     start: function () {
-        var self = this;
-        base.ready().then(function () {
-            self.$el.on('click', "#theme_customize a", theme_customize);
-            if ((window.location.hash || "").indexOf("theme=true") !== -1) {
-                theme_customize();
-                window.location.hash = "";
-            }
-        });
+        this.$el.on('click', "#theme_customize a", theme_customize);
+        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+            theme_customize();
+            window.location.hash = "";
+        }
 
         return this._super();
     }

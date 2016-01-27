@@ -19,7 +19,6 @@ for (var k=0; k<steps.length; k++) {
 tour.register('shop_customize', {
     test: true,
     url: '/shop',
-    wait_for: base.ready()
 },
     [
         {

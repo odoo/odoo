@@ -7,7 +7,6 @@ var base = require("web_editor.base");
 tour.register('event_buy_tickets', {
     test: true,
     url: '/event',
-    wait_for: base.ready()
 },
     [
         {

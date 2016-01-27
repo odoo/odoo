@@ -14,7 +14,6 @@ odoo.define('web_editor.tour', function (require) {
     tour.register("rte", {
         url: '/web_editor/field/html?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
         test: true,
-        wait_for: base.ready(),
     }, [{
         content: "Change html for this test",
         trigger: "#editable_area",
@@ -283,7 +282,6 @@ odoo.define('web_editor.tour', function (require) {
     tour.register('rte_inline', {
         url: '/web_editor/field/html/inline?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
         test: true,
-        wait_for: base.ready(),
     }, [{
         content: "Change html for this test",
         trigger: "#editable_area",

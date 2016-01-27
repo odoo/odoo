@@ -9,7 +9,6 @@ odoo.define("website_sale.tour_shop", function (require) {
 
     tour.register("shop", {
         url: "/",
-        wait_for: base.ready(),
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_product]",
         content: _t("Select <b>New Product</b> to create it and manage its properties to boost your sales."),

@@ -18,7 +18,6 @@ editor.dummy = function () {return true;}; // used for snippets, options...
 
 editor.editable = !!($('html').data('editable') || $("[data-oe-model]").length); // temporary hack, this should be done in python
 
-ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
 
 $(document).on('click', '.note-editable', function (ev) {
     ev.preventDefault();
@@ -51,13 +50,6 @@ editor.reload = function () {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ----- TOP EDITOR BAR FOR ADMIN ---- */
-
-base.ready().then(function () {
-    if (editor.editable && location.search.indexOf("enable_editor") >= 0) {
-        editor.editor_bar = new editor.Class();
-        editor.editor_bar.prependTo(document.body);
-    }
-});
 
 editor.Class = Widget.extend({
     template: 'web_editor.editorbar',
@@ -144,6 +136,13 @@ editor.Class = Widget.extend({
         });
     },
 });
+
+if (editor.editable && location.search.indexOf("enable_editor") >= 0) {
+    setTimeout(function () {
+        editor.editor_bar = new editor.Class();
+        editor.editor_bar.prependTo(document.body);
+    });
+}
 
 return editor;
 });
