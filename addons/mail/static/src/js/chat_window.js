@@ -3,6 +3,7 @@ odoo.define('mail.ChatWindow', function (require) {
 
 var ChatThread = require('mail.ChatThread');
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
@@ -23,15 +24,15 @@ return Widget.extend({
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
-        this.placeholder = _t("Say something");
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
             display_stars: true,
+            placeholder: _t("Say something"),
         });
         this.unread_msgs = unread_msgs || 0;
+        this.is_hidden = false;
     },
     start: function () {
-        this.$content = this.$('.o_chat_content');
         this.$input = this.$('.o_chat_input input');
 
         this.thread = new ChatThread(this, {
@@ -45,28 +46,21 @@ return Widget.extend({
 
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
+        } else {
+            this.focus_input();
         }
-        var def = this.thread.appendTo(this.$content);
+        var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
     },
     render: function (messages) {
-        this.update_header();
+        this.update_unread(this.unread_msgs);
         this.thread.render(messages, {display_load_more: false});
-    },
-    update_header: function () {
-        var title = this.unread_msgs > 0 ?
-            this.title + ' (' + this.unread_msgs + ')' : this.title;
-        this.$('.o_chat_title').text(title);
     },
     update_unread: function (counter) {
         this.unread_msgs = counter;
-        this.update_header();
-    },
-    scrollBottom: function () {
-        this.$content.scrollTop(this.$content[0].scrollHeight);
+        this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
     },
     fold: function () {
-        this.update_header();
         this.$el.animate({
             height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
         });
@@ -74,10 +68,27 @@ return Widget.extend({
     toggle_fold: function (fold) {
         this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
-            this.unread_msgs = 0;
-            this.trigger('messages_read');
+            this.thread.scroll_to();
+            this.focus_input();
         }
         this.fold();
+    },
+    focus_input: function () {
+        if (!config.device.touch) {
+            this.$input.focus();
+        }
+    },
+    do_show: function () {
+        this.is_hidden = false;
+        this._super.apply(this, arguments);
+    },
+    do_hide: function () {
+        this.is_hidden = true;
+        this._super.apply(this, arguments);
+    },
+    do_toggle: function (display) {
+        this.is_hidden = _.isBoolean(display) ? !display : !this.is_hidden;
+        this._super.apply(this, arguments);
     },
     on_keydown: function (event) {
         // ENTER key (avoid requiring jquery ui for external livechat)
@@ -100,8 +111,10 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        this.trigger("fold_channel", this.channel_id);
-        this.toggle_fold();
+        if (config.device.size_class !== config.device.SIZES.XS) {
+            this.toggle_fold();
+            this.trigger("fold_channel", this.channel_id, this.folded);
+        }
     },
 });
 

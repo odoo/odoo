@@ -65,7 +65,7 @@
                 </span>
                 <i t-if="!message.display_author &amp;&amp; options.display_stars &amp;&amp; message.message_type != 'notification'"
                     t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                    t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
+                    t-att-data-message-id="message.id" title="Mark as Todo"/>
             </div>
             <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
                 <p t-if="message.display_author" class="o_mail_info">
@@ -99,10 +99,10 @@
                     <span>
                         <i t-if="options.display_stars &amp;&amp; message.message_type != 'notification'"
                             t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                            t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
+                            t-att-data-message-id="message.id" title="Mark as Todo"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
                            class="fa fa-check o_thread_message_needaction"
-                           t-att-data-message-id="message.id" t-att-title="_t('Mark as Read')"/>
+                           t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
@@ -122,7 +122,7 @@
                         </div>
                     </t>
                     <t t-if="!options.shorten_messages || !message.body_short">
-                        <t t-raw="message.body"/>
+                        <div><t t-raw="message.body"/></div>
                     </t>
                 </t>
                 <t t-foreach="message.attachment_ids" t-as="attachment">

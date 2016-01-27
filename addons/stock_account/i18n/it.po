@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-11-11 16:43+0000\n"
+"PO-Revision-Date: 2016-01-23 22:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -204,7 +204,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Se la valutazione continua è abilitata per un articolo, il sistema automaticamente crea un movimento contabile corrispondente al movimento di magazzino, con il costo dell'articolo specificato come indicato dal 'metodo di costo'. Il conto di differenze inventariali impostato sulla categoria prodotto, rappresenterà il valore inventariale attuale, mentre il conto di ingresso e di uscita conserveranno le contropartite per la merce in ingresso e in uscita. "
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -431,7 +431,7 @@ msgstr "Specifica un unità di misura qui, se la fatturazione viene fatta in un'
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Indica se l'articolo può essere selezionato come costo per le HR"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -453,7 +453,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Prezzo Standard: Il costo è  manualmente aggiornato alla fine di ogni periodo (tipicamente ogni anno).\nPrezzo Medio: Il costo è ricalcolato ad ogni spedizione in ingresso e utilizzata la valorizzazione dell'articolo.\nPrezzo Reale: Il costo visualizzato è il costo dell'ultimo articolo spedito (viene utilizzato, ad esempio, nel caso di perdite inventariali)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method

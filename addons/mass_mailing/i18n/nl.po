@@ -3,14 +3,15 @@
 # * mass_mailing
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-06 07:17+0000\n"
-"PO-Revision-Date: 2016-01-06 09:32+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2016-01-23 14:47+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +187,7 @@ msgstr "Actief"
 msgid ""
 "Allow the use of a pop-up snippet on website to encourage visitors to sign "
 "up on a mass mailing list"
-msgstr "Sta het gebruik van pop-up snippets op de website toe om bezoekers aan te moedigen om zich in te schrijven voor de massa mailing lijst."
+msgstr "Sta het gebruik van pop-up snippets op de website toe om bezoekers aan te moedigen om zich in te schrijven voor de bulkmailing lijst."
 
 #. module: mass_mailing
 #: selection:mass.mailing.config.settings,group_mass_mailing_campaign:0
@@ -317,7 +318,7 @@ msgstr "Klik om een ontvanger aan te maken."
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
 msgid "Click to define a new mass mailing campaign."
-msgstr "Klik om een nieuwe massa mailing campagne te definiëren."
+msgstr "Klik om een bulkmailing campagne te definiëren."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -374,7 +375,7 @@ msgstr "Neem contact met ons op"
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
 msgid "Contacts"
-msgstr "Contactpersonen"
+msgstr "Contacten"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_bounce
@@ -391,7 +392,7 @@ msgstr "Aanmaakdatum"
 msgid ""
 "Create a campaign to structure mass mailing and get analysis from email "
 "status."
-msgstr "Maak een campagne aan om massa mailings te structureren en krijg analyses van e-mailstatussen."
+msgstr "Maak een campagne aan om bulkmailingen te structureren en krijg analyses van e-mailstatussen."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_uid
@@ -492,6 +493,7 @@ msgstr "Verwijderen"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Geleverd"
 
@@ -546,8 +548,10 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "Concept"
 
@@ -746,7 +750,9 @@ msgid ""
 msgstr "Indien aangevinkt zullen ontvangers eenmalig worden gemaild. Dit geeft u de mogelijkheid om meerdere mailingen in een enkele campagne te testen of effectiviteit van de mailing."
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
 msgstr "In wachtrij"
 
@@ -1009,7 +1015,7 @@ msgstr "Bulk mailing contact"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_stages
 msgid "Mass Mailing Stages"
-msgstr "Bulk mailing stadiums"
+msgstr "Bulk mailing fases"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
@@ -1055,7 +1061,7 @@ msgstr "Bulk mailingen"
 msgid ""
 "Mass mailing allows you to to easily design and send mass mailings to your "
 "contacts, customers or leads using mailing lists."
-msgstr "Massa mailings staan u toe om gemakkelijk massa mailings te ontwerpen en verzenden naar uw contacten, klanten of leads met gebruik van massa mailing lijsten."
+msgstr "Bulk mailings staan u toe om gemakkelijk bulkmailings te ontwerpen en verzenden naar uw contacten, klanten of leads met gebruik van bulk mailing lijsten."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
@@ -1066,7 +1072,7 @@ msgstr "Bulk mailing thema's"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_medium_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_medium_id
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Medium"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_message_id
@@ -1398,12 +1404,12 @@ msgstr "Stuur een voorbeeldmail naar de hierboven vermelde e-mailadressen om te 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Send new A/B Testing Mass Mailing"
-msgstr "Verzend nieuwe A/B test massa mailing"
+msgstr "Verzend nieuwe A/B test bulkmailing"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Send new Mass Mailing"
-msgstr "Verzend nieuwe massa mailing"
+msgstr "Verzend nieuwe bulkmailing"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1411,17 +1417,21 @@ msgid "Send to All"
 msgstr "Verstuur naar iedereen"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
 msgstr "verzenden"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "Verzonden"
 
@@ -1606,7 +1616,7 @@ msgstr "Dit is de bron van de link. Bijvoorbeeld: zoekmachine, ander domein of d
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "This mass mailing is scheduled to"
-msgstr "Deze massa mailing is ingepland voor"
+msgstr "Deze bulkmailing is ingepland voor"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form

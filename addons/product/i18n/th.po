@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-01 05:49+0000\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -369,7 +369,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 #: model:ir.ui.menu,name:product.menu_variants_action
 msgid "Attribute Values"
-msgstr ""
+msgstr "ค่าคุณลักษณะ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -379,7 +379,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Attributes"
-msgstr ""
+msgstr "คุณลักษณะ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -420,7 +420,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
 msgid "Based on"
-msgstr ""
+msgstr "Based on"
 
 #. module: product
 #: model:product.product,name:product.product_product_57
@@ -529,14 +529,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
-msgstr ""
+msgstr "สามารถเช่าได้"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template_sale_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr ""
+msgstr "สามารถขายได้"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -678,6 +678,12 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
 msgstr ""
 
 #. module: product
@@ -836,7 +842,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "เวลานำการจัดส่ง"
 
 #. module: product
 #: model:product.product,name:product.product_product_49
@@ -853,7 +859,7 @@ msgstr "รายละเอียด"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Quotations"
-msgstr ""
+msgstr "รายละเอียดสำหรับการเสนอราคา"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -914,7 +920,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "โหล"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_57
@@ -1101,7 +1107,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "ราคาคงที่"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
@@ -1463,7 +1469,7 @@ msgstr "ภายใน"
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
-msgstr ""
+msgstr "หมวดภายใน"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_code
@@ -1734,7 +1740,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_min_qty
 msgid "Minimal Quantity"
-msgstr ""
+msgstr "ปริมาณอย่างต่ำ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1805,7 +1811,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "New Price ="
-msgstr ""
+msgstr "ราคาใหม่ ="
 
 #. module: product
 #: selection:product.category,type:0 selection:product.template,state:0
@@ -2022,7 +2028,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "Price:"
-msgstr ""
+msgstr "ราคา:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_price_list
@@ -2203,7 +2209,7 @@ msgstr "หน่วยการวัดสินค้า"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr ""
+msgstr "แปลผันสินค้า"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
@@ -2265,7 +2271,7 @@ msgstr "ผลิตภัณฑ์ "
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
-msgstr ""
+msgstr "ราคาขาย"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2414,7 +2420,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sale Conditions"
-msgstr ""
+msgstr "เงื่อนไขการขาย"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_sale
@@ -2491,6 +2497,12 @@ msgstr "กำหนดเลขที่เอกสาร"
 #: model:product.public.category,name:product.server
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
+msgstr "Server"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
 msgstr ""
 
 #. module: product
@@ -2671,7 +2683,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
-msgstr ""
+msgstr "Template Name"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2989,7 +3001,7 @@ msgstr ""
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_uom_id
@@ -3012,7 +3024,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -3184,7 +3196,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
 #: model:ir.model.fields,field_description:product.field_product_template_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "การรับประกัน"
 
 #. module: product
 #: model:product.product,name:product.product_product_34
@@ -3328,7 +3340,7 @@ msgstr "base.config.settings"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "ซม"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3426,17 +3438,17 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "นิ้ว"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "กก"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "กม"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
@@ -3451,7 +3463,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "months"
-msgstr ""
+msgstr "เดือน"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
@@ -3507,7 +3519,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "บริษัทแม่"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view

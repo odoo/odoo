@@ -5,14 +5,16 @@
 # Translators:
 # Kontor Consulting <p.becker@kontor.consulting>, 2015
 # Pascal <paesce@gentlemansclub.de>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2015
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-12-17 11:54+0000\n"
-"Last-Translator: Renko Spiekermann <renkosp@gmail.com>\n"
+"PO-Revision-Date: 2016-01-23 19:33+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -107,7 +109,7 @@ msgstr "# Positionen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr ""
+msgstr "# der Aufträge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -141,7 +143,7 @@ msgstr "(aktualisieren)"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-msgstr ""
+msgstr "<span groups=\"sale.group_discount_per_so_line\">Rabatt(%)</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -288,7 +290,7 @@ msgstr "Nach Verkaufsteam"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "Kann gelieferte Zeilen ändern"
+msgstr "Kann gelieferte Auftragszeilen anpassen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -409,7 +411,7 @@ msgstr "Kundenreferenz"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
-msgstr "Umsatzsteuern"
+msgstr "Steuern (Verkauf)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -528,7 +530,7 @@ msgstr "Rabatt auf Auftragspositionen"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr "Zeige 3 Felder auf Verkausaufträgen: Kunde, Rechnungsadresse, Lieferadresse"
+msgstr "Zeige 3 Felder auf Verkaufsaufträgen: Kunde, Rechnungsadresse, Lieferadresse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -678,17 +680,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, brauchen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Wichtige Mitteilung"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -709,7 +706,7 @@ msgstr "Rechnung"
 #: code:addons/sale/sale.py:785
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "Rechnung %s bezahlt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -843,6 +840,7 @@ msgstr "Rechnungen werden als Entwürfe erstellt, damit Sie vor der Bestätigung
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Rechnungserstellung"
@@ -993,7 +991,7 @@ msgstr "Nichts abzurechnen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl Aktionen"
+msgstr "Anzahl der Aktionen"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1005,7 +1003,7 @@ msgstr "Anzahl der Tage zwischen Auftragserteilung und Auslieferung zum Kunden"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Anzahl Nachrichten, die eine Aktion erfordern"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread_counter
@@ -1096,7 +1094,7 @@ msgstr "Bestellte Mengen"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Aufträge für Upselling"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1128,7 +1126,7 @@ msgstr "Zahlungsbedingung"
 #: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr "Definieren sie bitte ein Finanzverkaufsjournal für dieses Unternehmen."
+msgstr "Definieren Sie bitte ein Finanzverkaufsjournal für dieses Unternehmen."
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1361,7 +1359,7 @@ msgstr "Auftragspositionen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Verkausauftragsänderung"
+msgstr "Verkaufsauftragsänderung"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1551,7 +1549,7 @@ msgstr "Setze auf Angebot"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr "Setzen sie Geschäftsbedingungen in ihren Unternehmenseinstellungen."
+msgstr "Setzen Sie Geschäftsbedingungen in Ihren Unternehmenseinstellungen."
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1566,7 +1564,7 @@ msgstr "Zeige Preislisten auf Produkten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr "Zeige Kunden Preislisten"
+msgstr "Kunden die Preislisten anzeigen"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1731,7 +1729,7 @@ msgstr "Abzurechnen"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr "Bruttobetrag"
+msgstr "Gesamtbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_total
@@ -1742,7 +1740,7 @@ msgstr "Gesamtpreis"
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr "Bruttobetrag"
+msgstr "Gesamtbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
@@ -1770,6 +1768,7 @@ msgstr "Maßeinheiten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 

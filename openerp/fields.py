@@ -560,8 +560,11 @@ class Field(object):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            # do not switch to another environment if record is a draft one
-            other, field = self.traverse_related(other if record.id else record)
+            if not record.id:
+                # draft records: copy record's cache to other's cache first
+                for name, value in record._cache.iteritems():
+                    other[name] = value
+            other, field = self.traverse_related(other)
             record[self.name] = other[field.name]
 
     def _inverse_related(self, records):

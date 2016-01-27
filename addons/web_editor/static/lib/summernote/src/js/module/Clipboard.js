@@ -144,17 +144,31 @@ define([
       filter_tag($node.find('*'), $editable).removeAttr('title', 'alt', 'id', 'contenteditable');
 
       /*
-          remove unless span
+          remove unless span and unwant font
       */
-      $node.find('span:not([class]):not([style])').each(function () {
+      $node.find('span, font').filter(':not([class]):not([style])').each(function () {
         $(this).replaceWith($(this).contents());
       });
       $node.find('span + span').each(function () {
+
+        if (dom.isText(this.previousSibling)) {
+          if (dom.isVisibleText(this.previousSibling)) {
+            return;
+          } else { // keep space between 2 tags, but can merge the both tags
+            $(this).prev().append(this.previousSibling);
+          }
+        }
         if ($(this).attr('class') === $(this).prev().attr('class') && $(this).attr('style') === $(this).prev().attr('style')) {
           $(this).prev().append($(this).contents());
           $(this).remove();
         }
       });
+
+      // remove empty table row and td
+      var $tdr;
+      while(($tdr = $node.find('tr:empty, td:empty, th:empty, tbody:empty, t-head:empty, table:empty')) && $tdr.length) {
+        $tdr.remove();
+      }
 
       /*
           reset architecture HTML node and add <p> tag
@@ -169,6 +183,9 @@ define([
         } else if (/h[0-9]+|li|table|p/i.test(this.tagName)) {
           $last = $('<p/>');
           $arch.append(this).append($last);
+        } else if ($arch.is(':empty') && dom.isText(this)) {
+          $last = $('<p/>').append(this);
+          $arch.append($last);
         } else if (this.nodeType !== Node.COMMENT_NODE) {
           $last.append(this);
         }

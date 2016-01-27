@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Volluta <volluta@tutanota.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:34+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"PO-Revision-Date: 2016-01-20 19:42+0000\n"
+"Last-Translator: Volluta <volluta@tutanota.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +89,11 @@ msgstr "<strong>Afdelingen en personeel</strong>"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_show_leaves
 msgid "Able to see Remaining Leaves"
 msgstr "Kan de resterende verlofdagen bekijken"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
+msgstr "Absentie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
@@ -559,11 +566,6 @@ msgid ""
 msgstr "Indien u dit aanvinkt, dan laat het systeem het toe dat werknemers meer verlof opnemen dan dat er beschikbaar is voor dit type verlof. Het systeem kijkt niet naar de overgebleven verlof zoals weergegeven op het werknemer formulier."
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
 msgid "Is Follower"
 msgstr "Is een volger"
@@ -752,7 +754,7 @@ msgstr "Verlofaanvragen goedkeuren"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request_approved
 msgid "Leaves to be reported in Payslip"
-msgstr "Verloven vermeld in de loonbrief"
+msgstr "Verloven vermeld in de loonstrook"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1022,7 +1024,7 @@ msgstr "Resterend verlof"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_payslip_status
 msgid "Reported in last payslips"
-msgstr "Vermeld op de laatste loonbrief"
+msgstr "Vermeld op de laatste loonstrook"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
@@ -1205,7 +1207,7 @@ msgstr "Te doen"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Report in Payslip"
-msgstr "Te vermelden op de loonbrief"
+msgstr "Te vermelden op de loonstrook"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1242,6 +1244,7 @@ msgstr "Onbetaald"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 

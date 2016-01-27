@@ -75,13 +75,13 @@
         <t t-if="!disable_add_channel || !empty">
             <div class="o_mail_sidebar_title">
                 <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''"><t t-esc="channel_title"/></h4>
-                <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
+                <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}"/>
             </div>
         </t>
     </t>
     <t t-name="mail.chat.SidebarItems">
         <t t-foreach="channels" t-as="channel">
-            <t t-set="counter" t-value="channel.needaction_counter"/>
+            <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id"
                  t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
                 <span t-if="display_status">
@@ -94,7 +94,7 @@
                 <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
-                      t-att-title="_t('Leave this channel')" t-att-data-channel-id="channel.id"/>
+                      title="Leave this channel" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
@@ -119,13 +119,14 @@
     <!-- Buttons of the Control Panel -->
     <t t-name="mail.chat.ControlButtons">
         <div>
-            <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" t-att-title='_t("Toggle Channels")'>Channels</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_detach hidden-xs" t-att-title='_t("Detach the conversation")'>Detach</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_mark_read" t-att-title='_t("Mark all as read")'>Mark all read</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" t-att-title='_t("Unstar all messages")'>Unstar all</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" t-att-title='_t("Unsubscribe from channel")'>Unsubscribe</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" t-att-title='_t("Open channel settings")'>Settings</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" title="Toggle Channels">Channels</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" title="Invite people">Invite</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_detach hidden-xs" title="Detach the conversation">Detach</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_new_message" title="Compose a new message">Send mail</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" title="Unsubscribe from channel">Unsubscribe</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>
         </div>
     </t>
 

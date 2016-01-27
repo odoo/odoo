@@ -7,14 +7,14 @@
 # Eric Geens <eric.geens@vitabiz.be>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-12-22 16:46+0000\n"
+"PO-Revision-Date: 2016-01-23 14:45+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -845,7 +845,7 @@ msgid ""
 "This module set the right product on all timesheet lines\n"
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
-msgstr "\nStaat verkopen van urenstaten toe op uw verkooporders\n=============================================\n\nDeze module zet het correcte product op alle urenstaten lijnen\nafhankelijk van de order / het contract waar u aan werkt. Dit staat u toe\nom echt geleverde hoeveelheden te hebben in verkooporders.\n"
+msgstr "\nStaat verkopen van urenstaten toe op uw verkooporders\n=============================================\n\nDeze module zet het correcte product op alle urenstaten regels\nafhankelijk van de order / het contract waar u aan werkt. Dit staat u toe\nom echt geleverde hoeveelheden te hebben in verkooporders.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -856,7 +856,7 @@ msgid ""
 "\n"
 "You can define your own carrier for prices. When creating\n"
 "invoices from picking, the system is able to add and compute the shipping line.\n"
-msgstr "\nStaat u toe om nieuwe leveringsmethodes toe te voegen in verkooporders en leveringen. ============================================================== \n\nU kan uw eigen vervoerder voor prijzen definiëren. Wanneer u een\nfactuur aanmaakt vanuit een levering kan het systeem de verzendlijn toevoegen en berekenen.\n"
+msgstr "\nStaat u toe om nieuwe leveringsmethodes toe te voegen in verkooporders en leveringen. ============================================================== \n\nU kan uw eigen vervoerder voor prijzen definiëren. Wanneer u een\nfactuur aanmaakt vanuit een levering kan het systeem de verzendregel toevoegen en berekenen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_portal
@@ -950,7 +950,7 @@ msgid ""
 "\n"
 "This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
 "    "
-msgstr "\nGeautomatiseerde vertalingen met Gengo API\n========================================\n\nDeze module installeert passieve geplande jobs voor geautomatiseerde vertalingen \ndoor de Gengo API te gebruiken. Om dit te activeren moet u\n1) Uw Gengo authenticatie parameters configureren onder 'Instellingen > Bedrijven > Gengo parameters'\n2) De wizard lanceren onder 'Instellingen > Applicatie uitdrukkingen > Gengo: Manuele verzoeken van vertalingen' en volg de wizard.\n\nDeze wizard activeer de CRON job en de scheduler en start automatisch de vertalingen via de Gengo Services voor alle termen die u wilt vertalen.\n    "
+msgstr "\nGeautomatiseerde vertalingen met Gengo API\n========================================\n\nDeze module installeert passieve geplande jobs voor geautomatiseerde vertalingen \ndoor de Gengo API te gebruiken. Om dit te activeren moet u\n1) Uw Gengo authenticatie parameters configureren onder 'Instellingen > Bedrijven > Gengo parameters'\n2) De wizard lanceren onder 'Instellingen > Applicatie uitdrukkingen > Gengo: handmatige verzoeken van vertalingen' en volg de wizard.\n\nDeze wizard activeer de CRON job en de scheduler en start automatisch de vertalingen via de Gengo Services voor alle termen die u wilt vertalen.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_service
@@ -975,7 +975,7 @@ msgid ""
 "is updated accordingly. For example, if this procurement corresponds to a sale\n"
 "order line, the sale order line will be considered delivered when the task is\n"
 "completed.\n"
-msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingslijn\n(bijvoorbeeld voor verkooporderlijnen), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderlijnen geleverd worden wanneer de taak\nvoltooid is.\n"
+msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingsregel\n(bijvoorbeeld voor verkooporderlijnen), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderlijnen geleverd worden wanneer de taak\nvoltooid is.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -1056,7 +1056,7 @@ msgid ""
 "The amount deposited to your bank will then appear as a single transaction on your bank statement.\n"
 "When you proceed with the reconciliation, simply select the corresponding batch deposit to reconcile the payments.\n"
 "    "
-msgstr "\nVerzamelopdrachten\n===================\nMet verzamelopdrachten kunt u uw ontvangen cheques groeperen vooraleer ze over te maken aan de bank.\nHet gestorte bedrag zal dan als één enkele lijn op uw bankafschrift verschijnen.\nWanneer u later de aflettering uitvoert, moet u slechts de desbetreffende verzamelopdracht kiezen om de betalingen af te letteren.\n    "
+msgstr "\nVerzamelopdrachten\n===================\nMet verzamelopdrachten kunt u uw ontvangen cheques groeperen vooraleer ze over te maken aan de bank.\nHet gestorte bedrag zal dan als één enkele regel op uw bankafschrift verschijnen.\nWanneer u later de aflettering uitvoert, moet u slechts de desbetreffende verzamelopdracht kiezen om de betalingen af te letteren.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1142,7 +1142,7 @@ msgid ""
 "\n"
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
-msgstr "\nRekeningschema voor Venezuela\n===============================\n\n\nVenezuela heeft geen wettelijk rekeningschema, maar het standaard\nschema voorgesteld in Odoo zou moeten overeenkomen met de aangerade praktijken in Venezuela,\ndit plan zou overeen moeten komen met deze praktijken.\n\nDeze module is getest als een basis voor meer dan 1000 bedrijven, omdat\nhet gebaseerd is op mengelingen van de meest gebruikte software in Venezuelaaanse\nmarkt wat er voor zorgt dat de eerste stappen met Odoo voor boekhouders\ncomfortabeler zijn.\n\nDeze module doet zich niet voor als de volledige lokalisatie voor Venezuela,\nmaar het helpt u heel snel te starten met Odoo in dit land.\n\nDeze module geeft u.\n---------------------\n\n- Basis belastingen voor Venezuela.\n- Basis data om testen uit te voeren voor community localisatie.\n- Start een bedrijf vanaf 0 als u vereisten van basisniveau zijn vanuit boekhoudkundig perspectief\n\nWe raden u aan of account_anglo_saxon te gebruiken als u\nuw\nstock gevalueerd heeft zoals Venezuela dit doet met facturen.\nAls u deze module installeert en aangepast rekeningschema kiest wordt een basis schema voorsteld,\nmaar u moet manueel rekening details instellen voor de belastingen.\n"
+msgstr "\nRekeningschema voor Venezuela\n===============================\n\n\nVenezuela heeft geen wettelijk rekeningschema, maar het standaard\nschema voorgesteld in Odoo zou moeten overeenkomen met de aangerade praktijken in Venezuela,\ndit plan zou overeen moeten komen met deze praktijken.\n\nDeze module is getest als een basis voor meer dan 1000 bedrijven, omdat\nhet gebaseerd is op mengelingen van de meest gebruikte software in Venezuelaaanse\nmarkt wat er voor zorgt dat de eerste stappen met Odoo voor boekhouders\ncomfortabeler zijn.\n\nDeze module doet zich niet voor als de volledige lokalisatie voor Venezuela,\nmaar het helpt u heel snel te starten met Odoo in dit land.\n\nDeze module geeft u.\n---------------------\n\n- Basis belastingen voor Venezuela.\n- Basis data om testen uit te voeren voor community lokalisatie.\n- Start een bedrijf vanaf 0 als u vereisten van basisniveau zijn vanuit boekhoudkundig perspectief\n\nWe raden u aan of account_anglo_saxon te gebruiken als u\nuw\nvoorraad gewaardeerd heeft zoals Venezuela dit doet met facturen.\nAls u deze module installeert en aangepast rekeningschema kiest wordt een basis schema voorsteld,\nmaar u moet manueel rekening details instellen voor de belastingen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -1192,7 +1192,7 @@ msgid ""
 "=================================================================================================\n"
 "\n"
 "The decimal precision is configured per company.\n"
-msgstr "\nConfigureer de prijsnauwkeurigheid die u nodig heeft voor verschillende gebruiken: boekhouding, verkoop, aankoop.\n=================================================================================================\n\nDe decimale precisie is geconfigureerd per bedrijf.\n"
+msgstr "\nConfigureer de prijsnauwkeurigheid die u nodig heeft voor verschillende gebruiken: boekhouding, verkoop, inkoop.\n=================================================================================================\n\nDe decimale precisie is geconfigureerd per bedrijf.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_claim_from_delivery
@@ -1700,7 +1700,7 @@ msgid ""
 "\n"
 "You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.\n"
 "    "
-msgstr "\nFacturatie & Betalingen\n====================\nHet specifieke en gemakkelijk te gebruiken factureringssysteem in Odoo staat u toe om uw boekhouding op te volgen, zelfs als u geen boekhouder bent. Het bied een gemakkelijke manier aan om uw fabrikanten en klanten op te volgen.\n\nU kan de vergemakkelijkte boekhouding gebruiken indien u werkt met een (externe) boekhouding voor uw boeken en als u toch nog uw betalingen wilt opvolgen. Deze module biedt u ook een gemakkelijk manier aan om betaalmethoden te registreren, zonder complete abstracties van rekeningen te coderen."
+msgstr "\nFacturatie & Betalingen\n====================\nHet specifieke en gemakkelijk te gebruiken factureringssysteem in Odoo staat u toe om uw boekhouding op te volgen, zelfs als u geen boekhouder bent. Het bied een gemakkelijke manier aan om uw leveranciers en klanten op te volgen.\n\nU kan de vergemakkelijkte boekhouding gebruiken indien u werkt met een (externe) boekhouding voor uw boeken en als u toch nog uw betalingen wilt opvolgen. Deze module biedt u ook een gemakkelijk manier aan om betaalmethoden te registreren, zonder complete abstracties van rekeningen te coderen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -1710,7 +1710,7 @@ msgid ""
 "=======================\n"
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
-msgstr "\nExtra kostenbeheer\n=======================\nDeze module staat u toe om extra kosten toe te voegen op leveringen en staat u toe te kiezen tussen het splitten van deze kosten over de stockmutaties om ze mee in rekening te neme in uw stock voorraadwaarde."
+msgstr "\nExtra kostenbeheer\n=======================\nDeze module staat u toe om extra kosten toe te voegen op leveringen en staat u toe te kiezen tussen het splitten van deze kosten over de voorraadmutaties om ze mee in rekening te neme in uw voorraadwaarde."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_project_issue
@@ -1750,7 +1750,7 @@ msgid ""
 "going through the retailer's warehouse. In this case no\n"
 "internal transfer document is needed.\n"
 "\n"
-msgstr "\nBeheer dropshipping orders\n===========================\n\nDeze module voegt een pre-gedefinieerde dropshipping levermethode toe\nen ook een verwervingsroute die dropshipping\nvan producten en orders toestaat.\n\nWanneer dropshipping wordt gebruikt worden de goederen direct overgeplaatst\nvan de fabrikant naar de klant (directe levering) zonder\ndoor de handelaar zijn magazijn te gaan. In dit geval is geen\nintern verplaatsingsdocument nodig.\n"
+msgstr "\nBeheer dropshipping orders\n===========================\n\nDeze module voegt een pre-gedefinieerde dropshipping levermethode toe\nen ook een verwervingsroute die dropshipping\nvan producten en orders toestaat.\n\nWanneer dropshipping wordt gebruikt worden de goederen direct overgeplaatst\nvan de leverancier naar de klant (directe levering) zonder\ndoor de handelaar zijn magazijn te gaan. In dit geval is geen\nintern verplaatsingsdocument nodig.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -1858,7 +1858,7 @@ msgid ""
 "* Last Product Inventories\n"
 "* Moves Analysis\n"
 "    "
-msgstr "\nBeheer multi-magazijnen, multi- en gestructureerde stocklocaties\n==============================================================\n\nHet magazijn en voorraadbeheer is gebaseerd op een hiërarchische locatiestructuur, van magazijnen naar opbergbakken.\n Het dubbele mutatie voorraadsysteem staat u toe om klanten, fabrikanten en fabricage voorraden te beheren.\n\nOdoo heeft de capaciteit om partijen en serienummers te beheren wat de naleving inzake van traceerbaarheid nakomt die worden opgelegd in de meeste industrieën.\n\nHoofd mogelijkheden:\n------------\n* Mutatiegeschiedenis en planning,\n* Minimale stockregels\n* Ondersteuning voor barcodes\n* Snelle detectie van fouten door dubbelen boekingsystemen\n* Traceerbaarheid (Serienummers, verpakkingen, ...)\n\nDashboard / Rapporten voor voorraadbeheer bevat:\n----------------------------------------------------------\n* Inkomende producten (Grafiek)\n* Uitgaande producten (Grafiek)\n* Verwerving in uitzondering\n* Voorraadanalyse\n* Laatste product voorraden\n* Mutatie analyse"
+msgstr "\nBeheer multi-magazijnen, multi- en gestructureerde voorraadlocaties\n==============================================================\n\nHet magazijn en voorraadbeheer is gebaseerd op een hiërarchische locatiestructuur, van magazijnen naar opbergbakken.\nHet dubbele mutatie voorraadsysteem staat u toe om klanten, leveranciers en fabricage voorraden te beheren.\n\nOdoo heeft de capaciteit om partijen en serienummers te beheren wat de naleving inzake van traceerbaarheid nakomt die worden opgelegd in de meeste industrieën.\n\nHoofd mogelijkheden:\n------------\n* Mutatiegeschiedenis en planning,\n* Minimale voorraadregels\n* Ondersteuning voor barcodes\n* Snelle detectie van fouten door dubbelen boekingsystemen\n* Traceerbaarheid (Serienummers, verpakkingen, ...)\n\nDashboard / Rapporten voor voorraadbeheer bevat:\n----------------------------------------------------------\n* Inkomende producten (Grafiek)\n* Uitgaande producten (Grafiek)\n* Verwerving in uitzondering\n* Voorraadanalyse\n* Laatste product voorraden\n* Mutatie analyse"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -1956,7 +1956,7 @@ msgid ""
 "* Stock Value Variation (Graph)\n"
 "* Work Order Analysis\n"
 "    "
-msgstr "\nBeheer het productieproces in Odoo\n===========================================\n\nDe productie module staat u toe om stock te plannen, ordenen en het procuderen van rauwe materialen en componenten te doen.\nHet handelt de consumptie en productie van producten af naar gelang de materiaallijst, de benodigde materialen en de benodigde handelingen op machines, tools of menselijke bronnen volgens routes.\n\nHet ondersteunt volledige integratie en planning van stockeerbare producten, verbruiksartikelen of diensten. Diensten zijn volledig geïntegreerd in de rest van de software. U kan bijvoorbeeld een sub-contract dienst opzetten in een materiaallijst om automatisch aan te kopen bij het bestellen van de samenvatting voor de productie.\n\nBelangrijkste kenmerken:\n------------\n* Maak op stock / Maak op voorraad\n* Meerdere niveau materiaallijsten, geen limieten\n* Meerdere niveau productieroute, geen limieten\n* Productieroutes en werkcentrums geïntegreerd met analytische boekhouding\n* Periodieke planner berekening\n* Staat navigeren door materiaallijsten in een complete structuur die kinderen en fantoom materiaallijsten toestaat\n\nDashboard / Rapporten voor MRP bevatten:\n-----------------------------------------\n* Verwervingen in uitzondering (Grafiek)\n* Stockwaarde variaties (Grafiek)\n* Werkorder analyse"
+msgstr "\nBeheer het productieproces in Odoo\n===========================================\n\nDe productie module staat u toe om voorraad te plannen, ordenen en het produceren van rauwe materialen en componenten te doen.\nHet handelt de consumptie en productie van producten af naar gelang de materiaallijst, de benodigde materialen en de benodigde handelingen op machines, tools of menselijke bronnen volgens routes.\n\nHet ondersteunt volledige integratie en planning van voorraadproducten, verbruiksartikelen of diensten. Diensten zijn volledig geïntegreerd in de rest van de software. U kan bijvoorbeeld een sub-contract dienst opzetten in een materiaallijst om automatisch aan te kopen bij het bestellen van de samenvatting voor de productie.\n\nBelangrijkste kenmerken:\n------------\n* Maak op voorraad / Maak op voorraad\n* Meerdere niveau materiaallijsten, geen limieten\n* Meerdere niveau productieroute, geen limieten\n* Productieroutes en werkcentrums geïntegreerd met analytische boekhouding\n* Periodieke planner berekening\n* Staat navigeren door materiaallijsten in een complete structuur die kinderen en fantoom materiaallijsten toestaat\n\nDashboard / Rapporten voor MRP bevatten:\n-----------------------------------------\n* Verwervingen in uitzondering (Grafiek)\n* Vooraadwaarde variaties (Grafiek)\n* Werkorder analyse"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -2052,7 +2052,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr "\nModule om automatisch brieven te beheren voor onbetaalde facturen, met verschillende herinneringsniveaus.\n=========================================================================\nU kan uw verschillende herinneringsniveaus definiëren via het menu:\n---------------------------------------------------------------\nConfiguratie / Opvolging / Betalingsherrineringsniveaus\n\nEenmaal gedefinieerd kan het dagelijks automatisch herinneringen afdrukken door simpelweg te klikken op het menu:\n------------------------------------------------------------------------------------------------------\n\nBetalingsherinneringen / Verzend e-mails en brieven\n\nHet genereert een PDF / verzend e-mail / stelt manuele acties in afhankelijk van de verschillende niveaus\nvan herinneringen die u heeft ingesteld. U kan een ander beleid toepassen voor verschillende bedrijven.\n\nLet op dat als u het betalingsherinnering niveau wilt controleren voor een bepaalde relatie/boekhoudkundige boeking kan u dit doen vanuit het menu:\n------------------------------------------------------------------------------------------------------------------\nRapportage / Boekhouding / Betalingsherinnering analyse\n\n"
+msgstr "\nModule om automatisch brieven te beheren voor onbetaalde facturen, met verschillende herinneringsniveaus.\n=========================================================================\nU kan uw verschillende herinneringsniveaus definiëren via het menu:\n---------------------------------------------------------------\nConfiguratie / Opvolging / Betalingsherrineringsniveaus\n\nEenmaal gedefinieerd kan het dagelijks automatisch herinneringen afdrukken door simpelweg te klikken op het menu:\n------------------------------------------------------------------------------------------------------\n\nBetalingsherinneringen / Verzend e-mails en brieven\n\nHet genereert een PDF / verzend e-mail / stelt handmatige acties in afhankelijk van de verschillende niveaus\nvan herinneringen die u heeft ingesteld. U kan een ander beleid toepassen voor verschillende bedrijven.\n\nLet op dat als u het betalingsherinnering niveau wilt controleren voor een bepaalde relatie/boekhoudkundige boeking kan u dit doen vanuit het menu:\n------------------------------------------------------------------------------------------------------------------\nRapportage / Boekhouding / Betalingsherinnering analyse\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2103,7 +2103,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr "\nModule om CODA bankafschriften te importeren.\n======================================\n\nCODA bestanden in V2 formaat van Belgische bankrekeningen zijn ondersteund.\n----------------------------------------------------------------------\n* CODA V1 ondersteuning.\n* CODA V2.2 ondersteuning.\n* Vreemde valuta ondersteuning.\n* Ondersteuning voor alle data record soorten (0, 1, 2, 3, 4, 8, 9).\n* Parsing & logging van alle transactie codes en gestructureerde formaat\ncommunicaties.\n* Automatische financiële dagboek toewijzgingen via CODA configuratie parameters.\n* Ondersteuning voor meerdere dagboeken per bankrekeningnummer.\n* Ondersteuning voor meerdere afschriften van verschillende bankrekeningen in één\nCODA bestand.\n* Ondersteuning voor 'alleen parsen' van CODA bankafschriften (gedefinieerd als type='info' op\nde CODA bankafschrift configuratie parameter records).\n* Multitaal CODA parsing, parsing configuratie data voorzien voor EN,\nNL, FR,\n\nDe machine leesbare CODA bestanden worden geparsed en opgeslagen in menselijk leesbaar formaat in\nCODA bankafschriften. Bankafschriften worden ook gegenereerd met een subset van\nde CODA informatie (alleen de transactielijnen die vereisten zijn voor de\naanmaak van de financiële boeking records). Het CODA bankafschrift is een\n'alleen-lezen' object, derhalve blijft het een betrouwbare weergaven van het originele\nCODA bestand waarbij de bankafschriften worden gewijzigd waar nodig door de financiële\nbedrijfsprocessen.\n\nCODA bankafschriften die geconfigureerd zijn als type 'info' genereren enkel CODA bankafschriften.\n\nHet verwijderen van een object in de CODA verwerking resulteert in het verwijderen van het\ngehele geassocieerde object. De verwijdering van een CODA bestand dat meerdere bankafschriften bevat\nzal ook de geassocieerde afschriften verwijderen.\n\nIn plaats van een manuele wijziging van het gegenereerde afschrift, kan u ook het\nCODA bestand opnieuw importeren na het updaten van uw Odoo database met de informatie\ndie ontbrak om automatische aflettering toe te staan.\n\nOpmerking op CODA V1 ondersteuning:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn sommige gevallen is een transactiecode, transactiecategorie of gestructureerde\ncommunicatiecode gegeven voor een nieuwere of duidelijkere omschrijving in CODA V2. De\nomschrijving die is opgegeven voor de CODA configuratie tafels is gebaseerd op de CODA.\nV2.2 specificaties.\nIndien vereist kan u manueel de omschrijvingen aanpassen via het CODA configuratie menu.\n"
+msgstr "\nModule om CODA bankafschriften te importeren.\n======================================\n\nCODA bestanden in V2 formaat van Belgische bankrekeningen zijn ondersteund.\n----------------------------------------------------------------------\n* CODA V1 ondersteuning.\n* CODA V2.2 ondersteuning.\n* Vreemde valuta ondersteuning.\n* Ondersteuning voor alle data record soorten (0, 1, 2, 3, 4, 8, 9).\n* Parsing & logging van alle transactie codes en gestructureerde formaat\ncommunicaties.\n* Automatische financiële dagboek toewijzgingen via CODA configuratie parameters.\n* Ondersteuning voor meerdere dagboeken per bankrekeningnummer.\n* Ondersteuning voor meerdere afschriften van verschillende bankrekeningen in één\nCODA bestand.\n* Ondersteuning voor 'alleen parsen' van CODA bankafschriften (gedefinieerd als type='info' op\nde CODA bankafschrift configuratie parameter records).\n* Multitaal CODA parsing, parsing configuratie data voorzien voor EN,\nNL, FR,\n\nDe machine leesbare CODA bestanden worden geparsed en opgeslagen in menselijk leesbaar formaat in\nCODA bankafschriften. Bankafschriften worden ook gegenereerd met een subset van\nde CODA informatie (alleen de transactieregels die vereisten zijn voor de\naanmaak van de financiële boeking records). Het CODA bankafschrift is een\n'alleen-lezen' object, derhalve blijft het een betrouwbare weergaven van het originele\nCODA bestand waarbij de bankafschriften worden gewijzigd waar nodig door de financiële\nbedrijfsprocessen.\n\nCODA bankafschriften die geconfigureerd zijn als type 'info' genereren enkel CODA bankafschriften.\n\nHet verwijderen van een object in de CODA verwerking resulteert in het verwijderen van het\ngehele geassocieerde object. De verwijdering van een CODA bestand dat meerdere bankafschriften bevat\nzal ook de geassocieerde afschriften verwijderen.\n\nIn plaats van een handmatige wijziging van het gegenereerde afschrift, kan u ook het\nCODA bestand opnieuw importeren na het updaten van uw Odoo database met de informatie\ndie ontbrak om automatische aflettering toe te staan.\n\nOpmerking op CODA V1 ondersteuning:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn sommige gevallen is een transactiecode, transactiecategorie of gestructureerde\ncommunicatiecode gegeven voor een nieuwere of duidelijkere omschrijving in CODA V2. De\nomschrijving die is opgegeven voor de CODA configuratie tafels is gebaseerd op de CODA.\nV2.2 specificaties.\nIndien vereist kan u handmatig de omschrijvingen aanpassen via het CODA configuratie menu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -2118,7 +2118,7 @@ msgid ""
 "Bank Statements may be generated containing a subset of the OFX information (only those transaction lines that are required for the\n"
 "creation of the Financial Accounting records).\n"
 "    "
-msgstr "\nModule om OFX bankafschriften te importeren.\n======================================\n\nDeze module staat u toe om machine leesbare OFX bestanden te importeren in Odoo: ze worden geparsed en opgeslagen in een menselijk leesbaar formaat onder\nBoekhouding \\ Bank en Kas \\ Bankafschriften.\n\nBankafschriften kunnen als een subset van de OFX informatie gegenereerd worden (alleen de transactie lijnen die vereist zijn voor de \naanmaak van de financiële administratie records)."
+msgstr "\nModule om OFX bankafschriften te importeren.\n======================================\n\nDeze module staat u toe om machine leesbare OFX bestanden te importeren in Odoo: ze worden geparsed en opgeslagen in een menselijk leesbaar formaat onder\nBoekhouding \\ Bank en Kas \\ Bankafschriften.\n\nBankafschriften kunnen als een subset van de OFX informatie gegenereerd worden (alleen de transactieregelsdie vereist zijn voor de \naanmaak van de financiële administratie records)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -2611,7 +2611,7 @@ msgid ""
 "* Automatic creation of sales order and invoices\n"
 "\n"
 "  "
-msgstr "\nPubliceer uw producten op eBay\n==============================================================\n\nDe eBay integrator geeft u de prospect om Odoo zijn producten te beheren op eBay.\n\nHoofd mogelijkheden\n------------\n* Publiceer producten op eBay\n* Herzie, her-lijst of beëindig items op eBay\n* Integratie met de stock mutaties\n* Automatische aanmaak van verkooporders en facturen"
+msgstr "\nPubliceer uw producten op eBay\n==============================================================\n\nDe eBay integrator geeft u de prospect om Odoo zijn producten te beheren op eBay.\n\nHoofd mogelijkheden\n------------\n* Publiceer producten op eBay\n* Herzie, her-lijst of beëindig items op eBay\n* Integratie met de voorraadmutaties\n* Automatische aanmaak van verkooporders en facturen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -2749,7 +2749,7 @@ msgid ""
 "\n"
 "Let your customers follow the signature process easily.\n"
 "    "
-msgstr "\nTeken en vervolledig uw documenten op een eenvoudige manier. Pas uw documenten aan met tekstvelden en een handtekening om ze te versturen naar uw contacten.\n\nBiedt uw klanten de mogelijkheid om eenvoudig documenten te handtekenen.\n    "
+msgstr "\nTeken en vervolledig uw documenten op een eenvoudige manier. Pas uw documenten aan met tekstvelden en een handtekening om ze te versturen naar uw contacten.\n\nBiedt uw klanten de mogelijkheid om eenvoudig documenten te ondertekenen.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -2854,7 +2854,7 @@ msgid ""
 "Management to the Timesheet line entries for particular date and particular user\n"
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
-msgstr "\nSynchronisatie van werken op projecttaken met tijdsregistratie.\n====================================================================\n\nDeze module laat uw de inschrijvingen onder taken definiëren voor \nprojectbeheer op de tijdsregistratielijnen voor specifieke data en gebruikers\nmet het effect de creatie, wijziging of verwijdering in beide richtingen.\n    "
+msgstr "\nSynchronisatie van werken op projecttaken met tijdsregistratie.\n====================================================================\n\nDeze module laat uw de inschrijvingen onder taken definiëren voor \nprojectbeheer op de tijdsregistratieregels voor specifieke data en gebruikers\nmet het effect de creatie, wijziging of verwijdering in beide richtingen.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -2888,7 +2888,7 @@ msgid ""
 "* Voucher Receipt [Sales & Purchase]\n"
 "* Voucher Payment [Customer & Vendors]\n"
 "    "
-msgstr "\nTE DOEN\n\noude omschrijving:\nFacturatie & Betalingen op boekhoudingvouchers en betaalbewijzen\n=====================================================\nHet specifieke en gemakkelijk te gebruiken facturatie systeem in Odoo staat u toe om uw boekhouding op te volgen, zelfs wanneer u geen boekhouder bent. Het bied een gemakkelijke manier aan om uw fabrikanten en klanten op te volgen.\n\nU kan deze simpele versie van boekhouding gebruiken als u werkt met een (externe) boekhouder om uw boekhouding te beheren, maar u nog wel uw betalingen wilt opvolgen.\n\nHet Boekhouding systeem bevat inkomsten en waardebonnen (een gemakkelijk weg om verkopen en inkopen op te volgen). Het bied u ook een gemakkelijke manier van geregistreerde betalingen aan, zondere complete abstracten van uw boekhouding te maken.\n\nDeze module beheert:\n\n* Waardebon invoer\n* Waardebon ticket [Verkopen & Inkopen]\n* Waardebon betaling [Klanten & Leveranciers]"
+msgstr "\nTE DOEN\n\noude omschrijving:\nFacturatie & Betalingen op boekhoudingvouchers en betaalbewijzen\n=====================================================\nHet specifieke en gemakkelijk te gebruiken facturatie systeem in Odoo staat u toe om uw boekhouding op te volgen, zelfs wanneer u geen boekhouder bent. Het bied een gemakkelijke manier aan om uw leveranciers en klanten op te volgen.\n\nU kan deze simpele versie van boekhouding gebruiken als u werkt met een (externe) boekhouder om uw boekhouding te beheren, maar u nog wel uw betalingen wilt opvolgen.\n\nHet Boekhouding systeem bevat inkomsten en waardebonnen (een gemakkelijk weg om verkopen en inkopen op te volgen). Het bied u ook een gemakkelijke manier van geregistreerde betalingen aan, zondere complete abstracten van uw boekhouding te maken.\n\nDeze module beheert:\n\n* Waardebon invoer\n* Waardebon ticket [Verkopen & Inkopen]\n* Waardebon betaling [Klanten & Leveranciers]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -2907,7 +2907,7 @@ msgid ""
 "\n"
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
-msgstr "\nDe basis module om lunch te beheren.\n================================\n\nVeel bedrijven bestellen broodjes, pizza's en andere dingen van fabrikanten om hun werknemers meer faciliteiten aan te bieden.\n\nHoewel lunch beheer binnen het bedrijf goede administratie vereist, vooral als het aantal werknemers of fabrikanten belangrijk is.\n\nDe \"Lunch Order\" module is ontwikkeld om dit beheer gemakkelijker te maken maar ook om werknemers meer tools en gebruiksvriendelijkheid aan te bieden.\n\nBoven een volledige maaltijd en fabrikant beheer biedt deze module de mogelijkheid om waarschuwingen te tonen en bied snelle order selectie gebaseerd op de werknemer zijn voorkeuren.\n\nAls u uw werknemer zijn tijd wilt bewaren en om te vermeiden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
+msgstr "\nDe basis module om lunch te beheren.\n================================\n\nVeel bedrijven bestellen broodjes, pizza's en andere dingen van leveranciers om hun werknemers meer faciliteiten aan te bieden.\n\nHoewel lunch beheer binnen het bedrijf goede administratie vereist, vooral als het aantal werknemers of leveranciers belangrijk is.\n\nDe \"Lunch Order\" module is ontwikkeld om dit beheer gemakkelijker te maken maar ook om werknemers meer tools en gebruiksvriendelijkheid aan te bieden.\n\nBoven een volledige maaltijd en leverancier beheer biedt deze module de mogelijkheid om waarschuwingen te tonen en bied snelle order selectie gebaseerd op de werknemer zijn voorkeuren.\n\nAls u uw werknemer zijn tijd wilt bewaren en om te vermeiden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -2931,7 +2931,7 @@ msgid ""
 "-------------------------------\n"
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
-msgstr "\nHet generieke Odoo klantenrelatie beheer\n====================================================\n\nDeze applicatie staat een groep van mensen toe om intelligent en efficiënt leads, opportuniteiten, meetings en activiteten te beheren.\n\nHet beheert sleuteltaken zoals communicatie, identificatie, prioritisatie, toewijzing, oplossen en notificaties.\n\nOdoo verzekert dat alle cases succesvol worden gevolgd door de gebruiker, klant of fabrikant. Het kan automatisch herinneringen sturen, specifieke methodes doen afgaan en vele andere acties gebaseerd op uw eigen enterprise regels.\n\nHet beste aan dit systeem is dat gebruikers niets speciaal moeten doen. De CRM module heeft een e-mail gateway voor de synchronisatie interface tussen e-mails en Odoo. Zo kunnen gebruikers simpelweg e-mails versturen naar de aangevraagde volger.\n\nOdoo bedankt hen voor hun bericht, stuurt het automatisch door naar de correcte persoon en verzekert dat alle toekomstige correspondentie op de juiste plaats aankomt.\n\nDashboard voor CRM bevat:\n-------------------------------\n* Geplande winst per fase en gebruiker (Grafiek)\n* Opportuniteiten per fase (Grafiek)\n"
+msgstr "\nHet generieke Odoo klantenrelatie beheer\n====================================================\n\nDeze applicatie staat een groep van mensen toe om intelligent en efficiënt leads, opportuniteiten, meetings en activiteten te beheren.\n\nHet beheert sleuteltaken zoals communicatie, identificatie, prioritisatie, toewijzing, oplossen en notificaties.\n\nOdoo verzekert dat alle cases succesvol worden gevolgd door de gebruiker, klant of leverancier. Het kan automatisch herinneringen sturen, specifieke methodes doen afgaan en vele andere acties gebaseerd op uw eigen enterprise regels.\n\nHet beste aan dit systeem is dat gebruikers niets speciaal moeten doen. De CRM module heeft een e-mail gateway voor de synchronisatie interface tussen e-mails en Odoo. Zo kunnen gebruikers simpelweg e-mails versturen naar de aangevraagde volger.\n\nOdoo bedankt hen voor hun bericht, stuurt het automatisch door naar de correcte persoon en verzekert dat alle toekomstige correspondentie op de juiste plaats aankomt.\n\nDashboard voor CRM bevat:\n-------------------------------\n* Geplande winst per fase en gebruiker (Grafiek)\n* Opportuniteiten per fase (Grafiek)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -3013,7 +3013,7 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 "    "
-msgstr "\nDit is de basis module voor het beheren van producten en prijslijsten in Odoo.\n========================================================================\n\nProducten ondersteunen varianten, verschillende prijsmethodes, leveranciersinformatie,\nop stock/bestelling maken, verschillende maateenheden, verpakking en eigenschappen.\n\nPrijslijst ondersteunt:\n-------------------\n    * Meerdere niveau's van korting (op product, categorie, hoeveelheden)\n    * Prijs berekenen op basis van verschillende criteria:\n    * Andere prijslijsten\n    * Kostprijs\n    * Lijstprijs\n    * Leveranciersprijs\n\nPrijslijst voorkeuren op product en/of partners.\n\nPrint product labels met barcode.\n    "
+msgstr "\nDit is de basis module voor het beheren van producten en prijslijsten in Odoo.\n========================================================================\n\nProducten ondersteunen varianten, verschillende prijsmethodes, leveranciersinformatie,\nop voorraad/bestelling maken, verschillende maateenheden, verpakking en eigenschappen.\n\nPrijslijst ondersteunt:\n-------------------\n    * Meerdere niveau's van korting (op product, categorie, hoeveelheden)\n    * Prijs berekenen op basis van verschillende criteria:\n    * Andere prijslijsten\n    * Kostprijs\n    * Lijstprijs\n    * Leveranciersprijs\n\nPrijslijst voorkeuren op product en/of partners.\n\nPrint product labels met barcode.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -3188,7 +3188,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr "\nDit is de module om verwervingen te berekenen.\n==============================================\n\nDeze verwerving module is alleen afhankelijk van de product module en is niet nuttig\nop zichzelf. Verwervingen stellen noden voor die moeten opgelost woorden door een verwerving\nregel. Wanneer een verwerving wordt aangemaakt is ze bevestigd. Wanneer een regel is gevonden,\nwordt deze in de uitvoerende status gezet. Hierna controleert het wat er voor regel die uitgevoerd wordt\ngedaan moest worden. Vervolgens gaat deze in de uitgevoerde status. Een verwerving\nkan ook in een uitzondering gaan, bijvoorbeeld wanneer het geen regel kan vinden en ze niet geannuleerd kan worden.\n\nHet mechanisme wordt verlengd door verschillende modules. De verwervingsregel van de stock zal\neen mutatie aanmaken en de verwerving wordt voldaan wanneer de mutatie voltooid is.\nDe verwervingsregel van sale_service maakt een taak. Die van inkoop of\nMRP maken een inkooporder of een productieorder.\n\nDe planner controleert of het een regel kan toewijzen aan de bevestigde verwervingen en of\nhet lopende verwervingen in de voltooid status kan zetten.\n\nVerwervingen met uitzondering moeten manueel gecontroleerd worden en kunnen vervolgens manueel opnieuw worden uitgevoerd."
+msgstr "\nDit is de module om verwervingen te berekenen.\n==============================================\n\nDeze verwerving module is alleen afhankelijk van de product module en is niet nuttig\nop zichzelf. Verwervingen stellen noden voor die moeten opgelost woorden door een verwerving\nregel. Wanneer een verwerving wordt aangemaakt is ze bevestigd. Wanneer een regel is gevonden,\nwordt deze in de uitvoerende status gezet. Hierna controleert het wat er voor regel die uitgevoerd wordt\ngedaan moest worden. Vervolgens gaat deze in de uitgevoerde status. Een verwerving\nkan ook in een uitzondering gaan, bijvoorbeeld wanneer het geen regel kan vinden en ze niet geannuleerd kan worden.\n\nHet mechanisme wordt verlengd door verschillende modules. De verwervingsregel van de voorraad zal\neen mutatie aanmaken en de verwerving wordt voldaan wanneer de mutatie voltooid is.\nDe verwervingsregel van sale_service maakt een taak. Die van inkoop of\nMRP maken een inkooporder of een productieorder.\n\nDe planner controleert of het een regel kan toewijzen aan de bevestigde verwervingen en of\nhet lopende verwervingen in de voltooid status kan zetten.\n\nVerwervingen met uitzondering moeten handmatig gecontroleerd worden en kunnen vervolgens handmatig opnieuw worden uitgevoerd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3232,7 +3232,7 @@ msgid ""
 "4) An international vendor charge you your provincial tax. They are registered with your\n"
 "position.\n"
 "    "
-msgstr "\nDit is de module om de Canadese grootboekrekeningen te beheren in Odoo.\n===========================================================================================\n\nCanadese grootboekrekeningen en localisaties.\n\nFiscale posities\n----------------\n\nBij het overwegen van de belastingen die moeten worden toegepast, is de provincie waar de levering plaatsvindt wat belangrijk is.\nDaarom hebben we beslist om de meest voorkomende cases te implementeren in de fiscale posities: levering is de \nverantwoordelijkheid van de fabrikant en wordt gedaan op de klant locatie.\n\nEen paar voorbeelden:\n\n1) U heeft een klant van een andere provincie en u levert aan deze locatie.\nZet op de klant de fiscale positie naar zijn provincie.\n\n2) U heeft een klant van een andere provincie. Maar deze klant komt naar uw locatie\nmet zijn vrachtwagen om de producten op te halen. Stel bij deze klant geen fiscale positie in.\n\n3) Een internationale fabrikant rekent u geen belastingen aan. Belastingen worden aangerekend bij de douane\ndouane-expediteur. Stel de fabrikant zijn fiscale positie in op internationaal.\n\n4) Een internationale fabrikant rekent u uw lokale belastingen aan. Deze zijn geregistreerd met uw\npositie."
+msgstr "\nDit is de module om de Canadese grootboekrekeningen te beheren in Odoo.\n===========================================================================================\n\nCanadese grootboekrekeningen en localisaties.\n\nFiscale posities\n----------------\n\nBij het overwegen van de belastingen die moeten worden toegepast, is de provincie waar de levering plaatsvindt wat belangrijk is.\nDaarom hebben we beslist om de meest voorkomende cases te implementeren in de fiscale posities: levering is de \nverantwoordelijkheid van de leverancier en wordt gedaan op de klant locatie.\n\nEen paar voorbeelden:\n\n1) U heeft een klant van een andere provincie en u levert aan deze locatie.\nZet op de klant de fiscale positie naar zijn provincie.\n\n2) U heeft een klant van een andere provincie. Maar deze klant komt naar uw locatie\nmet zijn vrachtwagen om de producten op te halen. Stel bij deze klant geen fiscale positie in.\n\n3) Een internationale leverancier rekent u geen belastingen aan. Belastingen worden aangerekend bij de douane\ndouane-expediteur. Stel de leverancier zijn fiscale positie in op internationaal.\n\n4) Een internationale leverancier rekent u uw lokale belastingen aan. Deze zijn geregistreerd met uw\npositie."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -3467,7 +3467,7 @@ msgid ""
 "This module adds access rules to your portal if stock and portal are installed.\n"
 "==========================================================================================\n"
 "    "
-msgstr "\nDeze module voegt toegangsregels aan uw portaal toe indien stock en portal geinstalleerd zijn.\n====================================================================================================\n    "
+msgstr "\nDeze module voegt toegangsregels aan uw portaal toe indien voorraad en portal geïnstalleerd zijn.\n====================================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_claim
@@ -3527,7 +3527,7 @@ msgid ""
 "The field 'Working Hours' is the delay(stop date - start date).\n"
 "So, that we can compare the theoretic delay and real delay. \n"
 "    "
-msgstr "\nDeze module voegt status, date_start, date_stop toe in productieorder operatielijnen (in het 'Werkorder' tabblad).\n================================================================================================================\n\nStatus: concept, bevestigd, klaar, geannuleerd\nWanneer u productieorders afwerkt/bevestigd of annuleert worden alle lijnen\nvan de overeenkomende status ingesteld.\n\nMaakt menus:\n-------------\n**Productie** > **Productie** > *Werkorders*\n\nWat een weergave is op 'werkorder'lijnen in de productieorder.\n\nVoeg knoppen toe in de formulierweergave van het productieorder onder het werkorder tabblad:\n-------------------------------------------------------------------------\n* start (zet datum om te bevestigen), stel date_start in\n* klaar (zet status op klaar), stel date_stop in\n* zet op concept (zet status op concept)\n* annuleer status om te annuleren\n\nWanneer de productieorder 'klaar om te produceren' wordt moeten handelingen\n'bevestigd' worden. Wanneer het productieorder klaar is is moeten alle handelingen\ngedaan zijn.\n\nHet veld 'Werkuren' is de vertraging (stop datum - start datum).\nZodat u de theoretische vertraging kan vergelijken met de echte vertraging."
+msgstr "\nDeze module voegt status, date_start, date_stop toe in productieorder, bewerkingsregels (in het 'Werkorder' tabblad).\n================================================================================================================\n\nStatus: concept, bevestigd, klaar, geannuleerd\nWanneer u productieorders afwerkt/bevestigd of annuleert worden alle regels\nvan de overeenkomende status ingesteld.\n\nMaakt menus:\n-------------\n**Productie** > **Productie** > *Werkorders*\n\nWat een weergave is op 'werkorder' regels in de productieorder.\n\nVoeg knoppen toe in de formulierweergave van het productieorder onder het werkorder tabblad:\n-------------------------------------------------------------------------\n* start (zet datum om te bevestigen), stel date_start in\n* klaar (zet status op klaar), stel date_stop in\n* zet op concept (zet status op concept)\n* annuleer status om te annuleren\n\nWanneer de productieorder 'klaar om te produceren' wordt moeten handelingen\n'bevestigd' worden. Wanneer het productieorder klaar is is moeten alle handelingen\ngedaan zijn.\n\nHet veld 'Werkuren' is de vertraging (stop datum - start datum).\nZodat u de theoretische vertraging kan vergelijken met de echte vertraging."
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -3743,7 +3743,7 @@ msgid ""
 "When a purchase order is created, you now have the opportunity to save the\n"
 "related requisition. This new object will regroup and will allow you to easily\n"
 "keep track and order all your purchase orders.\n"
-msgstr "\nDeze module laat toe om aankoopaanvragen te beheren.\n===========================================================\n\nWanneer een aankooporder is aangemaakt heeft u nu de mogelijkheid om de gerelateerde\nvordering te bewaren. Dit nieuwe object zal zich hergroeperen en staat u toe om gemakkelijk\naankooporders op te volgen en om alle aankooporders te ordenen.\n"
+msgstr "\nDeze module laat toe om inkoopaanvragen te beheren.\n===========================================================\n\nWanneer een inkooporder is aangemaakt heeft u nu de mogelijkheid om de gerelateerde\nvordering te bewaren. Dit nieuwe object zal zich hergroeperen en staat u toe om gemakkelijk\ninkooporders op te volgen en om alle aankooporders te ordenen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -3878,7 +3878,7 @@ msgid ""
 "    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n"
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
-msgstr "\nDeze module laat u kortingen berekenen op verkooporderlijnen en factuurlijnen gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderlijnen: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurlijnen:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
+msgstr "\nDeze module laat u kortingen berekenen op verkooporderlijnen en factuurlijnen gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderregels: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurregels:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -3929,7 +3929,7 @@ msgid ""
 "      module, but this will also install the CRM application as it depends on\n"
 "      CRM Leads.\n"
 "    "
-msgstr "\nDeze module biedt leads automatisatie aan via marketing campagnes (campagnes kunnen zelfs op elke resource worden gedefinieerd, niet alleen CRM leads).\n=========================================================================================================================================\n\nDe campagnes zijn dynamisch en multi-kanaal. Het proces is als volgt:\n------------------------------------------------------------------------\n* Ontwerp marketing campagnes zoals werk flows, inclusief e-mailsjablonen om\nte verzenden, rapporten om te printen en te verzenden via e-mail, aangepaste acties\n* Definieer input segmenten die de items selecteren die u wilt ingeven in de\ncampagne (bijv leads van bepaalde landen.)\n* Voer uw campagne uit in simulatiemodus om het real-time te testen of te accelereren,\nen verfijn het\n* U kan ook de echte campagne starten in manuele modus, waar elke actie\neen manuele validatie vereist\n* Lanceer uiteindelijk uw live campagne, en bekijken de statistieken terwijl de\ncampagne alles automatisch doet.\n\nTerwijl de campagne loopt kan u natuurlijk verder gaan met het verfijnen van uw parameters,\ninvoer segmenten, werk flow.\n\n**Opmerking:** Als u demo data nodig heeft kan u de module marketing_campaign_crm_demo\ninstalleren, maar dit installeert ook de CRM applicatie omdat deze afhankelijk is van de\nCRM leads."
+msgstr "\nDeze module biedt leads automatisatie aan via marketing campagnes (campagnes kunnen zelfs op elke resource worden gedefinieerd, niet alleen CRM leads).\n=========================================================================================================================================\n\nDe campagnes zijn dynamisch en multi-kanaal. Het proces is als volgt:\n------------------------------------------------------------------------\n* Ontwerp marketing campagnes zoals werk flows, inclusief e-mailsjablonen om\nte verzenden, rapporten om te printen en te verzenden via e-mail, aangepaste acties\n* Definieer input segmenten die de items selecteren die u wilt ingeven in de\ncampagne (bijv leads van bepaalde landen.)\n* Voer uw campagne uit in simulatiemodus om het real-time te testen of te accelereren,\nen verfijn het\n* U kan ook de echte campagne starten in handmatige modus, waar elke actie\neen handmatige validatie vereist\n* Lanceer uiteindelijk uw live campagne, en bekijken de statistieken terwijl de\ncampagne alles automatisch doet.\n\nTerwijl de campagne loopt kan u natuurlijk verder gaan met het verfijnen van uw parameters,\ninvoer segmenten, werk flow.\n\n**Opmerking:** Als u demo data nodig heeft kan u de module marketing_campaign_crm_demo\ninstalleren, maar dit installeert ook de CRM applicatie omdat deze afhankelijk is van de\nCRM leads."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -3970,7 +3970,7 @@ msgid ""
 "If this automatic reservation would reserve too much, you can\n"
 "still unreserve a picking.\n"
 "    "
-msgstr "\nDeze module zal automatisch de levering van de stock reserveren wanneer een verkooporder is bevestigd\n============================================================================================\nBij bevestiging van een verkooporder of wanneer hoeveelheden worden toegevoegd,\nzal de levering van de stock worden gereserveerd als de\nbenodigde voorraad aanwezig is.\n\nIn de gemakkelijkste configuratie is dit een gemakkelijke manier van werken:\nwie eerst komt, eerst krijgt. Wanneer dit niet geïnstalleerd is kan u\nmanuele reservatie gebruiken of de planners laten lopen waar het systeem\nde verwachte datum en prioriteit in achting houdt.\n\nAls deze automatische reservatie te veel zou reserveren, kan u een\nlevering zijn reservatie nog annuleren."
+msgstr "\nDeze module zal automatisch de levering van de voorraad reserveren wanneer een verkooporder is bevestigd\n============================================================================================\nBij bevestiging van een verkooporder of wanneer hoeveelheden worden toegevoegd,\nzal de levering van de voorraad worden gereserveerd als de\nbenodigde voorraad aanwezig is.\n\nIn de gemakkelijkste configuratie is dit een gemakkelijke manier van werken:\nwie eerst komt, eerst krijgt. Wanneer dit niet geïnstalleerd is kan u\nhandmatige reservering gebruiken of de planners laten lopen waar het systeem\nde verwachte datum en prioriteit in achting houdt.\n\nAls deze automatische reservering te veel zou reserveren, kan u de reservering nog annuleren."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -4153,7 +4153,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\nWMS boekhoudmodule\n======================\nDeze module maakt de link tussen 'stock' en 'boekhouding' modules en staat u toe om financiële boekingen te maken om uw stock mutaties te waarderen\n\nHoofd eigenschappen\n------------\n* Stockwaardering (periodiek of automatisch)\n* Factuur vanuit levering\n\nDashboard / Rapportages van magazijnen bevatten:\n------------------------------------------------------\nStockvoorraad waarde op een gegeven datum (ondersteund datums in de geschiedenis)"
+msgstr "\nWMS boekhoudmodule\n======================\nDeze module maakt de link tussen 'voorraad' en 'boekhouding' modules en staat u toe om financiële boekingen te maken om uw stock mutaties te waarderen\n\nHoofd eigenschappen\n------------\n* Stockwaardering (periodiek of automatisch)\n* Factuur vanuit levering\n\nDashboard / Rapportages van magazijnen bevatten:\n------------------------------------------------------\nStockvoorraad waarde op een gegeven datum (ondersteund datums in de geschiedenis)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4239,7 +4239,7 @@ msgid ""
 " Module for synchronization of Documents between several companies. For example, this allow you to have a Sale Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
 "\n"
 "    Supported documents are SO, PO and invoices/refunds.\n"
-msgstr "Module voor synchronisatie van documenten tussen verschillende bedrijven. Bijvoorbeeld, dit staat u toe om automatisch een verkooporder te maken wanneer een inkooporder gevalideerd is met een ander bedrijf van het systeem als fabrikant en omgekeerd.\n\nOndersteunde documenten zijn SO, PO en facturen/credit facturen.\n"
+msgstr "Module voor synchronisatie van documenten tussen verschillende bedrijven. Bijvoorbeeld, dit staat u toe om automatisch een verkooporder te maken wanneer een inkooporder gevalideerd is met een ander bedrijf van het systeem als leverancier en omgekeerd.\n\nOndersteunde documenten zijn SO, PO en facturen/credit facturen.\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4392,7 +4392,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ",\n'samenvatting': 'Repareer gebroken of beschadigde producten',\nHet doel is om een module te hebben om alle productreparaties te beheren.\n====================================================================\n\nDe volgende onderwerpen moeten gedekt worden door deze module:\n------------------------------------------------------\n* Producten toevoegen/verwijderen in de reparatie\n* Impact op stock\n* Facturatie (producten en/of diensten)\n* Garantie concept\n* Offerte rapport reparatie\n* Opmerkingen voor techniekers en voor de finale klant\n"
+msgstr ",\n'samenvatting': 'Repareer gebroken of beschadigde producten',\nHet doel is om een module te hebben om alle productreparaties te beheren.\n====================================================================\n\nDe volgende onderwerpen moeten gedekt worden door deze module:\n------------------------------------------------------\n* Producten toevoegen/verwijderen in de reparatie\n* Impact op voorraad\n* Facturatie (producten en/of diensten)\n* Garantie concept\n* Offerte rapport reparatie\n* Opmerkingen voor techniekers en voor de finale klant\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -6315,7 +6315,7 @@ msgid ""
 "correctly set. If an existing contact starts working for a new company then "
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
-msgstr "Het wijzigen van het bedrijf van een contactpersoon doet u alleen als dit een foutieve instelling was. Indien een bestaand contactpersoon start met werken bij een nieuw bedrijf, dan dient u een nieuw contactpersoon aan te maken onder dit nieuwe bedrijf. U kunt klikken op 'Negeren' om deze wijziging af te breken."
+msgstr "Het wijzigen van het bedrijf van een contact doet u alleen als dit een foutieve instelling was. Indien een bestaand contactpersoon start met werken bij een nieuw bedrijf, dan dient u een nieuw contactpersoon aan te maken onder dit nieuwe bedrijf. U kunt klikken op 'Negeren' om deze wijziging af te breken."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:506
@@ -6380,7 +6380,7 @@ msgstr "Vink dit aan indien deze relatie een klant is."
 msgid ""
 "Check this box if this contact is a vendor. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
-msgstr "Vink deze optie aan als uw contact een fabrikant is. Als dit niet is aangevinkt zullen inkoop mensen de decodering niet zien van een inkooporder."
+msgstr "Vink deze optie aan als uw contact een leverancier is. Als dit niet is aangevinkt zullen inkoop mensen de decodering niet zien van een inkooporder."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_employee
@@ -6943,7 +6943,7 @@ msgstr "Consultancy services"
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 #: selection:res.partner,type:0
 msgid "Contact"
-msgstr "Contactpersoon"
+msgstr "Contact"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -6963,13 +6963,13 @@ msgstr "Contact formulier"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact Name"
-msgstr "Naam contactpersoon"
+msgstr "Naam contact"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 #: model:ir.ui.menu,name:base.menu_partner_title_contact
 msgid "Contact Titles"
-msgstr "Titels contactpersoon"
+msgstr "Titels contact"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_child_ids
@@ -6977,7 +6977,7 @@ msgstr "Titels contactpersoon"
 #: model:ir.ui.menu,name:base.menu_config_address_book
 #: model:ir.ui.view,arch_db:base.view_partner_tree
 msgid "Contacts"
-msgstr "Contactpersonen"
+msgstr "Contacten"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7046,7 +7046,7 @@ msgstr "Costa Rica - Boekhouding"
 #: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "Niet mogelijk een contactpersoon aan te maken zonder e-mail adres"
+msgstr "Niet mogelijk een contact aan te maken zonder e-mail adres"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -7794,7 +7794,7 @@ msgstr "Verwijderen van de actieregel is mislukt."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr "Afleveringskosten"
+msgstr "Verzendkosten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_demo
@@ -10457,7 +10457,7 @@ msgstr "Is een klant"
 #: model:ir.model.fields,field_description:base.field_res_partner_supplier
 #: model:ir.model.fields,field_description:base.field_res_users_supplier
 msgid "Is a Vendor"
-msgstr "Is een fabrikant"
+msgstr "Is een leverancier"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_public
@@ -11354,7 +11354,7 @@ msgid ""
 " line and then delete it through the button that appeared. Items can be "
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
-msgstr "Beheer en personaliseer de items beschikbaar en die weergegeven worden in uw Odoo systeem menu. U kan een item verwijderen door te klikken op het vakje aan het begin van elke lijn en verwijder het item dan door de knop die verschijnt. Items kunnen toegewezen worden aan specifieke groepen om ze zo beschikbaar te maken aan bepaalde gebruikers in het systeem."
+msgstr "Beheer en personaliseer de items beschikbaar en die weergegeven worden in uw Odoo systeem menu. U kan een item verwijderen door te klikken op het vakje aan het begin van elke regel en verwijder het item dan door de knop die verschijnt. Items kunnen toegewezen worden aan specifieke groepen om ze zo beschikbaar te maken aan bepaalde gebruikers in het systeem."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
@@ -11374,7 +11374,7 @@ msgid ""
 "Manage the contact titles you want to have available in your system and the "
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs."
-msgstr "Beheer de contactpersoon titels die u beschikbaar wilt hebben in uw systeem en de manier waarop u ze wilt afdrukken in brieven en andere documenten. Enkele voorbeelden: Dhr. Mw. "
+msgstr "Beheer de contacttitels die u beschikbaar wilt hebben in uw systeem en de manier waarop u ze wilt afdrukken in brieven en andere documenten. Enkele voorbeelden: Dhr. Mw. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -14090,7 +14090,7 @@ msgstr "Verkoop"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Sale & Purchase Vouchers"
-msgstr "Verkoop- en Aankoopbewijzen"
+msgstr "Verkoop- en inkoopbewijzen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_uos
@@ -14665,7 +14665,7 @@ msgstr "Overslaan"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "Slides"
-msgstr "Dia's"
+msgstr "Presentaties"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14987,7 +14987,7 @@ msgstr "Naam staat/provincie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_ids
 msgid "States"
-msgstr "Statussen"
+msgstr "Provincie/Staat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install_state
@@ -15557,7 +15557,7 @@ msgid ""
 "The configuration wizards are used to help you configure a new instance of "
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
-msgstr "De configuratie wizards helpen u bij het configureren van uw nieuwe Odoo instantie. Ze worden gelanceerd tijdens de installatie van nieuwe modules maar u kan kiezen om wizards manueel te herstarten vanuit dit menu."
+msgstr "De configuratie wizards helpen u bij het configureren van uw nieuwe Odoo instantie. Ze worden gelanceerd tijdens de installatie van nieuwe modules maar u kan kiezen om wizards handmatig  te herstarten vanuit dit menu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_related
@@ -15644,7 +15644,7 @@ msgstr "De groep die de gebruiker moet hebben om geautoriseerd te zijn om deze o
 msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
-msgstr "De interne gebruiker die verantwoordelijk is voor de communicatie met deze contactpersoon indien van toepassing."
+msgstr "De interne gebruiker die verantwoordelijk is voor de communicatie met deze contact indien van toepassing."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
@@ -16673,7 +16673,7 @@ msgstr "Gebruikersnaam"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log_ids
 msgid "User log entries"
-msgstr "Gebruiker logboek lijnen"
+msgstr "Gebruiker logboek regels"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_defaults
@@ -16782,14 +16782,14 @@ msgstr "Voertuig, lease, verzekeringen, kosten"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Vendor"
-msgstr "Fabrikant"
+msgstr "Leverancier"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Vendors"
-msgstr "Fabrikanten"
+msgstr "Leveranciers"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -17153,7 +17153,7 @@ msgstr "Website digitale verkoop - verkoop digitale producten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Website Sale Stock - Website Delivery Informations"
-msgstr "Website verkoop stock - Website afleveringsinformatie"
+msgstr "Website verkoop voorraad - Website afleveringsinformatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_version
