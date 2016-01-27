@@ -24,10 +24,10 @@ return Widget.extend({
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
-        this.placeholder = _t("Say something");
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
             display_stars: true,
+            placeholder: _t("Say something"),
         });
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
@@ -46,6 +46,8 @@ return Widget.extend({
 
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
+        } else {
+            this.focus_input();
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
@@ -67,8 +69,14 @@ return Widget.extend({
         this.folded = _.isBoolean(fold) ? fold : !this.folded;
         if (!this.folded) {
             this.thread.scroll_to();
+            this.focus_input();
         }
         this.fold();
+    },
+    focus_input: function () {
+        if (!config.device.touch) {
+            this.$input.focus();
+        }
     },
     do_show: function () {
         this.is_hidden = false;

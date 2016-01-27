@@ -4,7 +4,7 @@
 import logging
 import sets
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule, self)._get_type_selection())
         types.update([
-            ('credit', 'Credit Card')
+            ('credit', _('Credit Card'))
         ])
         return list(types)
 

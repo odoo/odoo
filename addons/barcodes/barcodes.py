@@ -188,7 +188,7 @@ class barcode_rule(models.Model):
 
     @api.model
     def _get_type_selection(self):
-        return [('alias','Alias'),('product','Unit Product')]
+        return [('alias', _('Alias')), ('product', _('Unit Product'))]
 
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),

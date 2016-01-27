@@ -82,6 +82,11 @@
                 return symbolMap[match];
             });
         },
+        meridiemParse: /रात्री|सकाळी|दुपारी|सायंकाळी|रात्री/,
+        isPM : function (input) {
+            // TODO: This is wrong.
+            return /^(दुपारी|सायंकाळी|रात्री)$/.test(input);
+        },
         meridiem: function (hour, minute, isLower)
         {
             if (hour < 4) {

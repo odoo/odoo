@@ -483,7 +483,7 @@ class Post(models.Model):
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
-                partners = post.sudo().message_partner_ids.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
+                partners = post.sudo().message_partner_ids.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
                 note_subtype = self.sudo().env.ref('mail.mt_note')
                 body = _('<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>') % \
                         (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))

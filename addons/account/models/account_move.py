@@ -1142,6 +1142,9 @@ class AccountMoveLine(models.Model):
         if 'company_ids' in context:
             domain += [('company_id', 'in', context['company_ids'])]
 
+        if context.get('reconcile_date'):
+            domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.create_date', '>', context['reconcile_date']), ('matched_credit_ids.create_date', '>', context['reconcile_date'])]
+
         where_clause = ""
         where_clause_params = []
         tables = ''

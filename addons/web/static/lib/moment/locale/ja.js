@@ -24,6 +24,10 @@
             LLL : "YYYY年M月D日LT",
             LLLL : "YYYY年M月D日LT dddd"
         },
+        meridiemParse: /午前|午後/i,
+        isPM : function (input) {
+            return input === '午後';
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 12) {
                 return "午前";
