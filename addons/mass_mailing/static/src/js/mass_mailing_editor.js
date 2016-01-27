@@ -193,6 +193,7 @@ web_editor.Class.include({
     set_snippet_theme: function (theme) {
         $("#o_left_bar .o_panel_body > div").addClass("hidden");
         $("#o_left_bar .o_panel_body > div."+theme).removeClass("hidden");
+        $("#editable_area").trigger("content_changed");
     },
     get_snippet_template: function (mailing_model) {
         var self = this;

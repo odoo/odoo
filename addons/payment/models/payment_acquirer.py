@@ -198,8 +198,13 @@ class PaymentAcquirer(osv.Model):
 
         # Fill partner_* using values['partner_id'] or partner_id arguement
         partner_id = values.get('partner_id', partner_id)
+        billing_partner_id = values.get('billing_partner_id', partner_id)
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+            if partner_id != billing_partner_id:
+                billing_partner = self.pool['res.partner'].browse(cr, uid, billing_partner_id, context=context)
+            else:
+                billing_partner = partner
             values.update({
                 'partner': partner,
                 'partner_id': partner_id,
@@ -213,11 +218,28 @@ class PaymentAcquirer(osv.Model):
                 'partner_country': partner.country_id,
                 'partner_phone': partner.phone,
                 'partner_state': partner.state_id,
+                'billing_partner': billing_partner,
+                'billing_partner_id': billing_partner_id,
+                'billing_partner_name': billing_partner.name,
+                'billing_partner_lang': billing_partner.lang,
+                'billing_partner_email': billing_partner.email,
+                'billing_partner_zip': billing_partner.zip,
+                'billing_partner_city': billing_partner.city,
+                'billing_partner_address': _partner_format_address(billing_partner.street, billing_partner.street2),
+                'billing_partner_country_id': billing_partner.country_id.id,
+                'billing_partner_country': billing_partner.country_id,
+                'billing_partner_phone': billing_partner.phone,
+                'billing_partner_state': billing_partner.state_id,
             })
         if values.get('partner_name'):
             values.update({
                 'partner_first_name': _partner_split_name(values.get('partner_name'))[0],
                 'partner_last_name': _partner_split_name(values.get('partner_name'))[1],
+            })
+        if values.get('billing_partner_name'):
+            values.update({
+                'billing_partner_first_name': _partner_split_name(values.get('billing_partner_name'))[0],
+                'billing_partner_last_name': _partner_split_name(values.get('billing_partner_name'))[1],
             })
 
         # Fix address, country fields
@@ -225,6 +247,10 @@ class PaymentAcquirer(osv.Model):
             values['address'] = _partner_format_address(values.get('partner_street', ''), values.get('partner_street2', ''))
         if not values.get('partner_country') and values.get('partner_country_id'):
             values['country'] = self.pool['res.country'].browse(cr, uid, values.get('partner_country_id'), context=context)
+        if not values.get('billing_partner_address'):
+            values['billing_address'] = _partner_format_address(values.get('billing_partner_street', ''), values.get('billing_partner_street2', ''))
+        if not values.get('billing_partner_country') and values.get('billing_partner_country_id'):
+            values['billing_country'] = self.pool['res.country'].browse(cr, uid, values.get('billing_partner_country_id'), context=context)
 
 
         # compute fees

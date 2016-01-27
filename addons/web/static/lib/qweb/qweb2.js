@@ -295,15 +295,13 @@ QWeb2.Engine = (function() {
                 }
                 req.open('GET', s, async);
                 if (async) {
-                    req.onreadystatechange = function() {
-                        if (req.readyState == 4) {
-                            if (req.status == 200) {
-                                callback(null, self._parse_from_request(req));
-                            } else {
-                                callback(new Error("Can't load template " + s + ", http status " + req.status));
-                            }
+                    req.addEventListener("load", function() {
+                        if (req.status == 200) {
+                            callback(null, self._parse_from_request(req));
+                        } else {
+                            callback(new Error("Can't load template " + s + ", http status " + req.status));
                         }
-                    };
+                    });
                 }
                 req.send(null);
                 if (!async) {

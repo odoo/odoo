@@ -37,10 +37,11 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def button_choose_theme(self, context):
+        theme_category_id = self.env.ref('base.module_category_theme').id
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
-            '|', ('category_id', '!=', 'Hidden'), ('name', '=', 'theme_default'),
-            '|', ('category_id', '=', 'Theme'), ('category_id.parent_id', '=', 'Theme')
+            '|', ('category_id', 'not in', [self.env.ref('base.module_category_hidden').id, self.env.ref('base.module_category_theme_hidden').id]), ('name', '=', 'theme_default'),
+            '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
         ]).button_immediate_uninstall(context=context)
 
         next_action = self.button_immediate_install(context=context) # Then install the new chosen one

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Christian <c.zoellner@intero-technologies.de>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2015
-# Wolfgang Taferner, 2015
+# Wolfgang Taferner, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-24 14:29+0000\n"
+"PO-Revision-Date: 2016-01-23 19:33+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -684,6 +685,12 @@ msgid "Computers"
 msgstr "Computer"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -1253,7 +1260,7 @@ msgstr "HDD on Demand"
 #: model:product.template,description:product.product_product_32_product_template
 msgid ""
 "Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr "Freisprech-Kopfhörer für Laptop PC mit kominiertem Mikrofon- und Kopfhörerstecker."
+msgstr "Freisprech-Kopfhörer für Laptop PC mit In-Line Mikrofon- und Kopfhörerstecker."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1371,13 +1378,13 @@ msgstr "ID"
 #: model:ir.model.fields,help:product.field_product_product_message_unread
 #: model:ir.model.fields,help:product.field_product_template_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, brauchen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1824,13 +1831,13 @@ msgstr "Notizen"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl Aktionen"
+msgstr "Anzahl der Aktionen"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Anzahl Nachrichten, die eine Aktion erfordern"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
@@ -1891,7 +1898,7 @@ msgstr "Verpackung"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Packaging Type"
-msgstr ""
+msgstr "Typ der Verpackung"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1933,12 +1940,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Preis über Prozentsatz"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Physisch"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2497,6 +2504,12 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Dienstleistung"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2843,7 +2856,7 @@ msgstr "Volumen in m³"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Das Gewichts des Inhaltes in Kg, Verpackung nicht eingerechnet, etc."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -3131,22 +3144,22 @@ msgstr "Lieferant"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Lieferanteninformation"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Kurzbezeichnung beim Lieferant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr "Produktbez. b. Lieferant"
+msgstr "Produktbez. beim Lieferant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Mengeneinheit beim Lieferant"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
@@ -3156,7 +3169,7 @@ msgstr "Lieferant des Produktes"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr "Fahrzeughändler"
+msgstr "Lieferanten"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3295,7 +3308,7 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr "Sie müssen für alles, was Sie verkaufen, ein Produkt definieren, sei ein wirkliches Produkt, Verbrauchsmaterial oder eine Dienstleistung die Sie anbieten."
+msgstr "Sie müssen für alles, was Sie verkaufen, ein Produkt definieren,. Ein reales Produkt, Verbrauchsmaterial oder eine Dienstleistung, die Sie anbieten."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3505,7 +3518,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form

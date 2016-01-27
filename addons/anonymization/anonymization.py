@@ -72,7 +72,7 @@ class ir_model_fields_anonymization(osv.osv):
             if global_state == 'anonymized':
                 raise UserError(_("The database is currently anonymized, you cannot create, modify or delete fields."))
             elif global_state == 'unstable':
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                       " while some fields are not anonymized. You should try to solve this problem before trying to create, write or delete fields.")
                 raise UserError(msg)
 
@@ -339,7 +339,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything else.")
                 raise UserError(msg)
 
@@ -372,7 +372,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         if state == 'anonymized':
             self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("The database is currently anonymized, you cannot anonymize it again."))
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
             self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
@@ -509,7 +509,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         if state == 'clear':
             raise UserError(_("The database is not currently anonymized, you cannot reverse the anonymization."))
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
             raise UserError(msg)
 

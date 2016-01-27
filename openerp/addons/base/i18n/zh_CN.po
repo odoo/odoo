@@ -6,7 +6,7 @@
 # fausthuang, 2015
 # fausthuang, 2015-2016
 # jeffery9, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # Jonathon <jonathonli@gmail.com>, 2015
 # LIN Yu <yu_lin@me.com>, 2015
 # lttlsnk tsai <lttlsnk@gmail.com>, 2016
@@ -18,14 +18,15 @@
 # Zamba Lee <zambalee@gmail.com>, 2016
 # zhangpeiqing <zpq001@live.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2016
+# 榴莲 <nocoolyoyo@bengentea.top>, 2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-01-08 09:21+0000\n"
-"Last-Translator: Zamba Lee <zambalee@gmail.com>\n"
+"PO-Revision-Date: 2016-01-21 01:30+0000\n"
+"Last-Translator: 榴莲 <nocoolyoyo@bengentea.top>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4439,12 +4440,12 @@ msgstr "- 字段 ="
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr "- 群组 ="
+msgstr "- 组 ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- 删除时="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4454,12 +4455,12 @@ msgstr "- 关系 ="
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection ="
-msgstr ""
+msgstr "- 选择="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- 大小="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -4602,17 +4603,17 @@ msgstr "<strong>依赖:</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Group</strong>"
-msgstr "<strong>群组</strong>"
+msgstr "<strong>组</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Idx</strong>"
-msgstr ""
+msgstr "<strong>Idx</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Inherited</strong>"
-msgstr ""
+msgstr "<strong>继承</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4627,7 +4628,7 @@ msgstr "<strong>菜单：</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Name</strong>"
-msgstr "名称"
+msgstr "<strong>名称</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -4664,22 +4665,22 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Type</strong>"
-msgstr ""
+msgstr "<strong>类型</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View :</strong>"
-msgstr ""
+msgstr "<strong>视图:</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>XML ID</strong>"
-msgstr ""
+msgstr "<strong>XML ID</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Fields</strong></u>"
-msgstr ""
+msgstr "<u><strong>字段</strong></u>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4689,7 +4690,7 @@ msgstr "<u><strong>安全</strong></u>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr ""
+msgstr "<u><strong>视图</strong></u>"
 
 #. module: base
 #: code:addons/models.py:3480
@@ -4711,7 +4712,7 @@ msgstr "用户组用于把一系列功能分配给用户，使其能够访问特
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
 msgid "A homepage for the PosBox"
-msgstr "基于PosBox的主页"
+msgstr "PosBox的主页"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
@@ -4879,7 +4880,7 @@ msgstr "账户号码"
 #. module: base
 #: sql_constraint:res.partner.bank:0
 msgid "Account Number must be unique"
-msgstr ""
+msgstr "账户号码必须唯一。"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
@@ -6685,12 +6686,12 @@ msgstr "列2"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column2
 msgid "Column referring to the record in the comodel table"
-msgstr ""
+msgstr "指向在comodel表中的记录的栏位"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column1
 msgid "Column referring to the record in the model table"
-msgstr ""
+msgstr "指向在model表中的记录的栏位"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_mode
@@ -8784,7 +8785,7 @@ msgstr "筛选器"
 #: model:ir.model.fields,field_description:base.field_ir_filters_name
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filter Name"
-msgstr "过滤名称"
+msgstr "筛选器名称"
 
 #. module: base
 #: sql_constraint:ir.filters:0
@@ -8804,7 +8805,7 @@ msgstr "我的文档单据过滤"
 #: model:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr "过滤"
+msgstr "筛选"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -8826,7 +8827,7 @@ msgstr "只给自己用"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr ""
+msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_financial_management
@@ -8861,7 +8862,7 @@ msgstr "车队管理"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr "流"
+msgstr "浮点数"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_flow_start
@@ -8904,7 +8905,7 @@ msgstr "可用字体"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_rml_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "显示在所有报告下方的页脚文字。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_name
@@ -8942,13 +8943,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "对于关系字段，目标模型的技术名称。"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:446
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "对于选择字段，必须给出选择选项！"
 
 #. module: base
 #: code:addons/models.py:3540
@@ -8964,7 +8965,7 @@ msgstr "对这种类型的单据，你只能访问你自己创建的记录。 �
 #: selection:ir.actions.act_window.view,view_mode:0
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Form"
-msgstr "表格"
+msgstr "表单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -8985,7 +8986,7 @@ msgstr "论坛，FAQ，Q&A"
 #: code:addons/base/ir/ir_fields.py:344
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
-msgstr ""
+msgstr "找到字段 '%%(field)s' (%d 个匹配)的多个匹配"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -9845,7 +9846,7 @@ msgstr "图标URL"
 msgid ""
 "If checked and the action is bound to a model, it will only appear in the "
 "More menu on list views"
-msgstr ""
+msgstr "如果选中，并且该动作被绑定到一个模型，它只会出现在列表视图的’更多‘菜单里。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
@@ -10568,7 +10569,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Jobs, Recruitment, Applications, Job Interviews, Surveys"
-msgstr ""
+msgstr "工作，招聘，应聘，面试，调查"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_join_mode
@@ -11164,7 +11165,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
 msgid "Live Currency Exchange Rate"
-msgstr ""
+msgstr "动态货币兑换汇率"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
@@ -11280,28 +11281,28 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Macedonian / македонски јазик"
-msgstr ""
+msgstr "马其顿"
 
 #. module: base
 #: model:res.country,name:base.mg
 msgid "Madagascar"
-msgstr ""
+msgstr "马达加斯加"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
 msgid "Madam"
-msgstr ""
+msgstr "女士"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:483
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "邮件发送失败"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_tip
 msgid "Mail Tips"
-msgstr ""
+msgstr "邮件提示"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:479
@@ -11309,37 +11310,37 @@ msgstr ""
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
 "%s: %s"
-msgstr ""
+msgstr "通过SMTP发送邮件失败 '%s'.\n%s: %s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Mailing List Archive"
-msgstr ""
+msgstr "邮件清单存档"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_rml
 msgid "Main Report File Path/controller"
-msgstr ""
+msgstr "主报表文件路径/控制器"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_sequence_id
 msgid "Main Sequence"
-msgstr ""
+msgstr "主序列"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_maintainer
 msgid "Maintainer"
-msgstr ""
+msgstr "维护者"
 
 #. module: base
 #: model:res.country,name:base.mw
 msgid "Malawi"
-msgstr ""
+msgstr "马拉维"
 
 #. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
-msgstr ""
+msgstr "马来西亚"
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -11349,7 +11350,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ml
 msgid "Mali"
-msgstr ""
+msgstr "马里"
 
 #. module: base
 #: model:res.country,name:base.mt
@@ -11369,14 +11370,14 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Manage bank records you want to be used in the system."
-msgstr ""
+msgstr "管理你想用在系统中的银行记录。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
 msgid ""
 "Manage partner tags to better classify them for tracking and analysis purposes.\n"
 "                    A partner may have several categories and categories have a hierarchical structure: a partner with a categorie has also the parent categorie."
-msgstr ""
+msgstr "管理合作伙伴的标签，更好地归类以便跟踪和分析.\n                    一个合作伙伴可能有几个种类和分层结构: 合作伙伴的种类也有父类."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -11384,24 +11385,24 @@ msgid ""
 "Manage the contact titles you want to have available in your system and the "
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs."
-msgstr ""
+msgstr "管理您系统中可用的联系人称谓，这样您可以在信函或其它文档中使用它们，如：先生，女士 。 "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
 msgid "Manage your debts and credits thanks to simple sale/purchase receipts"
-msgstr ""
+msgstr "管理你的债权债务由于简单的出售/购买收据"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
 #: model:res.groups,name:base.group_survey_manager
 msgid "Manager"
-msgstr ""
+msgstr "经理"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_managing_vehicles_and_contracts
 msgid "Managing vehicles and contracts"
-msgstr ""
+msgstr "管理车辆和合同"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_todo_type
@@ -11414,7 +11415,7 @@ msgstr "手动：手动执行。\n自动：当系统重新启动时运行。\n�
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Manufacturer"
-msgstr ""
+msgstr "制造商"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -11425,12 +11426,12 @@ msgstr "生产"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "生产工序"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders, Bill of Materials, Routings"
-msgstr ""
+msgstr "制造订单，物料清单，工艺"
 
 #. module: base
 #: code:addons/models.py:2788
@@ -11441,13 +11442,13 @@ msgstr "Many2Many目标模型不存在: `%s`"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Many2One"
-msgstr ""
+msgstr "多对一"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:458
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
-msgstr " Many2one %s 不存在， 模型 %s  ！"
+msgstr "多对多模型 %s 不存在！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -11455,49 +11456,49 @@ msgstr " Many2one %s 不存在， 模型 %s  ！"
 #: model:ir.ui.view,arch_db:base.view_model_relation_form
 #: model:ir.ui.view,arch_db:base.view_model_relation_list
 msgid "ManyToMany Relations"
-msgstr ""
+msgstr "多对多 关系"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
 msgid "Margins by Products"
-msgstr ""
+msgstr "利润 按产品"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "销售订单利润"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
 #: model:ir.ui.menu,name:base.marketing_menu
 msgid "Marketing"
-msgstr ""
+msgstr "市场"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign_crm_demo
 msgid "Marketing Campaign - Demo"
-msgstr ""
+msgstr "市场营销 - 演示"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign
 msgid "Marketing Campaigns"
-msgstr ""
+msgstr "市场营销活动"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
 msgid "Maroc - Accounting"
-msgstr ""
+msgstr "摩洛哥 - 会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_reports
 msgid "Maroc - Accounting Reports"
-msgstr ""
+msgstr "摩洛哥 - 会计报告"
 
 #. module: base
 #: model:res.country,name:base.mh
 msgid "Marshall Islands"
-msgstr ""
+msgstr "马绍尔群岛"
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -11557,12 +11558,12 @@ msgstr "会员"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr ""
+msgstr "会员管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_note_pad
 msgid "Memos pad"
-msgstr ""
+msgstr "记事簿"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
@@ -11571,79 +11572,79 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.edit_menu_access_search
 #: model:ir.ui.view,arch_db:base.view_menu
 msgid "Menu"
-msgstr ""
+msgstr "菜单"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr ""
+msgstr "菜单项"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_name
 msgid "Menu Name"
-msgstr ""
+msgstr "菜单名称"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_menus_by_module
 #: model:ir.ui.view,arch_db:base.view_groups_form
 msgid "Menus"
-msgstr ""
+msgstr "菜单"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
-msgstr ""
+msgstr "菜单自定义"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
 msgid "Mercury Payment Services"
-msgstr ""
+msgstr "水星支付服务"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
 msgid "Message"
-msgstr ""
+msgstr "信息"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Messaging and Social"
-msgstr ""
+msgstr "通信与社交"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_function
 msgid "Method"
-msgstr ""
+msgstr "方法"
 
 #. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
-msgstr ""
+msgstr "墨西哥"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
-msgstr ""
+msgstr "墨西哥——会计"
 
 #. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
-msgstr ""
+msgstr "密克罗尼西亚"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "MIME 类型"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Minute: %(min)s"
-msgstr ""
+msgstr "分钟: %(min)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Minutes"
-msgstr ""
+msgstr "分钟"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -11660,19 +11661,19 @@ msgstr "杂项"
 #: model:res.partner.title,name:base.res_partner_title_miss
 #: model:res.partner.title,shortcut:base.res_partner_title_miss
 msgid "Miss"
-msgstr ""
+msgstr "小姐"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:458
 #, python-format
 msgid "Missing SMTP Server"
-msgstr ""
+msgstr "缺少 SMTP 服务器"
 
 #. module: base
 #: code:addons/models.py:3510
 #, python-format
 msgid "Missing document(s)"
-msgstr ""
+msgstr "文档(s)丢失"
 
 #. module: base
 #: code:addons/models.py:6148
@@ -11689,23 +11690,23 @@ msgstr "找不到字段 '%s' 所需的值"
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
 msgid "Mister"
-msgstr ""
+msgstr "先生"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_mobile
 #: model:ir.model.fields,field_description:base.field_res_users_mobile
 msgid "Mobile"
-msgstr ""
+msgstr "手机"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Mobile:"
-msgstr ""
+msgstr "手机"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_font_mode
 msgid "Mode"
-msgstr ""
+msgstr "模式"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_model
@@ -11736,7 +11737,7 @@ msgstr "模型 '%s' 包含了模块数据，不能被移除！"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_values_model_id
 msgid "Model (change only)"
-msgstr ""
+msgstr "模型（仅用于修改）"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
@@ -11781,7 +11782,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_res_model
 msgid "Model name of the object to open in the view window"
-msgstr ""
+msgstr "在新窗口打开的对象的模型名称"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_model
@@ -11832,7 +11833,7 @@ msgstr "模块"
 #: model:ir.ui.view,arch_db:base.view_module_category_form
 #: model:ir.ui.view,arch_db:base.view_module_category_tree
 msgid "Module Category"
-msgstr ""
+msgstr "模块种类"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -12560,7 +12561,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_act_window_src_model
 msgid ""
 "Optional model name of the objects on which this action should be visible"
-msgstr ""
+msgstr "可选的对象模型名称，此动作在该对象可见。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_res_model
@@ -13203,7 +13204,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:base.preview_rml_report
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "Preview RML Report"
-msgstr ""
+msgstr "预览RML报告"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
@@ -15021,7 +15022,7 @@ msgstr "步"
 #: code:addons/base/ir/ir_sequence.py:20 code:addons/base/ir/ir_sequence.py:43
 #, python-format
 msgid "Step must not be zero."
-msgstr ""
+msgstr "增量数字必须是非0的。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
@@ -16098,7 +16099,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_transient
 msgid "Transient Model"
-msgstr ""
+msgstr "Transient 模型"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -16870,12 +16871,12 @@ msgstr "视图名称"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
 msgid "View Rates"
-msgstr ""
+msgstr "查看赞数"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_id
 msgid "View Ref."
-msgstr ""
+msgstr "视图参考"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_type
@@ -16893,14 +16894,14 @@ msgstr "视图和创建的报表"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "视图继承模式"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
 msgid ""
 "View type: Tree type to use for the tree view, set to 'tree' for a "
 "hierarchical tree view, or 'form' for a regular list view"
-msgstr ""
+msgstr "视图类型: 树形用在tree 视图, 对于一个层级的树形视图设为'tree', 常规的清单视图设为 'form' "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -16924,12 +16925,12 @@ msgstr "视图"
 msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
-msgstr ""
+msgstr "视图允许你个性化odoo的每一个视图。你能添加新字段，移动字段，重命名字段，或者删除你不需要的字段。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "自此继承的视图"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -16964,7 +16965,7 @@ msgstr "瓦利斯和富图纳群岛"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Warehouse Management Barcode Scanning"
-msgstr ""
+msgstr "仓库管理条码扫描"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -17073,12 +17074,12 @@ msgstr "网站CRM 投诉"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
-msgstr ""
+msgstr "网站企业版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal_followup
 msgid "Website Followup"
-msgstr ""
+msgstr "网站催款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_editor
@@ -17201,14 +17202,14 @@ msgstr "西撒哈拉"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr ""
+msgstr "如果首先选择了一个关系型字段，这个字段可用于选择目标单据模型的目标字段。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
+msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的单据模型。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_diagram
@@ -17668,7 +17669,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "context: current context"
-msgstr ""
+msgstr "context：当前上下文"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -17766,7 +17767,7 @@ msgstr "外部id"
 #: code:addons/base/ir/ir_fields.py:144
 #, python-format
 msgid "false"
-msgstr ""
+msgstr "false"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -18081,7 +18082,7 @@ msgstr "待译术语: '%s'"
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
-msgstr ""
+msgstr "object或obj: 触发动作的记录的browse_record"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -18101,7 +18102,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "pool: ORM model pool (i.e. self.pool)"
-msgstr ""
+msgstr "pool: ORM模型池 (i.e. self.pool)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -18152,7 +18153,7 @@ msgstr "res.users.log"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr ""
+msgstr "self: 触发动作的记录的ORM模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights

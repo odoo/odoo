@@ -21,15 +21,25 @@
                 <input type='hidden' name='x_invoice_num' t-att-value='reference'/>
                 <input type='hidden' name='x_currency_code' t-att-value='x_currency_code'/>
                 <!-- Billing Information-->
-                <input type='hidden' name='x_first_name' t-att-value="first_name"/>
-                <input type='hidden' name='x_last_name' t-att-value="last_name"/>
-                <input type='hidden' name='x_address' t-att-value="address"/>
-                <input type='hidden' name='x_city' t-att-value="city"/>
-                <input type='hidden' name='x_zip' t-att-value="zip_code"/>
-                <input type='hidden' name='x_country' t-att-value="country"/>
-                <input type='hidden' name='x_phone' t-att-value='phone'/>
-                <input type='hidden' name='x_email' t-att-value="email"/>
-                <input type='hidden' name='x_state' t-att-value="state"/>
+                <input type='hidden' name='x_first_name' t-att-value="billing_first_name"/>
+                <input type='hidden' name='x_last_name' t-att-value="billing_last_name"/>
+                <input type='hidden' name='x_address' t-att-value="billing_address"/>
+                <input type='hidden' name='x_city' t-att-value="billing_city"/>
+                <input type='hidden' name='x_zip' t-att-value="billing_zip_code"/>
+                <input type='hidden' name='x_country' t-att-value="billing_country"/>
+                <input type='hidden' name='x_phone' t-att-value='billing_phone'/>
+                <input type='hidden' name='x_email' t-att-value="billing_email"/>
+                <input type='hidden' name='x_state' t-att-value="billing_state"/>
+                <!-- Shipping Information-->
+                <input type='hidden' name='x_ship_to_first_name' t-att-value="first_name"/>
+                <input type='hidden' name='x_ship_to_last_name' t-att-value="last_name"/>
+                <input type='hidden' name='x_ship_to_address' t-att-value="address"/>
+                <input type='hidden' name='x_ship_to_city' t-att-value="city"/>
+                <input type='hidden' name='x_ship_to_zip' t-att-value="zip_code"/>
+                <input type='hidden' name='x_ship_to_country' t-att-value="country"/>
+                <input type='hidden' name='x_ship_to_phone' t-att-value='phone'/>
+                <input type='hidden' name='x_ship_to_email' t-att-value="email"/>
+                <input type='hidden' name='x_ship_to_state' t-att-value="state"/>
                 <!-- Submit-->
                 <button type="submit" width="100px" t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_authorize/static/src/img/authorize_icon.png"/>

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2015
+# Simone Bernini <simone@aperturelabs.it>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-08 14:20+0000\n"
-"Last-Translator: Giuseppe Castellani <giuseppecastellani@gmail.com>\n"
+"PO-Revision-Date: 2016-01-23 22:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -325,7 +326,7 @@ msgstr "Tastiera Wireless Apple"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
-msgstr "Applicabile A"
+msgstr "Applicata a"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
@@ -608,7 +609,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Fai click per creare un nuovo prodotto."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -657,7 +658,7 @@ msgstr "Componenti"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Calcolo del Prezzo"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -680,6 +681,12 @@ msgstr "Computer all-in-one"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Computer"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1493,7 +1500,7 @@ msgstr "E' Follower"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "È una variante di prodotto"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1926,12 +1933,12 @@ msgstr "Pen drive, SP-4"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Percentuale (sconto)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Prezzo Percentuale"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
@@ -2054,7 +2061,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Oggetti Listino"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2495,6 +2502,12 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2841,7 +2854,7 @@ msgstr "Il volume in mc"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Il peso del contenuto in Kg, non comprende alcun imballo, ecc."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2888,7 +2901,7 @@ msgstr "Deriva dal form del prodotto"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Questo campo contiene l'immagine usata per la variante del prodotto, limitata a 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -3123,7 +3136,7 @@ msgstr "Varianti"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr "Venditore"
+msgstr "Fornitore"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3271,7 +3284,7 @@ msgstr ""
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr " Lavorare con prodotti diversi aiuta a definire alcune varianti dello stesso prodotto ,gestiscilo nel tuo ecommerce per esempio  "
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime

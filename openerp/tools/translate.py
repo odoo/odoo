@@ -169,9 +169,10 @@ class XMLTranslator(object):
             </div>
 
     """
-    def __init__(self, callback, method):
+    def __init__(self, callback, method, parser=None):
         self.callback = callback        # callback function to translate terms
         self.method = method            # serialization method ('xml' or 'html')
+        self.parser = parser            # parser for validating translations
         self._done = []                 # translated strings
         self._todo = []                 # todo strings that come after _done
         self.needs_trans = False        # whether todo needs translation
@@ -208,7 +209,15 @@ class XMLTranslator(object):
         """ Translate text.strip(), but keep the surrounding spaces from text. """
         term = text.strip()
         trans = term and self.callback(term)
-        return text.replace(term, trans) if trans else text
+        if trans:
+            try:
+                # parse the translation to validate it
+                etree.fromstring("<div>%s</div>" % encode(trans), parser=self.parser)
+            except etree.ParseError:
+                # fallback: escape the translation
+                trans = escape(trans)
+            text = text.replace(term, trans)
+        return text
 
     def process(self, node):
         """ Process the given xml `node`: collect `todo` and `done` items. """
@@ -284,9 +293,10 @@ def html_translate(callback, value):
     if not value:
         return value
 
-    trans = XMLTranslator(callback, 'html')
+    parser = etree.HTMLParser(encoding='utf-8')
+    trans = XMLTranslator(callback, 'html', parser)
     wrapped = "<div>%s</div>" % encode(value)
-    root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
+    root = etree.fromstring(wrapped, parser)
     trans.process(root[0][0])               # html > body > div
     return trans.get_done()[5:-6]           # remove tags <div> and </div>
 
@@ -664,7 +674,7 @@ def trans_export(lang, modules, buffer, format, cr):
 
         else:
             raise Exception(_('Unrecognized extension: must be one of '
-                '.csv, .po, or .tgz (received .%s).' % format))
+                '.csv, .po, or .tgz (received .%s).') % format)
 
     translations = trans_generate(lang, modules, cr)
     modules = set(t[0] for t in translations)

@@ -48,6 +48,10 @@
             LLL : 'D MMMM YYYY LT',
             LLLL : 'dddd, D MMMM YYYY LT'
         },
+        meridiemParse: /قبل از ظهر|بعد از ظهر/,
+        isPM: function (input) {
+            return /بعد از ظهر/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 12) {
                 return "قبل از ظهر";

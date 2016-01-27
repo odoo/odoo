@@ -397,7 +397,7 @@ class product_template(osv.osv):
     def _get_product_template_type(self, cr, uid, context=None):
         res = super(product_template, self)._get_product_template_type(cr, uid, context=context)
         if 'product' not in [item[0] for item in res]:
-            res.append(('product', 'Stockable Product'))
+            res.append(('product', _('Stockable Product')))
         return res
 
     _columns = {
