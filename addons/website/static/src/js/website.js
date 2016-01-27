@@ -167,78 +167,65 @@ var form = function (url, method, params) {
     form.submit();
 };
 
-
-ajax.loadXML('/website/static/src/xml/website.xml', qweb);
-ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
-
-/**
- * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
- */
- 
-base.ready().then(function () {
-    data.topBar = new TopBar();
-    data.topBar.attachTo($("#oe_main_menu_navbar"));
-});
-
 /**
  * Returns a deferred resolved when the templates are loaded
  * and the Widgets can be instanciated.
  */
 
-    /* ----- PUBLISHING STUFF ---- */
-    $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-        var $data = $(this).parents(".js_publish_management:first");
-        var self=this;
-        ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
-            .then(function (result) {
-                $data.toggleClass("css_unpublished css_published");
-                $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-            }).fail(function (err, data) {
-                error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
-            });
-        });
-
-        if (!$('.js_change_lang').length) {
-            // in case template is not up to date...
-            var links = $('ul.js_language_selector li a:not([data-oe-id])');
-            var m = $(_.min(links, function(l) { return $(l).attr('href').length; })).attr('href');
-            links.each(function() {
-                var t = $(this).attr('href');
-                var l = (t === m) ? "default" : t.split('/')[1];
-                $(this).data('lang', l).addClass('js_change_lang');
-            });
-        }
-
-        $(document).on('click', '.js_change_lang', function(e) {
-            e.preventDefault();
-
-            var self = $(this);
-            // retrieve the hash before the redirect
-            var redirect = {
-                lang: self.data('lang'),
-                url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
-                hash: encodeURIComponent(location.hash)
-            };
-            location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
-    });
-
-    /* ----- KANBAN WEBSITE ---- */
-    $('.js_kanban').each(function () {
-        init_kanban(this);
-    });
-
-    $('.js_website_submit_form').on('submit', function() {
-        var $buttons = $(this).find('button[type="submit"], a.a-submit');
-        _.each($buttons, function(btn) {
-            $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
+/* ----- PUBLISHING STUFF ---- */
+$(document).on('click', '.js_publish_management .js_publish_btn', function () {
+    var $data = $(this).parents(".js_publish_management:first");
+    var self=this;
+    ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
+        .then(function (result) {
+            $data.toggleClass("css_unpublished css_published");
+            $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+        }).fail(function (err, data) {
+            error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
         });
     });
 
-    setTimeout(function () {
-        if (window.location.hash.indexOf("scrollTop=") > -1) {
-            window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
-        }
-    },0);
+    if (!$('.js_change_lang').length) {
+        // in case template is not up to date...
+        var links = $('ul.js_language_selector li a:not([data-oe-id])');
+        var m = $(_.min(links, function(l) { return $(l).attr('href').length; })).attr('href');
+        links.each(function() {
+            var t = $(this).attr('href');
+            var l = (t === m) ? "default" : t.split('/')[1];
+            $(this).data('lang', l).addClass('js_change_lang');
+        });
+    }
+
+    $(document).on('click', '.js_change_lang', function(e) {
+        e.preventDefault();
+
+        var self = $(this);
+        // retrieve the hash before the redirect
+        var redirect = {
+            lang: self.data('lang'),
+            url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
+            hash: encodeURIComponent(location.hash)
+        };
+        location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+});
+
+/* ----- KANBAN WEBSITE ---- */
+$('.js_kanban').each(function () {
+    init_kanban(this);
+});
+
+$('.js_website_submit_form').on('submit', function() {
+    var $buttons = $(this).find('button[type="submit"], a.a-submit');
+    _.each($buttons, function(btn) {
+        $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
+    });
+});
+
+setTimeout(function () {
+    if (window.location.hash.indexOf("scrollTop=") > -1) {
+        window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
+    }
+},0);
 
 // display image thumbnail
 $(".o_image[data-mimetype^='image']").each(function () {
@@ -265,16 +252,17 @@ var TopBar = Widget.extend({
     }
 });
 
-
 var data = {
     prompt: prompt,
     form: form,
-    TopBar: TopBar,
-    ready: function () {
-        console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
-        return base.ready();
-    }
+    TopBar: TopBar
 };
+
+setTimeout(function () {
+    data.topBar = new TopBar();
+    data.topBar.attachTo($("#oe_main_menu_navbar"));
+});
+
 return data;
 
 });

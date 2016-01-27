@@ -66,11 +66,9 @@ var stop = function () {
     });
 };
 
-base.ready().always(function () {
-    setTimeout(function () {
-        start();
-    },0);
-});
+setTimeout(function () {
+    start();
+},0);
 
 return {
     'Class': Animation,

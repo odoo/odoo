@@ -49,7 +49,6 @@ if (!translate.edit_translations) {
     return;
 }
 
-ajax.loadXML('/website/static/src/xml/website.translator.xml', qweb);
 
 var nodialog = 'website_translator_nodialog';
 

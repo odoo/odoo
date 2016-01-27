@@ -11,10 +11,7 @@ var website = require('website.website');
 
 var _t = core._t;
 var qweb = core.qweb;
-
 var hash = "#advanced-view-editor";
-
-ajax.loadXML('/website/static/src/xml/website.ace.xml', qweb);
 
 var Ace = Widget.extend({
     events: {

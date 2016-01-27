@@ -6,10 +6,7 @@ odoo.define('website_blog.InlineDiscussion', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var base = require('web_editor.base');
-
 var qweb = core.qweb;
-
-ajax.loadXML('/website_blog/static/src/xml/website_blog.inline.discussion.xml', qweb);
 
 
 var InlineDiscussion = core.Class.extend({

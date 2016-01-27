@@ -7,8 +7,6 @@ var base = require('web_editor.base');
 
 var _t = core._t;
 
-base.ready().done(function () {
-
     Tour.register({
         id:   'banner',
         name: _t("Build a page"),
@@ -106,6 +104,5 @@ base.ready().done(function () {
             },
         ]
     });
-});
 
 });

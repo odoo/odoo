@@ -13,8 +13,6 @@ var editor_widget = require('web_editor.widget');
 var qweb = core.qweb;
 var _t = core._t;
 
-ajax.loadXML('/web_editor/static/src/xml/translator.xml', qweb);
-
 
 var translatable = !!$('html').data('translatable');
 var edit_translations = !!$('html').data('edit_translations');
@@ -306,28 +304,28 @@ var Translate = Widget.extend({
     }
 });
 
-
-if (edit_translations) {
-    base.ready().then(function () {
-        data.instance = new Translate(this, $('#wrapwrap'));
-        data.instance.prependTo(document.body);
-
-        $('a[href*=edit_translations]').each(function () {
-            this.href = this.href.replace(/[$?]edit_translations[^&?]+/, '');
-        });
-        $('form[action*=edit_translations]').each(function () {
-            this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
-        });
-
-        $('title').html($('title').html().replace(/&lt;span data-oe-model.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
-    });
-}
-
 var data = {
     'translatable': translatable,
     'edit_translations': edit_translations,
     'Class': Translate,
 };
+
+if (edit_translations) {
+    setTimeout(function () {
+        data.instance = new Translate(this, $('#wrapwrap'));
+        data.instance.prependTo(document.body);
+    });
+
+    $('a[href*=edit_translations]').each(function () {
+        this.href = this.href.replace(/[$?]edit_translations[^&?]+/, '');
+    });
+    $('form[action*=edit_translations]').each(function () {
+        this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
+    });
+
+    $('title').html($('title').html().replace(/&lt;span data-oe-model.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
+}
+
 return data;
 
 });

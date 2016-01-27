@@ -15,8 +15,6 @@ var dummy = editor.dummy;
 
 /* ----- SNIPPET SELECTOR ---- */
 
-ajax.loadXML('/web_editor/static/src/xml/snippets.xml', qweb);
-
 editor.Class.include({
     init: function() {
         var self = this;

@@ -15,7 +15,6 @@ odoo.define('website_form.animation', function (require) {
 
         start: function() {
             var self = this;
-            qweb.add_template('/website_form/static/src/xml/website_form.xml');
             this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
 
             // Initialize datetimepickers

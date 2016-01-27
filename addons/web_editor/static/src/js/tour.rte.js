@@ -8,8 +8,6 @@ var snippet_editor = require('web_editor.snippet.editor');
 
 var _t = core._t;
 
-base.ready().done(function () {
-
 var click_event = function(el, type) {
     var evt = document.createEvent("MouseEvents");
     evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
@@ -389,9 +387,6 @@ Tour.register({
             title:     "check the second font class to css",
         },
     ]
-});
-
-
 });
 
 });

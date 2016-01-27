@@ -7,13 +7,11 @@ var base = require('web_editor.base');
 var SocialShare = require('website.share');
 var website = require('website.website');
 var qweb = core.qweb;
-ajax.loadXML('/website_forum/static/src/xml/website_forum_share_templates.xml', qweb);
 
 
 if(!$('.website_forum').length) {
     return $.Deferred().reject("DOM doesn't contain '.website_forum'");
 }
-
 
 var ForumShare = SocialShare.extend({
     init: function (parent, target_type) {
@@ -44,29 +42,27 @@ var ForumShare = SocialShare.extend({
     }
 });
 
-base.ready().done(function() {
 
-    // Store social share data to display modal on next page
-    $(document.body).on('click', ':not(.karma_required).oe_social_share_call', function() {
-        var social_data = {};
-        social_data['target_type'] = $(this).data('social-target-type');
-        sessionStorage.setItem('social_share', JSON.stringify(social_data));
-    });
-
-    // Retrieve stored social data
-    if(sessionStorage.getItem('social_share')){
-        var social_data = JSON.parse(sessionStorage.getItem('social_share'));
-        new ForumShare($(this), social_data['target_type']);
-        sessionStorage.removeItem('social_share');
-    }
-
-    // Display an alert if post has no reply and is older than 10 days
-    if ($('.oe_js_bump').length) {
-        var $question_container = $('.oe_js_bump');
-        new ForumShare($question_container, 'social-alert');
-    }
-
+// Store social share data to display modal on next page
+$(document.body).on('click', ':not(.karma_required).oe_social_share_call', function() {
+    var social_data = {};
+    social_data['target_type'] = $(this).data('social-target-type');
+    sessionStorage.setItem('social_share', JSON.stringify(social_data));
 });
+
+// Retrieve stored social data
+if(sessionStorage.getItem('social_share')){
+    var social_data = JSON.parse(sessionStorage.getItem('social_share'));
+    new ForumShare($(this), social_data['target_type']);
+    sessionStorage.removeItem('social_share');
+}
+
+// Display an alert if post has no reply and is older than 10 days
+if ($('.oe_js_bump').length) {
+    var $question_container = $('.oe_js_bump');
+    new ForumShare($question_container, 'social-alert');
+}
+
 return {};
 
 });

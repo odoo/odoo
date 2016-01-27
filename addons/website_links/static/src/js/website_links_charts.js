@@ -117,7 +117,6 @@ if(!$('.o_website_links_chart').length) {
         },
     });
 
-    base.ready().done(function() {
         // Resize the chart when a tab is opened, because NVD3 automatically reduce the size
         // of the chart to 5px width when the bootstrap tab is closed.
         var charts = {};
@@ -237,7 +236,6 @@ if(!$('.o_website_links_chart').length) {
                     });
                 }
         });
-    });
 
     exports.BarChart = BarChart;
     exports.PieChart = PieChart;

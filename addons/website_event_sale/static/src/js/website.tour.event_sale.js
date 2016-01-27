@@ -5,7 +5,6 @@ var Tour = require('web.Tour');
 var base = require('web_editor.base');
 var website = require('website.website');
 
-base.ready().done(function () {
     Tour.register({
         id:   'event_buy_tickets',
         name: "Buy tickets for the Conference on Business Apps",
@@ -101,6 +100,5 @@ base.ready().done(function () {
             }
         ]
     });
-});
 
 });

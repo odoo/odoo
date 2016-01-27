@@ -9,8 +9,6 @@ var website = require('website.website');
 
 var qweb = core.qweb;
 
-ajax.loadXML('/website_twitter/static/src/xml/website.twitter.xml', qweb);
-
 animation.registry.twitter = animation.Class.extend({
     selector: ".twitter",
     start: function () {

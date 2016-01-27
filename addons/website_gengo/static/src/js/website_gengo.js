@@ -16,8 +16,6 @@ if (!translate.edit_translations) {
     return;
 }
 
-ajax.loadXML('/website_gengo/static/src/xml/website.gengo.xml', qweb);
-
 website.TopBar.include({
     events: _.extend({}, website.TopBar.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',

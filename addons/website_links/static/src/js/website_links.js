@@ -245,10 +245,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
         },
     });
 
-    ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
-
-    base.ready().done(function() {
-
+    
         ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
         // UTMS selects widgets
@@ -389,7 +386,6 @@ if(!$('.o_website_links_create_tracked_url').length) {
         $(function () {
           $('[data-toggle="tooltip"]').tooltip();
         });
-    });
 
     exports.SelectBox = SelectBox;
     exports.RecentLinkBox = RecentLinkBox;

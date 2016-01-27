@@ -6,10 +6,6 @@ odoo.define('website_sale.rating', function (require) {
     var rating = require('rating.rating');
     var website_mail_thread = require('website_mail.thread');
 
-    var qweb = core.qweb;
-
-    ajax.loadXML('/rating/static/src/xml/rating_common.xml', qweb);
-
     website_mail_thread.WebsiteMailThread.include({
         prepend_message: function(message_data){
             var rating_enabled = this.$el.data('rating-enabled');
