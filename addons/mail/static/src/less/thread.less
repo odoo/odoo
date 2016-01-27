@@ -97,6 +97,9 @@
 
         .o_thread_message_core {
             .o-flex(1, 1, auto);
+            min-width: 0;
+            max-width: 100%;
+            word-wrap: break-word;
 
             &.o_mail_note {
                 background-color: @gray-lighter;
@@ -111,11 +114,19 @@
                 color: gray;
             }
 
-            > p {
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
+            }
+
+            p {
                 margin: 0 0 9px; // Required by the old design to override a general rule on p's
                 &:last-child {
                     margin-bottom: 0;
                 }
+            }
+            a {
+                display: inline-block;
+                word-break: break-all;
             }
 
             .o_mail_body_long {

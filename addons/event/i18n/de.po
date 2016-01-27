@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-01-09 22:46+0000\n"
+"PO-Revision-Date: 2016-01-23 19:32+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
 msgid " # No of Cancelled Registrations"
-msgstr "Abgesagte Anmeldungen"
+msgstr "# von abgesagten Anmeldungen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_confirm_state
@@ -38,7 +39,7 @@ msgstr " Anmeldungen i. Entwurf"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr ""
+msgstr "(stats)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -94,7 +95,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>bis</i>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -905,7 +906,7 @@ msgstr "Beobachter (Kanäle)"
 #: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1000,13 +1001,13 @@ msgstr "ID"
 #: model:ir.model.fields,help:event.field_event_event_message_unread
 #: model:ir.model.fields,help:event.field_event_registration_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_message_needaction
 #: model:ir.model.fields,help:event.field_event_registration_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, brauchen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
@@ -1020,13 +1021,7 @@ msgstr "Wenn eine Veranstaltung erstellt wird, ist der Status zunächst \"im Ent
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
-
-#. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
-msgid "Important Messages"
-msgstr "Wichtige Nachrichten"
+msgstr "Sofort"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1189,7 +1184,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "E-Mail gesendet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
@@ -1220,12 +1215,12 @@ msgstr "Max. Sitzungen"
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Max. Teilnehmeranzahl"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "Max. Teilnehmeranzahl"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_ids
@@ -1302,7 +1297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl Aktionen"
+msgstr "Anzahl der Aktionen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1328,7 +1323,7 @@ msgstr "Anzahl Registrierung"
 #: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Anzahl Nachrichten, die eine Aktion erfordern"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_message_unread_counter
@@ -1431,7 +1426,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
+msgstr "Python Objekte"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1583,7 +1578,7 @@ msgstr "Geplante Lieferung"
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "Seminar"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1690,7 +1685,7 @@ msgstr "Dieses Feld enthält die hinterlegte E-Mail-Vorlage, die automatisch ges
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "Veranstaltungskarten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1764,6 +1759,8 @@ msgstr "Unbegrenzt"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_unread
 #: model:ir.model.fields,field_description:event.field_event_registration_message_unread
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 
@@ -1799,7 +1796,7 @@ msgstr "Benutzer"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Variablen und Operatoren"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1890,7 +1887,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_config_settings
 msgid "event.config.settings"
-msgstr ""
+msgstr "event.config.settings"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
@@ -1900,12 +1897,12 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "event.mail"
-msgstr ""
+msgstr "event.mail"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@openerp.com"
-msgstr ""
+msgstr "events@openerp.com"
 
 #. module: event
 #: model:ir.model,name:event.model_report_event_registration

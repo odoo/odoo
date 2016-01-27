@@ -3,17 +3,20 @@
 # * account
 # 
 # Translators:
+# Andrey Skabelin <andrey.skabelin@gmail.com>, 2015
+# Artur Komishenko <Archi1792@gmail.com>, 2016
 # Gennady Marchenko <gennadym@gmail.com>, 2015
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
-# SV <svilij@yahoo.com>, 2015
+# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# SV <svilij@yahoo.com>, 2015-2016
 # Viktor Pogrebniak <avtomaton@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2015-12-29 20:30+0000\n"
-"Last-Translator: SV <svilij@yahoo.com>\n"
+"PO-Revision-Date: 2016-01-22 08:20+0000\n"
+"Last-Translator: Artur Komishenko <Archi1792@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +80,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n<p>Здравствуйте, ${object.partner_id.name},</p>\n<p>Вам доступен новый счёт: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>ССЫЛКИ</strong><br />\n&nbsp;&nbsp;Номер счёта: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Итого по счёту: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Дата счёта: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Ссылка на заказ: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p> \n\n% if object.paypal_url:\n<br/>\n<p>Также возможна оплата напрямую через Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Пожалуйста, обратитесь к нам, если у вас остались вопросы.</p>\n<p>Благодарим вас за то, что выбрали ${object.company_id.name or 'нас'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nТелефон:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nСайт:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n<p>Здравствуйте, ${object.partner_id.name},</p>\n<p>Вам доступен новый счёт: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>ССЫЛКИ</strong><br />\n&nbsp;&nbsp;Номер счёта: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Итого по счёту: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Дата счёта: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Ссылка на заказ: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p> \n\n% if object.paypal_url:\n<br/>\n<p>Также возможна оплата напрямую через Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Пожалуйста, обратитесь к нам, если у вас остались вопросы.</p>\n<p>Благодарим вас за то, что выбрали ${object.company_id.name or 'нас'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nТелефон:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nСайт:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -87,7 +90,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "Используется статус \"Черновик\", когда пользователь создаёт новый неподтвеждённый счёт.\nИспользуется статус \"Проформа\", когда у счёта нет номера.\nИспользуется статус \"Открыт\", когда пользователь создаёт счёт, для которого генерируется номер. Этот статус сохраняется до тех пор пока пользователь не оплатит счёт.\nСтатус \"Оплачен\" устанавливается автоматически после оплаты счёта. Синхронизация соответствующих записей в журнале не гарантирована.\nСтатус \"Отменён\" используется, когда пользователь отменяет счёт."
+msgstr "Когда пользователь создаёт новый неподтвержденный счёт, то используется статус \"Черновик\".\nКогда у счёта нет номера, используется статус \"Проформа\".\nКогда пользователь создаёт счёт, для которого генерируется номер, используется \"Открытый\" статус. Этот статус сохраняется до тех пор пока пользователь не оплатит счёт.\nСтатус \"Оплачен\" устанавливается автоматически после оплаты счёта. Синхронизация соответствующих записей в журнале не гарантирована.\nСтатус \"Отменён\" используется, когда пользователь отменяет счёт."
 
 #. module: account
 #. openerp-web
@@ -146,7 +149,7 @@ msgstr "&amp;bull;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", если установлен модуль \"Бух. учёт\" или \"Закупки\""
+msgstr ", если установлен модуль \"Бухгалтерский. учёт\" или \"Закупки\""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -269,7 +272,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Customer follow-up</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Отслеживание заказчиком</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Отслеживание заказчиком</strong>\n</span> "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -301,7 +304,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Сверить банковские проводки</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Сверить банковские проводы</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -364,7 +367,7 @@ msgstr "<span>Операции</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reconciliation</span>"
-msgstr "<span>Сверка</span>"
+msgstr "<span>Сверить</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -401,7 +404,7 @@ msgstr "<strong>Управление активами</strong>"
 msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
-msgstr "<strong>Автоматическая отправка документов:</strong> автоматически отправлять ваши счета по электронной или бумажной почте."
+msgstr "<strong>Автоматическая отправка документов:</strong> автоматически отправлять ваши счета по электронной или обычной почте."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -1451,6 +1454,7 @@ msgstr "Позволяет использовать аналитический �
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -5458,14 +5462,14 @@ msgstr "Сообщения"
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Разное"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:157
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr ""
+msgstr "Разные Операции"
 
 #. module: account
 #. openerp-web
@@ -5795,7 +5799,7 @@ msgstr "Odoo позволяет Вам согласовать позиции н�
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
-msgstr "Odoo позволяет Вам согласовать позиции непосредственно со\nсвязанными счетами продажи или покупки."
+msgstr "Odoo позволяет Вам согласовать позиции непосредственно со\nсвязанными счет-фактурами продажи или покупки."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -6250,7 +6254,7 @@ msgstr "Ссылка На Платеж"
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 #: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Term"
-msgstr ""
+msgstr "Условие Оплаты"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -6262,7 +6266,7 @@ msgstr "Позиция Условий Оплаты"
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Payment Terms"
-msgstr ""
+msgstr "Условия Оплаты"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
@@ -6292,7 +6296,7 @@ msgstr "Условия оплаты - объяснение клиенту ..."
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment term: 15 Days"
-msgstr ""
+msgstr "Условие оплаты: 15 Дней"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
@@ -6463,7 +6467,7 @@ msgstr "Пожалуйста, проверьте, что поле 'Трансф�
 #: code:addons/account/models/account_invoice.py:662
 #, python-format
 msgid "Please create some invoice lines."
-msgstr "Пожалуйста, создайте позиции счета"
+msgstr "Пожалуйста, создайте несколько строк счета-фактуры"
 
 #. module: account
 #: code:addons/account/models/account_move.py:133
@@ -7581,6 +7585,7 @@ msgstr "Цель операции"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"

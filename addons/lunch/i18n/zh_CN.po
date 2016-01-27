@@ -4,7 +4,7 @@
 # 
 # Translators:
 # fausthuang, 2015
-# fausthuang, 2015
+# fausthuang, 2015-2016
 # James Yu <james.168@163.com>, 2015
 # Xu Lei <xulei8@qq.com>, 2015
 # 珠海-老天 <liangjia@qq.com>, 2015
@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-12-24 07:50+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-01-14 09:22+0000\n"
+"Last-Translator: fausthuang\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgid ""
 "A cashmove can either be an expense or a payment.<br/>\n"
 "                An expense is automatically created at the order receipt.<br/>\n"
 "                A payment represents the employee reimbursement to the company."
-msgstr ""
+msgstr "一个现金流可以是费用或支付.<br/>\n                费用是在收到订单自动生成.<br/>\n                支付代表员工向公司公司."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
@@ -52,7 +52,7 @@ msgid ""
 "A lunch order is defined by its user, date and order lines.\n"
 "                Each order line corresponds to a product, an additional note and a price.\n"
 "                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area."
-msgstr ""
+msgstr "一个午餐的订单由它的用户，日期和订单行定义.\n                每个订单行对应一个产品，一个额外说明，和一个价格.\n               在选择你的订单行前, 别忘了阅读红色区域的警告显示."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
@@ -84,7 +84,7 @@ msgstr "警告"
 msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
-msgstr ""
+msgstr "提醒功能用来提醒员工与定餐相关的事情。创建一个午餐提醒你必须定义他的周期，时间间隔和显示的信息。"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -99,7 +99,7 @@ msgstr "和"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
 msgid "Balance visible"
-msgstr ""
+msgstr "余额可见"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
@@ -119,19 +119,19 @@ msgstr "根据用户"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr ""
+msgstr "由供应商"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
 msgid "Can be an order or a payment"
-msgstr ""
+msgstr "可以是一个订单或支付"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
 msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
-msgstr ""
+msgstr "能主动(支付)或被动(订单或者支付如果用户想要拿回他的钱)"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -159,7 +159,7 @@ msgstr "现金划拨"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash move balance"
-msgstr ""
+msgstr "现金划转余额"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -171,32 +171,32 @@ msgstr "类别"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Click to create a lunch alert."
-msgstr ""
+msgstr "点击建立一个午餐提示"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Click to create a lunch category."
-msgstr ""
+msgstr "点击建立一个午餐种类"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
 msgid "Click to create a lunch order."
-msgstr ""
+msgstr "点击建立一个午餐订单"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Click to create a new payment."
-msgstr ""
+msgstr "点击建立一个新的付款"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Click to create a payment."
-msgstr ""
+msgstr "点击建立一个付款"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Click to create a product for lunch."
-msgstr ""
+msgstr "点击建立一个午餐的产品"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_company_id
@@ -217,7 +217,7 @@ msgstr "控制账户"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "供应商控制"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_uid
@@ -297,7 +297,7 @@ msgstr "员工付款"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
-msgstr ""
+msgstr "激活这个选项为你的幸运订单设一个最大预算"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -316,7 +316,7 @@ msgid ""
 "                - Recurency: Everyday<br/>\n"
 "                - Time interval: from 00h00 am to 11h59 pm<br/>\n"
 "                - Message: \"You must order before 10h30 am\""
-msgstr ""
+msgstr "例如: <br/>\n                - 重复: 每天<br/>\n                - 时间间隔: 从 00h00 am to 11h59 pm<br/>\n                - 信息: \"你必须在 10h30 am前下订单\""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -345,42 +345,42 @@ msgstr "帮你处理午餐需要的事务，如果是一个管理者，你能创
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "这里你可以访问所有的午餐产品的种类"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid ""
 "Here you can see the employees' payment. A payment is a cash move from the "
 "employee to the company."
-msgstr ""
+msgstr "这里你可以看到所有员工的付款。付款是一个从员工到公司的现金划转。"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "这里你可以看到以代理商分组的所有今天的订单"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid ""
 "Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
-msgstr ""
+msgstr "<p>\n                此处可以显示现金的转移。<br/>现金转移可以为费用或付款。\n                当收到一个午餐单时，会自动创建费用。而付款则为经理定义的向公司的缴款。\n              </p>\n            "
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky"
-msgstr ""
+msgstr "我觉得很幸运"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky today !"
-msgstr ""
+msgstr "我觉得今天运气真好！"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "I'm not feeling rich"
-msgstr ""
+msgstr "我不觉得我很富有"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
@@ -396,7 +396,7 @@ msgstr "ID"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
 msgid "Is an order or a payment"
-msgstr ""
+msgstr "一个订单或是一个付款"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
@@ -451,7 +451,7 @@ msgstr "午餐提醒"
 #: code:addons/lunch/models/lunch.py:223
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "午餐费的现金划转"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:62
@@ -471,7 +471,7 @@ msgstr "经理"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "最大预算"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
@@ -492,7 +492,7 @@ msgstr "我的账户组"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "我的午餐"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -520,7 +520,7 @@ msgstr "新的订单"
 #: code:addons/lunch/wizard/lucky_order.py:37
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr ""
+msgstr "没有产品符合你的需求，你要饿死了。"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -575,7 +575,7 @@ msgstr "订单树"
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
 msgid "Orders by Vendor"
-msgstr ""
+msgstr "按代理商排序"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -591,7 +591,7 @@ msgstr "之前的订单"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
 msgid "Previous order ids"
-msgstr ""
+msgstr "先前订单的ids"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
@@ -626,7 +626,7 @@ msgstr "产品分类:"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
-msgstr ""
+msgstr "产品搜索"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -709,7 +709,7 @@ msgstr "选择你的订单"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Select your vendor"
-msgstr ""
+msgstr "选择你的代理商"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -725,7 +725,7 @@ msgstr "状态"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "按代理和日期统计所有午餐订单"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
@@ -741,7 +741,7 @@ msgstr "该用户当前工作的公司"
 #: code:addons/lunch/models/lunch.py:98
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "你的订单日期是过去的时间"
 
 #. module: lunch
 #. openerp-web
@@ -763,7 +763,7 @@ msgstr "今天"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "今天的订单"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_total
@@ -808,7 +808,7 @@ msgstr "供应商"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Month"
-msgstr ""
+msgstr "代理订单按月"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_wednesday
@@ -887,7 +887,7 @@ msgstr "午餐产品目录"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "lunch.order.line.lucky"
-msgstr ""
+msgstr "午餐.订单.行.幸运"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -897,7 +897,7 @@ msgstr "或"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "red X to announce that the order isn't available"
-msgstr ""
+msgstr "红色的X 代表订单是无效的."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -905,7 +905,7 @@ msgstr ""
 msgid ""
 "to announce that the order is ordered <br/>\n"
 "                - Click on the"
-msgstr ""
+msgstr "表示订单已经被预订了 <br/>\n                - 点击"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -913,9 +913,9 @@ msgstr ""
 msgid ""
 "to announce that the order is received <br/>\n"
 "                - Click on the"
-msgstr ""
+msgstr "表示订单已经收到了 <br/>\n                - 点击"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "to announce that the order isn't available"
-msgstr ""
+msgstr "表示订单是无效的"

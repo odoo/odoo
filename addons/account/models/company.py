@@ -64,9 +64,7 @@ Best Regards,''')
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
-        new_prefix_length = len(new_prefix)
-        number = current_code[len(old_prefix):]
-        return new_prefix + '0' * (digits - new_prefix_length - len(number)) + number
+        return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code, digits):
         accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
@@ -74,6 +72,11 @@ Best Regards,''')
         for account in accounts:
             if account.code.startswith(old_code):
                 account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
+
+    def reflect_code_digits_change(self, digits):
+        accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
+        for account in accounts:
+            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
 
     @api.multi
     def write(self, values):
@@ -86,4 +89,6 @@ Best Regards,''')
             if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
+            if values.get('accounts_code_digits'):
+                company.reflect_code_digits_change(digits)
         return super(ResCompany, self).write(values)

@@ -75,7 +75,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 else:
                     emails_checked.append(email)
         if error_message:
-            raise UserError(_("One email at least is incorrect: %s" % error_message))
+            raise UserError(_("One email at least is incorrect: %s") % error_message)
 
         emails_checked.sort()
         values = {'multi_email': '\n'.join(emails_checked)}

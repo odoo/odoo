@@ -125,6 +125,7 @@ class AccountFiscalPosition(models.Model):
         base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
+        null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
 
         if zipcode and zipcode.isdigit():
             zipcode = int(zipcode)
@@ -151,6 +152,10 @@ class AccountFiscalPosition(models.Model):
         # fallback: country group with no state/zip range
         if not fpos:
             fpos = self.search(domain_group + null_state_dom + null_zip_dom, limit=1)
+
+        if not fpos:
+            # Fallback on catchall (no country, no group)
+            fpos = self.search(base_domain + null_country_dom, limit=1)
         return fpos or False
 
     @api.model
@@ -171,21 +176,13 @@ class AccountFiscalPosition(models.Model):
         if delivery.property_account_position_id or partner.property_account_position_id:
             return delivery.property_account_position_id.id or partner.property_account_position_id.id
 
-        def fallback_search(vat_required):
-            fpos = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
-            if not fpos:
-                # Fallback on catchall (no country, no group)
-                fpos = self.search([('auto_apply', '=', True), ('vat_required', '=', vat_required),
-                                    ('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
-            return fpos
-
         # First search only matching VAT positions
         vat_required = bool(partner.vat)
-        fp = fallback_search(vat_required)
+        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
 
         # Then if VAT required found no match, try positions that do not require it
         if not fp and vat_required:
-            fp = fallback_search(False)
+            fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp.id if fp else False
 

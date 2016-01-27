@@ -165,6 +165,9 @@ var Thread = Widget.extend({
     get_scrolltop: function () {
         return this.$el.scrollTop();
     },
+    is_at_bottom: function () {
+        return this.el.scrollHeight - this.$el.scrollTop() - this.$el.outerHeight() < 5;
+    },
 });
 
 Thread.ORDER = ORDER;
