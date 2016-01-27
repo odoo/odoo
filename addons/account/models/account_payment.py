@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, ValidationError
+from openerp.tools import float_is_zero
 
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',
@@ -366,6 +367,13 @@ class account_payment(models.Model):
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile':
             self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account_id, self.journal_id)
+            # At this point, the invoices should be set as paid. However, it might not be the case
+            # if the write-off has been linked to the payment and not the invoice. This could happen
+            # when the exchange difference is larger enough to compensate the write-off amount.
+            self.invoice_ids.filtered(
+                lambda r: r.state == 'open' and float_is_zero(r.residual_company_signed, self.company_id.currency_id.rounding) != float_is_zero(r.residual_signed, r.currency_id.rounding)\
+            ).write({'state': 'paid'})
+
         else:
             self.invoice_ids.register_payment(counterpart_aml)
 
