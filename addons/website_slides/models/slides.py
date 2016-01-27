@@ -459,7 +459,10 @@ class Slide(models.Model):
             return fetch_res
 
         values = {'slide_type': 'video', 'document_id': document_id}
-        youtube_values = fetch_res['values'].get('items', list(dict()))[0]
+        items = fetch_res['values'].get('items')
+        if not items:
+            return {'error': _('Please enter valid Youtube or Google Doc URL')}
+        youtube_values = items[0]
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
             if only_preview_fields:
