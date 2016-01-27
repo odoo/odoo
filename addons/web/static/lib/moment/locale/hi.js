@@ -84,6 +84,11 @@
         },
         // Hindi notation for meridiems are quite fuzzy in practice. While there exists
         // a rigid notion of a 'Pahar' it is not used as rigidly in modern Hindi.
+        meridiemParse: /रात|सुबह|दोपहर|शाम|रात/,
+        isPM: function (input) {
+            // TODO: This is incorrect (look at cutoffs). We need a better isPM interface.
+            return /^(दोपहर|शाम|रात)$/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 4) {
                 return "रात";
