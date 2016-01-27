@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Amaro Vita <vita.amaro@gmail.com>, 2015
+# Gennady Marchenko <gennadym@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-26 14:10+0000\n"
-"PO-Revision-Date: 2015-11-27 08:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-19 20:00+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Здравствуйте ${object.name},\n</p>\n<p>\n    Это письмо отправлено для проверки Вашего почтового ящика, чтобы открыть Вам доступ к \"${object.company_id.name}\" Форума Q/A.\n</p>\n<p>\n    Для проверки Вашей почты кликните на следующую ссылку:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Проверка моего аккаунта \"${object.company_id.name}\" Форума Q/A</a></li>\n</ul>\n<p>\n    Спасибо,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #. openerp-web
@@ -52,12 +53,12 @@ msgstr ""
 msgid ""
 " karma is required to perform this action. You can earn karma by having your"
 " answers upvoted by the community."
-msgstr ""
+msgstr "карма требуется для выполнения этого действия. Вы можете заработать карму, имея свои ответы отмеченные сообществом."
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} проверка форума"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -99,13 +100,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Closed]</b>"
-msgstr ""
+msgstr "<b> [Закрыто]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Deleted]</b>"
-msgstr ""
+msgstr "<b> [Удалено]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -117,7 +118,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.users
 msgid "<b> badges:</b>"
-msgstr ""
+msgstr "<b> значки:</b>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -205,7 +206,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<b>No badge yet!</b><br/>"
-msgstr ""
+msgstr "<b>Нет значка!</b><br/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_votes
@@ -236,7 +237,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 msgid "<b>[Answer]</b>"
-msgstr ""
+msgstr "<b>[Ответ]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
@@ -284,7 +285,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<small>profile</small>"
-msgstr ""
+msgstr "<small>профиль</small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -351,19 +352,19 @@ msgstr "Вкладка - это ярлык, который упорядочив�
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "About This Community"
-msgstr ""
+msgstr "Об этом сообществе"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Accept <i class=\"fa fa-check\"/>"
-msgstr ""
+msgstr "Принять <i class=\"fa fa-check\"/>"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:114
 #, python-format
 msgid "Accept Answer"
-msgstr ""
+msgstr "Принять ответ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer_accept_own
@@ -412,7 +413,7 @@ msgstr "Добавить содержание"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Add a Comment"
-msgstr ""
+msgstr "Добавить комментарий"
 
 #. module: website_forum
 #. openerp-web
@@ -461,12 +462,12 @@ msgstr "Ответ отредактирован"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:108
 #, python-format
 msgid "Answer Posted"
-msgstr ""
+msgstr "Ответ отправлен"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accepted
 msgid "Answer accepted"
-msgstr ""
+msgstr "Ответ принят"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_6
@@ -790,21 +791,21 @@ msgstr "Город"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:44
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
-msgstr ""
+msgstr "Кликните <em>Продолжить</em> чтобы создать форум."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:117
 #, python-format
 msgid "Click here to accept this answer."
-msgstr ""
+msgstr "Кликните тут, чтобы принять этот ответ."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Кликните тут, чтобы отправить письмо с подтверждением, позволяющее участвовать в форуме. "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -1074,12 +1075,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
 msgid "Delete all posts"
-msgstr ""
+msgstr "Удалить все сообщения"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_own
 msgid "Delete own posts"
-msgstr ""
+msgstr "Удалить свои сообщения"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
@@ -1111,7 +1112,7 @@ msgstr "Упорядочено"
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 msgid "Discussion"
-msgstr ""
+msgstr "Обсуждение"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_discussion
@@ -1160,12 +1161,12 @@ msgstr "Редактировать ваш предыдущий ответ"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
 msgid "Edit all posts"
-msgstr ""
+msgstr "Редактировать все сообщения"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
 msgid "Edit own posts"
-msgstr ""
+msgstr "Редактировать свои сообщения"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
@@ -1211,7 +1212,7 @@ msgstr "Проинформировано"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:37
 #, python-format
 msgid "Enter a name for your new forum then click 'Continue'."
-msgstr ""
+msgstr "Введите название Вашего нового форума и кликните 'Продолжить'."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1905,7 +1906,7 @@ msgstr "Оскорбительно"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
-msgstr ""
+msgstr "Вкл"
 
 #. module: website_forum
 #. openerp-web

@@ -13,7 +13,7 @@ class CrmTeam(models.Model):
     @api.model
     @api.returns('self', lambda value: value.id if value else False)
     def _get_default_team_id(self, user_id=None):
-        if user_id is None:
+        if not user_id:
             user_id = self.env.uid
         team_id = self.env['crm.team'].search([
             '|',

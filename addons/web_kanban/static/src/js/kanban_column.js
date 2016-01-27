@@ -164,7 +164,7 @@ var KanbanColumn = Widget.extend({
     },
 
     update_column: function () {
-        var title = this.folded ? this.title + ' (' + this.records.length + ')' : this.title;
+        var title = this.folded ? this.title + ' (' + this.dataset.size() + ')' : this.title;
         this.$header.find('.o_column_title').text(title);
         this.$header.find('.o-kanban-count').text(this.records.length);
 

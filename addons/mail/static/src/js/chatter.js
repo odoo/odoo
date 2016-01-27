@@ -451,6 +451,7 @@ var ChatterComposer = composer.BasicComposer.extend({
             record_name: false,
             is_log: false,
             internal_subtypes: [],
+            default_body: '',
         });
         if (this.options.is_log) {
             this.options.send_text = _('Log');
@@ -465,6 +466,17 @@ var ChatterComposer = composer.BasicComposer.extend({
             return this._super.apply(this, arguments);
         }
         return $.when(this._super.apply(this, arguments), this.message_get_suggested_recipients());
+    },
+
+    start: function () {
+        var self = this;
+        return this._super().then(function () {
+            self.$input.val(self.options.default_body);
+        });
+    },
+
+    should_send: function () {
+        return false;
     },
 
     preprocess_message: function () {
@@ -862,6 +874,8 @@ var Chatter = form_common.AbstractField.extend({
         // destroy current composer, if any
         if (this.composer) {
             this.composer.destroy();
+            this.composer = undefined;
+            this.mute_new_message_button(false);
         }
 
         // fetch and render messages of current document
@@ -891,6 +905,7 @@ var Chatter = form_common.AbstractField.extend({
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
+            default_body: old_composer && old_composer.$input.val(),
         });
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
@@ -906,11 +921,19 @@ var Chatter = form_common.AbstractField.extend({
             self.composer.on('post_message', self, self.on_post_message);
             self.composer.on('need_refresh', self, self.refresh_followers);
         });
-
+        this.mute_new_message_button(true);
     },
     close_composer: function () {
         if (this.composer.is_empty()) {
             this.composer.do_hide();
+            this.mute_new_message_button(false);
+        }
+    },
+    mute_new_message_button: function (mute) {
+        if (mute) {
+            this.$('.o_chatter_button_new_message').removeClass('btn-primary').addClass('btn-default');
+        } else if (!mute) {
+            this.$('.o_chatter_button_new_message').removeClass('btn-default').addClass('btn-primary');
         }
     },
 

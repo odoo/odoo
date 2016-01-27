@@ -289,7 +289,7 @@ class Website(osv.Model):
             dep[page_key] = []
         for p in post_obj.browse(cr, uid, posts, context=context):
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to have a link to this page !' % p.name),
+                'text': _('Blog Post <b>%s</b> seems to have a link to this page !') % p.name,
                 'link': p.website_url
             })
 

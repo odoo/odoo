@@ -130,7 +130,7 @@ class gamification_goal_definition(osv.Model):
                 obj.search(cr, uid, domain, context=context, count=True)
             except (ValueError, SyntaxError), e:
                 msg = e.message or (e.msg + '\n' + e.text)
-                raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
+                raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
 
     def create(self, cr, uid, vals, context=None):

@@ -3,14 +3,14 @@
 # * hr_payroll
 # 
 # Translators:
-# Ralf Hilgenstock <rh@dialoge.info>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-01 09:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-23 17:31+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +145,7 @@ msgstr "Interne Anmerkung hinzufügen ..."
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr "Füge abhängige Rechenregeln hinzu"
+msgstr "Abhängige Regeln hinzufügen"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -178,7 +178,7 @@ msgstr "Jährlich"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
 msgid "Appears on Payslip"
-msgstr "Scheint am Lohnkonto auf"
+msgstr "Erscheint im Lohnkonto"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
@@ -186,7 +186,7 @@ msgstr "Scheint am Lohnkonto auf"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr "Diese Rechenregel wird angewandt, wenn der die Bedingung erfüllt ist. zB basic > 1000"
+msgstr "Diese Regel wird angewandt, wenn die Bedingung erfüllt ist. Z.B. basic > 1000"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -229,19 +229,19 @@ msgstr "Kategorie"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Child Rules"
-msgstr "Abhängige Rechenregeln"
+msgstr "Abhängige Regeln"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
 msgid "Child Salary Rule"
-msgstr "abhängige Rechenregel"
+msgstr "Abhängige Regel für Lohnkonto"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
 msgid "Children"
-msgstr "abhängige Elemente"
+msgstr "Abhängige Elemente"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -251,7 +251,7 @@ msgstr "Definition von Abhängigkeiten"
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
-msgstr "Klicken Sie , um eine weitere Abrechnungsstelle anzulegen"
+msgstr "Klicken Sie, um eine weitere Abrechnungsstelle anzulegen"
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -341,7 +341,7 @@ msgstr "Arbeitsvertrag"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
-msgstr "Arbeitnehmer / Arbeitgeber Anteile"
+msgstr "Arbeitnehmer / Arbeitgeberanteile"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
@@ -430,7 +430,7 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr "Definiere Rechenregeln die entsprechend dem Vertrag für dieses Lohnkonto anzuwenden sind.\r\nWenn  das Feld leer ist werden alle für diese Periode gültigen Rechenregeln für alle Verträge der Mitarbeiter angewendet."
+msgstr "Definiere Rechenregeln, die entsprechend dem Vertrag für dieses Lohnkonto anzuwenden sind. Wenn das Feld leer ist werden alle für diese Periode gültigen Rechenregeln für alle Verträge der Mitarbeiter angewendet."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
@@ -630,7 +630,7 @@ msgstr "Wenn das Aktiv-Feld deaktiviert wird, wird die Rechenregel verborgen ohn
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
 msgid "Indicates this payslip has a refund of another"
-msgstr "Zeigt an dass dieses Lohnkonto eine Gutschrift eines anderen beinhaltet"
+msgstr "Zeigt an, dass dieses Lohnkonto eine Gutschrift eines anderen beinhaltet"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -1294,7 +1294,7 @@ msgstr "Dieser Assistent erzeugt das Lohnkonto für alle für diesen Lauf ausgew
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
-msgstr "Bruttobetrag"
+msgstr "Gesamtbetrag"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
