@@ -3,12 +3,10 @@ odoo.define("website.tour.banner", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
-    base.ready().done(function () {
-        tour.register("banner", {
+    tour.register("banner", {
             url: "/",
         }, [{
             trigger: "a[data-action=edit]",
@@ -52,6 +50,6 @@ odoo.define("website.tour.banner", function (require) {
             trigger: "#oe_main_menu_navbar a[data-action=new_page]",
             content: _t("<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages to your site or edit this page to make it even more awesome.</p>"),
             position: "bottom",
-        }]);
-    });
+        }
+    ]);
 });

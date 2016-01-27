@@ -50,10 +50,8 @@ var WebsitePlannerLauncher = Widget.extend({
     },
 });
 
-return ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
-    var websitePlannerLauncher = new WebsitePlannerLauncher();
-    websitePlannerLauncher.prependTo($('#oe_main_menu_navbar .o_menu_systray'));
-});
+var websitePlannerLauncher = new WebsitePlannerLauncher();
+websitePlannerLauncher.prependTo($('#oe_main_menu_navbar .o_menu_systray'));
 
 });
 

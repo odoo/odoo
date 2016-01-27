@@ -33,21 +33,6 @@ var Animation = Class.extend({
     stop: function () {},
 });
 
-/**
- * Start animations when loading the website is finished and stop/restart them
- * once we enter in edit mode.
- */
-base.ready().always(function () {
-    _.defer(start);
-});
-
-return {
-    Class: Animation,
-    registry: registry,
-    start: start,
-    stop: stop
-};
-
 function start(editable_mode, $init_target) {
     for (var k in registry) {
         var Animation = registry[k];
@@ -77,4 +62,18 @@ function stop() {
         }
     });
 }
+
+/**
+ * Start animations when loading the website is finished and stop/restart them
+ * once we enter in edit mode.
+ */
+_.defer(start);
+
+return {
+    Class: Animation,
+    registry: registry,
+    start: start,
+    stop: stop
+};
+
 });

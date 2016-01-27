@@ -7,7 +7,6 @@ odoo.define('website_crm.tour', function(require) {
     var Model   = require('web.Model');
     var Session = require('web.Session');
 
-    base.ready().done(function () {
         Tour.register({
             id:   'website_crm_tour',
             name: "Test the contact us form",
@@ -54,7 +53,6 @@ odoo.define('website_crm.tour', function(require) {
                 }
             ]
         });
-    });
 
     return {};
 });

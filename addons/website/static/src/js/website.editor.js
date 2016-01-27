@@ -12,7 +12,6 @@ var website = require('website.website');
 var qweb = core.qweb;
 var _t = core._t;
 
-ajax.loadXML('/website/static/src/xml/website.editor.xml', qweb);
 
 /**
  * Object who contains all method and bind for the top bar, the template is create server side.

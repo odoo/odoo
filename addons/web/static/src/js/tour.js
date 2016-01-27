@@ -347,21 +347,6 @@ var Tour = {
                 popover.arrow().css("top", top ? top + "px" : "");
         }
     },
-    _load_template: false,
-    load_template: function () {
-        // don't need template to use bootstrap Tour in automatic mode
-        Tour._load_template = true;
-        if (typeof QWeb2 === "undefined") return $.when();
-        var def = $.Deferred();
-        qweb.add_template('/web/static/src/xml/website.tour.xml', function(err) {
-            if (err) {
-                def.reject(err);
-            } else {
-                def.resolve();
-            }
-        });
-        return def;
-    },
     popoverTitle: function (tour, options) {
         return typeof QWeb2 !== "undefined" ? qweb.render('tour.popover_title', options) : options.title;
     },
@@ -456,10 +441,6 @@ var Tour = {
         var state = Tour.getState();
         if (!state) return;
         else if (state.tour) {
-            if (!Tour._load_template) {
-                Tour.load_template().then(Tour.running);
-                return;
-            }
             Tour.log("Tour '"+state.id+"' is running", true);
             Tour.registerSteps(state.tour, state.mode);
             Tour.nextStep();

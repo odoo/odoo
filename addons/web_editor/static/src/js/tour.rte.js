@@ -1,14 +1,10 @@
 odoo.define('web_editor.tour', function (require) {
 'use strict';
 
-var core = require('web.core');
 var Tour = require('web.Tour');
 var base = require('web_editor.base');
 var snippet_editor = require('web_editor.snippet.editor');
 
-var _t = core._t;
-
-base.ready().done(function () {
 
 var click_event = function (el, type) {
     var evt = document.createEvent("MouseEvents");
@@ -400,9 +396,6 @@ Tour.register({
             title:     "check the second font class to css",
         },
     ]
-});
-
-
 });
 
 });

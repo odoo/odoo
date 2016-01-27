@@ -4,7 +4,7 @@ odoo.define('website_links.website_links', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
+require('web_editor.base');
 var website = require('website.website');
 var Model = require('web.Model');
 
@@ -245,9 +245,6 @@ if(!$('.o_website_links_create_tracked_url').length) {
         },
     });
 
-    ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
-
-    base.ready().done(function() {
 
         ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
@@ -389,7 +386,6 @@ if(!$('.o_website_links_create_tracked_url').length) {
         $(function () {
           $('[data-toggle="tooltip"]').tooltip();
         });
-    });
 
     exports.SelectBox = SelectBox;
     exports.RecentLinkBox = RecentLinkBox;

@@ -12,8 +12,6 @@ var options = require('web_editor.snippets.options');
 var qweb = core.qweb;
 var _t = core._t;
 
-ajax.loadXML('/web_editor/static/src/xml/snippets.xml', qweb);
-
 var data = {};
 
 /* ----- SNIPPET SELECTOR ---- */

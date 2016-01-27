@@ -1,15 +1,12 @@
 odoo.define('website.share', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 
-var _t = core._t;
 var qweb = core.qweb;
 
-ajax.loadXML('/website/static/src/xml/website.share.xml', qweb);
 
 var SocialShare = Widget.extend({
     template: 'website.social_hover',
@@ -75,11 +72,8 @@ var SocialShare = Widget.extend({
     },
 });
 
-// Initialize all social_share links when ready
-base.ready().done(function () {
-    $('.oe_social_share').mouseenter(function () {
-        new SocialShare($(this));
-    });
+$('.oe_social_share').mouseenter(function () {
+    new SocialShare($(this));
 });
 
 return SocialShare;

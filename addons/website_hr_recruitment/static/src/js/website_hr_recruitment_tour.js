@@ -7,7 +7,6 @@ odoo.define('website_hr_recruitment.tour', function(require) {
     var Model   = require('web.Model');
     var Session = require('web.Session');
 
-    base.ready().done(function () {
         Tour.register({
             id:   'website_hr_recruitment_tour',
             name: "Test the hr applicants form",
@@ -45,7 +44,6 @@ odoo.define('website_hr_recruitment.tour', function(require) {
                 }
             ]
         });
-    });
 
     return {};
 });

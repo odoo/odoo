@@ -6,11 +6,6 @@ odoo.define('website_mail.thread', function(require) {
     var core = require('web.core');
     var Widget = require('web.Widget');
 
-    var qweb = core.qweb;
-    
-    // load qweb template
-    ajax.loadXML('/website_mail/static/src/xml/chatter_message.xml', qweb);
-
     /**
      * Widget WebsiteMailThread
      *
@@ -68,7 +63,7 @@ odoo.define('website_mail.thread', function(require) {
         },
     });
 
-    web_editor_base.ready().then(function(){
+    setTimeout(function(){
         if($('.o_website_mail_thread').length) {
             var mail_thread = new WebsiteMailThread($('body')).setElement($('.o_website_mail_thread'));
         }

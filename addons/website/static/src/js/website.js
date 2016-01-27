@@ -11,7 +11,6 @@ odoo.define('website.website', function (require) {
 
     var qweb = core.qweb;
     var _t = core._t;
-    base.url_translations = '/website/translations';
 
     /* --- Set the browser into the dom for css selectors --- */
     var browser;
@@ -166,15 +165,6 @@ odoo.define('website.website', function (require) {
         form.submit();
     };
 
-    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb).then(function () {
-        ajax.loadXML('/website/static/src/xml/website.xml', qweb);
-    });
-
-    base.ready().then(function () {
-        data.topBar = new TopBar();
-        return data.topBar.attachTo($("#oe_main_menu_navbar"));
-    });
-
     /* ----- PUBLISHING STUFF ---- */
     $(document).on('click', '.js_publish_management .js_publish_btn', function () {
         var $data = $(this).parents(".js_publish_management:first");
@@ -284,5 +274,11 @@ odoo.define('website.website', function (require) {
             return base.ready();
         },
     };
+
+    setTimeout(function () {
+        data.topBar = new TopBar();
+        data.topBar.attachTo($("#oe_main_menu_navbar"));
+    });
+
     return data;
 });

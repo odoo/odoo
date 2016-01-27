@@ -33,6 +33,6 @@ website.TopBar.include({
     }
 });
 
-base.ready().then(Tour.running);
+setTimeout(Tour.running);
 
 });

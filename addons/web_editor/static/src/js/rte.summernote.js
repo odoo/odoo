@@ -11,16 +11,6 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-ajax.jsonRpc('/web/dataset/call', 'call', {
-    'model': 'ir.ui.view',
-    'method': 'read_template',
-    'args': ['web_editor.colorpicker', base.get_context()]
-}).done(function (data) {
-    QWeb.add_template(data);
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Summernote Lib (neek change to make accessible: method and object) */
 
 var dom = $.summernote.core.dom;

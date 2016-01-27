@@ -16,8 +16,6 @@ if(!$('.oe_slide_js_upload').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_slide_js_upload'");
 }
 
-ajax.loadXML('/website_slides/static/src/xml/website_slides.xml', qweb);
-
 var SlideDialog = Widget.extend({
     template: 'website.slide.upload',
     events: {
