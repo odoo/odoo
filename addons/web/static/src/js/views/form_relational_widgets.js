@@ -1159,6 +1159,9 @@ var One2ManyListView = X2ManyListView.extend({
         return this._super();
     },
     _on_focus_one2many: function () {
+        if(!this.editor.is_editing()) {
+            return;
+        }
         this.dataset.x2m.internal_dataset_changed = true;
         this._dataset_changed = false;
         this.__focus = true;
