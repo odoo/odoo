@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Denis Trepalin <zekarious@gmail.com>, 2015
+# Gennady Marchenko <gennadym@gmail.com>, 2016
 # SV <svilij@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-19 19:53+0000\n"
-"Last-Translator: SV <svilij@yahoo.com>\n"
+"PO-Revision-Date: 2016-01-23 22:41+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "%s %% скидка"
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% скидки и %s надбавки"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -98,13 +99,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
+msgstr "2.7GHz четырех ядерный Intel Core i5\n                Turbo Boost до 3.2GHz\n                8GB (two 4GB) памяти\n                1TB жесткий диск\n                Intel Iris Pro графическая карта\n            "
 
 #. module: product
 #: model:product.product,name:product.product_product_52
 #: model:product.template,name:product.product_product_52_product_template
 msgid "30m RJ45 wire"
-msgstr ""
+msgstr "30м RJ45 кабель"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -130,20 +131,20 @@ msgstr "ЖК-дисплей 7,9 дюймов (диагональ) с матри�
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "отражение на 75% меньше"
 
 #. module: product
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
-msgstr ""
+msgstr "8-портовый коммутатор"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Общий Прайс  -  </span>\n                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Прочий прайс-лист  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -163,7 +164,7 @@ msgstr "<strong>Описание</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Имя прайс-листа</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -176,7 +177,7 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ""
+msgstr "<strong>Внимание</strong>: добавление или удаление атрибутов\n                            удалит или создаст заново существующие варианты и \n                            приведет к потере их возможных настроек."
 
 #. module: product
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
@@ -215,7 +216,7 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "Описание товара, о котором Вы хотите сообщить Вашим поставщикам. Это описание будет скопировано в каждый заказ на покупку, чек и счет/возврат поставщика."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -236,7 +237,7 @@ msgstr "Подробное описание продукта для внутре
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr ""
+msgstr "Прайс-лист содержит правила последовательности расчета для того,\n                чтобы вычислить цену реализации продукции.."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -283,7 +284,7 @@ msgstr "Все Продукты"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Все общие настройки об этом товаре управляются "
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -348,7 +349,7 @@ msgstr "Цена услуги сборки"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Назначает приоритет списку поставщиков продукции."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -387,14 +388,14 @@ msgstr "Атрибуты"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
-msgstr ""
+msgstr "Дополнительный вход для портативных устройств"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr ""
+msgstr "Дополнительный порт позволяет подключать другие источники звука такие, как MP3-плеер"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -428,19 +429,19 @@ msgstr "На основе"
 #: model:product.product,name:product.product_product_57
 #: model:product.template,name:product.product_product_57_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "Обычный компьютер"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Beautiful 7.9‑inch display."
-msgstr ""
+msgstr "Красивый 7.9‑inch дисплей."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Beautiful widescreen display."
-msgstr ""
+msgstr "Красивый широкоформатный дисплей."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -566,7 +567,7 @@ msgstr "Категория:  %s"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Характеристики"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -590,7 +591,7 @@ msgstr "Подчиненные категории"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Нажмите, чтобы добавить новую единицу измерения категории."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -670,7 +671,7 @@ msgstr "Корпус компьютера"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Компьютер SC234"
 
 #. module: product
 #: model:product.public.category,name:product.Computer_all_in_one
@@ -681,6 +682,12 @@ msgstr "Компьютер всё-в-одном"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Компьютеры"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Расходуемый"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -711,12 +718,12 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "Стоимость шаблона продукта используется для стандартной оценки запасов в бухгалтерском учете и используется в качестве базовой цены для заказов на поставку. Выражена в единицах измерения по умолчанию продукта."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
-msgstr ""
+msgstr "Стоимость продукта за единицу измерения по умолчанию"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -780,7 +787,7 @@ msgstr "Валюта"
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Custom Computer (kit)"
-msgstr ""
+msgstr "Пользовательский Компьютер (комплект)"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
@@ -792,7 +799,7 @@ msgstr "Персонализированный ноутбук, основанн�
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "Пользовательские компьютер поставляется в комплекте."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
@@ -844,7 +851,7 @@ msgstr "Время выполнения доставки"
 #: model:product.product,name:product.product_product_49
 #: model:product.template,name:product.product_product_49_product_template
 msgid "Dell Inspiron Laptop without OS"
-msgstr ""
+msgstr "Dell Inspiron Laptop без OS"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -860,7 +867,7 @@ msgstr "Описание для заявок"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "Описание для поставщиков"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -880,7 +887,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_56
 #: model:product.template,name:product.product_product_56_product_template
 msgid "Desktop Lamp"
-msgstr ""
+msgstr "Настольная лампа"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -932,13 +939,13 @@ msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
-msgstr ""
+msgstr "Каждое правило включают в себя набор критериев применимости (диапазон дат,\n                категории продукта ...) и вычисление, которое легко\n                помогает добиться каких-либо цен."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
-msgstr ""
+msgstr "Эффективное, высококачественное аудио"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -949,7 +956,7 @@ msgstr "Дата окончания"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Конечная дата этой цены поставщика"
 
 #. module: product
 #: selection:product.template,state:0
@@ -965,7 +972,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_54
 #: model:product.template,name:product.product_product_54_product_template
 msgid "Ergonomic Mouse"
-msgstr ""
+msgstr "Эргономичная Мышь"
 
 #. module: product
 #: constraint:product.category:0
@@ -1076,7 +1083,7 @@ msgstr "Название явного правила для позиции пр�
 #: model:product.product,name:product.product_product_1b
 #: model:product.template,name:product.product_product_1b_product_template
 msgid "External Audit"
-msgstr ""
+msgstr "Внешний Аудит"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
@@ -1152,7 +1159,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "Дружественный к окружающей среде."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_44
@@ -1177,7 +1184,7 @@ msgstr "Общая информация"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Genius. Your own personal DJ."
-msgstr ""
+msgstr "Genius. Ваш персональный DJ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
@@ -1204,7 +1211,7 @@ msgstr "Дает порядок последовательности при вы
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "Определяет порядок следования при отображении списка товаров"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1289,7 +1296,7 @@ msgstr "Наушники стандартные"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "Слышу, слышу."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1438,7 +1445,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "Информация о поставщике продукта"
 
 #. module: product
 #: model:product.product,name:product.product_product_38
@@ -2496,6 +2503,12 @@ msgid "Server"
 msgstr "Сервер"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Услуга"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2620,7 +2633,7 @@ msgstr "Дата начала"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Дата начала по этой цене поставщика"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
@@ -2780,7 +2793,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Цена покупки продукта"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3345,7 +3358,7 @@ msgstr "decimal.precision"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "например Лампы"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3514,7 +3527,7 @@ msgstr "родительская компания"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "шаблон продукта"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

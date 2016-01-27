@@ -28,6 +28,11 @@
             lll : "YYYY年MMMD日LT",
             llll : "YYYY年MMMD日ddddLT"
         },
+        meridiemParse: /早上|上午|中午|下午|晚上/,
+        isPM: function (input) {
+            // TODO: This is wrong.
+            return /^(中午|下午|晚上)$/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             var hm = hour * 100 + minute;
             if (hm < 900) {

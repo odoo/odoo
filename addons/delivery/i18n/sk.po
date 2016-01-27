@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-09 22:40+0000\n"
+"PO-Revision-Date: 2016-01-22 12:03+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -353,7 +353,7 @@ msgstr "Odkaz na zákazníka"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Dátum od ktorého bude členstvo aktívne."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -363,7 +363,7 @@ msgstr "Dátum poslednej správy zaslanej záznamu."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Dátum dokedy bude členstvo aktívne"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
@@ -524,7 +524,7 @@ msgstr ""
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Pevná cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
@@ -786,17 +786,17 @@ msgstr "Stredne veľký obrázok"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Členstvo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Dátum ukončenia členstva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Dátum začiatku členstva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1032,7 +1032,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Množstvo produktov s naplánovaným príchodom.\nV kontexte s jednou Lokáciou skladu, toto zahŕňa tovar prichádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\nV kontexte s jedným Skladiskom, toto zahŕňa tovar prichádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\nV opačnom prípade, toto zahŕňa tovar prichádzajúci do akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1041,7 +1041,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Množstvo produktov s naplánovaným odchodom.\nV kontexte s jednou Lokáciou skladu, toto zahŕňa tovar odchádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\nV kontexte s jedným Skladiskom, toto zahŕňa tovar odchádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\nV opačnom prípade, toto zahŕňa tovar odchádzajúci z akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1056,7 +1056,7 @@ msgstr "Pravidlá doobjednávania"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
-msgstr ""
+msgstr "Trasy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
@@ -1250,7 +1250,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "Priemerne meǩanie v dňoch medzi potvrdením zákaznickej objednávky a dodaním hotových produktov. Je to čas ktorý sľúbite vašim zákazníkom."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:53
@@ -1369,7 +1369,7 @@ msgstr "Sledovať službu"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr ""
+msgstr "Sledovanie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1384,7 +1384,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
-msgstr ""
+msgstr "Zvrat"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin

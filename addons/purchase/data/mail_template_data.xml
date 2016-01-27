@@ -6,7 +6,7 @@
         <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">RFQ - Send by Email</field>
             <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
-            <field name="subject">${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="auto_delete" eval="True"/>

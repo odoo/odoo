@@ -23,7 +23,7 @@ var LivechatButton = Widget.extend({
     init: function (parent, server_url, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
-            placeholder: _t('Ask something ...'),
+            input_placeholder: _t('Ask something ...'),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
@@ -64,14 +64,17 @@ var LivechatButton = Widget.extend({
                 this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
             }
         }
-        bus.on('notification', this, function (notification) {
-            if (this.channel && (notification[0] === this.channel.uuid)) {
-                this.add_message(notification[1]);
-                this.render_messages();
-                if (this.chat_window.folded) {
-                    this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+        bus.on('notification', this, function (notifications) {
+            var self = this;
+            _.each(notifications, function (notification) {
+                if (self.channel && (notification[0] === self.channel.uuid)) {
+                    self.add_message(notification[1]);
+                    self.render_messages();
+                    if (self.chat_window.folded || !self.chat_window.thread.is_at_bottom()) {
+                        self.chat_window.update_unread(self.chat_window.unread_msgs+1);
+                    }
                 }
-            }
+            });
         });
         return this._super();
     },
@@ -88,10 +91,14 @@ var LivechatButton = Widget.extend({
         return $.when.apply($, defs);
     },
 
-    open_chat: function () {
+    open_chat: _.debounce(function () {
+        if (this.opening_chat) {
+            return;
+        }
         var self = this;
         var cookie = utils.get_cookie('im_livechat_session');
         var def;
+        this.opening_chat = true;
         clearTimeout(this.auto_popup_timeout);
         if (cookie) {
             def = $.when(JSON.parse(cookie));
@@ -117,13 +124,16 @@ var LivechatButton = Widget.extend({
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
             }
+        }).always(function () {
+            self.opening_chat = false;
         });
-    },
+    }, 200, true),
 
     open_chat_window: function (channel) {
         var self = this;
         var options = {
             display_stars: false,
+            placeholder: this.options.input_placeholder || "",
         };
         var is_folded = (channel.state === 'folded');
         this.chat_window = new ChatWindow(this, channel.id, channel.name, is_folded, channel.message_unread_counter, options);
@@ -133,7 +143,10 @@ var LivechatButton = Widget.extend({
         });
         this.chat_window.on("close_chat_session", this, function () {
             var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled');
-            if (this.messages.length > 1 && !input_disabled) {
+            var ask_fb = !input_disabled && _.find(this.messages, function (msg) {
+                return msg.id !== '_welcome';
+            });
+            if (ask_fb) {
                 this.chat_window.toggle_fold(false);
                 this.ask_feedback();
             } else {
@@ -150,6 +163,11 @@ var LivechatButton = Widget.extend({
             this.channel.state = (this.channel.state === 'open') ? 'folded' : 'open';
             utils.set_cookie('im_livechat_session', JSON.stringify(this.channel), 60*60);
         });
+        this.chat_window.thread.$el.on("scroll", null, _.debounce(function () {
+            if (self.chat_window.thread.is_at_bottom()) {
+                self.chat_window.update_unread(0);
+            }
+        }, 100));
     },
 
     close_chat: function () {
@@ -158,7 +176,12 @@ var LivechatButton = Widget.extend({
     },
 
     send_message: function (message) {
-        return session.rpc("/mail/chat_post", {uuid: this.channel.uuid, message_content: message.content});
+        var self = this;
+        return session
+            .rpc("/mail/chat_post", {uuid: this.channel.uuid, message_content: message.content})
+            .then(function () {
+                self.chat_window.thread.scroll_to();
+            });
     },
 
     add_message: function (data, options) {
@@ -191,28 +214,32 @@ var LivechatButton = Widget.extend({
     },
 
     render_messages: function () {
+        var should_scroll = !this.chat_window.folded && this.chat_window.thread.is_at_bottom();
         this.chat_window.render(this.messages);
-        this.chat_window.scrollBottom();
+        if (should_scroll) {
+            this.chat_window.thread.scroll_to();
+        }
     },
 
     send_welcome_message: function () {
-        this.add_message({
-            id: 1,
-            attachment_ids: [],
-            author_id: this.channel.operator_pid,
-            body: this.options.default_message,
-            channel_ids: [this.channel.id],
-            date: time.datetime_to_str(new Date()),
-            tracking_value_ids: [],
-        }, {prepend: true});
+        if (this.options.default_message) {
+            this.add_message({
+                id: '_welcome',
+                attachment_ids: [],
+                author_id: this.channel.operator_pid,
+                body: this.options.default_message,
+                channel_ids: [this.channel.id],
+                date: time.datetime_to_str(new Date()),
+                tracking_value_ids: [],
+            }, {prepend: true});
+        }
     },
 
     ask_feedback: function () {
-        this.chat_window.$(".o_chat_content").empty();
         this.chat_window.$(".o_chat_input input").prop('disabled', true);
 
         var feedback = new Feedback(this, this.channel.uuid);
-        feedback.appendTo(this.chat_window.$(".o_chat_content"));
+        feedback.replace(this.chat_window.thread.$el);
 
         feedback.on("send_message", this, this.send_message);
         feedback.on("feedback_sent", this, this.close_chat);

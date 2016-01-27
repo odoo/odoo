@@ -228,9 +228,9 @@ var ActionManager = Widget.extend({
         this.main_control_panel = new ControlPanel(this);
         // Listen to event "on_breadcrumb_click" trigerred on the control panel when
         // clicking on a part of the breadcrumbs. Call select_action for this breadcrumb.
-        this.main_control_panel.on("on_breadcrumb_click", this, function(action, index) {
+        this.main_control_panel.on("on_breadcrumb_click", this, _.debounce(function(action, index) {
             this.select_action(action, index);
-        });
+        }, 200, true));
 
         // Append the main control panel to the DOM (inside the ActionManager jQuery element)
         this.main_control_panel.appendTo(this.$el);
@@ -788,10 +788,15 @@ var ActionManager = Widget.extend({
         });
     },
     ir_actions_act_url: function (action) {
+        var url = action.url;
+        if (session.debug && url && url.length && url[0] === '/') {
+            url = $.param.querystring(url, 'debug');
+        }
+
         if (action.target === 'self') {
-            framework.redirect(action.url);
+            framework.redirect(url);
         } else {
-            window.open(action.url, '_blank');
+            window.open(url, '_blank');
         }
         return $.when();
     },

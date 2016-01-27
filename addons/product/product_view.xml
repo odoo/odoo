@@ -130,6 +130,10 @@
                                         <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
                                             <field name="weight" string="Weight"/>
                                         </div>
+                                        <label for="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                        <div class="o_row" name="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                            <field name="volume" string="Volume"/>
+                                        </div>
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>

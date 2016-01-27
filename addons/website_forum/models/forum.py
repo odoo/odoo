@@ -138,13 +138,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
-
-    @api.one
-    @api.constrains('allow_link', 'allow_question', 'allow_discussion', 'default_post_type')
-    def _check_default_post_type(self):
-        if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
-            raise Warning(_('Post type in "Default post" must be activated'))
+            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -380,7 +374,7 @@ class Post(models.Model):
         if (self.post_type == 'question' and not self.forum_id.allow_question) \
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise UserError(_('This forum does not allow %s' % self.post_type))
+            raise UserError(_('This forum does not allow %s') % self.post_type)
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -510,7 +504,7 @@ class Post(models.Model):
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
                 partners = post.sudo().message_partner_ids | tag_partners
-                partners = partners.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
+                partners = partners.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
                 note_subtype = self.sudo().env.ref('mail.mt_note')
                 body = """
 <p>%(intro)s</p>

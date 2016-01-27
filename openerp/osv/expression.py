@@ -852,12 +852,12 @@ class expression(object):
             #    as after transforming the column, it will go through this loop once again
             # ----------------------------------------
 
-            elif len(path) > 1 and column._type == 'many2one' and column._auto_join:
+            elif len(path) > 1 and column and column._type == 'many2one' and column._auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 leaf.add_join_context(comodel, path[0], 'id', path[0])
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
-            elif len(path) > 1 and column._type == 'one2many' and column._auto_join:
+            elif len(path) > 1 and column and column._type == 'one2many' and column._auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
                 leaf.add_join_context(comodel, 'id', column._fields_id, path[0])
                 domain = column._domain(model) if callable(column._domain) else column._domain
@@ -868,16 +868,16 @@ class expression(object):
                         push(create_substitution_leaf(leaf, elem, comodel))
                     push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
 
-            elif len(path) > 1 and column._auto_join:
+            elif len(path) > 1 and column and column._auto_join:
                 raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
-            elif len(path) > 1 and column._type == 'many2one':
+            elif len(path) > 1 and column and column._type == 'many2one':
                 right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=dict(context, active_test=False))
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as column.o2m or column.m2m
-            elif len(path) > 1 and column._type in ['many2many', 'one2many']:
+            elif len(path) > 1 and column and column._type in ['many2many', 'one2many']:
                 right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
                 table_ids = model.search(cr, uid, [(path[0], 'in', right_ids)], context=dict(context, active_test=False))
                 leaf.leaf = ('id', 'in', table_ids)
@@ -894,7 +894,12 @@ class expression(object):
                     domain = []
                 else:
                     # Let the field generate a domain.
-                    recs = model.browse(cr, uid, [], context)
+                    if len(path) > 1:
+                        right = comodel.search(
+                            cr, uid, [(path[1], operator, right)],
+                            context=context)
+                        operator = 'in'
+                    recs = model.browse(cr, uid, [], context=context)
                     domain = field.determine_domain(recs, operator, right)
 
                 if not domain:

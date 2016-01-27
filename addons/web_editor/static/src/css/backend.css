@@ -5,11 +5,17 @@
     line-height: initial !important;
     color: initial !important;
 }
-.oe_form_field_html_text .note-editable p {
-    margin: initial;
+.oe_form_field_html_text iframe.o_readonly {
+    min-height: 1em;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
 }
-.oe_form_field_html_text .note-editable a, .oe_form_field_html_text .note-editable a:hover {
-    color: initial;
+.oe_form_field_html_text .note-editable p {
+    font-family: 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
+    -webkit-margin-before: 0;
+    font-size: 13px;
 }
 
 .oe_form_field_html iframe {
@@ -46,7 +52,6 @@
     width: auto !important;
     overflow: hidden !important;
 }
-
 
 .openerp .oe_form .oe_form_field_html_translate textarea {
     min-width: 60px;
