@@ -5,8 +5,7 @@ import re
 import logging
 
 from openerp.osv import fields, osv
-from psycopg2 import IntegrityError
-
+from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
@@ -107,26 +106,6 @@ class CountryState(osv.osv):
         Imd = self.pool['ir.model.data']
         State = self.pool['res.country.state']
 
-        # def get_fk from migration
-        req_fk = """
-            SELECT cl1.relname as table,
-                  att1.attname as column
-            FROM  pg_constraint as con, pg_class as cl1, pg_class as cl2,
-                  pg_attribute as att1, pg_attribute as att2
-            WHERE con.conrelid = cl1.oid
-              AND con.confrelid = cl2.oid
-              AND array_lower(con.conkey, 1) = 1
-              AND con.conkey[1] = att1.attnum
-              AND att1.attrelid = cl1.oid
-              AND cl2.relname = %s
-              AND att2.attname = 'id'
-              AND array_lower(con.confkey, 1) = 1
-              AND con.confkey[1] = att2.attnum
-              AND att2.attrelid = cl2.oid
-              AND con.contype = 'f'
-        """
-        depends_fk = False
-
         query = """
             SELECT st.id, st.oldid, imd.id, imd.name, imd2.id, ids
             FROM (
@@ -140,11 +119,10 @@ class CountryState(osv.osv):
             WHERE imd.module = 'base';
         """
         cr.execute(query)
+        data = cr.fetchall()
 
-        for st_id, st_oldid, imd_id, imd_name, imd2_id, ids in cr.fetchall():
-            duplicated_ids = set(map(int, ids.split(','))) - set([st_id, st_oldid])
+        for st_id, st_oldid, imd_id, imd_name, imd2_id, ids in data:
             values = dict(module=self._module)
-
             if imd2_id:
                 # If duplicated record had already a xml_id we update the old xml_id and
                 # force to delete the new xml_id created to avoid constraint error
@@ -159,30 +137,13 @@ class CountryState(osv.osv):
             Imd.write(cr, uid, keepid, values, context=context)
             State.unlink(cr, uid, st_id, context=context)
 
+            duplicated_ids = set(map(int, ids.split(','))) - set([st_id, st_oldid])
             if duplicated_ids:
-                if not depends_fk:
-                    cr.execute(req_fk, ('res_country_state',))
-                    depends_fk = cr.fetchall()
-                for table, field in depends_fk:
-                    for dup_id in duplicated_ids:
-                        merge_fk = "UPDATE %(table)s SET %(field)s=%%(newid)s WHERE %(field)s = %%(duplicated)s" % dict(table=table, field=field)
-                        with self.pool.cursor() as cr2:
-                            try:
-                                cr2.execute(merge_fk, dict(newid=st_oldid, duplicated=dup_id))
-                                State.unlink(cr, uid, dup_id, context=context)
-                            except IntegrityError, e:
-                                _logger.warning(e)
-                                pass
+                _logger.warning(_('State with id [%s] (%s) seems to have duplicated code: %s' % (st_oldid, imd_name, ','.join(duplicated_ids))))
 
-        # Try to add constraint if not already created
-        check_constraint = """
-            SELECT COUNT(*) FROM pg_catalog.pg_constraint con, pg_class as cl1
-            WHERE con.conrelid = cl1.oid AND conname='res_country_state_name_code_uniq' and relname='res_country_state'
-        """
-        cr.execute(check_constraint)
-        if not cr.fetchone()[0]:
-            cr.execute('ALTER TABLE "res_country_state" ADD CONSTRAINT "res_country_state_name_code_uniq" unique(country_id, code)')
+        if data:
+            self._add_sql_constraints(cr)
 
     _sql_constraints = [
-        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state (by country) must be unique !')
+        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
     ]
