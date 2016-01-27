@@ -1295,7 +1295,7 @@ class account_move(osv.osv):
         'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
-        'statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line reconciled with this entry', copy=False, readonly=True)
+        'statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line reconciled with this entry', copy=False, readonly=True, select=True)
     }
 
     _defaults = {
