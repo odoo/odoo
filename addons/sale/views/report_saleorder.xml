@@ -5,7 +5,7 @@
     <t t-call="report.external_layout">
         <div class="page">
             <div class="oe_structure"/>
-            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 180, 50)" style="width:180px;height:50px;"/>
+            <span t-field="o.name" t-field-options='{"widget": "barcode", "type": "Code128", "width": 180, "height": 50}' style="width:180px;height:50px;"/>
             <div class="row">
                 <div class="col-xs-6">
                     <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
