@@ -34,9 +34,9 @@ This is the module to manage the accounting chart for Vietnam in OpenERP.
 =============================================================================
 
 This module applies to companies based in Vietnamese Accounting Standard (VAS).
-Compatible with both dicision no. 15/2006/QĐ-BTC and no. 48/2006/QĐ-BTC
+Compatible with both decision no. 15/2006/QĐ-BTC and no. 48/2006/QĐ-BTC and Circular No. 200/2014/TT-BTC
 """,
-    "depends" : ["account","base_vat","base_iban"],
+    "depends" : ["account", "base_iban"],
     "data" : ["account_tax_code.xml","account_chart.xml","account_tax.xml","l10n_vn_wizard.xml"],
     "demo" : [],
     'auto_install': False,
