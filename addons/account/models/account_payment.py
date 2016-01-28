@@ -370,9 +370,28 @@ class account_payment(models.Model):
             # At this point, the invoices should be set as paid. However, it might not be the case
             # if the write-off has been linked to the payment and not the invoice. This could happen
             # when the exchange difference is larger enough to compensate the write-off amount.
-            self.invoice_ids.filtered(
-                lambda r: r.state == 'open' and float_is_zero(r.residual_company_signed, self.company_id.currency_id.rounding) != float_is_zero(r.residual_signed, r.currency_id.rounding)\
-            ).write({'state': 'paid'})
+
+            # First solution: create manually a reconciliation: works, but potential side effects
+            all_aml = self.mapped('move_line_ids').mapped('matched_debit_ids').mapped('debit_move_id').mapped('move_id').mapped('line_ids')
+            all_aml += self.mapped('move_line_ids').mapped('matched_credit_ids').mapped('credit_move_id').mapped('move_id').mapped('line_ids')
+            writeoff_aml = all_aml.filtered(lambda r: r.account_id == self.writeoff_account_id).mapped('move_id').mapped('line_ids').filtered(lambda r: r.reconciled == True)
+            inv_open = self.invoice_ids.filtered(lambda r: r.state == 'open' and not float_is_zero(r.residual, r.currency_id.rounding) and float_is_zero(r.residual_company_signed, r.company_currency_id.rounding))
+
+            if writeoff_aml and inv_open:
+                for inv in inv_open:
+                    inv_aml = inv.move_id.line_ids.filtered(lambda r: r.reconciled == True)
+                    self.env['account.partial.reconcile'].create({
+                        'debit_move_id': inv_aml[0].id,
+                        'credit_move_id': writeoff_aml[0].id,
+                        'amount': 0.0,
+                        'amount_currency': inv.residual,
+                        'currency_id': inv.currency_id.id,
+                    })
+
+            # Second solution: force the invoice to be set as paid
+            # self.invoice_ids.filtered(
+            #     lambda r: r.state == 'open' and float_is_zero(r.residual_company_signed, self.company_id.currency_id.rounding) != float_is_zero(r.residual_signed, r.currency_id.rounding)\
+            # ).write({'state': 'paid'})
 
         else:
             self.invoice_ids.register_payment(counterpart_aml)
