@@ -1065,11 +1065,6 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     var exist = r.sc.childNodes[r.so] || r.sc;
     var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
-    var last = node;
-    while (node && dom.isSplitable(node) && !dom.isList(node)) {
-        last = node;
-        node = node.parentNode;
-    }
 
     // table: add a tr
     var td = dom.ancestor(node, dom.isCell);
@@ -1083,7 +1078,15 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         dom.scrollIntoViewIfNeeded(br);
         event.preventDefault();
         return false;
-    } else if (last === node && !dom.isBR(node)) {
+    }
+
+    var last = node;
+    while (node && dom.isSplitable(node) && !dom.isList(node)) {
+        last = node;
+        node = node.parentNode;
+    }
+
+    if (last === node && !dom.isBR(node)) {
         node = r.insertNode(br, true);
         if (isFormatNode(last.firstChild) && $(last).closest(options.styleTags.join(',')).length) {
             dom.moveContent(last.firstChild, last);
