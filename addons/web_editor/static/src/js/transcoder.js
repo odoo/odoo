@@ -173,7 +173,11 @@ var class_to_style = function ($editable) {
                 style = k+":"+v+";"+style;
             }
         });
-        $target.attr("style", style);
+        if (_.isEmpty(style)) {
+            $target.removeAttr("style");
+        } else {
+            $target.attr("style", style);
+        }
     });
 };
 // convert style into inline class from mail
