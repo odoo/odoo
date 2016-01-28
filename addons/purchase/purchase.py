@@ -1213,7 +1213,8 @@ class purchase_order_line(osv.osv):
         if not uom_id:
             uom_id = product_uom_po_id
 
-        if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
+        line_uom = product_uom.browse(cr, uid, uom_id, context=context)
+        if product.uom_id.category_id.id != line_uom.category_id.id:
             if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
@@ -1251,7 +1252,9 @@ class purchase_order_line(osv.osv):
                 price = product_pricelist.price_get(cr, uid, [pricelist_id],
                         product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order_str})[pricelist_id]
             else:
-                price = product.standard_price
+                price = (product.standard_price *
+                         line_uom.factor_inv /
+                         product.uom_id.factor_inv)
 
         if uid == SUPERUSER_ID:
             company_id = self.pool['res.users'].browse(cr, uid, [uid]).company_id.id
