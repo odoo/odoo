@@ -451,7 +451,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             record_name: false,
             is_log: false,
             internal_subtypes: [],
-            default_body: '',
         });
         if (this.options.is_log) {
             this.options.send_text = _('Log');
@@ -466,13 +465,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             return this._super.apply(this, arguments);
         }
         return $.when(this._super.apply(this, arguments), this.message_get_suggested_recipients());
-    },
-
-    start: function () {
-        var self = this;
-        return this._super().then(function () {
-            self.$input.val(self.options.default_body);
-        });
     },
 
     should_send: function () {
@@ -920,6 +912,7 @@ var Chatter = form_common.AbstractField.extend({
             is_log: options && options.is_log,
             record_name: this.record_name,
             default_body: old_composer && old_composer.$input.val(),
+            default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
