@@ -95,7 +95,6 @@ odoo.define_section = function (name, section_deps) {
         QUnit.test(name, function (assert) {
             var services = odoo.testing.start_services();
             var deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
-            services.qweb.add_template(odoo.testing.templates);
             mock.clear();
             mock.interceptRPC(services['web.session']);
             var info = {
@@ -125,14 +124,6 @@ QUnit.log(function(result) {
         console.log(result.name, 'in section', result.module, 'failed:', result.message);
     }
 });
-
-(new QWeb2.Engine()).load_xml("/web/webclient/qweb", function (err, xDoc) {
-    odoo.testing.templates = xDoc;
-    QUnit.start();
-});
-
-QUnit.config.autostart = false;
-
 
 localStorage.clear();
 QUnit.config.testTimeout = 1 * 60 * 1000;
