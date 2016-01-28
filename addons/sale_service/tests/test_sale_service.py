@@ -27,7 +27,7 @@ class TestSaleService(TestSale):
         # register timesheet on task
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': project.id,
+            'project_id': project.id,
             'task_id': task.id,
             'unit_amount': 50,
             'user_id': self.manager.id,

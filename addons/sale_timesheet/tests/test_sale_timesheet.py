@@ -24,7 +24,7 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 10.5,
             'user_id': self.manager.id,
             'is_timesheet': True,
@@ -34,7 +34,7 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 39.5,
             'user_id': self.user.id,
             'is_timesheet': True,
@@ -44,7 +44,7 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 10,
             'user_id': self.user.id,
             'is_timesheet': True,
@@ -70,7 +70,7 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 10.5,
             'user_id': self.manager.id,
             'is_timesheet': True,
@@ -82,7 +82,7 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 39.5,
             'user_id': self.user.id,
             'is_timesheet': True,
@@ -93,7 +93,7 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 10,
             'user_id': self.user.id,
             'is_timesheet': True,
@@ -117,7 +117,7 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 16,
             'user_id': self.manager.id,
             'is_timesheet': True,
@@ -126,7 +126,7 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_id.project_ids[0].id,
             'unit_amount': 24,
             'user_id': self.user.id,
             'is_timesheet': True,

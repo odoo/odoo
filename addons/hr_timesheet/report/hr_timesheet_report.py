@@ -13,6 +13,7 @@ class hr_timesheet_report(models.Model):
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
+    project_id = fields.Many2one('project.project', 'Project', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     cost = fields.Float('Cost', readonly=True, digits=dp.get_precision('Account'))
     quantity = fields.Float('Time', readonly=True)
@@ -24,6 +25,7 @@ class hr_timesheet_report(models.Model):
                     sum(aal.amount) as cost,
                     sum(aal.unit_amount) as quantity,
                     aal.account_id as account_id,
+                    aal.project_id as project_id,
                     aal.product_id as product_id,
                     aal.user_id as user_id,
                     aal.company_id as company_id,
@@ -42,6 +44,7 @@ class hr_timesheet_report(models.Model):
             GROUP BY aal.date,
                     aal.account_id,
                     aal.product_id,
+                    aal.project_id,
                     aal.user_id,
                     aal.company_id,
                     aal.currency_id

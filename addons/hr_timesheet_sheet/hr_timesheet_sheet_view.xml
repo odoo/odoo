@@ -123,14 +123,16 @@
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'default_is_timesheet' : 1}" name="timesheet_ids" nolabel="1">
                                 <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field name="account_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="account_id" invisible="1" required="0"/><!--Required 0 to prevent the interface from blocking the creation triggered by the weekly_timesheet widget.-->
+                                    <field name="project_id" on_change="test"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field invisible="1" name="user_id" required="1"/>
-                                    <field name="is_timesheet" invisible="1"/>
+                                    <field invisible="0" name="user_id" required="1"/>
+                                    <field name="is_timesheet" invisible="0"/>
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <field name="date"/>
+                                    <field name="project_id"/>
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time"/>

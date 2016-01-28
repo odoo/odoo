@@ -32,6 +32,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <field name="account_id"/>
+                    <field name="project_id"/>
                     <field name="user_id"/>
                     <filter string="This Month" name="month" domain="[('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;=',time.strftime('%Y-%m-01'))]" help="month"/>
                     <group expand="0" string="Extended Filters...">
