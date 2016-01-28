@@ -58,6 +58,15 @@ def _check_value(value):
     """ Return ``value``, or call its getter if ``value`` is a :class:`SpecialValue`. """
     return value.get() if isinstance(value, SpecialValue) else value
 
+def copy_cache(records, env):
+    """ Recursively copy the cache of ``records`` to the environment ``env``. """
+    for record, target in zip(records, records.with_env(env)):
+        if not target._cache:
+            for name, value in record._cache.iteritems():
+                target[name] = value
+                if isinstance(value, BaseModel):
+                    copy_cache(value, env)
+
 
 def resolve_all_mro(cls, name, reverse=False):
     """ Return the (successively overridden) values of attribute ``name`` in ``cls``
@@ -538,10 +547,9 @@ class Field(object):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            if not record.id:
+            if not record.id and record.env != other.env:
                 # draft records: copy record's cache to other's cache first
-                for name, value in record._cache.iteritems():
-                    other[name] = value
+                copy_cache(record, other.env)
             # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
                 other = other[name][:1]
