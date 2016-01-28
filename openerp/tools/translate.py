@@ -234,7 +234,7 @@ class XMLTranslator(object):
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslator(self.callback, self.method)
+        child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)

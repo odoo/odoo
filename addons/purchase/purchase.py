@@ -398,15 +398,28 @@ class PurchaseOrder(models.Model):
 
         #override the context to get rid of the default filtering
         result['context'] = {'type': 'in_invoice', 'default_purchase_id': self.id}
-        result['domain'] = "[('purchase_id', '=', %s)]" % self.id
-        invoice_ids = sum([order.invoice_ids.ids for order in self], [])
+
+        if not self.invoice_ids:
+            # Choose a default account journal in the same currency in case a new invoice is created
+            journal_domain = [
+                ('type', '=', 'purchase'),
+                ('company_id', '=', self.company_id.id),
+                ('currency_id', '=', self.currency_id.id),
+            ]
+            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
+            if default_journal_id:
+                result['context']['default_journal_id'] = default_journal_id.id
+        else:
+            # Use the same account journal than a previous invoice
+            result['context']['default_journal_id'] = self.invoice_ids[0].journal_id.id
+
         #choose the view_mode accordingly
-        if len(invoice_ids) > 1:
-            result['domain'] = "[('id','in',[" + ','.join(map(str, invoice_ids)) + "])]"
-        elif len(invoice_ids) == 1:
+        if len(self.invoice_ids) != 1:
+            result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
+        elif len(self.invoice_ids) == 1:
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = invoice_ids and invoice_ids[0] or False
+            result['res_id'] = self.invoice_ids.id
         return result
 
 

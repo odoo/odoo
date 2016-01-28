@@ -29,6 +29,7 @@
     <record model="ir.ui.view" id="theme_view_search">
         <field name="name">Themes Search</field>
         <field name="model">ir.module.module</field>
+        <field name="priority">50</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name', 'ilike', self)]" string="Theme"/>
