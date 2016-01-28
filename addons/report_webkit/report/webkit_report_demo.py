@@ -1,6 +1,6 @@
 
 
-from openerp.addons.report_webkit.webkit_report import webkit_report_extender
+from openerp.addons.report_webkit.models.webkit_report import webkit_report_extender
 from openerp import SUPERUSER_ID
 
 @webkit_report_extender("report_webkit.webkit_demo_report")
