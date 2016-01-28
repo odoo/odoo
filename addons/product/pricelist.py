@@ -242,8 +242,7 @@ class product_pricelist(osv.osv):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-                price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
+                price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, context=context)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
         return results
