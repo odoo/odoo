@@ -3,4 +3,3 @@
 
 import mrp
 import procurement
-import stock

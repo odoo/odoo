@@ -19,66 +19,45 @@ class mrp_bom_llc(models.Model):
 
     def init(self, cr):
         cr.execute("""create or replace view mrp_bom_llc as (
-            -------------------------------------------------------------------
-            -- in order to handle phantom assemblies, need to change 2 things
-            --  1. only push to the path array when type is not phantom
-            --  2. finally exclude phantom-only components from the list
-            -- join required tables, with expansion of templates to variants
             with j as (
+                -- if only template specified on mrp.bom, then expand list with all variants
                 SELECT DISTINCT
                     COALESCE(b.product_id,p.id) AS parent_id,
-                    l.product_id AS comp_id,
-                    b.type
+                    l.product_id AS comp_id
                 FROM mrp_bom_line AS l, mrp_bom AS b, product_product AS p
                 WHERE b.product_tmpl_id=p.product_tmpl_id
                 AND l.bom_id=b.id
             )
             SELECT *
             FROM (
-                with recursive stack(parent_id, comp_id, path, comp_phantom) as (
+                 -- build a path array
+                with recursive stack(parent_id, comp_id, path) as (
                     SELECT
                         j.parent_id,
                         j.comp_id,
-                        CASE WHEN j.type<>'phantom' AND COALESCE('', j.type)<>'phantom' THEN
-                                ARRAY[j.parent_id, j.comp_id]
-                            WHEN j.type<>'phantom' AND COALESCE('', j.type)='phantom' THEN
-                                ARRAY[j.parent_id]
-                            WHEN j.type='phantom' AND COALESCE('', j.type)<>'phantom' THEN
-                                ARRAY[j.comp_id]
-                            ELSE
-                                ARRAY[]::int[]
-                            END,
-                        CASE WHEN j.type='phantom' THEN true ELSE false END
+                        ARRAY[j.comp_id]
                     FROM j
                     WHERE j.parent_id NOT IN (SELECT comp_id FROM j)
                     UNION ALL
                     SELECT
                         j.parent_id,
                         j.comp_id,
-                        CASE WHEN j.type<>'phantom' THEN
-                                path || j.comp_id
-                            ELSE
-                                path
-                            END,
-                        CASE WHEN j.type='phantom' THEN true ELSE false END
+                        path || j.comp_id
                     FROM stack AS s, j
                     WHERE j.parent_id=s.comp_id
                 )
+                -- use longest path for each orderpoint as llc
                 SELECT
                     op.id,
-                    CASE WHEN BOOL_AND(comp_phantom) THEN 0 ELSE COALESCE(MAX(ARRAY_LENGTH(path, 1))-1, 0) END AS llc
+                    COALESCE(MAX(ARRAY_LENGTH(path, 1)), 0) AS llc
                 FROM stock_warehouse_orderpoint AS op
                 LEFT JOIN stack AS s ON op.product_id=s.comp_id
                 GROUP BY op.id
             ) AS res
-            -------------------------------------------------------------------
         )""")
 
     @api.model
     def update_orderpoint_llc(self):
-        llc_obj = self.env['mrp.bom.llc']
-        llc_ids = llc_obj.search([])
-        for llc_id in llc_ids:
-            for orderpoint in self.env['stock.warehouse.orderpoint'].search(
-                    [('id', '=', llc_id.id)]):
-                orderpoint.sequence = llc_id.llc
+        for llc in self.env['mrp.bom.llc'].search([]):
+            for op in self.env['stock.warehouse.orderpoint'].browse(llc.id):
+                op.llc = llc.llc

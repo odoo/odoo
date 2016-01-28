@@ -6,7 +6,7 @@
 
 {
     "name": "MRP LLC",
-    "version": "2.2",
+    "version": "2.3",
     "summary": "MRP Low Level Code",
     "category": "Manufacturing",
     "author": "scosist",
