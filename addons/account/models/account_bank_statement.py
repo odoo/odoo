@@ -81,7 +81,7 @@ class AccountBankStatement(models.Model):
     @api.multi
     def _is_difference_zero(self):
         for bank_stmt in self:
-            bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, bank_stmt.currency_id.decimal_places)
+            bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, precision_digits=bank_stmt.currency_id.decimal_places)
 
     @api.one
     @api.depends('journal_id')
