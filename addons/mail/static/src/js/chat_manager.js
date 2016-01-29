@@ -147,7 +147,7 @@ function add_message (data, options) {
                     channel.hidden = false;
                     chat_manager.bus.trigger('new_channel', channel);
                 }
-                if (channel.type !== 'static' && !msg.is_author) {
+                if (channel.type !== 'static' && !msg.is_author && !msg.is_system_notification) {
                     if (options.increment_unread) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
@@ -179,6 +179,7 @@ function make_message (data) {
         subtype_description: data.subtype_description,
         is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
+        is_system_notification: data.message_type === 'notification' && data.model === 'mail.channel',
         attachment_ids: data.attachment_ids,
         subject: data.subject,
         email_from: data.email_from,
@@ -820,7 +821,7 @@ var chat_manager = {
             var msg = _.findWhere(messages, {id: channel.last_seen_message_id});
             if (msg) {
                 var i = _.sortedIndex(messages, msg, 'id') + 1;
-                while (i < messages.length && messages[i].is_author) {
+                while (i < messages.length && (messages[i].is_author || messages[i].is_system_notification)) {
                     msg = messages[i];
                     i++;
                 }
