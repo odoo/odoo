@@ -213,17 +213,12 @@ class BlogPost(osv.Model):
 
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
-            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
             for post in self.browse(cr, uid, ids, context=context):
-                post.blog_id.message_post(
-                    body='<p>%(post_publication)s <a href="%(base_url)s/blog/%(blog_slug)s/post/%(post_slug)s">%(post_link)s</a></p>' % {
-                        'post_publication': _('A new post %s has been published on the %s blog.') % (post.name, post.blog_id.name),
-                        'post_link': _('Click here to access the post.'),
-                        'base_url': base_url,
-                        'blog_slug': slug(post.blog_id),
-                        'post_slug': slug(post),
-                    },
-                    subtype='website_blog.mt_blog_blog_published')
+                post.blog_id.message_post_with_view(
+                    'website_blog.blog_post_template_new_post',
+                    subject=post.name,
+                    values={'post': post},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, SUPERUSER_ID, 'website_blog.mt_blog_blog_published'))
             return True
         return False
 
