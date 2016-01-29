@@ -12,6 +12,7 @@ import logging
 import pytz
 import xmlrpclib
 
+from openerp.sql_db import LazyCursor
 from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -560,11 +561,8 @@ class Field(object):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            if not record.id:
-                # draft records: copy record's cache to other's cache first
-                for name, value in record._cache.iteritems():
-                    other[name] = value
-            other, field = self.traverse_related(other)
+            # do not switch to another environment if record is a draft one
+            other, field = self.traverse_related(other if record.id else record)
             record[self.name] = other[field.name]
 
     def _inverse_related(self, records):
@@ -1074,7 +1072,7 @@ class Float(Field):
     @property
     def digits(self):
         if callable(self._digits):
-            with fields._get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits(cr)
         else:
             return self._digits
@@ -1091,6 +1089,8 @@ class Float(Field):
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
+        if not validate:
+            return value
         digits = self.digits
         return float_round(value, precision_digits=digits[1]) if digits else value
 
@@ -1980,7 +1980,7 @@ class Id(Field):
         raise TypeError("field 'id' cannot be assigned")
 
 # imported here to avoid dependency cycle issues
-from openerp import SUPERUSER_ID, registry
+from openerp import SUPERUSER_ID
 from .exceptions import Warning, AccessError, MissingError
 from .models import check_pg_name, BaseModel, MAGIC_COLUMNS
 from .osv import fields

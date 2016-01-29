@@ -139,8 +139,8 @@ class website(orm.Model):
 
     def _get_pricelist_id(self, cr, uid, ids, name, args, context=None):
         res = {}
-        pricelist = self.get_current_pricelist(cr, uid, context=context)
         for data in self.browse(cr, uid, ids, context=context):
+            pricelist = self.get_current_pricelist(cr, uid, context=dict(context, website_id=data.id))
             res[data.id] = pricelist.id
         return res
 
@@ -198,11 +198,18 @@ class website(orm.Model):
 
         :returns: pricelist recordset
         """
+        website = request.website
+        if not request.website:
+            if context.get('website_id'):
+                website_id = context['website_id']
+            else:
+                website_id = self.search(cr, uid, [], context=context)
+            website = self.browse(cr, uid, website_id, context=context)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
         pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
-                              request.website.user_id.sudo().partner_id.property_product_pricelist.id,
+                              website.user_id.sudo().partner_id.property_product_pricelist.id,
                               request.session.get('website_sale_current_pl'),
-                              request.website.website_pricelist_ids)
+                              website.website_pricelist_ids)
         return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
 
     def is_pricelist_available(self, cr, uid, pl_id, context=None):
