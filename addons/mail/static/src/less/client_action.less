@@ -67,10 +67,18 @@
             }
         }
         .o_mail_chat_channel_item {
+            .o-flex-display();
             width: 100%;
             padding: 2px 8px 2px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
-            > .badge {
-                margin: 0;
+            .o_channel_name {
+                .o-flex(1, 1, auto);
+                .o-text-overflow();
+            }
+            .o_mail_sidebar_needaction, .o_mail_partner_unpin {
+                .o-flex(0, 0, auto);
+            }
+            .o_mail_sidebar_needaction {
+                margin: 0 0 0 5px;
             }
             .o_mail_partner_unpin {
                 padding: 2px 6px;
@@ -82,10 +90,11 @@
         }
         .o_mail_add_channel {
             width: 100%;
-            padding: 5px 8px 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
+            padding: 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
             position: relative;
 
             > input {
+                width: 100%;
                 padding: 2px 5px;
                 padding-left: 12px;
             }
@@ -172,8 +181,6 @@
         opacity: 0.9;
 
         .o_mail_chat_channel_item {
-            overflow: hidden;
-            text-overflow: ellipsis;
             cursor: pointer;
 
             &:hover {
