@@ -143,6 +143,7 @@ class MailController(http.Controller):
             'id': res_id,
             'active_id': res_id,
             'view_id': record_sudo.get_formview_id(),
+            'action': record_action.get('id'),
         }
         url = '/web?%s#%s' % (url_encode(query), url_encode(url_params))
         return werkzeug.utils.redirect(url)
