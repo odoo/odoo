@@ -43,6 +43,7 @@ from misc import SKIPPED_ELEMENT_TYPES
 import osutil
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.models import Model, TransientModel
 
 _logger = logging.getLogger(__name__)
 
@@ -753,7 +754,8 @@ def trans_generate(lang, modules, cr):
             if field_def.help:
                 push_translation(module, 'help', name, 0, encode(field_def.help))
 
-            if field_def.translate:
+            if field_def.translate and isinstance(objmodel,
+                                                  (Model, TransientModel)):
                 ids = objmodel.search(cr, uid, [])
                 obj_values = objmodel.read(cr, uid, ids, [field_name])
                 for obj_value in obj_values:
