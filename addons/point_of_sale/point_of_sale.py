@@ -1132,6 +1132,7 @@ class pos_order(osv.osv):
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
                 'company_id': company_id,
+                'user_id': uid,
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
