@@ -8,18 +8,6 @@ from odoo.addons.website_sale.controllers.main import website_sale
 
 class WebsiteSaleOptions(website_sale):
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
-    def product(self, product, category='', search='', **kwargs):
-        r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
-
-        optional_product_ids = request.env['product.template']
-
-        for product in product.optional_product_ids:
-            optional_product_ids |= product.with_context(active_id=product.id)
-
-        r.qcontext['optional_product_ids'] = optional_product_ids
-        return r
-
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
         if lang:
