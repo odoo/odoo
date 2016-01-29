@@ -468,7 +468,7 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = endpoint.routing.get('method') or ['GET']
+        methods = endpoint.routing.get('methods') or ['GET']
 
         converters = rule._converters.values()
         if not ('GET' in methods
