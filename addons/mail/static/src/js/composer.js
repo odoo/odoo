@@ -698,6 +698,10 @@ var ExtendedComposer = BasicComposer.extend({
     should_send: function () {
         return false;
     },
+
+    focus: function () {
+        this.$subject_input.focus();
+    },
 });
 
 return {
