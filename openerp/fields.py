@@ -30,6 +30,7 @@ import logging
 import pytz
 import xmlrpclib
 
+from openerp.sql_db import LazyCursor
 from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -57,6 +58,15 @@ class FailedValue(SpecialValue):
 def _check_value(value):
     """ Return ``value``, or call its getter if ``value`` is a :class:`SpecialValue`. """
     return value.get() if isinstance(value, SpecialValue) else value
+
+def copy_cache(records, env):
+    """ Recursively copy the cache of ``records`` to the environment ``env``. """
+    for record, target in zip(records, records.with_env(env)):
+        if not target._cache:
+            for name, value in record._cache.iteritems():
+                target[name] = value
+                if isinstance(value, BaseModel):
+                    copy_cache(value, env)
 
 
 def resolve_all_mro(cls, name, reverse=False):
@@ -538,10 +548,9 @@ class Field(object):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            if not record.id:
+            if not record.id and record.env != other.env:
                 # draft records: copy record's cache to other's cache first
-                for name, value in record._cache.iteritems():
-                    other[name] = value
+                copy_cache(record, other.env)
             # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
                 other = other[name][:1]
@@ -1062,7 +1071,7 @@ class Float(Field):
     @property
     def digits(self):
         if callable(self._digits):
-            with fields._get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits(cr)
         else:
             return self._digits
@@ -1087,6 +1096,8 @@ class Float(Field):
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
+        if not validate:
+            return value
         digits = self.digits
         return float_round(value, precision_digits=digits[1]) if digits else value
 
@@ -1874,7 +1885,7 @@ class Id(Field):
         raise TypeError("field 'id' cannot be assigned")
 
 # imported here to avoid dependency cycle issues
-from openerp import SUPERUSER_ID, registry
+from openerp import SUPERUSER_ID
 from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

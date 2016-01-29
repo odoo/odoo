@@ -46,7 +46,7 @@ class LivechatController(http.Controller):
                 'regex_url' : rule.regex_url,
             }
         info['rule'] = json.dumps(rule and rule_data or False)
-        return request.render('im_livechat.loader', info)
+        return request.render('im_livechat.loader', info, headers=[('Content-Type', 'application/javascript')])
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
     def get_session(self, channel_id, anonymous_name, **kwargs):
