@@ -447,5 +447,18 @@
     </t>
 </template>
 
+<!-- Chatter templates -->
+<template id="event_track_template_new">
+    <h3>New track proposal</h3>
+    <ul>
+        <li><b>Proposed By</b>: <t t-esc="object.partner_id.name or object.partner_name or object.partner_email"/></li>
+        <li><b>Mail</b>: <a t-attf-href="mailto:#{object.partner_email}"><t t-esc="object.partner_email"/></a></li>
+        <li><b>Phone</b>: <t t-esc="object.partner_phone"/></li>
+        <li><b>Title</b>: <t t-esc="object.name"/></li>
+        <li><b>Speakers Biography</b>: <t t-esc="object.partner_biography"/></li>
+        <li><b>Talk Introduction</b>: <t t-esc="object.description"/></li>
+    </ul>
+</template>
+
 </data>
 </openerp>

@@ -67,23 +67,10 @@ class event_track(models.Model):
     def create(self, vals):
         res = super(event_track, self).create(vals)
         res.message_subscribe(res.speaker_ids.ids)
-        res.event_id.message_post(body="""<h3>%(header)s</h3>
-<ul>
-    <li>%(proposed_by)s</li>
-    <li>%(mail)s</li>
-    <li>%(phone)s</li>
-    <li>%(title)s</li>
-    <li>%(speakers)s</li>
-    <li>%(introduction)s</li>
-</ul>""" % {
-            'header': _('New Track Proposal'),
-            'proposed_by': '<b>%s</b>: %s' % (_('Proposed By'), (res.partner_id.name or res.partner_name or res.partner_email)),
-            'mail': '<b>%s</b>: %s' % (_('Mail'), '<a href="mailto:%s">%s</a>' % (res.partner_email, res.partner_email)),
-            'phone': '<b>%s</b>: %s' % (_('Phone'), res.partner_phone),
-            'title': '<b>%s</b>: %s' % (_('Title'), res.name),
-            'speakers': '<b>%s</b>: %s' % (_('Speakers Biography'), res.partner_biography),
-            'introduction': '<b>%s</b>: %s' % (_('Talk Introduction'), res.description),
-        }, subtype='event.mt_event_track')
+        res.message_post_with_view(
+            'website_event_track.event_track_template_new',
+            subject=res.name,
+            subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('website_event_track.mt_event_track'))
         return res
 
     @api.multi
