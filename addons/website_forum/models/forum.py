@@ -473,49 +473,35 @@ class Post(models.Model):
 
     @api.multi
     def post_notification(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for post in self:
             tag_partners = post.tag_ids.mapped('message_partner_ids')
             tag_channels = post.tag_ids.mapped('message_channel_ids')
 
             if post.state == 'active' and post.parent_id:
-                body = """
-<p>%(intro)s</p>
-<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-<a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
-    %(click)s
-</a>
-</p>""" % {'intro': _('A new answer on %s has been posted. Click here to access the post :') % self.parent_id.name,
-           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.parent_id.forum_id), slug(self.parent_id)),
-           'click': _('See post')}
-                post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, partner_ids=[(4, p.id) for p in tag_partners], channel_ids=[(4, c.id) for c in tag_channels], subtype='website_forum.mt_answer_new')
+                post.parent_id.message_post_with_view(
+                    'website_forum.forum_post_template_new_answer',
+                    subject=_('Re: %s') % post.parent_id.name,
+                    partner_ids=[(4, p.id) for p in tag_partners],
+                    channel_ids=[(4, c.id) for c in tag_channels],
+                    subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('website_forum.mt_answer_new'))
             elif post.state == 'active' and not post.parent_id:
-                body = """
-<p>%(intro)s</p>
-<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-    <a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
-        %(click)s
-    </a>
-</p>""" % {'intro': _('A new question <b>%s</b> on %s has been posted. Click here to access the question :') % (self.name, self.forum_id.name),
-           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.forum_id), slug(self)),
-           'click': _('See question')}
-                post.message_post(subject=post.name, body=body, partner_ids=[(4, p.id) for p in tag_partners], channel_ids=[(4, c.id) for c in tag_channels], subtype='website_forum.mt_question_new')
+                post.message_post_with_view(
+                    'website_forum.forum_post_template_new_question',
+                    subject=post.name,
+                    partner_ids=[(4, p.id) for p in tag_partners],
+                    channel_ids=[(4, c.id) for c in tag_channels],
+                    subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('website_forum.mt_question_new'))
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
                 partners = post.sudo().message_partner_ids | tag_partners
                 partners = partners.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
-                note_subtype = self.sudo().env.ref('mail.mt_note')
-                body = """
-<p>%(intro)s</p>
-<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-    <a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
-        %(click)s
-    </a>
-</p>""" % {'intro': _('A new question <b>%s</b> has been asked on %s and require your validation. Click here to access the question :') % (self.name, self.parent_id.name),
-           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.forum_id), slug(self)),
-           'click': _('Validate question')}
-                post.message_post(subject=post.name, body=body, subtype_id=note_subtype.id, partner_ids=partners.ids)
+
+                post.message_post_with_view(
+                    'website_forum.forum_post_template_validation',
+                    subject=post.name,
+                    partner_ids=partners.ids,
+                    subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('mail.mt_note'))
         return True
 
     @api.multi
