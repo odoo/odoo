@@ -15,7 +15,9 @@ var HEIGHT_FOLDED = '28px';
 return Widget.extend({
     template: "mail.ChatWindow",
     events: {
+        "click .o_chat_input": "focus_input", // focus even if jquery's blockUI is enabled
         "keydown .o_chat_input": "on_keydown",
+        "keypress .o_chat_input": "on_keypress",
         "click .o_chat_window_close": "on_click_close",
         "click .o_chat_title": "on_click_fold",
     },
@@ -91,7 +93,11 @@ return Widget.extend({
         this.is_hidden = _.isBoolean(display) ? !display : !this.is_hidden;
         this._super.apply(this, arguments);
     },
+    on_keypress: function (event) {
+        event.stopPropagation(); // to prevent jquery's blockUI to cancel event
+    },
     on_keydown: function (event) {
+        event.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
             var content = _.str.trim(this.$input.val());
