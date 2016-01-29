@@ -58,6 +58,8 @@ var Thread = Widget.extend({
     },
 
     render: function (messages, options) {
+        clearTimeout(this.auto_render_timeout);
+        var self = this;
         var msgs = _.map(messages, this._preprocess_message.bind(this));
         if (this.options.display_order === ORDER.DESC) {
             msgs.reverse();
@@ -83,6 +85,12 @@ var Thread = Widget.extend({
             options: options,
             ORDER: ORDER,
         }));
+
+        this.auto_render_timeout = setTimeout(function () {
+            if (!self.isDestroyed()) {
+                self.render(messages, options);
+            }
+        }, 1000*60); // re-render the thread every minute to update dates
     },
 
     on_click_redirect: function (event) {
@@ -110,7 +118,7 @@ var Thread = Widget.extend({
     _preprocess_message: function (message) {
         var msg = _.extend({}, message);
 
-        // Set the date in the browser timezone
+        msg.date = moment.min(msg.date, moment());
         var date = msg.date.format('YYYY-MM-DD');
 
         if (date === moment().format('YYYY-MM-DD')) {
