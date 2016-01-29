@@ -280,13 +280,6 @@ customize the amout of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
-Advanced options
-----------------
-
-.. option:: --auto-reload
-
-    enable auto-reloading of python files and xml files without having to
-    restart the server. Requires pyinotify_.
 
 .. _reference/cmdline/scaffold:
 
