@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-01-14 12:05+0000\n"
+"PO-Revision-Date: 2016-01-30 14:55+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,16 @@ msgstr " (%s gereserveerd)"
 #, python-format
 msgid " (reserved)"
 msgstr " (gereserveerd)"
+
+#. module: stock
+#: code:addons/stock/stock.py:3182
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr "U kan geen twee voorraad aanpassingen hebben die zich in de status 'In behandeling' hebben met hetzelfde product (%s), dezelfde locatie (%s), dezelfde verpakking, dezelfde eigenaar en hetzelfde lot. Valideer eerste de eerste voorraad aanpassing voor dit product voor dat u een andere aanmaakt."
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -2769,7 +2779,7 @@ msgstr "Voorraad aanpassing"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Voorraad aanpassingen"
+msgstr "Voorraad tellingen"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -2805,7 +2815,7 @@ msgstr "Voorraad regels"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Voorraadtellingen locatie"
+msgstr "Voorraadverschillen locatie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -2858,7 +2868,7 @@ msgstr "Voorraadwaarde"
 msgid ""
 "Inventory adjustments will be made by comparing the theoretical and the "
 "checked quantities."
-msgstr "Voorraad aanpassingen worden gemaakt door het vergelijken van de theoretische en gecontroleerde hoeveelheden."
+msgstr "Voorraad tellingen worden gemaakt door het vergelijken van de theoretische en gecontroleerde hoeveelheden."
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -3113,6 +3123,7 @@ msgid "Localization"
 msgstr "Lokalisatie"
 
 #. module: stock
+#: code:addons/stock/stock.py:4912
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3126,6 +3137,7 @@ msgstr "Lokalisatie"
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Location"
 msgstr "Locatie"
 
@@ -3184,6 +3196,7 @@ msgid "Logistics"
 msgstr "Logistiek"
 
 #. module: stock
+#: code:addons/stock/stock.py:4913
 #: model:ir.model.fields,field_description:stock.field_stock_move_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_lot_id
@@ -3192,6 +3205,7 @@ msgstr "Logistiek"
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
+#, python-format
 msgid "Lot"
 msgstr "Partij"
 
@@ -3964,11 +3978,13 @@ msgid "Pack Type"
 msgstr "Type van verpakking"
 
 #. module: stock
+#: code:addons/stock/stock.py:4914
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
+#, python-format
 msgid "Package"
 msgstr "Verpakking"
 
@@ -4989,7 +5005,7 @@ msgstr "Retouren"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reverse"
-msgstr "Omkeren"
+msgstr "Terug"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -6164,6 +6180,12 @@ msgstr "UPS integratie"
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_usps
 msgid "USPS integration"
 msgstr "USPS integratie"
+
+#. module: stock
+#: code:addons/stock/stock.py:730
+#, python-format
+msgid "Under no circumstances should you delete or change quants yourselves!"
+msgstr "Wijzig of verwijder zelf nooit aantallen!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
