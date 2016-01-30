@@ -718,6 +718,16 @@ var Chatter = form_common.AbstractField.extend({
     start: function () {
         var self = this;
 
+        // Hide the chatter in 'create' mode
+        this.view.on("change:actual_mode", this, this.check_visibility);
+        this.check_visibility();
+        var $container = this.$el.parent();
+        if ($container.hasClass('oe_chatter')) {
+            this.$el
+                .addClass($container.attr("class"))
+                .unwrap();
+        }
+
         // Move the follower's widget (if any) inside the chatter
         this.followers = this.field_manager.fields.message_follower_ids;
         if (this.followers) {
@@ -749,6 +759,10 @@ var Chatter = form_common.AbstractField.extend({
             chat_manager.bus.on('update_message', self, self.on_update_message);
             self.ready.resolve();
         });
+    },
+
+    check_visibility: function () {
+        this.set({"force_invisible": this.view.get("actual_mode") === "create"});
     },
 
     fetch_and_render_thread: function (ids, options) {
@@ -866,6 +880,8 @@ var Chatter = form_common.AbstractField.extend({
         // destroy current composer, if any
         if (this.composer) {
             this.composer.destroy();
+            this.composer = undefined;
+            this.mute_new_message_button(false);
         }
 
         // fetch and render messages of current document
@@ -895,6 +911,8 @@ var Chatter = form_common.AbstractField.extend({
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
+            default_body: old_composer && old_composer.$input.val(),
+            default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
@@ -910,11 +928,19 @@ var Chatter = form_common.AbstractField.extend({
             self.composer.on('post_message', self, self.on_post_message);
             self.composer.on('need_refresh', self, self.refresh_followers);
         });
-
+        this.mute_new_message_button(true);
     },
     close_composer: function () {
         if (this.composer.is_empty()) {
             this.composer.do_hide();
+            this.mute_new_message_button(false);
+        }
+    },
+    mute_new_message_button: function (mute) {
+        if (mute) {
+            this.$('.o_chatter_button_new_message').removeClass('btn-primary').addClass('btn-default');
+        } else if (!mute) {
+            this.$('.o_chatter_button_new_message').removeClass('btn-default').addClass('btn-primary');
         }
     },
 

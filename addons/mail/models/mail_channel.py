@@ -312,7 +312,11 @@ class Channel(models.Model):
                 info['info'] = extra_info
             # add the partner for 'direct mesage' channel
             if channel.channel_type == 'chat':
-                info['direct_partner'] = channel.sudo().channel_partner_ids.filtered(lambda p: p.id != self.env.user.partner_id.id).read(['id', 'name', 'im_status'])
+                info['direct_partner'] = (channel.sudo()
+                                          .with_context(active_test=False)
+                                          .channel_partner_ids
+                                          .filtered(lambda p: p.id != self.env.user.partner_id.id)
+                                          .read(['id', 'name', 'im_status']))
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
@@ -441,7 +445,7 @@ class Channel(models.Model):
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
             self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id})
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id, 'last_message_id': last_message_id})
             return last_message_id
 
     @api.multi

@@ -1132,6 +1132,7 @@ class pos_order(osv.osv):
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
                 'company_id': company_id,
+                'user_id': uid,
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
@@ -1597,10 +1598,10 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule,self)._get_type_selection())
         types.update([
-            ('weight','Weighted Product'),
-            ('price','Priced Product'),
-            ('discount','Discounted Product'),
-            ('client','Client'),
-            ('cashier','Cashier')
+            ('weight', _('Weighted Product')),
+            ('price', _('Priced Product')),
+            ('discount', _('Discounted Product')),
+            ('client', _('Client')),
+            ('cashier', _('Cashier'))
         ])
         return list(types)

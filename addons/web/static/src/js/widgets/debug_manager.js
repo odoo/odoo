@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var formats = require('web.formats');
 var framework = require('web.framework');
+var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -148,15 +149,9 @@ if (core.debug) {
             });
         },
         translate: function() {
-            this.do_action({
-                name: _t("Technical Translation"),
-                res_model : 'ir.translation',
-                domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
-                views: [[false, 'list'], [false, 'form']],
-                type : 'ir.actions.act_window',
-                view_type : "list",
-                view_mode : "list"
-            });
+            new Model("ir.translation")
+                .call('get_technical_translations', [this.dataset.model])
+                .then(this.do_action);
         },
         edit: function(params, evt) {
             this.do_action({

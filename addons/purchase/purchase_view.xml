@@ -145,7 +145,7 @@
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
-                    <button name="action_rfq_send" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
+                    <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
                     <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
@@ -414,7 +414,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="price_subtotal" widget="monetary"/>
-                    <field name="date_planned"  widget="date" width="135"/>
+                    <field name="date_planned"  widget="date"/>
                 </tree>
             </field>
         </record>

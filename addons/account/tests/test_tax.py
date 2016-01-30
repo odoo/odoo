@@ -91,7 +91,7 @@ class TestTax(AccountTestUsers):
     def test_tax_currency(self):
         self.division_tax.amount = 15.0
         res = self.division_tax.compute_all(200.0, currency=self.env.ref('base.VEF'))
-        self.assertEquals(res['total_included'], 235.2941)
+        self.assertAlmostEqual(res['total_included'], 235.2941)
 
     def test_tax_move_lines_creation(self):
         """ Test that creating a move.line with tax_ids generates the tax move lines and adjust line amount when a tax is price_include """

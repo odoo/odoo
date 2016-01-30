@@ -129,7 +129,6 @@ class ir_translation_import_cursor(object):
         find_expr = """
                 irt.lang = ti.lang
             AND irt.type = ti.type
-            AND irt.module = ti.module
             AND irt.name = ti.name
             AND (
                     (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
@@ -713,3 +712,29 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
+
+    @api.model
+    def get_technical_translations(self, model_name):
+        """ Find the translations for the fields of `model_name`
+
+        Find the technical translations for the fields of the model, including
+        string, tooltip and available selections.
+
+        :return: action definition to open the list of available translations
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        view = self.env.ref("base.view_translation_tree", False)
+        return {
+            'name': _("Technical Translation"),
+            'view_mode': 'tree',
+            'views': [(view and view.id or False, "list")],
+            'res_model': 'ir.translation',
+            'type': 'ir.actions.act_window',
+            'domain': ['|',
+                            '&',('type', '=', 'model'),
+                                '&',('res_id', 'in', fields.ids),
+                                    ('name', 'like', 'ir.model.fields,'),
+                            '&',('type', '=', 'selection'),
+                                ('name', 'like', model_name+','),
+                    ],
+        }

@@ -1866,7 +1866,7 @@ $sheet-padding: 16px
             opacity: 0
             display: block !important
     .oe_list.oe_list_editable.oe_editing
-        .oe_edition .oe_list_field_cell
+        .oe_edition .oe_list_field_cell:not(.oe-button)
             *
                 visibility: hidden
             color: transparent
@@ -2413,6 +2413,7 @@ body.oe_single_form
             height: auto !important
         .oe-view-manager
             display: block
+            overflow: visible
         .oe_application, .oe_view_manager_wrapper
             height: auto !important
         .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body

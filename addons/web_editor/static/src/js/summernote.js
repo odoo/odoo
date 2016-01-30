@@ -558,13 +558,15 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     };
 };
 dom.indent = function (node) {
-    var margin = parseFloat(node.style.marginLeft || 0)+1.5;
-    node.style.marginLeft = margin + "em";
+    var style = dom.isCell(node) ? 'paddingLeft' : 'marginLeft';
+    var margin = parseFloat(node.style[style] || 0)+1.5;
+    node.style[style] = margin + "em";
     return margin;
 };
 dom.outdent = function (node) {
-    var margin = parseFloat(node.style.marginLeft || 0)-1.5;
-    node.style.marginLeft = margin > 0 ? margin + "em" : "";
+    var style = dom.isCell(node) ? 'paddingLeft' : 'marginLeft';
+    var margin = parseFloat(node.style[style] || 0)-1.5;
+    node.style[style] = margin > 0 ? margin + "em" : "";
     return margin;
 };
 dom.scrollIntoViewIfNeeded = function (node) {
@@ -950,9 +952,10 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
     $editable.data('NoteHistory').recordUndo($editable, 'tab');
     var r = range.create();
     var outdent = outdent || false;
+    event.preventDefault();
 
-        if (r && r.isCollapsed()) {
-        if (r.isOnCell() && r.isOnCellFirst()) {
+    if (r && (dom.ancestor(r.sc, dom.isCell) || dom.ancestor(r.ec, dom.isCell))) {
+        if (r.isCollapsed() && r.isOnCell() && r.isOnCellFirst()) {
             var td = dom.ancestor(r.sc, dom.isCell);
             if (!outdent && !dom.nextElementSibling(td) && !dom.nextElementSibling(td.parentNode)) {
                 var last = dom.lastChild(td);
@@ -963,10 +966,10 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             } else {
                 editor.table.tab(r, outdent);
             }
-            event.preventDefault();
-            return false;
+        } else {
+            $.summernote.pluginEvents.indent(event, editor, layoutInfo, outdent);
         }
-
+    } else if (r && r.isCollapsed()) {
         if (!r.sc.textContent.slice(0,r.so).match(/\S/) && r.isOnList()) {
             if (outdent) {
                 $.summernote.pluginEvents.outdent(event, editor, layoutInfo);
@@ -993,11 +996,8 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
                 next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
                 range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
             }
-            event.preventDefault();
-            return false;
         }
     }
-    event.preventDefault();
     return false;
 };
 $.summernote.pluginEvents.untab = function (event, editor, layoutInfo) {
@@ -1065,11 +1065,6 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     var exist = r.sc.childNodes[r.so] || r.sc;
     var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
-    var last = node;
-    while (node && dom.isSplitable(node) && !dom.isList(node)) {
-        last = node;
-        node = node.parentNode;
-    }
 
     // table: add a tr
     var td = dom.ancestor(node, dom.isCell);
@@ -1083,7 +1078,15 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         dom.scrollIntoViewIfNeeded(br);
         event.preventDefault();
         return false;
-    } else if (last === node && !dom.isBR(node)) {
+    }
+
+    var last = node;
+    while (node && dom.isSplitable(node) && !dom.isList(node)) {
+        last = node;
+        node = node.parentNode;
+    }
+
+    if (last === node && !dom.isBR(node)) {
         node = r.insertNode(br, true);
         if (isFormatNode(last.firstChild) && $(last).closest(options.styleTags.join(',')).length) {
             dom.moveContent(last.firstChild, last);
@@ -1724,7 +1727,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
         dom.merge(parent, start, 0, end, 1, null, true);
     }
     function indentOther (p, start, end) {
-        if (p === start || $.contains(p, start)) {
+        if (p === start || $.contains(p, start) || $.contains(start, p)) {
             flag = true;
         }
         if (flag) {
@@ -1734,7 +1737,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
                 dom.indent(p);
             }
         }
-        if (p === end || $.contains(p, end)) {
+        if (p === end || $.contains(p, end) || $.contains(end, p)) {
             flag = false;
         }
     }
@@ -1743,14 +1746,17 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $dom = $(ancestor);
 
     if (!dom.isList(ancestor)) {
-        $dom = $(ancestor).children();
+        $dom = $(dom.node(ancestor)).children();
     }
     if (!$dom.length) {
-        $dom = $(dom.ancestor(r.sc, dom.isList));
+        $dom = $(dom.ancestor(r.sc, dom.isList) || dom.ancestor(r.sc, dom.isCell));
         if (!$dom.length) {
             $dom = $(r.sc).closest(options.styleTags.join(','));
         }
     }
+
+    // if select tr, take the first td
+    $dom = $dom.map(function () { return this.tagName === "TR" ? dom.firstElementChild(this) : this; });
 
     $dom.each(function () {
         if (flag || $.contains(this, r.sc)) {
@@ -1760,7 +1766,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
                 } else {
                     indentUL(this, r.sc, r.ec);
                 }
-            } else if (isFormatNode(this)) {
+            } else if (isFormatNode(this) || dom.ancestor(this, dom.isCell)) {
                 indentOther(this, r.sc, r.ec);
             }
         }

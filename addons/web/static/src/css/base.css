@@ -2165,11 +2165,11 @@
   opacity: 0;
   display: block !important;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe-button) {
   color: transparent;
   text-shadow: none;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell * {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe-button) * {
   visibility: hidden;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
@@ -2831,6 +2831,7 @@ body.oe_single_form .oe_single_form_container {
   }
   .openerp .oe-view-manager {
     display: block;
+    overflow: visible;
   }
   .openerp .oe_application, .openerp .oe_view_manager_wrapper {
     height: auto !important;

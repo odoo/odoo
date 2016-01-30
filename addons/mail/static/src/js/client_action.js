@@ -171,8 +171,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.basic_composer = new composer.BasicComposer(this);
-        this.extended_composer = new composer.ExtendedComposer(this);
+        this.basic_composer = new composer.BasicComposer(this, {mention_partners_restricted: true});
+        this.extended_composer = new composer.ExtendedComposer(this, {mention_partners_restricted: true});
         this.thread = new ChatThread(this, {
             display_help: true,
             shorten_messages: false,
@@ -214,7 +214,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def1 = this.thread.appendTo(this.$('.o_mail_chat_content'));
         var def2 = this.basic_composer.appendTo(this.$('.o_mail_chat_content'));
         var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
-        var def4 = this.searchview.appendTo($("<div>"));
+        var def4 = this.searchview.appendTo($("<div>")).then(function () {
+            self.$searchview_buttons = self.searchview.$buttons.contents();
+        });
 
         this.render_sidebar();
 
@@ -421,13 +423,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         // Compute position of the 'New messages' separator, only once when joining
         // a channel to keep it in the thread when new messages arrive
         if (_.isUndefined(this.messages_separator_position)) {
-            var msg_id = this.last_seen_message_id;
             if (!this.unread_counter) {
                 this.messages_separator_position = false; // no unread message -> don't display separator
-            } else if ((msg_id === false) || !_.findWhere(messages, {id: msg_id})) {
-                this.messages_separator_position = 'top'; // all displayed messages are unread
             } else {
-                this.messages_separator_position = msg_id; // last read message is msg_id
+                var msg = chat_manager.get_last_seen_message(this.channel);
+                this.messages_separator_position = msg ? msg.id : 'top';
             }
         }
         return {
@@ -435,7 +435,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
             display_needactions: this.channel.display_needactions,
             messages_separator_position: this.messages_separator_position,
-            squash_close_messages: this.channel.type !== 'static',
+            squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
             display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
@@ -486,7 +486,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             cp_content: {
                 $buttons: this.$buttons,
                 $searchview: this.searchview.$el,
-                $searchview_buttons: this.searchview.$buttons.contents(),
+                $searchview_buttons: this.$searchview_buttons,
             },
             searchview: this.searchview,
         });

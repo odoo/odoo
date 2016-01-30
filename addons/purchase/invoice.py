@@ -33,28 +33,12 @@ class AccountInvoice(models.Model):
     # Load all unsold PO lines
     @api.onchange('purchase_id')
     def purchase_order_change(self):
-        result = []
         if not self.purchase_id:
             return {}
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
-        # Keep existing lines. We want to be able to add several PO on the same invoice.
-        for line in self.invoice_line_ids:
-            result.append({
-                'purchase_line_id': line.purchase_line_id.id,
-                'name': line.name,
-                'origin': line.origin,
-                'uom_id': line.uom_id.id,
-                'product_id': line.product_id.id,
-                'account_id': line.account_id.id,
-                'price_unit': line.price_unit,
-                'quantity': line.quantity,
-                'discount': line.discount,
-                'account_analytic_id': line.account_analytic_id.id,
-                'invoice_line_tax_ids': line.invoice_line_tax_ids.ids,
-            })
-
+        new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line:
             # Load a PO line only once
             if line in self.invoice_line_ids.mapped('purchase_line_id'):
@@ -80,13 +64,14 @@ class AccountInvoice(models.Model):
                 'account_analytic_id': line.account_analytic_id.id,
                 'invoice_line_tax_ids': invoice_line_tax_ids.ids
             }
-            account = self.env['account.invoice.line'].get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
+            account = new_lines.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
             if account:
                 data['account_id'] = account.id
-            result.append(data)
+            new_line = new_lines.new(data)
+            new_line._set_additional_fields(self)
+            new_lines += new_line
 
-        self.invoice_line_ids = False # To avoid duplicates
-        self.invoice_line_ids = result
+        self.invoice_line_ids += new_lines
         self.purchase_id = False
         return {}
 
@@ -95,6 +80,12 @@ class AccountInvoice(models.Model):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
                 line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id)
+
+    @api.onchange('invoice_line_ids')
+    def _onchange_origin(self):
+        purchase_ids = self.invoice_line_ids.mapped('purchase_id')
+        if purchase_ids:
+            self.origin = ', '.join(purchase_ids.mapped('name'))
 
     @api.model
     def invoice_line_move_line_get(self):

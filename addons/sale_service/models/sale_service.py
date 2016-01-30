@@ -145,6 +145,16 @@ class project_task(osv.osv):
         res = super(project_task, self).unlink(cr, uid, ids, context)
         return res
 
+    def action_view_so(self, cr, uid, ids, context=None):
+        task = self.browse(cr, uid, ids, context=context)[0]
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "views": [[False, "form"]],
+            "res_id": task.sale_line_id.order_id.id,
+            "context": {"create": False, "show_sale": True},
+        }
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
