@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-01-14 10:27+0000\n"
+"PO-Revision-Date: 2016-01-30 22:33+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -282,6 +282,13 @@ msgid "@ Inbox"
 msgstr "@ Beérkezett üzenetek"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:20
+#, python-format
+msgid "@Inbox"
+msgstr "@Bejövő"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,help:mail.field_res_users_alias_defaults
@@ -445,6 +452,13 @@ msgstr "Minta álnév"
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
 msgstr "Álnevek"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:12
+#, python-format
+msgid "All"
+msgstr "Összes"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -691,7 +705,10 @@ msgid "Channels/Partner"
 msgstr "Csatornák/Partner"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:13
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
+#, python-format
 msgid "Chat"
 msgstr "Társalgás"
 
@@ -1468,11 +1485,6 @@ msgid ""
 msgstr "Ha beállított egy domaint, mely minden Odoo rendszer irányába beérkező emailt megkap, akkor ide írja be ezt a domaint."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
-msgid "Important Messages"
-msgstr "Fontos üzenet"
-
-#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Important messages"
 msgstr "Fontos üzenet"
@@ -1548,7 +1560,8 @@ msgstr "Követő meghívása"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:31
+#: code:addons/mail/static/src/js/client_action.js:30
+#: code:addons/mail/static/src/xml/client_action.xml:123
 #, python-format
 msgid "Invite people"
 msgstr "Személy meghívása"
@@ -1902,6 +1915,8 @@ msgid "Message-Id"
 msgstr "Üzenet-ID azonosító"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:6
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
@@ -1909,6 +1924,7 @@ msgstr "Üzenet-ID azonosító"
 #: model:ir.model.fields,field_description:mail.field_res_users_message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
+#, python-format
 msgid "Messages"
 msgstr "Üzenetek"
 
@@ -2024,8 +2040,11 @@ msgstr "Szöveg új értéke"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:99
+#: code:addons/mail/static/src/js/chat_manager.js:54
+#: code:addons/mail/static/src/js/window_manager.js:124
 #: code:addons/mail/static/src/xml/chatter.xml:67
+#: code:addons/mail/static/src/xml/client_action.xml:127
+#: code:addons/mail/static/src/xml/systray.xml:16
 #, python-format
 msgid "New message"
 msgstr "Új üzenet"
@@ -2686,6 +2705,13 @@ msgid "Send Email"
 msgstr "E-mail küldése"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/client_action.xml:127
+#, python-format
+msgid "Send mail"
+msgstr "Üzenetet küld"
+
+#. module: mail
 #: code:addons/mail/models/mail_template.py:237
 #, python-format
 msgid "Send Mail (%s)"
@@ -3026,6 +3052,13 @@ msgstr "Részére (Partnereknek)"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/chat_window.xml:24
+#, python-format
+msgid "To:"
+msgstr "Címzett:"
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "To: Followers of"
@@ -3129,6 +3162,7 @@ msgstr "Sajnos ez az email álnév már használva van, kérem válasszon egy eg
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread
+#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
@@ -3139,6 +3173,11 @@ msgstr "Olvasatlan üzenetek"
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Olvasatlan üzenetek számlálója"
+
+#. module: mail
+#: model:ir.ui.view,arch_db:mail.view_message_search
+msgid "Unread messages"
+msgstr "Olvasatlan üzenetek"
 
 #. module: mail
 #. openerp-web

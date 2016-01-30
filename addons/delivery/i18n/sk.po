@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-22 12:03+0000\n"
+"PO-Revision-Date: 2016-01-30 19:32+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -125,7 +125,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Typ aktíva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
@@ -301,7 +301,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Metóda kalkulácie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
@@ -380,7 +380,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Typ odložených príjmov"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
@@ -508,7 +508,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
 msgid "Expense Account"
-msgstr ""
+msgstr "Účet výdajov"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -608,7 +608,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Ak je trvalé oceňovanie povolené pre produkt, systém automaticky vytvorí položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a výstupy účtu budú držať ako protipoložka pohybov pre prichádzajúce a odchádzajúce produkty."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -945,7 +945,7 @@ msgstr "Lokácia obstarávania"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Čas upozornenia produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
@@ -960,7 +960,7 @@ msgstr "Emailová šablóna produktu"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Životnosť produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_manager
@@ -970,7 +970,7 @@ msgstr "Produktový manažér"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Čas odobratia produktu"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
@@ -987,7 +987,7 @@ msgstr "Typ produktu"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Čas použitia výrobku"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
@@ -1173,7 +1173,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Štandardná cena: Výrobná cena je manuálne aktualizované na konci určitého obdobia (obvykle raz ročne).\nPriemerná cena: Výrobná cena je prepočítaná pri každej prichádzajúcej zásielke a použitá pre ocenenie výrobku.\nSkutočná cena: Zobrazená výrobná cena je cenaposledného odchádzajúceho produktu (bude sa používať napríklad v prípade straty zásob)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1188,7 +1188,7 @@ msgstr "Stav"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Účet vstupov skladu"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -1198,7 +1198,7 @@ msgstr "Pohyb na sklade"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Účet výstupov skladu"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1286,14 +1286,14 @@ msgstr ""
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Tento účet bude použitý pre faktúry namiesto predvoleného do nákladov hodnôt pre aktuálny produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Tento účet bude použitý pre faktúry miesto predvoleného pre hodnotu predajov pre aktuálny produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1324,21 +1324,21 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované výrobnými objednávkami."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované obstarávaniami. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované keď robíte inventúru."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1510,28 +1510,28 @@ msgstr ""
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "Keď je vydané nové sériové číslo, toto je počet dní pred oznámením upozornenia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Keď je vydané nové sériové číslo, toto je počet dní pred tým než s tovar môže stať nebezpečným a nesmie byť konzumovaný."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "Keď je vydané nové sériové číslo, toto je počet dní pred tým než by mal byť tovar odstránený zo skladu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "Keď je vydané nové sériové číslo, toto je počet dní pred tým než sa tovar začne zhoršuje, bez toho aby už bol nebezpečný."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -1540,7 +1540,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak neexistuje osobitný oceňovací účet nastavený v zdrojovej lokácii. Toto je predvolená hodnota pre všetky produkty v tejto kategórii. Pokiaľ nie je nastavená na produkte, použije sa jeden z produktovej kategórie."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1549,7 +1549,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak neexistuje osobitný oceňovací účet nastavený v zdrojovej lokácii. Toto je predvolená hodnota pre všetky produkty v tejto kategórii. Pokiaľ nie je nastavená na produkte, použije sa jeden z produktovej kategórie."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
