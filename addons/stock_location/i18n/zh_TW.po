@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2015-06-10 02:47+0000\n"
+"PO-Revision-Date: 2015-12-04 06:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-7/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "調動"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "推式物流"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -105,7 +105,7 @@ msgstr "發票狀態"
 msgid ""
 "This is used to define paths the product has to follow within the location tree.\n"
 "The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
-msgstr ""
+msgstr "這些規則確定了產品在位置樹中的正確移動路徑.\n‘自動移動’ 將在建立庫存移動後自動確認.\n‘手動作業’ 庫存移動需要人工確認. \n‘自動不加入步驟’ 這位置取代移動的源位置."
 
 #. module: stock_location
 #: view:product.product:0
@@ -161,7 +161,7 @@ msgstr "庫存調動"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
+msgstr "如果選中，在取消本移動時也取消相關移動。"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -198,7 +198,7 @@ msgstr "待開發票"
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr ""
+msgstr "完成此中轉需要的天數"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
@@ -259,7 +259,7 @@ msgstr "產品"
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "質量管理"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -270,7 +270,7 @@ msgstr "不適用"
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr ""
+msgstr "延遲（天）"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:67
@@ -356,12 +356,12 @@ msgstr ""
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr ""
+msgstr "操作"
 
 #. module: stock_location
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr ""
+msgstr "位置路徑"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0

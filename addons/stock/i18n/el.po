@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-12-27 19:47+0000\n"
+"PO-Revision-Date: 2016-01-16 14:30+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-7/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αντιστοίχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Αυτή είναι η προεπιλεγμένη τιμή για όλα τα προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να ρυθμιστεί για κάθε προϊόν"
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -235,7 +235,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "Ενεργό Αναγνωριστικό δεν έχει ρυθμιστεί στο Πλαίσιο"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -509,7 +509,7 @@ msgstr "Απόθεμα και Αναμενόμενες Διακυμάνσεις.
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "Όταν η αποτίμηση αποθέματος σε πραγματικό χρόνο είναι ενεργοποιημένη σε ένα προϊόν, αυτός ο λογαριασμός θα κρατήσει την τρέχουσα αξία των προϊόντων."
 
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
@@ -813,7 +813,7 @@ msgstr "Γραμή Καταγραφής"
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αυτό  είναι το Ημερολόγιο Λογιστικής στο οποίο οι εγγραφές θα αναρτηθούν αυτόματα όταν οι κινήσεις του αποθέματος επεξεργάζονται."
 
 #. module: stock
 #: code:addons/stock/stock.py:2289
@@ -833,7 +833,7 @@ msgstr "Σύνοψη"
 #. module: stock
 #: view:product.category:0
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Λογαριασμός Ιδιοτήτων Αποθέματος"
 
 #. module: stock
 #: sql_constraint:stock.picking:0 sql_constraint:stock.picking.in:0
@@ -1028,7 +1028,7 @@ msgstr "Ημερολόγιο"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
-msgstr ""
+msgstr "Δημιουργήστε Πρόχειρα Τιμολόγια"
 
 #. module: stock
 #: help:stock.picking,location_id:0 help:stock.picking.in,location_id:0
@@ -1130,7 +1130,7 @@ msgstr "Αριστερός γονέας"
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Λογαριασμός Αποτιμήσης Αποθέματος"
 
 #. module: stock
 #: view:stock.return.picking.memory:0
@@ -1406,7 +1406,7 @@ msgstr "Συγχώνευση Απογραφών"
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "Για να επιστραφούν τα χρήματα/τιμολογημένα"
 
 #. module: stock
 #: code:addons/stock/stock.py:2487
@@ -1532,7 +1532,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται από αυτή την θέση σε μια εσωτερική θέση, αντί του γενικού Λογαριασμού Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει καμία επίδραση για τις εσωτερικές θέσεις."
 
 #. module: stock
 #: field:stock.inventory,date:0 field:stock.move,create_date:0
@@ -1646,7 +1646,7 @@ msgstr "Διαχείριση διαφορετικών μονάδων μέτρη�
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
+msgstr "Τιμολόγιο Αποθέματος Προς Αποστολή"
 
 #. module: stock
 #: code:addons/stock/stock.py:2512
@@ -1717,7 +1717,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Λογαριασμός Αποτιμήσης Αποθέματος (εξερχόμενο)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1799
@@ -1784,7 +1784,7 @@ msgstr "Δημιουργημένες Κινήσεις"
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Λογαριασμός Αποτιμήσης Αποθέματος (εισερχέμενο)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -1830,7 +1830,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2907,7 +2907,7 @@ msgstr ""
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
+msgstr "Επιτρέπει να διαμορφώσετε τις αποτιμήσεις των αποθεμάτων για τα προϊόντα και κατηγορίες προϊόντων."
 
 #. module: stock
 #: help:stock.config.settings,module_stock_location:0
@@ -2997,7 +2997,7 @@ msgstr "Ολοκληρώθηκε"
 #: model:ir.model,name:stock.model_stock_change_standard_price
 #: view:stock.change.standard.price:0
 msgid "Change Standard Price"
-msgstr ""
+msgstr "Αλλάγή Πρότυπης Τιμής"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -3505,7 +3505,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα στοιχεία του ημερολογίου για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Αυτή είναι η προεπιλεγμένη τιμή για όλα τα προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να ρυθμιστεί για κάθε προϊόν"
 
 #. module: stock
 #: field:stock.picking,message_ids:0 field:stock.picking.in,message_ids:0
@@ -3749,7 +3749,7 @@ msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Απ
 msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr ""
+msgstr "Εάν η τιμή κόστους είναι αυξημένη, ο λογαριασμός μεταβολής αποθεμάτων θα χρεώνεται και ο λογαριασμός παραγωγής των αποθεμάτων θα πρέπει να πιστώνεται με την αξία = (διαφορά του ποσού * διαθέσιμη ποσότητα) .\n\nΕάν η τιμή κόστους είναι μειωμένη, ο λογαριασμός μεταβολής των αποθεμάτων θα πιστώνεται και ο λογαριασμός  εισροής των αποθεμάτων θα χρεώνεται."
 
 #. module: stock
 #: code:addons/stock/stock.py:2855
@@ -3800,7 +3800,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται από μια εσωτερική θέση σε αυτήν τη θέση, αντί του γενικού Λογαριασμού Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει καμία επίδραση για τις εσωτερικές θέσεις."
 
 #. module: stock
 #: code:addons/stock/product.py:460
@@ -4052,7 +4052,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Καμία απο αυτές τις λίστες επιλογής δεν απαιτούν τιμολόγηση."
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4187,7 +4187,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
 
 #. module: stock
 #: view:stock.move:0 field:stock.partial.move,move_ids:0
@@ -4275,7 +4275,7 @@ msgstr "Μάιος"
 #: code:addons/stock/product.py:112
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "Καμία διαφορά μεταξύ της πρότυπης τιμής και της νέας τιμής!"
 
 #. module: stock
 #: view:stock.picking.out:0
