@@ -947,6 +947,7 @@ class account_bank_statement_line(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line', context=context),
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
+        'sequence': 1,
     }
 
 class account_statement_operation_template(osv.osv):
