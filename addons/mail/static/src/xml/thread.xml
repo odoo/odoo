@@ -28,6 +28,10 @@
             <div class="o_thread_title">No starred message</div>
             <div> You can mark any message as 'starred', and it shows up in this channel.</div>
         </t>
+        <t t-if="options.channel_id==='channel_read'">
+            <div class="o_thread_title">Read Messages</div>
+            <div>Any read message shows up in this channel.</div>
+        </t>
     </div>
 
     <t t-name="mail.ChatThread.Content">

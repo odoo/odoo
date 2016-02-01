@@ -213,16 +213,23 @@ function make_message (data) {
     Object.defineProperties(msg, {
         is_starred: property_descr("channel_starred"),
         is_needaction: property_descr("channel_inbox"),
+        is_read: property_descr("channel_read"),
     });
 
     if (_.contains(data.needaction_partner_ids, session.partner_id)) {
         msg.is_needaction = true;
     }
+    var temp_partner_ids = _.map(data.partner_ids, function (partner) {
+        return partner[0]
+    });
+    if (_.contains(temp_partner_ids, session.partner_id)) {
+        msg.is_read = true;
+    }
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
     }
     if (msg.model === 'mail.channel') {
-        var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
+        var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred', 'channel_read');
         var origin = real_channels.length === 1 ? real_channels[0] : undefined;
         var channel = origin && chat_manager.get_channel(origin);
         if (channel) {
@@ -398,6 +405,7 @@ function fetch_from_channel (channel, options) {
     var domain =
         (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
         (channel.id === "channel_starred") ? [['starred', '=', true]] :
+            (channel.id === "channel_read")? [['needaction', '=', false]]:
                                             [['channel_ids', 'in', channel.id]];
     var cache = get_channel_cache(channel, options.domain);
 
@@ -991,6 +999,12 @@ function init () {
     add_channel({
         id: "channel_starred",
         name: _t("Starred"),
+        type: "static"
+    });
+
+    add_channel({
+        id: "channel_read",
+        name: _t("Read Messages"),
         type: "static"
     });
 
