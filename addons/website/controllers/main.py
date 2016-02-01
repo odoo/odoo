@@ -122,9 +122,8 @@ class Website(openerp.addons.web.controllers.main.Home):
             first_page = None
             locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
-                start = pages * LOC_PER_SITEMAP
                 values = {
-                    'locs': islice(locs, start, start + LOC_PER_SITEMAP),
+                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
