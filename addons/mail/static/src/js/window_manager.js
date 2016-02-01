@@ -18,6 +18,7 @@ var CHAT_WINDOW_WIDTH = 300 + 5;  // 5 pixels between windows
 var chat_sessions = [];
 var new_chat_session;
 var display_state = {
+    chat_windows_hidden: false,  // chat windows aren't displayed when the client action is open
     hidden_sessions: [],
     hidden_unread_counter: 0,  // total number of unread msgs in hidden chat windows
     nb_slots: 0,
@@ -69,9 +70,6 @@ function open_chat (session) {
                     chat_session.window.thread.scroll_to();
                 });
         });
-        chat_session.window.on("messages_read", null, function () {
-            chat_manager.mark_channel_as_seen(session);
-        });
         chat_session.window.on("redirect", null, function (res_model, res_id) {
             chat_manager.redirect(res_model, res_id, open_chat);
         });
@@ -108,7 +106,7 @@ function open_chat (session) {
                         }
                     }, 100));
                 }, 0); // setTimeout to prevent to execute handler on first scroll_to, which is asynchronous
-                if (!session.is_folded) {
+                if (!display_state.chat_windows_hidden && !session.is_folded) {
                     chat_manager.mark_channel_as_seen(session);
                 }
             });
@@ -198,6 +196,9 @@ var reposition_windows = function (options) {
     if (options && options.remove_new_chat) {
         destroy_new_chat();
     }
+    if (display_state.chat_windows_hidden) {
+        return;
+    }
     compute_available_slots(chat_sessions.length);
     var hidden_sessions = [];
     var hidden_unread_counter = 0;
@@ -270,7 +271,8 @@ function reposition_hidden_sessions_dropdown () {
 function update_sessions (message, scrollBottom) {
     _.each(chat_sessions, function (session) {
         if (_.contains(message.channel_ids, session.id)) {
-            var message_visible = !session.window.folded && !session.window.is_hidden && session.window.thread.is_at_bottom();
+            var message_visible = !display_state.chat_windows_hidden && !session.window.folded &&
+                                  !session.window.is_hidden && session.window.thread.is_at_bottom();
             if (message_visible) {
                 chat_manager.mark_channel_as_seen(chat_manager.get_channel(session.id));
             }
@@ -359,6 +361,16 @@ core.bus.on('web_client_ready', null, function () {
             make_session_visible(chat_session);
         } else {
             chat_session.window.focus_input();
+        }
+    });
+
+    chat_manager.bus.on('client_action_open', null, function (open) {
+        display_state.chat_windows_hidden = open;
+        if (open) {
+            $('body').addClass('o_no_chat_window');
+        } else {
+            $('body').removeClass('o_no_chat_window');
+            reposition_windows();
         }
     });
 

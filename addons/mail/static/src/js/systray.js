@@ -145,7 +145,7 @@ var MessagingMenu = Widget.extend({
             var channel_id = $(event.currentTarget).data('channel_id');
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
-                chat_manager.bus.trigger('detach_channel', channel);
+                chat_manager.open_channel(channel);
             }
         },
 });
