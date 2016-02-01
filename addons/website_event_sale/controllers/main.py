@@ -50,7 +50,7 @@ class website_event(website_event):
             order.action_confirm()  # tde notsure: email sending ?
             attendees = request.registry['event.registration'].browse(cr, uid, list(attendee_ids), context=context)
             # clean context and session, then redirect to the confirmation page
-            request.website.sale_reset(context=context)
+            request.website.sale_reset()
             return request.website.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,
