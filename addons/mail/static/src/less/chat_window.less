@@ -132,6 +132,9 @@
 .o_ui_blocked .o_chat_window {
     z-index: 1101; // blockUI's z-index is 1100
 }
+.o_no_chat_window .o_chat_window {
+    display: none;
+}
 
 // FIXME: move this to its own file in master
 .o_chat_window.o_thread_less {

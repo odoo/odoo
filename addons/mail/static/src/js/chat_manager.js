@@ -33,6 +33,7 @@ var mention_partner_suggestions = [];
 var discuss_ids = {};
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
+var client_action_open = false;
 
 // Utils: Window focus/unfocus, beep, tab title, parsing html strings
 //----------------------------------------------------------------------------------
@@ -892,6 +893,9 @@ var chat_manager = {
     open_and_detach_dm: function (partner_id) {
         return ChannelModel.call('channel_get_and_minimize', [[partner_id]]).then(add_channel);
     },
+    open_channel: function (channel) {
+        chat_manager.bus.trigger(client_action_open ? 'open_channel' : 'detach_channel', channel);
+    },
 
     unsubscribe: function (channel) {
         var def;
@@ -1006,6 +1010,10 @@ var chat_manager = {
 
     send_native_notification: send_native_notification,
 };
+
+chat_manager.bus.on('client_action_open', null, function (open) {
+    client_action_open = open;
+});
 
 // Initialization
 // ---------------------------------------------------------------------------------
