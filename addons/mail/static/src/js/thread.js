@@ -38,9 +38,9 @@ var Thread = Widget.extend({
         "click .oe_mail_expand": function (event) {
             event.preventDefault();
             event.stopPropagation();
-            var $source = $(event.currentTarget);
-            $source.parents('.o_thread_message_core').find('.o_mail_body_short').toggle();
-            $source.parents('.o_thread_message_core').find('.o_mail_body_long').toggle();
+            var $message = $(event.currentTarget).parents('.o_thread_message');
+            $message.addClass('o_message_expanded');
+            this.expanded_msg_ids.push($message.data('message-id'));
         },
     },
 
@@ -55,6 +55,7 @@ var Thread = Widget.extend({
             shorten_messages: true,
             squash_close_messages: true,
         });
+        this.expanded_msg_ids = [];
     },
 
     render: function (messages, options) {
@@ -130,6 +131,10 @@ var Thread = Widget.extend({
         } else {
             msg.day = msg.date.format('LL');
             msg.hour = msg.date.format('LT');
+        }
+
+        if (_.contains(this.expanded_msg_ids, message.id)) {
+            msg.expanded = true;
         }
 
         msg.display_subject = message.subject && !message.is_system_notification;
