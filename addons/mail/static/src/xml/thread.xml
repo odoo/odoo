@@ -46,7 +46,7 @@
     </t>
 
     <t t-name="mail.ChatThread.Message">
-        <div class="o_thread_message" t-att-data-message-id="message.id">
+        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded' : '')" t-att-data-message-id="message.id">
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
                 <t t-if="!message.mailto &amp;&amp; message.author_id[0]">
                     <img t-if="message.avatar_src &amp;&amp; message.display_author"
