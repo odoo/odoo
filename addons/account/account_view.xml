@@ -602,7 +602,7 @@
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_id!=False">
-                                    <field name="sequence" readonly="1" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="journal_entry_id" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
