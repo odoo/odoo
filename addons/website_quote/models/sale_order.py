@@ -169,13 +169,6 @@ class SaleOrder(models.Model):
             return True
         return False
 
-    def create(self, cr, uid, values, context=None):
-        if not values.get('template_id'):
-            defaults = self.default_get(cr, uid, ['template_id'], context=context)
-            template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position_id=values.get('fiscal_position'), context=context).get('value', {})
-            values = dict(template_values, **values)
-        return super(sale_order, self).create(cr, uid, values, context=context)
-
     @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -199,37 +192,6 @@ class SaleOrderOption(models.Model):
     uom_id = fields.Many2one('product.uom', string='Unit of Measure ', required=True)
     quantity = fields.Float(string='Quantity', required=True,
         digits_compute= dp.get_precision('Product UoS'), default=1)
-
-    # TODO master: to remove, replaced by onchange of the new api
-    def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
-        vals, domain = {}, []
-        if not product:
-            return vals
-        product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        name = product_obj.name
-        if product_obj.description_sale:
-            name += '\n'+product_obj.description_sale
-        vals.update({
-            'price_unit': product_obj.list_price,
-            'website_description': product_obj and (product_obj.quote_description or product_obj.website_description),
-            'name': name,
-            'uom_id': uom_id or product_obj.uom_id.id,
-        })
-        uom_obj = self.pool.get('product.uom')
-        if vals['uom_id'] != product_obj.uom_id.id:
-            selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
-            vals['price_unit'] = new_price
-        if not uom_id:
-            domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
-        return {'value': vals, 'domain': domain}
-
-    # TODO master: to remove, replaced by onchange of the new api
-    def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
-        context = context or {}
-        if not uom_id:
-            return {'value': {'price_unit': 0.0, 'uom_id': False}}
-        return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
     @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
