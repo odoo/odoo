@@ -235,6 +235,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Advanced options")
         group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
+        group.add_option("--debugger", default="pdb")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
