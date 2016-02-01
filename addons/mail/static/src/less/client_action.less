@@ -112,6 +112,9 @@
         height: 100%;
         margin-left: @mail-chat-sidebar-width;
         position: relative;
+        @media (min-width: @screen-sm-min) {
+            overflow: auto;
+        }
 
         @media (max-width: @screen-xs-max) {
             margin-left: 0;
