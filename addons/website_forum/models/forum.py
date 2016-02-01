@@ -275,8 +275,11 @@ class Post(models.Model):
         if operator not in ('=', '!=', '<>'):
             raise ValueError('Invalid operator: %s' % (operator,))
 
-        is_admin = self._uid == SUPERUSER_ID
-        if is_admin:
+        if not value:
+            operator = operator == "=" and '!=' or '='
+            value = True
+
+        if self._uid == SUPERUSER_ID:
             return [(1, '=', 1)]
 
         user = self.env['res.users'].browse(self._uid)
@@ -290,8 +293,11 @@ class Post(models.Model):
                 or (p.create_uid = %s and f.karma_close_own <= %s)
                 or (p.create_uid != %s and f.karma_close_all <= %s)
         """
+
+        op = operator == "=" and "inselect" or "not inselect"
+
         # don't use param named because orm will add other param (test_active, ...)
-        return [('id', '%sselect' % (operator == "=" and "in" or "not in"), (req, (user.id, user.karma, user.id, user.karma)))]
+        return [('id', op, (req, (user.id, user.karma, user.id, user.karma)))]
 
     @api.one
     @api.depends('content')
