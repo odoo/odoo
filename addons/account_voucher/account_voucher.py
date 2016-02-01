@@ -1498,6 +1498,7 @@ class account_voucher_line(osv.osv):
         'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True, digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
+        'state': fields.related('voucher_id', 'state', type='char', string='State', readonly=True),
     }
     _defaults = {
         'name': '',
