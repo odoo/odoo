@@ -49,7 +49,6 @@ Main Features
         'views/account_journal_view.xml',
         'views/pos_config_view.xml',
         'views/pos_session_view.xml',
-        'views/account_invoice_view.xml',
         'views/point_of_sale_sequence.xml',
         'data/point_of_sale_data.xml',
         'data/point_of_sale_workflow.xml',
