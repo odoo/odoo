@@ -51,6 +51,11 @@ class DeliveryCarrier(models.Model):
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
     fixed_price = fields.Float(compute='_compute_fixed_price', inverse='_set_product_fixed_price', store=True, string='Fixed Price',help="Keep empty if the pricing depends on the advanced pricing per destination")
     shipping_enabled = fields.Boolean(string="Shipping enabled", default=True, help="Uncheck this box to disable package shipping while validating Delivery Orders")
+    prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
+
+    @api.one
+    def toggle_prod_environment(self):
+        self.prod_environment = not self.prod_environment
 
     @api.multi
     def name_get(self):

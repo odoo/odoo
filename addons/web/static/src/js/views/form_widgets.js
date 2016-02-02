@@ -665,6 +665,12 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.string_false = _t("Archived");
                 this.hover_false = _t("Unarchive");
                 break;
+            case "prod_environment":
+                this.string_true = _t("Production Environment");
+                this.hover_true = _t("Switch to test environment");
+                this.string_false = _t("Test Environment");
+                this.hover_false = _t("Switch to production environment");
+                break;
             default:
                 this.string_true = _t("On");
                 this.hover_true = _t("Switch Off");
