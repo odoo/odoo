@@ -10,7 +10,7 @@ class wizard_price(osv.osv):
     _description = "Compute Price Wizard"
     _columns = {
         'info_field': fields.text('Info', readonly=True), 
-        'real_time_accounting': fields.boolean("Generate accounting entries when real-time"),
+        'real_time_accounting': fields.boolean("Generate accounting entries when perpetual"),
         'recursive': fields.boolean("Change prices of child BoMs too"),
         }
 
