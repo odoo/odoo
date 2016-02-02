@@ -139,7 +139,8 @@ class StockPicking(models.Model):
         res = self.carrier_id.send_shipping(self)[0]
         self.carrier_price = res['exact_price']
         self.carrier_tracking_ref = res['tracking_number']
-        msg = _("Shipment sent to carrier %s for expedition with tracking number %s") % (self.carrier_id.name, self.carrier_tracking_ref)
+        order_currency = self.sale_id.currency_id or self.company_id.currency_id
+        msg = _("Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
 
     @api.multi
