@@ -597,7 +597,7 @@ class AccountTax(models.Model):
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.v8
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, precision=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
@@ -632,9 +632,11 @@ class AccountTax(models.Model):
         # precision when we round the tax amount for each line (we use
         # the 'Account' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
-        prec = currency.decimal_places
-        if company_id.tax_calculation_rounding_method == 'round_globally':
-            prec += 5
+        prec = precision
+        if not prec:
+            prec = currency.decimal_places
+            if company_id.tax_calculation_rounding_method == 'round_globally':
+                prec += 5
         total_excluded = total_included = base = round(price_unit * quantity, prec)
 
         for tax in self:
@@ -673,11 +675,18 @@ class AccountTax(models.Model):
                     'analytic': tax.analytic,
                 })
 
-        return {
-            'taxes': sorted(taxes, key=lambda k: k['sequence']),
-            'total_excluded': currency.round(total_excluded),
-            'total_included': currency.round(total_included),
-        }
+        if precision:
+            return {
+                'taxes': sorted(taxes, key=lambda k: k['sequence']),
+                'total_excluded': total_excluded,
+                'total_included': total_included,
+            }
+        else:
+            return {
+                'taxes': sorted(taxes, key=lambda k: k['sequence']),
+                'total_excluded': currency.round(total_excluded),
+                'total_included': currency.round(total_included),
+            }
 
     @api.v7
     def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, context=None):
