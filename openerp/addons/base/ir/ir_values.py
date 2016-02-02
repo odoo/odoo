@@ -18,12 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pickle
 
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.exceptions import AccessError, MissingError
 from openerp.tools.translate import _
+from openerp.tools import pickle
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
