@@ -5,7 +5,7 @@ from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, _
+from openerp import api, fields, models, _, SUPERUSER_ID
 from openerp.tools import float_is_zero
 from openerp.tools.misc import formatLang
 
@@ -97,7 +97,7 @@ class AccountInvoice(models.Model):
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
-        if float_is_zero(self.residual, digits_rounding_precision):
+        if float_is_zero(self.residual, precision_rounding=digits_rounding_precision):
             self.reconciled = True
         else:
             self.reconciled = False
@@ -1093,6 +1093,8 @@ class AccountInvoiceLine(models.Model):
             taxes = self.product_id.taxes_id or self.account_id.tax_ids
         else:
             taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
+        if self.env.uid == SUPERUSER_ID:
+            taxes = taxes.filtered(lambda r: r.company_id == self.company_id)
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes)
 
         fix_price = self.env['account.tax']._fix_tax_included_price

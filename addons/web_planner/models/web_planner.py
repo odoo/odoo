@@ -62,9 +62,9 @@ class Planner(models.Model):
             params['model'] = 'ir.module.module'
         # setting the module
         if module_name:
-            installed = self.env['ir.module.module']._installed()
-            if module_name in installed:
-                params['id'] = installed[module_name]
+            module = self.env['ir.module.module'].sudo().search([('name', '=', module_name)], limit=1)
+            if module:
+                params['id'] = module.id
         return "/web#%s" % (urlencode(params),)
 
     @api.model
