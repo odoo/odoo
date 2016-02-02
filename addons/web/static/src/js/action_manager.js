@@ -180,6 +180,9 @@ var ViewManagerAction = WidgetAction.extend({
      * @return {jQuery} the view_manager's $el
      */
     detach: function() {
+        // Hack to remove badly inserted nvd3 tooltips ; should be removed when upgrading nvd3 lib
+        $('body > .nvtooltip').remove();
+
         return this.widget.$el.detach();
     },
     /**

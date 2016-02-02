@@ -70,7 +70,7 @@ class sale_order_line(osv.osv):
                 line.discount = 0.0
         return res
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(sale_order_line, self).product_uom_change()
         if not self.product_uom:
