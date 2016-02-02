@@ -1011,6 +1011,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
+        'sequence': 1,
     }
 
 class account_statement_operation_template(osv.osv):
