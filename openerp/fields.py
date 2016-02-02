@@ -64,9 +64,11 @@ def copy_cache(records, env):
     for record, target in zip(records, records.with_env(env)):
         if not target._cache:
             for name, value in record._cache.iteritems():
-                target[name] = value
                 if isinstance(value, BaseModel):
+                    target._cache[name] = value.with_env(env)
                     copy_cache(value, env)
+                else:
+                    target._cache[name] = value
 
 
 def resolve_all_mro(cls, name, reverse=False):
