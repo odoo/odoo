@@ -2313,13 +2313,13 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
-    def _save_constraint(self, cr, constraint_name, type, definition):
+    def _save_constraint(self, cr, constraint_name, type, definition, module):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
         'f' or 'u' depending on the constraint being a foreign key or not.
         """
-        if not self._module:
+        if not module:
             # no need to save constraints for custom models as they're not part
             # of any module
             return
@@ -2329,7 +2329,7 @@ class BaseModel(object):
             WHERE ir_model_constraint.module=ir_module_module.id
                 AND ir_model_constraint.name=%s
                 AND ir_module_module.name=%s
-            """, (constraint_name, self._module))
+            """, (constraint_name, module))
         constraints = cr.dictfetchone()
         if not constraints:
             cr.execute("""
@@ -2338,13 +2338,13 @@ class BaseModel(object):
                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s), %s, %s)""",
-                    (constraint_name, self._module, self._name, type, definition))
+                    (constraint_name, module, self._name, type, definition))
         elif constraints['type'] != type or (definition and constraints['definition'] != definition):
             cr.execute("""
                 UPDATE ir_model_constraint
                 SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
                 WHERE name=%s AND module = (SELECT id FROM ir_module_module WHERE name=%s)""",
-                    (type, definition, constraint_name, self._module))
+                    (type, definition, constraint_name, module))
 
     def _save_relation_table(self, cr, relation_table, module):
         """
@@ -2374,13 +2374,12 @@ class BaseModel(object):
             # usually because they could block deletion due to the FKs.
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
-        fk_def = (self._table, source_field, dest_model._table, ondelete or 'set null')
-        self._foreign_keys.add(fk_def)
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
+        field = self._fields[source_field]
+        self._m2o_add_foreign_key_unchecked(self._table, source_field, dest_model, ondelete, field._module)
 
     # unchecked version: for custom cases, such as m2m relationships
-    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
-        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null')
+    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete, module):
+        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null', module)
         self._foreign_keys.add(fk_def)
         _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
@@ -2754,9 +2753,10 @@ class BaseModel(object):
 
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
-        for t, k, r, d in self._foreign_keys:
-            cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f', False)
+        query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
+        for table1, column, table2, ondelete, module in self._foreign_keys:
+            cr.execute(query % (table1, column, table2, ondelete))
+            self._save_constraint(cr, "%s_%s_fkey" % (table1, column), 'f', False, module)
         cr.commit()
         del self._foreign_keys
 
@@ -2852,10 +2852,10 @@ class BaseModel(object):
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade', f._module)
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade', f._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
@@ -2874,6 +2874,14 @@ class BaseModel(object):
         """
         def unify_cons_text(txt):
             return txt.lower().replace(', ',',').replace(' (','(')
+
+        # map each constraint on the name of the module where it is defined
+        constraint_module = {
+            constraint[0]: cls._module
+            for cls in reversed(type(self).mro())
+            if not getattr(cls, 'pool', None)
+            for constraint in getattr(cls, '_local_sql_constraints', ())
+        }
 
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
@@ -2917,7 +2925,8 @@ class BaseModel(object):
                 sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
 
             # we need to add the constraint:
-            self._save_constraint(cr, conname, 'u', unify_cons_text(con))
+            module = constraint_module.get(key)
+            self._save_constraint(cr, conname, 'u', unify_cons_text(con), module)
             sql_actions = [item for item in sql_actions.values()]
             sql_actions.sort(key=lambda x: x['order'])
             for sql_action in [action for action in sql_actions if action['execute']]:
