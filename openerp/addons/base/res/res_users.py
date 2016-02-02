@@ -13,6 +13,7 @@ from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
+from openerp import api
 from openerp.osv import fields, osv, expression
 from openerp.service.db import check_super
 from openerp.tools.translate import _
@@ -537,8 +538,19 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache('uid', 'group_ext_id')
+    @api.v7
     def has_group(self, cr, uid, group_ext_id):
+        return self._has_group(cr, uid, group_ext_id)
+    @api.v8
+    def has_group(self, group_ext_id):
+        # use singleton's id if called on a non-empty recordset, otherwise
+        # context uid
+        uid = self.id or self.env.uid
+        return self._has_group(self.env.cr, uid, group_ext_id)
+
+    @api.noguess
+    @tools.ormcache('uid', 'group_ext_id')
+    def _has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
         :param str group_ext_id: external ID (XML ID) of the group.
@@ -553,6 +565,8 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+    # for a few places explicitly clearing the has_group cache
+    has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
     def _is_admin(self):
