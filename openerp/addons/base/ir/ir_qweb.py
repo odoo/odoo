@@ -441,7 +441,8 @@ class QWeb(orm.AbstractModel):
         if 'lang' in template_attributes:
             init_lang = d.context.get('lang', 'en_US')
             lang = template_attributes['lang']
-            d.context['lang'] = self.eval(lang, d) or lang
+            lang = self.eval(lang, d) or lang
+            d.context['lang'] = lang
             if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', lang)], count=True, context=d.context):
                 _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
 
