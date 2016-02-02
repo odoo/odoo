@@ -1187,14 +1187,14 @@ class AssetsBundle(object):
                 css_attachments = self.css()
                 if not self.css_errors:
                     for attachment in css_attachments:
-                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(str(attachment.url)))
                 else:
                     msg = '\n'.join(self.css_errors)
                     self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                     for style in self.stylesheets:
                         response.append(style.to_html())
             if js and self.javascripts:
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(str(self.js().url))))
         response.extend(self.remains)
         return sep + sep.join(response)
 
