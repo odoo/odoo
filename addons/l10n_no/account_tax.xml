@@ -149,7 +149,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chart2714"/>
         <field name="refund_account_id" ref="chart2714"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), , ref('tax_tag_uncl5305_e')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), ref('tax_tag_uncl5305_e')])]"/>
 </record>
 
 <record id="tax8" model="account.tax.template">
@@ -166,19 +166,19 @@
 
 <record id="tax9" model="account.tax.template">
         <field name="chart_template_id" ref="no_chart_template"/>
-        <field name="name">Inngående 0% mva</field>
+        <field name="name">Inngående 0% mva - utenfor område</field>
         <field name="description">Inngående 0% mva</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chart2714"/>
         <field name="refund_account_id" ref="chart2714"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), , ref('tax_tag_uncl5305_z')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), ref('tax_tag_uncl5305_z')])]"/>
 </record>
 
 <record id="tax10" model="account.tax.template">
         <field name="chart_template_id" ref="no_chart_template"/>
-        <field name="name">Utgående 0% mva</field>
+        <field name="name">Utgående 0% mva - utenfor område</field>
         <field name="description">Utgående 0% mva</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
