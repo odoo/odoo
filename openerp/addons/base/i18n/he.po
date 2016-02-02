@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-01 09:15+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2016-01-29 10:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -280,9 +280,9 @@ msgstr ""
 #: model:ir.module.module,description:base.module_account_extension
 msgid ""
 "\n"
-"        Add to res_config of account modules the possibility to install extra accounting modules\n"
+"        Adapt base accounting module for Enterprise Edition.\n"
 "\n"
-"        This module will be auto installed if account module and enterprise version are present\n"
+"        This module will be auto installed if account module and enterprise edition are present\n"
 "    "
 msgstr ""
 
@@ -913,6 +913,21 @@ msgid ""
 "========================================\n"
 "* Show attachment on the top of the forms\n"
 "* Document Indexation: odt\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_au
+msgid ""
+"\n"
+"Australian Accounting Module\n"
+"============================\n"
+"\n"
+"Australian accounting basic charts and localizations.\n"
+"\n"
+"Also:\n"
+"    - activates a number of regional currencies.\n"
+"    - sets up Australian taxes.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -4296,7 +4311,7 @@ msgid "%s (copy)"
 msgstr "%s (העתק)"
 
 #. module: base
-#: code:addons/models.py:6145
+#: code:addons/models.py:6163
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -4853,12 +4868,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
 msgid "Account Report"
-msgstr ""
+msgstr "דוח החשבון"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_reports
 msgid "Account Reports"
-msgstr ""
+msgstr "דוחות החשבון"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
@@ -5076,11 +5091,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_header
 msgid "Add or not the corporate RML header"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_account_extension
-msgid "Add some extension to account modules for enterprise version"
 msgstr ""
 
 #. module: base
@@ -5591,6 +5601,11 @@ msgstr ""
 #: model:res.country,name:base.au
 msgid "Australia"
 msgstr "Australia"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_au
+msgid "Australian - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.at
@@ -6780,7 +6795,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
 msgid "Compute"
-msgstr ""
+msgstr "חשב"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -7543,6 +7558,11 @@ msgid "Czech Republic"
 msgstr "Czech Republic"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_dhl
+msgid "DHL Shipping"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Danish / Dansk"
 msgstr ""
@@ -7907,6 +7927,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_discuss
+#: model:ir.module.module,shortdesc:base.module_mail
+msgid "Discuss"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
 msgstr ""
@@ -8204,7 +8230,7 @@ msgid "El Salvador"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:592
+#: code:addons/base/ir/ir_ui_view.py:585
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -8270,14 +8296,6 @@ msgid "Enable Light Multi Company"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:479
-#, python-format
-msgid ""
-"Enabling this feature you will install following paying application(s) \n"
-"%s"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
 msgstr ""
@@ -8335,7 +8353,7 @@ msgid "Error ! You can not create recursive tags."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:456
+#: code:addons/base/ir/ir_ui_view.py:449
 #, python-format
 msgid ""
 "Error context:\n"
@@ -8667,7 +8685,7 @@ msgid "Field Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:916
+#: code:addons/base/ir/ir_ui_view.py:909
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr ""
@@ -10141,7 +10159,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr ""
+msgstr "התקנת תוסף"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -10268,7 +10286,7 @@ msgid "Introspection report on objects"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4521
+#: code:addons/models.py:4516
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -10330,7 +10348,7 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:584
+#: code:addons/base/ir/ir_ui_view.py:577
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
@@ -10387,7 +10405,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.ui.menu,name:base.menu_invoiced
 msgid "Invoicing"
-msgstr ""
+msgstr "חשבוניות"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
@@ -11606,13 +11624,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr ""
+msgstr "שונות"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr ""
+msgstr "שונות"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -11633,13 +11651,13 @@ msgid "Missing document(s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6130
+#: code:addons/models.py:6148
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6127
+#: code:addons/models.py:6145
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr ""
@@ -11748,7 +11766,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:692 code:addons/base/ir/ir_ui_view.py:870
+#: code:addons/base/ir/ir_ui_view.py:685 code:addons/base/ir/ir_ui_view.py:863
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr ""
@@ -12399,7 +12417,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3919
+#: code:addons/models.py:3915
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -13526,7 +13544,7 @@ msgid "Record"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4832
+#: code:addons/models.py:4827
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr ""
@@ -13561,7 +13579,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:407 code:addons/models.py:4957
+#: code:addons/base/ir/ir_actions.py:407 code:addons/models.py:4952
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr ""
@@ -13594,7 +13612,7 @@ msgid "Recursion found in child server actions"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4031
+#: code:addons/models.py:4026
 #, python-format
 msgid "Recursivity Detected."
 msgstr ""
@@ -14339,8 +14357,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_dhl
+msgid "Send your shippings through DHL and track them online"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid "Send your shippings through Fedex and track them online"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_temando
+msgid "Send your shippings through Temando and track them online"
 msgstr ""
 
 #. module: base
@@ -14671,12 +14699,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_social_network
-#: model:ir.module.module,shortdesc:base.module_mail
-msgid "Social Network"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.sb
 msgid "Solomon Islands"
 msgstr ""
@@ -14723,7 +14745,7 @@ msgid "Sort"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4680
+#: code:addons/models.py:4675
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -15263,7 +15285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 msgid "Tags"
-msgstr ""
+msgstr "תגיות"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -15368,6 +15390,11 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Telugu / తెలుగు"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_temando
+msgid "Temando Shipping"
 msgstr ""
 
 #. module: base
@@ -15802,7 +15829,7 @@ msgid "The user will be able to manage equipments."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6142
+#: code:addons/models.py:6160
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr ""
@@ -16122,7 +16149,7 @@ msgid "Translation comments"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:580
+#: code:addons/base/ir/ir_translation.py:582
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -16941,6 +16968,12 @@ msgid "Warning!"
 msgstr ""
 
 #. module: base
+#: code:addons/models.py:5855 code:addons/models.py:5905
+#, python-format
+msgid "Warnings"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
@@ -17296,7 +17329,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
-msgid "Worldline SIPS Payment Acquiring  for online payments"
+msgid "Worldline SIPS"
 msgstr ""
 
 #. module: base
@@ -17456,12 +17489,6 @@ msgstr ""
 #: code:addons/base/res/res_users.py:345
 #, python-format
 msgid "You cannot unactivate the user you're currently logged in as."
-msgstr ""
-
-#. module: base
-#: code:addons/models.py:3894
-#, python-format
-msgid "You cannot update the translated value of field '%s'"
 msgstr ""
 
 #. module: base
@@ -17625,7 +17652,7 @@ msgid "cr: database cursor"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4335
+#: code:addons/models.py:4330
 #, python-format
 msgid "created."
 msgstr ""
@@ -18003,7 +18030,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:454
+#: code:addons/base/ir/ir_ui_view.py:447
 #, python-format
 msgid "n/a"
 msgstr ""

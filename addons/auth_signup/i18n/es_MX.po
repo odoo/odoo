@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-01-18 18:41+0000\n"
+"PO-Revision-Date: 2016-01-27 18:18+0000\n"
 "Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n\n\n<p>\n${object.name},\n</p>\n<p>\nUsted ha sido invitado para conectarse a \"${object.company_id.name}\" con el fin de tener acceso a sus documentos en Odoo\n</p>\n<p>\nPara aceptar la invitación, haga clic en el siguiente enlace:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Aceptar invitación a \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nGracias,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email

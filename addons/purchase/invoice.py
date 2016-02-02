@@ -81,6 +81,12 @@ class AccountInvoice(models.Model):
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
                 line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id)
 
+    @api.onchange('invoice_line_ids')
+    def _onchange_origin(self):
+        purchase_ids = self.invoice_line_ids.mapped('purchase_id')
+        if purchase_ids:
+            self.origin = ', '.join(purchase_ids.mapped('name'))
+
     @api.model
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()

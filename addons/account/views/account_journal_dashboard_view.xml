@@ -260,7 +260,7 @@
                         <div class="col-xs-6 o_kanban_primary_right">
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <a type="object" name="open_action" context="{'search_default_draft': '1'}">
+                                    <a type="object" name="open_action" context="{'search_default_draft': '1', 'search_default_proforma': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to validate"><t t-esc="dashboard.number_draft"/> Invoices to validate</span>
                                         <span t-if="journal_type == 'purchase'" title="Draft bills"><t t-esc="dashboard.number_draft"/> Draft bills</span>
                                     </a>

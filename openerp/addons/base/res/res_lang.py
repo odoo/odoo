@@ -34,7 +34,7 @@ class lang(osv.osv):
 
         """
         # config['load_language'] is a comma-separated list or None
-        lang = (tools.config['load_language'] or 'en_US').split(',')[0]
+        lang = (tools.config.get('load_language') or 'en_US').split(',')[0]
         lang_ids = self.search(cr, uid, [('code','=', lang)])
         if not lang_ids:
             self.load_lang(cr, uid, lang)
@@ -95,6 +95,7 @@ class lang(osv.osv):
                 format = format.replace(pattern, replacement)
             return str(format)
 
+        conv = locale.localeconv()
         lang_info = {
             'code': lang,
             'iso_code': iso_lang,
@@ -103,8 +104,9 @@ class lang(osv.osv):
             'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
-            'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-            'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+            'decimal_point' : fix_xa0(str(conv['decimal_point'])),
+            'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
+            'grouping' : str(conv.get('grouping', [])),
         }
         lang_id = False
         try:

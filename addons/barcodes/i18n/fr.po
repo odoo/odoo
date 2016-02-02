@@ -5,6 +5,7 @@
 # Translators:
 # Clo <clo@odoo.com>, 2015
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Olivier Dony <odo@odoo.com>, 2016
 # Quentin THEURET <quentin@theuret.net>, 2015
 # Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-01-14 10:12+0000\n"
+"PO-Revision-Date: 2016-01-27 10:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +64,9 @@ msgid ""
 msgstr "Une nomenclature de code barre définit la façon dont le point de vente identifie et interprète le code barre."
 
 #. module: barcodes
+#: code:addons/barcodes/barcodes.py:191
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
 msgid "Alias"
 msgstr "Alias"
 
@@ -86,7 +89,7 @@ msgstr "Un identifiant interne de la nomenclature de code-barres"
 #: code:addons/barcodes/barcodes.py:183
 #, python-format
 msgid "Any"
-msgstr ""
+msgstr "Tous"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
@@ -281,6 +284,12 @@ msgstr "UPC-A vers EAN-13"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
 msgid "UPC/EAN Conversion"
 msgstr "Conversion UPC/EAN"
+
+#. module: barcodes
+#: code:addons/barcodes/barcodes.py:191
+#, python-format
+msgid "Unit Product"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
