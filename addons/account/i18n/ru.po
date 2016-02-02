@@ -8,15 +8,16 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2015
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
-# SV <svilij@yahoo.com>, 2015-2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
 # Viktor Pogrebniak <avtomaton@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-22 08:20+0000\n"
-"Last-Translator: Artur Komishenko <Archi1792@gmail.com>\n"
+"PO-Revision-Date: 2016-01-29 21:12+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,7 +297,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Pay your bills</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Оплатить ваши счета</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Оплатить ваши счета-фактуры</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -312,7 +313,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Record your Bills</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Записать ваши счета</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Записать ваши Счета-фактуры</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -471,7 +472,7 @@ msgstr "<strong>Создать заявку на депозит</strong><br/>\n�
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr "<strong>Создать счёт в Odoo</strong><br/> с верной датой оплаты, и создать производителя, если он ещё не представлен в системе."
+msgstr "<strong>Создать счёт-фактуру в Odoo</strong><br/> с верной датой оплаты, и создать поставщика, если он ещё не представлен в системе."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -764,7 +765,7 @@ msgstr "В журнал записываются транзакции по вс�
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of common taxes and their rates."
-msgstr "Список обычных сборов с указанием их размера."
+msgstr "Список обычных налогов с указанием их размера."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4504,7 +4505,7 @@ msgstr "Дополнительная информация"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
 msgid "Input Account for Stock Valuation"
-msgstr "Входной Счет для Оценки Запасов"
+msgstr "Входящий Счет для Оценки Запасов"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4794,7 +4795,7 @@ msgstr "Это обычная практика, чтобы изменить св
 msgid ""
 "It's recommended that you do not delete any accounts, even if they are not "
 "relevant. Simply make them inactive."
-msgstr "Рекомендуется, чтобы вы не удалили ни какие счета, даже если они не актуальны. Просто сделайте их неактивными."
+msgstr "Рекомендуется, чтобы вы не удаляли никакие счета, даже если они не актуальны. Просто сделайте их неактивными."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4996,7 +4997,7 @@ msgstr "Метка"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
 msgid "Label on Invoices"
-msgstr "Фирменный знак на Счет-фактурах"
+msgstr "Обозначение на Счет-фактурах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_last_post
@@ -7325,7 +7326,7 @@ msgstr "Отправить по Email"
 msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
-msgstr "Отправка выписок клиентов (счета-фактуры) вручную в течение переходного периода"
+msgstr "Отправка выписок клиентам (счета-фактуры) вручную в течение переходного периода"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -8424,7 +8425,7 @@ msgstr "Этот налог на покупку будет назначен по
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "This role is best suited for managing the day to day accounting operations:"
-msgstr "Эту роль лучше всего подходит для управления ежедневными бухгалтерскими операциями:"
+msgstr "Эта роль лучше всего подходит для управления ежедневными бухгалтерскими операциями:"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
@@ -8486,7 +8487,7 @@ msgid ""
 "To manage the tax applied when invoicing a Company, Odoo uses the concept of"
 " Fiscal Position: they serve to automatically set the right tax and/or "
 "account according to the customer country and state."
-msgstr "Чтобы управлять налогом который применяется при выставлении счета-фактуры Компании, Odoo использует понятие Фискальной Позиции: оно служат для того, чтобы автоматически установить правильный налог и/или счет, в зависимости от страны заказчика."
+msgstr "Чтобы управлять налогом который применяется при выставлении счета-фактуры Компании, Odoo использует понятие Фискальной Позиции: оно служит для того, чтобы автоматически установить правильный налог и/или счет, в зависимости от страны заказчика."
 
 #. module: account
 #: code:addons/account/models/account_move.py:776
@@ -9515,7 +9516,7 @@ msgstr "быстрый интерфейс записи"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "first)"
-msgstr "первый)"
+msgstr "сначала)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

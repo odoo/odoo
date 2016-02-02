@@ -18,7 +18,7 @@ class website_payment(http.Controller):
             acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': '/my/payment_method', 'json': False, 'bootstrap_formatting': True})[0]
         return request.website.render("website_payment.pay_methods", values)
 
-    @http.route(['/website_payment/delete/'], method=['POST'], type='http', auth="user", website=True)
+    @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
         if delete_pm_id:
             pay_meth = request.env['payment.method'].browse(int(delete_pm_id))

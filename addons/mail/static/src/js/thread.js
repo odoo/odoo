@@ -38,9 +38,9 @@ var Thread = Widget.extend({
         "click .oe_mail_expand": function (event) {
             event.preventDefault();
             event.stopPropagation();
-            var $source = $(event.currentTarget);
-            $source.parents('.o_thread_message_core').find('.o_mail_body_short').toggle();
-            $source.parents('.o_thread_message_core').find('.o_mail_body_long').toggle();
+            var $message = $(event.currentTarget).parents('.o_thread_message');
+            $message.addClass('o_message_expanded');
+            this.expanded_msg_ids.push($message.data('message-id'));
         },
     },
 
@@ -55,9 +55,12 @@ var Thread = Widget.extend({
             shorten_messages: true,
             squash_close_messages: true,
         });
+        this.expanded_msg_ids = [];
     },
 
     render: function (messages, options) {
+        clearTimeout(this.auto_render_timeout);
+        var self = this;
         var msgs = _.map(messages, this._preprocess_message.bind(this));
         if (this.options.display_order === ORDER.DESC) {
             msgs.reverse();
@@ -83,6 +86,12 @@ var Thread = Widget.extend({
             options: options,
             ORDER: ORDER,
         }));
+
+        this.auto_render_timeout = setTimeout(function () {
+            if (!self.isDestroyed()) {
+                self.render(messages, options);
+            }
+        }, 1000*60); // re-render the thread every minute to update dates
     },
 
     on_click_redirect: function (event) {
@@ -110,7 +119,7 @@ var Thread = Widget.extend({
     _preprocess_message: function (message) {
         var msg = _.extend({}, message);
 
-        // Set the date in the browser timezone
+        msg.date = moment.min(msg.date, moment());
         var date = msg.date.format('YYYY-MM-DD');
 
         if (date === moment().format('YYYY-MM-DD')) {
@@ -124,7 +133,11 @@ var Thread = Widget.extend({
             msg.hour = msg.date.format('LT');
         }
 
-        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
+        if (_.contains(this.expanded_msg_ids, message.id)) {
+            msg.expanded = true;
+        }
+
+        msg.display_subject = message.subject && !message.is_system_notification;
         return msg;
     },
 

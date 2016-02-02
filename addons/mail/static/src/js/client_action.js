@@ -371,7 +371,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             // Hide 'detach' button in static channels
             self.$buttons
                 .find('.o_mail_chat_button_detach')
-                .toggle(channel.type !== "static" && !channel.mass_mailing);
+                .toggle(channel.type !== "static");
             // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
             self.$buttons
                 .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
@@ -446,7 +446,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
             display_needactions: this.channel.display_needactions,
             messages_separator_position: this.messages_separator_position,
-            squash_close_messages: this.channel.type !== 'static',
+            squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
             display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",

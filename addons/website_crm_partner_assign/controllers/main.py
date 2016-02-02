@@ -111,7 +111,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         # search partners matching current search parameters
         partner_ids = partner_obj.search(
             request.cr, SUPERUSER_ID, base_partner_domain,
-            order="grade_id DESC",
+            order="grade_id DESC, display_name ASC",
             context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
         # remove me in trunk

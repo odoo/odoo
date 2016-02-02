@@ -73,7 +73,7 @@ var FieldTextHtmlSimple = widget.extend({
                     self.resize();
                 });
             } else {
-                this.$content = $('<div class="note-editable o_readonly"/>');
+                this.$content = $('<div class="o_readonly"/>');
                 this.$textarea.hide().after(this.$content);
             }
         } else {

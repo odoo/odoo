@@ -907,7 +907,7 @@ class expression(object):
                     push(leaf)
                 else:
                     for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, model))
+                        push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
             # FUNCTION FIELD
