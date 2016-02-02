@@ -137,9 +137,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
-                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
+                    content = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     pages += 1
-                    last = create_sitemap('/sitemap-%d.xml' % pages, page)
+                    last = create_sitemap('/sitemap-%d.xml' % pages, content)
                 else:
                     break
             if not pages:
