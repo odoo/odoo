@@ -43,21 +43,18 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
-from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
 import openerp.tools as tools
+from openerp.sql_db import LazyCursor
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
-from openerp import SUPERUSER_ID, registry
+from openerp import SUPERUSER_ID
 
-@contextmanager
-def _get_cursor():
-    # yield a valid cursor from any environment or create a new one if none found
-    with registry().cursor() as cr:
-        yield cr
+# deprecated; kept for backward compatibility only
+_get_cursor = LazyCursor
 
 EMPTY_DICT = frozendict()
 
@@ -396,7 +393,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -1007,6 +1004,25 @@ class many2many(_column):
             return
         rel, id1, id2 = self._sql_names(model)
         obj = model.pool[self._obj]
+
+        def link(ids):
+            # beware of duplicates when inserting
+            query = """ INSERT INTO {rel} ({id1}, {id2})
+                        (SELECT %s, unnest(%s)) EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1}=%s)
+                    """.format(rel=rel, id1=id1, id2=id2)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute(query, (id, list(sub_ids), id))
+
+        def unlink_all():
+            # remove all records for which user has access rights
+            clauses, params, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+            cond = " AND ".join(clauses) if clauses else "1=1"
+            query = """ DELETE FROM {rel} USING {tables}
+                        WHERE {rel}.{id1}=%s AND {rel}.{id2}={table}.id AND {cond}
+                    """.format(rel=rel, id1=id1, id2=id2,
+                               table=obj._table, tables=','.join(tables), cond=cond)
+            cr.execute(query, [id] + params)
+
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
@@ -1020,23 +1036,12 @@ class many2many(_column):
             elif act[0] == 3:
                 cr.execute('delete from '+rel+' where ' + id1 + '=%s and '+ id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+' = %s and '+id2+' = %s', (id, act[1]))
-                if not cr.fetchone():
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s,%s)', (id, act[1]))
+                link([act[1]])
             elif act[0] == 5:
-                cr.execute('delete from '+rel+' where ' + id1 + ' = %s', (id,))
+                unlink_all()
             elif act[0] == 6:
-
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-                if d1:
-                    d1 = ' and ' + ' and '.join(d1)
-                else:
-                    d1 = ''
-                cr.execute('delete from '+rel+' where '+id1+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
-
-                for act_nbr in act[2]:
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s, %s)', (id, act_nbr))
+                unlink_all()
+                link(act[2])
 
     #
     # TODO: use a name_search
@@ -1315,7 +1320,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
