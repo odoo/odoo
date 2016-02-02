@@ -1148,30 +1148,8 @@ class ir_model_data(osv.osv):
         return res_id
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        if isinstance(models[0], (list, tuple)):
-            model,res_id = models[0]
-        else:
-            res_id=None
-            model = models[0]
-
-        if res_id:
-            where = ' and res_id=%s' % (res_id,)
-        else:
-            where = ' and (res_id is null)'
-
-        if key2:
-            where += ' and key2=\'%s\'' % (key2,)
-        else:
-            where += ' and (key2 is null)'
-
-        cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
-        res = cr.fetchone()
         ir_values_obj = openerp.registry(cr.dbname)['ir.values']
-        if not res:
-            ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
-        elif xml_id:
-            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
-            ir_values_obj.invalidate_cache(cr, uid, ['value'])
+        ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         return True
 
     def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
