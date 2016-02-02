@@ -25,6 +25,7 @@
                             <field name="prefix"/>
                             <field name="suffix"/>
                             <field name="use_date_range"/>
+                            <field name="date_range_type" attrs="{'invisible': [('use_date_range', '=', False)]}"/>
                           </group>
                           <group>
                             <field name="padding"/>
