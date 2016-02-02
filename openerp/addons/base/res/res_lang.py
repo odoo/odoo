@@ -34,7 +34,7 @@ class lang(osv.osv):
 
         """
         # config['load_language'] is a comma-separated list or None
-        lang = (tools.config['load_language'] or 'en_US').split(',')[0]
+        lang = (tools.config.get('load_language') or 'en_US').split(',')[0]
         lang_ids = self.search(cr, uid, [('code','=', lang)])
         if not lang_ids:
             self.load_lang(cr, uid, lang)
