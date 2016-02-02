@@ -1439,13 +1439,11 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <t t-foreach="widget.get('records')" t-as="record">
         <div>
-            <t t-if="widget.get('value').indexOf(record[0]) !== -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
-            </t>
-            <t t-if="widget.get('value').indexOf(record[0]) === -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            </t>
-            <t t-esc="record[1]"/>
+            <label style="font-weight: normal">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
+                       t-att-checked="(widget.get('value').indexOf(record[0]) !== -1) or null"/>
+                <t t-esc="record[1]"/>
+            </label>
         </div>
     </t>
 </t>

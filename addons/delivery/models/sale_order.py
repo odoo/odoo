@@ -92,7 +92,8 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        SaleOrderLine.create(values)
+        so = SaleOrderLine.create(values)
+        so.product_id_change_margin()
 
 
 class SaleOrderLine(models.Model):
