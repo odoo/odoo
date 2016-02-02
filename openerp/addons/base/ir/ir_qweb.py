@@ -478,7 +478,7 @@ class QWeb(orm.AbstractModel):
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         async = self.get_attr_bool(template_attributes.get('async'), default=False)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async, qwebcontext=qwebcontext)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -1166,7 +1166,7 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith('/web/content')
 
-    def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, qwebcontext=None):
         if sep is None:
             sep = '\n            '
         response = []
@@ -1182,19 +1182,22 @@ class AssetsBundle(object):
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
         else:
-            url_for = self.context.get('url_for', lambda url: url)
+            if qwebcontext is None:
+                qwebcontext = QWebContext(self.cr, self.uid, {})
             if css and self.stylesheets:
                 css_attachments = self.css()
                 if not self.css_errors:
                     for attachment in css_attachments:
-                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                        el = etree.fromstring('<link href="%s" rel="stylesheet"/>' % attachment.url)
+                        response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
                 else:
                     msg = '\n'.join(self.css_errors)
                     self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                     for style in self.stylesheets:
                         response.append(style.to_html())
             if js and self.javascripts:
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+                el = etree.fromstring('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.js().url))
+                response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
         response.extend(self.remains)
         return sep + sep.join(response)
 

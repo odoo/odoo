@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-01-14 10:09+0000\n"
+"PO-Revision-Date: 2016-01-27 10:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -280,6 +280,13 @@ msgid "@ Inbox"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:20
+#, python-format
+msgid "@Inbox"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,help:mail.field_res_users_alias_defaults
@@ -443,6 +450,13 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
 msgstr "นามแฝง"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:12
+#, python-format
+msgid "All"
+msgstr ""
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -689,7 +703,10 @@ msgid "Channels/Partner"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:13
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
+#, python-format
 msgid "Chat"
 msgstr ""
 
@@ -1466,11 +1483,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
-msgid "Important Messages"
-msgstr ""
-
-#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Important messages"
 msgstr ""
@@ -1546,7 +1558,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:31
+#: code:addons/mail/static/src/js/client_action.js:30
+#: code:addons/mail/static/src/xml/client_action.xml:123
 #, python-format
 msgid "Invite people"
 msgstr ""
@@ -1900,6 +1913,8 @@ msgid "Message-Id"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:6
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
@@ -1907,6 +1922,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
+#, python-format
 msgid "Messages"
 msgstr "ข้อความ"
 
@@ -2022,8 +2038,11 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:99
+#: code:addons/mail/static/src/js/chat_manager.js:54
+#: code:addons/mail/static/src/js/window_manager.js:124
 #: code:addons/mail/static/src/xml/chatter.xml:67
+#: code:addons/mail/static/src/xml/client_action.xml:127
+#: code:addons/mail/static/src/xml/systray.xml:16
 #, python-format
 msgid "New message"
 msgstr ""
@@ -2684,6 +2703,13 @@ msgid "Send Email"
 msgstr "ส่งอีเมล"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/client_action.xml:127
+#, python-format
+msgid "Send mail"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_template.py:237
 #, python-format
 msgid "Send Mail (%s)"
@@ -3024,6 +3050,13 @@ msgstr "ถึง (คู่ค้า)"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/chat_window.xml:24
+#, python-format
+msgid "To:"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "To: Followers of"
@@ -3127,6 +3160,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread
+#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Unread Messages"
 msgstr "ข้อความที่ยังไม่ได้อ่าน"
 
@@ -3136,6 +3170,11 @@ msgstr "ข้อความที่ยังไม่ได้อ่าน"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread_counter
 msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: mail
+#: model:ir.ui.view,arch_db:mail.view_message_search
+msgid "Unread messages"
 msgstr ""
 
 #. module: mail

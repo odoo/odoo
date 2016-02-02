@@ -360,7 +360,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             // Hide 'detach' button in static channels
             self.$buttons
                 .find('.o_mail_chat_button_detach')
-                .toggle(channel.type !== "static" && !channel.mass_mailing);
+                .toggle(channel.type !== "static");
             // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
             self.$buttons
                 .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
