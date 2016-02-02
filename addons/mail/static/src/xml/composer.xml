@@ -5,23 +5,23 @@
          <div class="o_composer_attachments_list"/>
          <t t-if="widget.extended">
              <div class="o_composer_subject">
-                 <input type="text" placeholder="Subject"></input>
+                 <input tabindex="1" type="text" placeholder="Subject"></input>
                  <div class="btn-group o_composer_buttons">
-                    <button class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
-                    <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
-                    <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                    <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
+                    <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                    <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
                  </div>
              </div>
          </t>
          <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
              <div class="o_composer_input">
-                 <textarea placeholder="Write something..."/>
+                 <textarea tabindex="2" placeholder="Write something..."/>
              </div>
              <t t-if="!widget.extended">
                  <div class="btn-group o_composer_buttons">
-                    <button class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
-                    <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
-                    <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                    <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
+                    <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                    <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
                  </div>
              </t>
          </div>
