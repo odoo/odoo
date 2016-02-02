@@ -94,6 +94,7 @@ class _column(object):
         'deprecated',           # Optional deprecation warning
         '_args',
         '_prefetch',
+        '_module',              # the column's module name
     ]
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=[], context={}, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
@@ -126,6 +127,7 @@ class _column(object):
         args['groups'] = args.get('groups', None)
         args['deprecated'] = args.get('deprecated', None)
         args['_prefetch'] = args.get('_prefetch', True)
+        args['_module'] = args.get('_module', None)
 
         self._args = EMPTY_DICT
         for key, val in args.iteritems():
@@ -178,6 +180,7 @@ class _column(object):
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
+            ('_module', self._module),
             ('automatic', False),
             ('inherited', False),
             ('store', True),
