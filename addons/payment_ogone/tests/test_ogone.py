@@ -18,7 +18,7 @@ class OgonePayment(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the adyen account
-        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_ogone', 'payment_acquirer_ogone')
+        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_ogone')
 
     def test_10_ogone_form_render(self):
         cr, uid, context = self.cr, self.uid, {}

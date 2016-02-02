@@ -20,7 +20,7 @@ class BuckarooCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the buckaroo account
-        model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_buckaroo', 'payment_acquirer_buckaroo')
+        model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_buckaroo')
 
 
 @openerp.tests.common.at_install(False)
