@@ -251,11 +251,14 @@ class MetaModel(api.Meta):
         for key, val in attrs.iteritems():
             if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
                 _logger.error("Trailing comma after field definition: %s.%s", self, key)
+            if isinstance(val, Field):
+                val.args = dict(val.args, _module=self._module)
 
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
                 _logger.warning("In class %s, field %r overriding an existing value", self, name)
+            column._module = self._module
             setattr(self, name, column.to_field())
 
 
@@ -446,13 +449,14 @@ class BaseModel(object):
                     ",".join("%%(%s)s" % name for name in vals),
                 )
                 cr.execute(query, vals)
-                if 'module' in context:
+                module = f._module or context.get('module')
+                if module:
                     name1 = 'field_' + self._table + '_' + k
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
                     cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                        (name1, context['module'], 'ir.model.fields', id)
+                        (name1, module, 'ir.model.fields', id)
                     )
             else:
                 for key, val in vals.items():
@@ -2342,7 +2346,7 @@ class BaseModel(object):
                 WHERE name=%s AND module = (SELECT id FROM ir_module_module WHERE name=%s)""",
                     (type, definition, constraint_name, self._module))
 
-    def _save_relation_table(self, cr, relation_table):
+    def _save_relation_table(self, cr, relation_table, module):
         """
         Record the creation of a many2many for this model, to make it possible
         to delete it later when the module is uninstalled.
@@ -2352,13 +2356,13 @@ class BaseModel(object):
             WHERE ir_model_relation.module=ir_module_module.id
                 AND ir_model_relation.name=%s
                 AND ir_module_module.name=%s
-            """, (relation_table, self._module))
+            """, (relation_table, module))
         if not cr.rowcount:
             cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
                                  VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
-                       (relation_table, self._module, self._name))
+                       (relation_table, module, self._name))
             self.invalidate_cache(cr, SUPERUSER_ID)
 
     # checked version: for direct m2o starting from ``self``
@@ -2837,7 +2841,7 @@ class BaseModel(object):
         # they will be automatically removed when dropping the corresponding ir.model.field
         # table name for custom relation all starts with x_, see __init__
         if not m2m_tbl.startswith('x_'):
-            self._save_relation_table(cr, m2m_tbl)
+            self._save_relation_table(cr, m2m_tbl, f._module)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if f._obj not in self.pool:

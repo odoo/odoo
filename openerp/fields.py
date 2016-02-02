@@ -304,6 +304,7 @@ class Field(object):
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
+        '_module': None,                # the field's module name
         'setup_full_done': False,       # whether the field has been fully setup
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
@@ -732,6 +733,7 @@ class Field(object):
         return self.column
 
     # properties used by to_column() to create a column instance
+    _column__module = property(attrgetter('_module'))
     _column_copy = property(attrgetter('copy'))
     _column_select = property(attrgetter('index'))
     _column_manual = property(attrgetter('manual'))
