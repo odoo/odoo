@@ -17,12 +17,12 @@ class ReportJournal(models.AbstractModel):
 
         query_get_clause = self._get_query_get_clause(data)
         params = [tuple(move_state), tuple(journal_ids)] + query_get_clause[2]
-        query = 'SELECT "account_move_line".id FROM ' + query_get_clause[0] + ', account_move am WHERE "account_move_line".move_id=am.id AND am.state IN %s AND "account_move_line".journal_id IN %s AND ' + query_get_clause[1] + ' ORDER BY '
+        query = 'SELECT "account_move_line".id FROM ' + query_get_clause[0] + ', account_move am, account_account acc WHERE "account_move_line".account_id = acc.id AND "account_move_line".move_id=am.id AND am.state IN %s AND "account_move_line".journal_id IN %s AND ' + query_get_clause[1] + ' ORDER BY '
         if sort_selection == 'date':
             query += '"account_move_line".date'
         else:
             query += 'am.name'
-        query += ', "account_move_line".move_id'
+        query += ', "account_move_line".move_id, acc.code'
         self.env.cr.execute(query, tuple(params))
         ids = map(lambda x: x[0], self.env.cr.fetchall())
         return self.env['account.move.line'].browse(ids)
@@ -58,23 +58,32 @@ class ReportJournal(models.AbstractModel):
 
         query_get_clause = self._get_query_get_clause(data)
         params = [tuple(move_state), tuple(journal_id.ids)] + query_get_clause[2]
-        self.env.cr.execute('SELECT DISTINCT tax_line_id FROM ' + query_get_clause[0] + ', account_move am '
-                        'WHERE "account_move_line".move_id=am.id AND am.state IN %s AND "account_move_line".journal_id IN %s AND ' + query_get_clause[1] + ' AND tax_line_id is not null',
-                        tuple(params))
-        ids = map(lambda x: x[0], self.env.cr.fetchall())
-        taxes = self.env['account.tax'].browse(ids)
+        query = """
+            SELECT rel.account_tax_id, SUM("account_move_line".balance) AS base_amount
+            FROM account_move_line_account_tax_rel rel, """ + query_get_clause[0] + """ 
+            LEFT JOIN account_move am ON "account_move_line".move_id = am.id
+            WHERE "account_move_line".id = rel.account_move_line_id
+                AND am.state IN %s
+                AND "account_move_line".journal_id IN %s
+                AND """ + query_get_clause[1] + """
+           GROUP BY rel.account_tax_id"""
+        self.env.cr.execute(query, tuple(params))
+        ids = []
+        base_amounts = {}
+        for row in self.env.cr.fetchall():
+            ids.append(row[0])
+            base_amounts[row[0]] = row[1]
+
+
         res = {}
-        for tax in taxes:
-            res[tax] = {}
+        for tax in self.env['account.tax'].browse(ids):
             self.env.cr.execute('SELECT sum(debit - credit) FROM ' + query_get_clause[0] + ', account_move am '
                 'WHERE "account_move_line".move_id=am.id AND am.state IN %s AND "account_move_line".journal_id IN %s AND ' + query_get_clause[1] + ' AND tax_line_id = %s',
                 tuple(params + [tax.id]))
-            res[tax]['tax_amount'] = self.env.cr.fetchone()[0] or 0.0
-            amls = self.env['account.move.line'].search([('tax_ids', 'in', [tax.id])])
-            self.env.cr.execute('SELECT sum(debit - credit) FROM ' + query_get_clause[0] + ', account_move am '
-                'WHERE "account_move_line".move_id=am.id AND am.state IN %s AND "account_move_line".journal_id IN %s AND ' + query_get_clause[1] + ' AND "account_move_line".id in %s',
-                tuple(params + [tuple(amls.ids)]))
-            res[tax]['base_amount'] = self.env.cr.fetchone()[0] or 0.0
+            res[tax] = {
+                'base_amount': base_amounts[tax.id],
+                'tax_amount': self.env.cr.fetchone()[0] or 0.0,
+            }
             if journal_id.type == 'sale':
                 #sales operation are credits
                 res[tax]['base_amount'] = res[tax]['base_amount'] * -1

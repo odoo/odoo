@@ -6,14 +6,15 @@
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-01-23 19:32+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"PO-Revision-Date: 2016-01-29 15:43+0000\n"
+"Last-Translator: Tina Rittmüller <tr@ife.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/>\n<b>Bis</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -146,7 +147,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr ""
+msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -194,12 +195,12 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
-msgstr ""
+msgstr "<strong>Unsere Preise enthalten:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>Programm:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -211,7 +212,7 @@ msgstr "<strong>Anforderungen:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>Wo Sie uns finden können:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction
@@ -239,7 +240,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "Nach der Veranstaltung"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
@@ -305,13 +306,13 @@ msgstr "Teilnehmer"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Attendee / Contact"
-msgstr ""
+msgstr "Teilnehmer / Kontakt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Teilnehmer Name"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -357,12 +358,12 @@ msgstr "Banner Odoo Bild"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "Vor der Veranstaltung"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "Mit freundlichen Grüßen, "
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -376,7 +377,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Bringen Sie Ihren eigenen Laptop mit."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -429,7 +430,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr ""
+msgstr "Klicken Sie hier zum Hinzufügen einer neuen Veranstaltung."
 
 #. module: event
 #: code:addons/event/models/event.py:204
@@ -469,7 +470,7 @@ msgstr "Konfiguration"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 msgid "Configure Event"
-msgstr ""
+msgstr "Konfiguriere Event"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -495,7 +496,7 @@ msgstr "Bestätige Anmeldung"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Confirmation not required"
-msgstr ""
+msgstr "Bestätigung nicht erforderlich"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -508,7 +509,7 @@ msgstr "Bestätigt"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "Bestätigte Teilnehmer"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -589,21 +590,21 @@ msgstr "Datum der letzten Nachricht."
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr ""
+msgstr "Tag 1"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 2"
-msgstr ""
+msgstr "Tag 2"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 3"
-msgstr ""
+msgstr "Tag 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -749,12 +750,12 @@ msgstr "Ende der Veranstaltung"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "Veranstaltungsinformationen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "Veranstaltungslogo"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
@@ -848,7 +849,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 msgid "Events Types"
-msgstr ""
+msgstr "Veranstaltungsarten"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -878,7 +879,7 @@ msgstr "Erwartet"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Erwartete Teilnehmer"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -943,7 +944,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Functions"
-msgstr ""
+msgstr "Funktionen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -962,7 +963,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Hello World"
-msgstr ""
+msgstr "Hallo Welt"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1062,26 +1063,26 @@ msgstr "Intervalle"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "Einführung zu JQuery"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "Einführung zu Javascript"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "Einführung zu QWeb"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "Einführung, CRM, Verkaufsmanagement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
@@ -1102,7 +1103,7 @@ msgstr "Die minimale Anzahl der Teilnehmer wird  als Standard bei der Auswahl de
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "Kanban Farb Index"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_last_post
@@ -1164,7 +1165,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr ""
+msgstr "Luigi Roni, Senior Event Manager"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1343,7 +1344,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo Web Client"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view

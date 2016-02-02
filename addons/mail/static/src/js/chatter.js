@@ -451,7 +451,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             record_name: false,
             is_log: false,
             internal_subtypes: [],
-            default_body: '',
         });
         if (this.options.is_log) {
             this.options.send_text = _('Log');
@@ -466,13 +465,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             return this._super.apply(this, arguments);
         }
         return $.when(this._super.apply(this, arguments), this.message_get_suggested_recipients());
-    },
-
-    start: function () {
-        var self = this;
-        return this._super().then(function () {
-            self.$input.val(self.options.default_body);
-        });
     },
 
     should_send: function () {
@@ -726,6 +718,16 @@ var Chatter = form_common.AbstractField.extend({
     start: function () {
         var self = this;
 
+        // Hide the chatter in 'create' mode
+        this.view.on("change:actual_mode", this, this.check_visibility);
+        this.check_visibility();
+        var $container = this.$el.parent();
+        if ($container.hasClass('oe_chatter')) {
+            this.$el
+                .addClass($container.attr("class"))
+                .unwrap();
+        }
+
         // Move the follower's widget (if any) inside the chatter
         this.followers = this.field_manager.fields.message_follower_ids;
         if (this.followers) {
@@ -757,6 +759,10 @@ var Chatter = form_common.AbstractField.extend({
             chat_manager.bus.on('update_message', self, self.on_update_message);
             self.ready.resolve();
         });
+    },
+
+    check_visibility: function () {
+        this.set({"force_invisible": this.view.get("actual_mode") === "create"});
     },
 
     fetch_and_render_thread: function (ids, options) {
@@ -906,6 +912,7 @@ var Chatter = form_common.AbstractField.extend({
             is_log: options && options.is_log,
             record_name: this.record_name,
             default_body: old_composer && old_composer.$input.val(),
+            default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);

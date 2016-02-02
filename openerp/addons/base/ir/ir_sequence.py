@@ -194,19 +194,21 @@ class ir_sequence(models.Model):
             return ''
 
         def _interpolation_dict():
-            now = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
+            now = range_date = effective_date = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
             if self.env.context.get('ir_sequence_date'):
-                t = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
-            else:
-                t = now
+                effective_date = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
+            if self.env.context.get('ir_sequence_date_range'):
+                range_date = datetime.strptime(self.env.context.get('ir_sequence_date_range'), '%Y-%m-%d')
+
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
                 'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
             }
             res = {}
             for key, sequence in sequences.iteritems():
-                res[key] = now.strftime(sequence)
-                res['range_' + key] = t.strftime(sequence)
+                res[key] = effective_date.strftime(sequence)
+                res['range_' + key] = range_date.strftime(sequence)
+                res['current_' + key] = now.strftime(sequence)
 
             return res
 
@@ -248,7 +250,7 @@ class ir_sequence(models.Model):
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
-        return seq_date._next()
+        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
 
     @api.multi
     def next_by_id(self):

@@ -28,7 +28,8 @@ class sale_order(osv.Model):
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             document = self.browse(cr, uid, id, context=context)
             action_xmlid = 'action_quotations_portal' if document.state in ('draft', 'sent') else 'action_orders_portal'
@@ -57,7 +58,8 @@ class account_invoice(osv.Model):
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
         return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)

@@ -11,7 +11,7 @@
             </div>
             <div class="o_chat_content">
             </div>
-            <div class="o_chat_input">
+            <div t-if='!widget.options.input_less' class="o_chat_input">
                 <input t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>

@@ -23,6 +23,10 @@
         }
     }
 
+    @media print {
+        display: none;
+    }
+
     .o_chat_header {
         .o-flex-display();
         .o-flex(0, 0, auto);
@@ -123,6 +127,10 @@
             }
         }
     }
+}
+
+.o_ui_blocked .o_chat_window {
+    z-index: 1101; // blockUI's z-index is 1100
 }
 
 // FIXME: move this to its own file in master
