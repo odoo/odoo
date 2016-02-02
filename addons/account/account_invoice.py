@@ -813,7 +813,7 @@ class account_invoice(models.Model):
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
-            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
+            if self.env.user.has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise UserError(_('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
