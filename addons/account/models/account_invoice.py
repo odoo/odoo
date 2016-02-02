@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import api, fields, models, _, SUPERUSER_ID
-from openerp.tools import float_is_zero
+from openerp.tools import float_is_zero, float_compare
 from openerp.tools.misc import formatLang
 
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
@@ -1098,8 +1098,8 @@ class AccountInvoiceLine(models.Model):
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes)
 
         fix_price = self.env['account.tax']._fix_tax_included_price
-        if type in ('in_invoice', 'in_refund'):
-            if not self.price_unit or self.price_unit == self.product_id.standard_price:
+        if self.invoice_id.type in ('in_invoice', 'in_refund'):
+            if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=self.currency_id.rounding) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
