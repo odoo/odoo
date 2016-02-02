@@ -38,6 +38,40 @@
                 <field name="applicability">taxes</field>
         </record>
 
+        <record id="tax_tag_uncl5305_s" model="account.account.tag">
+                <field name="name">Standard rate</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_h" model="account.account.tag">
+                <field name="name">Reduced rate - food</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_r" model="account.account.tag">
+                <field name="name">Unprocessed fish</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_aa" model="account.account.tag">
+                <field name="name">Low rate</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_e" model="account.account.tag">
+                <field name="name">Tax exempt</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_z" model="account.account.tag">
+                <field name="name">Zero rate (outside of legislative area)</field>
+                <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_tag_uncl5305_k" model="account.account.tag">
+                <field name="name">Climate quotas</field>
+                <field name="applicability">taxes</field>
+        </record>
 
 <record id="tax1" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -48,7 +82,7 @@
 	<field name="type_tax_use">sale</field>
 	<field name="account_id" ref="chart2701"/>
 	<field name="refund_account_id" ref="chart2701"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut25')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut25'), ref('tax_tag_uncl5305_s')])]"/>
 </record>
 <record id="tax2" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -59,7 +93,7 @@
 	<field name="type_tax_use">sale</field>
 	<field name="account_id" ref="chart2703"/>
 	<field name="refund_account_id" ref="chart2703"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut15')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut15'), ref('tax_tag_uncl5305_h')])]"/>
 </record>
 <record id="tax3" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -70,7 +104,7 @@
 	<field name="type_tax_use">sale</field>
 	<field name="account_id" ref="chart2704"/>
 	<field name="refund_account_id" ref="chart2704"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut8')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut8'), ref('tax_tag_uncl5305_aa')])]"/>
 </record>
 <record id="tax4" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -81,7 +115,7 @@
 	<field name="type_tax_use">purchase</field>
 	<field name="account_id" ref="chart2711"/>
 	<field name="refund_account_id" ref="chart2711"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in25')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in25'), ref('tax_tag_uncl5305_s')])]"/>
 </record>
 <record id="tax5" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -92,7 +126,7 @@
 	<field name="type_tax_use">purchase</field>
 	<field name="account_id" ref="chart2713"/>
 	<field name="refund_account_id" ref="chart2713"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in15')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in15'), ref('tax_tag_uncl5305_h')])]"/>
 </record>
 <record id="tax6" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
@@ -103,7 +137,7 @@
 	<field name="type_tax_use">purchase</field>
 	<field name="account_id" ref="chart2714"/>
 	<field name="refund_account_id" ref="chart2714"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in8')])]"/>
+	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in8'), ref('tax_tag_uncl5305_aa')])]"/>
 </record>
 
 <record id="tax7" model="account.tax.template">
@@ -115,7 +149,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chart2714"/>
         <field name="refund_account_id" ref="chart2714"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), , ref('tax_tag_uncl5305_e')])]"/>
 </record>
 
 <record id="tax8" model="account.tax.template">
@@ -127,7 +161,31 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="chart2704"/>
         <field name="refund_account_id" ref="chart2704"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut0')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut0'), ref('tax_tag_uncl5305_e')])]"/>
+</record>
+
+<record id="tax9" model="account.tax.template">
+        <field name="chart_template_id" ref="no_chart_template"/>
+        <field name="name">Inngående 0% mva</field>
+        <field name="description">Inngående 0% mva</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="chart2714"/>
+        <field name="refund_account_id" ref="chart2714"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0'), , ref('tax_tag_uncl5305_z')])]"/>
+</record>
+
+<record id="tax10" model="account.tax.template">
+        <field name="chart_template_id" ref="no_chart_template"/>
+        <field name="name">Utgående 0% mva</field>
+        <field name="description">Utgående 0% mva</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="chart2704"/>
+        <field name="refund_account_id" ref="chart2704"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut0'), ref('tax_tag_uncl5305_z')])]"/>
 </record>
 
 </data>
