@@ -162,11 +162,10 @@
                         <field name="carrier_id"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
-                        <div>
+                        <div name="tracking">
                             <field name="carrier_tracking_ref" class="oe_inline"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
-                        <field name="carrier_price"/>
                     </group>
                     <group>
                         <label for="weight" string="Weight"/>
@@ -273,26 +272,6 @@
                       </div>
                   </xpath>
                 </data>
-            </field>
-        </record>
-
-        <record id="view_picking_withcarrier_out_form_shipping" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.form.view.shipping</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form"/>
-            <field name="arch" type="xml">
-                <xpath expr='//group[@name="carrier_data"]' position='replace'>
-                    <group name='carrier_data'>
-                      <field name="carrier_id"/>
-                      <field name="delivery_type" attrs="{'invisible':True}"/>
-                      <label for="carrier_tracking_ref"/>
-                      <div>
-                          <field name="carrier_tracking_ref" class="oe_inline"/>
-                          <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
-                      </div>
-                      <field name="carrier_price"/>
-                    </group>
-                </xpath>
             </field>
         </record>
 

@@ -37,6 +37,5 @@ class StockMove(models.Model):
             if pickings:
                 pickings.write({
                     'carrier_id': proc.sale_line_id.order_id.carrier_id.id,
-                    'carrier_price': proc.sale_line_id.order_id.delivery_price,
                 })
         return res
