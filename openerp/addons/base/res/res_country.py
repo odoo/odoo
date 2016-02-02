@@ -19,7 +19,7 @@ def location_name_search(self, cr, user, name='', args=None, operator='ilike',
     if ids:
         search_domain.append(('id', 'not in', ids))
     ids.extend(self.search(cr, user, search_domain + args,
-                           limit=limit-len(ids), context=context))
+                           limit=limit, context=context))
 
     locations = self.name_get(cr, user, ids, context)
     return sorted(locations, key=lambda (id, name): ids.index(id))
