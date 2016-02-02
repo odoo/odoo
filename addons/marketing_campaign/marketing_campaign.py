@@ -160,7 +160,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     def _get_partner_for(self, campaign, record):
         partner_field = campaign.partner_field_id.name
         if partner_field:
-            return getattr(record, partner_field)
+            return record[partner_field]
         elif campaign.object_id.model == 'res.partner':
             return record
         return None
