@@ -17,7 +17,7 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the paypal account
-        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_paypal', 'payment_acquirer_paypal')
+        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_paypal')
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
         # some CC

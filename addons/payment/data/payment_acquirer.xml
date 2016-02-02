@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <template id="default_acquirer_button">
+        <form/>
+    </template>
+
+    <record id="payment_acquirer_buckaroo" model="payment.acquirer">
+        <field name="name">Buckaroo</field>
+        <field name="image" type="base64" file="payment_buckaroo/static/description/icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_buckaroo"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_ogone" model="payment.acquirer">
+        <field name="name">Ingenico</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_ogone/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_ogone"/>
+        <field name="description" type="html">
+            <p>
+                Ingenico Payment Services (formerly Ogone), is a payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Subscription</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_adyen" model="payment.acquirer">
+        <field name="name">Adyen</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_adyen/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_adyen"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_authorize" model="payment.acquirer">
+        <field name="name">Authorize.net</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_authorize/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_authorize"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards and e-checks.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_transfer" model="payment.acquirer">
+        <field name="name">Wire Transfer</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_transfer/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_transfer"/>
+        <field name="description" type="html">
+            <p>
+                Provide instructions to customers so that they can pay their orders manually.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_sips" model="payment.acquirer">
+        <field name="name">Sips</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_sips/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_sips"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Atos Worldline to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_paypal" model="payment.acquirer">
+        <field name="name">Paypal</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_paypal/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_paypal"/>
+        <field name="description" type="html">
+            <p>
+                PayPal is the easiest way to accept payments via Paypal or credit cards as you do not need an agreement with a payment processor.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
+            </ul>
+        </field>
+    </record>
+</odoo>

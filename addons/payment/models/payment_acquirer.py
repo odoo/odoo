@@ -54,14 +54,14 @@ class PaymentAcquirer(osv.Model):
     _order = 'sequence'
 
     def _get_providers(self, cr, uid, context=None):
-        return []
+        return [('manual', 'Manual Configuration')]
 
     # indirection to ease inheritance
     _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
-        'provider': fields.selection(_provider_selection, string='Provider', required=True),
+        'provider': fields.selection(_provider_selection, string='Provider', required=True, default='manual'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Help Message', translate=True,
                                help='Message displayed to explain and help the payment process.'),
@@ -92,6 +92,9 @@ class PaymentAcquirer(osv.Model):
         'fees_int_fixed': fields.float('Fixed international fees'),
         'fees_int_var': fields.float('Variable international fees (in percents)'),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
+        'module_id': fields.many2one('ir.module.module', string='Corresponding Module'),
+        'module_state': fields.related('module_id', 'state', type='char', string='Installation State'),
+        'description': fields.html('Description'),
     }
 
     image = openerp.fields.Binary("Image", attachment=True,
@@ -314,6 +317,20 @@ class PaymentAcquirer(osv.Model):
         test_ids = [acquirer.id for acquirer in acquirers if acquirer.environment == 'test']
         self.write(cr, uid, prod_ids, {'environment': 'test'}, context=context)
         self.write(cr, uid, test_ids, {'environment': 'prod'}, context=context)
+
+    def button_immediate_install(self, cr, uid, ids, context=None):
+        acquirer_id = self.browse(cr, uid, ids, context=context)
+        if acquirer_id.module_id and acquirer_id.module_state != 'installed':
+            acquirer_id.module_id.button_immediate_install()
+            context['active_id'] = ids[0]
+            return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'payment.acquirer',
+                'type': 'ir.actions.act_window',
+                'res_id': ids[0],
+                'context': context,
+            }
 
 
 class PaymentTransaction(osv.Model):
