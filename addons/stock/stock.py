@@ -2135,6 +2135,10 @@ class stock_move(osv.osv):
             propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
         if vals.get('product_uom_id'):
             propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
+        if vals.get('product_uos_qty'):
+            propagated_changes_dict['product_uos_qty'] = vals['product_uos_qty']
+        if vals.get('product_uos_id'):
+            propagated_changes_dict['product_uos_id'] = vals['product_uos_id']
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -3169,8 +3173,6 @@ class stock_inventory_line(osv.osv):
     }
 
     def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
         product_obj = self.pool.get('product.product')
         dom = [('product_id', '=', values.get('product_id')), ('inventory_id.state', '=', 'confirm'),
                ('location_id', '=', values.get('location_id')), ('partner_id', '=', values.get('partner_id')),
