@@ -2153,7 +2153,8 @@ class BaseModel(object):
         if many2onefields:
             for row in fetched_data:
                 for field in many2onefields:
-                    many2onefields[field].add(row[field])
+                    if row[field]:
+                        many2onefields[field].add(row[field])
             for field, ids in many2onefields.iteritems():
                 many2one_data[field] = dict(
                     self.pool[self._all_columns[field].column._obj].name_get(
@@ -2162,7 +2163,8 @@ class BaseModel(object):
         result = []
         for row in fetched_data:
             for field, values in many2one_data.iteritems():
-                row[field] = (row[field], values[row[field]])
+                if row[field]:
+                    row[field] = (row[field], values[row[field]])
             data = {
                 k: self._read_group_prepare_data(k,v, groupby_dict, context)
                 for k,v in row.iteritems()}
