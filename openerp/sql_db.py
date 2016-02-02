@@ -456,6 +456,40 @@ class TestCursor(Cursor):
         self.execute("ROLLBACK TO SAVEPOINT test_cursor")
         self.execute("SAVEPOINT test_cursor")
 
+class LazyCursor(object):
+    """ A proxy object to a cursor. The cursor itself is allocated only if it is
+        needed. This class is useful for cached methods, that use the cursor
+        only in the case of a cache miss.
+    """
+    def __init__(self, dbname=None):
+        self._dbname = dbname
+        self._cursor = None
+        self._depth = 0
+
+    @property
+    def dbname(self):
+        return self._dbname or threading.currentThread().dbname
+
+    def __getattr__(self, name):
+        cr = self._cursor
+        if cr is None:
+            from openerp import registry
+            cr = self._cursor = registry(self.dbname).cursor()
+            for _ in xrange(self._depth):
+                cr.__enter__()
+        return getattr(cr, name)
+
+    def __enter__(self):
+        self._depth += 1
+        if self._cursor is not None:
+            self._cursor.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._depth -= 1
+        if self._cursor is not None:
+            self._cursor.__exit__(exc_type, exc_value, traceback)
+
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 

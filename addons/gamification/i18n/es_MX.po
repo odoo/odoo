@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-30 12:39+0000\n"
-"PO-Revision-Date: 2016-01-18 18:41+0000\n"
+"PO-Revision-Date: 2016-01-27 19:50+0000\n"
 "Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
+msgstr "\n<p>Enhorabuena, has recibido la insignia <strong>${object.badge_id.name}</strong> !\n% if object.sender_id\nEste logro fue concedida por <strong>${object.sender_id.name}</strong>.\n% terminara si\n</p>\n\n% if object.comment\n<p><em>${object.comment}</em></p>\n% terminara si"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -650,7 +650,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "Everyone"
-msgstr ""
+msgstr "Todos"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0

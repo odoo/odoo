@@ -93,7 +93,7 @@ class OdooHook(object):
     """ Makes odoo package also available as openerp
     """
 
-    def find_module(self, name, path):
+    def find_module(self, name, path=None):
         # openerp.addons.<identifier> should already be matched by AddonsHook,
         # only framework and subdirectories of modules should match
         if re.match(r'^odoo\b', name):

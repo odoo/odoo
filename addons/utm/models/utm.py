@@ -43,6 +43,12 @@ class UtmMixin(models.AbstractModel):
                                 help="This is the method of delivery.Ex: Postcard, Email, or Banner Ad", oldname='channel_id')
 
     def tracking_fields(self):
+        # This function cannot be overridden in a model which inherit utm.mixin
+        # Limitation by the heritage on AbstractModel
+        # record_crm_lead.tracking_fields() will call tracking_fields() from module utm.mixin (if not overridden on crm.lead)
+        # instead of the overridden method from utm.mixin.
+        # To force the call of overridden method, we use self.pool['utm.mixin'].tracking_fields() which respects overridden
+        # methods of utm.mixin, but will ignore overridden method on crm.lead
         return [
             # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
             ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
@@ -54,7 +60,7 @@ class UtmMixin(models.AbstractModel):
     def default_get(self, fields):
         values = super(UtmMixin, self).default_get(fields)
 
-        for url_param, field_name, cookie_name in self.tracking_fields():
+        for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
             if field_name in fields:
                 field = self._fields[field_name]
                 value = False

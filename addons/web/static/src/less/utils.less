@@ -217,6 +217,15 @@
 }
 
 // ------------------------------------------------------------------
+// Columns
+// ------------------------------------------------------------------
+.o-columns(@width: auto, @col: auto) {
+    -webkit-columns: @width @col;
+    -moz-columns: @width @col;
+    columns: @width @col;
+}
+
+// ------------------------------------------------------------------
 // Position absolute
 // ------------------------------------------------------------------
 .o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {

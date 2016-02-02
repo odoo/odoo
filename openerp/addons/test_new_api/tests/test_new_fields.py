@@ -3,7 +3,7 @@
 #
 from datetime import date, datetime
 
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, except_orm
 from openerp.tests import common
 from openerp.tools import mute_logger
 
@@ -422,27 +422,45 @@ class TestNewFields(common.TransactionCase):
 
     @mute_logger('openerp.addons.base.ir.ir_model')
     def test_41_new_related(self):
-        """ test the behavior of related fields on new records. """
-        discussion = self.env.ref('test_new_api.discussion_0')
-        access = self.env.ref('test_new_api.access_discussion')
-
+        """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
+        access = self.env.ref('test_new_api.access_discussion')
         access.write({'perm_read': False})
 
         # create an environment for demo user
-        demo_env = self.env(user=self.env.ref('base.user_demo'))
-        self.assertEqual(demo_env.user.login, "demo")
+        env = self.env(user=self.env.ref('base.user_demo'))
+        self.assertEqual(env.user.login, "demo")
 
         # create a new message as demo user
-        values = {'discussion': discussion.id}
-        message = demo_env['test_new_api.message'].new(values)
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = env['test_new_api.message'].new({'discussion': discussion})
         self.assertEqual(message.discussion, discussion)
 
         # read the related field discussion_name
-        self.assertEqual(message.discussion.env, demo_env)
+        self.assertEqual(message.discussion.env, env)
         self.assertEqual(message.discussion_name, discussion.name)
         with self.assertRaises(AccessError):
             message.discussion.name
+
+    @mute_logger('openerp.addons.base.ir.ir_model')
+    def test_42_new_related(self):
+        """ test the behavior of related fields traversing new records. """
+        # make discussions unreadable for demo user
+        access = self.env.ref('test_new_api.access_discussion')
+        access.write({'perm_read': False})
+
+        # create an environment for demo user
+        env = self.env(user=self.env.ref('base.user_demo'))
+        self.assertEqual(env.user.login, "demo")
+
+        # create a new discussion and a new message as demo user
+        discussion = env['test_new_api.discussion'].new({'name': 'Stuff'})
+        message = env['test_new_api.message'].new({'discussion': discussion})
+        self.assertEqual(message.discussion, discussion)
+
+        # read the related field discussion_name
+        self.assertNotEqual(message.sudo().env, message.env)
+        self.assertEqual(message.discussion_name, discussion.name)
 
     def test_50_defaults(self):
         """ test default values. """
