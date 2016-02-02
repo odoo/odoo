@@ -49,7 +49,6 @@ import datetime
 import itertools
 import logging
 import operator
-import pickle
 import re
 import simplejson
 import time
@@ -65,7 +64,7 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
-from openerp.tools.misc import CountingStream
+from openerp.tools.misc import CountingStream, pickle
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID

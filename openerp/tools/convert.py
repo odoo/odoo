@@ -23,7 +23,6 @@ import cStringIO
 import csv
 import logging
 import os.path
-import pickle
 import re
 
 # for eval context:
@@ -53,7 +52,7 @@ from translate import _
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
 
-from misc import unquote
+from misc import pickle, unquote
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
