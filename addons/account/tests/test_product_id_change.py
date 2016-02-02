@@ -38,10 +38,10 @@ class TestProductIdChange(AccountingTestCase):
                                                           amount='0.00'))
         product_tmpl = self.product_tmpl_model.create(dict(name="Voiture",
                                                            list_price='121',
-                                                           standard_price='121',
                                                            taxes_id=[(6, 0, [tax_include_sale.id])],
                                                            supplier_taxes_id=[(6, 0, [tax_include_purchase.id])]))
-        product = self.product_model.create(dict(product_tmpl_id=product_tmpl.id))
+        product = self.product_model.create(dict(product_tmpl_id=product_tmpl.id,
+                                                 standard_price='242'))
         fp = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
         fp_tax_sale = self.fiscal_position_tax_model.create(dict(position_id=fp.id,
                                                             tax_src_id=tax_include_sale.id,
@@ -80,7 +80,7 @@ class TestProductIdChange(AccountingTestCase):
         in_line = self.invoice_line_model.create({
             'product_id': product.id,
             'quantity': 1,
-            'price_unit': 121.0,
+            'price_unit': 242.0,
             'invoice_id': in_invoice.id,
             'name': 'something in',
             'account_id': self.account_revenue.id,
@@ -88,4 +88,4 @@ class TestProductIdChange(AccountingTestCase):
         out_line._onchange_product_id()
         self.assertEquals(100, out_line.price_unit, "The included tax must be subtracted to the price")
         in_line._onchange_product_id()
-        self.assertEquals(100, in_line.price_unit, "The included tax must be subtracted to the price")
+        self.assertEquals(200, in_line.price_unit, "The included tax must be subtracted to the price")
