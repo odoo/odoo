@@ -474,6 +474,9 @@ class Field(object):
                         model._defaults[name] = default_new_to_old(self, value)
                     return
 
+            # do not look up _defaults on model classes
+            if getattr(klass, 'pool', None):
+                continue
             defaults = klass.__dict__.get('_defaults') or {}
             if name in defaults:
                 # take the value from _defaults, and adapt it for self.default
