@@ -1666,7 +1666,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Quants" create="false" edit="false">
+                <form string="Quants" create="false" edit="false" delete="false">
                     <div class="oe_right oe_button_box">
                         <button name="action_view_quant_history" type="object" string="Quant History"/>                            
                     </div>
@@ -1692,7 +1692,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Quants" create="0">
+                <tree string="Quants" create="0" delete="0">
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>

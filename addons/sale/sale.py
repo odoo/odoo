@@ -313,7 +313,9 @@ class sale_order(osv.osv):
         return {'warning': warning, 'value': value}
 
     def get_salenote(self, cr, uid, ids, partner_id, context=None):
-        context_lang = context.copy() 
+        if context is None:
+            context = {}
+        context_lang = context.copy()
         if partner_id:
             partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
             context_lang.update({'lang': partner_lang})
@@ -730,7 +732,7 @@ class sale_order(osv.osv):
 
         :return: True
         """
-        context = context or {}
+        context = dict(context or {})
         context['lang'] = self.pool['res.users'].browse(cr, uid, uid).lang
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')

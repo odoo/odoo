@@ -34,14 +34,15 @@ class sale_order(osv.Model):
                 event_ticket_id = product.event_ticket_ids[0].id
 
         if event_ticket_id:
-            ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)
+            order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
+            ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=dict(context, pricelist=order.pricelist_id.id))
             if product_id != ticket.product_id.id:
                 raise osv.except_osv(_('Error!'),_("The ticket doesn't match with this product."))
 
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
-            values['price_unit'] = ticket.price
+            values['price_unit'] = ticket.price_reduce or ticket.price
             values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
 
         return values

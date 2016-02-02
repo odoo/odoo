@@ -96,17 +96,24 @@ class website_hr_recruitment(http.Controller):
     def _get_applicant_relational_fields(self):
         return ['department_id', 'job_id']
 
+    def _get_applicant_files_fields(self):
+        return ['ufile']
+
+    def _get_applicant_required_fields(self):
+        return ["partner_name", "phone", "email_from"]
+
     @http.route('/jobs/thankyou', methods=['POST'], type='http', auth="public", website=True)
     def jobs_thankyou(self, **post):
         error = {}
-        for field_name in ["partner_name", "phone", "email_from"]:
+        for field_name in self._get_applicant_required_fields():
             if not post.get(field_name):
                 error[field_name] = 'missing'
         if error:
             request.session['website_hr_recruitment_error'] = error
-            ufile = post.pop('ufile')
-            if ufile:
-                error['ufile'] = 'reset'
+            for field_name in self._get_applicant_files_fields():
+                f = field_name in post and post.pop(field_name)
+                if f:
+                    error[field_name] = 'reset'
             request.session['website_hr_recruitment_default'] = post
             return request.redirect('/jobs/apply/%s' % post.get("job_id"))
 
@@ -124,16 +131,17 @@ class website_hr_recruitment(http.Controller):
         value['partner_phone'] = post.pop('phone', False)
 
         applicant_id = env['hr.applicant'].create(value).id
-        if post['ufile']:
-            attachment_value = {
-                'name': post['ufile'].filename,
-                'res_name': value['partner_name'],
-                'res_model': 'hr.applicant',
-                'res_id': applicant_id,
-                'datas': base64.encodestring(post['ufile'].read()),
-                'datas_fname': post['ufile'].filename,
-            }
-            env['ir.attachment'].create(attachment_value)
+        for field_name in self._get_applicant_files_fields():
+            if post[field_name]:
+                attachment_value = {
+                    'name': post[field_name].filename,
+                    'res_name': value['partner_name'],
+                    'res_model': 'hr.applicant',
+                    'res_id': applicant_id,
+                    'datas': base64.encodestring(post[field_name].read()),
+                    'datas_fname': post[field_name].filename,
+                }
+                env['ir.attachment'].create(attachment_value)
         return request.render("website_hr_recruitment.thankyou", {})
 
 # vim :et:

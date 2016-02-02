@@ -1372,7 +1372,7 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id.strip())
                    for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
@@ -3896,7 +3896,7 @@ class BaseModel(object):
                 self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
             )
             params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(ids):
+            for sub_ids in cr.split_for_in_conditions(set(ids)):
                 cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)

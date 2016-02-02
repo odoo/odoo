@@ -5,15 +5,16 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2015
 # Mustafa Rawi <mustafa@cubexco.com>, 2015
-# safi2266 <safi2266@gmail.com>, 2015
+# SaFi J. <safi2266@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-10-06 05:31+0000\n"
-"Last-Translator: safi2266 <safi2266@gmail.com>\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-15 08:14+0000\n"
+"Last-Translator: Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -696,7 +697,7 @@ msgstr "ملغي"
 #: code:addons/stock/stock.py:1840
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr ""
+msgstr "لا يمكن إلغاء حجز حركة تمت"
 
 #. module: stock
 #: field:product.template,loc_case:0
@@ -706,7 +707,7 @@ msgstr "الحالة"
 #. module: stock
 #: field:stock.return.picking,move_dest_exists:0
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "يوجد سلسلة حركات"
 
 #. module: stock
 #. openerp-web
@@ -754,7 +755,7 @@ msgstr "الكمية المفحوصة"
 #. module: stock
 #: help:stock.move,partially_available:0
 msgid "Checks if the move has some stock reserved"
-msgstr ""
+msgstr "تحقق ما إذا كان هناك حركات محجوزة لهذا المخزون"
 
 #. module: stock
 #. openerp-web
@@ -838,7 +839,7 @@ msgstr "إعداد المخزن"
 #: code:addons/stock/static/src/xml/picking.xml:175
 #, python-format
 msgid "Configure package"
-msgstr ""
+msgstr "أضبط الصندوق"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
@@ -864,7 +865,7 @@ msgstr "الاستهلاكية"
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,children_ids:0
 msgid "Contained Packages"
-msgstr ""
+msgstr "الصناديق المحتواة"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -1345,12 +1346,12 @@ msgstr "تم"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr ""
+msgstr "التحويلات المنتهية"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "التحويلات المنتهية بالتاريخ"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1505,6 +1506,7 @@ msgstr "توقع المخزون السالب"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "توقع الكمية"
 
@@ -1605,7 +1607,7 @@ msgstr ""
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
 msgid "Goods will always be resupplied from this warehouse"
-msgstr ""
+msgstr "المنتجات سوف يتم توريدها من هذا المخزن"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
@@ -1630,7 +1632,7 @@ msgstr ""
 #. module: stock
 #: field:stock.pack.operation,processed:0
 msgid "Has been processed?"
-msgstr ""
+msgstr "هل تم الانتهاء منها؟"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1921,7 +1923,7 @@ msgstr "التحويلات الداخلية"
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "مكان مؤقت داخلي"
 
 #. module: stock
 #: field:stock.warehouse,int_type_id:0
@@ -1938,12 +1940,12 @@ msgstr "الرقم التسلسل الداخلي \"إذا كان مختلف عن
 #. module: stock
 #: field:stock.inventory,location_id:0
 msgid "Inventoried Location"
-msgstr ""
+msgstr "مكان جرد"
 
 #. module: stock
 #: field:stock.inventory,lot_id:0
 msgid "Inventoried Lot/Serial Number"
-msgstr ""
+msgstr "الحصة المجرودة/رقم المسلسل"
 
 #. module: stock
 #: field:stock.inventory,partner_id:0
@@ -2014,7 +2016,7 @@ msgstr "خط الجرد"
 #. module: stock
 #: help:stock.inventory,line_ids:0
 msgid "Inventory Lines."
-msgstr ""
+msgstr "خطوط الجرد"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
@@ -2057,7 +2059,7 @@ msgstr "قيمة الجرد"
 msgid ""
 "Inventory adjustments will be made by comparing the theoretical and the "
 "checked quantities."
-msgstr ""
+msgstr "تعديلات الجرد سوفت تنشأ بمقارنة بين الكمية النظرية والكمية الفعلية"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -2067,7 +2069,7 @@ msgstr "المفقود من الجرد"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory of"
-msgstr ""
+msgstr "جرد ل"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
@@ -2104,12 +2106,12 @@ msgstr "العناصر"
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Last 10 Done Operations"
-msgstr ""
+msgstr "أخر 10 عمليات تمت"
 
 #. module: stock
 #: field:stock.picking.type,last_done_picking:0
 msgid "Last 10 Done Pickings"
-msgstr ""
+msgstr "أخر 10 إلتقاطات تمت"
 
 #. module: stock
 #: field:stock.picking,message_last_post:0
@@ -2199,12 +2201,12 @@ msgstr "اساس المتروك"
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between companies"
-msgstr ""
+msgstr "اترك هذا الحقل فارغًا اذا تم اشتراك هذا المكان بين الشركات"
 
 #. module: stock
 #: help:stock.location.route,company_id:0
 msgid "Let this field empty if this route is shared between all companies"
-msgstr ""
+msgstr "اترك هذا الحقل فارغًا اذا تم اشتراك هذا المكان بين كل الشركات"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
@@ -2214,17 +2216,17 @@ msgstr ""
 #. module: stock
 #: field:stock.pack.operation,linked_move_operation_ids:0
 msgid "Linked Moves"
-msgstr ""
+msgstr "الحركات المتصلة"
 
 #. module: stock
 #: field:stock.move,linked_move_operation_ids:0
 msgid "Linked Operations"
-msgstr ""
+msgstr "العمليات المتصلة"
 
 #. module: stock
 #: field:stock.quant,propagated_from_id:0
 msgid "Linked Quant"
-msgstr ""
+msgstr "الكميات المتصلة"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -2255,12 +2257,12 @@ msgstr "الموقع و المخزن"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr ""
+msgstr "باركود المكان"
 
 #. module: stock
 #: field:stock.location,loc_barcode:0
 msgid "Location Barcode"
-msgstr ""
+msgstr "باركود المكان"
 
 #. module: stock
 #: field:stock.inventory.line,location_name:0
@@ -2330,7 +2332,7 @@ msgstr "حصة"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
 msgid "Lot BarCode"
-msgstr ""
+msgstr "باركود الحصة"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_tree
@@ -2346,7 +2348,7 @@ msgstr "اللوط/المسلسل"
 #: field:stock.pack.operation,lot_id:0
 #: field:stock.transfer_details_items,lot_id:0
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "الحصة/الرقم المسلسل"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -2452,7 +2454,7 @@ msgstr "الاختيار اليدوي من المنتجات"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr ""
+msgstr "اجعل في انتظار التنفيذ"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -2495,7 +2497,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "قاعدة إعادة الطلب"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -2801,7 +2803,7 @@ msgstr "العمليات"
 #: code:addons/stock/static/src/xml/picking.xml:93
 #, python-format
 msgid "Operations Processed"
-msgstr ""
+msgstr "العمليات المنتهية"
 
 #. module: stock
 #. openerp-web
@@ -3624,7 +3626,7 @@ msgid "Quantity (UOS)"
 msgstr "الكمية (وحدة المبيعات)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -4048,7 +4050,7 @@ msgstr "القواعد"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_proc_schedulers
 msgid "Run Schedulers"
-msgstr ""
+msgstr "تحقق من المخزون"
 
 #. module: stock
 #. openerp-web
@@ -4465,7 +4467,7 @@ msgstr "قابل للتخزين"
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Stockable products"
-msgstr ""
+msgstr "المنتجات للتخزين"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -5016,7 +5018,7 @@ msgstr "تفاصيل النقل"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Transferred"
-msgstr ""
+msgstr "تم النقل"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -5026,7 +5028,7 @@ msgstr "تحويلات"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr ""
+msgstr "مكان مؤقت"
 
 #. module: stock
 #: help:stock.picking,recompute_pack_op:0
@@ -5262,7 +5264,7 @@ msgstr "منتظر التوفر"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "منتظر التوفر"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -5556,7 +5558,7 @@ msgstr ""
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
-msgstr ""
+msgstr "إحجز"
 
 #. module: stock
 #: help:stock.inventory,move_ids_exist:0
@@ -5607,9 +5609,9 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
-msgstr ""
+msgstr "عين الكميات إلي صفر"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Update"
-msgstr ""
+msgstr "حدث"

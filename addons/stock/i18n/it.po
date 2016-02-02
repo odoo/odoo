@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-11-11 16:55+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-23 22:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1502,6 +1502,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Quantità prevista"
 
@@ -1512,7 +1513,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "La quantità in forecast (calcolata come quantità disponibile - In Uscita + In Ingresso)\nIn un contesto con una sola locazione di magazzino, questa include la merce in questa locazione e nei suoi figli.\n In un contesto con un singolo punto vendita, questa include merce della locazione del magazzino del punto vendita e dei suoi figli. \nAltrimenti, questa include la merce da qualsiasi locazione di magazzino di tipo 'interna'."
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -3000,7 +3001,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 msgid "Packages"
-msgstr ""
+msgstr "Confezioni"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -3092,7 +3093,7 @@ msgstr "Punto di Stoccaggio Fisico"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Confezionamento Fisico"
 
 #. module: stock
 #: code:addons/stock/stock.py:3302
@@ -3141,7 +3142,7 @@ msgstr ""
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipo Prelievo"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
@@ -3316,7 +3317,7 @@ msgstr "Approvvigionamento"
 #: view:stock.picking:stock.view_picking_internal_search
 #: field:stock.picking,group_id:0 field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Gruppo di approvvigionamento"
 
 #. module: stock
 #: field:procurement.order,location_id:0 field:procurement.rule,location_id:0
@@ -3343,7 +3344,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule field:stock.move,rule_id:0
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regole d'appalto"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
@@ -3621,7 +3622,7 @@ msgid "Quantity (UOS)"
 msgstr "Quantità (UoS)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "Quantità Disponibile"
 
@@ -3676,7 +3677,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantità di prodotto che hai pianificato per l'ingresso. \nIn un contesto con una sola locazione di magazzino, questa include la merce in uscita da questa locazione e i suoi figli. \nIn un contesto con un singolo magazzino, questa include la merce in uscita dalla locazione di questo magazzino e dei suoi figli. \nIn un contesto con un singolo punto vendita, questa include merce in uscita dalla locazione del magazzino del punto vendita o dei suoi figli. \nAltrimenti, questa include la merce in uscita da qualsiasi locazione di magazzino di tipo 'interna'."
 
 #. module: stock
 #: help:product.product,outgoing_qty:0
@@ -3685,7 +3686,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantità di prodotto che si intende evadere. \nIn un contesto con una sola locazione di magazzino, questa include la merce in uscita da questa locazione e i suoi figli. \nIn un contesto con un singolo magazzino, questa include la merce in uscita dalla locazione di questo magazzino e dei suoi figli. \nIn un contesto con un singolo punto vendita, questa include merce in uscita dalla locazione del magazzino del punto vendita o dei suoi figli. \nAltrimenti, questa include la merce in uscita da qualsiasi locazione di magazzino di tipo 'interna'."
 
 #. module: stock
 #: help:stock.move.operation.link,qty:0
@@ -3911,7 +3912,7 @@ msgstr "Modalità di riordino"
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_tree
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Regole di Riordino"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
@@ -4023,7 +4024,7 @@ msgstr ""
 #: view:stock.location.route:stock.stock_location_route_tree
 #: view:stock.warehouse:stock.view_warehouse field:stock.warehouse,route_ids:0
 msgid "Routes"
-msgstr ""
+msgstr "Rotte"
 
 #. module: stock
 #: help:stock.warehouse,resupply_route_ids:0
@@ -4270,7 +4271,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: stock
 #: help:stock.warehouse,code:0
