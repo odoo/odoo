@@ -5,5 +5,5 @@
 # Author : Nicolas Bessi (Camptocamp)
 
 import models
-import wizard
 import report
+import wizard
