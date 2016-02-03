@@ -3620,7 +3620,7 @@ class stock_warehouse(osv.osv):
             for pull in route.pull_ids:
                 pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
             for push in route.push_ids:
-                push_obj.write(cr, uid, push.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
+                push_obj.write(cr, uid, push.id, {'name': push.name.replace(warehouse.name, name, 1)}, context=context)
         #change the mto pull rule name
         if warehouse.mto_pull_id.id:
             pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
