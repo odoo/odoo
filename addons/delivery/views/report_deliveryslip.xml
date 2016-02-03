@@ -1,15 +1,16 @@
 <odoo>
     <template id="report_delivery_document2" inherit_id="stock.report_delivery_document">
         <xpath expr="//th[@name='td_sched_date_h']" position="after">
-            <th t-if="o.picking_type_id.code == 'outgoing'"><strong>Carrier</strong></th>
-            <th><strong>Weight</strong></th>
+            <th t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id"><strong>Carrier</strong></th>
+            <th t-if="o.weight"><strong>Weight</strong></th>
         </xpath>
         <xpath expr="//td[@name='td_sched_date']" position="after">
-            <td t-if="o.picking_type_id.code == 'outgoing'">
+            <td t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id">
                     <span t-field="o.carrier_id"/>
             </td>
-            <td>
+            <td t-if="o.weight">
                 <span t-field="o.weight"/>
+                <span t-field="o.weight_uom_id"/>
             </td>
         </xpath>
     </template>
