@@ -458,7 +458,7 @@ var CalendarView = View.extend({
         var self = this;
         var to_get = {};
         _(this.info_fields).each(function (fieldname) {
-            if (!_(["many2one", "one2one"]).contains(
+            if (!_(["many2one"]).contains(
                 self.fields[fieldname].type))
                 return;
             to_get[fieldname] = [];
@@ -525,7 +525,7 @@ var CalendarView = View.extend({
             
             _.each(this.info_fields, function (fieldname) {
                 var value = evt[fieldname];
-                if (_.contains(["many2one", "one2one"], self.fields[fieldname].type)) {
+                if (_.contains(["many2one"], self.fields[fieldname].type)) {
                     if (value === false) {
                         temp_ret[fieldname] = null;
                     }
