@@ -112,6 +112,9 @@
         height: 100%;
         margin-left: @mail-chat-sidebar-width;
         position: relative;
+        @media (min-width: @screen-sm-min) {
+            overflow: auto;
+        }
 
         @media (max-width: @screen-xs-max) {
             margin-left: 0;
@@ -120,8 +123,7 @@
         .o_mail_thread {
             .o-flex(1, 0, 0);
             overflow: auto;
-            .o-webclient-padding();
-            padding-bottom: 15px;
+            padding: 0 0 15px 0;
 
             .o_chat_help_message {
                 padding: 25px 0;
@@ -250,6 +252,17 @@
                 .o_attachment_name, .o_attachment_delete {
                     color: white;
                 }
+            }
+        }
+    }
+
+    &.o_mail_selection_mode {
+        .o_thread_message {
+            opacity: 0.5;
+            &.o_thread_selected_message {
+                padding: 4px @odoo-horizontal-padding;
+                opacity: 1;
+                background-color: lightgray;
             }
         }
     }

@@ -29,6 +29,7 @@ return Widget.extend({
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
             display_stars: true,
+            display_reply_icon: false,
             placeholder: _t("Say something"),
             input_less: false,
         });
