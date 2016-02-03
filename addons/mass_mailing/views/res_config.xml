@@ -12,7 +12,12 @@
                     </header>
                     <group string="Mass Mailing">
                         <field name="group_mass_mailing_campaign" widget="radio"/>
-                        <field name="module_mass_mailing_themes" widget="upgrade_boolean"/>
+                        <label for="module_mass_mailing_themes" string="Mass mailing themes"/>
+                        <div>
+                            <field name="module_mass_mailing_themes" widget="upgrade_boolean"/>
+                            <label for="module_mass_mailing_themes" invisible="1"/>
+                            <a href="https://www.odoo.com/page/email-marketing" target="_blank"> More Info </a>
+                        </div>
                         <field name="group_website_popup_on_exit" widget="radio"/>
                     </group>
                 </form>
