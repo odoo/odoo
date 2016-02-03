@@ -32,15 +32,20 @@ function add_chat_session (chat_session) {
     chat_sessions.splice(display_state.nb_slots-1, 0, chat_session);
 }
 
-function open_chat (session) {
+// options.passively: if set to true, open the chat window without focusing the
+// input and marking messages as read if it is not open yet, and do nothing
+// otherwise
+function open_chat (session, options) {
     if (!session) {
         open_chat_without_session();
         return;
     }
+    options = options || {};
     var chat_session = _.findWhere(chat_sessions, {id: session.id});
     if (!chat_session) {
         var prefix = !session.is_chat ? "#" : "";
-        var options = {
+        var window_options = {
+            autofocus: !options.passively,
             input_less: session.mass_mailing,
             status: session.status,
         };
@@ -48,7 +53,8 @@ function open_chat (session) {
             id: session.id,
             uuid: session.uuid,
             name: session.name,
-            window: new ExtendedChatWindow(web_client, session.id, prefix + session.name, session.is_folded, session.unread_counter, options),
+            keep_unread: options.passively, // don't automatically mark unread messages as seen
+            window: new ExtendedChatWindow(web_client, session.id, prefix + session.name, session.is_folded, session.unread_counter, window_options),
         };
         chat_session.window.on("close_chat_session", null, function () {
             close_chat(chat_session);
@@ -85,11 +91,14 @@ function open_chat (session) {
         });
 
         var remove_new_chat = false;
-        if (new_chat_session && new_chat_session.partner_id && new_chat_session.partner_id === session.direct_partner_id) {
+        if (options.passively) {
+            chat_sessions.push(chat_session); // simply insert the window to the left
+        } else if (new_chat_session && new_chat_session.partner_id && new_chat_session.partner_id === session.direct_partner_id) {
+            // the window takes the place of the 'new_chat_session' window
             chat_sessions[_.indexOf(chat_sessions, new_chat_session)] = chat_session;
             remove_new_chat = true;
         } else {
-            add_chat_session(chat_session);
+            add_chat_session(chat_session); // add session such that window is visible
         }
 
         chat_session.window.appendTo($('body'))
@@ -101,16 +110,21 @@ function open_chat (session) {
                 chat_session.window.thread.scroll_to();
                 setTimeout(function () {
                     chat_session.window.thread.$el.on("scroll", null, _.debounce(function () {
-                        if (chat_session.window.thread.is_at_bottom()) {
+                        if (!chat_session.keep_unread && chat_session.window.thread.is_at_bottom()) {
                             chat_manager.mark_channel_as_seen(session);
                         }
                     }, 100));
                 }, 0); // setTimeout to prevent to execute handler on first scroll_to, which is asynchronous
-                if (!display_state.chat_windows_hidden && !session.is_folded) {
+                if (options.passively) {
+                    // mark first unread messages as seen when focusing the window, then on scroll to bottom as usual
+                    chat_session.window.$('.o_mail_thread, .o_chat_input').one('click', function () {
+                        chat_manager.mark_channel_as_seen(session);
+                    });
+                } else if (!display_state.chat_windows_hidden && !session.is_folded) {
                     chat_manager.mark_channel_as_seen(session);
                 }
             });
-    } else {
+    } else if (!options.passively) {
         if (chat_session.window.is_hidden) {
             make_session_visible(chat_session);
         } else if (session.is_folded !== chat_session.window.folded) {
@@ -153,7 +167,10 @@ function open_chat_without_session () {
     }
 }
 
-function close_chat (chat_session) {
+function close_chat (chat_session, options) {
+    if (options && options.keep_open_if_unread && chat_session.keep_unread) {
+        return;
+    }
     chat_sessions = _.without(chat_sessions, chat_session);
     chat_session.window.destroy();
     reposition_windows();
@@ -273,7 +290,7 @@ function update_sessions (message, scrollBottom) {
         if (_.contains(message.channel_ids, session.id)) {
             var message_visible = !display_state.chat_windows_hidden && !session.window.folded &&
                                   !session.window.is_hidden && session.window.thread.is_at_bottom();
-            if (message_visible) {
+            if (message_visible && !session.keep_unread) {
                 chat_manager.mark_channel_as_seen(chat_manager.get_channel(session.id));
             }
             chat_manager.get_messages({channel_id: session.id}).then(function (messages) {
@@ -289,10 +306,10 @@ function update_sessions (message, scrollBottom) {
 
 core.bus.on('web_client_ready', null, function () {
     chat_manager.bus.on('open_chat', null, open_chat);
-    chat_manager.bus.on('close_chat', null, function (channel) {
+    chat_manager.bus.on('close_chat', null, function (channel, options) {
         var session = _.find(chat_sessions, {id: channel.id});
         if (session) {
-            close_chat(session);
+            close_chat(session, options);
         }
     });
     chat_manager.bus.on('channel_toggle_fold', null, toggle_fold_chat);
@@ -326,6 +343,9 @@ core.bus.on('web_client_ready', null, function () {
         _.each(chat_sessions, function (session) {
             if (channel.id === session.id) {
                 session.window.update_unread(channel.unread_counter);
+                if (channel.unread_counter === 0) {
+                    session.keep_unread = false;
+                }
             }
             if (session.window.is_hidden) {
                 display_state.hidden_unread_counter += session.window.unread_msgs;

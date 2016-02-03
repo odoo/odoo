@@ -2,6 +2,7 @@ odoo.define('mail.chat_manager', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -166,6 +167,10 @@ function add_message (data, options) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
                     if (channel.is_chat && options.show_notification) {
+                        if (!client_action_open && config.device.size_class !== config.device.SIZES.XS) {
+                            // automatically open chat window
+                            chat_manager.bus.trigger('open_chat', channel, { passively: true });
+                        }
                         var query = {is_displayed: false};
                         chat_manager.bus.trigger('anyone_listening', channel, query);
                         notify_incoming_message(msg, query);
@@ -656,7 +661,7 @@ function on_chat_session_notification (chat_session) {
         channel = chat_manager.get_channel(chat_session.id);
         if (channel) {
             channel.is_detached = false;
-            chat_manager.bus.trigger("close_chat", channel);
+            chat_manager.bus.trigger("close_chat", channel, {keep_open_if_unread: true});
         }
     }
 }

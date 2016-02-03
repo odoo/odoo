@@ -29,6 +29,7 @@ return Widget.extend({
         this.channel_id = channel_id;
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
+            autofocus: true,
             display_stars: true,
             display_reply_icon: false,
             placeholder: _t("Say something"),
@@ -53,7 +54,7 @@ return Widget.extend({
 
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
-        } else {
+        } else if (this.options.autofocus) {
             this.focus_input();
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
