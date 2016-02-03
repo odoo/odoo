@@ -1,11 +1,8 @@
 import logging
 import re
 
-import openerp
-from openerp import tools, models, fields, api
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
+from odoo import tools, models, fields, api, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -17,18 +14,13 @@ UPC_EAN_CONVERSIONS = [
     ('always','Always'),
 ]
 
-class barcode_nomenclature(osv.osv):
+class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
-    _columns = {
-        'name': fields.char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature'),
-        'rule_ids': fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
-        'upc_ean_conv': fields.selection(UPC_EAN_CONVERSIONS, 'UPC/EAN Conversion', required=True,
-            help='UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.'),
-    }
 
-    _defaults = {
-        'upc_ean_conv': 'always',
-    }
+    name = fields.Char(string='Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature')
+    rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
+    upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
+        help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
 
     # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
     def ean_checksum(self, ean):
@@ -173,7 +165,7 @@ class barcode_nomenclature(osv.osv):
 
         return parsed_result
 
-class barcode_rule(models.Model):
+class BarcodeRule(models.Model):
     _name = 'barcode.rule'
     _order = 'sequence asc'
 
@@ -186,26 +178,18 @@ class barcode_rule(models.Model):
                 ('upca', 'UPC-A'),
         ]
 
-    @api.model
     def _get_type_selection(self):
         return [('alias', _('Alias')), ('product', _('Unit Product'))]
 
-    _columns = {
-        'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
-        'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
-        'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
-        'encoding': fields.selection('_encoding_selection_list','Encoding',required=True,help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        'type':     fields.selection('_get_type_selection','Type', required=True),
-        'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern", required=True),
-        'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode', required=True),      
-    }
+    _type_selection = lambda self: self._get_type_selection()
 
-    _defaults = {
-        'type': 'product',
-        'pattern': '.*',
-        'encoding': 'any',
-        'alias': "0",
-    }
+    name = fields.Char(string='Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule')
+    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
+    sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
+    encoding = fields.Selection(_encoding_selection_list, string='Encoding', required=True, default='any', help='This rule will apply only if the barcode is encoded with the specified encoding')
+    type = fields.Selection(_type_selection, string='Type', required=True, default='product')
+    pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
+    alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)
 
     @api.one
     @api.constrains('pattern')
@@ -221,5 +205,3 @@ class barcode_rule(models.Model):
             raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": a rule can only contain one pair of braces."))
         elif p == '*':
             raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))
-
-        
