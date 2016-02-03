@@ -1043,6 +1043,9 @@ class function(_column):
     _type = 'function'
     _properties = True
 
+    def _symbol_get_struct(self, val):
+        return simplejson.loads(val or '{}')
+
 #
 # multi: compute several fields in one call
 #
@@ -1076,6 +1079,8 @@ class function(_column):
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
+            elif type == 'serialized':
+                self._symbol_get = self._symbol_get_struct
             else:
                 self._prefetch = True
 
