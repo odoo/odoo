@@ -1305,11 +1305,15 @@ else:
 
 class Pickle(object):
     @classmethod
-    def load(cls, stream):
+    def load(cls, stream, errors=False):
         unpickler = cPickle.Unpickler(stream)
         # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
         unpickler.find_global = None
-        return unpickler.load()
+        try:
+            return unpickler.load()
+        except Exception:
+            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
+            return errors
 
     @classmethod
     def loads(cls, text):
