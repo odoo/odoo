@@ -1522,7 +1522,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         }
 
         // Render it
-        self.$(".protip").hide();
+        self.$(".o_protip").hide();
         self.updateShowMoreButton();
         self.$(".oe_form_sheet, o_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
             title: title,
