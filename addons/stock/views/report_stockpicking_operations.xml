@@ -21,22 +21,6 @@
                             <br/>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                        <span><strong>Vendor Address:</strong></span>
-                                    </div>
-                                    <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
-                                        <span><strong>Warehouse Address:</strong></span>
-                                    </div>
-                                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
-                                        <span><strong>Customer Address:</strong></span>
-                                    </div>
-                                    <div t-if="o.partner_id" name="partner_header">
-                                        <div t-field="o.partner_id"
-                                           t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true, "phone_icons": true}'/>
-                                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                                    </div>
-                                </div>
-                                <div class="col-xs-5 col-xs-offset-1">
                                     <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
                                         <span><strong>Delivery Address:</strong></span>
                                         <div t-field="o.move_lines[0].partner_id"
@@ -48,14 +32,29 @@
                                             t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true, "phone_icons": true}'/>
                                     </div>
                                 </div>
+                                <div class="col-xs-5 col-xs-offset-1">
+                                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
+                                        <span><strong>Vendor Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
+                                        <span><strong>Warehouse Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
+                                        <span><strong>Customer Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.partner_id" name="partner_header">
+                                        <div t-field="o.partner_id"
+                                           t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": true, "phone_icons": true}'/>
+                                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                                    </div>
+                                </div>
                             </div>
                             <br/><br/>
-                            <div t-field="o.picking_type_id"/>
                             <h1 t-field="o.name" class="mt0"/>
                             <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <th><strong>Order (Origin)</strong></th>
+                                    <th t-if="o.origin"><strong>Order (Origin)</strong></th>
                                     <th><strong>State</strong></th>
                                     <th><strong>Commitment Date</strong></th>
                                     <th name="td_sched_date_h"><strong>Scheduled Date</strong></th>
@@ -63,7 +62,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
+                                    <td t-if="o.origin">
                                         <span t-field="o.origin"/>
                                     </td>
                                     <td>
@@ -81,12 +80,18 @@
                             <br/>
                             <br/>
                             <table class="table table-condensed" t-if="o.pack_operation_ids">
+                              <t t-set="has_serial_number" t-value="o.pack_operation_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
                               <thead>
                                 <tr>
                                     <th><strong>Product</strong></th>
                                     <th class="text-right"><strong>Quantity</strong></th>
                                     <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
-                                    <th><strong>Barcode</strong></th>
+                                    <th t-if="any([pack_operation.product_id and pack_operation.product_id.barcode or pack_operation.package_id for pack_operation in o.pack_operation_ids])">
+                                        <strong>Barcode</strong>
+                                    </th>
+                                    <th t-if="has_serial_number">
+                                        <strong>Serial Number /Lot</strong>
+                                    </th>
                                     <t t-if="o.picking_type_id.code != 'outgoing'"><th><strong>Destination</strong></th></t>
                                 </tr>
                               </thead>
@@ -108,10 +113,9 @@
                                         <span t-if="pack_operation.package_id and not pack_operation.product_id">
                                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.package_id.name, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
+                                    </td>
+                                    <td t-if="has_serial_number">
                                         <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
-                                            <thead>
-                                                <tr><th>Lot</th><th>Qty</th></tr>
-                                            </thead>
                                             <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
                                                 <td>
                                                     <span t-field="packlot.lot_id"/>

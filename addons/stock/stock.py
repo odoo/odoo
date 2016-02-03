@@ -2009,6 +2009,7 @@ class stock_move(osv.osv):
         'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any)."),
+        'ordered_qty': fields.float('Ordered Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
     }
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -2139,6 +2140,7 @@ class stock_move(osv.osv):
         if track:
             picking = picking_obj.browse(cr, uid, vals['picking_id'], context=context)
             initial_values = {picking.id: {'state': picking.state}}
+        vals['ordered_qty'] = vals.get('product_uom_qty')
         res = super(stock_move, self).create(cr, uid, vals, context=context)
         if track:
             picking_obj.message_track(cr, uid, [vals['picking_id']], picking_obj.fields_get(cr, uid, ['state'], context=context), initial_values, context=context)
@@ -4480,6 +4482,7 @@ class stock_pack_operation(osv.osv):
                 ('assigned', 'Available'),
                 ('done', 'Done'),
                 ]),
+        'ordered_qty': fields.float('Ordered Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
     }
 
     _defaults = {
@@ -4500,6 +4503,10 @@ class stock_pack_operation(osv.osv):
             else:
                 raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
         return True
+
+    def create(self, cr, uid, vals, context=None):
+        vals['ordered_qty'] = vals.get('product_qty')
+        return super(stock_pack_operation, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         vals['fresh_record'] = False
