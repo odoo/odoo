@@ -694,6 +694,9 @@ var chat_manager = {
         }
     },
 
+    get_message: function (id) {
+        return _.findWhere(messages, {id: id});
+    },
     get_messages: function (options) {
         var channel;
 

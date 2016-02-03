@@ -21,26 +21,35 @@ var Thread = Widget.extend({
         "click strong": "on_click_redirect",
         "click .o_thread_show_more": "on_click_show_more",
         "click .o_thread_message_needaction": function (event) {
-            event.stopPropagation();
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
         },
         "click .o_thread_message_star": function (event) {
-            event.stopPropagation();
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("toggle_star_status", message_id);
         },
-        "click .o_thread_message": function (event) {
-            var selected = $(event.currentTarget).hasClass('o_thread_selected_message');
+        "click .o_thread_message_reply": function (event) {
+            this.selected_id = $(event.currentTarget).data('message-id');
             this.$('.o_thread_message').removeClass('o_thread_selected_message');
-            $(event.currentTarget).toggleClass('o_thread_selected_message', !selected);
+            this.$('.o_thread_message[data-message-id=' + this.selected_id + ']')
+                .addClass('o_thread_selected_message');
+            this.trigger('select_message', this.selected_id);
+            event.stopPropagation();
         },
         "click .oe_mail_expand": function (event) {
             event.preventDefault();
-            event.stopPropagation();
             var $message = $(event.currentTarget).parents('.o_thread_message');
             $message.addClass('o_message_expanded');
             this.expanded_msg_ids.push($message.data('message-id'));
+        },
+        "click .o_thread_message": function (event) {
+            $(event.currentTarget).toggleClass('o_thread_selected_message');
+        },
+        "click": function () {
+            if (this.selected_id) {
+                this.unselect();
+                this.trigger('unselect_message');
+            }
         },
     },
 
@@ -54,8 +63,10 @@ var Thread = Widget.extend({
             display_avatar: true,
             shorten_messages: true,
             squash_close_messages: true,
+            display_reply_icon: false,
         });
         this.expanded_msg_ids = [];
+        this.selected_id = null;
     },
 
     render: function (messages, options) {
@@ -69,11 +80,14 @@ var Thread = Widget.extend({
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
+        // and in the same document (users can now post message in documents
+        // directly from a channel that follows it)
         var prev_msg;
         _.each(msgs, function (msg) {
             if (!prev_msg || (Math.abs(msg.date.diff(prev_msg.date)) > 60000) ||
                 prev_msg.message_type !== 'comment' || msg.message_type !== 'comment' ||
-                (prev_msg.author_id[0] !== msg.author_id[0])) {
+                (prev_msg.author_id[0] !== msg.author_id[0]) || prev_msg.model !== msg.model ||
+                prev_msg.res_id !== msg.res_id) {
                 msg.display_author = true;
             } else {
                 msg.display_author = !options.squash_close_messages;
@@ -138,6 +152,7 @@ var Thread = Widget.extend({
         }
 
         msg.display_subject = message.subject && !message.is_system_notification;
+        msg.is_selected = msg.id === this.selected_id;
         return msg;
     },
 
@@ -159,18 +174,23 @@ var Thread = Widget.extend({
 
     /**
      * Scrolls the thread to a given message or offset if any, to bottom otherwise
-     * @param {int} [target.id] optional: the id of the message to scroll to
-     * @param {int} [target.offset] optional: the number of pixels to scroll
+     * @param {int} [options.id] optional: the id of the message to scroll to
+     * @param {int} [options.offset] optional: the number of pixels to scroll
      */
-    scroll_to: function (target) {
-        target = target || {};
-        if (target.id !== undefined) {
-            var $target = this.$('.o_thread_message[data-message-id=' + target.id + ']');
-            if ($target.length) {
+    scroll_to: function (options) {
+        options = options || {};
+        if (options.id !== undefined) {
+            var $target = this.$('.o_thread_message[data-message-id=' + options.id + ']');
+            if (options.only_if_necessary) {
+                var delta = $target.parent().height() - $target.height();
+                var offset = delta < 0 ? 0 : delta - ($target.offset().top - $target.offsetParent().offset().top);
+                offset = - Math.min(offset, 0);
+                this.$el.scrollTo("+=" + offset + "px", options);
+            } else if ($target.length) {
                 this.$el.scrollTo($target);
             }
-        } else if (target.offset !== undefined) {
-            this.$el.scrollTop(target.offset);
+        } else if (options.offset !== undefined) {
+            this.$el.scrollTop(options.offset);
         } else {
             this.$el.scrollTop(this.el.scrollHeight);
         }
@@ -180,6 +200,10 @@ var Thread = Widget.extend({
     },
     is_at_bottom: function () {
         return this.el.scrollHeight - this.$el.scrollTop() - this.$el.outerHeight() < 5;
+    },
+    unselect: function () {
+        this.$('.o_thread_message').removeClass('o_thread_selected_message');
+        this.selected_id = null;
     },
 });
 

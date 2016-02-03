@@ -5,8 +5,8 @@ from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, _, SUPERUSER_ID
-from openerp.tools import float_is_zero
+from openerp import api, fields, models, _
+from openerp.tools import float_is_zero, float_compare
 from openerp.tools.misc import formatLang
 
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
@@ -1093,13 +1093,16 @@ class AccountInvoiceLine(models.Model):
             taxes = self.product_id.taxes_id or self.account_id.tax_ids
         else:
             taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
-        if self.env.uid == SUPERUSER_ID:
-            taxes = taxes.filtered(lambda r: r.company_id == self.company_id)
+
+        # Keep only taxes of the company
+        company_id = self.company_id or self.env.user.company_id
+        taxes = taxes.filtered(lambda r: r.company_id == company_id)
+
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes)
 
         fix_price = self.env['account.tax']._fix_tax_included_price
-        if type in ('in_invoice', 'in_refund'):
-            if not self.price_unit or self.price_unit == self.product_id.standard_price:
+        if self.invoice_id.type in ('in_invoice', 'in_refund'):
+            if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=self.currency_id.rounding) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
