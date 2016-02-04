@@ -529,13 +529,16 @@ function on_needaction_notification (message) {
 
 function on_channel_notification (message) {
     var def;
+    var channel_already_in_cache = true;
     if (message.channel_ids.length === 1) {
+        channel_already_in_cache = !!chat_manager.get_channel(message.channel_ids[0]);
         def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
     } else {
         def = $.when();
     }
     def.then(function () {
-        add_message(message, { show_notification: true, increment_unread: true });
+        // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
+        add_message(message, { show_notification: true, increment_unread: channel_already_in_cache });
         invalidate_caches(message.channel_ids);
     });
 }
