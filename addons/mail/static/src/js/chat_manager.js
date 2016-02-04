@@ -962,22 +962,22 @@ var chat_manager = {
             }
             return info;
         });
+        var missing_channels = _.where(channels_preview, {last_message: undefined});
         if (!channels_preview_def) {
-            var missing_channel_ids = _.pluck(_.where(channels_preview, {last_message: undefined}), 'id');
-            if (missing_channel_ids.length) {
-                channels_preview_def = ChannelModel
-                    .call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true})
-                    .then(function (channels) {
-                        _.each(channels, function (channel) {
-                            var msg = add_message(channel.last_message);
-                            _.findWhere(channels_preview, {id: channel.id}).last_message = msg;
-                        });
-                    });
+            if (missing_channels.length) {
+                var missing_channel_ids = _.pluck(missing_channels, 'id');
+                channels_preview_def = ChannelModel.call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true});
             } else {
                 channels_preview_def = $.when();
             }
         }
-        return channels_preview_def.then(function () {
+        return channels_preview_def.then(function (channels) {
+            _.each(missing_channels, function (channel_preview) {
+                var channel = _.findWhere(channels, {id: channel_preview.id});
+                if (channel) {
+                    channel_preview.last_message = add_message(channel.last_message);
+                }
+            });
             return _.filter(channels_preview, function (channel) {
                 return channel.last_message;  // remove empty channels
             });
