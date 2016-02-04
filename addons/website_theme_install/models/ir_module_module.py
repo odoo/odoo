@@ -10,8 +10,8 @@ class IrModuleModule(models.Model):
                                 string='Screenshots', readonly=True)
 
     @api.model
-    def update_list(self, context=None):
-        res = super(IrModuleModule, self).update_list(context=context)
+    def update_list(self):
+        res = super(IrModuleModule, self).update_list()
 
         IrAttachment = self.env['ir.attachment']
         existing_urls = IrAttachment.search_read([['res_model', '=', self._name], ['type', '=', 'url']], ['url'])
@@ -36,15 +36,15 @@ class IrModuleModule(models.Model):
         return res
 
     @api.multi
-    def button_choose_theme(self, context):
+    def button_choose_theme(self):
         theme_category_id = self.env.ref('base.module_category_theme').id
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
             '|', ('category_id', 'not in', [self.env.ref('base.module_category_hidden').id, self.env.ref('base.module_category_theme_hidden').id]), ('name', '=', 'theme_default'),
             '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
-        ]).button_immediate_uninstall(context=context)
+        ]).button_immediate_uninstall()
 
-        next_action = self.button_immediate_install(context=context) # Then install the new chosen one
+        next_action = self.button_immediate_install() # Then install the new chosen one
         if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
             next_action = self.env.ref('website.action_website_tutorial').read()[0]
 
