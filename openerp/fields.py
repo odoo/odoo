@@ -69,7 +69,7 @@ def copy_cache(records, env):
             target = record.with_env(env)
             for name, value in record._cache.iteritems():
                 if isinstance(value, BaseModel):
-                    todo.add(value)
+                    todo.update(value)
                     value = value.with_env(env)
                 target._cache[name] = value
 
