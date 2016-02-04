@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields, osv
 import random
 import re
 import string
 import urllib2
 import logging
-from openerp import SUPERUSER_ID
+
+from openerp import models, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
@@ -13,7 +13,7 @@ from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-class pad_common(osv.osv_memory):
+class pad_common(models.AbstractModel):
     _name = 'pad.common'
 
     def pad_is_configured(self, cr, uid, context=None):
