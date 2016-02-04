@@ -96,14 +96,14 @@ msgstr "Luôn đúng"
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Amount"
-msgstr "Tổng tiền"
+msgstr "Tổng số"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: field:hr.payslip.line,amount_select:0
 #: field:hr.salary.rule,amount_select:0
 msgid "Amount Type"
-msgstr "Kiểu tổng tiền"
+msgstr "Kiểu tổng sổ"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -588,12 +588,12 @@ msgstr "Ghi chú nội bộ"
 #. module: hr_payroll
 #: help:hr.salary.rule,quantity:0
 msgid "It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr "Nó được sử dụng trong việc tính toàn theo phần trăm và số tiền cố định. Ví dụ, một quy tắc cho Phiếu ăn có giá trị cố định 25.000đ cho mỗi ngày làm việc có thể có số lượng của nó được định nghĩa bằng biểu thức: worked_days.WORK100.number_of_days"
+msgstr "Được sử dụng trong việc tính toán số tiền theo Phần trăm và Giá trị cố định. Ví dụ, một quy tắc cho Phiếu ăn có giá trị cố định 25.000đ cho mỗi ngày làm việc có thể có số lượng của nó được định nghĩa bằng biểu thức: worked_days.WORK100.number_of_days"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
 msgid "It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."
-msgstr "Not được sử dụng trong tính toán. Ví dụ, môt quy tắc cho nhân viên bán hàng có hoa hồng bằng 1% lương cơ bản nhân giá trị sản phẩm bán ra có thể được thể hiện bằng biểu thức result = inputs.SALEURO.amount * contract.wage*0.01."
+msgstr "Được sử dụng trong tính toán. Ví dụ, môt quy tắc cho nhân viên bán hàng có hoa hồng bằng 1% lương cơ bản nhân giá trị sản phẩm bán ra có thể được thể hiện bằng biểu thức result = inputs.SALEURO.amount * contract.wage*0.01."
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_uid:0
@@ -1237,12 +1237,12 @@ msgstr "Hàng tuần"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Worked Day"
-msgstr "Ngày được làm việc"
+msgstr "Ngày làm việc"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Worked Days"
-msgstr "Ngày được làm việc"
+msgstr "Ngày làm việc"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -1259,7 +1259,7 @@ msgstr "Sai số lượng hoặc cơ sở phần trăm đối với quy tắc l�
 #: code:addons/hr_payroll/hr_payroll.py:863
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "Sai mã python định nghĩa đối với quy tắc lương %s (%s)."
+msgstr "Sai mã python được định nghĩa đối với quy tắc lương %s (Mã %s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:886
