@@ -432,12 +432,12 @@ class website(osv.osv):
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
         name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
