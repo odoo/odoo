@@ -423,13 +423,16 @@ class website(osv.osv):
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = ((needle or "")
+                .replace("/page/website.", "")
+                .replace("/page/", "")
+                .replace("-", "_")
+                .replace(" ", "_"))
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
