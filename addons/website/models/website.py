@@ -716,7 +716,7 @@ class base_language_install(osv.osv_memory):
             }
         return action
 
-class website_seo_metadata(osv.Model):
+class website_seo_metadata(osv.AbstractModel):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 

@@ -111,3 +111,38 @@ class test_inherit_property(models.Model):
     def _compute_bar(self):
         for record in self:
             record.property_bar = 42
+
+
+#
+# Extend a parent model after is has been inherited in a child model
+#
+class Parent1(models.AbstractModel):
+    _name = 'test.inherit.parent'
+
+    def stuff(self):
+        return 'P1'
+
+
+class Child(models.AbstractModel):
+    _name = 'test.inherit.child'
+    _inherit = 'test.inherit.parent'
+
+    bar = fields.Integer()
+
+    def stuff(self):
+        return super(Child, self).stuff() + 'C1'
+
+
+class Parent2(models.AbstractModel):
+    _inherit = 'test.inherit.parent'
+
+    foo = fields.Integer()
+
+    _sql_constraints = [('unique_foo', 'UNIQUE(foo)', 'foo must be unique')]
+
+    def stuff(self):
+        return super(Parent2, self).stuff() + 'P2'
+
+    @api.constrains('foo')
+    def _check_foo(self):
+        pass

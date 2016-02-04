@@ -48,7 +48,7 @@ from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
-from .tools import frozendict, lazy_property, ormcache, Collector
+from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSet, OrderedSet
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -251,11 +251,14 @@ class MetaModel(api.Meta):
         for key, val in attrs.iteritems():
             if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
                 _logger.error("Trailing comma after field definition: %s.%s", self, key)
+            if isinstance(val, Field):
+                val.args = dict(val.args, _module=self._module)
 
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
                 _logger.warning("In class %s, field %r overriding an existing value", self, name)
+            column._module = self._module
             setattr(self, name, column.to_field())
 
 
@@ -275,9 +278,9 @@ LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 class BaseModel(object):
-    """ Base class for OpenERP models.
+    """ Base class for Odoo models.
 
-    OpenERP models are created by inheriting from this class' subclasses:
+    Odoo models are created by inheriting:
 
     *   :class:`Model` for regular database-persisted models
 
@@ -285,7 +288,7 @@ class BaseModel(object):
         automatically vacuumed every so often
 
     *   :class:`AbstractModel` for abstract super classes meant to be shared by
-        multiple inheriting model
+        multiple inheriting models
 
     The system automatically instantiates every model once per database. Those
     instances represent the available models on each database, and depend on
@@ -303,8 +306,10 @@ class BaseModel(object):
     attribute may be set to False.
     """
     __metaclass__ = MetaModel
-    _auto = True # create database backend
-    _register = False # Set to false if the model shouldn't be automatically discovered.
+    _auto = False               # don't create any database backend
+    _register = False           # not visible in ORM registry
+    _transient = False          # not transient
+
     _name = None
     _columns = {}
     _constraints = []
@@ -324,9 +329,6 @@ class BaseModel(object):
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
     _group_by_full = {}
-
-    # Transience
-    _transient = False # True in a TransientModel
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -447,13 +449,14 @@ class BaseModel(object):
                     ",".join("%%(%s)s" % name for name in vals),
                 )
                 cr.execute(query, vals)
-                if 'module' in context:
+                module = f._module or context.get('module')
+                if module:
                     name1 = 'field_' + self._table + '_' + k
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
                     cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                        (name1, context['module'], 'ir.model.fields', id)
+                        (name1, module, 'ir.model.fields', id)
                     )
             else:
                 for key, val in vals.items():
@@ -558,31 +561,48 @@ class BaseModel(object):
     #
     @classmethod
     def _build_model(cls, pool, cr):
-        """ Instantiate a given model.
+        """ Instantiate a given model in the registry.
 
-        This class method instantiates the class of some model (i.e. a class
-        deriving from osv or osv_memory). The class might be the class passed
-        in argument or, if it inherits from another class, a class constructed
-        by combining the two classes.
+        This method creates or extends a "registry" class for the given model.
+        This "registry" class carries inferred model metadata, and inherits (in
+        the Python sense) from all classes that define the model, and possibly
+        other registry classes.
 
         """
 
-        # The model's class inherits from cls and the classes of the inherited
-        # models. All those classes are combined in a flat hierarchy:
+        # In the simplest case, the model's registry class inherits from cls and
+        # the other classes that define the model in a flat hierarchy. The
+        # registry contains the instance ``model`` (on the left). Its class,
+        # ``ModelClass``, carries inferred metadata that is shared between all
+        # the model's instances for this registry only.
         #
-        #         Model                 the base class of all models
-        #        /  |  \
-        #      cls  c2  c1              the classes defined in modules
-        #        \  |  /
-        #       ModelClass              the final class of the model
-        #        /  |  \
-        #     model   recordset ...     the class' instances
+        #   class A1(Model):                          Model
+        #       _name = 'a'                           / | \
+        #                                            A3 A2 A1
+        #   class A2(Model):                          \ | /
+        #       _inherit = 'a'                      ModelClass
+        #                                             /   \
+        #   class A3(Model):                      model   recordset
+        #       _inherit = 'a'
         #
-        # The registry contains the instance ``model``. Its class, ``ModelClass``,
-        # carries inferred metadata that is shared between all the model's
-        # instances for this registry only. When we '_inherit' from another
-        # model, we do not inherit its ``ModelClass``, but this class' parents.
-        # This is a limitation of the inheritance mechanism.
+        # When a model is extended by '_inherit', its base classes are modified
+        # to include the current class and the other inherited model classes.
+        # Note that we actually inherit from other ``ModelClass``, so that
+        # extensions to an inherited model are immediately visible in the
+        # current model class, like in the following example:
+        #
+        #   class A1(Model):
+        #       _name = 'a'                           Model
+        #                                            / / \ \
+        #   class B1(Model):                        / A2 A1 \
+        #       _name = 'b'                        /   \ /   \
+        #                                         B2  ModelA  B1
+        #   class B2(Model):                       \    |    /
+        #       _name = 'b'                         \   |   /
+        #       _inherit = ['a', 'b']                \  |  /
+        #                                             ModelB
+        #   class A2(Model):
+        #       _inherit = 'a'
 
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
@@ -596,59 +616,85 @@ class BaseModel(object):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
-        # determine the module that introduced the model
-        original_module = pool[name]._original_module if name in parents else cls._module
+        # all models except 'base' implicitly inherit from 'base'
+        if name != 'base':
+            parents = list(parents) + ['base']
+
+        # create or retrieve the model's class
+        if name in parents:
+            if name not in pool:
+                raise TypeError("Model %r does not exist in registry." % name)
+            ModelClass = type(pool[name])
+        else:
+            ModelClass = type(name, (BaseModel,), {
+                '_name': name,
+                '_register': False,
+                '_original_module': cls._module,
+                '_inherit_children': OrderedSet(),      # names of children models
+                '_fields': {},                          # populated in _setup_base()
+                '_defaults': {},                        # populated in _setup_base()
+            })
 
         # determine all the classes the model should inherit from
-        bases = [cls]
-        hierarchy = cls
+        bases = LastOrderedSet([cls])
         for parent in parents:
             if parent not in pool:
-                raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
-                    'You may need to add a dependency on the parent class\' module.' % (name, parent))
+                raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
             parent_class = type(pool[parent])
-            bases += parent_class.__bases__
-            hierarchy = type(name, (hierarchy, parent_class), {'_register': False})
-
-        # order bases following the mro of class hierarchy
-        bases = [base for base in hierarchy.mro() if base in bases]
+            if parent == name:
+                for base in parent_class.__bases__:
+                    bases.add(base)
+            else:
+                bases.add(parent_class)
+                parent_class._inherit_children.add(name)
+        ModelClass.__bases__ = tuple(bases)
 
         # determine the attributes of the model's class
-        inherits = {}
-        depends = {}
-        constraints = {}
-        sql_constraints = []
-
-        for base in reversed(bases):
-            inherits.update(base._inherits)
-
-            for mname, fnames in base._depends.iteritems():
-                depends[mname] = depends.get(mname, []) + fnames
-
-            for cons in base._constraints:
-                # cons may override a constraint with the same function name
-                constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
-
-            sql_constraints += base._sql_constraints
-
-        # build the actual class of the model
-        ModelClass = type(name, tuple(bases), {
-            '_name': name,
-            '_register': False,
-            '_columns': {},             # recomputed in _setup_fields()
-            '_defaults': {},            # recomputed in _setup_base()
-            '_fields': {},              # idem
-            '_inherits': inherits,
-            '_depends': depends,
-            '_constraints': constraints.values(),
-            '_sql_constraints': sql_constraints,
-            '_original_module': original_module,
-        })
+        ModelClass._build_model_attributes(pool)
 
         # instantiate the model, and initialize it
         model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
+
+    @classmethod
+    def _build_model_attributes(cls, pool):
+        """ Initialize base model attributes. """
+        cls._description = cls._name
+        cls._table = cls._name.replace('.', '_')
+        cls._sequence = None
+        cls._log_access = cls._auto
+        cls._inherits = {}
+        cls._depends = {}
+        cls._constraints = {}
+        cls._sql_constraints = []
+
+        for base in reversed(cls.__bases__):
+            if not getattr(base, 'pool', None):
+                # the following attributes are not taken from model classes
+                cls._description = base._description or cls._description
+                cls._table = base._table or cls._table
+                cls._sequence = base._sequence or cls._sequence
+                cls._log_access = getattr(base, '_log_access', cls._log_access)
+
+            cls._inherits.update(base._inherits)
+
+            for mname, fnames in base._depends.iteritems():
+                cls._depends[mname] = cls._depends.get(mname, []) + fnames
+
+            for cons in base._constraints:
+                # cons may override a constraint with the same function name
+                cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
+
+            cls._sql_constraints += base._sql_constraints
+
+        cls._sequence = cls._sequence or (cls._table + '_id_seq')
+        cls._constraints = cls._constraints.values()
+
+        # recompute attributes of children models
+        for child_name in cls._inherit_children:
+            child_class = type(pool[child_name])
+            child_class._build_model_attributes(pool)
 
     @classmethod
     def _init_function_fields(cls, pool, cr):
@@ -747,6 +793,10 @@ class BaseModel(object):
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
 
+        # reset properties memoized on cls
+        cls._constraint_methods = BaseModel._constraint_methods
+        cls._onchange_methods = BaseModel._onchange_methods
+
     @property
     def _constraint_methods(self):
         """ Return a list of methods implementing Python constraints. """
@@ -806,17 +856,6 @@ class BaseModel(object):
         cls.pool = pool
         cls._model = self              # backward compatibility
         pool.add(cls._name, self)
-
-        # determine description, table, sequence and log_access
-        if not cls._description:
-            cls._description = cls._name
-        if not cls._table:
-            cls._table = cls._name.replace('.', '_')
-        if not cls._sequence:
-            cls._sequence = cls._table + '_id_seq'
-        if not hasattr(cls, '_log_access'):
-            # If _log_access is not specified, it is the same value as _auto.
-            cls._log_access = cls._auto
 
         check_pg_name(cls._table)
 
@@ -2274,13 +2313,13 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
-    def _save_constraint(self, cr, constraint_name, type, definition):
+    def _save_constraint(self, cr, constraint_name, type, definition, module):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
         'f' or 'u' depending on the constraint being a foreign key or not.
         """
-        if not self._module:
+        if not module:
             # no need to save constraints for custom models as they're not part
             # of any module
             return
@@ -2290,7 +2329,7 @@ class BaseModel(object):
             WHERE ir_model_constraint.module=ir_module_module.id
                 AND ir_model_constraint.name=%s
                 AND ir_module_module.name=%s
-            """, (constraint_name, self._module))
+            """, (constraint_name, module))
         constraints = cr.dictfetchone()
         if not constraints:
             cr.execute("""
@@ -2299,15 +2338,15 @@ class BaseModel(object):
                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s), %s, %s)""",
-                    (constraint_name, self._module, self._name, type, definition))
+                    (constraint_name, module, self._name, type, definition))
         elif constraints['type'] != type or (definition and constraints['definition'] != definition):
             cr.execute("""
                 UPDATE ir_model_constraint
                 SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
                 WHERE name=%s AND module = (SELECT id FROM ir_module_module WHERE name=%s)""",
-                    (type, definition, constraint_name, self._module))
+                    (type, definition, constraint_name, module))
 
-    def _save_relation_table(self, cr, relation_table):
+    def _save_relation_table(self, cr, relation_table, module):
         """
         Record the creation of a many2many for this model, to make it possible
         to delete it later when the module is uninstalled.
@@ -2317,13 +2356,13 @@ class BaseModel(object):
             WHERE ir_model_relation.module=ir_module_module.id
                 AND ir_model_relation.name=%s
                 AND ir_module_module.name=%s
-            """, (relation_table, self._module))
+            """, (relation_table, module))
         if not cr.rowcount:
             cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
                                  VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
-                       (relation_table, self._module, self._name))
+                       (relation_table, module, self._name))
             self.invalidate_cache(cr, SUPERUSER_ID)
 
     # checked version: for direct m2o starting from ``self``
@@ -2335,13 +2374,12 @@ class BaseModel(object):
             # usually because they could block deletion due to the FKs.
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
-        fk_def = (self._table, source_field, dest_model._table, ondelete or 'set null')
-        self._foreign_keys.add(fk_def)
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
+        field = self._fields[source_field]
+        self._m2o_add_foreign_key_unchecked(self._table, source_field, dest_model, ondelete, field._module)
 
     # unchecked version: for custom cases, such as m2m relationships
-    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
-        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null')
+    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete, module):
+        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null', module)
         self._foreign_keys.add(fk_def)
         _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
@@ -2715,9 +2753,10 @@ class BaseModel(object):
 
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
-        for t, k, r, d in self._foreign_keys:
-            cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f', False)
+        query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
+        for table1, column, table2, ondelete, module in self._foreign_keys:
+            cr.execute(query % (table1, column, table2, ondelete))
+            self._save_constraint(cr, "%s_%s_fkey" % (table1, column), 'f', False, module)
         cr.commit()
         del self._foreign_keys
 
@@ -2802,7 +2841,7 @@ class BaseModel(object):
         # they will be automatically removed when dropping the corresponding ir.model.field
         # table name for custom relation all starts with x_, see __init__
         if not m2m_tbl.startswith('x_'):
-            self._save_relation_table(cr, m2m_tbl)
+            self._save_relation_table(cr, m2m_tbl, f._module)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if f._obj not in self.pool:
@@ -2813,10 +2852,10 @@ class BaseModel(object):
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade', f._module)
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade', f._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
@@ -2835,6 +2874,14 @@ class BaseModel(object):
         """
         def unify_cons_text(txt):
             return txt.lower().replace(', ',',').replace(' (','(')
+
+        # map each constraint on the name of the module where it is defined
+        constraint_module = {
+            constraint[0]: cls._module
+            for cls in reversed(type(self).mro())
+            if not getattr(cls, 'pool', None)
+            for constraint in getattr(cls, '_local_sql_constraints', ())
+        }
 
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
@@ -2878,7 +2925,8 @@ class BaseModel(object):
                 sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
 
             # we need to add the constraint:
-            self._save_constraint(cr, conname, 'u', unify_cons_text(con))
+            module = constraint_module.get(key)
+            self._save_constraint(cr, conname, 'u', unify_cons_text(con), module)
             sql_actions = [item for item in sql_actions.values()]
             sql_actions.sort(key=lambda x: x['order'])
             for sql_action in [action for action in sql_actions if action['execute']]:
@@ -2981,7 +3029,10 @@ class BaseModel(object):
     @api.model
     def _prepare_setup(self):
         """ Prepare the setup of the model. """
-        type(self)._setup_done = False
+        cls = type(self)
+        cls._setup_done = False
+        # a model's base structure depends on its mro (without registry classes)
+        cls._model_cache_key = tuple(c for c in cls.mro() if not getattr(c, 'pool', None))
 
     @api.model
     def _setup_base(self, partial):
@@ -2992,8 +3043,8 @@ class BaseModel(object):
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
-        cls0 = cls.pool.model_cache.get(cls.__bases__)
-        if cls0:
+        cls0 = cls.pool.model_cache.get(cls._model_cache_key)
+        if cls0 and cls0._model_cache_key == cls._model_cache_key:
             # cls0 is either a model class from another registry, or cls itself.
             # The point is that it has the same base classes. We retrieve stuff
             # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
@@ -3021,14 +3072,18 @@ class BaseModel(object):
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
             # avoid clashes with inheritance between different models
+            for name in cls._fields:
+                delattr(cls, name)
             cls._fields = {}
             cls._defaults = {}
             for name, field in getmembers(cls, Field.__instancecheck__):
-                self._add_field(name, field.new())
+                # do not retrieve magic, custom and inherited fields
+                if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
+                    self._add_field(name, field.new())
             self._add_magic_fields()
             cls._proper_fields = set(cls._fields)
 
-            cls.pool.model_cache[cls.__bases__] = cls
+            cls.pool.model_cache[cls._model_cache_key] = cls
 
         # 2. add custom fields
         self._add_manual_fields(partial)
@@ -6164,10 +6219,13 @@ class RecordCache(MutableMapping):
         """ Return the number of fields with a regular value in cache. """
         return sum(1 for name in self)
 
-class Model(BaseModel):
-    """Main super-class for regular database-persisted OpenERP models.
 
-    OpenERP models are created by inheriting from this class::
+AbstractModel = BaseModel
+
+class Model(AbstractModel):
+    """ Main super-class for regular database-persisted Odoo models.
+
+    Odoo models are created by inheriting from this class::
 
         class user(Model):
             ...
@@ -6175,36 +6233,21 @@ class Model(BaseModel):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
     """
-    _auto = True
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = False # True in a TransientModel
+    _auto = True                # automatically create database backend
+    _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _transient = False          # not transient
 
-class TransientModel(BaseModel):
-    """Model super-class for transient records, meant to be temporarily
-       persisted, and regularly vacuum-cleaned.
+class TransientModel(AbstractModel):
+    """ Model super-class for transient records, meant to be temporarily
+    persisted, and regularly vacuum-cleaned.
 
-       A TransientModel has a simplified access rights management,
-       all users can create new records, and may only access the
-       records they created. The super-user has unrestricted access
-       to all TransientModel records.
+    A TransientModel has a simplified access rights management, all users can
+    create new records, and may only access the records they created. The super-
+    user has unrestricted access to all TransientModel records.
     """
-    _auto = True
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = True
-
-class AbstractModel(BaseModel):
-    """Abstract Model super-class for creating an abstract class meant to be
-       inherited by regular models (Models or TransientModels) but not meant to
-       be usable on its own, or persisted.
-
-       Technical note: we don't want to make AbstractModel the super-class of
-       Model or BaseModel because it would not make sense to put the main
-       definition of persistence methods such as create() in it, and still we
-       should be able to override them within an AbstractModel.
-       """
-    _auto = False # don't create any database backend for AbstractModels
-    _register = False # not visible in ORM registry, meant to be python-inherited only
-    _transient = False
+    _auto = True                # automatically create database backend
+    _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _transient = True           # transient
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning
