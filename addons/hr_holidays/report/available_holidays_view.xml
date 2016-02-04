@@ -35,7 +35,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,pivot,calendar,form</field>
             <field name="view_id"></field>  <!-- force empty -->
-            <field name="domain">[('type','=','remove')]</field>
+            <field name="context">{'search_default_leaves':1}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
