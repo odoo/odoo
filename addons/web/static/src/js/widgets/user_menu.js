@@ -37,12 +37,10 @@ var UserMenu = Widget.extend({
             if (!session.uid)
                 return;
             var func = new Model("res.users").get_func("read");
-            return self.alive(func(session.uid, ["name", "company_id"])).then(function(res) {
+            return self.alive(func(session.uid, ["name"])).then(function(res) {
                 var topbar_name = res.name;
                 if(session.debug)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
-                if(res.company_id[0] > 1)
-                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
                 if (!session.debug) {
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);

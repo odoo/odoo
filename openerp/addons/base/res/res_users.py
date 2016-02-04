@@ -308,6 +308,11 @@ class res_users(osv.osv):
 
         return result
 
+    def read_companies(self, cr, uid, context=None):
+        user = self.browse(cr, SUPERUSER_ID, uid, context=context)
+        display_switch_company_menu = self.has_group(cr, uid, 'base.group_multi_company') and len(user.company_ids) > 1
+        return {'current_company': (user.company_id.id, user.company_id.name), 'all_allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if uid != SUPERUSER_ID:
             groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
