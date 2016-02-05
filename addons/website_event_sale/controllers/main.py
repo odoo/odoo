@@ -55,9 +55,11 @@ class website_event(website_event):
 
         return request.redirect("/shop/checkout")
 
-    def _add_event(self, event_name="New Event", context={}, **kwargs):
-        try:
-            res_id = request.env.ref('event_sale.product_product_event').id
+    def _add_event(self, event_name="New Event", context=None, **kwargs):
+        if context is None:
+            context = {}
+        res_id = request.env.ref('event_sale.product_product_event', raise_if_not_found=False).id
+        if res_id:
             context['default_event_ticket_ids'] = [[0, 0, {
                 'name': _('Subscription'),
                 'product_id': res_id,
@@ -65,6 +67,4 @@ class website_event(website_event):
                 'seats_max': 1000,
                 'price': 0,
             }]]
-        except ValueError:
-            pass
         return super(website_event, self)._add_event(event_name, context, **kwargs)
