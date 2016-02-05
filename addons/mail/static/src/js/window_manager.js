@@ -302,7 +302,7 @@ core.bus.on('web_client_ready', null, function () {
 
     chat_manager.bus.on('anyone_listening', null, function (channel, query) {
         _.each(chat_sessions, function (session) {
-            if (channel.id === session.id && session.window.thread.is_at_bottom()) {
+            if (channel.id === session.id && session.window.thread.is_at_bottom() && !session.window.is_hidden) {
                 query.is_displayed = true;
             }
         });

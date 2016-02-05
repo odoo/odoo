@@ -122,7 +122,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_request_permission": function (event) {
             event.preventDefault();
             this.$(".o_mail_annoying_notification_bar").slideUp();
-            window.Notification.requestPermission();
+            var def = window.Notification.requestPermission();
+            if (def) {
+                def.then(function () {
+                    chat_manager.send_native_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                });
+            }
         },
         "keydown": function (event) {
             if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
