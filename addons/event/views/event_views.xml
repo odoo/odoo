@@ -12,12 +12,14 @@
             <field name="model">event.type</field>
             <field name="arch" type="xml">
                 <form string="Event Type">
-                    <group>
-                        <field name="name"/>
-                        <field name="default_reply_to"/>
-                        <field name="default_registration_min"/>
-                        <field name="default_registration_max"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="default_reply_to"/>
+                            <field name="default_registration_min"/>
+                            <field name="default_registration_max"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -33,14 +35,14 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Events Types</field>
+            <field name="name">Event Types</field>
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
 
         <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
             sequence="100"/>
-        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
+        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
@@ -91,7 +93,7 @@
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="event_type_id"/>
+                                <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
@@ -467,7 +469,7 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem name="Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Mail Schedulers" id="menu_event_mail_schedulers" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
     </data>
 </openerp>
