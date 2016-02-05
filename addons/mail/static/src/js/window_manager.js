@@ -39,7 +39,10 @@ function open_chat (session) {
     var chat_session = _.findWhere(chat_sessions, {id: session.id});
     if (!chat_session) {
         var prefix = !session.is_chat ? "#" : "";
-        var options = { input_less: session.mass_mailing };
+        var options = {
+            input_less: session.mass_mailing,
+            status: session.status,
+        };
         chat_session = {
             id: session.id,
             uuid: session.uuid,
@@ -330,6 +333,14 @@ core.bus.on('web_client_ready', null, function () {
             display_state.$hidden_windows_dropdown.html(render_hidden_sessions_dropdown().html());
             reposition_hidden_sessions_dropdown();
         }
+    });
+
+    chat_manager.bus.on('update_dm_presence', null, function (channel) {
+        _.each(chat_sessions, function (session) {
+            if (channel.id === session.id) {
+                session.window.update_status(channel.status);
+            }
+        });
     });
 
     chat_manager.is_ready.then(function() {
