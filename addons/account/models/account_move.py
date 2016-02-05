@@ -599,8 +599,9 @@ class AccountMoveLine(models.Model):
 
     @api.v7
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, line_ids, target_currency_id=False, context=None):
+        recs = self.browse(cr, uid, line_ids, context)
         target_currency = target_currency_id and self.pool.get('res.currency').browse(cr, uid, target_currency_id, context=context) or False
-        return self.browse(cr, uid, line_ids, context).prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
+        return AccountMoveLine.prepare_move_lines_for_reconciliation_widget(recs, target_currency=target_currency)
 
     @api.v8
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
@@ -695,11 +696,7 @@ class AccountMoveLine(models.Model):
                 accounts = self.pool['account.account'].browse(cr, uid, datum['id'], context=context)
                 self.pool['account.account'].mark_as_reconciled(cr, uid, accounts.ids, context=context)
 
-    @api.v7
-    def process_reconciliation(self, cr, uid, mv_line_ids, new_mv_line_dicts, context=None):
-        return self.browse(cr, uid, mv_line_ids, context).process_reconciliation(new_mv_line_dicts)
-
-    @api.v8
+    @api.multi
     def process_reconciliation(self, new_mv_line_dicts):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
