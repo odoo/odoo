@@ -191,7 +191,6 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
-                'refund_sequence': True,
                 'show_on_dashboard': journal['favorite'],
             }
             journal_data.append(vals)

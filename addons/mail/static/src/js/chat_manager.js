@@ -51,31 +51,44 @@ bus.on("window_focus", null, function() {
     web_client.set_title_part("_chat");
 });
 
+// to do: move this to mail.utils
+function send_native_notification(title, content) {
+    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
+    notification.onclick = function (e) {
+        window.focus();
+        if (this.cancel) {
+            this.cancel();
+        } else if (this.close) {
+            this.close();
+        }
+    };
+}
+
 function notify_incoming_message (msg, options) {
+    if (bus.is_odoo_focused() && options.is_displayed) {
+        // no need to notify
+        return;
+    }
     var title = _t('New message');
     if (msg.author_id[1]) {
         title = _.escape(msg.author_id[1]);
     }
     var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
 
-    if (bus.is_odoo_focused()) {
-        if (!options.is_displayed) {
-            web_client.do_notify(title, content);
-        }
-    } else {
+    if (!bus.is_odoo_focused()) {
         global_unread_counter++;
         var tab_title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
         web_client.set_title_part("_chat", tab_title);
+    }
 
-        if (Notification && Notification.permission === "granted") {
-            if (bus.is_master) {
-                new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png", silent: false});
-            }
-        } else {
-            web_client.do_notify(title, content);
-            if (bus.is_master) {
-                beep();
-            }
+    if (Notification && Notification.permission === "granted") {
+        if (bus.is_master) {
+            send_native_notification(title, content);
+        }
+    } else {
+        web_client.do_notify(title, content);
+        if (bus.is_master) {
+            beep();
         }
     }
 }
@@ -987,6 +1000,8 @@ var chat_manager = {
             return values;
         });
     },
+
+    send_native_notification: send_native_notification,
 };
 
 // Initialization
