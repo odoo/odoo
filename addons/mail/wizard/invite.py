@@ -11,7 +11,6 @@ class Invite(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(Invite, self).default_get(fields)
-        user_name = self.env.user.name_get()[0][1]
         model = result.get('res_model')
         res_id = result.get('res_id')
         if self._context.get('mail_invite_follower_channel_only'):
@@ -19,10 +18,14 @@ class Invite(models.TransientModel):
         if 'message' in fields and model and res_id:
             model_name = self.env['ir.model'].search([('model', '=', self.pool[model]._name)]).name_get()[0][1]
             document_name = self.env[model].browse(res_id).name_get()[0][1]
-            message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>') % (user_name, model_name, document_name)
-            result['message'] = message
-        elif 'message' in fields:
-            result['message'] = _('<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>') % user_name
+            values = {
+                'model': model,
+                'res_id': res_id,
+                'document_name': document_name,
+                'model_name': model_name,
+            }
+            rendered_template = self.env.ref('mail.mail_wizard_invite_template_message').render(values, engine='ir.qweb')
+            result['message'] = rendered_template
         return result
 
     res_model = fields.Char('Related Document Model', required=True, select=1, help='Model of the followed resource')

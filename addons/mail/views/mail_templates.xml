@@ -23,5 +23,19 @@
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
             </xpath>
         </template>
+
+        <template id="mail_wizard_invite_template_message">
+<div>
+    <p>Hello,</p>
+    <p><t t-raw="env.user.name"/> invited you to follow <t t-raw="model_name"/> document: <t t-raw="document_name"/>.</p>
+    <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+        <a t-attf-href="/mail/view?model=#{model}&amp;res_id=#{res_id}"
+            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #a24689; border: 1px solid #a24689; border-radius:3px">
+            See document
+        </a>
+    </p>
+</div>
+        </template>
+
     </data>
 </openerp>
