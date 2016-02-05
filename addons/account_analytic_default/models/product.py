@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
 
     def _compute_rules_count(self):
         for template in self:
-            self.rules_count = sum([p.rules_count for p in template.product_variant_ids])
+            template.rules_count = sum([p.rules_count for p in template.product_variant_ids])
 
     @api.multi
     def action_view_rules(self):
