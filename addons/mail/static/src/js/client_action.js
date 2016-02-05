@@ -390,7 +390,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             if (channel.type !== 'static') {
                 // Display snackbar if needactions have been cleared
                 if (channel.needaction_counter > 0) {
-                    self.render_snackbar('mail.chat.MessageSentSnackbar', {
+                    self.render_snackbar('mail.chat.UndoSnackbar', {
                         nb_needactions: channel.needaction_counter,
                     });
                 }
