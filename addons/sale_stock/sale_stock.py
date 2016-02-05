@@ -292,6 +292,16 @@ class StockMove(models.Model):
             line.qty_delivered = line._get_delivered_qty()
         return result
 
+    @api.model
+    def _create_procurement(self, move):
+        result = super(StockMove, self)._create_procurement(move)
+        procurement = self.env['procurement.order'].browse(result)
+        if move.group_id:
+            order = self.env['sale.order'].search([('procurement_group_id', '=', move.group_id.id)])
+            procurement.message_post_with_view('mail.message_origin_link',
+                values={'self': procurement, 'origin': order},
+                subtype_id=self.env.ref('mail.mt_note').id)
+        return result
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

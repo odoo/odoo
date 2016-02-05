@@ -204,6 +204,17 @@ class StockMove(osv.osv):
                     workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
         return res
 
+    def _create_procurement(self, cr, uid, move, context=None):
+        """ This will create a procurement order """
+        result = super(StockMove, self)._create_procurement(cr, uid, move, context=context)
+        procurement = self.pool['procurement.order'].browse(cr, uid, result, context=context)
+        production = move.production_id or move.raw_material_production_id
+        if production:
+            procurement.message_post_with_view('mail.message_origin_link',
+                values={'self': procurement, 'origin': production},
+                subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
+        return result
+
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {

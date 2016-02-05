@@ -370,6 +370,9 @@ class PurchaseOrder(models.Model):
                 move_ids = moves.action_confirm()
                 moves = self.env['stock.move'].browse(move_ids)
                 moves.force_assign()
+                picking.message_post_with_view('mail.message_origin_link',
+                    values={'self': picking, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     @api.multi
@@ -953,6 +956,9 @@ class ProcurementOrder(models.Model):
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
+                po.message_post_with_view('mail.message_origin_link',
+                    values={'self': po, 'origin': procurement},
+                    subtype_id=self.env.ref('mail.mt_note').id)
                 cache[domain] = po
             elif not po.origin or procurement.origin not in po.origin.split(', '):
                 # Keep track of all procurements
@@ -963,6 +969,9 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
+                po.message_post_with_view('mail.message_origin_link',
+                    values={'self': po, 'origin': procurement, 'edit': True},
+                    subtype_id=self.env.ref('mail.mt_note').id)
             if po:
                 res += [procurement.id]
 

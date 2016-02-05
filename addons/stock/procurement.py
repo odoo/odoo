@@ -508,6 +508,10 @@ class procurement_order(osv.osv):
                                                                  self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
                                                                  context=dict(context, procurement_autorun_defer=True))
                                 tot_procs.append(proc_id)
+                                procurement = procurement_obj.browse(cr, uid, proc_id, context=context)
+                                procurement.message_post_with_view('mail.message_origin_link',
+                                    values={'self': procurement, 'origin': op},
+                                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
                             if use_new_cursor:
                                 cr.commit()
                     except OperationalError:
