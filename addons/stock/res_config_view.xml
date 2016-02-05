@@ -17,7 +17,7 @@
                     </header>
                     <group string="Traceability" name="traceability">
                         <field name="group_stock_production_lot" widget="radio"/>
-                        <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot','=', 0)]}"/>
+                        <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"/>
                         <field name="group_stock_tracking_lot" widget="radio"/>
                         <field name="group_stock_tracking_owner" widget="radio"/>
                         <label for="id" string="Barcode Interface"/>
