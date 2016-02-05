@@ -144,7 +144,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
+                    <p class="mt8"><t t-esc="html2plaintext(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
                 </div>
             </div>
         </div>

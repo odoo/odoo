@@ -4,11 +4,10 @@
 import collections
 import datetime
 import pytz
-import re
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape
+from odoo.tools import html_escape as escape, html2plaintext
 
 
 class website_event(http.Controller):
@@ -93,16 +92,13 @@ class website_event(http.Controller):
         else:
             tracks = event.track_ids
 
-        def html2text(html):
-            return re.sub(r'<[^>]+>', "", html)
-
         values = {
             'event': event,
             'main_object': event,
             'tracks': tracks,
             'tags': event.tracks_tag_ids,
             'searches': searches,
-            'html2text': html2text
+            'html2plaintext': html2plaintext
         }
         return request.website.render("website_event_track.tracks", values)
 
