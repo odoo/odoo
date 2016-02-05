@@ -25,34 +25,34 @@ class AccountTaxPython(models.Model):
             ":param partner: res.partner recordset singleton or None")
 
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, invoice_line=None):
         self.ensure_one()
         if self.amount_type == 'code':
             company = self.env.user.company_id
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company, 'invoice_line':invoice_line}
             safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             return localdict['result']
-        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
+        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, invoice_line)
 
     @api.v8
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, invoice_line=None):
         taxes = self.env['account.tax']
         company = self.env.user.company_id
         for tax in self:
-            localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company, 'invoice_line':invoice_line}
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
                 taxes += tax
-        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner)
+        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, invoice_line)
 
     @api.v7
-    def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, context=None):
+    def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, invoice_line=None, context=None):
         currency = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context) or None
         product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or None
         partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency, quantity, product, partner)
+        return recs.compute_all(price_unit, currency, quantity, product, partner, invoice_line)
 
 class AccountTaxTemplatePython(models.Model):
     _inherit = 'account.tax.template'
