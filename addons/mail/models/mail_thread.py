@@ -176,8 +176,10 @@ class MailThread(models.AbstractModel):
                              RIGHT JOIN mail_message_mail_channel_rel rel
                              ON rel.mail_message_id = msg.id
                              RIGHT JOIN mail_channel_partner cp
-                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND (cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s AND msg.author_id != %s AND
+                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                                (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+                             WHERE msg.model = %s AND msg.res_id in %s AND
+                                   (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
                          (partner_id, self._name, tuple(self.ids), partner_id,))
         for result in self._cr.fetchall():
