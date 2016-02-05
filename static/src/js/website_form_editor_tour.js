@@ -2,10 +2,8 @@ odoo.define('website_form_editor.tour', function(require) {
     'use strict';
 
     var base = require('web_editor.base');
-    var core    = require('web.core');
-    var Tour    = require('web.Tour');
-    var Model   = require('web.Model');
-    var Session = require('web.Session');
+    var Tour = require('web.Tour');
+    var Model = require('web.Model');
 
     base.ready().done(function () {
         Tour.register({
@@ -17,7 +15,7 @@ odoo.define('website_form_editor.tour', function(require) {
                 // Drop a form builder snippet and configure it
                 {
                     title:          "Enter edit mode",
-                    element:        "button[data-action=edit]"
+                    element:        "a[data-action=edit]"
                 },
                 {
                     title:          "Drop the form snippet",
@@ -506,7 +504,7 @@ odoo.define('website_form_editor.tour', function(require) {
         Tour.register({
             id:   'website_form_editor_tour_submit',
             name: "Check created form works correctly",
-            path: '',
+            path: '/',
             mode: 'test',
             steps: [
                 {
@@ -602,7 +600,7 @@ odoo.define('website_form_editor.tour', function(require) {
         Tour.register({
             id:   'website_form_editor_tour_results',
             name: "Check records have been created",
-            path: '',
+            path: '/',
             mode: 'test',
             steps: [
                 {
