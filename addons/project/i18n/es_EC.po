@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-30 22:55+0000\n"
+"PO-Revision-Date: 2016-02-04 18:11+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgstr "- El equipo de Odoo"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks, Issues and Timesheets."
-msgstr "1. Aprenda sobre Tareas, Incidencias y Parte de horas"
+msgstr "1. Aprenda sobre Tareas, Incidencias y Hojas de registro"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -151,7 +151,7 @@ msgid ""
 "                                            <span class=\"fa fa-mobile\"/>\n"
 "                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-mobile\"/>\n<strong> Desde su teléfono móvil</strong>\n</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -169,7 +169,7 @@ msgid ""
 "                                            <span class=\"fa fa-puzzle-piece\"/>\n"
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-puzzle-piece\"/>\n<strong> Vía extensión de Chrome </strong>\n</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -207,7 +207,7 @@ msgid ""
 "                                            <strong> Exercise 2</strong><br/>\n"
 "                                            <span class=\"small\">Delay to close an Issue</span>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-thumb-tack\"/>\n<strong> Ejercicio 2</strong><br/>\n<span class=\"small\">Retraso para cerrar un problema</span>\n</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -225,7 +225,7 @@ msgid ""
 "                                        <span class=\"fa fa-clock-o\"/>\n"
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa fa-clock-o\"/>\n                                        <strong> Partes de horas</strong>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa fa-clock-o\"/>\n                                        <strong> Hojas de registro</strong>\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -275,7 +275,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr ""
+msgstr "<strong> Prepare una agenda (y mantener a la misma)</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -346,7 +346,7 @@ msgstr "<strong>Informes de análisis</strong> (cada año)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr "<strong>Apruebe sus partes de horas</strong> (cada semana)"
+msgstr "<strong>Apruebe sus hojas de registro</strong> (cada semana)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -507,7 +507,7 @@ msgstr "<strong>¿Necesita ayuda para estructurar sus proyectos?</strong><br/>"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>¿Necesita ayuda con la administración de Hojas de registro? Contáctenos </strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -681,12 +681,12 @@ msgstr "La acción necesita una descripición fácil de entender"
 msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
-msgstr "Activar 'Permitir facturar en base a partes de horas' desde los <i>ajustes de recursos humanos</i>."
+msgstr "Activar 'Permitir facturar en base a hojas de registro' desde los <i>ajustes de recursos humanos</i>."
 
 #. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Activate timesheets on issues"
-msgstr ""
+msgstr "Activar Hojas de registro en novedades"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -977,7 +977,7 @@ msgstr "Marque esta casilla para gestionar actividades internas en este proyecto
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_use_timesheets
 msgid "Check this field if this project manages timesheets"
-msgstr "Marque esta casilla si este proyecto gestiona partes de horas"
+msgstr "Marque esta casilla si este proyecto gestiona hojas de registro"
 
 #. module: project
 #: code:addons/project/project.py:612
@@ -1405,7 +1405,7 @@ msgstr "No estimar tiempo de trabajo en las tareas"
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
 msgid "Do not record timesheets on tasks"
-msgstr "No registrar partes de horas en las tareas"
+msgstr "No registrar hojas de registro en las tareas"
 
 #. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -1808,14 +1808,14 @@ msgstr "ID del registro padre que tiene el seudónimo. (ejemplo: el proyecto que
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr ""
+msgstr "La Idea ha sido transformada en acciones concretas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:102
 #, python-format
 msgid "Idea is fully explained"
-msgstr ""
+msgstr "La idea ha sido explicada completamente"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1832,7 +1832,7 @@ msgstr "Ideas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr ""
+msgstr "Identificar los problemas y los puntos de bloqueo con más facilidad"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_unread
@@ -2506,7 +2506,7 @@ msgstr "Política para enviar un mensaje en el documento usando la pasarela de c
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
-msgstr ""
+msgstr "Preparar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_priority
@@ -2517,7 +2517,7 @@ msgstr "Prioridad"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Explicación de Administración Prioritaria"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2621,7 +2621,7 @@ msgstr "Proyectos"
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr "Proveer de soporte de partes de horas para la gestión de incidencias/errores en los proyectos.\n- Esto instala el módulo project_issue_sheet."
+msgstr "Proveer de soporte de hojas de registro para la gestión de incidencias/errores en los proyectos.\n- Esto instala el módulo project_issue_sheet."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -2638,7 +2638,7 @@ msgstr "Preparado"
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr ""
+msgstr "Listo para su diseño / redacción"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2653,26 +2653,26 @@ msgstr "Lista para la siguiente etapa"
 #: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Ready for release"
-msgstr ""
+msgstr "Listo para lanzamiento"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Ready for testing"
-msgstr ""
+msgstr "Listo para pruebas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready to be displayed, published or sent"
-msgstr ""
+msgstr "Listo para ser mostrado, publicado o enviado"
 
 #. module: project
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Listo para ser reabiertos"
 
 #. module: project
 #. openerp-web
@@ -2680,7 +2680,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
+msgstr "Las razones para la cancelación han sido documentadas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -2695,7 +2695,7 @@ msgstr "Grabar líneas de parte de horas para las tareas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
-msgstr ""
+msgstr "Rojo: la tarea está bloqueada (existe un problema)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -2707,7 +2707,7 @@ msgstr "Referencia"
 #: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Release"
-msgstr ""
+msgstr "Lanzamient"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
@@ -2723,21 +2723,21 @@ msgstr "Tiempo restante"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
-msgstr ""
+msgstr "Taller de reparación"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "Repair has started"
-msgstr ""
+msgstr "Reparación ha iniciado"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Repair is completed"
-msgstr ""
+msgstr "La reparación está completa"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2749,7 +2749,7 @@ msgstr "Informando"
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Request for parts has been sent"
-msgstr ""
+msgstr "Requerimiento de piezas ha sido enviado. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2770,7 +2770,7 @@ msgstr "Responsable"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Runs outside Odoo, always available"
-msgstr ""
+msgstr "Se ejecuta fuera de Odoo, siempre disponible"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_service
@@ -2795,14 +2795,14 @@ msgstr "Buscar proyecto"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
-msgstr ""
+msgstr "Enviar una alerta cuando una tarea se ha quedado atascado en rojo durante algunos días"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Send an automatic confirmation to all issue emails sent to your customer "
 "support"
-msgstr ""
+msgstr "Enviar una confirmación automática de todos los correos electrónicos enviados a servicio al cliente"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -2819,14 +2819,14 @@ msgstr "Acuerdo de nivel de servicio (Service Level Agreement - SLA)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Configurar imagen de portada"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/xml/project.xml:9
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Configurar una imagen de portada"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2842,7 +2842,7 @@ msgstr "Severidad"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
-msgstr ""
+msgstr "Compartir archivos y administrar versiones"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2868,21 +2868,21 @@ msgstr "Especificación"
 #: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification is validated"
-msgstr ""
+msgstr "Especificaciones son validadas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:22
 #, python-format
 msgid "Specification of task is written"
-msgstr ""
+msgstr "Especificación de tarea fue escrita"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:48
 #, python-format
 msgid "Sprint"
-msgstr ""
+msgstr "Sprint"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_type_id
@@ -2903,7 +2903,7 @@ msgstr "Etapa cambiada"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Descripción de etapa y consejos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -2923,7 +2923,7 @@ msgstr "Etapas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr ""
+msgstr "Iniciar / Parar el temporizador en un clic"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -2959,7 +2959,7 @@ msgstr "Etiquetas"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks, issues..."
-msgstr ""
+msgstr "Etiquetas de tareas de proyectos, novedades ..."
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -2998,7 +2998,7 @@ msgstr "Tubería de tareas"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Tarea lista"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3031,14 +3031,14 @@ msgstr "Tarea bloqueada"
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Task description is a plain text"
-msgstr ""
+msgstr "Descripción de tarea en un texto simple"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Task is Developed"
-msgstr ""
+msgstr "Tarea se encuentra en desarrollo"
 
 #. module: project
 #. openerp-web
@@ -3052,7 +3052,7 @@ msgstr "La tarea está completa"
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "Tarea fue probada"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -3096,7 +3096,7 @@ msgstr "Tareas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks &amp; Issues"
-msgstr ""
+msgstr "Tareas y Novedades"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3303,7 +3303,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Timesheets"
-msgstr "Partes de tiempo"
+msgstr "Hojas de registro"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue_sheet
@@ -3321,7 +3321,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr "Los partes de horas se pueden usar por varios motivos:"
+msgstr "Las hojas de registro se pueden usar por varios motivos:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet
@@ -3331,7 +3331,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets to Approve"
-msgstr "Hoja de Horas por aprobar"
+msgstr "Hojas de Registro por aprobar"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id

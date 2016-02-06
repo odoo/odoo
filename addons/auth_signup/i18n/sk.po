@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-01-27 13:35+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-02-06 07:47+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n\n<p>\n${object.name},\n</p>\n<p>\nBoli ste pozvaní na pripojenie sa k \"${object.company_id.name}\" s cieľom získať prístup k Vašim dokumentom v Odoo.\n</p>\n<p>\nPre prijatie pozvánky, kliknite na nasledovný odkaz:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Prijať pozvánku do \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nVďaka,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -56,26 +57,26 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Bolo požiadané o resetovanie hesla pre Odoo účet spojený s týmto emailom.</p>\n\n<p>Môžete zmeniť svoje heslo kliknutím na <a href=\"${object.signup_url}\">tento odkaz</a>, ktorý bude platný po dobu 24 hodín.</p>\n\n<p>Poznámka: Ak toto neočakávate, môžete bez obáv tento email ignorovať.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} pozvánka na pripojenie sa k Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Bolo požiadané o resetovanie hesla pre tohto používateľa. Email obsahujúci nasledujúci odkaz bol odoslaný:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Emailová pozvánka, obsahujúca nasledujúci odkaz odberu bola odoslaná:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -86,31 +87,31 @@ msgstr "Povoliť externým používateľom prihlásiť sa"
 #: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Bol odoslaný email s prihlasovacími údajmi na resetovanie vášho hesla"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:40
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Iný používateľ je už registrovaný pomocou tejto emailovej adresy."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autentifikácia zlyhala."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
-msgstr ""
+msgstr "Späť na prihlásenie"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Nemožno odoslať email: používateľ %s nemá žiadnu emailovú adresu."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -120,24 +121,24 @@ msgstr "Potvrdiť"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Potvrdiť heslo"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Pripojené"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:43
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Nebolo možné vytvoriť nový účet."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Nebolo možné resetovať vaše heslo"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -153,12 +154,12 @@ msgstr "Ak nezaškrtnuté, iba pozvaný používatelia sa môžu prihlásiť."
 #: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Neplatný prihlasovací token"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Nikdy pripojený"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -173,64 +174,64 @@ msgstr "Heslo"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Reset hesla"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Resetovať heslo"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Resetovať heslo: nesprávne používateľské meno alebo email"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Poslať inštrukcie na resetovanie hesla"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Poslať emailovú pozvánku"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Registrácia"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Expirácia registrácie"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Registračný token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Typ registračného tokenu"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Registračný token je platný"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "URL registrácie"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -256,7 +257,7 @@ msgstr "Používatelia"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Váš email"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -271,4 +272,4 @@ msgstr "base.config.settings"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "napr. John Doe"

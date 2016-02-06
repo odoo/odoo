@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-30 22:55+0000\n"
+"PO-Revision-Date: 2016-02-01 04:17+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "* El estado 'Borrador' se usa cuando un usuario está introduciendo una nueva factura no confirmada.\n* El estado 'Pro-forma' se usa cuando la factura no tiene un número asignado.\n* El estado 'Abierta' se usa cuando el usuario crea la factura y la confirma. Se genera un número de factura y su estado permanecerá así hasta que el usuario pague la factura.\n* El estado 'Pagada' se establece automáticamente cuando se paga la factura. Sus correspondientes asientos pueden o no estar conciliados.\n* El estado 'Cancelada' se usa cuando el usuario cancela la factura."
+msgstr "* El estado 'Borrador' se usa cuando un usuario está introduciendo una nueva factura no confirmada.\n* El estado 'Cotización' se usa cuando la factura no tiene un número asignado.\n* El estado 'Abierta' se usa cuando el usuario crea la factura y la confirma. Se genera un número de factura y su estado permanecerá así hasta que el usuario pague la factura.\n* El estado 'Pagada' se establece automáticamente cuando se paga la factura. Sus correspondientes asientos pueden o no estar conciliados.\n* El estado 'Cancelada' se usa cuando el usuario cancela la factura."
 
 #. module: account
 #. openerp-web
@@ -1425,7 +1425,7 @@ msgstr "Permitir multi divisa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_proforma_invoices
 msgid "Allow pro-forma invoices"
-msgstr "Permitir facturas pro-forma"
+msgstr "Permitir facturas cotización"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
@@ -1435,7 +1435,7 @@ msgstr "Permite un entorno multi compañía"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
 msgid "Allows you to put invoices in pro-forma state."
-msgstr "Permite poner las facturas es estado pro-forma."
+msgstr "Permite poner las facturas es estado cotización."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_analytic_accounting
@@ -6065,7 +6065,7 @@ msgstr "Informes PDF"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PRO-FORMA"
-msgstr "PRO-FORMA"
+msgstr "COTIZACIÓN"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -6609,12 +6609,12 @@ msgstr "Factura proforma"
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Pro-forma"
-msgstr "Pro-forma"
+msgstr "cotización"
 
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "Facturas pro-forma"
+msgstr "Facturas cotización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -7310,7 +7310,7 @@ msgstr "La(s) factura(s) seleccionada(s) no puede(n) ser cancelada(s) porque ya 
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr "La(s) factura(s) seleccionada(s) no puede(n) confirmarse ya que no están en estado 'Borrador' o 'Pro-Forma'."
+msgstr "La(s) factura(s) seleccionada(s) no puede(n) confirmarse ya que no están en estado 'Borrador' o 'Cotización'."
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8943,7 +8943,7 @@ msgstr "Pago a proveedor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 msgid "Vendor Payment Term"
-msgstr "Condiciones de pago a proveedor"
+msgstr "Plazo de pago a proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
