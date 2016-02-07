@@ -1,4 +1,4 @@
-Belgium, 6 february 2016
+Belgium, 2016-02-06
 
 be-cloud.be agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
