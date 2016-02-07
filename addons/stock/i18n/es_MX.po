@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-20 18:47+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-8/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,16 @@ msgstr "(%s reservado)"
 #, python-format
 msgid " (reserved)"
 msgstr "(reservado)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -384,7 +394,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:stock.view_location_form field:stock.location,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Información Adicional"
 
 #. module: stock
 #: field:stock.warehouse,partner_id:0
@@ -1027,7 +1037,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "La cantidad actual de productos.\nEn un contexto con una sola Ubicación de archivo, lo que incluye los bienes almacenados en esta oficina, o cualquiera de sus hijos.\nEn un contexto con un único almacén, lo que incluye los bienes almacenados en la Bolsa de ubicación de este almacén, o cualquiera de sus hijos.\nalmacenada en el archivo Ubicación del Almacén de esta tienda, o cualquiera de sus hijos.\nDe lo contrario, esto incluye los bienes almacenados en cualquier Ubicación de archivo con el tipo \"interno\"."
 
 #. module: stock
 #: code:addons/stock/stock.py:4263
@@ -1240,7 +1250,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Método de Entrega"
 
 #. module: stock
 #: code:addons/stock/stock.py:3271
@@ -1260,7 +1270,7 @@ msgstr ""
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "En función de los módulos instalados, esto le permitirá definir la ruta del producto: si va a ser comprado, fabricado, MTO/MTS, ..."
 
 #. module: stock
 #: field:stock.move,name:0
@@ -1271,7 +1281,7 @@ msgstr "Descripción"
 #: view:stock.move:stock.view_move_form view:stock.move:stock.view_move_search
 #: view:website:stock.report_picking
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #. module: stock
 #: field:stock.move,partner_id:0
@@ -1504,7 +1514,7 @@ msgstr ""
 #: field:product.product,virtual_available:0
 #: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Cantidad Pronosticada"
 
 #. module: stock
 #: help:product.product,virtual_available:0
@@ -1513,7 +1523,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad Pronóstico (calculado como cantidad disponible - Salientes + Entrantes)\nEn un contexto con una sola Ubicación de archivo, lo que incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijos.\nEn un contexto con un único almacén, lo que incluye los bienes almacenados en la Bolsa de ubicación de este almacén, o cualquiera de sus hijos.\nDe lo contrario, esto incluye los bienes almacenados en cualquier Ubicación de archivo con el tipo \"interno\"."
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -4271,7 +4281,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr ""
+msgstr "Nombre Corto"
 
 #. module: stock
 #: help:stock.warehouse,code:0
@@ -5019,7 +5029,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr ""
+msgstr "Transferencias"
 
 #. module: stock
 #: selection:stock.location,usage:0

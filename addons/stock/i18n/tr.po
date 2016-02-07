@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-11 17:21+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,16 @@ msgstr " (%s rezerve)"
 #, python-format
 msgid " (reserved)"
 msgstr " (rezerve)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -3553,7 +3563,7 @@ msgstr "Yerleştirme Strateji"
 #: code:addons/stock/static/src/xml/picking.xml:111
 #, python-format
 msgid "Put in Cart"
-msgstr "Sepet Koy"
+msgstr "Sepete Ekle"
 
 #. module: stock
 #. openerp-web
