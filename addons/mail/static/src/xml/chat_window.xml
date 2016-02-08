@@ -5,13 +5,14 @@
         <div class="o_chat_window">
             <div class="o_chat_header">
                 <t t-call="mail.ChatWindowHeaderContent">
+                    <t t-set="status" t-value="widget.status"/>
                     <t t-set="title" t-value="widget.title"/>
                     <t t-set="unread_counter" t-value="widget.unread_msgs"/>
                 </t>
             </div>
             <div class="o_chat_content">
             </div>
-            <div class="o_chat_input">
+            <div t-if='!widget.options.input_less' class="o_chat_input">
                 <input t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>
@@ -39,6 +40,7 @@
                 <t t-foreach="sessions" t-as="session">
                     <li class="o_chat_header" t-att-data-session-id="session.id">
                         <t t-call="mail.ChatWindowHeaderContent">
+                            <t t-set="status" t-value="session.window.status"/>
                             <t t-set="title" t-value="session.window.title"/>
                             <t t-set="unread_counter" t-value="session.window.unread_msgs"/>
                         </t>
@@ -50,10 +52,9 @@
 
     <t t-name="mail.ChatWindowHeaderContent">
         <span class="o_chat_title">
+            <t t-if="status" t-call="mail.chat.UserStatus"/>
             <t t-esc="title"/>
-            <span class="o_unread_counter">
-                <t t-if="unread_counter">(<t t-esc="unread_counter"/>)</t>
-            </span>
+            <span t-if="unread_counter"> (<t t-esc="unread_counter"/>)</span>
         </span>
         <span>
             <a href="#" class="o_chat_window_close fa fa-close"/>

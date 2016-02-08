@@ -543,7 +543,7 @@
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids">
-                                    <field name="sequence" readonly="1" invisible="1"/>
+                                    <field name="sequence"  widget="handle"/>
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>

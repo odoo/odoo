@@ -27,6 +27,9 @@ var accented_letters_mapping = {
     ' ': '[()\\[\\]]',
 };
 
+var MENTION_PARTNER_DELIMITER = '@';
+var MENTION_CHANNEL_DELIMITER = '#';
+
 // The MentionManager allows the Composer to register listeners. For each
 // listener, it detects if the user is currently typing a mention (starting by a
 // given delimiter). If so, if fetches mention suggestions and renders them. On
@@ -106,7 +109,7 @@ var MentionManager = Widget.extend({
      * @param {string} [redirect_classname] the classname of the <a> wrapping the mention
      */
     register: function (listener) {
-        this.listeners.push(_.extend(listener, {
+        this.listeners.push(_.defaults(listener, {
             selection: [],
         }));
     },
@@ -121,6 +124,14 @@ var MentionManager = Widget.extend({
     get_listener_selection: function (delimiter) {
         var listener = _.findWhere(this.listeners, {delimiter: delimiter});
         return listener ? listener.selection : [];
+    },
+
+    get_listener_selections: function () {
+        var selections = {};
+        _.each(this.listeners, function (listener) {
+            selections[listener.delimiter] = listener.selection;
+        });
+        return selections;
     },
 
     proposition_navigation: function (keycode) {
@@ -333,6 +344,8 @@ var BasicComposer = Widget.extend({
             mention_fetch_limit: 8,
             mention_partners_restricted: false, // set to true to only suggest prefetched partners
             send_text: _('Send'),
+            default_body: '',
+            default_mention_selections: {},
         });
         this.context = this.options.context;
 
@@ -344,16 +357,18 @@ var BasicComposer = Widget.extend({
         // Mention
         this.mention_manager = new MentionManager(this);
         this.mention_manager.register({
-            delimiter: '@',
+            delimiter: MENTION_PARTNER_DELIMITER,
             fetch_callback: this.mention_fetch_partners.bind(this),
             model: 'res.partner',
             redirect_classname: 'o_mail_redirect',
+            selection: this.options.default_mention_selections[MENTION_PARTNER_DELIMITER],
         });
         this.mention_manager.register({
-            delimiter: '#',
+            delimiter: MENTION_CHANNEL_DELIMITER,
             fetch_callback: this.mention_fetch_channels.bind(this),
             model: 'mail.channel',
             redirect_classname: 'o_channel_redirect',
+            selection: this.options.default_mention_selections[MENTION_CHANNEL_DELIMITER],
         });
 
         // Emojis
@@ -372,6 +387,7 @@ var BasicComposer = Widget.extend({
         this.$input.focus(function () {
             self.trigger('input_focused');
         });
+        this.$input.val(this.options.default_body);
         dom_utils.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
 
         // Attachments
@@ -635,6 +651,9 @@ var BasicComposer = Widget.extend({
     mention_set_prefetched_partners: function (prefetched_partners) {
         this.mention_prefetched_partners = prefetched_partners;
     },
+    mention_get_listener_selections: function () {
+        return this.mention_manager.get_listener_selections();
+    },
 
     // Others
     is_empty: function () {
@@ -678,6 +697,16 @@ var ExtendedComposer = BasicComposer.extend({
 
     should_send: function () {
         return false;
+    },
+    focus: function (target) {
+        if (target === 'body') {
+            this.$input.focus();
+        } else {
+            this.$subject_input.focus();
+        }
+    },
+    set_subject: function(subject) {
+        this.$('.o_composer_subject input').val(subject);
     },
 });
 

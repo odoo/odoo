@@ -234,7 +234,7 @@ class XMLTranslator(object):
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslator(self.callback, self.method)
+        child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)
@@ -782,6 +782,10 @@ def trans_generate(lang, modules, cr):
         query += ' WHERE module IN %s'
         query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
+    else:
+        query += ' WHERE module != %s'
+        query_models += ' AND imd.module != %s'
+        query_param = ('__export__',)
     query += ' ORDER BY module, model, name'
     query_models += ' ORDER BY module, model'
 

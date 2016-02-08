@@ -46,7 +46,7 @@
     </t>
 
     <t t-name="mail.ChatThread.Message">
-        <div class="o_thread_message" t-att-data-message-id="message.id">
+        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '')" t-att-data-message-id="message.id">
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
                 <t t-if="!message.mailto &amp;&amp; message.author_id[0]">
                     <img t-if="message.avatar_src &amp;&amp; message.display_author"
@@ -97,12 +97,15 @@
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
                     <span>
-                        <i t-if="options.display_stars &amp;&amp; message.message_type != 'notification'"
+                        <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
                             t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.id" title="Mark as Todo"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
                            class="fa fa-check o_thread_message_needaction"
                            t-att-data-message-id="message.id" title="Mark as Read"/>
+                       <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
+                           class="fa fa-reply o_thread_message_reply"
+                           t-att-data-message-id="message.id" title="Reply"/>
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">

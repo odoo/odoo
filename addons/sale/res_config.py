@@ -3,6 +3,7 @@
 
 import logging
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 _logger = logging.getLogger(__name__)
@@ -80,17 +81,17 @@ class sale_configuration(osv.TransientModel):
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         sale_price = self.browse(cr, uid, ids, context=context).sale_pricelist_setting
-        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
         return res
 
     def set_deposit_product_id_defaults(self, cr, uid, ids, context=None):
         deposit_product_id = self.browse(cr, uid, ids, context=context).deposit_product_id_setting
-        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
         return res
 
     def set_auto_done_defaults(self, cr, uid, ids, context=None):
         auto_done = self.browse(cr, uid, ids, context=context).auto_done_setting
-        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'auto_done_setting', auto_done)
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'auto_done_setting', auto_done)
         return res
 
     def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):

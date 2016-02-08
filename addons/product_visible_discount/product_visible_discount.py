@@ -57,7 +57,7 @@ class sale_order_line(osv.osv):
                     if line.product_id.company_id and line.order_id.pricelist_id.currency_id.id != line.product_id.company_id.currency_id.id:
                         # new_list_price is in company's currency while price in pricelist currency
                         ctx = dict(context_partner, date=self.order_id.date_order)
-                        new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, line.order_id.pricelist_id.currency_id.id)
+                        new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, line.order_id.pricelist_id.currency_id)
                     discount = (new_list_price - line.price_unit) / new_list_price * 100
                     if discount > 0:
                         line.price_unit = new_list_price
@@ -70,7 +70,7 @@ class sale_order_line(osv.osv):
                 line.discount = 0.0
         return res
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(sale_order_line, self).product_uom_change()
         if not self.product_uom:
@@ -86,7 +86,7 @@ class sale_order_line(osv.osv):
                 if self.product_id.company_id and self.order_id.pricelist_id.currency_id.id != self.product_id.company_id.currency_id.id:
                     # new_list_price is in company's currency while price in pricelist currency
                     ctx = dict(context_partner, date=self.order_id.date_order)
-                    new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id.id)
+                    new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
                 discount = (new_list_price - self.price_unit) / new_list_price * 100
                 if discount > 0:
                     self.price_unit = new_list_price

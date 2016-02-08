@@ -19,7 +19,8 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     that need migration (for example in case of VAT report improvements)
     '''
     xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', 'in', ['account.tax.template', 'account.account.tag']), ('module', 'like', module)])
-    cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
+    if xml_record_ids:
+        cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
 def migrate_tags_on_taxes(cr, registry):
     ''' This is a utiliy function to help migrate the tags of taxes when the localization has been modified on stable version. If
@@ -190,7 +191,6 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
-                'refund_sequence': True,
                 'show_on_dashboard': journal['favorite'],
             }
             journal_data.append(vals)

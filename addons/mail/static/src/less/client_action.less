@@ -67,10 +67,18 @@
             }
         }
         .o_mail_chat_channel_item {
+            .o-flex-display();
             width: 100%;
             padding: 2px 8px 2px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
-            > .badge {
-                margin: 0;
+            .o_channel_name {
+                .o-flex(1, 1, auto);
+                .o-text-overflow();
+            }
+            .o_mail_sidebar_needaction, .o_mail_partner_unpin {
+                .o-flex(0, 0, auto);
+            }
+            .o_mail_sidebar_needaction {
+                margin: 0 0 0 5px;
             }
             .o_mail_partner_unpin {
                 padding: 2px 6px;
@@ -82,10 +90,11 @@
         }
         .o_mail_add_channel {
             width: 100%;
-            padding: 5px 8px 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
+            padding: 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
             position: relative;
 
             > input {
+                width: 100%;
                 padding: 2px 5px;
                 padding-left: 12px;
             }
@@ -103,6 +112,9 @@
         height: 100%;
         margin-left: @mail-chat-sidebar-width;
         position: relative;
+        @media (min-width: @screen-sm-min) {
+            overflow: auto;
+        }
 
         @media (max-width: @screen-xs-max) {
             margin-left: 0;
@@ -111,8 +123,7 @@
         .o_mail_thread {
             .o-flex(1, 0, 0);
             overflow: auto;
-            .o-webclient-padding();
-            padding-bottom: 15px;
+            padding: 0 0 15px 0;
 
             .o_chat_help_message {
                 padding: 25px 0;
@@ -172,8 +183,6 @@
         opacity: 0.9;
 
         .o_mail_chat_channel_item {
-            overflow: hidden;
-            text-overflow: ellipsis;
             cursor: pointer;
 
             &:hover {
@@ -246,6 +255,17 @@
             }
         }
     }
+
+    &.o_mail_selection_mode {
+        .o_thread_message {
+            opacity: 0.5;
+            &.o_thread_selected_message {
+                padding: 4px @odoo-horizontal-padding;
+                opacity: 1;
+                background-color: lightgray;
+            }
+        }
+    }
 }
 
 // User status bullet (in Discuss sidebar and Invite dialog)
@@ -253,7 +273,6 @@
     font-size: 10px;
     position: relative;
     bottom: 1px;
-    margin-right: 3px;
     &.o_user_online {
         color: @odoo-brand-optional;
     }
@@ -275,6 +294,9 @@
         .o_notification_counter {
             display: none;
         }
+    }
+    &.o_unread_chat > a > i {
+        color: @odoo-brand-optional;
     }
 
     &.open .o_mail_navbar_dropdown {
@@ -301,19 +323,16 @@
             height: 50px;
         }
 
-        .o_filter_button,
-        .o_new_message,
-        .o_redirect_to_discuss {
-            .btn-link;
-            padding: 5px;
-        }
-
         .o_mail_navbar_dropdown_top {
             .o-flex-display();
             .o-flex(0, 0, auto);
             justify-content: space-between;
             border-bottom: 1px solid lightgray;
 
+            .o_filter_button, .o_new_message {
+                .btn-link;
+                padding: 5px;
+            }
             .o_filter_button {
                 color: @odoo-main-color-muted;
                 &:hover, &.o_selected {
@@ -323,15 +342,6 @@
                     cursor: default;
                     font-weight: bold;
                 }
-            }
-        }
-        .o_mail_navbar_dropdown_bottom {
-            .o-flex(0, 0, auto);
-            border-top: 1px solid lightgray;
-            height: 35px;
-            .o_redirect_to_discuss {
-                height: 100%;
-                width: 100%;
             }
         }
 
@@ -394,4 +404,8 @@
             }
         }
     }
+}
+
+.o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
+    display: none;  // hide 'new message' button if chat windows are disabled
 }

@@ -46,7 +46,7 @@ class AddonsImportHook(object):
     thus `import openerp.addons.module`.
     """
 
-    def find_module(self, module_name, package_path):
+    def find_module(self, module_name, package_path=None):
         module_parts = module_name.split('.')
         if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
             return self # We act as a loader too.

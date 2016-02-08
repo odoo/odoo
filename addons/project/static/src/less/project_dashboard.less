@@ -82,3 +82,17 @@
         }
     }
 }
+
+.o_kanban_task_cover_image {
+    .o-columns(200px, 4);
+    > img {
+        cursor: pointer;
+        margin-bottom: 1em;
+        border: 1px solid transparent;
+
+        &.o_selected {
+            border-color: @odoo-brand-secondary;
+            box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
+        }
+    }
+}

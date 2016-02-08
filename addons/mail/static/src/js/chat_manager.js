@@ -2,6 +2,7 @@ odoo.define('mail.chat_manager', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -25,6 +26,7 @@ var channels = [];
 var channels_preview_def;
 var channel_defs = {};
 var chat_unread_counter = 0;
+var unread_conversation_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
@@ -32,6 +34,7 @@ var mention_partner_suggestions = [];
 var discuss_ids = {};
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
+var client_action_open = false;
 
 // Utils: Window focus/unfocus, beep, tab title, parsing html strings
 //----------------------------------------------------------------------------------
@@ -50,31 +53,44 @@ bus.on("window_focus", null, function() {
     web_client.set_title_part("_chat");
 });
 
+// to do: move this to mail.utils
+function send_native_notification(title, content) {
+    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
+    notification.onclick = function (e) {
+        window.focus();
+        if (this.cancel) {
+            this.cancel();
+        } else if (this.close) {
+            this.close();
+        }
+    };
+}
+
 function notify_incoming_message (msg, options) {
+    if (bus.is_odoo_focused() && options.is_displayed) {
+        // no need to notify
+        return;
+    }
     var title = _t('New message');
     if (msg.author_id[1]) {
         title = _.escape(msg.author_id[1]);
     }
     var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
 
-    if (bus.is_odoo_focused()) {
-        if (!options.is_displayed) {
-            web_client.do_notify(title, content);
-        }
-    } else {
+    if (!bus.is_odoo_focused()) {
         global_unread_counter++;
         var tab_title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
         web_client.set_title_part("_chat", tab_title);
+    }
 
-        if (Notification && Notification.permission === "granted") {
-            if (bus.is_master) {
-                new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png", silent: false});
-            }
-        } else {
-            web_client.do_notify(title, content);
-            if (bus.is_master) {
-                beep();
-            }
+    if (Notification && Notification.permission === "granted") {
+        if (bus.is_master) {
+            send_native_notification(title, content);
+        }
+    } else {
+        web_client.do_notify(title, content);
+        if (bus.is_master) {
+            beep();
         }
     }
 }
@@ -146,11 +162,15 @@ function add_message (data, options) {
                     channel.hidden = false;
                     chat_manager.bus.trigger('new_channel', channel);
                 }
-                if (!msg.author_id || msg.author_id[0] !== session.partner_id) {
+                if (channel.type !== 'static' && !msg.is_author && !msg.is_system_notification) {
                     if (options.increment_unread) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
                     if (channel.is_chat && options.show_notification) {
+                        if (!client_action_open && config.device.size_class !== config.device.SIZES.XS) {
+                            // automatically open chat window
+                            chat_manager.bus.trigger('open_chat', channel, { passively: true });
+                        }
                         var query = {is_displayed: false};
                         chat_manager.bus.trigger('anyone_listening', channel, query);
                         notify_incoming_message(msg, query);
@@ -176,7 +196,9 @@ function make_message (data) {
         date: moment(time.str_to_datetime(data.date)),
         message_type: data.message_type,
         subtype_description: data.subtype_description,
+        is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
+        is_system_notification: data.message_type === 'notification' && data.model === 'mail.channel',
         attachment_ids: data.attachment_ids,
         subject: data.subject,
         email_from: data.email_from,
@@ -240,11 +262,7 @@ function make_message (data) {
     }
 
     // Don't redirect on author clicked of self-posted messages
-    if (msg.author_id && msg.author_id[0] === session.partner_id) {
-        msg.author_redirect = false;
-    } else {
-        msg.author_redirect = true;
-    }
+    msg.author_redirect = !msg.is_author;
 
     // Compute the avatar_url
     if (msg.author_id && msg.author_id[0]) {
@@ -449,8 +467,13 @@ function fetch_document_messages (ids, options) {
 }
 
 function update_channel_unread_counter (channel, counter) {
+    if (channel.unread_counter > 0 && counter === 0) {
+        unread_conversation_counter = Math.max(0, unread_conversation_counter-1);
+    } else if (channel.unread_counter === 0 && counter > 0) {
+        unread_conversation_counter++;
+    }
     if (channel.is_chat) {
-        chat_unread_counter = chat_unread_counter - channel.unread_counter + counter;
+        chat_unread_counter = Math.max(0, chat_unread_counter - channel.unread_counter + counter);
     }
     channel.unread_counter = counter;
     chat_manager.bus.trigger("update_channel_unread_counter", channel);
@@ -512,13 +535,16 @@ function on_needaction_notification (message) {
 
 function on_channel_notification (message) {
     var def;
+    var channel_already_in_cache = true;
     if (message.channel_ids.length === 1) {
+        channel_already_in_cache = !!chat_manager.get_channel(message.channel_ids[0]);
         def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
     } else {
         def = $.when();
     }
     def.then(function () {
-        add_message(message, { show_notification: true, increment_unread: true });
+        // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
+        add_message(message, { show_notification: true, increment_unread: channel_already_in_cache });
         invalidate_caches(message.channel_ids);
     });
 }
@@ -635,7 +661,7 @@ function on_chat_session_notification (chat_session) {
         channel = chat_manager.get_channel(chat_session.id);
         if (channel) {
             channel.is_detached = false;
-            chat_manager.bus.trigger("close_chat", channel);
+            chat_manager.bus.trigger("close_chat", channel, {keep_open_if_unread: true});
         }
     }
 }
@@ -690,6 +716,9 @@ var chat_manager = {
         }
     },
 
+    get_message: function (id) {
+        return _.findWhere(messages, {id: id});
+    },
     get_messages: function (options) {
         var channel;
 
@@ -807,6 +836,9 @@ var chat_manager = {
     get_chat_unread_counter: function () {
         return chat_unread_counter;
     },
+    get_unread_conversation_counter: function () {
+        return unread_conversation_counter;
+    },
 
     get_last_seen_message: function (channel) {
         if (channel.last_seen_message_id) {
@@ -814,7 +846,7 @@ var chat_manager = {
             var msg = _.findWhere(messages, {id: channel.last_seen_message_id});
             if (msg) {
                 var i = _.sortedIndex(messages, msg, 'id') + 1;
-                while (i < messages.length && messages[i].author_id && messages[i].author_id[0] === session.partner_id) {
+                while (i < messages.length && (messages[i].is_author || messages[i].is_system_notification)) {
                     msg = messages[i];
                     i++;
                 }
@@ -865,6 +897,9 @@ var chat_manager = {
     },
     open_and_detach_dm: function (partner_id) {
         return ChannelModel.call('channel_get_and_minimize', [[partner_id]]).then(add_channel);
+    },
+    open_channel: function (channel) {
+        chat_manager.bus.trigger(client_action_open ? 'open_channel' : 'detach_channel', channel);
     },
 
     unsubscribe: function (channel) {
@@ -939,22 +974,22 @@ var chat_manager = {
             }
             return info;
         });
+        var missing_channels = _.where(channels_preview, {last_message: undefined});
         if (!channels_preview_def) {
-            var missing_channel_ids = _.pluck(_.where(channels_preview, {last_message: undefined}), 'id');
-            if (missing_channel_ids.length) {
-                channels_preview_def = ChannelModel
-                    .call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true})
-                    .then(function (channels) {
-                        _.each(channels, function (channel) {
-                            var msg = add_message(channel.last_message);
-                            _.findWhere(channels_preview, {id: channel.id}).last_message = msg;
-                        });
-                    });
+            if (missing_channels.length) {
+                var missing_channel_ids = _.pluck(missing_channels, 'id');
+                channels_preview_def = ChannelModel.call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true});
             } else {
                 channels_preview_def = $.when();
             }
         }
-        return channels_preview_def.then(function () {
+        return channels_preview_def.then(function (channels) {
+            _.each(missing_channels, function (channel_preview) {
+                var channel = _.findWhere(channels, {id: channel_preview.id});
+                if (channel) {
+                    channel_preview.last_message = add_message(channel.last_message);
+                }
+            });
             return _.filter(channels_preview, function (channel) {
                 return channel.last_message;  // remove empty channels
             });
@@ -977,7 +1012,13 @@ var chat_manager = {
             return values;
         });
     },
+
+    send_native_notification: send_native_notification,
 };
+
+chat_manager.bus.on('client_action_open', null, function (open) {
+    client_action_open = open;
+});
 
 // Initialization
 // ---------------------------------------------------------------------------------

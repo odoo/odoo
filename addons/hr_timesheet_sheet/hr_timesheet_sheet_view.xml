@@ -262,16 +262,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="timesheets_grp" string="Timesheets">
-                        <field name="timesheet_range"/>
-                        <field name="timesheet_max_difference"/>
-                        <div>
-                            <label for="timesheet_range"/>
-                            <field name="timesheet_range" required="1" class="oe_inline"/>
-                        </div>
-                        <div>
-                            <label for="timesheet_max_difference"/>
-                            <field name="timesheet_max_difference" required="1" class="oe_inline"/>
-                        </div>
+                        <field name="timesheet_range" required="1"/>
+                        <field name="timesheet_max_difference" required="1"/>
                     </group>
                 </xpath>
             </field>

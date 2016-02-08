@@ -7,6 +7,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 var HEIGHT_OPEN = '400px';
@@ -15,7 +16,9 @@ var HEIGHT_FOLDED = '28px';
 return Widget.extend({
     template: "mail.ChatWindow",
     events: {
+        "click .o_chat_input": "focus_input", // focus even if jquery's blockUI is enabled
         "keydown .o_chat_input": "on_keydown",
+        "keypress .o_chat_input": "on_keypress",
         "click .o_chat_window_close": "on_click_close",
         "click .o_chat_title": "on_click_fold",
     },
@@ -26,14 +29,19 @@ return Widget.extend({
         this.channel_id = channel_id;
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
+            autofocus: true,
             display_stars: true,
+            display_reply_icon: false,
             placeholder: _t("Say something"),
+            input_less: false,
         });
+        this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
     },
     start: function () {
         this.$input = this.$('.o_chat_input input');
+        this.$header = this.$('.o_chat_header');
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
@@ -46,7 +54,7 @@ return Widget.extend({
 
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
-        } else {
+        } else if (this.options.autofocus) {
             this.focus_input();
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
@@ -58,7 +66,18 @@ return Widget.extend({
     },
     update_unread: function (counter) {
         this.unread_msgs = counter;
-        this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
+        this.render_header();
+    },
+    update_status: function (status) {
+        this.status = status;
+        this.render_header();
+    },
+    render_header: function () {
+        this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
+            status: this.status,
+            title: this.title,
+            unread_counter: this.unread_msgs,
+        }));
     },
     fold: function () {
         this.$el.animate({
@@ -90,7 +109,11 @@ return Widget.extend({
         this.is_hidden = _.isBoolean(display) ? !display : !this.is_hidden;
         this._super.apply(this, arguments);
     },
+    on_keypress: function (event) {
+        event.stopPropagation(); // to prevent jquery's blockUI to cancel event
+    },
     on_keydown: function (event) {
+        event.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
             var content = _.str.trim(this.$input.val());
