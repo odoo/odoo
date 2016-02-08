@@ -93,8 +93,8 @@ class BlogPost(osv.Model):
                     </div> '''
 
     _columns = {
-        'name': fields.char('Title', required=True, translate=True),
-        'subtitle': fields.char('Sub Title', translate=True),
+        'name': fields.html('Title', required=True, translate=html_translate, sanitize=False),
+        'subtitle': fields.html('Sub Title', translate=html_translate, sanitize=False),
         'author_id': fields.many2one('res.partner', 'Author'),
         'cover_properties': fields.text('Cover Properties'),
         'blog_id': fields.many2one(
