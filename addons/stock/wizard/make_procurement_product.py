@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from openerp.osv import fields, osv
+from odoo.osv import fields, osv
 
 
 class make_procurement(osv.osv_memory):

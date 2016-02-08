@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
 
-class stock_backorder_confirmation(models.TransientModel):
+
+class StockBackorderConfirmation(models.TransientModel):
     _name = 'stock.backorder.confirmation'
     _description = 'Backorder Confirmation'
 

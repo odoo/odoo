@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
 
         <!--  Scrap move -->
 
@@ -19,7 +19,7 @@
                         <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_production_lot"
                             context="{'default_product_id': product_id}"/>
                         <field name="location_id" string="Scrap Location" widget="selection"
-                            domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_stock_multi_locations"/>
+                            domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="move_scrap" string="Scrap" type="object" class="btn-primary"/>
@@ -40,5 +40,5 @@
             <field name="context">{'form_view_ref': False}</field>
         </record>
 
-    </data>
-</openerp>
+
+</odoo>
