@@ -41,14 +41,14 @@
                     <div name="standard_price_uom" position="after">
                         <button string="Set standard price" type="action"
                             name="%(action_view_change_standard_price)d"
-                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard'])]}"
+                            attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard']), ('product_variant_count', '>', 1)]}"
                             class="oe_link oe_read_only" colspan="2"
                             groups="stock_account.group_inventory_valuation"/>
                     </div>
                     <div name="standard_price_uom" position="after">
                         <button string="Compute from average price" type="action"
                             name="%(action_view_change_standard_price)d"
-                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average'])]}"
+                            attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average']), ('product_variant_count', '>', 1)]}"
                             class="oe_link oe_read_only" colspan="2"
                             groups="stock_account.group_inventory_valuation"/>
                     </div>
@@ -63,6 +63,34 @@
                                 domain="[('deprecated', '=', False)]"/>
                         </group>
                     </group>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.product.view.form.easy.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="standard_price" position="after">
+                        <field name="valuation" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                    </field>
+                    <field name="standard_price" position="after">
+                        <button string="Set standard price" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard'])]}"
+                            class="oe_link oe_read_only" colspan="2"
+                            groups="stock_account.group_inventory_valuation"/>
+                    </field>
+                    <field name="standard_price" position="after">
+                        <button string="Compute from average price" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average'])]}"
+                            class="oe_link oe_read_only" colspan="2"
+                            groups="stock_account.group_inventory_valuation"/>
+                    </field>
                 </data>
             </field>
         </record>
