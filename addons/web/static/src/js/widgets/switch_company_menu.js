@@ -19,6 +19,8 @@ odoo.define('web.SwitchCompanyMenu', function(require) {
                 } else {
                     def.reject();
                 }
+            }).fail(function(){
+                def.reject();
             });
             return $.when(this._super(), def);
         },
@@ -27,7 +29,10 @@ odoo.define('web.SwitchCompanyMenu', function(require) {
 
             this.$el.on('click', '.dropdown-menu li a[data-menu]', function(ev) {
                 ev.preventDefault();
-                self['on_menu_company']($(this));
+                var company_id = $(ev.currentTarget).data('company-id');
+                new Model('res.users').call('write', [[session.uid], {'company_id': company_id}]).then(function() {
+                    location.reload();
+                });
             });
 
             self.$('.oe_topbar_name').text(self.current_company[1]);
@@ -44,12 +49,6 @@ odoo.define('web.SwitchCompanyMenu', function(require) {
             });
             self.$('.dropdown-menu').html(companies_list);
             return this._super();
-        },
-        on_menu_company: function(selected) {
-            var company_id = selected.data('company-id');
-            new Model('res.users').call('write', [[session.uid], {'company_id': company_id}]).then(function() {
-                location.reload();
-            });
         },
     });
 
