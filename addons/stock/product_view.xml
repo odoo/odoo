@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_stock_product_tree" model="ir.ui.view">
             <field name="name">product.stock.tree.inherit</field>
@@ -100,7 +99,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <div name="weight" position="after">
-                    <field name="tracking" on_change="onchange_tracking(tracking)" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
+                    <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
                 </div>
                 <field name="company_id" position="after">
                     <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
@@ -328,5 +327,4 @@
                 </data>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
