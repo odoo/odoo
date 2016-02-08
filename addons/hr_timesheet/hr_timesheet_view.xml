@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree editable="top" string="Timesheet Activities">
                     <field name="date"/>
-                    <field name="user_id" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" required="1" options='{"no_open": True}' groups="base.group_hr_manager"/>
                     <field name="name"/>
                     <field name="project_id" options="{'no_open': True, 'no_create': True}" required="1"/>
                     <field name="task_id" options="{'no_open': True, 'no_create': True}" domain="[('project_id', '=', project_id)]"/>
@@ -26,7 +26,7 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="user_id" required="1"/>
+                            <field name="user_id" required="1" groups="base.group_hr_manager"/>
                             <field name="project_id" required="1"/>
                             <field name="is_timesheet" invisible="1"/>
                         </group>

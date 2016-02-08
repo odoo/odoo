@@ -105,8 +105,9 @@
                     </div>
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
-                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline" placeholder="Employee's Name"/></h1>
+                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline" placeholder="Employee's Name" attrs="{'readonly': [('can_change_employee', '=', False)]}"/></h1>
                         <field name="user_id" invisible="1"/>
+                        <field name="can_change_employee" invisible="1"/>
                     </div>
                     <group>
                         <group>
@@ -130,8 +131,8 @@
                                     <field name="project_id" on_change="test"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field invisible="0" name="user_id" required="1"/>
-                                    <field name="is_timesheet" invisible="0"/>
+                                    <field name="user_id" required="1" groups="base.group_hr_manager"/>
+                                    <field name="is_timesheet" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <field name="date"/>
@@ -141,7 +142,7 @@
                                     <field name="unit_amount" widget="float_time"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
-                                    <field name="user_id" required="1"/>
+                                    <field name="user_id" required="1" groups="base.group_hr_manager"/>
                                     <field name="is_timesheet" invisible="1"/>
                                 </form>
                             </field>
