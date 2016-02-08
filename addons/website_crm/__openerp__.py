@@ -9,11 +9,12 @@ Odoo Contact Form
 ====================
 
         """,
-    'depends': ['website_form','website_partner', 'crm'],
+    'depends': ['website_form', 'website_partner', 'crm'],
     'data': [
         'data/website_crm_data.xml',
         'views/website_crm.xml',
     ],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': True,
 }
