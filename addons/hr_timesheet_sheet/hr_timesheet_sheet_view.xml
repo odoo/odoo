@@ -43,6 +43,9 @@
             <field name="name">Timesheet Activities</field>
             <field name="res_model">account.analytic.line</field>
             <field name="src_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})]"/>
         </record>
 
 
