@@ -580,13 +580,14 @@ class MailThread(models.AbstractModel):
         Example: having defined a group_hr_user entry, store HR users and
         officers. """
         # TDE note: recipients is normally sudo-ed
+        group_user = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            else:
+            if recipient.user_ids and group_user in recipient.user_ids[0].groups_id.ids:
                 group_data['user'] |= recipient
+            else:
+                group_data['partner'] |= recipient
         return group_data
 
     @api.multi
