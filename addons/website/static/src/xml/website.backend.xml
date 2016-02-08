@@ -4,4 +4,44 @@
         <span class="o_stat_text o_value"/>
         <span class="o_stat_text">On Website</span>
     </div>
+
+    <t t-name="website.WebsiteDashboardMain">
+        <div class="container o_website_dashboard">
+        </div>
+    </t>
+
+    <t t-name="website.dashboard_visits">
+        <div class="row o_dashboard_visits">
+            <div class="col-xs-12 o_box">
+                <h2>Visits</h2>
+
+                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id" id="analytics_dashboard" class="row js_analytics_components">
+                </div>
+
+                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)">
+                    <div class="o_demo_background">
+                        <div class="o_layer">
+                        </div>
+                        <button class="btn btn-sm btn-primary js_link_analytics_settings">Link your Analytics Account</button>
+                    </div>
+                </div>
+
+                <a href="#" class="js_link_analytics_settings">Edit my Analytics Account</a>
+
+            </div>
+        </div>
+    </t>
+
+    <div t-name="website.ga_dialog_content">
+        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key"></input>
+        <br/>Go to our <a href="https://www.odoo.com/documentation/user/9.0/website/google_analytics.html" target="_blank">User Documentation</a> to get more information.
+    </div>
+
+    <t t-name="website.DateRangeButtons">
+        <div class="btn-group btn-group-sm o_date_range_buttons">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        </div>
+    </t>
 </templates>
