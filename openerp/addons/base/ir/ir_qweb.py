@@ -1115,6 +1115,7 @@ class AssetsBundle(object):
         self.max_css_rules = max_css_rules
         self.javascripts = []
         self.stylesheets = []
+        self.xmlsheets = []
         self.css_errors = []
         self.remains = []
         self._checksum = None
@@ -1136,6 +1137,7 @@ class AssetsBundle(object):
                 href = el.get('href', '')
                 atype = el.get('type')
                 media = el.get('media')
+
                 if el.tag == 'style':
                     if atype == 'text/sass' or src.endswith('.sass'):
                         self.stylesheets.append(SassStylesheetAsset(self, inline=el.text, media=media))
@@ -1150,6 +1152,8 @@ class AssetsBundle(object):
                         self.stylesheets.append(LessStylesheetAsset(self, url=href, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
+                elif el.tag == 'link' and el.get('rel') == 'alternate' and atype == 'application/xml':
+                    self.xmlsheets.append(XMLsheetAsset(self, url=href))
                 elif el.tag == 'script' and not src:
                     self.javascripts.append(JavascriptAsset(self, inline=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
@@ -1166,7 +1170,7 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith('/web/content')
 
-    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, qwebcontext=None):
+    def to_html(self, sep=None, css=True, js=True, xml=True, debug=False, async=False, qwebcontext=None):
         if sep is None:
             sep = '\n            '
         response = []
@@ -1182,6 +1186,8 @@ class AssetsBundle(object):
             if js:
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
+            if js and xml and self.xmlsheets:
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.xml(minify=False).url))
         else:
             if qwebcontext is None:
                 qwebcontext = QWebContext(self.cr, self.uid, {})
@@ -1198,6 +1204,9 @@ class AssetsBundle(object):
                         response.append(style.to_html())
             if js and self.javascripts:
                 el = etree.fromstring('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.js().url))
+                response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
+            if js and xml and self.xmlsheets:
+                el = etree.fromstring('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.xml().url))
                 response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
         response.extend(self.remains)
         return sep + sep.join(response)
@@ -1247,7 +1256,7 @@ class AssetsBundle(object):
 
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
-        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
+        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('' if inc is '' else '%%' if inc is None else '.%s' % inc), type))]
         attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, order='name asc', context=self.context)
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
@@ -1256,7 +1265,7 @@ class AssetsBundle(object):
 
         values = {}
         values["name"] = "/web/content/%s" % type
-        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None or inc is '' else '.%s' % inc), type)
         values["res_model"] = 'ir.ui.view'
         values["public"] = True
         values["type"] = 'binary'
@@ -1280,6 +1289,18 @@ class AssetsBundle(object):
         if not attachments:
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
+        return attachments[0]
+
+    def xml(self, minify=True):
+        inc = '' if minify else 'debug.'
+        inc += self.context.get('lang', 'en_US')
+        attachments = self.get_attachments('xml', inc=inc)
+        if not attachments:
+            if minify:
+                content = self.xmlsheets[0].to_js(self.xmlid, '\n\n'.join(asset.minify() for asset in self.xmlsheets))
+            else:
+                content = '\n'.join(asset.to_js() for asset in self.xmlsheets)
+            return self.save_attachment('xml', content, inc=inc)
         return attachments[0]
 
     def css(self):
@@ -1538,6 +1559,143 @@ class JavascriptAsset(WebAsset):
             return '<script type="text/javascript" src="%s"></script>' % (self.html_url % self.url)
         else:
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
+
+class XMLsheetAsset(WebAsset):
+    def __init__(self, *args, **kw):
+        super(XMLsheetAsset, self).__init__(*args, **kw)
+        if not ((self.url[0] == "/" and "/static/" in self.url) or ("/" not in self.url and "." in self.url)):
+            raise AssetError('Wrong XML url "%s", please use a static file with relative path or a template xmlid' % self.url)
+
+    def stat(self):
+        if '/static/' in self.url:
+            return super(XMLsheetAsset, self).stat()
+
+        module, name = self.url.split('.', 1)
+        record = self.registry['ir.model.data'].get_object(self.cr, openerp.SUPERUSER_ID, module, name, context=self.context)
+        self._ir_attach = {
+            '__last_update': getattr(record, '__last_update'),
+            'datas': "\n".join(record.read_template()[0].split("\n")[2:-1]) # remove read_template added lines: <?xml>, <template> and first <t>
+        }
+
+    def _fetch_content(self):
+        """ Fetch content from file or database"""
+        if '/static/' not in self.url:
+            self.stat()
+            return self._ir_attach['datas'].decode('utf-8')
+
+        datas = super(XMLsheetAsset, self)._fetch_content()
+        return datas
+
+    def with_header(self, content=None):
+        if content is None:
+            content = self.content
+        return '\n<!-- %s -->\n%s' % (self.name, content)
+
+    def minify(self, xml_in=None, pretty=False):
+        if xml_in is None:
+            xml_in = self.content
+
+        xml = re.sub(r'>', ">~::~", xml_in)
+        xml = re.sub(r'<', "~::~<", xml)
+        parts = xml.split('~::~')
+
+        indent = "    "
+        inComment = False
+        inPre = False #pre tag or xml:space="preserve"
+        deep = 0
+        xml_out = ''
+
+        def addxml(part):
+            if inPre:
+                return part
+            else:
+                return (pretty and (len(xml_out) < 2 or xml_out[-2] == ">") and ("\n" + indent * deep) or "") + re.sub(r'\s{1,}', " ", part)
+
+        for key, part in enumerate(parts):
+            # start comment or <![CDATA[...]]> or <!DOCTYPE
+            if part.find('<!') > -1:
+                inComment = True
+            # end comment  or <![CDATA[...]]>
+            if part[-3:] == '-->' or part[-2:] == ']>' or part[:9] == '<!DOCTYPE':
+                inComment = False
+                continue
+            # remove all comments
+            if inComment or not part:
+                continue
+
+            if re.search(r'^<[^>]+ t-name=', part):
+                xml_out += "\n"
+
+            if part.find('<?xml') > -1 or part.find('<template') > -1 or part.find('</template') > -1:
+                continue
+
+            if re.search(r'<pre( |>)', part) or re.search(r'^<[^/](.*[^/])?>$', part) and 'xml:space="preserve"' in part:
+                inPre = deep
+            if inPre is not False and inPre == deep-1 and part.find('</') > -1:
+                inPre = False
+
+            # <? xml ... ?>
+            if part.find('<?') > -1:
+                xml_out += addxml(part)
+            # <elm></elm>
+            elif key and re.search(r'^<\w', parts[key-1]) and re.search(r'^<\/\w', part) and \
+                    re.search(r'^<[\w:\-\.\,]+', parts[key-1]).group(0) == re.search(r'^<\/[\w:\-\.\,]+', part).group(0).replace('/', ''):
+
+                xml_out += part
+                deep -= 1
+             # <elm>
+            elif re.search(r'<\w', part) and part.find('</') == -1 and part.find('/>') == -1:
+                xml_out += addxml(part)
+                deep += 1
+             # <elm>...</elm>
+            elif(re.search(r'<\w', part) and part.find('</') > -1):
+                xml_out += addxml(part)
+            # </elm>
+            elif part.find('</') > -1:
+                deep -= 1
+                xml_out += addxml(part)
+            # <elm/>
+            elif part.find('/>') > -1:
+                xml_out += addxml(part)
+            # space and content in pre
+            elif inPre:
+                xml_out += part
+            # space and content but does not add space if there were none in the template
+            else:
+                last_is_space = not len(xml_out) or re.search(r'\s', xml_out[-1])
+                part = re.sub(r'\s+', " ", part)
+                if last_is_space:
+                    part = re.sub(r'^\s+', "", part)
+                xml_out += part
+
+        return self.with_header(xml_out)
+
+    def to_js(self, name=None, content=None, with_header=True):
+        if name is None:
+            name = "%s[%s]" % (self.bundle.xmlid, self.url)
+        if content is None:
+            content = self.minify(pretty=True)
+        js = [
+            'odoo.define("base.ir.qweb.%s", function (require) {' % name,
+            '"use strict"',
+            'var core = require("web.core");',
+            'var _t = core._t;',
+            'var template = \'<t t-name="%s">\'+' % name,
+        ]
+        for line in content.split('\n'):
+            if not line:
+                js.append("")
+            elif line[0:4] == "<!--":
+                js.append("/*" + line + "*/")
+            else:
+                js.append("'" + line.replace("\\", "\\\\").replace("'", "\\'") + "\\n'+")
+        js += [
+            '\'</t>\';',
+            'core.qweb.add_template(template);',
+            '});'
+        ]
+        return '\n'.join(js)
+
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)

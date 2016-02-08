@@ -933,13 +933,13 @@ class view(osv.osv):
         arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
         return arch
 
-    def read_template(self, cr, uid, xml_id, context=None):
-        if isinstance(xml_id, (int, long)):
-            view_id = xml_id
+    def read_template(self, cr, uid, id, context=None):
+        if isinstance(id, (int, long)):
+            view_id = id
         else:
-            if '.' not in xml_id:
-                raise ValueError('Invalid template id: %r' % (xml_id,))
-            view_id = self.get_view_id(cr, uid, xml_id, context=context)
+            if '.' not in id:
+                raise ValueError('Invalid template id: %r' % (id,))
+            view_id = self.get_view_id(cr, uid, id, context=context)
         return self._read_template(cr, uid, view_id, context=context)
 
     def get_view_id(self, cr, uid, xml_id, context=None):
