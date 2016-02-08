@@ -84,7 +84,7 @@ var getMatchedCSSRules = function (a) {
     var style = {};
     _.each(css, function (v,k) {
         _.each(v[1], function (v,k) {
-            if (v && k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
+            if (v && _.isString(v) && k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
                 style[k] = v;
             }
         });
@@ -195,7 +195,7 @@ var style_to_class = function ($editable) {
                 style = k+":"+v+";"+style;
             }
         });
-        css = $c.attr("style", style).attr("style").split(/\s*;\s*/);
+        css = ($c.attr("style", style).attr("style") || "").split(/\s*;\s*/);
         style = $target.attr("style") || "";
         _.each(css, function (v) {
             style = style.replace(v, '');

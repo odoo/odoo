@@ -47,7 +47,7 @@ class Partner(models.Model):
         if message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
         elif message.author_id:
-            signature = "<p>--<br />%s</p>" % message.author_id.name
+            signature = "<p>-- <br/>%s</p>" % message.author_id.name
 
         # compute Sent by
         if message.author_id and message.author_id.user_ids:

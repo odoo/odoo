@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-15 05:50+0000\n"
+"PO-Revision-Date: 2016-02-01 04:12+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -222,7 +222,7 @@ msgstr "Permite descuentos en líneas de ordenes de ventas"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "Permite editar ordenes de ventas desde el menú 'Ordenes de Venta' (no desde el menú de Pro-formas)"
+msgstr "Permite editar ordenes de ventas desde el menú 'Ordenes de Venta' (no desde el menú de Cotizaciones)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -307,7 +307,7 @@ msgstr "Marcar esta opción para gestionar las facturas para este equipo de vent
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
-msgstr "Marque esta casilla para gestionar pro-formas de este equipo de ventas."
+msgstr "Marque esta casilla para gestionar cotización de este equipo de ventas."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -330,7 +330,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "Company"
+msgstr "Compañía"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -354,7 +354,7 @@ msgstr "Crear facturas"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "Crear una pro-forma, el primer paso de una nueva venta."
+msgstr "Crear una cotización, el primer paso de una nueva venta."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -544,7 +544,7 @@ msgstr "Mostrar incoterms en pedidos de venta y facturas relacionadas"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Mostrar márgenes de pro-formas y órdenes de venta"
+msgstr "Mostrar márgenes de cotización y órdenes de venta"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -586,7 +586,7 @@ msgstr "Depósito de %s%%"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "Pro-forma en borrador"
+msgstr "Cotización en borrador"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -682,11 +682,6 @@ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisado"
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Si esta habilitado, los nuevos mensajes deben ser revisados"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -841,6 +836,7 @@ msgstr "Facturas pueden ser creadas en borrador para que usted pueda actualizarl
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturación"
@@ -1013,7 +1009,7 @@ msgstr "Número de mensajes no leídos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr "Pro-formas en línea"
+msgstr "Cotización en línea"
 
 #. module: sale
 #. openerp-web
@@ -1312,7 +1308,7 @@ msgstr "Presupuesto enviado"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "Peticiones"
+msgstr "Cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1768,6 +1764,7 @@ msgstr "Unidades de Medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Mensajes no leídos"
 
@@ -1860,7 +1857,7 @@ msgstr "Su siguiente acción muestra la eficiencia del flujo: convierta el presu
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr "Sus próximas acciones deben fluir de manera eficiente: convertir la Pro-forma en una Orden de Venta, a continuación, crear la factura y efectuar el cobro."
+msgstr "Sus próximas acciones deben fluir de manera eficiente: convertir la cotización en una Orden de Venta, a continuación, crear la factura y efectuar el cobro."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings

@@ -122,7 +122,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_request_permission": function (event) {
             event.preventDefault();
             this.$(".o_mail_annoying_notification_bar").slideUp();
-            window.Notification.requestPermission();
+            var def = window.Notification.requestPermission();
+            if (def) {
+                def.then(function () {
+                    chat_manager.send_native_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                });
+            }
         },
         "keydown": function (event) {
             if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
@@ -132,11 +137,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_attach_callback: function () {
+        chat_manager.bus.trigger('client_action_open', true);
         if (this.channel) {
             this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
         }
     },
     on_detach_callback: function () {
+        chat_manager.bus.trigger('client_action_open', false);
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
@@ -187,7 +194,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this.on_click_button_invite);
-        this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
         this.$buttons.on('click', '.o_mail_chat_button_unsubscribe', this.on_click_button_unsubscribe);
         this.$buttons.on('click', '.o_mail_chat_button_settings', this.on_click_button_settings);
         this.$buttons.on('click', '.o_mail_toggle_channels', function () {
@@ -232,6 +238,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return $.when(def1, def2, def3, def4)
             .then(this.set_channel.bind(this, default_channel))
             .then(function () {
+                chat_manager.bus.on('open_channel', self, self.set_channel);
                 chat_manager.bus.on('new_message', self, self.on_new_message);
                 chat_manager.bus.on('update_message', self, self.on_update_message);
                 chat_manager.bus.on('new_channel', self, self.on_new_channel);
@@ -385,7 +392,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             if (channel.type !== 'static') {
                 // Display snackbar if needactions have been cleared
                 if (channel.needaction_counter > 0) {
-                    self.render_snackbar('mail.chat.MessageSentSnackbar', {
+                    self.render_snackbar('mail.chat.UndoSnackbar', {
                         nb_needactions: channel.needaction_counter,
                     });
                 }
@@ -395,10 +402,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
             // Update control panel
             self.set("title", '#' + channel.name);
-            // Hide 'detach' button in static channels
-            self.$buttons
-                .find('.o_mail_chat_button_detach')
-                .toggle(channel.type !== "static");
             // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
             self.$buttons
                 .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
@@ -625,9 +628,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     on_click_button_invite: function () {
         var title = _.str.sprintf(_t('Invite people to #%s'), this.channel.name);
         new PartnerInviteDialog(this, title, this.channel.id).open();
-    },
-    on_click_button_detach: function () {
-        chat_manager.detach_channel(this.channel);
     },
 
     on_click_button_unsubscribe: function () {

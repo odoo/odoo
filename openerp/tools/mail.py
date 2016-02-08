@@ -52,7 +52,9 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
 
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
-    src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
+    # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
+    src = part.sub(lambda m: 'cite=' not in m.group(1) and cgi.escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace('<%', cgi.escape('<%'))
     src = src.replace('%>', cgi.escape('%>'))
