@@ -137,8 +137,12 @@ var Thread = Widget.extend({
         var date = msg.date.format('YYYY-MM-DD');
 
         if (date === moment().format('YYYY-MM-DD')) {
-           msg.day = _t("Today");
-           msg.hour = msg.date.fromNow();
+            msg.day = _t("Today");
+            if (moment().diff(msg.date, 'minutes') === 0) {
+                msg.hour = _t("now");
+            } else {
+                msg.hour = msg.date.fromNow();
+            }
         } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
            msg.day = _t("Yesterday");
            msg.hour = msg.date.format('LT');
@@ -151,7 +155,7 @@ var Thread = Widget.extend({
             msg.expanded = true;
         }
 
-        msg.display_subject = message.subject && !message.is_system_notification;
+        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
         msg.is_selected = msg.id === this.selected_id;
         return msg;
     },

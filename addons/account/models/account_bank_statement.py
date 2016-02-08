@@ -104,27 +104,23 @@ class AccountBankStatement(models.Model):
         return False
 
     @api.multi
+    def _get_opening_balance(self, journal_id):
+        last_bnk_stmt = self.search([('journal_id', '=', journal_id)], limit=1)
+        if last_bnk_stmt:
+            return last_bnk_stmt.balance_end
+        return 0
+
+    @api.multi
     def _set_opening_balance(self, journal_id):
-        last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date_done desc", limit=1)
-        for bank_stmt in self:
-            if last_bnk_stmt:
-                bank_stmt.balance_start = last_bnk_stmt.balance_end
-            else:
-                bank_stmt.balance_start = 0
+        self.balance_start = self._get_opening_balance(journal_id)
 
     @api.model
     def _default_opening_balance(self):
         #Search last bank statement and set current opening balance as closing balance of previous one
         journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
         if journal_id:
-            last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date_done desc", limit=1)
-
-            if last_bnk_stmt:
-                return last_bnk_stmt.balance_end
-            else:
-                return 0
-        else:
-            return 0
+            return self._get_opening_balance(journal_id)
+        return 0
 
     _name = "account.bank.statement"
     _description = "Bank Statement"

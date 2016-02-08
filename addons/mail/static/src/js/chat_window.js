@@ -7,6 +7,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 var HEIGHT_OPEN = '400px';
@@ -28,16 +29,19 @@ return Widget.extend({
         this.channel_id = channel_id;
         this.folded = is_folded;
         this.options = _.defaults(options || {}, {
+            autofocus: true,
             display_stars: true,
             display_reply_icon: false,
             placeholder: _t("Say something"),
             input_less: false,
         });
+        this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
     },
     start: function () {
         this.$input = this.$('.o_chat_input input');
+        this.$header = this.$('.o_chat_header');
 
         this.thread = new ChatThread(this, {
             channel_id: this.channel_id,
@@ -50,7 +54,7 @@ return Widget.extend({
 
         if (this.folded) {
             this.$el.css('height', HEIGHT_FOLDED);
-        } else {
+        } else if (this.options.autofocus) {
             this.focus_input();
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
@@ -62,7 +66,18 @@ return Widget.extend({
     },
     update_unread: function (counter) {
         this.unread_msgs = counter;
-        this.$('.o_unread_counter').text(counter > 0 ? '(' + counter + ')' : '');
+        this.render_header();
+    },
+    update_status: function (status) {
+        this.status = status;
+        this.render_header();
+    },
+    render_header: function () {
+        this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
+            status: this.status,
+            title: this.title,
+            unread_counter: this.unread_msgs,
+        }));
     },
     fold: function () {
         this.$el.animate({

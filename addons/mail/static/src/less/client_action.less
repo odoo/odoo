@@ -273,7 +273,6 @@
     font-size: 10px;
     position: relative;
     bottom: 1px;
-    margin-right: 3px;
     &.o_user_online {
         color: @odoo-brand-optional;
     }
@@ -405,4 +404,8 @@
             }
         }
     }
+}
+
+.o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
+    display: none;  // hide 'new message' button if chat windows are disabled
 }
