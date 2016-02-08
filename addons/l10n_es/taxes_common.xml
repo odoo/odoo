@@ -35,272 +35,557 @@
 
         -->
         <!-- Account Tax Tags -->
-        <record id="tax_tag_1" model="account.account.tag">
-            <field name="name">4% IVA Soportado (operaciones corrientes)</field>
+        <record id="tag_es_01" model="account.account.tag">
+            <field name="name">IVA devengado. Base imponible</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_2" model="account.account.tag">
-            <field name="name">4% IVA Soportado (bienes de inversión)</field>
+
+        <record id="tag_es_02" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Base imponible 4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_3" model="account.account.tag">
-            <field name="name">10% IVA Soportado (operaciones corrientes)</field>
+
+        <record id="tag_es_03" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Base imponible 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_4" model="account.account.tag">
-            <field name="name">10% IVA Soportado (bienes de inversión)</field>
+
+        <record id="tag_es_04" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Base imponible 21%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_5" model="account.account.tag">
-            <field name="name">12% IVA Soportado régimen agricultura</field>
+
+        <record id="tag_es_05" model="account.account.tag">
+            <field name="name">Recargo equivalencia base imponible 0.5%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_6" model="account.account.tag">
-            <field name="name">21% IVA Soportado (operaciones corrientes)</field>
+
+        <record id="tag_es_06" model="account.account.tag">
+            <field name="name">Recargo equivalencia base imponible 1.4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_7" model="account.account.tag">
-            <field name="name">21% IVA Soportado (bienes de inversión)</field>
+
+        <record id="tag_es_07" model="account.account.tag">
+            <field name="name">Recargo equivalencia base imponible 5.2%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_8" model="account.account.tag">
-            <field name="name">IVA 0% Importaciones bienes corrientes</field>
+
+        <record id="tag_es_08" model="account.account.tag">
+            <field name="name">Adquisiciones intracomunitarias. Base imponible</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_9" model="account.account.tag">
-            <field name="name">IVA 0% Importaciones bienes de inversión</field>
+
+        <record id="tag_es_09" model="account.account.tag">
+            <field name="name">Base adquisiciones exentas</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_10" model="account.account.tag">
-            <field name="name">IVA 4% Importaciones bienes corrientes</field>
+
+        <record id="tag_es_10" model="account.account.tag">
+            <field name="name">Base ventas exentas</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_11" model="account.account.tag">
-            <field name="name">IVA 4% Importaciones bienes de inversión</field>
+
+        <record id="tag_es_11" model="account.account.tag">
+            <field name="name">IVA deducible. Base imponible</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_12" model="account.account.tag">
-            <field name="name">IVA 10% Importaciones bienes corrientes</field>
+
+        <record id="tag_es_12" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Base imponible 1.4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_13" model="account.account.tag">
-            <field name="name">IVA 10% Importaciones bienes de inversión</field>
+
+        <record id="tag_es_13" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Base imponible 0.5%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_14" model="account.account.tag">
-            <field name="name">IVA 21% Importaciones bienes corrientes</field>
+
+        <record id="tag_es_14" model="account.account.tag">
+            <field name="name">Base de compensaciones Régimen Especial A., G. y P. 12%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_15" model="account.account.tag">
-            <field name="name">IVA 21% Importaciones bienes de inversión</field>
+
+        <record id="tag_es_15" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Base imponible 5.2%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_16" model="account.account.tag">
-            <field name="name">IVA 0% Exportaciones</field>
+
+        <record id="tag_es_16" model="account.account.tag">
+            <field name="name">Base operaciones interiores bienes inversión</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_17" model="account.account.tag">
-            <field name="name">IVA 21% Inversión del sujeto pasivo (1)</field>
+
+        <record id="tag_es_17" model="account.account.tag">
+            <field name="name">Base operaciones interiores bienes inversión (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_18" model="account.account.tag">
-            <field name="name">IVA 21% Inversión del sujeto pasivo (2)</field>
+
+        <record id="tag_es_18" model="account.account.tag">
+            <field name="name">Base operaciones interiores bienes inversión (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_19" model="account.account.tag">
-            <field name="name">IVA 21% Inversión del sujeto pasivo (3)</field>
+
+        <record id="tag_es_19" model="account.account.tag">
+            <field name="name">Base operaciones interiores bienes inversión (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_20" model="account.account.tag">
-            <field name="name">IVA 21% Inversión del sujeto pasivo</field>
+
+        <record id="tag_es_20" model="account.account.tag">
+            <field name="name">Base operaciones interiores corrientes</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_21" model="account.account.tag">
-            <field name="name">IVA 4%</field>
+
+        <record id="tag_es_21" model="account.account.tag">
+            <field name="name">Base operaciones interiores corrientes (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_22" model="account.account.tag">
-            <field name="name">IVA 10%</field>
+
+        <record id="tag_es_22" model="account.account.tag">
+            <field name="name">Base operaciones interiores corrientes (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_23" model="account.account.tag">
-            <field name="name">IVA 21%</field>
+
+        <record id="tag_es_23" model="account.account.tag">
+            <field name="name">Base operaciones interiores corrientes (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_24" model="account.account.tag">
-            <field name="name">0.50% Recargo Equivalencia Ventas</field>
+
+        <record id="tag_es_24" model="account.account.tag">
+            <field name="name">Base importaciones bienes y servicios corrientes</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_25" model="account.account.tag">
-            <field name="name">1.4% Recargo Equivalencia Ventas</field>
+
+        <record id="tag_es_25" model="account.account.tag">
+            <field name="name">Base importaciones bienes y servicios corrientes (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_26" model="account.account.tag">
-            <field name="name">5.2% Recargo Equivalencia Ventas</field>
+
+        <record id="tag_es_26" model="account.account.tag">
+            <field name="name">Base importaciones bienes y servicios corrientes (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_27" model="account.account.tag">
-            <field name="name">0.50% Recargo Equivalencia Compras</field>
+
+        <record id="tag_es_27" model="account.account.tag">
+            <field name="name">Base importaciones bienes y servicios corrientes (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_28" model="account.account.tag">
-            <field name="name">1.4% Recargo Equivalencia Compras</field>
+
+        <record id="tag_es_28" model="account.account.tag">
+            <field name="name">Base importaciones bienes inversión</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_29" model="account.account.tag">
-            <field name="name">5.2% Recargo Equivalencia Compras</field>
+
+        <record id="tag_es_29" model="account.account.tag">
+            <field name="name">Base importaciones bienes inversión (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_30" model="account.account.tag">
-            <field name="name">IVA 0% Intracomunitario</field>
+
+        <record id="tag_es_30" model="account.account.tag">
+            <field name="name">Base importaciones bienes inversión (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_31" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes corrientes (1)</field>
+
+        <record id="tag_es_31" model="account.account.tag">
+            <field name="name">Base importaciones bienes inversión (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_32" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes corrientes (2)</field>
+
+        <record id="tag_es_32" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes y serv. corrientes</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_33" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes corrientes</field>
+
+        <record id="tag_es_33" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes y serv. corr. (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_34" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes de inversión (1)</field>
+
+        <record id="tag_es_34" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes y serv. corr. (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_35" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes de inversión (2)</field>
+
+        <record id="tag_es_35" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes y serv. corr. (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_36" model="account.account.tag">
-            <field name="name">IVA 4% Intracomunitario. Bienes de inversión</field>
+
+        <record id="tag_es_36" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes inversión</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_37" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes corrientes (1)</field>
+
+        <record id="tag_es_37" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes inversión (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_38" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes corrientes (2)</field>
+
+        <record id="tag_es_38" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes inversión (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_39" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes corrientes</field>
+
+        <record id="tag_es_39" model="account.account.tag">
+            <field name="name">Base adquisiciones intracomunitarias bienes inversión (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_40" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes de inversión (1)</field>
+
+        <record id="tag_es_40" model="account.account.tag">
+            <field name="name">IVA cuota total devengada</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_41" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes de inversión (2)</field>
+        <record id="tag_es_41" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Cuota 4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_42" model="account.account.tag">
-            <field name="name">IVA 10% Intracomunitario. Bienes de inversión</field>
+
+        <record id="tag_es_42" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Cuota 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_43" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes corrientes (1)</field>
+
+        <record id="tag_es_43" model="account.account.tag">
+            <field name="name">Régimen general IVA devengado. Cuota 21%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_44" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes corrientes (2)</field>
+
+        <record id="tag_es_44" model="account.account.tag">
+            <field name="name">Recargo equivalencia. Cuota 0.5%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_45" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes corrientes</field>
+
+        <record id="tag_es_45" model="account.account.tag">
+            <field name="name">Recargo equivalencia. Cuota 1.4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_46" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes de inversión (1)</field>
+
+        <record id="tag_es_46" model="account.account.tag">
+            <field name="name">Recargo equivalencia. Cuota 5.2%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_47" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes de inversión (2)</field>
+
+        <record id="tag_es_47" model="account.account.tag">
+            <field name="name">Adquisiciones intracomunitarias. Cuota</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_48" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Bienes de inversión</field>
+
+        <record id="tag_es_48" model="account.account.tag">
+            <field name="name">IVA deducible (Cuota)- Total a deducir [Mod.303]</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_49" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Servicios (1)</field>
+
+        <record id="tag_es_49" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Cuota 0.5%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_50" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Servicios (2)</field>
+
+        <record id="tag_es_50" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Cuota 1.4%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_51" model="account.account.tag">
-            <field name="name">IVA 21% Intracomunitario. Servicios</field>
+
+        <record id="tag_es_51" model="account.account.tag">
+            <field name="name">Recargo equivalencia ded. Cuota 5.2%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_52" model="account.account.tag">
-            <field name="name">IVA Exento</field>
+
+        <record id="tag_es_52" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores corrientes</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_53" model="account.account.tag">
-            <field name="name">IVA Soportado exento (operaciones corrientes)</field>
+
+        <record id="tag_es_53" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores corrientes (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_54" model="account.account.tag">
-            <field name="name">Retenciones IRPF 1%</field>
+
+        <record id="tag_es_54" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores corrientes (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_55" model="account.account.tag">
-            <field name="name">Retenciones IRPF 2%</field>
+
+        <record id="tag_es_55" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores corrientes (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_56" model="account.account.tag">
-            <field name="name">Retenciones IRPF 7%</field>
+
+        <record id="tag_es_56" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores bienes inversión</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_57" model="account.account.tag">
-            <field name="name">Retenciones IRPF 9%</field>
+
+        <record id="tag_es_57" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores bienes inversión (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_58" model="account.account.tag">
-            <field name="name">Retenciones IRPF 15%</field>
+
+        <record id="tag_es_58" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores bienes inversión (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_59" model="account.account.tag">
-            <field name="name">Retenciones IRPF 20%</field>
+
+        <record id="tag_es_59" model="account.account.tag">
+            <field name="name">Cuotas soportadas operaciones interiores bienes inversión (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_60" model="account.account.tag">
-            <field name="name">Retenciones IRPF 21%</field>
+
+        <record id="tag_es_60" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes y servicios corrientes</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_61" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 1%</field>
+
+        <record id="tag_es_61" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes y serv. corr. (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_62" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 2%</field>
+
+        <record id="tag_es_62" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes y serv. corr. (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_63" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 7%</field>
+
+        <record id="tag_es_63" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes y serv. corr. (21%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_64" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 9%</field>
+
+        <record id="tag_es_64" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes inversión</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_65" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 15%</field>
+
+        <record id="tag_es_65" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes inversión (4%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_66" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 20%</field>
+
+        <record id="tag_es_66" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes inversión (10%)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_67" model="account.account.tag">
-            <field name="name">Retenciones a cuenta IRPF 21%</field>
+
+        <record id="tag_es_67" model="account.account.tag">
+            <field name="name">Cuotas devengadas importaciones bienes inversión (21%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_68" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes y servicios corrientes</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_69" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes y serv. corr. (4%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_70" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes y serv. corr. (10%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_71" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes y serv. corr. (21%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_72" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes inversión</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_73" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes inversión (4%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_74" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes inversión (10%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_75" model="account.account.tag">
+            <field name="name">En adquisiciones intracomunitarias bienes inversión (21%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_76" model="account.account.tag">
+            <field name="name">Compensaciones Régimen Especial A., G. y P. 12%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_77" model="account.account.tag">
+            <field name="name">Entregas intracomunitarias</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_78" model="account.account.tag">
+            <field name="name">Exportaciones y operaciones asimiladas</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_79" model="account.account.tag">
+            <field name="name">Inversión del sujeto pasivo</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_80" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_81" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 1%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_82" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 15%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_83" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 2%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_84" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 20%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_85" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 21%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_86" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_87" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Base imponible 9%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_88" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_89" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 15%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_90" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 1%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_91" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 20%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_92" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 21%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_93" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 2%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_94" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_95" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Base imponible 9%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_96" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Total cuota</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_97" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 1%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_98" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 15%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_99" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 2%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_100" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 20%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_101" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 21%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_102" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_103" model="account.account.tag">
+            <field name="name">IRPF retenciones practicadas. Cuota 9%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_104" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Total cuota</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_105" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 15%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_106" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 1%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_107" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 20%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_108" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 21%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_109" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 2%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_110" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_es_111" model="account.account.tag">
+            <field name="name">IRPF retenciones a cuenta. Cuota 9%</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -315,7 +600,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_1')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_53'), ref('tag_es_21')])]"/>
         </record>
 
         <record id="iva_sop_4_inv" model="account.tax.template">
@@ -327,7 +612,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_2')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_17'), ref('tag_es_57')])]"/>
         </record>
 
         <record id="iva_sop_10" model="account.tax.template">
@@ -339,7 +624,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_3')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_22'), ref('tag_es_54')])]"/>
         </record>
 
         <record id="iva_sop_10_inv" model="account.tax.template">
@@ -351,7 +636,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_4')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_58'), ref('tag_es_18')])]"/>
         </record>
 
         <record id="iva_sop_12_agr" model="account.tax.template">
@@ -364,7 +649,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field eval="1" name="include_base_amount"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_76'), ref('tag_es_14')])]"/>
         </record>
 
         <record id="iva_sop_21" model="account.tax.template">
@@ -377,7 +662,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="sequence" eval="0"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_55'), ref('tag_es_23')])]"/>
         </record>
 
         <record id="iva_sop_21_inv" model="account.tax.template">
@@ -389,7 +674,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_59'), ref('tag_es_55')])]"/>
         </record>
 
         <!-- EXTRACOMUNITARIO-->
@@ -402,7 +687,7 @@
             <field eval="0.00" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_8')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_60'), ref('tag_es_24')])]"/>
         </record>
         <record id="iva_X0_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -411,7 +696,7 @@
             <field eval="0.00" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_9')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_64'),ref('tag_es_28')])]"/>
         </record>
 
         <record id="iva_X4_compras_bc" model="account.tax.template">
@@ -423,7 +708,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_61'), ref('tag_es_25')])]"/>
         </record>
         <record id="iva_X4_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -434,7 +719,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_11')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_65'), ref('tag_es_29')])]"/>
         </record>
 
         <record id="iva_X10_compras_bc" model="account.tax.template">
@@ -446,7 +731,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_62'), ref('tag_es_26')])]"/>
         </record>
         <record id="iva_X10_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -457,7 +742,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_13')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_66'), ref('tag_es_30')])]"/>
         </record>
 
         <record id="iva_X21_compras_bc" model="account.tax.template">
@@ -469,7 +754,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_14')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_63'), ref('tag_es_27')])]"/>
         </record>
         <record id="iva_X21_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -480,7 +765,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_15')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_31'),ref('tag_es_67')])]"/>
         </record>
 
         <!-- Ventas -->
@@ -492,7 +777,7 @@
             <field eval="0.00" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_16')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_78')])]"/>
         </record>
 
         <!-- INVERSIÓN DEL SUJETO PASIVO -->
@@ -504,7 +789,7 @@
             <field name="amount" eval="0.00"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_17')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_79')])]"/>
         </record>
         <record id="iva_ISP_compras_21_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -515,7 +800,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_18')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_43')])]"/>
         </record>
 
         <record id="iva_ISP_compras_21_3" model="account.tax.template">
@@ -527,7 +812,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_55')])]"/>
         </record>
 
         <record id="iva_ISP_compras_21" model="account.tax.template">
@@ -537,7 +822,7 @@
             <field name="amount" eval="100.00"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_20')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_04'), ref('tag_es_23'), ref('tag_es_79')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_ISP_compras_21_1'), ref('iva_ISP_compras_21_2'), ref('iva_ISP_compras_21_3')])]"/>
         </record>
 
@@ -553,7 +838,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_21')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_02'), ref('tag_es_41')])]"/>
         </record>
 
         <record id="iva_rep_10" model="account.tax.template">
@@ -565,7 +850,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_22')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_42'), ref('tag_es_03')])]"/>
         </record>
 
         <record id="iva_rep_21" model="account.tax.template">
@@ -577,7 +862,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field eval="0" name="sequence"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_23')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_43'), ref('tag_es_04')])]"/>
         </record>
 
         <!-- RECARGO DE EQUIVALENCIA -->
@@ -591,7 +876,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_24')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_05'), ref('tag_es_44')])]"/>
         </record>
 
         <record id="re_14" model="account.tax.template">
@@ -603,7 +888,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_25')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_45'), ref('tag_es_06')])]"/>
         </record>
 
         <record id="re_52" model="account.tax.template">
@@ -615,7 +900,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_26')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_07'), ref('tag_es_46')])]"/>
         </record>
 
         <record id="re_buy_05" model="account.tax.template">
@@ -627,7 +912,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_27')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_13'), ref('tag_es_49')])]"/>
         </record>
 
         <record id="re_buy_14" model="account.tax.template">
@@ -639,7 +924,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_28')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_12'),ref('tag_es_50')])]"/>
         </record>
 
         <record id="re_buy_52" model="account.tax.template">
@@ -651,7 +936,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_29')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_15'),ref('tag_es_51')])]"/>
         </record>
 
         <!-- OPERACIONES INTRACOMUNITARIAS -->
@@ -665,7 +950,7 @@
             <field eval="0.00" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_30')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_77')])]"/>
         </record>
 
         <!-- Compras -->
@@ -679,7 +964,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_31')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_69')])]"/>
         </record>
         <record id="iva_IC_compras_4_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -690,7 +975,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_32')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_4_bc" model="account.tax.template">
@@ -700,7 +985,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_33')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_33'), ref('tag_es_08')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_4_bc_1'), ref('iva_IC_compras_4_bc_2')])]"/>
         </record>
 
@@ -713,7 +998,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_34')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_73')])]"/>
         </record>
         <record id="iva_IC_compras_4_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -724,7 +1009,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_35')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_4_bi" model="account.tax.template">
@@ -734,7 +1019,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_36')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_81'), ref('tag_es_37')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_4_bi_1'), ref('iva_IC_compras_4_bi_2')])]"/>
         </record>
 
@@ -748,7 +1033,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_37')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_70')])]"/>
         </record>
         <record id="iva_IC_compras_10_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -759,7 +1044,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_38')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_10_bc" model="account.tax.template">
@@ -769,7 +1054,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_39')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_34')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_10_bc_1'), ref('iva_IC_compras_10_bc_2')])]"/>
         </record>
 
@@ -782,7 +1067,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_40')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_74')])]"/>
         </record>
         <record id="iva_IC_compras_10_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -793,7 +1078,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_41')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_10_bi" model="account.tax.template">
@@ -803,7 +1088,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_42')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_38')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_10_bi_1'), ref('iva_IC_compras_10_bi_2')])]"/>    
         </record>
 
@@ -816,7 +1101,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_43')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_71')])]"/>
         </record>
         <record id="iva_IC_compras_21_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -827,7 +1112,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_44')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_21_bc" model="account.tax.template">
@@ -837,7 +1122,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_45')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_35')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_bc_1'), ref('iva_IC_compras_21_bc_2')])]"/>    
         </record>
 
@@ -850,7 +1135,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_75')])]"/>
         </record>
         <record id="iva_IC_compras_21_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -861,7 +1146,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_47')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_21_bi" model="account.tax.template">
@@ -871,7 +1156,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_48')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_39')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_bi_1'), ref('iva_IC_compras_21_bi_2')])]"/>    
         </record>
 
@@ -884,7 +1169,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_49')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_71')])]"/>
         </record>
 
         <record id="iva_IC_compras_21_sv_2" model="account.tax.template">
@@ -896,7 +1181,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_50')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_47')])]"/>
         </record>
 
         <record id="iva_IC_compras_21_sv" model="account.tax.template">
@@ -906,7 +1191,7 @@
             <field eval="100.00" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_51')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_35')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_sv_1'), ref('iva_IC_compras_21_sv_2')])]"/>    
         </record>
 
@@ -921,7 +1206,7 @@
             <field eval="0.0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_52')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_10')])]"/>
         </record>
 
         <!-- Compras -->
@@ -933,7 +1218,7 @@
             <field eval="0.0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_53')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_09')])]"/>
         </record>
 
         <!-- RETENCIONES DE IRPF -->
@@ -960,7 +1245,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_54')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_08'), ref('tag_es_97')])]"/>
         </record>
 
         <record id="irpf_2" model="account.tax.template">
@@ -973,7 +1258,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field eval="50" name="sequence"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_83'), ref('tag_es_99')])]"/>
         </record>
 
         <record id="irpf_7" model="account.tax.template">
@@ -985,7 +1270,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_86'), ref('tag_es_102')])]"/>
         </record>
 
         <record id="irpf_9" model="account.tax.template">
@@ -997,7 +1282,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_87'), ref('tag_es_103')])]"/>
         </record>
 
         <record id="irpf_15" model="account.tax.template">
@@ -1009,7 +1294,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_58')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_82'), ref('tag_es_98')])]"/>
         </record>
 
         <record id="irpf_20" model="account.tax.template">
@@ -1021,7 +1306,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_59')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_84'), ref('tag_es_100')])]"/>
         </record>
 
         <record id="irpf_21" model="account.tax.template">
@@ -1033,7 +1318,7 @@
             <field name="refund_account_id" ref="pgc_4751_child"/>
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_60')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_85'), ref('tag_es_101')])]"/>
         </record>
 
 
@@ -1048,7 +1333,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_61')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_90'), ref('tag_es_106')])]"/>
         </record>
 
         <record id="irpf_sale_2" model="account.tax.template">
@@ -1060,7 +1345,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_62')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_93'), ref('tag_es_109')])]"/>
         </record>
 
         <record id="irpf_sale_7" model="account.tax.template">
@@ -1072,7 +1357,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_63')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_110'), ref('tag_es_94')])]"/>
         </record>
 
         <record id="irpf_sale_9" model="account.tax.template">
@@ -1084,7 +1369,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_64')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_95'), ref('tag_es_111')])]"/>
         </record>
 
         <record id="irpf_sale_15" model="account.tax.template">
@@ -1096,7 +1381,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_65')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_89'), ref('tag_es_105')])]"/>
         </record>
 
         <record id="irpf_sale_20" model="account.tax.template">
@@ -1108,7 +1393,7 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_66')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_107'), ref('tag_es_91')])]"/>
         </record>
 
         <record id="irpf_sale_21" model="account.tax.template">
@@ -1120,6 +1405,6 @@
             <field name="refund_account_id" ref="pgc_473_child"/>
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_67')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_es_108'), ref('tag_es_92')])]"/>
         </record>
 </odoo>
