@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
         <!-- After installation of the module, open the related menu -->
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="base.action_open_website"/>
@@ -55,13 +55,13 @@
                     </group>
                     <group string="Location &amp; Warehouse">
                         <field name="module_procurement_jit" widget="radio"/>
-                        <field name="warehouse_and_location_usage_level" widget="radio" on_change="onchange_warehouse_and_location_usage_level(warehouse_and_location_usage_level)"/>
+                        <field name="warehouse_and_location_usage_level" widget="radio"/>
                         <field name="group_stock_multi_locations" invisible="1"/>
                         <field name="group_stock_multi_warehouses" invisible="1"/>
                         
                         <label for="group_stock_adv_location"/>
                         <div>
-                            <field name="group_stock_adv_location" widget="radio" on_change="onchange_adv_location(group_stock_adv_location)"/>
+                            <field name="group_stock_adv_location" widget="radio"/>
                             <div attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}">
                                 <label for="propagation_minimum_delta"/>
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
@@ -100,5 +100,4 @@
             sequence="100" groups="group_stock_manager,base.group_configuration"/>
         <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
             sequence="0" action="action_stock_config_settings"/>
-    </data>
-</openerp>
+</odoo>
