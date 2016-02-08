@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from openerp import fields, models
-from openerp import tools
+from odoo import fields, models
+from odoo import tools
 
 
-class report_stock_forecast(models.Model):
+class ReportStockForecast(models.Model):
     _name = 'report.stock.forecast'
     _auto = False
 
