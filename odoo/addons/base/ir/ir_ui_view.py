@@ -1043,7 +1043,8 @@ actual arch.
             relativedelta=relativedelta,
             xmlid=self.key,
         )
-        qcontext.update(values or {})
+        if values:
+            qcontext.update(values)
 
         return self.env[engine].render(self.id, qcontext)
 

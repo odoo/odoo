@@ -4,7 +4,7 @@ from urlparse import urlparse
 from lxml import html
 
 from .qweb import QWeb, Contextifier
-from .assetsbundle import AssetsBundle
+from .assetsbundle import AssetsBundle, AssetError
 from lxml import etree
 from collections import OrderedDict
 
@@ -128,6 +128,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 keywords=[
                     ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
                     ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
+                    ast.keyword('xml', self._get_attr_bool(el.get('t-xml', True))),
                     ast.keyword('debug', ast.Call(
                         func=ast.Attribute(
                             value=ast.Name(id='values', ctx=ast.Load()),
@@ -158,7 +159,6 @@ class IrQWeb(models.AbstractModel, QWeb):
             try:
                 options = "{'widget': 'monetary'"
                 for k, v in json.loads(field_options).iteritems():
-                    print k, v
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:
@@ -180,18 +180,17 @@ class IrQWeb(models.AbstractModel, QWeb):
         'xml' not in tools.config['dev_mode'],
         tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async'),
     )
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
-        files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, remains, env=self.env)
-        return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
-
-    @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
-    def _get_asset_content(self, xmlid, options):
+    def _get_asset(self, xmlid, options, css=True, js=True, xml=True, debug=False, async=False, values=None):
         options = dict(options,
             inherit_branding=False, inherit_branding_auto=False,
             edit_translations=False, translatable=False,
             rendering_bundle=True)
+        files, remains = self._get_asset_content(xmlid, options)
+        asset = AssetsBundle(xmlid, files, remains, env=self.env(context=options))
+        return asset.to_html(css=css, js=js, xml=xml, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
 
+    @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
+    def _get_asset_content(self, xmlid, options):
         env = self.env(context=options)
 
         # TODO: This helper can be used by any template that wants to embedd the backend.
@@ -203,6 +202,13 @@ class IrQWeb(models.AbstractModel, QWeb):
                 return json.dumps(module_boot())
             return '[]'
         template = env['ir.qweb'].render(xmlid, {"get_modules_order": get_modules_order})
+
+        def get_filename(href):
+            path = filter(None, href.split('/'))
+            filename = get_resource_path(*path) if path else None
+            if not filename:
+                raise AssetError("file '%s' does not exist" % href)
+            return filename
 
         files = []
         remains = []
@@ -223,22 +229,18 @@ class IrQWeb(models.AbstractModel, QWeb):
                         atype = 'text/less'
                     if atype not in ('text/less', 'text/sass'):
                         atype = 'text/css'
-                    path = filter(None, href.split('/'))
-                    filename = get_resource_path(*path) if path else None
-                    files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
+                    files.append({'atype': atype, 'url': href, 'filename': href and get_filename(href), 'content': el.text, 'media': media})
+                elif el.tag == 'link' and el.get('rel') == 'alternate':
+                    atype = 'application/xml'
+                    if '/' not in href: self.env['ir.ui.view'].get_view_id(href) # test xml id
+                    files.append({'atype': atype, 'url': href, 'filename': get_filename(href) if '/' in href else None, 'content': el.text, 'media': media})
                 elif el.tag == 'script':
                     atype = 'text/javascript'
-                    path = filter(None, src.split('/'))
-                    filename = get_resource_path(*path) if path else None
-                    files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
+                    files.append({'atype': atype, 'url': src, 'filename': src and get_filename(src), 'content': el.text, 'media': media})
                 else:
                     remains.append(html.tostring(el))
             else:
-                try:
-                    remains.append(html.tostring(el))
-                except Exception:
-                    # notYETimplementederror
-                    raise NotImplementedError
+                remains.append(html.tostring(el))
 
         return (files, remains)
 

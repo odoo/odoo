@@ -5,6 +5,7 @@ import hashlib
 import itertools
 import json
 import textwrap
+import operator
 import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
@@ -74,6 +75,12 @@ class AssetNotFound(AssetError):
     pass
 
 
+def utf8(val):
+    if isinstance(val, str):
+        return val or ''
+    return val and unicode(val).encode('utf-8') or ''
+
+
 class AssetsBundle(object):
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
@@ -85,6 +92,7 @@ class AssetsBundle(object):
         self.max_css_rules = self.env.context.get('max_css_rules', MAX_CSS_RULES)
         self.javascripts = []
         self.stylesheets = []
+        self.xmlsheets = []
         self.css_errors = []
         self.remains = []
         self._checksum = None
@@ -99,8 +107,10 @@ class AssetsBundle(object):
                 self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
+            elif f['atype'] == 'application/xml':
+                self.xmlsheets.append(XMLsheetAsset(self, url=f['url'], filename=f['filename']))
 
-    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, url_for=(lambda url: url)):
+    def to_html(self, sep=None, css=True, js=True, xml=True, debug=False, async=False, url_for=(lambda url: url)):
         if sep is None:
             sep = '\n            '
         response = []
@@ -116,6 +126,8 @@ class AssetsBundle(object):
             if js:
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
+                if xml and self.xmlsheets:
+                    response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.xml(minify=False).url))
         else:
             if css and self.stylesheets:
                 css_attachments = self.css()
@@ -129,6 +141,9 @@ class AssetsBundle(object):
                         response.append(style.to_html())
             if js and self.javascripts:
                 response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+            if js and xml and self.xmlsheets:
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.xml().url))
+
         response.extend(self.remains)
 
         return sep + sep.join(response)
@@ -170,9 +185,12 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         domain = [
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.name, type)),  # The wilcards are id, version and pagination number (if any)
+            ('url', '=like', '/web/content/%-%/{0}{1}.{2}'.format(self.name, '%' if type == 'css' else '', type)),  # The wilcards are id, version and pagination number (if any)
             '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
         ]
+        if type == 'js':
+            domain += ['!', ('url', '=like', '/web/content/%.xml.js')]
+
         return ira.sudo().search(domain).unlink()
 
     def get_attachments(self, type):
@@ -183,14 +201,16 @@ class AssetsBundle(object):
         multiple time the same bundle in our `to_html` function, we group our ir.attachment records
         by file name and only return the one with the max id for each group.
         """
-        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.name, '.%' if type == 'css' else '', type)
-        self.env.cr.execute("""
-             SELECT max(id)
-               FROM ir_attachment
-              WHERE url like %s
-           GROUP BY datas_fname
-           ORDER BY datas_fname
-         """, [url_pattern])
+        url_pattern = '/web/content/%-{version}/{name}{add}.{type}'.format(
+            version=self.version, name=self.name, add='.%' if type == 'css' else '', type=type)
+        req = """
+            SELECT max(id)
+                FROM ir_attachment
+                WHERE url like %%s %s
+            GROUP BY datas_fname
+            ORDER BY datas_fname
+        """ % ("and url not like '%%.xml.js'" if type == 'js' else '')
+        self.env.cr.execute(req, (url_pattern,))
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
@@ -205,7 +225,7 @@ class AssetsBundle(object):
             'res_id': False,
             'type': 'binary',
             'public': True,
-            'datas': content.encode('utf8').encode('base64'),
+            'datas': utf8(content).encode('base64'),
         }
         attachment = ira.sudo().create(values)
 
@@ -230,6 +250,18 @@ class AssetsBundle(object):
             return self.save_attachment('js', content)
         return attachments[0]
 
+    def xml(self, minify=True):
+        inc = '' if minify else 'debug.'
+        inc += self.context.get('lang', 'en_US')
+        attachments = self.get_attachments('xml.js', inc=inc)
+        if not attachments:
+            if minify:
+                content = self.xmlsheets[0].to_js(self.name, '\n\n'.join([asset.minify() for asset in self.xmlsheets]))
+            else:
+                content = '\n'.join(asset.to_js() for asset in self.xmlsheets)
+            return self.save_attachment('xml.js', content, inc=inc)
+        return attachments[0]
+
     def css(self):
         attachments = self.get_attachments('css')
         if not attachments:
@@ -242,7 +274,7 @@ class AssetsBundle(object):
             matches = []
             css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
             matches.append(css)
-            css = u'\n'.join(matches)
+            css = '\n'.join(matches)
 
             # split for browser max file size and browser max expression
             re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
@@ -334,7 +366,7 @@ class AssetsBundle(object):
                             url = asset.html_url
                             with self.env.cr.savepoint():
                                 self.env['ir.attachment'].sudo().create(dict(
-                                    datas=asset.content.encode('utf8').encode('base64'),
+                                    datas=utf8(asset.content).encode('base64'),
                                     mimetype='text/css',
                                     type='binary',
                                     name=url,
@@ -400,7 +432,7 @@ class WebAsset(object):
     html_url_format = '%s'
     _content = None
     _filename = None
-    _ir_attach = None
+    _last_update = None
     _id = None
 
     def __init__(self, bundle, inline=None, url=None, filename=None):
@@ -427,7 +459,7 @@ class WebAsset(object):
         return self.html_url_format % self.html_url_args
 
     def stat(self):
-        if not (self.inline or self._filename or self._ir_attach):
+        if not (self.inline or self._filename or self._last_update):
             path = filter(None, self.url.split('/'))
             self._filename = get_resource_path(*path)
             if self._filename:
@@ -437,7 +469,8 @@ class WebAsset(object):
                 fields = ['__last_update', 'datas', 'mimetype']
                 domain = [('type', '=', 'binary'), ('url', '=', self.url)]
                 attach = self.bundle.env['ir.attachment'].sudo().search_read(domain, fields)
-                self._ir_attach = attach[0]
+                self._last_update = attach[0]['__last_update']
+                self._content = attach[0]['datas'].decode('base64')
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
 
@@ -450,13 +483,12 @@ class WebAsset(object):
             self.stat()
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
-            elif self._ir_attach:
+            elif self._last_update:
                 server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-                last_update = self._ir_attach['__last_update']
                 try:
-                    return datetime.strptime(last_update, server_format + '.%f')
+                    return datetime.strptime(self._last_update, server_format + '.%f')
                 except ValueError:
-                    return datetime.strptime(last_update, server_format)
+                    return datetime.strptime(self._last_update, server_format)
         except Exception:
             pass
         return datetime(1970, 1, 1)
@@ -465,7 +497,7 @@ class WebAsset(object):
     def content(self):
         if self._content is None:
             self._content = self.inline or self._fetch_content()
-        return self._content
+        return utf8(self._content)
 
     def _fetch_content(self):
         """ Fetch content from file or database"""
@@ -475,7 +507,7 @@ class WebAsset(object):
                 with open(self._filename, 'rb') as fp:
                     return fp.read().decode('utf-8')
             else:
-                return self._ir_attach['datas'].decode('base64')
+                return self._content
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:
@@ -507,6 +539,145 @@ class JavascriptAsset(WebAsset):
             return '<script type="text/javascript" src="%s"></script>' % (self.html_url)
         else:
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
+
+
+class XMLsheetAsset(WebAsset):
+    def __init__(self, *args, **kw):
+        super(XMLsheetAsset, self).__init__(*args, **kw)
+        if not ((self.url[0] == "/" and "/static/" in self.url) or ("/" not in self.url and "." in self.url)):
+            raise AssetError('Wrong XML url "%s", please use a static file with relative path or a template xmlid' % self.url)
+
+    def stat(self):
+        if '/static/' in self.url:
+            return super(XMLsheetAsset, self).stat()
+
+        module, name = self.url.split('.', 1)
+        record = self.bundle.env['ir.model.data'].sudo().get_object(module, name)
+        self._last_update = getattr(record, '__last_update')
+        self._content = '<t t-name="%s">%s</t>' % (self.url, record.render())
+
+    def _fetch_content(self):
+        """ Fetch content from file or database"""
+        if '/static/' not in self.url:
+            self.stat()
+            return self._content
+
+        try:
+            datas = super(XMLsheetAsset, self)._fetch_content()
+        except AssetError, e:
+            return "console.error(%s);" % json.dumps(e.message)
+
+        return datas
+
+    def with_header(self, content=None):
+        if content is None:
+            content = self.content
+        return '\n<!-- %s -->\n%s' % (self.name, content)
+
+    def minify(self, xml_in=None, pretty=False):
+        if xml_in is None:
+            xml_in = self.content
+
+        xml = re.sub(r'>', ">~::~", xml_in)
+        xml = re.sub(r'<', "~::~<", xml)
+        parts = xml.split('~::~')
+
+        indent = "    "
+        inComment = False
+        inPre = False #pre tag or xml:space="preserve"
+        deep = 0
+        xml_out = ''
+
+        def addxml(part):
+            if inPre:
+                return part
+            else:
+                return (pretty and (len(xml_out) < 2 or xml_out[-2] == ">") and ("\n" + indent * deep) or "") + re.sub(r'\s{1,}', " ", part)
+
+        for key, part in enumerate(parts):
+            # start comment or <![CDATA[...]]> or <!DOCTYPE
+            if part.find('<!') > -1:
+                inComment = True
+            # end comment  or <![CDATA[...]]>
+            if part[-3:] == '-->' or part[-2:] == ']>' or part[:9] == '<!DOCTYPE':
+                inComment = False
+                continue
+            # remove all comments
+            if inComment or not part:
+                continue
+
+            if re.search(r'^<[^>]+ t-name=', part):
+                xml_out += "\n"
+
+            if part.find('<?xml') > -1 or part.find('<template') > -1 or part.find('</template') > -1:
+                continue
+
+            if re.search(r'<pre( |>)', part) or re.search(r'^<[^/](.*[^/])?>$', part) and 'xml:space="preserve"' in part:
+                inPre = deep
+            if inPre is not False and inPre == deep-1 and part.find('</') > -1:
+                inPre = False
+
+            # <? xml ... ?>
+            if part.find('<?') > -1:
+                xml_out += addxml(part)
+            # <elm></elm>
+            elif key and re.search(r'^<\w', parts[key-1]) and re.search(r'^<\/\w', part) and \
+                    re.search(r'^<[\w:\-\.\,]+', parts[key-1]).group(0) == re.search(r'^<\/[\w:\-\.\,]+', part).group(0).replace('/', ''):
+
+                xml_out += part
+                deep -= 1
+             # <elm>
+            elif re.search(r'<\w', part) and part.find('</') == -1 and part.find('/>') == -1:
+                xml_out += addxml(part)
+                deep += 1
+             # <elm>...</elm>
+            elif(re.search(r'<\w', part) and part.find('</') > -1):
+                xml_out += addxml(part)
+            # </elm>
+            elif part.find('</') > -1:
+                deep -= 1
+                xml_out += addxml(part)
+            # <elm/>
+            elif part.find('/>') > -1:
+                xml_out += addxml(part)
+            # space and content in pre
+            elif inPre:
+                xml_out += part
+            # space and content but does not add space if there were none in the template
+            else:
+                last_is_space = not len(xml_out) or re.search(r'\s', xml_out[-1])
+                part = re.sub(r'\s+', " ", part)
+                if last_is_space:
+                    part = re.sub(r'^\s+', "", part)
+                xml_out += part
+
+        return self.with_header(utf8(xml_out))
+
+    def to_js(self, name=None, content=None, with_header=True):
+        if name is None:
+            name = "%s[%s]" % (self.bundle.name, self.url)
+        if content is None:
+            content = self.minify(pretty=True)
+        js = [
+            'odoo.define("base.ir.qweb.%s", function (require) {' % name,
+            '"use strict"',
+            'var core = require("web.core");',
+            'var _t = core._t;',
+            'var template = \'<t t-name="%s">\'+' % name,
+        ]
+        for line in content.split('\n'):
+            if not line:
+                js.append("")
+            elif line[0:4] == "<!--":
+                js.append("/*" + line + "*/")
+            else:
+                js.append("'" + line.replace("\\", "\\\\").replace("'", "\\'") + "\\n'+")
+        js += [
+            '\'</t>\';',
+            'core.qweb.add_template(template);',
+            '});'
+        ]
+        return '\n'.join(js)
 
 
 class StylesheetAsset(WebAsset):
