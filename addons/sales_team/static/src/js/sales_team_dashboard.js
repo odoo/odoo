@@ -24,7 +24,7 @@ var SalesTeamDashboardView = KanbanView.extend({
 
     fetch_data: function() {
         // Overwrite this function with useful data
-        return $.Deferred().resolve();
+        return $.when();
     },
 
     render: function() {
@@ -32,7 +32,7 @@ var SalesTeamDashboardView = KanbanView.extend({
         var self = this;
 
         return this.fetch_data().then(function(result){
-            self.show_demo = result && result['nb_opportunities'] == 0;
+            self.show_demo = result && result.nb_opportunities === 0;
 
             var sales_dashboard = QWeb.render('sales_team.SalesDashboard', {
                 widget: self,
@@ -47,34 +47,27 @@ var SalesTeamDashboardView = KanbanView.extend({
     on_dashboard_action_clicked: function(ev){
         ev.preventDefault();
 
-        var self = this;
         var $action = $(ev.currentTarget);
         var action_name = $action.attr('name');
         var action_extra = $action.data('extra');
-        var additional_context = {}
+        var additional_context = {};
 
         // TODO: find a better way to add defaults to search view
         if (action_name === 'calendar.action_calendar_event') {
-            additional_context['search_default_mymeetings'] = 1;
+            additional_context.search_default_mymeetings = 1;
         } else if (action_name === 'crm.crm_lead_action_activities') {
             if (action_extra === 'today') {
-                additional_context['search_default_today'] = 1;
+                additional_context.search_default_today = 1;
             } else if (action_extra === 'this_week') {
-                additional_context['search_default_this_week'] = 1;
+                additional_context.search_default_this_week = 1;
             } else if (action_extra === 'overdue') {
-                additional_context['search_default_overdue'] = 1;
+                additional_context.search_default_overdue = 1;
             }
         } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
-            additional_context['search_default_won'] = 1;
+            additional_context.search_default_won = 1;
         }
 
-        new Model("ir.model.data")
-            .call("xmlid_to_res_id", [action_name])
-            .then(function(data) {
-                if (data){
-                   self.do_action(data, {additional_context: additional_context});
-                }
-            });
+        this.do_action(action_name, {additional_context: additional_context});
     },
 
     on_change_input_target: function(e) {
@@ -143,6 +136,6 @@ var SalesTeamDashboardView = KanbanView.extend({
 
 core.view_registry.add('sales_team_dashboard', SalesTeamDashboardView);
 
-return SalesTeamDashboardView
+return SalesTeamDashboardView;
 
 });
