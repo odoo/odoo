@@ -8,39 +8,28 @@ odoo.define('web.SwitchCompanyMenu', function(require) {
     
     var SwitchCompanyMenu = Widget.extend({
         template: 'SwitchCompanyMenu',
-        willStart: function(){
-            var self = this;
-            var def = $.Deferred();
-            new Model("res.users").call("read_companies").then(function(res) {
-                if (res){
-                    self.all_allowed_companies = res.all_allowed_companies;
-                    self.current_company = res.current_company;
-                    def.resolve();
-                } else {
-                    def.reject();
-                }
-            }).fail(function(){
-                def.reject();
-            });
-            return $.when(this._super(), def);
+        willStart: function() {
+            if (!session.user_companies) {
+                return $.Deferred().reject();
+            }
+            return this._super();
         },
         start: function() {
             var self = this;
-
-            this.$el.on('click', '.dropdown-menu li a[data-menu]', function(ev) {
+            this.$el.on('click', '.dropdown-menu li a[data-menu]', _.debounce(function(ev) {
                 ev.preventDefault();
                 var company_id = $(ev.currentTarget).data('company-id');
                 new Model('res.users').call('write', [[session.uid], {'company_id': company_id}]).then(function() {
                     location.reload();
                 });
-            });
+            }, 1500, true));
 
-            self.$('.oe_topbar_name').text(self.current_company[1]);
+            self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
 
             var companies_list = '';
-            _.each(self.all_allowed_companies, function(company) {
+            _.each(session.user_companies.allowed_companies, function(company) {
                 var a = '';
-                if(company[0] == self.current_company[0]) {
+                if(company[0] == session.user_companies.current_company[0]) {
                     a = '<i class="fa fa-check o_current_company"></i>';
                 } else {
                     a = '<span class="o_company"/>';
