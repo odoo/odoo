@@ -971,6 +971,9 @@ calendar view are:
 ``all_day``
     name of a boolean field on the record indicating whether the corresponding
     event is flagged as day-long (and duration is irrelevant)
+``mode``
+    Default display mode when loading the calendar.
+    Possible attributes are: ``day``, ``week``, ``month``
 
 
 .. todo::
