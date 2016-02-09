@@ -1328,7 +1328,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
         for f in req.files.values():
             storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
-            path = os.path.join(root.session_store.path, storename)
+            path = os.path.join(openerp.tools.config.session_dir, storename)
             with open(path, 'w') as fp:
                 f.save(fp)
             files.add(f.name, (storename, f.filename, f.content_type))
@@ -1345,7 +1345,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             if data:
                 # regenerate files filenames with the current session store
                 for name, (storename, filename, content_type) in data['files'].iteritems():
-                    path = os.path.join(root.session_store.path, storename)
+                    path = os.path.join(openerp.tools.config.session_dir, storename)
                     files.add(name, (path, filename, content_type))
                 yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
             else:
@@ -1363,12 +1363,18 @@ def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
         last_week = time.time() - 60*60*24*7
-        for fname in os.listdir(session_store.path):
-            path = os.path.join(session_store.path, fname)
+        if isinstance(session_store, werkzeug.contrib.sessions.FilesystemSessionStore):
+            for fname in os.listdir(session_store.path):
+                path = os.path.join(session_store.path, fname)
+                try:
+                    if os.path.getmtime(path) < last_week:
+                        os.unlink(path)
+                except OSError:
+                    pass
+        else:
             try:
-                if os.path.getmtime(path) < last_week:
-                    os.unlink(path)
-            except OSError:
+                session_store.session_gc(last_week)
+            except AttributeError:
                 pass
 
 #----------------------------------------------------------
