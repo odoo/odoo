@@ -27,6 +27,7 @@ up a management by affair.
         'report/hr_timesheet_report_view.xml',
         'hr_timesheet_installer.xml',
         'hr_dashboard.xml',
+        'security/hr_timesheet_security.xml'
     ],
     'demo': [
         'hr_timesheet_demo.yml',

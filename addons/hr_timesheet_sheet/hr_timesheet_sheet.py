@@ -137,6 +137,14 @@ class hr_timesheet_sheet(osv.osv):
         result = dict.fromkeys(ids, False)
         return result
 
+    def _default_get_can_change_employee(self, cr, uid, context=None):
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        group_hr_manager_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_manager')[1]
+        if group_hr_manager_id in [g.id for g in user.groups_id]:
+            return True
+        else:
+            return False
+
     _columns = {
         'name': fields.char('Note', select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -169,7 +177,7 @@ class hr_timesheet_sheet(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'department_id':fields.many2one('hr.department','Department'),
         'attendance_count': fields.function(_count_attendances, type='integer', string="Attendances"),
-        'can_change_employee': fields.function(_get_can_change_employee, type='boolean', string="Can change employee on timesheet"),
+        'can_change_employee': fields.function(_get_can_change_employee, type='boolean', string="Can change employee on timesheet", default=lambda self: self._default_get_can_change_employee()),
     }
 
     def _default_date_from(self, cr, uid, context=None):

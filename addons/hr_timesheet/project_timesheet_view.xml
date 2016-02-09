@@ -30,7 +30,7 @@
                     <field name="timesheet_ids" context="{'default_account_id' : analytic_account_id, 'default_is_timesheet' : 1, 'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
-                            <field name="user_id" required="1"/>
+                            <field name="user_id" required="1" groups="base.group_hr_manager"/>
                             <field name="name"/>
                             <field name="unit_amount" string="Duration" sum="Total time" widget="float_time"/>
                             <field name="is_timesheet" invisible="1"/>
