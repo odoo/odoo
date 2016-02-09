@@ -27,7 +27,6 @@ import functools
 import itertools
 import logging
 import operator
-import pickle
 import pytz
 import re
 import time
@@ -51,7 +50,7 @@ from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache, Collector
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, pickle
 from .tools.safe_eval import safe_eval as eval
 from .tools.translate import _
 
@@ -3927,7 +3926,7 @@ class BaseModel(object):
                 self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
             )
             params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(ids):
+            for sub_ids in cr.split_for_in_conditions(set(ids)):
                 cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)

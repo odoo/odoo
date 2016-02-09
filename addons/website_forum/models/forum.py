@@ -275,8 +275,11 @@ class Post(models.Model):
         if operator not in ('=', '!=', '<>'):
             raise ValueError('Invalid operator: %s' % (operator,))
 
-        is_admin = self._uid == SUPERUSER_ID
-        if is_admin:
+        if not value:
+            operator = operator == "=" and '!=' or '='
+            value = True
+
+        if self._uid == SUPERUSER_ID:
             return [(1, '=', 1)]
 
         user = self.env['res.users'].browse(self._uid)
@@ -286,12 +289,18 @@ class Post(models.Model):
                    LEFT JOIN res_users u ON p.create_uid = u.id
                    LEFT JOIN forum_forum f ON p.forum_id = f.id
             WHERE
-                u.karma > 0
-                or (p.create_uid = %s and f.karma_close_own <= %s)
+                (p.create_uid = %s and f.karma_close_own <= %s)
                 or (p.create_uid != %s and f.karma_close_all <= %s)
+                or (
+                    u.karma > 0
+                    and (p.active or p.create_uid = %s)
+                )
         """
+
+        op = operator == "=" and "inselect" or "not inselect"
+
         # don't use param named because orm will add other param (test_active, ...)
-        return [('id', '%sselect' % (operator == "=" and "in" or "not in"), (req, (user.id, user.karma, user.id, user.karma)))]
+        return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
 
     @api.one
     @api.depends('content')
@@ -384,7 +393,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
+            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid.id == user))
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag

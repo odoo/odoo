@@ -40,7 +40,8 @@
 
     .o_thread_message {
         .o-flex-display();
-        padding: 4px 0;
+        padding: 4px @odoo-horizontal-padding;
+        margin-bottom: 0px;
 
         .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
@@ -69,7 +70,7 @@
             }
         }
 
-        i.o_thread_message_star, i.o_thread_message_needaction  {
+        i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply  {
             cursor: pointer;
             opacity: 0;
             &.fa-star {
@@ -83,7 +84,7 @@
                 opacity: @mail-thread-side-date-opacity;
             }
 
-            i.o_thread_message_star, i.o_thread_message_needaction {
+            i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -141,8 +142,17 @@
                 }
             }
 
-            .o_thread_message_star, .o_thread_message_needaction {
+            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply {
                 padding: 4px;
+            }
+        }
+
+        &.o_message_expanded .o_thread_message_core {
+            .o_mail_body_short {
+                display: none;
+            }
+            .o_mail_body_long {
+                display: block;
             }
         }
     }

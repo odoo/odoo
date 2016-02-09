@@ -7,6 +7,7 @@ from lxml import etree, objectify
 from openerp.tools.translate import _
 from pprint import pformat
 import time
+from unicodedata import normalize
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -478,7 +479,7 @@ class PaymentMethod(osv.Model):
                 'TRANSACTION_CODE': 'ATR',
                 'OPERATION': 'SAL',
                 'NB_PAYMENTS': 1,   # even if we do not actually have any payment, ogone want it to not be 0
-                'FILE': line,
+                'FILE': normalize('NFKD', line).encode('ascii','ignore'),  # Ogone Batch must be ASCII only
                 'REPLY_TYPE': 'XML',
                 'PSPID': acquirer.ogone_pspid,
                 'USERID': acquirer.ogone_userid,

@@ -105,7 +105,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         content = None
 
         def create_sitemap(url, content):
-            ira.create(cr, uid, dict(
+            return ira.create(cr, uid, dict(
                 datas=content.encode('base64'),
                 mimetype=mimetype,
                 type='binary',
@@ -129,34 +129,30 @@ class Website(openerp.addons.web.controllers.main.Home):
                 ira.unlink(cr, uid, sitemap_ids, context=context)
 
             pages = 0
-            first_page = None
             locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
-                start = pages * LOC_PER_SITEMAP
                 values = {
-                    'locs': islice(locs, start, start + LOC_PER_SITEMAP),
+                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
-                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
-                    if not first_page:
-                        first_page = page
+                    content = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     pages += 1
-                    create_sitemap('/sitemap-%d.xml' % pages, page)
+                    last = create_sitemap('/sitemap-%d.xml' % pages, content)
                 else:
                     break
             if not pages:
                 return request.not_found()
             elif pages == 1:
-                content = first_page
+                ira.write(cr, uid, last, dict(url="/sitemap.xml", name="/sitemap.xml"), context=context)
             else:
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
                     url_root=request.httprequest.url_root,
                 ), context=context)
-            create_sitemap('/sitemap.xml', content)
+                create_sitemap('/sitemap.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 

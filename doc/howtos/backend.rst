@@ -775,7 +775,7 @@ method should simply set the value of the field to compute on every record in
 .. code-block:: python
 
     import random
-    from openerp import models, fields
+    from openerp import models, fields, api
 
     class ComputedModel(models.Model):
         _name = 'test.computed'
@@ -808,7 +808,7 @@ field whenever some of its dependencies have been modified::
         @api.depends('value')
         def _compute_name(self):
             for record in self:
-                self.name = "Record with value %s" % self.value
+                record.name = "Record with value %s" % record.value
 
 .. exercise:: Computed fields
 
