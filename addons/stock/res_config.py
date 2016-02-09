@@ -116,6 +116,7 @@ class StockConfigSettings(models.TransientModel):
         (0, 'Set lead times in calendar days (easy)'),
         (1, "Adapt lead times using the suppliers' open days calendars (advanced)")], string="Minimum Stock Rules",
         help='This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n-This installs the module stock_calendar.')
+    module_stock_barcode = fields.Boolean(string="Barcode scanner support")
     module_delivery_dhl = fields.Boolean(string="DHL integration")
     module_delivery_fedex = fields.Boolean(string="Fedex integration")
     module_delivery_temando = fields.Boolean(string="Temando integration")
