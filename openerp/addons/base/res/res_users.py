@@ -336,6 +336,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
+        user.partner_id.active = user.active
         if user.partner_id.company_id: 
             user.partner_id.write({'company_id': user.company_id.id})
         return user_id
