@@ -38,8 +38,8 @@ function reload_favorite_list(result) {
             is_checked: true,
             is_remove: false,
         };
-        sidebar_items[0] = filter_item ;
-        
+        sidebar_items[1] = filter_item ;
+
         filter_item = {
                 value: -1,
                 label: _lt("Everybody's calendars"),
@@ -50,7 +50,7 @@ function reload_favorite_list(result) {
         sidebar_items[-1] = filter_item ;
         //Get my coworkers/contacts
         new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-            var i = 1;
+            var unsorted_res = {};
             _.each(result, function(item) {
                 filter_value = item.partner_id[0];
                 filter_item = {
@@ -60,8 +60,13 @@ function reload_favorite_list(result) {
                     avatar_model: self.avatar_model,
                     is_checked: true
                 };
-                sidebar_items[i++] = filter_item ;
+                unsorted_res[filter_item.label + " " +filter_value] = filter_item;
             });
+            var i = 2;
+            _.keys(unsorted_res).sort().forEach(function(key){
+                sidebar_items[i++] = unsorted_res[key];
+            });
+
             self.all_filters = sidebar_items;
             self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
             
