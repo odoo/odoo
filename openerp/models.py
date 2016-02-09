@@ -2084,7 +2084,7 @@ class BaseModel(object):
             self._inherits_join_calc(cr, uid, self._table, f, query, context=context),
             f,
         )
-        select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
+        select_terms = ['%s(%s) AS "%s" ' % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
