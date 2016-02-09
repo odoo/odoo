@@ -808,7 +808,7 @@ field whenever some of its dependencies have been modified::
         @api.depends('value')
         def _compute_name(self):
             for record in self:
-                self.name = "Record with value %s" % self.value
+                record.name = "Record with value %s" % record.value
 
 .. exercise:: Computed fields
 
