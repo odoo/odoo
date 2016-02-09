@@ -80,11 +80,6 @@ var _lt = function (s) {
     return {toString: function () { return _t(s); }};
 };
 
-// provide timeago.js with our own translator method
-if($.timeago){ // make timeago an optional dependency of translation
-    $.timeago.settings.translator = _t;
-}
-
 qweb.default_dict = {
     '_' : _,
     'JSON': JSON,

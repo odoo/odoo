@@ -24,7 +24,7 @@ $(document).ready(function () {
         if (datetime_obj && new Date().getTime() - datetime_obj.getTime() > 7 * 24 * 60 * 60 * 1000) {
             display_str = datetime_obj.toDateString();
         } else {
-            display_str = $.timeago(datetime_obj);
+            display_str = moment(datetime_obj).fromNow();
         }
         $(el).text(display_str);
     });
