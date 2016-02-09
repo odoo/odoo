@@ -1018,17 +1018,21 @@ take the following attributes:
   between 0 and 100
 ``default_group_by``
   name of a field to group tasks by
-
-.. previously documented content which don't seem to be used anymore:
-
-   * string
-   * day_length
-   * color
-   * mode
-   * date_string
-   * <level>
-   * <field>
-   * <html>
+``fold_last_level``
+  If a value is set, the last grouping level is folded
+``round_dnd_dates``
+  enables rounding the task's start and end dates to the nearest scale marks
+``consolidation``
+  field name to display consolidation value in record cell
+``consolidation_max``
+  dictionary with the "group by" field as key and the maximum consolidation
+  value that can be reached before displaying the cell in red
+.. consolidation_exclude
+.. consolidation_color
+..  ``type``
+      ``gantt`` classic gantt view (default)
+      ``consolidate`` values of the first children are consolidated in the gantt's task
+      ``planning`` children are displayed in the gantt's task
 
 .. _reference/views/diagram:
 
