@@ -73,6 +73,8 @@ class Partner(models.Model):
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
 
+        is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
+
         return {
             'signature': signature,
             'website_url': website_url,
@@ -80,6 +82,7 @@ class Partner(models.Model):
             'model_name': model_name,
             'record_name': record_name,
             'tracking': tracking,
+            'is_discussion': is_discussion,
         }
 
     @api.model
@@ -157,6 +160,7 @@ class Partner(models.Model):
         if not user_signature:
             base_template_ctx['signature'] = False
         base_mail_values = self._notify_prepare_email_values(message)
+
 
         # classify recipients: actions / no action
         if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):

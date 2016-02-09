@@ -67,6 +67,7 @@
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
     </div>
 </div>
+% if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
 <div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
     <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
@@ -116,31 +117,66 @@
     </table>
 </div>
 <div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
+% else:
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;>
+% endif
     <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
-                ${object.body | safe}
-                % if ctx.get('tracking'):
-                    <ul>
-                    % for tracking in ctx['tracking']
-                        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
-                    % endfor
-                    </ul>
-                % endif
-            </td>
-        </tr></tbody>
-    </table>
-</div>
-<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+
         <tbody>
-            % if ctx.get('signature'):
+            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
             <tr>
-                <td style="padding:0px 10px 5px 5px;font-size: 14px; text-align: left;">
-                    ${ctx['signature'] | safe}
+                <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                    ${object.body | safe}
+                    % if ctx.get('tracking'):
+                        <ul>
+                        % for tracking in ctx['tracking']
+                            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+                        % endfor
+                        </ul>
+                    % endif
+                </td>
+            </tr>
+            % else:
+            <tr>
+                <td style="font-size: 14px;">
+                    ${object.body | safe}
+                    % if ctx.get('tracking'):
+                        <ul>
+                        % for tracking in ctx['tracking']
+                            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+                        % endfor
+                        </ul>
+                    % endif
                 </td>
             </tr>
             % endif
+        </tbody>
+    </table>
+</div>
+% if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+% else:
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;>
+% endif
+    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody>
+            % if ctx.get('signature'):
+                % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
+                    <tr>
+                        <td style="padding:0px 10px 5px 5px;font-size: 14px; text-align: left;">
+                            ${ctx['signature'] | safe}
+                        </td>
+                    </tr>
+                % else:
+                    <tr>
+                        <td style="font-size: 14px; text-align: left;">
+                            ${ctx['signature'] | safe}
+                        </td>
+                    </tr>
+                % endif
+            % endif
+
+            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
             <tr>
                 <td style="padding:0px 10px 5px 5px;font-size: 11px; text-align: left;">
                     <strong>Sent by</strong>
@@ -155,6 +191,22 @@
                     <a href="https://www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo</strong></a>
                 </td>
             </tr>
+            % else:
+            <tr>
+                <td style="font-size: 14px; text-align: left;">
+                    <strong>Sent by</strong>
+                    % if ctx.get('website_url'):
+                    <a href="${ctx['website_url']}" style="text-decoration:none;">
+                    % endif
+                    <strong>${ctx.get('company_name')}</strong>
+                    % if ctx.get('website_url'):
+                    </a>
+                    % endif
+                    <strong>using</strong>
+                    <a href="https://www.odoo.com" style="text-decoration:none;"><strong>Odoo</strong></a>
+                </td>
+            </tr>
+            % endif
         </tbody>
     </table>
 </div>]]></field>
