@@ -81,7 +81,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'origin': order.name,
                 'account_id': account_id,
                 'price_unit': amount,
-                'quantity': 1.0,
+                'quantity': 0.0,
                 'discount': 0.0,
                 'uom_id': self.product_id.uom_id.id,
                 'product_id': self.product_id.id,
@@ -131,6 +131,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
                     'tax_id': [(6, 0, self.product_id.taxes_id.ids)],
+                    'qty_invoiced': 0.0,
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
