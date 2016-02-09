@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, date, timedelta
 from math import floor
@@ -8,8 +8,8 @@ import time
 import operator
 import babel
 
-from openerp.addons.website.controllers.backend import WebsiteBackend
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.addons.website.controllers.backend import WebsiteBackend
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 
 class WebsiteSaleBackend(WebsiteBackend):

@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import urlparse
 
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.addons.web.http import request
+from odoo import http
+from odoo.addons.web.http import request
 
-from openerp.addons.website_mail.controllers.main import WebsiteMail
+from odoo.addons.website_mail.controllers.main import WebsiteMail
 
 
 class WebsiteMailController(WebsiteMail):
@@ -38,7 +37,7 @@ class WebsiteMailController(WebsiteMail):
             try:
                 fragment = urlparse.urlparse(response.location).fragment
                 message_id = int(fragment.replace('message-', ''))
-                rating = request.env['rating.rating'].create({
+                request.env['rating.rating'].create({
                     'rating': float(kw.get('rating')),
                     'res_model': res_model,
                     'res_id': res_id,

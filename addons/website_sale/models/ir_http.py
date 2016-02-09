@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import models
-from openerp.addons.web.http import request
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import models
+from odoo.http import request
+
 
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
