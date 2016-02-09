@@ -92,7 +92,8 @@
                               </thead>
                               <tbody>
                                 <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
-                                    <td><span t-field="pack_operation.product_id"/>
+                                    <td><span t-field="pack_operation.product_id"/><br/>
+                                        <span t-field="pack_operation.product_id.description_picking"/>
                                         <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>
                                     <td class="text-right"><span t-field="pack_operation.product_qty"/> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
                                     <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="pack_operation.location_id"/>
