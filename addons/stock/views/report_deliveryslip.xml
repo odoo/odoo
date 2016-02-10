@@ -15,21 +15,6 @@
                                 <div t-field="o.partner_id"
                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                             </div>
-                        </div>
-                        <div class="col-xs-5 col-xs-offset-1">
-                            <div>
-                                <span><strong>Contact Address:</strong></span>
-                            </div>
-                            <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
-                                <div>
-                                    <div t-field="o.move_lines[0].partner_id"
-                                        t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                                </div>
-                            </div>
-                            <div t-if="(o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id == o.partner_id.id) or o.move_lines and not o.move_lines[0].partner_id">
-                                <div t-field="o.partner_id"
-                                   t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                            </div>
                         </div>    
                     </div>
                     <h2>
