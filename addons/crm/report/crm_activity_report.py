@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models
-from openerp import tools
+from odoo import fields, models, tools
 
 
-class crm_activity_report(models.Model):
+class CrmActivityReport(models.Model):
     """ CRM Lead Analysis """
     _name = "crm.activity.report"
     _auto = False
