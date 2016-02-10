@@ -64,5 +64,6 @@ Main Features
         'static/src/xml/systray.xml',
         'static/src/xml/thread.xml',
         'static/src/xml/chat_window.xml',
+        'static/src/xml/announcement.xml',
     ],
 }

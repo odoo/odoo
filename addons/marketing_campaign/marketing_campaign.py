@@ -796,4 +796,4 @@ class report_xml(osv.osv):
         if object_id:
             model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
             args.append(('model', '=', model))
-        return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(report_xml, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
