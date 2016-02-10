@@ -425,7 +425,7 @@
         assert [p1,p2] == res_partner.search(cr, uid, [('user_ids', 'in', [u1a,u2])]), "o2m IN matches any on the right side"
         all_partners = res_partner.search(cr, uid, [])
         assert (set(all_partners) - set([p1])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', u1a)])), "o2m NOT IN matches none on the right side"
-        # For 9.0: assert (set(all_partners) - set([p1])) == set(res_partner.search(cr, uid, [('user_ids', '!=', 'Dédé Boitaclou')])), "o2m NOT IN matches none on the right side"
+        assert (set(all_partners) - set([p1])) == set(res_partner.search(cr, uid, [('user_ids', '!=', 'Dédé Boitaclou')])), "o2m NOT IN matches none on the right side"
         assert (set(all_partners) - set([p1,p2])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', [u1b, u2])])), "o2m NOT IN matches none on the right side"
 
 
