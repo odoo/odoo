@@ -316,3 +316,20 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         import sys
         exc_info = sys.exc_info()
         raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
+def test_python_expr(expr, mode="eval"):
+    try:
+        test_expr(expr, _SAFE_OPCODES, mode=mode)
+    except (SyntaxError, TypeError, ValueError) as err:
+        if len(err.args) >= 2 and len(err.args[1]) >= 4:
+            error = {
+                'message': err.args[0],
+                'filename': err.args[1][0],
+                'lineno': err.args[1][1],
+                'offset': err.args[1][2],
+                'error_line': err.args[1][3],
+            }
+            msg = "%s : %s at line %d\n%s" % (type(err).__name__, error['message'], error['lineno'], error['error_line'])
+        else:
+            msg = ustr(err)
+        return msg
+    return False
