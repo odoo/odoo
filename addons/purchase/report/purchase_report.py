@@ -49,15 +49,7 @@ class purchase_report(osv.osv):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
             create or replace view purchase_report as (
-                WITH currency_rate (currency_id, rate, date_start, date_end) AS (
-                    SELECT r.currency_id, r.rate, r.name AS date_start,
-                        (SELECT name FROM res_currency_rate r2
-                        WHERE r2.name > r.name AND
-                            r2.currency_id = r.currency_id
-                         ORDER BY r2.name ASC
-                         LIMIT 1) AS date_end
-                    FROM res_currency_rate r
-                )
+                WITH currency_rate as (%s)
                 select
                     min(l.id) as id,
                     s.date_order as date,
@@ -96,6 +88,7 @@ class purchase_report(osv.osv):
                     left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                     left join currency_rate cr on (cr.currency_id = s.currency_id and
+                        cr.company_id = s.company_id and
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
                 group by
@@ -125,4 +118,4 @@ class purchase_report(osv.osv):
                     partner.commercial_partner_id,
                     analytic_account.id
             )
-        """)
+        """ % self.pool['res.currency']._select_companies_rates())
