@@ -72,7 +72,7 @@ class PaymentAcquirer(osv.Model):
                                                          help="Template for method registration"),
         'environment': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
-            string='Environment', oldname='env'),
+            string='Environment', required=True, oldname='env'),
         'website_published': fields.boolean(
             'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
