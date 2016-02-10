@@ -4618,19 +4618,17 @@ class stock_pack_operation_lot(osv.osv):
         return pack_obj.split_lot(cr, uid, [pack.id], context=context)
 
 
-class stock_move_operation_link(osv.osv):
+class StockMoveOperationLink(models.Model):
     """
     Table making the link between stock.moves and stock.pack.operations to compute the remaining quantities on each of these objects
     """
     _name = "stock.move.operation.link"
     _description = "Link between stock moves and pack operations"
 
-    _columns = {
-        'qty': fields.float('Quantity', help="Quantity of products to consider when talking about the contribution of this pack operation towards the remaining quantity of the move (and inverse). Given in the product main uom."),
-        'operation_id': fields.many2one('stock.pack.operation', 'Operation', required=True, ondelete="cascade"),
-        'move_id': fields.many2one('stock.move', 'Move', required=True, ondelete="cascade"),
-        'reserved_quant_id': fields.many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again"),
-    }
+    qty = fields.Float('Quantity', help="Quantity of products to consider when talking about the contribution of this pack operation towards the remaining quantity of the move (and inverse). Given in the product main uom.")
+    operation_id = fields.Many2one('stock.pack.operation', 'Operation', required=True, ondelete="cascade")
+    move_id = fields.Many2one('stock.move', 'Move', required=True, ondelete="cascade")
+    reserved_quant_id = fields.Many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again")
 
 
 class StockWarehouseOrderpoint(models.Model):
