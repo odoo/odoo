@@ -4938,16 +4938,16 @@ class stock_picking_type(osv.osv):
         'use_create_lots': True,
     }
 
-class barcode_rule(models.Model):
+class BarcodeRule(models.Model):
     _inherit = 'barcode.rule'
 
     def _get_type_selection(self):
-        types = sets.Set(super(barcode_rule,self)._get_type_selection()) 
+        types = sets.Set(super(BarcodeRule, self)._get_type_selection())
         types.update([
-            ('weight', _('Weighted Product')),
-            ('location', _('Location')),
-            ('lot', _('Lot')),
-            ('package', _('Package'))
+            ('weight', 'Weighted Product'),
+            ('location', 'Location'),
+            ('lot', 'Lot'),
+            ('package', 'Package')
         ])
         return list(types)
 
