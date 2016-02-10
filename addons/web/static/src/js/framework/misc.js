@@ -7,7 +7,6 @@ var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var Spinner = window.Spinner;
 
 var messages_by_seconds = function() {
     return [
@@ -24,23 +23,6 @@ var messages_by_seconds = function() {
 var Throbber = Widget.extend({
     template: "Throbber",
     start: function() {
-        var opts = {
-          lines: 13, // The number of lines to draw
-          length: 7, // The length of each line
-          width: 4, // The line thickness
-          radius: 10, // The radius of the inner circle
-          rotate: 0, // The rotation offset
-          color: '#FFF', // #rgb or #rrggbb
-          speed: 1, // Rounds per second
-          trail: 60, // Afterglow percentage
-          shadow: false, // Whether to render a shadow
-          hwaccel: false, // Whether to use hardware acceleration
-          className: 'spinner', // The CSS class to assign to the spinner
-          zIndex: 2e9, // The z-index (defaults to 2000000000)
-          top: 'auto', // Top position relative to parent in px
-          left: 'auto' // Left position relative to parent in px
-        };
-        this.spin = new Spinner(opts).spin(this.$el[0]);
         this.start_time = new Date().getTime();
         this.act_message();
     },
@@ -58,11 +40,6 @@ var Throbber = Widget.extend({
             self.$(".oe_throbber_message").html(mes);
             self.act_message();
         }, 1000);
-    },
-    destroy: function() {
-        if (this.spin)
-            this.spin.stop();
-        this._super();
     },
 });
 
