@@ -43,6 +43,9 @@
             <field name="name">Timesheet Activities</field>
             <field name="res_model">account.analytic.line</field>
             <field name="src_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})]"/>
         </record>
 
 
@@ -102,8 +105,9 @@
                     </div>
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
-                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline" placeholder="Employee's Name"/></h1>
+                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline" placeholder="Employee's Name" attrs="{'readonly': [('can_change_employee', '=', False)]}"/></h1>
                         <field name="user_id" invisible="1"/>
+                        <field name="can_change_employee" invisible="1"/>
                     </div>
                     <group>
                         <group>
@@ -123,20 +127,22 @@
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'default_is_timesheet' : 1}" name="timesheet_ids" nolabel="1">
                                 <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field name="account_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="account_id" invisible="1" required="0"/><!--Required 0 to prevent the interface from blocking the creation triggered by the weekly_timesheet widget.-->
+                                    <field name="project_id" on_change="test"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field invisible="1" name="user_id" required="1"/>
+                                    <field name="user_id" required="1" groups="base.group_hr_manager"/>
                                     <field name="is_timesheet" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <field name="date"/>
+                                    <field name="project_id"/>
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
-                                    <field name="user_id" required="1"/>
+                                    <field name="user_id" required="1" groups="base.group_hr_manager"/>
                                     <field name="is_timesheet" invisible="1"/>
                                 </form>
                             </field>

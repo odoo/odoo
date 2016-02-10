@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data>
         <record model="res.groups" id="base.group_user">
             <field name="implied_ids" eval="[(4, ref('project.group_tasks_work_on_tasks'))]"/>
         </record>
@@ -18,6 +18,18 @@
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
+
+    <record id="hr_timesheet_personal" model="ir.rule">
+        <field name="name">Personal Timesheet entries</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('is_timesheet','=',False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="hr_timesheet_all" model="ir.rule">
+        <field name="name">All Timesheet entries</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
+    </record>
     </data>
 </openerp>
-
