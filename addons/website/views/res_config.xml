@@ -100,8 +100,8 @@
                                     <label for="module_website_version"/>
                                 </div>
                             </div>
-                            <label for="id" string="Speed"/>
-                            <div>
+                            <label for="id" string="Optimization" groups="base.group_no_one"/>
+                            <div groups="base.group_no_one">
                                 <div>
                                     <field name="compress_html"/>
                                     <label for="compress_html"/>
@@ -109,11 +109,16 @@
                                 <div>
                                     <field name="cdn_activated"/>
                                     <label for="cdn_activated"/>
-                                </div><div>
+                                </div>
+                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}">
                                     <label for="cdn_url"/>
-                                    <field name="cdn_url" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
+                                    <field name="cdn_url"
+                                           attrs="{'required': [('cdn_activated', '=', True)]}"
+                                           placeholder="//mycompany.mycdn.com/"
+                                           t-translation="off"/>
                                     <label for="cdn_filters"/>
-                                    <field name="cdn_filters" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
+                                    <field name="cdn_filters"
+                                           attrs="{'required': [('cdn_activated', '=', True)]}"/>
                                 </div>
                             </div>
 

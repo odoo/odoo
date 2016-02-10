@@ -179,7 +179,7 @@ class website(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
         'compress_html': False,
         'cdn_activated': False,
-        'cdn_url': '//localhost:8069/',
+        'cdn_url': '',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
