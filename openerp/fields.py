@@ -44,14 +44,17 @@ def _check_value(value):
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    for record, target in zip(records, records.with_env(env)):
-        if not target._cache:
+    todo, done = set(records), set()
+    while todo:
+        record = todo.pop()
+        if record not in done:
+            done.add(record)
+            target = record.with_env(env)
             for name, value in record._cache.iteritems():
                 if isinstance(value, BaseModel):
-                    target._cache[name] = value.with_env(env)
-                    copy_cache(value, env)
-                else:
-                    target._cache[name] = value
+                    todo.update(value)
+                    value = value.with_env(env)
+                target._cache[name] = value
 
 
 def resolve_mro(model, name, predicate):

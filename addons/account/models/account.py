@@ -235,7 +235,7 @@ class AccountJournal(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 
-    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=True)
+    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=False)
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
@@ -641,7 +641,7 @@ class AccountTax(models.Model):
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
-                base = ret['total_excluded']
+                base = ret['base']
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
@@ -677,6 +677,7 @@ class AccountTax(models.Model):
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
             'total_excluded': currency.round(total_excluded),
             'total_included': currency.round(total_included),
+            'base': base,
         }
 
     @api.v7
@@ -686,7 +687,7 @@ class AccountTax(models.Model):
         partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency, quantity, product, partner)
+        return AccountTax.compute_all(recs, price_unit, currency, quantity, product, partner)
 
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):

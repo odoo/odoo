@@ -698,9 +698,15 @@ var ExtendedComposer = BasicComposer.extend({
     should_send: function () {
         return false;
     },
-
-    focus: function () {
-        this.$subject_input.focus();
+    focus: function (target) {
+        if (target === 'body') {
+            this.$input.focus();
+        } else {
+            this.$subject_input.focus();
+        }
+    },
+    set_subject: function(subject) {
+        this.$('.o_composer_subject input').val(subject);
     },
 });
 
