@@ -53,13 +53,13 @@ def url_for(path_or_uri, lang=None):
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang
+                    ps[1] = lang.encode('utf-8')
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.website.default_lang_code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang)
+                ps.insert(1, lang.encode('utf-8'))
             location = '/'.join(ps)
 
     return location.decode('utf-8')
