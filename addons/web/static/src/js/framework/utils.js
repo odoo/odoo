@@ -296,14 +296,19 @@ function human_size (size) {
  *
  * @param {Number} number
  */
-function human_number (number) {
-    var units = _t(",k,M").split(',');
-    var i = 0;
-    while (number >= 1000) {
-        number /= 1000;
-        ++i;
+function human_number (number, decimals) {
+    var decimals = decimals | 0;
+    var number = Math.round(number);
+    var d2 = Math.pow(10, decimals);
+    var val = _t("kMGTPE");
+    var i = val.length-1, s;
+    while( i ) {
+        s = Math.pow(10,i--*3);
+        if( s <= number ) {
+            number = Math.round(number*d2/s)/d2 + val[i];
+        }
     }
-    return parseInt(number) + units[i];
+    return number;
 }
 
 /**
