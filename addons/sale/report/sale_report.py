@@ -45,15 +45,7 @@ class sale_report(osv.osv):
 
     def _select(self):
         select_str = """
-            WITH currency_rate (currency_id, rate, date_start, date_end) AS (
-                    SELECT r.currency_id, r.rate, r.name AS date_start,
-                        (SELECT name FROM res_currency_rate r2
-                        WHERE r2.name > r.name AND
-                            r2.currency_id = r.currency_id
-                         ORDER BY r2.name ASC
-                         LIMIT 1) AS date_end
-                    FROM res_currency_rate r
-                )
+            WITH currency_rate as (%s)
              SELECT min(l.id) as id,
                     l.product_id as product_id,
                     t.uom_id as product_uom,
@@ -79,7 +71,7 @@ class sale_report(osv.osv):
                     partner.commercial_partner_id as commercial_partner_id,
                     sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
                     sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
-        """
+        """ % self.pool['res.currency']._select_companies_rates()
         return select_str
 
     def _from(self):
@@ -93,6 +85,7 @@ class sale_report(osv.osv):
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                     left join currency_rate cr on (cr.currency_id = pp.currency_id and
+                        cr.company_id = s.company_id and
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
         """

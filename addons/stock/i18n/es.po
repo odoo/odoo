@@ -7,7 +7,7 @@
 # Antonio Trueba, 2016
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
-# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
+# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015-2016
 # Mario Calvar <ventas.bbca@gmail.com>, 2015
 # Martin Trigaux, 2016
 msgid ""
@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-01-30 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-01 14:54+0000\n"
+"Last-Translator: Antonio Trueba\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +70,7 @@ msgid ""
 "same product(%s), same location(%s), same package, same owner and same lot. "
 "Please first validate the first inventory adjustement with this product "
 "before creating another one."
-msgstr ""
+msgstr "No se puede tener dos ajustes de inventario en el estado 'en Progreso' con el mismo producto (%s), misma ubicación (%s), mismo paquete, el mismo propietario y mismo lote. Por favor, primero validar el primer ajuste de inventario con este producto antes de crear otro."
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -416,7 +416,7 @@ msgstr "<strong> Código de barras </ strong>"
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr "<strong> Comprar: </strong> el producto se compra a un vendedor a través de una Orden de Compra"
+msgstr "<strong>Comprar:</strong> el producto es comprado de un proveedor, a travez de un Pedido de Compra"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -1924,7 +1924,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Do not record internal moves within a warehouse"
-msgstr ""
+msgstr "No registrar movimientos internos dentro del mismo almacén"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -2029,7 +2029,7 @@ msgstr "Fecha prevista"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_product_expiry
 msgid "Expiration Dates"
-msgstr ""
+msgstr "Fechas de caducidad"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form

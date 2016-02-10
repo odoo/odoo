@@ -219,6 +219,12 @@ class XMLTranslator(object):
             text = text.replace(term, trans)
         return text
 
+    def process_attr(self, attr):
+        """ Translate the given node attribute value. """
+        term = attr.strip()
+        trans = term and self.callback(term)
+        return attr.replace(term, trans) if trans else attr
+
     def process(self, node):
         """ Process the given xml `node`: collect `todo` and `done` items. """
         if (
@@ -249,7 +255,7 @@ class XMLTranslator(object):
             # complete translations and serialize result as done
             for attr in TRANSLATED_ATTRS:
                 if node.get(attr):
-                    node.set(attr, self.process_text(node.get(attr)))
+                    node.set(attr, self.process_attr(node.get(attr)))
             self.done(self.serialize(node.tag, node.attrib, child_trans.get_done()))
 
         # add node tail as todo

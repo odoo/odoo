@@ -775,7 +775,7 @@ method should simply set the value of the field to compute on every record in
 .. code-block:: python
 
     import random
-    from openerp import models, fields
+    from openerp import models, fields, api
 
     class ComputedModel(models.Model):
         _name = 'test.computed'
@@ -808,7 +808,7 @@ field whenever some of its dependencies have been modified::
         @api.depends('value')
         def _compute_name(self):
             for record in self:
-                self.name = "Record with value %s" % self.value
+                record.name = "Record with value %s" % record.value
 
 .. exercise:: Computed fields
 
@@ -1153,13 +1153,15 @@ Graph views
 Graph views allow aggregated overview and analysis of models, their root
 element is ``<graph>``.
 
+.. note::
+    Pivot views (element ``<pivot>``) a multidimensional table, allows the
+    selection of filers and dimensions to get the right aggregated dataset
+    before moving to a more graphical overview. The pivot view shares the same
+    content definition as graph views.
+
 Graph views have 4 display modes, the default mode is selected using the
 ``@type`` attribute.
 
-Pivot
-    a multidimensional table, allows the selection of filers and dimensions
-    to get the right aggregated dataset before moving to a more graphical
-    overview
 Bar (default)
     a bar chart, the first dimension is used to define groups on the
     horizontal axis, other dimensions define aggregated bars within each group.

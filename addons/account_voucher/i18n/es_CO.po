@@ -3,14 +3,15 @@
 # * account_voucher
 # 
 # Translators:
+# Esteban Echeverry <tebanep@nubark.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-11-28 07:47+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-05 22:12+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* El estado \"Borrador\" es usado cuando un usuario está codificando un Comprobante nuevo y no confirmado.\n* El estado \"Pro-forma\" es usado cuando el comprobante no tiene un número de comprobante.\n* El estado \"Contabilizado\" es usado cuando el usuario crea un comprobante, un número de comprobante es generado y líneas de comprobante son creadas en la cuenta.\n* El estado \"Cancelado\" es usado cuando el usuario cancela un comprobante."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -36,7 +37,7 @@ msgstr "Cuenta"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Fecha de Cuenta"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -236,7 +237,7 @@ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr "En caso que tengamos un problema de redondeo en el impuesto, use este campo para corregirlo "
+msgstr "En caso de que tengamos un problema de redondeo en el impuesto, use este campo para corregirlo "
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -371,7 +372,7 @@ msgstr "Referencia del Pago"
 #: code:addons/account_voucher/account_voucher.py:180
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "Por favor active la secuencia del libro seleccionado!"
+msgstr "¡Por favor active la secuencia del libro seleccionado!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:183
@@ -586,7 +587,7 @@ msgstr "Comprobante"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr ""
+msgstr "Entradas del Comprobante"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -606,7 +607,7 @@ msgstr "Estadísticas de Comprobantes"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Entradas de los Comprobantes"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_website_message_ids
