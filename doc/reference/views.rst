@@ -862,6 +862,8 @@ Possible children of the view element are:
     a :meth:`~openerp.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
+  ``formats``
+    the :js:class:`web.formats` module to manipulate and convert values
   ``read_only_mode``
     self-explanatory
 
