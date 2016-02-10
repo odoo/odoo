@@ -100,11 +100,15 @@ class StockPicking(models.Model):
     @api.multi
     def open_website_url(self):
         self.ensure_one()
+        if self.carrier_id.get_tracking_link(self):
+            url = self.carrier_id.get_tracking_link(self)[0]
+        else:
+            raise UserError(_("Your delivery method has no redirect on courier provider's website to track this order."))
 
         client_action = {'type': 'ir.actions.act_url',
                          'name': "Shipment Tracking Page",
                          'target': 'new',
-                         'url': self.carrier_id.get_tracking_link(self)[0]
+                         'url': url,
                          }
         return client_action
 
