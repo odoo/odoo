@@ -12,7 +12,7 @@ import odoo
 from odoo import api, fields, models, tools, workflow, _
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.report.report_sxw import report_sxw, report_rml
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval as eval, test_python_expr
 
 _logger = logging.getLogger(__name__)
 
@@ -595,6 +595,13 @@ class IrActionsServer(models.Model):
             if ftype == 'many2one':
                 model_name = field.comodel_name
         return (True, model_name, None)
+
+    @api.constrains('code')
+    def _check_python_code(self):
+        for action in self.filtered('code'):
+            msg = test_python_expr(expr=action.code.strip(), mode="exec")
+            if msg:
+                raise ValidationError(msg)
 
     @api.constrains('write_expression', 'model_id')
     def _check_write_expression(self):
