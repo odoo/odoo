@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data>
 
     <!-- Marketing Campaign -->
@@ -197,12 +197,12 @@
                 <group>
                     <group>
                         <field name="name"/>
-                        <field name="campaign_id" on_change="onchange_campaign_id(campaign_id)"/>
+                        <field name="campaign_id"/>
                         <field name="object_id" invisible="1"/>
                         <field name="sync_mode" required="True"/>
                        <label for="sync_last_date"/>
                        <div>
-                           <field name="sync_last_date" class="oe_inline"/>
+                           <field name="sync_last_date" class="o_row"/>
                            <button string="Synchronize Manually" states="running" name="synchroniz" type="object"/>
                        </div>
                        <field name="date_next_sync"/>
@@ -461,4 +461,4 @@
             <field name="state">open</field>
         </record>
     </data>
-</openerp>
+</odoo>
