@@ -111,7 +111,7 @@
                         <page string="Settings">
                             <group>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                                <field name="partner_id" string="Customer"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                         groups="base.group_no_one"/>
@@ -263,7 +263,6 @@
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
-                                on_change="onchange_user_id(user_id, context)"
                                 options='{"no_open": True}'/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>

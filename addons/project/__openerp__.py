@@ -51,9 +51,5 @@ Dashboard / Reports for Project Management will include:
     ],
     'qweb': ['static/src/xml/project.xml'],
     'demo': ['project_demo.xml'],
-    'test': [
-    ],
-    'installable': True,
-    'auto_install': False,
     'application': True,
 }
