@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Update a transporter -->
-        <record id="res_partner_delivery" model="res.partner">
-            <field name="city">Manchester</field>
-            <field name="zip">06040</field>
-            <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
-            <field name="street">3958 Maxwell Street</field>
-        </record>
 
         <!-- Carrier -->
 
@@ -15,7 +8,6 @@
             <field name="name">The Poste</field>
             <field name="fixed_price">20</field>
             <field name="sequence">2</field>
-            <field name="partner_id" ref="res_partner_delivery"/>
             <field name="delivery_type">base_on_rule</field>
             <field name="product_type">service</field>
             <field name="product_sale_ok" eval="False"/>
@@ -25,7 +17,6 @@
             <field name="name">Normal Delivery Charges</field>
             <field name="fixed_price">10</field>
             <field name="sequence">3</field>
-            <field name="partner_id" ref="res_partner_delivery"/>
             <field name="delivery_type">fixed</field>
             <field name="product_type">service</field>
             <field name="product_sale_ok" eval="False"/>

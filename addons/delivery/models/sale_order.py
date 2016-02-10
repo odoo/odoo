@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     carrier_id = fields.Many2one("delivery.carrier", string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
     invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery")
 
-    @api.depends('carrier_id', 'partner_id', 'order_line')
+    @api.depends('carrier_id', 'order_line')
     def _compute_delivery_price(self):
         for order in self:
             if order.state != 'draft':
