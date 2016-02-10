@@ -608,6 +608,16 @@ def v7(method_v7):
             def foo(self):
                 ...
 
+        Special care must be taken if one method calls the other one, because
+        the method may be overridden! In that case, one should call the method
+        from the current class (say ``MyClass``), for instance::
+
+            @api.v7
+            def foo(self, cr, uid, ids, context=None):
+                # Beware: records.foo() may call an overriding of foo()
+                records = self.browse(cr, uid, ids, context)
+                return MyClass.foo(records)
+
         Note that the wrapper method uses the docstring of the first method.
     """
     # retrieve method_v8 from the caller's frame
