@@ -101,7 +101,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         res = super(StockPicking, self).do_transfer()
 
-        if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.shipping_enabled:
+        if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.integration_level == 'rate_and_ship':
             self.send_to_shipper()
 
         if self.carrier_id:
