@@ -48,7 +48,7 @@ class fetchmail_server(osv.osv):
         'is_ssl':fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
         'attach':fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                          "If not enabled, incoming emails will be stripped of any attachments before being processed"),
-        'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
+        'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
                                                         "and attached to each processed message. This will usually double the size of your message database."),
         'date': fields.datetime('Last Fetch Date', readonly=True),
         'user' : fields.char('Username', readonly=True, states={'draft':[('readonly', False)]}),

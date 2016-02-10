@@ -20,51 +20,77 @@
 
         <!-- Email template for reset password -->
         <record id="reset_password_email" model="mail.template">
-            <field name="name">Reset Password</field>
+            <field name="name">Auth Signup: Reset Password</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject">Password reset</field>
             <field name="body_html"><![CDATA[
-<p>A password reset was requested for the Odoo account linked to this email.</p>
-
-<p>You may change your password by following <a href="${object.signup_url}">this link</a>, which will remain valid during 24 hours.</p>
-
-<p>Note: If you do not expect this, you can safely ignore this email.</p>]]></field>
+<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+        <tbody><tr>
+            <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <p>Dear ${object.name},</p>
+    <p>A password reset was requested for the Odoo account linked to this email.</p>
+    <p>You may change your password by following this link which will remain valid during 24 hours:</p>
+    <div style="text-align: center; margin-top: 16px;">
+        <a href="${object.signup_url}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px">Change password</a>
+    </div>
+    <p>If you do not expect this, you can safely ignore this email.</p>
+    <p>Best regards,</p>
+</div>
+<div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+    ${user.signature | safe}
+    <p style="font-size: 11px; margin-top: 10px;">
+        <strong>Sent by ${user.company_id.name} using <a href="www.odoo.com" style="text-decoration:none; color: #a24689;">Odoo</a></strong>
+    </p>
+</div>]]></field>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <!-- Email template for new users -->
         <record id="set_password_email" model="mail.template">
-            <field name="name">Odoo Enterprise Connection</field>
+            <field name="name">Auth Signup: Odoo Connection</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject"><![CDATA[${object.company_id.name} invitation to connect on Odoo]]></field>
-            <field name="body_html">
-                <![CDATA[
-                    <p>
-                        ${object.name},
-                    </p>
-                    <p>
-                        You have been invited to connect to "${object.company_id.name}" in order to get access to your documents in Odoo.
-                    </p>
-                    <p>
-                        To accept the invitation, click on the following link:
-                    </p>
-                    <ul>
-                        <li><a href="${object.signup_url}">Accept invitation to "${object.company_id.name}"</a></li>
-                    </ul>
-                    <p>
-                        Thanks,
-                    </p>
-                    <pre>
---
-${object.company_id.name or ''}
-${object.company_id.email or ''}
-${object.company_id.phone or ''}
-                    </pre>
-                ]]>
-            </field>
+            <field name="body_html"><![CDATA[
+<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+        <tbody><tr>
+            <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+<p>Dear ${object.name},</p>
+    <p>
+        You have been invited to connect to "${object.company_id.name}" in order to get access to your documents in Odoo.
+    </p>
+    <p>
+        To accept the invitation, click on the following link:
+    </p>
+    <div style="text-align: center; margin-top: 16px;">
+         <a href="${object.signup_url}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px">Accept invitation to "${object.company_id.name}"</a>
+    </div>
+    <p>Best regards,</p>
+</div>
+<div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+    ${user.signature | safe}
+    <p style="font-size: 11px; margin-top: 10px;">
+        <strong>Sent by ${user.company_id.name} using <a href="www.odoo.com" style="text-decoration:none; color: #a24689;">Odoo</a></strong>
+    </p>
+</div>]]></field>
+            <field name="user_signature" eval="False"/>
         </record>
 
     </data>

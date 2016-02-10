@@ -5,7 +5,7 @@
     'summary': 'Create Leads From Contact Form',
     'version': '2.0',
     'description': """
-OpenERP Contact Form
+Odoo Contact Form
 ====================
 
         """,

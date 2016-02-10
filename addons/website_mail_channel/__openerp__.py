@@ -4,7 +4,7 @@
     'summary': '',
     'version': '1.0',
     'description': """
-OpenERP Mail Group : Mailing List Archives
+Odoo Mail Group : Mailing List Archives
 ==========================================
 
         """,

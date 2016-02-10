@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
-    'name': 'Partners Geo-Localization',
-    'version': '1.0',
+    'name': 'Partners Geolocation',
+    'version': '2.0',
     'category': 'Customer Relationship Management',
+    'author': 'Odoo SA',
     'description': """
-Partners geolocalization
+Partners Geolocation
 ========================
     """,
     'depends': ['crm'],
-    'demo': [
-    ],
     'data': [
-        'views/res_partner_view.xml',
+        'views/res_partner_views.xml',
     ],
-    'test': [],
     'installable': True,
-    'auto_install': False,
 }

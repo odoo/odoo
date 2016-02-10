@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-Module to trigger warnings in OpenERP objects.
+Module to trigger warnings in Odoo objects.
 ==============================================
 
 Warning messages can be displayed for objects like sale order, purchase order,

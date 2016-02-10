@@ -13,146 +13,117 @@
 
         <!-- Email tempalte -->
         <record id="email_template_1" model="mail.template">
+            <field name="name">Lead Automation: For Odoo OnDemand Free Trial 2015</field>
             <field name="subject">Thanks for showing interest in Odoo</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;Thanks for the genuine interest you have shown in Odoo.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">For Odoo OnDemand Free Trial 2015</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for the genuine interest you have shown in Odoo.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
         <record id="email_template_2" model="mail.template">
+            <field name="name">Lead Automation: For Odoo Discovery Day on May 2015</field>
             <field name="subject">Propose to subscribe to the Odoo Discovery Day on May 2015</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;We have very good offer that might suit you.
-            We suggest you subscribe to the Odoo Discovery Day on May 2015.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">For Odoo Discovery Day on May 2015</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. We suggest you subscribe to the
+Odoo Discovery Day on May 2015.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
         <record id="email_template_3" model="mail.template">
-            <field name="subject">Thanks for subscribing to the Odoo Discovery Day</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
+            <field name="subject">Lead Automation: Thanks for subscribing to the Odoo Discovery Day</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;Thanks for showing interest and for subscribing to the Odoo Discovery Day.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and for subscribing to the Odoo Discovery Day.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
             <field name="name">For Odoo Discovery Day</field>
         </record>
 
         <record id="email_template_4" model="mail.template">
+            <field name="name">Lead Automation: For Odoo book</field>
             <field name="subject">Thanks for buying the Odoo book</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-           <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
-             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;Thanks for showing interest and buying the Odoo book.&lt;/p&gt;
-            If any further information required kindly revert back.
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">For Odoo book</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and buying the Odoo book.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
          <record id="email_template_5" model="mail.template">
+            <field name="name">Lead Automation: technical training to gold partners</field>
             <field name="subject">Propose a free technical training to Gold partners</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;We have very good offer that might suit you.
-            For our gold partners,We are arranging free technical training on june,2015.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">technical training to gold partners</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our gold partners we are
+arranging free technical training on June 2016.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
           <record id="email_template_6" model="mail.template">
+            <field name="name">Lead Automation: training to silver partners</field>
             <field name="subject">Propose paid training to Silver partners</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;We have very good offer that might suit you.
-            For our silver partners,We are  paid technical training on june,2015.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">training to silver partners</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our silver partners we are 
+arranging a paid technical training on June 2016.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
         <record id="email_template_7" model="mail.template">
+            <field name="name">Lead Automation: gold partnership to silver partners</field>
             <field name="subject">Propose gold partnership to silver partners</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;We have very good offer that might suit you.
-            For our silver partners, we are  offering Gold partnership.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">gold partnership to silver partners</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our silver partners, we are
+offering Gold partnership.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
         <record id="email_template_8" model="mail.template">
+            <field name="name">Lead Automation: subscribing to technical training</field>
             <field name="subject">Thanks for subscribing to technical training</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;Thanks for showing interest and for subscribing to technical training.&lt;/p&gt;
-            If any further information required kindly revert back.I really appreciate your co-operation on this.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">subscribing to technical training</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and for subscribing to technical training.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
         <record id="email_template_9" model="mail.template">
+            <field name="name">Lead Automation: Propose 1 month OnDemand trial</field>
             <field name="subject">1 month free trial for an OnDemand offer</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;It seems Odoo could do a lot for you. Would you be interested in a free trial of our OnDemand offer?&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">Propose 1 month OnDemand trial</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>It seems Odoo could do a lot for you. Would you be interested in a free trial of our OnDemand offer?</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
         <record id="email_template_10" model="mail.template">
+            <field name="name">Lead Automation: Propose Odoo Book</field>
             <field name="subject">Odoo Book</field>
-            <field name="email_to">info@openerp.com</field>
-            <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For Odoo OnDemand Free Trial 2015 Mail Form')]"/>
-            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For Odoo OnDemand Free Trial 2015)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field eval="0" name="user_signature"/>
-            <field name="body_html">&lt;p&gt;Hello,&lt;/p&gt;
-            &lt;p&gt;Would you be interested in buying our book? It contains a lot of useful functionnal information to perfect your Odoo training.&lt;/p&gt;
-            &lt;p&gt;If any further information is required, do not hesitate to reply to this message.&lt;/p&gt;
-            &lt;p&gt;Regards,Odoo Team&lt;/p&gt;</field>
-            <field name="name">Propose Odoo Book</field>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Would you be interested in buying our book? It contains a lot of useful
+functionnal information to perfect your Odoo training.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
         </record>
 
     <!-- Campaign -->

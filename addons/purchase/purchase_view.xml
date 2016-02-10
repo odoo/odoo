@@ -78,7 +78,7 @@
           </p><p>
             You must define a product for everything you purchase, whether
             it's a physical product, a consumable or services you buy to
-            subcontractants.
+            subcontractors.
           </p><p>
             The product form contains detailed information to improve the
             purchase process: prices, procurement logistics, accounting data,
@@ -284,6 +284,7 @@
                     <field name="create_uid"/>
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that include lines not invoiced."/>

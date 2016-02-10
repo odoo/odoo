@@ -10,9 +10,9 @@
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="lang">${object.user_id.lang}</field>
             <field name="body_html"><![CDATA[
-    <header>
+    <p>
         <strong>Reminder ${object.name}</strong>
-    </header>
+    </p>
     
     <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
             ]]></field>
@@ -21,9 +21,9 @@
         <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
             <field name="body_html"><![CDATA[
-<header>
+<p>
     <strong>${object.name}</strong>
-</header>
+</p>
 <p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
 
 % if object.visibility_mode == 'personal':

@@ -25,16 +25,6 @@
                 </field>
             </field>
         </record>
-        <record id="task_type_edit_mrp_inherit" model="ir.ui.view">
-            <field name="name">project.task.type.mrp.inherit</field>
-            <field name="model">project.task.type</field>
-            <field name="inherit_id" ref="project.task_type_edit"/>
-            <field name="arch" type="xml">
-                <field name="fold" position="after">
-                    <field name="closed" groups="base.group_no_one"/>
-                </field>
-            </field>
-        </record>
         <record id="view_sale_service_inherit_form2" model="ir.ui.view">
             <field name="name">sale.service.form.view.inherit</field>
             <field name="model">project.task</field>

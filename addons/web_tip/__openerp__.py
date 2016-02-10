@@ -3,7 +3,7 @@
     'name': 'Tips',
     'category': 'Usability',
     'description': """
-OpenERP Web tips.
+Odoo Web tips.
 ========================
 
 """,

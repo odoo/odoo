@@ -394,14 +394,7 @@ class test_selection(ImporterCase):
         self.assertEqual([3, 2, 1, 2], values(self.read()))
 
     def test_imported_translated(self):
-        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': u'Français',
-            'code': 'fr_FR',
-            'translatable': True,
-            'date_format': '%d.%m.%Y',
-            'decimal_point': ',',
-            'thousands_sep': ' ',
-        })
+        self.registry('res.lang').load_lang(self.cr, openerp.SUPERUSER_ID, 'fr_FR')
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:
             Translations.create(self.cr, openerp.SUPERUSER_ID, {
@@ -461,14 +454,7 @@ class test_selection_function(ImporterCase):
     def test_translated(self):
         """ Expects output of selection function returns translated labels
         """
-        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': u'Français',
-            'code': 'fr_FR',
-            'translatable': True,
-            'date_format': '%d.%m.%Y',
-            'decimal_point': ',',
-            'thousands_sep': ' ',
-        })
+        self.registry('res.lang').load_lang(self.cr, openerp.SUPERUSER_ID, 'fr_FR')
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:
             Translations.create(self.cr, openerp.SUPERUSER_ID, {

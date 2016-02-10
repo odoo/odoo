@@ -4,10 +4,10 @@
 # Copyright (c) 2009 Veritos - Jan Verlaan - www.veritos.nl
 
 #
-#    Deze module werkt in OpenERP 5.0.0 (en waarschijnlijk hoger).
-#    Deze module werkt niet in OpenERP versie 4 en lager.
+#    Deze module werkt in Odoo 5.0.0 (en waarschijnlijk hoger).
+#    Deze module werkt niet in Odoo versie 4 en lager.
 #
-#    Status 1.0 - getest op OpenERP 5.0.3
+#    Status 1.0 - getest op Odoo 5.0.3
 #
 # Versie 5.0.0.1
 #   account.account.type
@@ -68,12 +68,12 @@
     'version' : '1.5',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the accounting chart for Netherlands in OpenERP.
+This is the module to manage the accounting chart for Netherlands in Odoo.
 =============================================================================
 
 Read changelog in file __openerp__.py for version information.
 Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor
-Nederlandse bedrijven te installeren in OpenERP versie 7.0.
+Nederlandse bedrijven te installeren in Odoo versie 7.0.
 
 De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren,
 denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet opvoeren,

@@ -370,19 +370,26 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        params = {
+            'model': self._name,
+            'name': self._description,
+            'info': next(cls.__doc__ for cls in type(self).mro() if cls.__doc__),
+            'state': 'manual' if self._custom else 'base',
+            'transient': self._transient,
+        }
         cr.execute("""
             UPDATE ir_model
-               SET transient=%s
-             WHERE model=%s
+               SET name=%(name)s, info=%(info)s, transient=%(transient)s
+             WHERE model=%(model)s
          RETURNING id
-        """, [self._transient, self._name])
+        """, params)
         if not cr.rowcount:
-            cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
-            model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id, model, name, info, state, transient) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (model_id, self._name, self._description, self.__doc__, 'base', self._transient))
-        else:
-            model_id = cr.fetchone()[0]
+            cr.execute("""
+                INSERT INTO ir_model (model, name, info, state, transient)
+                VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
+                RETURNING id
+            """, params)
+        model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
@@ -3896,6 +3903,7 @@ class BaseModel(object):
         updend = []
         direct = []
         has_trans = context.get('lang') and context['lang'] != 'en_US'
+        single_lang = len(self.pool['res.lang'].get_installed(cr, user, context)) <= 1
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3905,7 +3913,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if not (has_trans and column.translate and not callable(column.translate)):
+                    if single_lang or not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
                         updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
                     direct.append(field)
@@ -4225,13 +4233,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            current_field = self._columns[field]
-            if current_field._classic_write:
-                updates.append((field, current_field._symbol_set[0], current_field._symbol_set[1](vals[field])))
+            column = self._columns[field]
+            if column._classic_write:
+                updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
+                if (hasattr(column, '_fnct_inv')) and not isinstance(column, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4243,11 +4251,9 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(current_field, fields.related):
+                if not isinstance(column, fields.related):
                     upd_todo.append(field)
-            if field in self._columns \
-                    and hasattr(current_field, 'selection') \
-                    and vals[field]:
+            if hasattr(column, 'selection') and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             updates.append(('create_uid', '%s', user))
@@ -4271,6 +4277,16 @@ class BaseModel(object):
 
         id_new, = cr.fetchone()
         recs = self.browse(cr, user, id_new, context)
+
+        if context.get('lang') and context['lang'] != 'en_US':
+            # add translations for context['lang']
+            for field in vals:
+                column = self._columns[field]
+                if column._classic_write and column.translate and not callable(column.translate):
+                    self.pool['ir.translation']._set_ids(
+                        cr, user, self._name+','+field, 'model',
+                        context['lang'], recs.ids, vals[field], vals[field],
+                    )
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:

@@ -86,7 +86,7 @@ class barcode_nomenclature(osv.osv):
         return self.sanitize_ean('0'+upc)[1:]
 
     # Checks if barcode matches the pattern
-    # Additionnaly retrieves the optional numerical content in barcode
+    # Additionaly retrieves the optional numerical content in barcode
     # Returns an object containing:
     # - value: the numerical value encoded in the barcode (0 if no value encoded)
     # - base_code: the barcode in which numerical content is replaced by 0's

@@ -560,7 +560,7 @@ var ChatterComposer = composer.BasicComposer.extend({
     },
 
     /**
-     * Check the additionnal partners (not necessary registered partners), and open a popup form view
+     * Check the additional partners (not necessary registered partners), and open a popup form view
      * for the ones who informations is missing.
      * @param Array : list of 'recipient' partners to complete informations or validate
      * @returns Deferred resolved with the list of checked suggested partners (real partner)

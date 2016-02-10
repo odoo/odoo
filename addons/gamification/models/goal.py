@@ -276,7 +276,7 @@ class gamification_goal(osv.Model):
 
         return result
 
-    def update(self, cr, uid, ids, context=None):
+    def update_goal(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
         If a manual goal is not updated for enough time, the user will be
@@ -401,7 +401,7 @@ class gamification_goal(osv.Model):
 
         This should only be used when creating goals manually (in draft state)"""
         self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-        return self.update(cr, uid, ids, context=context)
+        return self.update_goal(cr, uid, ids, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
         """Mark a goal as reached.

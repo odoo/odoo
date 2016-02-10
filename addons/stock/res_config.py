@@ -99,8 +99,8 @@ class stock_config_settings(osv.osv_memory):
                     This installs the module product_expiry."""),
         'group_uom': fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/purchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_stock_packaging': fields.selection([
@@ -145,7 +145,7 @@ class stock_config_settings(osv.osv_memory):
             (0, 'Suppliers always deliver to your warehouse(s)'),
             (1, "Allow suppliers to deliver directly to your customers")
             ], "Dropshipping",
-            help='\nCreates the dropship route and add more complex tests'
+            help='\nCreates the dropship route and add more complex tests\n'
                  '-This installs the module stock_dropshipping.'),
         'module_stock_picking_wave': fields.selection([
             (0, 'Manage pickings one at a time'),
@@ -160,6 +160,7 @@ class stock_config_settings(osv.osv_memory):
         'module_stock_barcode': fields.boolean("Barcode scanner support"),
         'module_delivery_dhl': fields.boolean("DHL integration"),
         'module_delivery_fedex': fields.boolean("Fedex integration"),
+        'module_delivery_temando': fields.boolean("Temando integration"),
         'module_delivery_ups': fields.boolean("UPS integration"),
         'module_delivery_usps': fields.boolean("USPS integration"),
     }

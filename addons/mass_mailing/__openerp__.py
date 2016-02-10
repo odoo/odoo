@@ -15,7 +15,6 @@ professional emails and reuse templates in a few clicks.
     'category': 'Marketing',
     'depends': [
         'mail',
-        'marketing',
         'utm',
         'link_tracker',
         'web_editor',
