@@ -158,23 +158,16 @@ class AccountInvoiceReport(models.Model):
         # self._table = account_invoice_report
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
-            WITH currency_rate (currency_id, rate, date_start, date_end) AS (
-                SELECT r.currency_id, r.rate, r.name AS date_start,
-                    (SELECT name FROM res_currency_rate r2
-                     WHERE r2.name > r.name AND
-                           r2.currency_id = r.currency_id
-                     ORDER BY r2.name ASC
-                     LIMIT 1) AS date_end
-                FROM res_currency_rate r
-            )
+            WITH currency_rate AS (%s)
             %s
             FROM (
                 %s %s %s
             ) AS sub
             LEFT JOIN currency_rate cr ON
                 (cr.currency_id = sub.currency_id AND
+                 cr.company_id = sub.company_id AND
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
-                    self._table,
+                    self._table, self.pool['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
