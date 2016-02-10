@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-10 23:43+0000\n"
-"Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>\n"
+"PO-Revision-Date: 2016-02-01 17:56+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,7 +212,7 @@ msgstr "Anticipo: %s"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formula"
-msgstr "Prezzi avanzati basati su formula"
+msgstr "Prezzi avanzati basati su formule"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -224,7 +224,7 @@ msgstr "Permetti sconti sulle righe degli ordini di vendita"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "Permetti di modificare gli ordini di vendita dal menu \"Ordini di vendia\" (e non dal menu Preventivi)"
+msgstr "Permetti di modificare gli ordini di vendita dal menu \"Ordini di vendita\" (e non dal menu Preventivi)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -506,7 +506,7 @@ msgstr "Descrizione"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Different prices per customer segment"
-msgstr "Differenti prezzi per tipologia di clienti"
+msgstr "Prezzi differenti per tipologia di clienti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -528,7 +528,7 @@ msgstr "Sconti sulle righe"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr "Mostra 3 campi sull'ordine di vendita: cliente, inidirizzo fatturazione, indirizzo di spedizione."
+msgstr "Gestisci 3 campi sull'ordine di vendita: cliente, indirizzo di fatturazione, indirizzo di spedizione."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -598,7 +598,7 @@ msgstr "Wizard composizione email"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr "Permetti ai clienti del portale di seguire di ordini, spedizioni e fatture."
+msgstr "Abilita il portale clienti per permettere ai clienti di tenere traccia di ordini, spedizioni e fatture"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -684,11 +684,6 @@ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Messaggi importanti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -843,6 +838,7 @@ msgstr "Le fatture sono create in bozza, in modo da essere modificabili prima di
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Fatturazione"
@@ -868,7 +864,7 @@ msgstr "Indirizzo di fatturazione e spedizione:"
 msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
-msgstr "Fatture e indirizzo di spiedizione sono sempre li stessi (Esempio: compagnia di servizi)"
+msgstr "L'indirizzo di spedizione è sempre uguale all'indirizzo di fatturazione (Esempio: compagnia di servizi)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -955,7 +951,7 @@ msgstr "Nuovo preventivo"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "Non permettere sconti sulle singole righe, solo sconto globale."
+msgstr "Non permettere sconti sulle singole righe, solo sconti globali."
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -965,7 +961,7 @@ msgstr "Non incoterm nei report"
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "No varianti su prodotti"
+msgstr "I prodotti non hanno varianti (taglia, colore, ecc..)"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -973,7 +969,7 @@ msgstr "No varianti su prodotti"
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved \n"
 "                from the Quotations list to the Sales Order list."
-msgstr "Nota che una volta che una quotazione diventa un odine di vendita, esso verrà spostato\n               dalla lista quotaioni alla lista degli ordini d'acquisto"
+msgstr "Nota che una volta che una quotazione diverrà un ordine di vendita, verrà spostatata dalla sezione Preventivi alla sezione Ordini di Vendita."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -982,7 +978,7 @@ msgstr "Nota che una volta che una quotazione diventa un odine di vendita, esso 
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
-msgstr "Nota che una volta che una quotazione diventa un odine di vendita, esso verrà spostatato dalla lista quotaioni alla lista degli ordini d'acquisto"
+msgstr "Nota che una volta che una quotazione diverrà un ordine di vendita, verrà spostatata dalla sezione Preventivi alla sezione Ordini di Vendita."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1167,7 +1163,7 @@ msgstr "Stampa"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr "Stampa preventivo o invia via mail"
+msgstr "Stampa i preventivi o inviali via mail"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1220,7 +1216,7 @@ msgstr "Prodotti"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "I prodotti posso avere diversi attributi, definisci le varianti ( Esempio: taglia, colore )"
+msgstr "I prodotti possono avere diversi attributi, che ne definiscono le varianti ( Esempio: taglie, colori, ecc.. )"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1361,7 +1357,7 @@ msgstr "Righe ordine di vendita"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "MOdifica Ordine di vendita "
+msgstr "Modifiche agli Ordini di vendita "
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1770,6 +1766,7 @@ msgstr "Unità di misura"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Messaggi Non Letti"
 
@@ -1853,7 +1850,7 @@ msgstr "E' possibile cancellare solo i preventivi in bozza!"
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
-msgstr "La tua prossima azione dovrebbe fluire in : conferma le quotazioni\n                    negli ordini di vendita, crea le fatture e collegale ai pagamenti."
+msgstr "Le azioni successive saranno: confermare il preventivo come ordine di vendita, emettere fattura e collegare il rispettivo pagamento."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1862,7 +1859,7 @@ msgstr "La tua prossima azione dovrebbe fluire in : conferma le quotazioni\n    
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr "La tua prossima azione dovrebbe fluire in : conferma le quotazioni negli ordini di vendita, crea le fatture e collegale ai pagamenti."
+msgstr "Le azioni successive saranno: confermare il preventivo come ordine di vendita, emettere fattura e collegare il rispettivo pagamento."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
