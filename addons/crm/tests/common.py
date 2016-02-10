@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
-
+from odoo.tests.common import TransactionCase
+from odoo.addons.mail.tests.common import TestMail
 
 class TestCrm(TestMail):
 
@@ -25,3 +25,34 @@ class TestCrm(TestMail):
             'name': 'Test Sales Team',
             'alias_name': 'test_sales_team',
         })
+
+class TestCrmCases(TransactionCase):
+
+    def setUp(self):
+        super(TestCrmCases, self).setUp()
+
+        self.CrmLead = self.env['crm.lead']
+        self.ResUsers = self.env['res.users']
+
+        self.partner1_id = self.ref("base.res_partner_1")
+        self.partner2_id = self.ref("base.res_partner_2")
+        self.sales_team_dept_id = self.ref("sales_team.team_sales_department")
+        self.stage_lead1_id = self.ref("crm.stage_lead1")
+
+        # Create a user as 'Crm Salesmanager' and added the `sales manager` group
+        self.crm_salemanager_id = self.ResUsers.create({
+            'company_id': self.ref("base.main_company"),
+            'name': "Crm Sales manager",
+            'login': "csm",
+            'email': "crmmanager@yourcompany.com",
+            'groups_id': [(6, 0, [self.ref('base.group_sale_manager')])]
+        }).id
+
+        # Create a user as 'Crm Salesman' and added few groups
+        self.crm_salesman_id = self.ResUsers.create({
+            'company_id': self.ref("base.main_company"),
+            'name': "Crm Salesman",
+            'login': "csu",
+            'email': "crmuser@yourcompany.com",
+            'groups_id': [(6, 0, [self.ref('base.group_sale_salesman_all_leads'), self.ref('base.group_partner_manager')])]
+        }).id
