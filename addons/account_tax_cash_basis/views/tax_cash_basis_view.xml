@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="model">account.config.settings</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='account_config']/div[last()]" position="after">
+                <xpath expr="//p[@id='journal_config_message']" position="replace">
                     <div>
                         <label for="tax_cash_basis_journal_id"/>
                         <field name="tax_cash_basis_journal_id" class="oe_inline"/>
