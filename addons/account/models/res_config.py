@@ -82,11 +82,9 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
-    module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
+    module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
-                 'Revenue recognition: This allows you to manage the Revenue recognition on selling product. '
-                 'It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n'
              '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
              'but not accounting (Journal Items, Chart of Accounts, ...)')
     module_account_budget = fields.Boolean(string='Budget management',
