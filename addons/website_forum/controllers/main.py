@@ -562,6 +562,12 @@ class WebsiteForum(http.Controller):
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
         status, headers, content = binary_content(model='res.users', id=user_id, field='image', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+
+        if not content:
+            img_path = openerp.modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            with open(img_path, 'rb') as f:
+                image = f.read()
+            content = image.encode('base64')
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -598,7 +604,7 @@ class WebsiteForum(http.Controller):
         if (user_id != request.session.uid and not
                 (user.website_published or
                     (count_user_questions and current_user.karma > forum.karma_unlink_all))):
-            return request.website.render("website_forum.private_profile", values)
+            return request.render("website_forum.private_profile", values, status=404)
 
         # limit length of visible posts by default for performance reasons, except for the high
         # karma users (not many of them, and they need it to properly moderate the forum)

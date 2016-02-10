@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-01-27 10:49+0000\n"
+"PO-Revision-Date: 2016-02-06 10:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -861,6 +861,13 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/systray.xml:14
+#, python-format
+msgid "Conversations"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:250
 #, python-format
 msgid "Create %s"
@@ -1699,7 +1706,7 @@ msgstr "Última actualización en"
 #: code:addons/mail/static/src/xml/client_action.xml:97
 #, python-format
 msgid "Leave this channel"
-msgstr ""
+msgstr "Abandonar este canal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
@@ -1787,14 +1794,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:125
 #, python-format
 msgid "Mark all as read"
-msgstr ""
+msgstr "Marcar todo como leido"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:125
 #, python-format
 msgid "Mark all read"
-msgstr ""
+msgstr "Marcar todo como leido"
 
 #. module: mail
 #. openerp-web
@@ -2063,7 +2070,7 @@ msgstr "Nuevo mensaje"
 #: code:addons/mail/static/src/xml/thread.xml:25
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "Los mensajes nuevos se muestran aquí."
 
 #. module: mail
 #. openerp-web
@@ -2084,7 +2091,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:16
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "No se encuentran coincidencias"
 
 #. module: mail
 #. openerp-web
@@ -2129,7 +2136,7 @@ msgstr "Notificación"
 #: code:addons/mail/static/src/xml/systray.xml:12
 #, python-format
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
@@ -2140,6 +2147,11 @@ msgstr "Notificar a los seguidores"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
 msgid "Notify followers of the document (mass post only)"
 msgstr "Notificar a los seguidores del documento (sólo para envíos masivos)"
+
+#. module: mail
+#: code:addons/mail/static/src/js/thread.js:140
+msgid "now"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction_counter
@@ -2178,14 +2190,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "Odoo necesita su permiso para"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:109
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "Desconectado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_char
@@ -2229,7 +2241,7 @@ msgstr "Un seguidor"
 #: code:addons/mail/static/src/xml/client_action.xml:107
 #, python-format
 msgid "Online"
-msgstr ""
+msgstr "En línea"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -2258,7 +2270,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:46
 #, python-format
 msgid "Open chat"
-msgstr ""
+msgstr "Abrir chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -2504,7 +2516,7 @@ msgstr "Privacidad"
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Private Channels"
-msgstr ""
+msgstr "Canales privados"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:176
@@ -2711,7 +2723,7 @@ msgstr "Enviar correo electrónico"
 #: code:addons/mail/static/src/xml/client_action.xml:127
 #, python-format
 msgid "Send mail"
-msgstr ""
+msgstr "Enviar correo"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:237

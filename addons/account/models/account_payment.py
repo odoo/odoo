@@ -33,7 +33,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, oldname="payment_method")
     payment_method_code = fields.Char(related='payment_method_id.code',
-        help="Technical field used to adapt the interface to the payment type selected.")
+        help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')

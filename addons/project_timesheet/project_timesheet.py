@@ -50,6 +50,8 @@ class task(osv.osv):
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
+        for task in self.browse(cr, uid, ids, context=context):
+            res[task.id] = {'effective_hours': 0.0, 'remaining_hours': task.planned_hours, 'progress': 0.0, 'total_hours': task.planned_hours, 'delay_hours': 0.0}
         tasks_data = self.pool['account.analytic.line'].read_group(cr, uid, [('task_id', 'in', ids)], ['task_id','unit_amount'], ['task_id'], context=context)
         for data in tasks_data:
             task = self.browse(cr, uid, data['task_id'][0], context=context)

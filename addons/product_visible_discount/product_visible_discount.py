@@ -61,7 +61,7 @@ class sale_order_line(osv.osv):
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
                 ctx = dict(context_partner, date=self.order_id.date_order)
-                new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id.id)
+                new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
             discount = (new_list_price - self.price_unit) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
