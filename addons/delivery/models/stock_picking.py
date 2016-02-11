@@ -115,6 +115,10 @@ class StockPicking(models.Model):
         package_id = super(StockPicking, self).put_in_pack()
         package = self.env['stock.quant.package'].browse(package_id)
 
+        current_package_carrier_type = self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none'
+        count_packaging = self.env['product.packaging'].search_count([('package_carrier_type', '=', current_package_carrier_type)])
+        if not count_packaging:
+            return False
         # By default, sum the weights of all package operations contained in this package
         pack_operation_ids = self.env['stock.pack.operation'].search([('result_package_id', '=', package_id)])
         package_weight = sum([x.qty_done * x.product_id.weight for x in pack_operation_ids])
@@ -129,7 +133,7 @@ class StockPicking(models.Model):
             'target': 'new',
             'res_id': package_id,
             'context': {
-                'current_package_carrier_type': self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
+                'current_package_carrier_type': current_package_carrier_type,
             },
         }
 
