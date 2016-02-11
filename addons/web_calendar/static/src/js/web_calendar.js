@@ -834,6 +834,15 @@ var CalendarView = View.extend({
     },
 
     /**
+     * Get all_filters ordered by label
+     */
+    get_all_filters_ordered: function() {
+        return _.values(this.all_filters).sort(function(f1,f2) {
+            return _.string.naturalCmp(f1.label, f2.label);
+        });
+    },
+
+    /**
      * Updates record identified by ``id`` with values in object ``data``
      */
     update_record: function(id, data) {
