@@ -1564,16 +1564,12 @@ class calendar_event(osv.Model):
             else:
                 real_event_id = calendar_id2real_id(event_id)
 
-                # update the real id unless it is a deletion of a virtual still to be recurrent
-                if 'active' not in values or not values.get('recurrency', True):
+                # if we are setting the recurrency flag to False or if we are only changing fields that
+                # should be only updated on the real ID and not on the virtual (like message_follower_ids):
+                # then set real ids to be updated.
+                blacklisted = any(key in values for key in ('start', 'stop', 'active'))
+                if not values.get('recurrency', True) or not blacklisted:
                     real_ids = [real_event_id]
-                    # if start change, update recurrent_id_date time of detached events
-                    if 'start' in values:
-                        _, _, new_time = values['start'].partition(' ')
-                        detached_ids = self.search(cr, uid, [('recurrent_id', '=', real_event_id)], context=context)
-                        for event in self.browse(cr, uid, detached_ids, context=context):
-                            detached_date, _, _ = event.recurrent_id_date.partition(' ')
-                            event.recurrent_id_date = detached_date + ' ' + new_time
                 else:
                     data = self.read(cr, uid, event_id, ['start', 'stop', 'rrule', 'duration'])
                     if data.get('rrule'):
