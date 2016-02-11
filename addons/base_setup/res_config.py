@@ -28,6 +28,10 @@ class base_config_settings(osv.osv_memory):
             help="Share your partners to all companies defined in your instance.\n"
                  " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
                  " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."),
+        'group_multi_currency': fields.boolean('Allow multi currencies',
+            implied_group='base.group_multi_currency',
+            help="Allows to work in a multi currency environment"),
+
     }
 
     def open_company(self, cr, uid, ids, context=None):
