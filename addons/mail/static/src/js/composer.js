@@ -2,6 +2,7 @@ odoo.define('mail.composer', function (require) {
 "use strict";
 
 var chat_manager = require('mail.chat_manager');
+var utils = require('mail.utils');
 
 var core = require('web.core');
 var data = require('web.data');
@@ -12,20 +13,6 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
-
-var accented_letters_mapping = {
-    'a': '[àáâãäå]',
-    'ae': 'æ',
-    'c': 'ç',
-    'e': '[èéêë]',
-    'i': '[ìíîï]',
-    'n': 'ñ',
-    'o': '[òóôõö]',
-    'oe': 'œ',
-    'u': '[ùúûűü]',
-    'y': '[ýÿ]',
-    ' ': '[()\\[\\]]',
-};
 
 var NON_BREAKING_SPACE = '\u00a0';
 
@@ -614,12 +601,12 @@ var BasicComposer = Widget.extend({
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mention_fetch_limit;
-            var search_regexp = new RegExp(self.unaccent(search), 'i');
+            var search_regexp = new RegExp(utils.unaccent(search), 'i');
             _.each(prefetched_partners, function (partners) {
                 if (limit > 0) {
                     var filtered_partners = _.filter(partners, function (partner) {
                         return partner.email && partner.email.search(search_regexp) !== -1 ||
-                               partner.name && self.unaccent(partner.name).search(search_regexp) !== -1;
+                               partner.name && utils.unaccent(partner.name).search(search_regexp) !== -1;
                     });
                     if (filtered_partners.length) {
                         suggestions.push(filtered_partners.slice(0, limit));
@@ -651,12 +638,6 @@ var BasicComposer = Widget.extend({
     },
     focus: function () {
         this.$input.focus();
-    },
-    unaccent: function (str) {
-        _.each(accented_letters_mapping, function (value, key) {
-            str = str.replace(new RegExp(value, 'g'), key);
-        });
-        return str;
     },
 });
 
