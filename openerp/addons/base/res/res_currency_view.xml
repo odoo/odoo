@@ -69,10 +69,16 @@
                         <button name="%(act_view_currency_rates)d" string="View Rates" type="action" attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
                         <group col="4">
                             <field name="name"/>
                             <field name="rate"/>
-                            <field name="active"/>
                         </group>
 
                         <group groups="base.group_no_one">
@@ -100,6 +106,21 @@
         </record>
 
         <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
+
+        <!-- We override the view res_company here because the action wasn't defined before -->
+        <record id="action_view_company_form_link_2_currencies" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@id='company_currency']" position="after">
+                    <label for="id"/>
+                    <p class="text-muted">
+                        Click <a type="action" name="%(base.action_currency_form)d">here</a> to activate a new currency.
+                    </p>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

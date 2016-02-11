@@ -182,6 +182,9 @@ class Users(models.Model):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         return (default_user or self.env['res.users']).groups_id
 
+    def _companies_count(self):
+        return self.env['res.company'].search_count([])
+
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
@@ -201,7 +204,8 @@ class Users(models.Model):
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
     share = fields.Boolean(compute='_compute_share', string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
-
+    companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
+    
     @api.v7
     def _get_company(self, cr, uid, context=None, uid2=False):
         user = self.browse(cr, uid, uid2 or uid, context=context)
@@ -250,6 +254,12 @@ class Users(models.Model):
     def _compute_share(self):
         for user in self:
             user.share = not user.has_group('base.group_user')
+
+    @api.multi
+    def _compute_companies_count(self):
+        companies_count = self._companies_count()
+        for user in self:
+            user.companies_count = companies_count
 
     @api.onchange('login')
     def on_change_login(self):
@@ -697,7 +707,7 @@ class GroupsView(models.Model):
             for app, kind, gs in self.get_groups_by_application():
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 attrs = {}
-                if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra'):
+                if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
                     attrs['groups'] = 'base.group_no_one'
 
                 if kind == 'selection':
@@ -769,12 +779,27 @@ class UsersView(models.Model):
     @api.model
     def create(self, values):
         values = self._remove_reified_groups(values)
-        return super(UsersView, self).create(values)
+        user = super(UsersView, self).create(values)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                group_multi_company.write({'users': [(3, user.id)]})
+            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                group_multi_company.write({'users': [(4, user.id)]})
+        return user
 
     @api.multi
     def write(self, values):
         values = self._remove_reified_groups(values)
-        return super(UsersView, self).write(values)
+        res = super(UsersView, self).write(values)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            for user in self:
+                if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                    group_multi_company.write({'users': [(3, user.id)]})
+                elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                    group_multi_company.write({'users': [(4, user.id)]})
+        return res
 
     def _remove_reified_groups(self, values):
         """ return `values` without reified group fields """

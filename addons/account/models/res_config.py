@@ -75,7 +75,7 @@ class AccountConfigSettings(models.TransientModel):
     module_account_reports = fields.Boolean("Get dynamic accounting reports")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
-        help="Allows you multi currency environment")
+        help="Allows to work in a multi currency environment")
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
