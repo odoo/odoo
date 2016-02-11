@@ -35,10 +35,9 @@ var InboxItem = Widget.extend({
     },
     discuss_redirect: _.debounce(function () {
         var self = this;
-        var discuss_ids = chat_manager.get_discuss_ids();
-        this.do_action(discuss_ids.action_id, {clear_breadcrumbs: true}).then(function () {
+        this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true}).then(function () {
             self.trigger_up('hide_app_switcher');
-            core.bus.trigger('change_menu_section', discuss_ids.menu_id);
+            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
         });
     }, 1000, true),
 });

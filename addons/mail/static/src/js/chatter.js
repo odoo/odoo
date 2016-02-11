@@ -813,8 +813,7 @@ var Chatter = form_common.AbstractField.extend({
         var def = chat_manager.join_channel(channel_id);
         $.when(def).then(function () {
             // Execute Discuss client action with 'channel' as default channel
-            var discuss_ids = chat_manager.get_discuss_ids();
-            self.do_action(discuss_ids.action_id, {active_id: channel_id});
+            self.do_action('mail.mail_channel_action_client_chat', {active_id: channel_id});
         });
     },
 

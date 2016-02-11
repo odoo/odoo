@@ -31,7 +31,7 @@ var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
 var mention_partner_suggestions = [];
-var discuss_ids = {};
+var discuss_menu_id;
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 var client_action_open = false;
@@ -855,8 +855,8 @@ var chat_manager = {
         }
     },
 
-    get_discuss_ids: function () {
-        return discuss_ids;
+    get_discuss_menu_id: function () {
+        return discuss_menu_id;
     },
 
     detach_channel: function (channel) {
@@ -1035,7 +1035,9 @@ function init () {
         type: "static"
     });
 
-    var load_channels = session.rpc('/mail/client_action').then(function (result) {
+    bus.on('notification', null, on_notification);
+
+    return session.rpc('/mail/client_action').then(function (result) {
         _.each(result.channel_slots, function (channels) {
             _.each(channels, add_channel);
         });
@@ -1045,19 +1047,8 @@ function init () {
         _.each(emojis, function(emoji) {
             emoji_substitutions[_.escape(emoji.source)] = emoji.substitution;
         });
-    });
+        discuss_menu_id = result.menu_id;
 
-    var ir_model = new Model("ir.model.data");
-    var load_menu_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"], {}, {shadow: true});
-    var load_action_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"], {}, {shadow: true});
-
-    bus.on('notification', null, on_notification);
-
-    return $.when(load_menu_id, load_action_id, load_channels).then(function (menu_id, action_id) {
-        discuss_ids = {
-            menu_id: menu_id,
-            action_id: action_id,
-        };
         bus.start_polling();
     });
 }
