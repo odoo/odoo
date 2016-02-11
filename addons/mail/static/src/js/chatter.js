@@ -110,7 +110,8 @@ var Followers = form_common.AbstractField.extend({
     on_edit_subtype: function (event) {
         var self = this;
         var $currentTarget = $(event.currentTarget);
-        var follower_id = $currentTarget.data('oe-id');
+        var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
+        var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
         var is_channel = $currentTarget.data('oe-model') === 'mail.channel';
         self.dialog = new Dialog(this, {
                         size: 'medium',
@@ -120,7 +121,7 @@ var Followers = form_common.AbstractField.extend({
                                     text: _t("Apply"),
                                     classes: 'btn-primary',
                                     click: function () {
-                                        self.do_update_subscription(event, follower_id, is_channel);
+                                        self.do_update_subscription(event, res_id, is_channel);
                                     },
                                     close: true
                                 },
@@ -130,7 +131,9 @@ var Followers = form_common.AbstractField.extend({
                                 },
                             ],
                 }).open();
-        return self.fetch_subtypes($currentTarget.data('id'), $currentTarget.data('oe-model'));
+        return self.fetch_subtypes(follower_id).then(function (data) {
+            self.display_subtypes(data, true, is_channel);
+        });
     },
 
     on_invite_follower: function (channel_only) {
@@ -183,16 +186,35 @@ var Followers = form_common.AbstractField.extend({
     },
 
     render_value: function () {
+        var self = this;
         this.reinit();
-        return this.fetch_followers(this.value);
+        this.value = this.value || [];
+        return this.fetch_followers().then(function (results) {
+            self.display_followers(results.followers);
+            if (results.subtypes) { // current user is follower
+                self.display_subtypes(results.subtypes);
+            }
+            self.display_buttons();
+        }).fail(this.display_generic.bind(this));
     },
 
-    fetch_followers: function (value_) {
-        this.value = value_ || [];
-        return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
-            .then(this.proxy('display_followers'), this.proxy('display_generic'))
-            .then(this.proxy('display_buttons'))
-            .then(this.proxy('fetch_subtypes'));
+    fetch_followers: function () {
+        return ajax.jsonRpc('/mail/read_followers', 'call', {
+            follower_ids: this.value,
+            res_model: this.view.model,
+            res_id: this.view.datarecord.id,
+        });
+    },
+
+    /** Fetch subtypes of the given follower
+     *  @param {int} [follower_id] the id of the follower
+     *  @param {string} [follower_model] 'res.partner' or 'mail.channel'
+     */
+    fetch_subtypes: function (follower_id) {
+        return ajax.jsonRpc('/mail/read_subscription_data', 'call', {
+            res_model: this.view.model,
+            follower_id: follower_id,
+        });
     },
 
     _format_followers: function (count){
@@ -250,41 +272,10 @@ var Followers = form_common.AbstractField.extend({
     display_buttons: function () {
         if (this.message_is_follower) {
             this.$('button.o_followers_follow_button').removeClass('o_followers_notfollow').addClass('o_followers_following');
+            this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
         } else {
             this.$('button.o_followers_follow_button').removeClass('o_followers_following').addClass('o_followers_notfollow');
-        }
-    },
-
-    /** Fetch subtypes, only if current user is follower or if follower_id is given, i.e. if
-     *  the current user is editing the subtypes of another follower
-     *  @param {int} [follower_id] the id of the follower
-     *  @param {string} [follower_model] 'res.partner' or 'mail.channel'
-     */
-    fetch_subtypes: function (follower_id, follower_model) {
-        var self = this;
-        var dialog = false;
-
-        if (follower_id) {
-            dialog = true;
-        } else {
-            this.$('.o_subtypes_list ul').empty();
-            if (!this.message_is_follower) {
-                this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
-                return;
-            } else {
-                this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
-            }
-        }
-        if (this.follower_id || follower_id) {
-            return ajax.jsonRpc('/mail/read_subscription_data', 'call', {
-                res_model: this.view.model,
-                res_id: this.view.datarecord.id,
-                follower_id: follower_id,
-            }).then(function (data) {
-                self.display_subtypes(data, dialog, (follower_model === 'mail.channel'));
-            });
-        } else  {
-            return $.Deferred().resolve();
+            this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
         }
     },
 
