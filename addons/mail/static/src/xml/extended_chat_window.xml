@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ExtendedChatWindow" t-extend="mail.ChatWindow">
+        <t t-jquery=".o_chat_header" t-operation="after">
+            <div t-if="widget.options.thread_less" class="o_chat_search_input">
+                <span> To: </span>
+                <input type="text"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

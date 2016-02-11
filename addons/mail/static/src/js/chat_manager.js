@@ -2,6 +2,7 @@ odoo.define('mail.chat_manager', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var utils = require('mail.utils');
 var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
@@ -36,35 +37,12 @@ var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 var client_action_open = false;
 
-// Utils: Window focus/unfocus, beep, tab title, parsing html strings
+// Global unread counter and notifications
 //----------------------------------------------------------------------------------
-var beep = (function () {
-    if (typeof(Audio) === "undefined") {
-        return function () {};
-    }
-    var audio = new Audio();
-    var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-    audio.src = session.url("/mail/static/src/audio/ting" + ext);
-    return function () { audio.play(); };
-})();
-
 bus.on("window_focus", null, function() {
     global_unread_counter = 0;
     web_client.set_title_part("_chat");
 });
-
-// to do: move this to mail.utils
-function send_native_notification(title, content) {
-    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
-    notification.onclick = function (e) {
-        window.focus();
-        if (this.cancel) {
-            this.cancel();
-        } else if (this.close) {
-            this.close();
-        }
-    };
-}
 
 function notify_incoming_message (msg, options) {
     if (bus.is_odoo_focused() && options.is_displayed) {
@@ -75,7 +53,7 @@ function notify_incoming_message (msg, options) {
     if (msg.author_id[1]) {
         title = _.escape(msg.author_id[1]);
     }
-    var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
+    var content = utils.parse_and_transform(msg.body, utils.strip_html).substr(0, preview_msg_max_size);
 
     if (!bus.is_odoo_focused()) {
         global_unread_counter++;
@@ -83,60 +61,7 @@ function notify_incoming_message (msg, options) {
         web_client.set_title_part("_chat", tab_title);
     }
 
-    if (Notification && Notification.permission === "granted") {
-        if (bus.is_master) {
-            send_native_notification(title, content);
-        }
-    } else {
-        web_client.do_notify(title, content);
-        if (bus.is_master) {
-            beep();
-        }
-    }
-}
-
-function parse_and_transform(html_string, transform_function) {
-    var open_token = "OPEN" + Date.now();
-    var string = html_string.replace(/&lt;/g, open_token);
-    var children = $('<div>').html(string).contents();
-    return _parse_and_transform(children, transform_function)
-                .replace(new RegExp(open_token, "g"), "&lt;");
-}
-
-function _parse_and_transform(nodes, transform_function) {
-    return _.map(nodes, function (node) {
-        return transform_function(node, function () {
-            return _parse_and_transform(node.childNodes, transform_function);
-        });
-    }).join("");
-}
-
-// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
-var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
-function add_link (node, transform_children) {
-    if (node.nodeType === 3) {  // text node
-        return node.data.replace(url_regexp, function (url) {
-            var href = (!/^(f|ht)tps?:\/\//i.test(url)) ? "http://" + url : url;
-            return '<a target="_blank" href="' + href + '">' + url + '</a>';
-        });
-    }
-    if (node.tagName === "A") return node.outerHTML;
-    node.innerHTML = transform_children();
-    return node.outerHTML;
-}
-
-function strip_html (node, transform_children) {
-    if (node.nodeType === 3) return node.data;  // text node
-    if (node.tagName === "BR") return "\n";
-    return transform_children();
-}
-
-function inline (node, transform_children) {
-    if (node.nodeType === 3) return node.data;
-    if (node.tagName === "BR") return " ";
-    if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) return transform_children();
-    node.innerHTML = transform_children();
-    return node.outerHTML;
+    utils.send_notification(title, content);
 }
 
 // Message and channel manipulation helpers
@@ -274,7 +199,7 @@ function make_message (data) {
     }
 
     // add anchor tags to urls
-    msg.body = parse_and_transform(msg.body, add_link);
+    msg.body = utils.parse_and_transform(msg.body, utils.add_link);
 
     // Compute url of attachments
     _.each(msg.attachment_ids, function(a) {
@@ -1000,7 +925,7 @@ var chat_manager = {
         });
     },
     get_message_body_preview: function (message_body) {
-        return parse_and_transform(message_body, inline);
+        return utils.parse_and_transform(message_body, utils.inline);
     },
 
     search_partner: function (search_val, limit) {
@@ -1016,8 +941,6 @@ var chat_manager = {
             return values;
         });
     },
-
-    send_native_notification: send_native_notification,
 };
 
 chat_manager.bus.on('client_action_open', null, function (open) {

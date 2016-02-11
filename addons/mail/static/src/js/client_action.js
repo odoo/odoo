@@ -4,6 +4,7 @@ odoo.define('mail.chat_client_action', function (require) {
 var chat_manager = require('mail.chat_manager');
 var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
+var utils = require('mail.utils');
 
 var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
@@ -42,10 +43,8 @@ var PartnerInviteDialog = Dialog.extend({
                 click: _.bind(this.on_click_add, this),
             }],
         });
-        this.PartnersModel = new Model('res.partner');
     },
     start: function(){
-        var self = this;
         this.$input = this.$('.o_mail_chat_partner_invite_input');
         this.$input.select2({
             width: '100%',
@@ -56,7 +55,7 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.PartnersModel.call('im_search', [query.term, 20]).then(function(result){
+                chat_manager.search_partner(query.term, 20).then(function(result){
                     var data = [];
                     _.each(result, function(partner){
                         partner.text = partner.name;
@@ -125,7 +124,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             var def = window.Notification.requestPermission();
             if (def) {
                 def.then(function () {
-                    chat_manager.send_native_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                    utils.send_native_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
                 });
             }
         },
