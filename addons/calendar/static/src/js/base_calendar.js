@@ -38,19 +38,18 @@ function reload_favorite_list(result) {
             is_checked: true,
             is_remove: false,
         };
-        sidebar_items[1] = filter_item ;
+        sidebar_items[filter_value] = filter_item;
 
         filter_item = {
-                value: -1,
-                label: _lt("Everybody's calendars"),
-                color: self.get_color(-1),
-                avatar_model: self.avatar_model,
-                is_checked: false
-            };
-        sidebar_items[-1] = filter_item ;
+            value: -1,
+            label: _lt("Everybody's calendars"),
+            color: self.get_color(-1),
+            avatar_model: self.avatar_model,
+            is_checked: false
+        };
+        sidebar_items[-1] = filter_item;
         //Get my coworkers/contacts
         new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-            var unsorted_res = {};
             _.each(result, function(item) {
                 filter_value = item.partner_id[0];
                 filter_item = {
@@ -60,17 +59,13 @@ function reload_favorite_list(result) {
                     avatar_model: self.avatar_model,
                     is_checked: true
                 };
-                unsorted_res[filter_item.label + " " +filter_value] = filter_item;
-            });
-            var i = 2;
-            _.keys(unsorted_res).sort().forEach(function(key){
-                sidebar_items[i++] = unsorted_res[key];
+                sidebar_items[filter_value] = filter_item;
             });
 
             self.all_filters = sidebar_items;
             self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
             
-            self.sidebar.filter.events_loaded(self.all_filters);
+            self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
             self.sidebar.filter.set_filters();
             self.sidebar.filter.add_favorite_calendar();
             self.sidebar.filter.destroy_filter();
@@ -90,6 +85,15 @@ CalendarView.include({
             return result.then(reload_favorite_list(this));
         }
         return result;
+    },
+    get_all_filters_ordered: function() {
+        var filters = this._super();
+        if (this.useContacts) {
+            var filter_me = _.first(_.values(this.all_filters));
+            var filter_all = this.all_filters[-1];
+            filters = [].concat(filter_me, _.difference(filters, [filter_me, filter_all]), filter_all);
+        }
+        return filters;
     }
 });
 
