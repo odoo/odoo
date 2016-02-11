@@ -9,7 +9,7 @@ from openerp import api, tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -546,7 +546,7 @@ class ir_translation(osv.osv):
                     value1 = field.translate({trans.src: trans.value}.get, value0)
                     value2 = field.translate({trans.value: trans.src}.get, value1)
                     if value2 != value0:
-                        raise ValueError(_("Translation is not valid:\n%s") % trans.value)
+                        raise ValidationError(_("Translation is not valid:\n%s") % trans.value)
 
     @api.model
     def create(self, vals):
