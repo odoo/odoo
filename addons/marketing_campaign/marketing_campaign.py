@@ -179,7 +179,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     def _get_partner_for(self, campaign, record):
         partner_field = campaign.partner_field_id.name
         if partner_field:
-            return getattr(record, partner_field)
+            return record[partner_field]
         elif campaign.object_id.model == 'res.partner':
             return record
         return None
@@ -819,7 +819,7 @@ class report_xml(osv.osv):
         if object_id:
             model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
             args.append(('model', '=', model))
-        return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(report_xml, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
 
 

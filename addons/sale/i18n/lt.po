@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 08:00+0000\n"
+"PO-Revision-Date: 2015-11-11 13:18+0000\n"
 "Last-Translator: Anatolij\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -123,14 +123,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -421,7 +421,7 @@ msgstr "Pagal pardavėjus"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Pagal Pardavėją"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -638,7 +638,7 @@ msgstr "Data"
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "Patvirtinimo data"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -792,7 +792,7 @@ msgstr "Neįvykdyta"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Išplėstiniai filtrai"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -932,7 +932,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "Netinkami duomenys"
 
 #. module: sale
 #: code:addons/sale/sale.py:274 code:addons/sale/sale.py:990
@@ -997,12 +997,12 @@ msgstr "Iš pardavimų užsakymo sukurtos sąskaitos-faktūros adresas."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Sąskaitos adresas:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "S/F ir pristatymo adresas:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1150,7 +1150,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1132
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "Nėra kainoraščio ! :"
 
 #. module: sale
 #: code:addons/sale/sale.py:1143
@@ -1418,7 +1418,7 @@ msgstr "Pasiūlymas / Užsakymas"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Pasiūlymo data:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
@@ -1443,19 +1443,19 @@ msgstr "Pasiūlymas išsiųstas"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Pasiūlymas patvirtintas"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Pasiūlymas sukurtas"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Pasiūlymas išsiųstas"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1570,7 +1570,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "Sukurti sąskaitą/faktūrą"
 
 #. module: sale
 #: code:addons/sale/sale.py:284 model:ir.model,name:sale.model_sale_order
@@ -1697,7 +1697,7 @@ msgstr "Pardavėjas"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Pardavėjas:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1708,7 +1708,7 @@ msgstr "Ieškoti pardavimų užsakymo"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "Neužpajamuotų eilučių paieška"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1748,7 +1748,7 @@ msgstr "Pristatymo klaida"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Pristatymo adresas:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2081,12 +2081,12 @@ msgstr "Įspėjimas!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Interneto svetainės pranešimai"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Interneto svetainės komunikacijos istorija"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2140,7 +2140,7 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Jūsų užsakymo numeris:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv

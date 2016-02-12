@@ -249,7 +249,7 @@ class Partner(osv.osv):
                                 s = 3
                 if s==4:
                     for mline in partner_data.member_lines:
-                        if mline.date_from < today and mline.date_to < today and mline.date_from <= mline.date_to and (mline.account_invoice_line and mline.account_invoice_line.invoice_id.state) == 'paid':
+                        if mline.date_from < today and mline.date_to < today and mline.date_from <= mline.date_to and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
                             s = 5
                         else:
                             s = 6
@@ -488,6 +488,16 @@ class Invoice(osv.osv):
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
+    # TODO master: replace by ondelete='cascade'
+    def unlink(self, cr, uid, ids, context=None):
+        member_line_obj = self.pool.get('membership.membership_line')
+        for invoice in self.browse(cr, uid, ids, context=context):
+            mlines = member_line_obj.search(cr, uid,
+                    [('account_invoice_line', 'in',
+                        [l.id for l in invoice.invoice_line])])
+            member_line_obj.unlink(cr, uid, mlines, context=context)
+        return super(Invoice, self).unlink(cr, uid, ids, context=context)
+
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
@@ -520,6 +530,7 @@ class account_invoice_line(osv.osv):
                     member_line_obj.unlink(cr, uid, ml_ids, context=context)
         return res
 
+    # TODO master: replace by ondelete='cascade'
     def unlink(self, cr, uid, ids, context=None):
         """Remove Membership Line Record for Account Invoice Line
         """

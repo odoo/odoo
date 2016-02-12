@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-07 23:45+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2015-12-21 13:49+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Έχετε προσκληθεί για να συνδεθείτε στο \"${object.company_id.name}\" για να έχετε πρόσβαση στα έγγραφά σας στο Odoo.\n                    </p>\n                    <p>\n                        Για να αποδεχθείτε την πρόσκληση, κάντε κλικ στον παρακάτω σύνδεσμο:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Αποδοχή πρόσκλησης για την \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Ευχαριστούμε,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -56,48 +57,54 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης του λογαριασμού Odoo του χρήστη αυτού του email.</p>\n\n<p>Μπορείτε να αλλάξετε τον κωδικό πρόσβασης ακολουθώντας αυτόν τον <a href=\"${object.signup_url}\">σύνδεσμο</a>.</p>\n\n<p>Σημείωση: Εάν δεν έχετε ζητήσει εσείς αυτό το email, μπορείτε με ασφάλεια να το αγνοήσετε.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Πρόσκληση της ${object.company_id.name} για σύνδεση στο Odoo"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
+msgstr "Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης αυτού του χρήστη. Έχει αποσταλεί ένα email με τον παρακάτω σύνδεσμο:"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Activated"
-msgstr ""
+msgstr "Ενεργοποιήθηκε"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Να Επιτρέπετε η εγγραφή εξωτερικών χρηστών"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Έχει αποσταλεί ένα email με διαπιστευτήρια για να επαναφέρετε τον κωδικό πρόσβασής σας"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "An invitation email containing the following subscription link has been "
 "sent:"
-msgstr ""
+msgstr "Έχει αποσταλεί μία πρόσκληση με email το οποίο περιέχει τον παρακάτω σύνδεσμο σύνδεσης:"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Κάποιος άλλος χρήστης έχει ήδη εγγραφεί χρησιμοποιώντας αυτό το email."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
-msgstr ""
+msgstr "Η ταυτοποίηση απέτυχε."
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password view:website:auth_signup.signup
@@ -108,39 +115,45 @@ msgstr "Πίσω στην σελίδα Σύνδεσης"
 #: code:addons/auth_signup/res_users.py:294
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "Αδυναμία αποστολής e-mail: Ο χρήστης δεν έχει διεύθυνση e-mail"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Επιβεβαίωση Κωδικού Πρόσβασης"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Δεν μπορεί να δημιουργηθεί νέος λογαριασμός."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Δεν ήταν δυνατή η επαναφορά του κωδικού πρόσβασής σας"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Ενεργοποίηση επαναφοράς κωδικού πρόσβασης από τη σελίδα Είσοδος"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Εάν δεν είναι επιλεγμένο, μόνο οι προσκεκλημένοι χρήστες μπορούν να κάνουν εγγραφούν."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Μη έγκυρο διακριτικό σύνδεσης"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Ποτέ δεν συνδέθηκε"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -150,77 +163,83 @@ msgstr "Συνεργάτης"
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Password"
-msgstr "Συνθηματικό"
+msgstr "Κωδικός Πρόσβασης"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Επαναφορά Κωδικού Πρόσβασης"
 
 #. module: auth_signup
 #: view:website:web.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Επαναφορά Κωδικού Πρόσβασης"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
 msgid "Reset password"
-msgstr ""
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Επαναφορά Κωδικού Πρόσβασης: Λανθασμένο όνομα χρήστη ή email "
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Αποστολή Οδηγιών Επαναφοράς Κωδικού Πρόσβασης"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Στείλτε μια πρόσκληση ηλεκτρονικού ταχυδρομείου"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
-msgstr ""
+msgstr "Εγγραφή"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Λήξη Εγγραφής"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Διακριτικό Εγγραφής"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Τύπος Διακριτικού Εγγραφής"
 
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Το Διακριτικό Εγγραφής είναι Έγκυρο"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "Διεύθυνση URL Εγγραφής"
 
 #. module: auth_signup
 #: field:res.users,state:0
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Πρότυπο χρήστη για νέους χρήστες που δημιουργήθηκαν μέσω Εγγραφής"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "Αυτό επιτρέπει στους χρήστες να ξεκινήσουν την επαναφορά του κωδικού πρόσβασης από τη σελίδα σύνδεσης."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -230,7 +249,7 @@ msgstr "Χρήστες"
 #. module: auth_signup
 #: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Το email σας"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
@@ -240,4 +259,4 @@ msgstr "Το Όνομά σας"
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "π.χ. Κώστας Γουτούδης"

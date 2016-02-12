@@ -3,13 +3,14 @@
 # * portal
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-21 08:11+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgid ""
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    <b>Συγχαρητήρια!</b> Ο φάκελος εισερχόμενα είναι κενός.\n                </p><p>\n                    Στα εισερχόμενα περιέχονται προσωπικά μηνύματα ή email\n                    που σας στάλθηκαν καθώς και πληροφορίες που σχετίζονται\n                    με κείμενα ή με ανθρώπους που ακολουθείτε.\n                </p>\n            "
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
@@ -40,7 +41,7 @@ msgid ""
 "                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    <b>Καμία Εκκρεμότητα.</b>\n                </p><p>\n                    Όταν επεξεργάζεστε μηνύματα στα εισερχόμενα, μπορείτε να χαρακτηρίσετε\n                    ορισμένα ως <i>Εκκρεμότητες</i>. Από αυτό το μενού μπορείτε να επεξεργάζεστε όλες τις Εκκρεμότητες.\n                </p>\n            "
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -52,7 +53,7 @@ msgid ""
 "                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    Δεν έχει βρεθεί και δεν έχει αποσταλεί κάποιο μήνυμα ακόμη.\n                </p><p>\n                    Κάντε κλικ στο εικονίδιο πάνω δεξιά για να συνθέσετε ένα μήνυμα.\n                    Αυτό το μήνυμα θα σταλεί με email εάν πρόκειται για εσωτερική επαφή.\n                </p>\n            "
 
 #. module: portal
 #: code:addons/portal/mail_message.py:59
@@ -68,7 +69,7 @@ msgstr "Ομάδες Πρόσβασης"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Υπηρεσίες Μετά την Πώληση"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -105,7 +106,7 @@ msgstr "Στοιχεία"
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "Contacts Error"
-msgstr ""
+msgstr "Σφάλμα Επαφών"
 
 #. module: portal
 #: field:portal.wizard,create_uid:0 field:portal.wizard.user,create_uid:0
@@ -138,7 +139,7 @@ msgid ""
 "--\n"
 "Odoo - Open Source Business Applications\n"
 "http://www.openerp.com\n"
-msgstr ""
+msgstr "Αγαπητέ/ή %(name)s,\n\nΣας έχει δοθεί πρόσβαση στο %(portal)s της εταιρίας %(company)s.\n\nΤα στοιχεία εισόδου σας είναι:\n  Username: %(login)s\n  Portal: %(portal_url)s\n  Βάση Δεδομένων: %(db)s \n\nΜπορείτε να ορίσετε τον κωδικό πρόσβασής σας μέσα από το ακόλουθο url:\n   %(signup_url)s\n\n%(welcome_message)s\n\n--\nOdoo - Open Source Business Applications\nhttp://www.openerp.com\n"
 
 #. module: portal
 #: view:share.wizard:portal.share_step2_form_portal
@@ -154,7 +155,7 @@ msgstr "Email"
 #: code:addons/portal/wizard/portal_wizard.py:225
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "Απαιτείται E-mail"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -165,19 +166,19 @@ msgstr "Νήμα Email"
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr ""
+msgstr "Υπάρχουσες Ομάδες (π.χ. Ομάδες Portal)"
 
 #. module: portal
 #: view:share.wizard:portal.share_step1_form_portal
 #: field:share.wizard,group_ids:0
 msgid "Existing groups"
-msgstr ""
+msgstr "Υπάρχουσες Ομάδες"
 
 #. module: portal
 #: view:share.wizard:portal.share_step1_form_portal
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Υπάρχοντες Χρήστες"
 
 #. module: portal
 #: field:portal.wizard,id:0 field:portal.wizard.user,id:0
@@ -187,12 +188,12 @@ msgstr "Κωδικός"
 #. module: portal
 #: help:res.groups,is_portal:0
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Εάν είναι ενεργοποιημένο, αυτή η ομάδα χρησιμοποιείται ως portal."
 
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
 msgid "In Portal"
-msgstr ""
+msgstr "Σε Portal"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
@@ -203,17 +204,17 @@ msgstr "Εισερχόμενα"
 #. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
-msgstr ""
+msgstr "Μήνυμα Πρόσκλησης"
 
 #. module: portal
 #: field:portal.wizard,write_uid:0 field:portal.wizard.user,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία Αναβαθμίστηκε από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: portal
 #: field:portal.wizard,write_date:0 field:portal.wizard.user,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία Αναβαθμίστηκε στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -228,7 +229,7 @@ msgstr "Μηνύματα"
 #. module: portal
 #: view:res.groups:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Ομάδες χωρίς Portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
@@ -239,13 +240,13 @@ msgstr "Εξερχόμενα μηνύματα"
 #: code:addons/portal/wizard/share_wizard.py:54
 #, python-format
 msgid "Please select at least one group to share with"
-msgstr ""
+msgstr "Παρακαλώ επιλέξτε τουλάχιστον μια ομάδα με την οποία θα μοιραστείτε"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:50
 #, python-format
 msgid "Please select at least one user to share with"
-msgstr ""
+msgstr "Παρακαλώ επιλέξτε τουλάχιστον ένα χρήστη με τον οποίο θα μοιραστείτε"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
@@ -258,17 +259,17 @@ msgstr "Πύλη"
 #: model:ir.model,name:portal.model_portal_wizard
 #: view:portal.wizard:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Διαχείριση Πρόσβασης στο Portal"
 
 #. module: portal
 #: view:res.groups:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Ομάδες Portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Ρυθμίσεις Χρήστη Πύλης"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
@@ -281,35 +282,35 @@ msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr ""
+msgstr "Επιλέξτε ποιες επαφές πρέπει να ανήκουν στο portal στην παρακάτω λίστα.\n                        Η διεύθυνση email κάθε επιλεγμένης επαφής πρέπει να είναι έγκυρη και μοναδική.\n                        Εάν είναι απαραίτητο, μπορείτε να διορθώσετε οποιαδήποτε διεύθυνση e-mail μιας επαφής άμεσα στη λίστα."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:149
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Αρκετές επαφές έχουν το ίδιο email:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr ""
+msgstr "Οδηγός Κοινοποίησης"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:146
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Ορισμένες επαφές δεν έχουν ένα έγκυρο email:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:152
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Ορισμένες επαφές έχουν το ίδιο email με μια επαφή στην πύλη χρηστών:"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Η Πύλη όπου οι χρήστες μπορούν να προστεθούν ή να αφαιρεθούν. "
 
 #. module: portal
 #: code:addons/portal/mail_message.py:60
@@ -318,17 +319,17 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Η λειτουργία που ζητήθηκε δεν μπορεί να ολοκληρωθεί λόγω των περιορισμών ασφαλείας. Παρακαλούμε επικοινωνήστε με τον διαχειριστή του συστήματός σας.\n\n(Τύπος εγγράφου: %s, Λειτουργία: %s)"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "Αυτό το κείμενο περιλαμβάνεται στο email που θα στέλνεται στους νέους χρήστες της πύλης."
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "Αυτό το κείμενο περιλαμβάνεται στο email που θα στέλνεται στους νέους χρήστες της πύλης."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:155
@@ -337,13 +338,13 @@ msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr ""
+msgstr "Για να επιλύσετε αυτό το σφάλμα, μπορείτε: \n- Να διορθώσετε τις διευθύνσεις emails των σχετικών επαφών\n- Να δώσετε πρόσβαση μόνο στις επαφές που έχουν μοναδική διεύθυνση email"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr "Να-Γίνει"
+msgstr "Εκκρεμότητες"
 
 #. module: portal
 #: field:portal.wizard,user_ids:0
@@ -354,7 +355,7 @@ msgstr "Χρήστες"
 #: code:addons/portal/wizard/share_wizard.py:38
 #, python-format
 msgid "Users you already shared with"
-msgstr ""
+msgstr "Χρήστες με τους οποίους έχετε μοιραστεί κοινοποιήσεις"
 
 #. module: portal
 #: field:portal.wizard.user,wizard_id:0
@@ -366,19 +367,19 @@ msgstr "Αυτόματος Οδηγός"
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
+msgstr "Πρέπει να έχετε μια διεύθυνση email στο προφίλ σας για την αποστολή emails."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:33
 #, python-format
 msgid "Your Odoo account at %(company)s"
-msgstr ""
+msgstr "Ο Odoo λογαριασμό σας στο %(company)s"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:46
 #, python-format
 msgid "access directly to"
-msgstr ""
+msgstr "απευθείας πρόσβαση σε:"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -389,4 +390,4 @@ msgstr "ή"
 #: code:addons/portal/mail_mail.py:48
 #, python-format
 msgid "your messages "
-msgstr ""
+msgstr "τα μηνύματά σας"

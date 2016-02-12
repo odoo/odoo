@@ -3,13 +3,14 @@
 # * stock
 # 
 # Translators:
+# Daniel Blanco <daniel@blancomartin.com.ar>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-10-06 08:56+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Chile) (http://www.transifex.com/odoo/odoo-8/language/es_CL/)\n"
 "MIME-Version: 1.0\n"
@@ -57,6 +58,16 @@ msgid " (reserved)"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
@@ -66,37 +77,37 @@ msgstr ""
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
 #, python-format
 msgid " On Hand"
-msgstr ""
+msgstr "En Mano"
 
 #. module: stock
 #: code:addons/stock/stock.py:3224 code:addons/stock/stock.py:3498
 #, python-format
 msgid " Sequence in"
-msgstr ""
+msgstr "Secuencia de Entrada"
 
 #. module: stock
 #: code:addons/stock/stock.py:3228 code:addons/stock/stock.py:3502
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr "Secuencia interna"
 
 #. module: stock
 #: code:addons/stock/stock.py:3225 code:addons/stock/stock.py:3499
 #, python-format
 msgid " Sequence out"
-msgstr ""
+msgstr "Secuencia de salida"
 
 #. module: stock
 #: code:addons/stock/stock.py:3226 code:addons/stock/stock.py:3500
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr "Secuencia de empaquetado"
 
 #. module: stock
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr "Secuencia de picking"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
@@ -107,19 +118,19 @@ msgstr ""
 #: code:addons/stock/stock.py:2444
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
-msgstr ""
+msgstr "%s %s %s ha sido <b>pasado a </b> descarte."
 
 #. module: stock
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Suminstra Producto desde %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Ubicación de tránsito"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -594,7 +605,7 @@ msgstr "Mejor precio (aún no activo!)"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Big Suppliers"
-msgstr ""
+msgstr "Grandes Proveedores"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -1502,6 +1513,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr ""
 
@@ -2471,7 +2483,7 @@ msgstr "Menú"
 #. module: stock
 #: field:stock.picking,message_ids:0 field:stock.production.lot,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #. module: stock
 #: help:stock.picking,message_ids:0 help:stock.production.lot,message_ids:0
@@ -3621,7 +3633,7 @@ msgid "Quantity (UOS)"
 msgstr "Cantidad (UdV)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 

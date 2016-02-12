@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-10-26 12:15+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-02-02 22:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -57,10 +57,20 @@ msgid " (reserved)"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
-msgstr ""
+msgstr "Vyrobené na zákazku"
 
 #. module: stock
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
@@ -369,7 +379,7 @@ msgstr "Aktívny"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Pridať internú poznámku"
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
@@ -384,7 +394,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:stock.view_location_form field:stock.location,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Dodatočné informácie"
 
 #. module: stock
 #: field:stock.warehouse,partner_id:0
@@ -454,7 +464,7 @@ msgstr ""
 #: help:stock.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Umožňuje vám vybrať a udržiavať rôzne merné jednotky pre produkty."
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -525,7 +535,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "Automatické Žiadny krok pridané"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -535,7 +545,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,string_availability_info:0
 msgid "Availability"
-msgstr ""
+msgstr "Dostupnosť"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -584,7 +594,7 @@ msgstr "Čiarový kód"
 #. module: stock
 #: view:website:stock.barcode_index
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Skener čiarových kódov"
 
 #. module: stock
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -995,12 +1005,12 @@ msgstr "Dátum vytvorenia, zvyčajne čas objednávky"
 #: code:addons/stock/stock.py:3392
 #, python-format
 msgid "Cross-Dock"
-msgstr ""
+msgstr "Medzi-prekládka"
 
 #. module: stock
 #: field:stock.warehouse,crossdock_route_id:0
 msgid "Crossdock Route"
-msgstr ""
+msgstr "Trasa medziprekládky"
 
 #. module: stock
 #: field:stock.pack.operation,currency:0
@@ -1364,7 +1374,7 @@ msgstr "Návrh pohybov"
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Edit..."
-msgstr ""
+msgstr "Upraviť..."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_transfer_details.py:115
@@ -1457,12 +1467,12 @@ msgstr "Odberatelia"
 #: view:stock.move:stock.view_move_picking_form
 #: view:stock.picking:stock.view_picking_form
 msgid "Force Availability"
-msgstr ""
+msgstr "Vymôcť Dostupnosť"
 
 #. module: stock
 #: field:product.category,removal_strategy_id:0
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "Vymôcť Stratégiu odstránenia"
 
 #. module: stock
 #: help:product.template,track_incoming:0
@@ -1502,6 +1512,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Odhadované množstvo"
 
@@ -1597,7 +1608,7 @@ msgstr ""
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr ""
+msgstr "Dať viac špecializované kategórie, vyššiu prioritu na to, aby boli v hornej časti zoznamu."
 
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
@@ -1746,7 +1757,7 @@ msgstr "Ak nastavené, operácie sú balené do tohto balíka"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
+msgstr "Ak je aktívne pole nastavené na Nepravda, umožní Vám schovať položku objednávky bez jej odtránenia."
 
 #. module: stock
 #: help:stock.location.route,active:0
@@ -2096,7 +2107,7 @@ msgstr "Určuje či tovar bude dodaný čiastočne alebo celý naraz"
 #. module: stock
 #: field:stock.transfer_details,item_ids:0
 msgid "Items"
-msgstr ""
+msgstr "Položky"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -2191,7 +2202,7 @@ msgstr "Meškajúce Inventúry & Pohyby"
 #. module: stock
 #: field:stock.location,parent_left:0 field:stock.quant.package,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Ľavé nadradenie"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -2354,7 +2365,7 @@ msgstr "Šarže"
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
 msgid "MTO rule"
-msgstr ""
+msgstr "Pravidlo Výroby na objednávku"
 
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
@@ -2373,7 +2384,7 @@ msgstr "Vyrobi na zákazku"
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr ""
+msgstr "Urobiť balíčky do vyhradenej lokácie, a potom ich preniesť do výstupného miesta na expedíciu (Vybrať + Zabaliť + Poslať)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -2398,7 +2409,7 @@ msgstr "Spravovať balíky"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "Spravovať Tlačenie a Ťahanie toku zásob"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_adv_location:0
@@ -2513,7 +2524,7 @@ msgstr "Pravidlá pre minimálne zásoby."
 #: field:stock.config.settings,propagation_minimum_delta:0
 msgid ""
 "Minimum days to trigger a propagation of date change in pushed/pull flows."
-msgstr ""
+msgstr "Minimum dní na spustenie propagácie dátumu zmeny v tokoch tlačenia/ťahania."
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
@@ -2733,7 +2744,7 @@ msgstr "OK"
 #: code:addons/stock/static/src/js/widgets.js:651
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -2939,7 +2950,7 @@ msgstr "Vlastník kvantov"
 #: code:addons/stock/product.py:270
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "P&L Množ"
 
 #. module: stock
 #: code:addons/stock/stock.py:3292 field:stock.inventory.line,package_id:0
@@ -3045,12 +3056,12 @@ msgstr "Parametre"
 #: view:stock.location:stock.view_location_search
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr ""
+msgstr "Nadradená lokácia"
 
 #. module: stock
 #: field:stock.quant.package,parent_id:0
 msgid "Parent Package"
-msgstr ""
+msgstr "Nadradený balík"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3256,7 +3267,7 @@ msgstr "Uprednostňovaná trasa pre riadenie sa obstrávacej objednávky"
 msgid ""
 "Preferred route to be followed by the procurement order. Usually copied from"
 " the generating document (SO) but could be set up manually."
-msgstr ""
+msgstr "Preferovaná navrhnutá trasa pre obstarávaciu objednávku. Zvyčajne skopírovaná z generujúceho dokumentu (SO), ale môže byť natavená manuálne."
 
 #. module: stock
 #. openerp-web
@@ -3504,7 +3515,7 @@ msgstr ""
 #: field:procurement.rule,propagate:0 field:stock.location.path,propagate:0
 #: field:stock.move,propagate:0
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "Propagovať zrušenie a rozdelenie"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -3521,29 +3532,29 @@ msgstr ""
 #. module: stock
 #: field:stock.move,push_rule_id:0
 msgid "Push Rule"
-msgstr ""
+msgstr "Pravidlo tlačenia"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,push_ids:0
 msgid "Push Rules"
-msgstr ""
+msgstr "Pravidlá tlačenia"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Tlačené toky"
 
 #. module: stock
 #: field:stock.fixed.putaway.strat,putaway_id:0
 msgid "Put Away Method"
-msgstr ""
+msgstr "Metóda odloženia"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: field:stock.location,putaway_strategy_id:0
 msgid "Put Away Strategy"
-msgstr ""
+msgstr "Stratégia odloženia"
 
 #. module: stock
 #. openerp-web
@@ -3562,17 +3573,17 @@ msgstr ""
 #. module: stock
 #: view:product.putaway:stock.view_putaway
 msgid "Putaway"
-msgstr ""
+msgstr "Odložiť"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr ""
+msgstr "Množ viacnásobné"
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Viacnásobné množstvo musí byť väčšie alebo rovné nule."
 
 #. module: stock
 #: code:addons/stock/stock.py:3352
@@ -3621,14 +3632,14 @@ msgid "Quantity (UOS)"
 msgstr ""
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Viacnásobné množstvo"
 
 #. module: stock
 #: field:product.product,qty_available:0
@@ -3660,7 +3671,7 @@ msgstr "Mnoštvo na sklade ktoré ešte môže byť zarezrvované pre tento pohy
 #. module: stock
 #: help:stock.move,product_qty:0
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "Množstvo je prednastavená Merná jednotka produktu"
 
 #. module: stock
 #: help:stock.quant,qty:0
@@ -3676,7 +3687,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Množstvo produktov s naplánovaným príchodom.\nV kontexte s jednou Lokáciou skladu, toto zahŕňa tovar prichádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\nV kontexte s jedným Skladiskom, toto zahŕňa tovar prichádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\nV opačnom prípade, toto zahŕňa tovar prichádzajúci do akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: stock
 #: help:product.product,outgoing_qty:0
@@ -3685,7 +3696,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Množstvo produktov s naplánovaným odchodom.\nV kontexte s jednou Lokáciou skladu, toto zahŕňa tovar odchádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\nV kontexte s jedným Skladiskom, toto zahŕňa tovar odchádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\nV opačnom prípade, toto zahŕňa tovar odchádzajúci z akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: stock
 #: help:stock.move.operation.link,qty:0
@@ -3962,7 +3973,7 @@ msgstr "Návrat"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Vrátiť výber"
 
 #. module: stock
 #: view:stock.return.picking.line:stock.stock_return_line_form_in
@@ -3983,35 +3994,35 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:179
 #, python-format
 msgid "Returned Picking"
-msgstr ""
+msgstr "Vrátené výbery"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "Zvrátiť prevod"
 
 #. module: stock
 #: field:stock.location,parent_right:0
 #: field:stock.quant.package,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Pravý nadradený"
 
 #. module: stock
 #: field:procurement.rule,route_id:0 field:stock.location.path,route_id:0
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Route"
-msgstr ""
+msgstr "Trasa"
 
 #. module: stock
 #: field:stock.location.route,name:0
 msgid "Route Name"
-msgstr ""
+msgstr "Názov trasy"
 
 #. module: stock
 #: field:procurement.rule,route_sequence:0
 #: field:stock.location.path,route_sequence:0
 msgid "Route Sequence"
-msgstr ""
+msgstr "Sekvencia trasy"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -4023,14 +4034,14 @@ msgstr ""
 #: view:stock.location.route:stock.stock_location_route_tree
 #: view:stock.warehouse:stock.view_warehouse field:stock.warehouse,route_ids:0
 msgid "Routes"
-msgstr ""
+msgstr "Trasy"
 
 #. module: stock
 #: help:stock.warehouse,resupply_route_ids:0
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr ""
+msgstr "Trasy budú vytvorené pre tieto skladiská doplňovania zásob, a môžete si ich vybrať na produktoch a kategóriach produktov"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4096,34 +4107,34 @@ msgstr "Naplánovaný dátum na spracovanie tohto pohybu"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "Plánovaný čas pre prvú časť zásielky, ktorá má byť spracovaná. Manuálne nastavenie hodnoty tu ju nastaví ako očakávaný dátum pre všetky skladové pohyby."
 
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "Naplánovaný dátum pre poslednú časť zásielky na jej spracovanie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
 msgid "Schedulers"
-msgstr ""
+msgstr "Plánovače"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap"
-msgstr ""
+msgstr "Vyradené"
 
 #. module: stock
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap Location"
-msgstr ""
+msgstr "Vyraďovacia lokácia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap
 msgid "Scrap Move"
-msgstr ""
+msgstr "Vyraďovací pohyb"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_scrap
@@ -4133,13 +4144,13 @@ msgstr ""
 #: view:stock.move:stock.view_move_tree_receipt_picking
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap Products"
-msgstr ""
+msgstr "Vyradené produkty"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr ""
+msgstr "Vyradené"
 
 #. module: stock
 #. openerp-web
@@ -4151,7 +4162,7 @@ msgstr "Hľadanie"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
 msgid "Search Inventory"
-msgstr ""
+msgstr "Vyhľadať zásoby"
 
 #. module: stock
 #. openerp-web
@@ -4163,7 +4174,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "Vyberte miesta kde môže byť táto trasa zvolená"
 
 #. module: stock
 #. openerp-web
@@ -4208,7 +4219,7 @@ msgstr ""
 #. module: stock
 #: field:procurement.rule,warehouse_id:0
 msgid "Served Warehouse"
-msgstr ""
+msgstr "Obslúžené skladisko"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -4220,7 +4231,7 @@ msgstr ""
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "Nastaviť špecifickú stratégiu odstránenia, ktorá budú použitá, bez ohľadu na lokáciu zdroja pre túto kategóriu produktov"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4232,7 +4243,7 @@ msgstr "Nastaviť ako návr"
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "Nastaví lokáciu ak produkujete pevnú lokáciu. Toto môže byť partnerská lokácia ak zasubkontraktujete výrobné operácie."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4326,32 +4337,32 @@ msgstr ""
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
+msgstr "Určite šaržu/sériové číslo pre zameranie vašich zásob na konkrétnu šaržu/sériové číslo."
 
 #. module: stock
 #: help:stock.inventory,partner_id:0
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "Špecifikujte vlastníka pre zameranie vašich zásob na konkrétneho vlastníka."
 
 #. module: stock
 #: help:stock.inventory,package_id:0
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "Špecifikujte balenie pre zameranie vašich zásob na konkrétne balenie."
 
 #. module: stock
 #: help:stock.inventory,product_id:0
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "Špecifikujte produkt pre zameranie vašich zásob na konkrétny produkt."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Split"
-msgstr ""
+msgstr "Rozdeliť"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr ""
+msgstr "Spustiť zásoby"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -4373,22 +4384,22 @@ msgstr "Status"
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
 msgid "Stock"
-msgstr ""
+msgstr "Zásoby"
 
 #. module: stock
 #: view:website:stock.report_inventory
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Skladové zásoby"
 
 #. module: stock
 #: view:stock.inventory.line:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr ""
+msgstr "Riadky skladových zásob"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "Odhad Úrovne skladu"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -4432,7 +4443,7 @@ msgstr "Skladové operácie"
 #. module: stock
 #: field:stock.pack.operation,picking_id:0
 msgid "Stock Picking"
-msgstr ""
+msgstr "Skladový výber"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -4447,17 +4458,17 @@ msgstr "Skladové pohyby ktoré sú dosupné (pripravené na spracovanie)"
 #. module: stock
 #: view:stock.move:stock.view_move_search
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr ""
+msgstr "Skladové pohyby ktoré sú Potvrdené, Dosupné alebo Čakajúce"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "Skladové pohyby ktoré boli spracované"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Stockable"
-msgstr ""
+msgstr "Skladovateľný"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
@@ -4483,7 +4494,7 @@ msgstr "Zhrnutie"
 #. module: stock
 #: field:stock.location.route,supplied_wh_id:0
 msgid "Supplied Warehouse"
-msgstr ""
+msgstr "Zásobený sklad"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -4526,17 +4537,17 @@ msgstr ""
 #. module: stock
 #: field:stock.move,procure_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "Zásobovacia metóda"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Take From Stock"
-msgstr ""
+msgstr "Vziať zo skladu"
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Technical Information"
-msgstr ""
+msgstr "Technické informácie"
 
 #. module: stock
 #: help:stock.move.operation.link,reserved_quant_id:0
@@ -4544,35 +4555,35 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "Technické pole obsahujúce kvant ktorý vytvoril tento odkaz medzi operáciou a skladovým pohybom. Použité pri stock_move_obj.action_done() čase pre vyhnutie sa opäatovnému hľadaniu zodpovedajúceho kvantu"
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "Technické pole zobrazujúce sklad, pre zváženie pri výbere trasy na ďalšie obstarávanie (ak existuje)."
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "Technické pole používané pre trasy dozásobovania medzi skladiskami, ktoré patria tejto spoločnosti"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "Technické pole používané pre znázornenie obmedzenia na množtvá kvantov, pre zváženie pri označovaní tohoto pohybu ako 'urobené'"
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "Technické pole používané pre znázornenie obmedzenia na vlastníctvo kvantov, pre zváženie pri označovaní tohoto pohybu ako 'urobené'"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -4584,14 +4595,14 @@ msgstr ""
 #. module: stock
 #: help:stock.return.picking,move_dest_exists:0
 msgid "Technical field used to hide help tooltip if not needed"
-msgstr ""
+msgstr "Technické pole používané na skrytie nápovedy nástroja keď nie je potrebná"
 
 #. module: stock
 #: help:stock.quant,negative_dest_location_id:0
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "Technické pole používané na zaznamenávanie cieľovej lokácie pohybu ktorý vytvoril záporný kvant"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -4599,14 +4610,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "Technické pole pouźívané pre zaznamenanie ceny produktu nastavenej pouźívateľom počas potvrdenia výberu (keď je použitá cenová metóda 'priemerná cena' alebo 'skutočná'). Hodnota zadaná v peňažnej mene spoločnosti a v mernej jednotke produktu."
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "Technické pole používané na sledovanie pôvodu rkzdeleného pohybu, čo môže byť užitočné v prípade odstraňovania chýb"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4614,12 +4625,12 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "Priemerne meǩanie v dňoch medzi potvrdením zákaznickej objednávky a dodaním hotových produktov. Je to čas ktorý sľúbite vašim zákazníkom."
 
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "Čiarový kód pre lokáciu musí byť unikátny pre spoločnosť!"
 
 #. module: stock
 #: code:addons/stock/stock.py:3874
@@ -4627,12 +4638,12 @@ msgstr ""
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr ""
+msgstr "Zvolené množstvo produktu %s nie je kompatibilné so zaokrúhľovaním mernej jednotky. Bude automaticky prekonvertované pri potvrdení"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Kód skladiska musí byť unikátny pre spoločnosť!"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -4644,14 +4655,14 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr ""
+msgstr "Spoločnosť ktorej patrí kvant"
 
 #. module: stock
 #: help:stock.inventory,date:0
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "Dátum ktorý bude použitý pre kontrolu úrovne skladu produktov a validáciu skladového pohybu vzťahujúceho sa na tieto zásoby."
 
 #. module: stock
 #: code:addons/stock/stock.py:3522
@@ -4659,58 +4670,58 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "Predvolené dozásobovacie skladisko by malo byť iné ako samotné skladisko!"
 
 #. module: stock
 #: code:addons/stock/stock.py:1067
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Cieľová lokácia musí byť rovnaká pre všetky pohyby a výbery."
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr ""
+msgstr "Nasledujúce trasy sa budú vzťahovať na produkty v tejto kategórii s prihliadnutím na nadradené kategórie:"
 
 #. module: stock
 #: help:stock.quant,reservation_id:0
 msgid "The move the quant is reserved for"
-msgstr ""
+msgstr "Pohyb pre ktorý je rezervovaný kvant"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Názov skladiska musí byť unikány pre spoločnosť!t"
 
 #. module: stock
 #: help:stock.quant,propagated_from_id:0
 msgid "The negative quant this is coming from"
-msgstr ""
+msgstr "Negatívny kvant od ktorého toto prichádza"
 
 #. module: stock
 #: help:stock.quant.package,parent_id:0
 msgid "The package containing this item"
-msgstr ""
+msgstr "Balík obashuje túto položku"
 
 #. module: stock
 #: help:stock.quant,package_id:0
 msgid "The package containing this quant"
-msgstr ""
+msgstr "Balík obsahujúci tento kvant"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "Typ výberu určuje zobrazenie výberu"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used.  "
-msgstr ""
+msgstr "Množstvo obstarávania bude zaokrúhlené na tento násobok. Ak je to 0, bude použité presné množstvo."
 
 #. module: stock
 #: help:stock.move,rule_id:0
@@ -4720,7 +4731,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,push_rule_id:0
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "Pravidlo tlačenia ktoré vytvorilo tento skladový pohyb"
 
 #. module: stock
 #: code:addons/stock/stock.py:1699
@@ -4728,7 +4739,7 @@ msgstr ""
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "Požadovaná operácia nemôže byť spracovaná, lôli chybe programovania nastavujúcej `product_qty` pole namiesto `product_uom_qty"
 
 #. module: stock
 #. openerp-web
@@ -4744,7 +4755,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "Zaokrúhlenia vašich merných jednotiek %s na pohybe vs. %s na produkte neumožňujú vykonávať tieto operácie, alebo nepresúvate výber naraz."
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -4752,18 +4763,18 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
-msgstr ""
+msgstr "Vybraná merná jednotka pre produkt %s nie je kompatibilná s mernou jednotkou nastavenou na formulári produktu,\nProsím vyberte mernú jednotku v rovnakej kategórií merných jendotiek."
 
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Zvolené možnosti zásob nie sú kompaktné."
 
 #. module: stock
 #: code:addons/stock/stock.py:1070
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Zdrojová lokácia musí byť rovnaká pre všetky pohyby výberu."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4775,12 +4786,12 @@ msgstr ""
 #. module: stock
 #: help:stock.pack.operation,picking_id:0
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "Skladová operácia kde sa vykonalo balenie"
 
 #. module: stock
 #: help:procurement.rule,warehouse_id:0
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Skladisko pre ktoré je toto pravidlo"
 
 #. module: stock
 #: help:procurement.rule,propagate_warehouse_id:0
@@ -4788,12 +4799,12 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr ""
+msgstr "Skladisko na propagovanie vytvoreného pohybu/obstarávania, ktoré môžu byť  rôzne od skladiska pre ktré je toto pravidlo (nepr. pre dozásobovanie z iného skladiska)"
 
 #. module: stock
 #: field:stock.inventory.line,theoretical_qty:0
 msgid "Theoretical Quantity"
-msgstr ""
+msgstr "Teoretické množstvo"
 
 #. module: stock
 #: help:stock.config.settings,module_procurement_jit:0
@@ -4810,7 +4821,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "Toto umožňuje manipulovať s balíkmi. Môžete doň niečo vložiť, vybrať z neho niečo, ale aj presunúť celé balíky, a dokonca ich vložiť do iného balíka."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -4818,7 +4829,7 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "Toto vám umožňuje prideliť šaržu (alebo sériové číslo) výberom a pohybom. To umožní vedieť ktorá produkčná šarža bola poslaná konkrétnemu klientovi, ..."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
@@ -4832,12 +4843,12 @@ msgstr ""
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "Toto pole by malo byť skompletizované iba ak všetko v balíku zdieľa rovnaký produkt,\ninak to nedáva zmysel."
 
 #. module: stock
 #: help:stock.quant,owner_id:0
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Toto je vlastník kvantu"
 
 #. module: stock
 #: help:stock.location.path,picking_type_id:0
@@ -4853,7 +4864,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr ""
+msgstr "Toto je množstvo produktov zo zásobovacej perspektívy. Pre pohyby v stave 'hotovo',\ntoto je množstvo produktov ktoré boli skutočne posunuté. Pre iné pohyby, toto je množstvo\nproduktu ktorý je naplánovaný na pohyb. Zníženie tohoto množstva negeneruje\nspôatnú objednávku. Menenie tohoto množstva na pridelených pohyboch ovplyvňuje rezerváciu produktu, a malo by sa robiť opatrne."
 
 #. module: stock
 #: help:stock.location.path,auto:0
@@ -4867,7 +4878,7 @@ msgstr ""
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "Táto možnosť dopĺňa aplikáciu skladiska účinným implmentovaním Ťahových a Tlačených zásobových tokov cez Trasy."
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -4880,54 +4891,54 @@ msgstr ""
 #: help:stock.change.product.qty,new_quantity:0
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "Toto množstvo je vyjadrené v predvolenej mernej jednotke produktu."
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr ""
+msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý posielate tomuto partnerovi"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr ""
+msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý obdržíte od súčasného partnera"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované výrobnými objednávkami."
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované obstarávaniami. "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová lokácia pre skladové pohyby generované keď robíte inventúru."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_owner:0
 msgid "This way you can receive products attributed to a certain owner. "
-msgstr ""
+msgstr "Týmto spôsobom môžete prijímať výrobky pripisované určitému vlastníkovi."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "Toto vám ukáže lokácie a dovolí vám definovať viaceré typy výberov a skladísk."
 
 #. module: stock
 #. openerp-web
@@ -4961,7 +4972,7 @@ msgstr "Celkové množstvo"
 #. module: stock
 #: field:product.category,total_route_ids:0
 msgid "Total routes"
-msgstr ""
+msgstr "Trasy celkovo"
 
 #. module: stock
 #: code:addons/stock/stock.py:1564
@@ -4970,7 +4981,7 @@ msgstr ""
 #: view:stock.production.lot:stock.view_production_lot_form
 #, python-format
 msgid "Traceability"
-msgstr ""
+msgstr "Sledovateľnosť"
 
 #. module: stock
 #: field:product.template,track_incoming:0
@@ -4997,7 +5008,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "Sledovať šarže alebo sériové čísla"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -5018,29 +5029,29 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr ""
+msgstr "Prevody"
 
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr ""
+msgstr "Lokácia prevodu"
 
 #. module: stock
 #: help:stock.picking,recompute_pack_op:0
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "Pravda ak sa rezervované kvanty zmenili, čo znamená že možno budeme musieť prerátať baliace operácie"
 
 #. module: stock
 #: field:stock.picking.type,code:0
 msgid "Type of Operation"
-msgstr ""
+msgstr "Typ operácie"
 
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "Typ balenia"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
@@ -5055,12 +5066,12 @@ msgstr ""
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
-msgstr ""
+msgstr "Unikátne sériové číslo"
 
 #. module: stock
 #: field:stock.quant,cost:0
 msgid "Unit Cost"
-msgstr ""
+msgstr "Cena jednotky"
 
 #. module: stock
 #: help:stock.pack.operation,cost:0
@@ -5070,7 +5081,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
 msgid "Unit Of Measure"
-msgstr ""
+msgstr "Merná jednotka"
 
 #. module: stock
 #: field:stock.move,price_unit:0
@@ -5092,7 +5103,7 @@ msgstr "Merná jednotka"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Kategórie merných jednotiek"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -5104,30 +5115,30 @@ msgstr "Merné jednotky"
 #: code:addons/stock/stock.py:3736
 #, python-format
 msgid "Unknown Pack"
-msgstr ""
+msgstr "Neznáme balenie"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "Uvoľniť v lokácii vstupu potom ísť na sklad (2 kroky)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr ""
+msgstr "Uvoľniť v lokácii vstupu, prejsť cez kontrolu kvality pred prijatím na sklad (3 kroky)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Unpack"
-msgstr ""
+msgstr "Rozbaliť"
 
 #. module: stock
 #: code:addons/stock/product.py:276
 #, python-format
 msgid "Unplanned Qty"
-msgstr ""
+msgstr "Neplánované množ"
 
 #. module: stock
 #: field:stock.picking,message_unread:0
@@ -5138,18 +5149,18 @@ msgstr "Neprečítané správy"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
-msgstr ""
+msgstr "Odrezervovať"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "UoM"
-msgstr ""
+msgstr "Merná jdnotka"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid "Update Product Quantity"
-msgstr ""
+msgstr "Aktualizovať množstvo produktu"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -5168,7 +5179,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "Použite tohto asistenta na generovanie obstarávacích žiadostí pre tento\nprodukt. Podľa konfigurácie produktu, toto by mohlo\nspustiť návrh nákupnej objednávky, výrobnú objednávku alebo\nnovú úlohu."
 
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
@@ -5178,7 +5189,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking.type,sequence:0
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "Používané pre objednanie 'Všetky operácie' kanban zobrazenia"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -5194,12 +5205,12 @@ msgstr ""
 #. module: stock
 #: view:website:stock.report_picking
 msgid "VAT:"
-msgstr ""
+msgstr "DPH:"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Overenie zásob"
 
 #. module: stock
 #. openerp-web
@@ -5211,7 +5222,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.inventory,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Overené"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -5226,27 +5237,27 @@ msgstr "Pohľad"
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "View Contained Packages content"
-msgstr ""
+msgstr "Zobraziť obsah Obsiahnutých balíčkov"
 
 #. module: stock
 #: field:stock.warehouse,view_location_id:0
 msgid "View Location"
-msgstr ""
+msgstr "Zobraziť lokáciu"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
 msgid "Virtual Locations"
-msgstr ""
+msgstr "Virtuálne lokácie"
 
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "Čaká na ďalší pohyb"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "Čaká na ďalšiu operáciu"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -5254,7 +5265,7 @@ msgstr ""
 #: selection:stock.picking,state:0
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Waiting Availability"
-msgstr ""
+msgstr "Čaká na dostupnosť"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
@@ -5264,7 +5275,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr ""
+msgstr "Čaká na pohyby"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -5290,35 +5301,35 @@ msgstr ""
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Warehouse Configuration"
-msgstr ""
+msgstr "Nastavenie skladiska"
 
 #. module: stock
 #: field:stock.warehouse,name:0
 msgid "Warehouse Name"
-msgstr ""
+msgstr "Názov skladiska"
 
 #. module: stock
 #: field:procurement.rule,propagate_warehouse_id:0
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "Skladisko na propagovanie"
 
 #. module: stock
 #: help:procurement.order,warehouse_id:0
 msgid "Warehouse to consider for the route selection"
-msgstr ""
+msgstr "Skladisko na zváženie pre výber trasy"
 
 #. module: stock
 #: code:addons/stock/stock.py:3550
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "Trasy skladiska"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Warehouses"
-msgstr ""
+msgstr "Skladiská"
 
 #. module: stock
 #: code:addons/stock/stock.py:2625 code:addons/stock/stock.py:3522
@@ -5349,13 +5360,13 @@ msgstr "Varovanie !"
 #: code:addons/stock/stock.py:3866
 #, python-format
 msgid "Warning: wrong UoM!"
-msgstr ""
+msgstr "Varovnie: nesprávna merná jednotka!"
 
 #. module: stock
 #: code:addons/stock/stock.py:3873
 #, python-format
 msgid "Warning: wrong quantity!"
-msgstr ""
+msgstr "Varovanie: nesprávné množstvo!"
 
 #. module: stock
 #: help:product.putaway,fixed_location_ids:0
@@ -5369,7 +5380,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "Keď virtuálny sklad klesne pod Min množstvo špecifikované pre toto pole, Odoo vygeneruje obstarávanie pre prinesenie predpokladaného množstva na Max množstvo."
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -5377,14 +5388,14 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "Keď virtuálny sklad klesne pod Min množstvo, Odoo vygeneruje obstarávanie pre prinesenie predpokladaného množstva na Špecifikované množstvo ako Max množstvo."
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "Keď zvolíte sériové číslo (šaržu), množstvo je upravené s ohľadom na\nmnožstvo toho sériového čísla (šarže), a nie na celkové množstvo produktu."
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -5395,7 +5406,7 @@ msgstr "Sprievodca"
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
+msgstr "Sprievodca kontroluje všetky pravidlá minima skladu a generuje obstarávaciu objednávku."
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
@@ -5438,7 +5449,7 @@ msgstr "Nemôžte zrušiť skladový pohyb ktorý bol nastavený na \"Dokončen�
 #: code:addons/stock/stock.py:638
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr ""
+msgstr "Nemôžete presunúť do lokácie typu zobrazenia %s."
 
 #. module: stock
 #: code:addons/stock/stock.py:2625
@@ -5446,13 +5457,13 @@ msgstr ""
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
-msgstr ""
+msgstr "Nemôžete nastaviť negatívne množstvo produktu v riadku zásob:\n⇥%s - qty: %s"
 
 #. module: stock
 #: code:addons/stock/stock.py:2465
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
+msgstr "Nemôžete rozdeliť koncept pohybu. Najskôr musí byť potvrdený."
 
 #. module: stock
 #: code:addons/stock/stock.py:2461
@@ -5464,26 +5475,26 @@ msgstr "Nemôžte rozdeliť urobený pohyb"
 #: code:addons/stock/wizard/stock_return_picking.py:132
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
-msgstr ""
+msgstr "Manuálne ste vytvorili riadky produktov, prosím zmažte ich pre pokračovanie"
 
 #. module: stock
 #: constraint:stock.warehouse.orderpoint:0
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
-msgstr ""
+msgstr "Musíte zvoliť mernú jendotku produktu v rovnakej kategórii ako predvolená merná jendotka produktu"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:62
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "Môžete vrátiť iba jeden výber naraz!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
-msgstr ""
+msgstr "Môžete vratiť iba odbery ktoré sú Hotovo!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2159
@@ -5496,36 +5507,36 @@ msgstr ""
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
-msgstr ""
+msgstr "Snažíte sa presunúť použitím mernej jednotky ktorá nie je kompatibilná s mernou jednotkou presunutého produktu. Prosím použite mernú jednotku v rovnakej kategórii."
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "_Apply"
-msgstr ""
+msgstr "_Aplikovať"
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "_Cancel"
-msgstr ""
+msgstr "_Zrušiť"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
 #: view:product.template:stock.view_template_property_form
 #: view:stock.location.path:stock.stock_location_path_form
 msgid "days"
-msgstr ""
+msgstr "dni"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr ""
+msgstr "napr. Ročná inventúra"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "napr. PO0032"
 
 #. module: stock
 #: help:stock.move,origin_returned_move_id:0

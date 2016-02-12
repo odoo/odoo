@@ -602,7 +602,7 @@
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_id!=False">
-                                    <field name="sequence" readonly="1" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="journal_entry_id" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
@@ -1253,7 +1253,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                    <field name="journal_id" context="{'journal_name':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
                     <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
                     <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

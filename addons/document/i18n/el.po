@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-22 01:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-02 20:46+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "# των Αρχείων"
 #: code:addons/document/static/src/js/document.js:19
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: code:addons/document/document.py:117 code:addons/document/document.py:307
@@ -46,14 +47,14 @@ msgid ""
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr "Επιλέξτε για να δημιουργήσετε ένα νέο έγγραφο. \n</p><p>\nΤο αποθετήριο Εγγράφων σας δίνει πρόσβαση σε όλα τα συνημμένα, όπως\nmails, έγγραφα έργων, τιμολόγια κλπ.\n</p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να δημιουργήσετε ένα νέο έγγραφο. \n</p><p>\nΤο αποθετήριο Εγγράφων σας δίνει πρόσβαση σε όλα τα συνημμένα, όπως\nmails, έγγραφα έργων, τιμολόγια κλπ.\n</p>\n        "
 
 #. module: document
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
-msgstr ""
+msgstr "Μια έκφραση python χρησιμοποιείται για να αξιολογήσει το πεδίο.\nΜπορείτε να χρησιμοποιήσετε το 'dir_id' για τον τρέχοντα κατάλογο, το 'res_id', το 'res_model' ως αναφορά στην τρέχουσα εγγραφή σε δυναμικούς φακέλους"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -104,7 +105,7 @@ msgstr "Αύγουστος"
 msgid ""
 "Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr "Επιλέξτε αυτό το πεδίο εάν θέλετε το όνομα του αρχείου να περιέχει την περιγραφή της εγγραφής.\nΕάν ρυθμιστεί,ο φάκελος θα πρέπει να είναι ένας φάκελος προέλευσης."
+msgstr "Επιλέξτε αυτό το πεδίο εάν θέλετε το όνομα του αρχείου να περιέχει την περιγραφή της εγγραφής.\nΕάν ρυθμιστεί, ο φάκελος θα πρέπει να είναι ένας φάκελος προέλευσης."
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -148,7 +149,7 @@ msgstr "Περιεχόμενα"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr "Πεδία Περιεχομένων"
+msgstr "Πεδία Περιεχομένου"
 
 #. module: document
 #: field:document.configuration,create_uid:0
@@ -192,7 +193,7 @@ msgstr "Δεκέμβριος"
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Define words in the context, for all child directories and files"
-msgstr "Προσδορίζει λέξεις στο κείμενο, για όλους τους παραγόμενους φακέλους και αρχεία"
+msgstr "Προσδιορίζει λέξεις στο Περιεχόμενο, για όλους τους παραγόμενους φακέλους και αρχεία"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -205,13 +206,13 @@ msgstr "Ορισμός"
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
-msgstr "Φάκελλοι"
+msgstr "Φάκελοι"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Δομή Φακέλων"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -305,7 +306,7 @@ msgid ""
 "directory that can contain a set of files. The directories linked to systems"
 " resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr "Κάθε φάκελος μπορεί είτε να έχει ένα στατικό τύπο είτε να συνδεθεί με μια άλλη πηγή - πόρο. Ένας στατικός φάκελος, όπως και στα Λειτουργικά Συστήματα , είναι ο κλασικός φάκελος που μπορεί να περιέχει ένα αριθμό αρχείων. Οι φάκελοι που συνδεόνται με πηγές του συστήματος αυτόματα κατακτούν τους υποφάκελους για κάθε τύπο πόρου που καθορίστηκε στο μητρικό φάκελο."
+msgstr "Κάθε φάκελος μπορεί είτε να έχει ένα στατικό τύπο είτε να συνδεθεί με μια άλλη πηγή - πόρο. Ένας στατικός φάκελος, όπως και στα Λειτουργικά Συστήματα , είναι ο κλασικός φάκελος που μπορεί να περιέχει ένα αριθμό αρχείων. Οι φάκελοι που συνδέονται με πηγές του συστήματος αυτόματα κατακτούν τους υποφάκελους για κάθε τύπο πόρου που καθορίστηκε στο μητρικό φάκελο."
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -501,7 +502,7 @@ msgstr "Τελευταίος Χρήστης Τροποποίησης"
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -510,7 +511,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -579,7 +580,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
+msgstr "Το Σύστημα Διαχείρισης Εγγράφων του Odoo υποστηρίζει χαρτογράφηση εικονικών φακέλων με έγγραφα. Ο εικονικός φάκελος ενός εγγράφου μπορεί να χρησιμοποιηθεί για την διαχείριση των αρχείων που συνδέθηκαν στο έγγραφο, ή να εκτυπώσει και να κατεβάσει οποιαδήποτε αναφορά. Αυτό το εργαλείο θα δημιουργήσει αυτοματοποιημένους φακέλους σύμφωνα με τις εγκατεστημένες εφαρμογές."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -698,7 +699,7 @@ msgstr "Μέσο αποθήκευσης"
 #. module: document
 #: field:document.directory.content,suffix:0
 msgid "Suffix"
-msgstr "Κατάληξη"
+msgstr "Επίθημα"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -708,7 +709,7 @@ msgstr "Αυτό το όνομα φακέλου πρέπει να είναι μ�
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "Το όνομα αρχείου πρέπει να είναι μοναδικό στον φάκελο !"
 
 #. module: document
 #: help:document.directory.dctx,field:0

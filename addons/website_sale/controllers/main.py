@@ -780,16 +780,14 @@ class website_sale(http.Controller):
                 '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
             ], context=context)
 
+        state = 'done'
+        message = ""
+        validation = None
+
         if not tx_ids:
             if order.amount_total:
-                return {
-                    'state': 'error',
-                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
-                }
-            else:
-                state = 'done'
-                message = ""
-                validation = None
+                state = 'error'
+                message = '<p>%s</p>' % _('There seems to be an error with your request.')
         else:
             tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
@@ -974,7 +972,7 @@ class website_sale(http.Controller):
             pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
         else:
             pricelist_id = partner.property_product_pricelist.id
-        prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
+        prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [pricelist_id], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

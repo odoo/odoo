@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-22 03:23+0000\n"
+"PO-Revision-Date: 2015-12-15 16:25+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -31,13 +32,13 @@ msgid ""
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Yeni bir Teklif Çağrısı işlemi için tıklayın. \n          </p><p>\n            Teklif Çağrısı farklı isteklilerden rekabet eden teklifler\n            oluşturan bir işlemdir. Teklif isteğinde, satınalmak\n            istediğiniz ürünleri kaydedebilir ve tedarikçilerden Teklif İstekleri\n            oluşturabilirsiniz. Teklifler kayıt edildekten sonra, onları inceleyebilir,\n            karşılaştırabilir, bazılarını doğrulayabilir ve iptal edebilirsiniz.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Yeni bir Teklif Toplama işlemi için tıklayın. \n          </p><p>\n            Teklif Toplama farklı tedarikçilerden rekabet eden teklifler\n            oluşturan bir işlemdir. Teklif isteğinde, satın almak\n            istediğiniz ürünleri kaydedebilir ve tedarikçilerden Teklif İstekleri\n            oluşturabilirsiniz. Teklifler kayıt edildekten sonra, onları inceleyebilir,\n            karşılaştırabilir, bazılarını doğrulayabilir ve iptal edebilirsiniz.\n          </p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
 #: field:purchase.requisition.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+msgstr "Analitik Hesap"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -47,27 +48,27 @@ msgstr "Tedarikçiden Onaylı"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
 msgid "Bid Line Qty"
-msgstr "İhale Satır Mik"
+msgstr "Sorgu Miktarı"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Bid Lines"
-msgstr "İhale Satırları"
+msgstr "Kalemler"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr "İhale Seçimi"
+msgstr "Tedarikçi Seçimi"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr "İhale Seçim Türü"
+msgstr "Teklif Toplama Seçim Türü"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Bid Submission Deadline"
-msgstr "İhale Teslim Tarihi"
+msgstr "Teklif Toplama Son Tarihi"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -79,17 +80,17 @@ msgstr "İhale Teslim Tarihi"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
-msgstr "İhale Çağrısı"
+msgstr "Teklif Toplama"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
 msgid "Call for Bids Reference"
-msgstr "İhale Çağrı Referansı"
+msgstr "Teklif Toplama Referansı"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr "Yürürlükteki İhale Çağrıları"
+msgstr "Aktif Teklif Çağrıları"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -99,13 +100,13 @@ msgstr "Kapalı durumdaki Teklif İsteği"
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bif Reference:"
-msgstr "İhale Çağrı Referansı:"
+msgstr "Teklif Toplama Referansı:"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr "İhale Çağrıları"
+msgstr "Teklif Toplama"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -144,7 +145,7 @@ msgstr "Bu teklif isteği ile ilişkilendirlmiş teklif çağrısı tarafından 
 #: code:addons/purchase_requisition/purchase_requisition.py:85
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr "Bu teklifle ilişkilendirilmiş ihale ile iptal edildi."
+msgstr "Bu teklifle ilişkilendirilmiş teklif toplama işlemi ile iptal edildi."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
@@ -178,12 +179,12 @@ msgstr "Ürün satırları seçin"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Bids"
-msgstr "İhale Çağrısını Kapat"
+msgstr "Teklif Toplama İşlemini Kapat"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Bids"
-msgstr "Kapanan İhaleler"
+msgstr "Kapanan İşlemler"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -277,7 +278,7 @@ msgstr "Hata!"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -306,7 +307,7 @@ msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_last_post:0
@@ -350,7 +351,7 @@ msgstr "Mesajlar ve iletişim geçmişi"
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr "Çoklu RFQ Tedariçiler'den"
+msgstr "Çoklu teklif isteği"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -365,7 +366,7 @@ msgstr "Yeni"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Bids"
-msgstr "Yeni İhale Çağrıları"
+msgstr "Yeni Teklif Toplama İşlemleri"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -401,7 +402,7 @@ msgstr "Ürün"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr "Ürün Şablon"
+msgstr "Ürün Şablonu"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
@@ -464,23 +465,23 @@ msgstr "Satınalma Talebi"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Satınalma Taleb Satırı"
+msgstr "Satınalma Talep Satırı"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "Satınalma Taleb Partneri"
+msgstr "Satınalma Talebi Tedarikçi"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
-msgstr "Satınalam Talebi oluşturuldu"
+msgstr "Satınlma Talebi oluşturuldu"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Purchase Requisitions (exclusive)"
-msgstr "Satınalam Talepleri (hariç)"
+msgstr "Satınlma Talepleri (hariç)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -490,7 +491,7 @@ msgstr "Satınalma siparişleri"
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Qty"
-msgstr "Mik"
+msgstr "Miktar"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -501,13 +502,13 @@ msgstr "Miktar"
 #. module: purchase_requisition
 #: field:purchase.order.line,quantity_bid:0
 msgid "Quantity Bid"
-msgstr "İhale Miktarı"
+msgstr "Sorgu Miktarı"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
-msgstr "RFQ oluşturuldu"
+msgstr "Teklif isteği oluşturuldu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -566,17 +567,17 @@ msgstr "Planlanan Sipariş Tarihi:"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Bids"
-msgstr "İhale Çağrısı Ara"
+msgstr "Teklif Toplama Ara"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select multiple RFQ"
-msgstr "Çoklu RFQ Seçimi"
+msgstr "Birden fazla teklif isteği seçilebilir"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr "Sadece bir RFQ (özel)"
+msgstr "Sadece bir teklif isteği seçilebilir (özel)"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -593,7 +594,7 @@ msgstr "Seçim Türü:"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Send RFQ by Email"
-msgstr "E-posta ile RFQ Gönder"
+msgstr "E-posta ile Teklif İsteği Gönder"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -673,7 +674,7 @@ msgstr "Ürün Satırlarını İncele"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View RFQs/Bids"
-msgstr "Teklif İsteği/Teklif İncele"
+msgstr "Teklif Toplama/Teklif İncele"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0

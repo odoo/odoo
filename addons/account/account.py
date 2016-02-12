@@ -1580,7 +1580,7 @@ class account_move(osv.osv):
 
                 obj_move_line.write(cr, uid, line_draft_ids, {
                     'state': 'valid'
-                }, context, check=False)
+                }, context=context, check=False)
 
                 account = {}
                 account2 = {}
@@ -1599,7 +1599,7 @@ class account_move(osv.osv):
                             obj_move_line.write(cr, uid, [line.id], {
                                 'tax_code_id': code,
                                 'tax_amount': amount
-                            }, context, check=False)
+                            }, context=context, check=False)
             elif journal.centralisation:
                 # If the move is not balanced, it must be centralised...
 
@@ -1614,7 +1614,7 @@ class account_move(osv.osv):
                 self._centralise(cr, uid, move, 'credit', context=context)
                 obj_move_line.write(cr, uid, line_draft_ids, {
                     'state': 'valid'
-                }, context, check=False)
+                }, context=context, check=False)
             else:
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
@@ -1622,7 +1622,7 @@ class account_move(osv.osv):
                 if not_draft_line_ids:
                     obj_move_line.write(cr, uid, not_draft_line_ids, {
                         'state': 'draft'
-                    }, context, check=False)
+                    }, context=context, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
             obj_move_line.create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
@@ -2141,8 +2141,8 @@ class account_tax(osv.osv):
 
     @api.v8
     def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
-        return self._model.compute_all(
-            self._cr, self._uid, self, price_unit, quantity,
+        return account_tax.compute_all(
+            self._model, self._cr, self._uid, self, price_unit, quantity,
             product=product, partner=partner, force_excluded=force_excluded)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):

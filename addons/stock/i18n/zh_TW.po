@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 09:24+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-02-03 14:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -35,73 +35,83 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr ""
+msgstr "\n                * 草稿：即未確認狀態，直到確認前不會被安排分揀。\n\n                * 等待其他操作：等待另一庫存移動完成後而自動變為可用狀態（例如MTO流程）。\n\n                * 等待可用：等待產品可用狀態。\n\n                * 部分可用：部分產品可用並被保留。\n\n                * 準備待調撥：產品已被保留，等待確認。\n\n                * 已調撥：已完成調撥，無法修改和取消。\n\n                * 已取消：已取消，無法被再次確認。"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\n建立從供應商直接發到客戶的路線，增加更加複雜的測試-這會安裝 stock_dropshipping模組。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr " (%s 已保留)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr " (已保留)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
-msgstr ""
+msgstr " MTO"
 
 #. module: stock
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
 #, python-format
 msgid " On Hand"
-msgstr ""
+msgstr " 在手"
 
 #. module: stock
 #: code:addons/stock/stock.py:3224 code:addons/stock/stock.py:3498
 #, python-format
 msgid " Sequence in"
-msgstr ""
+msgstr " 入庫序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3228 code:addons/stock/stock.py:3502
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr " 內部序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3225 code:addons/stock/stock.py:3499
 #, python-format
 msgid " Sequence out"
-msgstr ""
+msgstr " 出庫序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3226 code:addons/stock/stock.py:3500
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr " 包裹序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr " 分揀序列"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr ""
+msgstr " 庫存移動存在？"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -113,13 +123,13 @@ msgstr "%s %s %s 已被 <b>調動到</b> 報廢倉."
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: 供應產品來自 %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: 中轉位置"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -150,14 +160,14 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* 供應商位置 : 表示產品的供應商來源位置的虛擬位置\n                       \n* 檢視 : 用於為倉庫建立一個分層的結構的虛擬位置。用來聚集下級位置；不能直接放置產品\n                       \n* 內部位置 : 您倉庫內部的實際位置。\n                       \n* 客戶位置 : 表示產品的客戶送貨目的地的虛擬位置。\n                       \n* 盤點: 用於盤點操作的虛擬位置，用於確認庫存量(實物盤點表) \n                       \n* 補貨: 當來源是(供應商或生產)還不得而知時用於臨時需求操作的虛擬位置。當需求計劃執行完成後這個位置應該為空、\n                       \n* 生產 : 生產作業的虛擬對應位置: 這位置可以有消耗品、原料及成品\n                       \n* 中轉位置: 公司之間或倉庫內部作業的對方位置\n                      "
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:260
 #, python-format
 msgid "< Previous"
-msgstr ""
+msgstr "< 上一個"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -170,7 +180,7 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order. </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    單擊 建立路徑。\n              </p>\n                <p>您可以在這裡定義您倉庫的主要路徑\n                    並可以定義您產品的流程。 這些\n                    路線可以分配給產品、產品類別或固定於\n                    需求單或銷售訂單上。 </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -205,7 +215,7 @@ msgid ""
 "                physical, partner or virtual locations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                點選新增位置。\n              </p><p>\n                定義位置以反映您的倉庫結構\n                和組織。Odoo 能夠管理物理庫 位\n                (倉庫, 貨架, 箱子,等等),  合作伙伴位置 (客戶,\n                供應商) 以及虛擬位置用於對應\n                庫存操作：諸如製造單消耗，\n                庫存檔點等。\n              </p><p>  \n                在Odoo的每一個庫存操作都是將產品從一個位置\n                移動到另一個位置。 例如,如果您從供應商\n                那裡收到產品， Odoo將把產品從供應商位置\n                移動到庫存位置。每一個報表都能從\n                物理位置，合作伙伴位置或虛擬位置執行。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -214,7 +224,7 @@ msgid ""
 "                Click to add a reordering rule.\n"
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
-msgstr ""
+msgstr "            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -226,7 +236,7 @@ msgid ""
 "                you select a lot, you can get the traceability of the products contained in lot.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                點選新增序號。\n              </p><p>\n                這是您全部生產記錄的列表。當\n                您多選（非單選），您能以此序號來批量追溯產品。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -257,7 +267,7 @@ msgid ""
 "                if it should show the customer.  \n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                單擊建立新的分揀類型。\n              </p><p>\n                分揀類型允許您為每個庫存操作\n                定義一個特定的類型來警示。  \n                例如：在分揀類型裡您可以定義是否需要預設包裝。 \n                如果需要展示給客戶。   \n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -283,7 +293,7 @@ msgid ""
 "                manual stock movements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                點選建立一個移庫操作。 \n              </p><p>\n                大多數的操作Odoo是按您預設定的物流規則\n                自動準備的。不過您依然可以記錄\n                手動的庫存移動。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -308,7 +318,7 @@ msgid ""
 "                received using the buttons on the right of each line.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                點選登記一個產品入庫單。\n              </p><p>\n                這裡您能接收單個產品，不需要匹配採購單或者分揀單。\n                您能找出正在等待的產品列表，一旦您收到一個訂單，您能基於\n                供應商名稱或者採購單進行過濾.。然後您能使用每一行右側的\n                按鈕確認收到的產品。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receive_move
@@ -321,7 +331,7 @@ msgid ""
 "                from your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                點選為此產品登記一個收貨單。\n              </p><p>\n                這裡可以找到此產品相關的所有收貨記錄，\n                以及所有您正在等待的來自供應商的\n                尚未到達的收貨單。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -343,20 +353,20 @@ msgid ""
 "<p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>包裹通常在調撥時由產品打包而成，可以包含數個不同的產品。 您可以用這個包裹將它整體移動到某個地方，或是將它打包到一個更大的包裹。包裹也可以拆包，將其再還原拆分成單獨的單元。\n                </p>\n            "
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/js/widgets.js:656
 #, python-format
 msgid "<p>We could not find a picking to display.</p>"
-msgstr ""
+msgstr "<p>找不到要顯示的分揀。</p>"
 
 #. module: stock
 #: code:addons/stock/stock.py:2556
 #, python-format
 msgid "A Pack"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: field:report.stock.lines.date,active:0 field:stock.incoterms,active:0
@@ -374,7 +384,7 @@ msgstr "增加一個內部備註"
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
 msgid "Additional Features"
-msgstr ""
+msgstr "額外的功能"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -396,12 +406,12 @@ msgstr "地址"
 msgid ""
 "Adds a Claim link to the delivery order.\n"
 "-This installs the module claim_from_delivery."
-msgstr ""
+msgstr "為送貨單新增一個索賠連結。\n-這會安裝模組claim_from_delivery。"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr ""
+msgstr "高階：應用補貨規則"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_form
@@ -409,7 +419,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_type_form
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "All Operations"
-msgstr ""
+msgstr "所有作業"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -425,13 +435,13 @@ msgstr "所有產品"
 #. module: stock
 #: field:stock.move,returned_move_ids:0
 msgid "All returned moves"
-msgstr ""
+msgstr "所有退貨移動"
 
 #. module: stock
 #: code:addons/stock/procurement.py:241
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr ""
+msgstr "這個補貨的所有庫存移動都會被取消。"
 
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
@@ -468,27 +478,27 @@ msgstr ""
 msgid ""
 "Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
 "For instance, you can store pieces of meat that you sell and invoice based on their weight."
-msgstr ""
+msgstr "Allows you to store units of a product, but sell and invoice based on a different unit of measure.\nFor instance, you can store pieces of meat that you sell and invoice based on their weight."
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "可應用於"
 
 #. module: stock
 #: field:stock.location.route,product_selectable:0
 msgid "Applicable on Product"
-msgstr ""
+msgstr "可應用於產品"
 
 #. module: stock
 #: field:stock.location.route,product_categ_selectable:0
 msgid "Applicable on Product Category"
-msgstr ""
+msgstr "可應用於產品分類"
 
 #. module: stock
 #: field:stock.location.route,warehouse_selectable:0
 msgid "Applicable on Warehouse"
-msgstr ""
+msgstr "可應用於倉庫"
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
@@ -505,17 +515,17 @@ msgstr "例如10進位精準度為2將允許重量如9.99公斤，而10進位精
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
 msgid "Ask New Products"
-msgstr ""
+msgstr "要求新產品"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Assign Owner"
-msgstr ""
+msgstr "指定所有者"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr ""
+msgstr "指定的移動"
 
 #. module: stock
 #: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
@@ -530,7 +540,7 @@ msgstr "自動，無額外調動"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "自動補貨"
 
 #. module: stock
 #: field:stock.move,string_availability_info:0
@@ -545,7 +555,7 @@ msgstr "有庫存"
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Available Products"
-msgstr ""
+msgstr "可用產品"
 
 #. module: stock
 #: field:stock.move,backorder_id:0 field:stock.picking,backorder_id:0
@@ -556,40 +566,40 @@ msgstr "延期交貨清單 -"
 #: code:addons/stock/stock.py:952
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr ""
+msgstr "欠單 <em>%s</em> <b>已建立</b>。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4193
 #, python-format
 msgid "Backorder exists"
-msgstr ""
+msgstr "欠單已存在"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr ""
+msgstr "欠單"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders (%)"
-msgstr ""
+msgstr "欠單(%)"
 
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Barcode"
-msgstr ""
+msgstr "條碼"
 
 #. module: stock
 #: view:website:stock.barcode_index
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "條碼掃描器"
 
 #. module: stock
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
-msgstr ""
+msgstr "最優價（未啟用！）"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -599,13 +609,13 @@ msgstr "大型供應商"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr ""
+msgstr "在送貨之前將貨物送到出貨位置（分揀+發貨）"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,quant_ids:0
 msgid "Bulk Content"
-msgstr ""
+msgstr "包含內容"
 
 #. module: stock
 #: code:addons/stock/stock.py:1978
@@ -613,7 +623,7 @@ msgstr ""
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
-msgstr ""
+msgstr "通過改變這裡的數量，您確認新的完成數量: Odoo不會自動生成欠單。"
 
 #. module: stock
 #: help:stock.move,procure_method:0
@@ -623,7 +633,7 @@ msgid ""
 "directly create a procurement on the source location (and thus ignore its "
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
-msgstr ""
+msgstr "預設情況下，系統從源位置的庫存中取貨，並等待產品可用。另外一個可能是允許您在源位置上直接產生一個需求單(從而忽略它的當前庫存)來獲取產品。如果我們想把庫存移動連線起來，並讓庫存移動等待上一個移動，您應該選擇第二個選項。"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -635,7 +645,7 @@ msgstr "取消勾選「啟用」方框，您可以隱藏倉位而不必刪除倉
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
+msgstr "通過取消勾選有效欄位，您能隱藏不再使用的INCOTERM。"
 
 #. module: stock
 #: view:stock.picking:stock.stock_picking_calendar
@@ -646,13 +656,13 @@ msgstr "行事曆檢視"
 #: code:addons/stock/stock.py:2989
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr ""
+msgstr "找不到任何客戶或供應商位置。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3074
 #, python-format
 msgid "Can't find any generic Make To Order route."
-msgstr ""
+msgstr "無法找到任何按訂單生成路線。"
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -693,24 +703,24 @@ msgstr "取消"
 #: code:addons/stock/stock.py:1840
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr ""
+msgstr "不能解除一個已完成的移動"
 
 #. module: stock
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr ""
+msgstr "箱子"
 
 #. module: stock
 #: field:stock.return.picking,move_dest_exists:0
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "連結的移動已存在"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:24
 #, python-format
 msgid "Change Location"
-msgstr ""
+msgstr "更改位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -723,14 +733,14 @@ msgstr "更改產品數量"
 #: code:addons/stock/static/src/xml/picking.xml:173
 #, python-format
 msgid "Change destination location"
-msgstr ""
+msgstr "更改目標位置"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:169
 #, python-format
 msgid "Change source location"
-msgstr ""
+msgstr "更改源位置"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -746,19 +756,19 @@ msgstr "勾選選項以允許此倉位存放報廢/損壞貨物。"
 #. module: stock
 #: field:stock.inventory.line,product_qty:0
 msgid "Checked Quantity"
-msgstr ""
+msgstr "點檢的數量"
 
 #. module: stock
 #: help:stock.move,partially_available:0
 msgid "Checks if the move has some stock reserved"
-msgstr ""
+msgstr "檢查移動是否有一些庫存保留"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:11
 #, python-format
 msgid "Choose a location"
-msgstr ""
+msgstr "選擇一個位置"
 
 #. module: stock
 #. openerp-web
@@ -777,7 +787,7 @@ msgstr "代號"
 #. module: stock
 #: field:stock.picking.type,color:0
 msgid "Color"
-msgstr ""
+msgstr "顏色"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -805,18 +815,18 @@ msgstr "公司"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_orderpoint_compute
 msgid "Compute Minimum Stock Rules"
-msgstr ""
+msgstr "計算最小庫存規則"
 
 #. module: stock
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid "Compute Stock"
-msgstr ""
+msgstr "計算庫存"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "僅計算最小庫存規則"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -835,7 +845,7 @@ msgstr "倉庫設定"
 #: code:addons/stock/static/src/xml/picking.xml:175
 #, python-format
 msgid "Configure package"
-msgstr ""
+msgstr "配置包裹"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
@@ -850,7 +860,7 @@ msgstr "確認"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Confirmed Moves"
-msgstr ""
+msgstr "已確認移動"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
@@ -861,7 +871,7 @@ msgstr "消耗品"
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,children_ids:0
 msgid "Contained Packages"
-msgstr ""
+msgstr "包含的包裹"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -893,7 +903,7 @@ msgstr "相對倉位屬性"
 #: code:addons/stock/static/src/xml/picking.xml:166
 #, python-format
 msgid "Create / Change Lot"
-msgstr ""
+msgstr "建立/更改批次"
 
 #. module: stock
 #. openerp-web
@@ -901,19 +911,19 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:43
 #, python-format
 msgid "Create Lot"
-msgstr ""
+msgstr "建立批次"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr ""
+msgstr "建立補貨"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:80
 #, python-format
 msgid "Create backorder"
-msgstr ""
+msgstr "建立欠單"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -923,7 +933,7 @@ msgstr "已建立的調動"
 #. module: stock
 #: field:stock.warehouse.orderpoint,procurement_ids:0
 msgid "Created Procurements"
-msgstr ""
+msgstr "建立的補貨"
 
 #. module: stock
 #: field:make.procurement,create_uid:0
@@ -948,7 +958,7 @@ msgstr ""
 #: field:stock.warehouse,create_uid:0
 #: field:stock.warehouse.orderpoint,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "建立人"
 
 #. module: stock
 #: field:make.procurement,create_date:0
@@ -989,18 +999,18 @@ msgstr "建立日期"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Creation Date, usually the time of the order"
-msgstr ""
+msgstr "建立日期,通常是訂單的時間"
 
 #. module: stock
 #: code:addons/stock/stock.py:3392
 #, python-format
 msgid "Cross-Dock"
-msgstr ""
+msgstr "Cross-Dock"
 
 #. module: stock
 #: field:stock.warehouse,crossdock_route_id:0
 msgid "Crossdock Route"
-msgstr ""
+msgstr "交叉轉運路線"
 
 #. module: stock
 #: field:stock.pack.operation,currency:0
@@ -1017,7 +1027,7 @@ msgstr "單位成本幣別"
 #: model:ir.actions.act_window,name:stock.product_open_quants
 #: view:stock.location:stock.view_location_form
 msgid "Current Stock"
-msgstr ""
+msgstr "當前庫存"
 
 #. module: stock
 #: help:product.product,qty_available:0
@@ -1027,7 +1037,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "當前產品數量。 \n對位置來說，包括了此位置或其子位置的產品。 \n對倉庫來說，包括了這個倉庫位置或其子位置的產品。  \n另外，包括了所有'內部'類型位置的產品。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4263
@@ -1044,7 +1054,7 @@ msgstr "客戶地址"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Customer Address:"
-msgstr ""
+msgstr "客戶地址："
 
 #. module: stock
 #: field:product.template,sale_delay:0
@@ -1093,18 +1103,18 @@ msgstr "運送日期"
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Date of latest Inventory"
-msgstr ""
+msgstr "最近盤存日期"
 
 #. module: stock
 #: field:report.stock.lines.date,move_date:0
 msgid "Date of latest Stock Move"
-msgstr ""
+msgstr "最近庫存移動日期"
 
 #. module: stock
 #: help:stock.picking,message_last_post:0
 #: help:stock.production.lot,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "釋出到記錄上的最後資訊的日期"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_tree
@@ -1115,12 +1125,12 @@ msgstr "盤點日期"
 #: view:report.stock.lines.date:stock.report_stock_lines_date_form
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Dates of Inventories & Moves"
-msgstr ""
+msgstr "盤存與移動日期"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
 msgid "Dates of Inventories and latest Moves"
-msgstr ""
+msgstr "盤存及最近移動日期"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_1
@@ -1143,42 +1153,42 @@ msgstr "重量的小數精度"
 #. module: stock
 #: field:stock.picking.type,default_location_dest_id:0
 msgid "Default Destination Location"
-msgstr ""
+msgstr "預設目的位置"
 
 #. module: stock
 #: help:stock.picking,owner_id:0
 msgid "Default Owner"
-msgstr ""
+msgstr "預設所有者"
 
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
 msgid "Default Resupply Warehouse"
-msgstr ""
+msgstr "預設補給倉庫"
 
 #. module: stock
 #: field:stock.picking.type,default_location_src_id:0
 msgid "Default Source Location"
-msgstr ""
+msgstr "預設源位置"
 
 #. module: stock
 #: help:stock.warehouse,reception_steps:0
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "預設進貨路線"
 
 #. module: stock
 #: help:stock.warehouse,delivery_steps:0
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "默認出貨路線"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr ""
+msgstr "預設:從庫存獲取"
 
 #. module: stock
 #: help:stock.warehouse,route_ids:0
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "通過此倉庫的預設路線"
 
 #. module: stock
 #: help:stock.location,putaway_strategy_id:0
@@ -1187,7 +1197,7 @@ msgid ""
 "where to store the products. This method can be enforced at the product "
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
-msgstr ""
+msgstr "定義儲存產品的確切位置(層)的預設方法。這個方法可被用於產品類別，如果上級位置沒有設定也可以延伸到其上級位置。"
 
 #. module: stock
 #: help:stock.location,removal_strategy_id:0
@@ -1196,18 +1206,18 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr ""
+msgstr "定義此位置提取產品的確切位置(層)的預設方法，這個方法可被用於產品類別，如果上級位置沒有設定也可以延伸到其上級位置。"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
 #: view:stock.location.path:stock.stock_location_path_form
 msgid "Delay"
-msgstr ""
+msgstr "延遲"
 
 #. module: stock
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr ""
+msgstr "延遲（天）"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -1235,7 +1245,7 @@ msgstr "交貨"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Delivery Address:"
-msgstr ""
+msgstr "送貨地址："
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1253,14 +1263,14 @@ msgstr "交貨單"
 #. module: stock
 #: field:stock.warehouse,delivery_route_id:0
 msgid "Delivery Route"
-msgstr ""
+msgstr "交貨路線"
 
 #. module: stock
 #: help:product.template,route_ids:0
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "基於此安裝的模組。能夠定義的產品路線：產品是否是購買的製造的還是MTO/MTS(按訂單生產/按庫存生產),等等..."
 
 #. module: stock
 #: field:stock.move,name:0
@@ -1290,22 +1300,22 @@ msgstr "目的倉位"
 #. module: stock
 #: field:procurement.order,move_dest_id:0 field:stock.move,move_dest_id:0
 msgid "Destination Move"
-msgstr ""
+msgstr "目的移動"
 
 #. module: stock
 #: field:stock.pack.operation,result_package_id:0
 msgid "Destination Package"
-msgstr ""
+msgstr "目的包裹"
 
 #. module: stock
 #: field:stock.transfer_details_items,result_package_id:0
 msgid "Destination package"
-msgstr ""
+msgstr "目的包裹"
 
 #. module: stock
 #: field:stock.move,route_ids:0
 msgid "Destination route"
-msgstr ""
+msgstr "目的路線"
 
 #. module: stock
 #: help:procurement.rule,procure_method:0
@@ -1313,7 +1323,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr ""
+msgstr "確定要生成的庫存移動的補貨方法：是從源位置的可用庫存中提取產品還是忽略其庫存直接建立補貨單。"
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -1329,7 +1339,7 @@ msgid ""
 "product is controlled at least once a year. This also lets you find out "
 "which products have seen little move lately and may deserve special measures"
 " (discounted sale, quality control...)"
-msgstr ""
+msgstr "顯示您產品的最後盤點和完成的移動，還可以方便的使用特定的篩選規則去排序。如果您經常操作移庫及部分盤點，您需要每年至少一次用這報表來控制您的產品庫存。這也讓您更容易發現哪些產品很少移動，從而採用特定的措施(銷售折扣、質量控制...)"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search view:stock.move:stock.view_move_tree
@@ -1342,12 +1352,12 @@ msgstr "完成"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr ""
+msgstr "已完成的調撥"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "已完成的調撥，按日期"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1359,18 +1369,18 @@ msgstr "草案"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Draft Moves"
-msgstr ""
+msgstr "草稿移動"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Edit..."
-msgstr ""
+msgstr "編輯..."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_transfer_details.py:115
 #, python-format
 msgid "Enter transfer details"
-msgstr ""
+msgstr "輸入調撥細節"
 
 #. module: stock
 #: code:addons/stock/stock.py:638 code:addons/stock/stock.py:2353
@@ -1396,12 +1406,12 @@ msgstr "歐洲客戶"
 #: code:addons/stock/stock.py:3753
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "包裹裡面的東西應該在同一個位置"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Exhausted Stock"
-msgstr ""
+msgstr "耗盡的庫存"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -1418,19 +1428,19 @@ msgstr "序號過期日"
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "Extra Move: "
-msgstr ""
+msgstr "額外移動： "
 
 #. module: stock
 #: help:product.removal,method:0
 msgid "FIFO, LIFO..."
-msgstr ""
+msgstr "FIFO, LIFO..."
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:101
 #, python-format
 msgid "Filter by location..."
-msgstr ""
+msgstr "按位置篩選..."
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -1440,12 +1450,12 @@ msgstr "過濾器"
 #. module: stock
 #: view:product.putaway:stock.view_putaway
 msgid "Fixed Locations Per Categories"
-msgstr ""
+msgstr "每個分類固定位置"
 
 #. module: stock
 #: field:product.putaway,fixed_location_ids:0
 msgid "Fixed Locations Per Product Category"
-msgstr ""
+msgstr "每個產品分類固定位置"
 
 #. module: stock
 #: field:stock.picking,message_follower_ids:0
@@ -1462,7 +1472,7 @@ msgstr "強制可用庫存量"
 #. module: stock
 #: field:product.category,removal_strategy_id:0
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "強制下架策略"
 
 #. module: stock
 #: help:product.template,track_incoming:0
@@ -1483,27 +1493,28 @@ msgstr "強制給所有將入客戶倉位的這個產品的調動指定一個序
 msgid ""
 "Forces to specify a Serial Number on each and every operation related to "
 "this product"
-msgstr ""
+msgstr "對此產品的每一個相關作業強制使用序列號"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Available Products"
-msgstr ""
+msgstr "預測的可用產品"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Exhausted Stock"
-msgstr ""
+msgstr "預測的耗盡庫存"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Negative Stock"
-msgstr ""
+msgstr "預測的負數庫存"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "預測數量"
 
 #. module: stock
 #: help:product.product,virtual_available:0
@@ -1512,7 +1523,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "預測數量(計算方法：在手數量-將要出貨的數量+將要進貨的數量) \n對於一個位置來說，這包括了將要到達此位置或其子位置的產品。\n對於一個倉庫來說，這包括了將要到達這個倉庫的位置,或其子位置的產品。\n另外，這包括了要到達所有“內部”類型的位置的產品。"
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -1529,7 +1540,7 @@ msgstr "自"
 #. module: stock
 #: field:product.template,track_all:0
 msgid "Full Lots Traceability"
-msgstr ""
+msgstr "完全批次跟蹤"
 
 #. module: stock
 #: code:addons/stock/product.py:262
@@ -1559,7 +1570,7 @@ msgstr "未來數量"
 #: code:addons/stock/product.py:252
 #, python-format
 msgid "Future Receipts"
-msgstr ""
+msgstr "未來收貨"
 
 #. module: stock
 #: code:addons/stock/product.py:258
@@ -1585,7 +1596,7 @@ msgstr "一般資訊"
 #. module: stock
 #: field:stock.config.settings,module_procurement_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "實時生成補貨"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -1597,12 +1608,12 @@ msgstr "一般IT供應商"
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr ""
+msgstr "給予更專業的分類，更高的優先順序讓他們顯示在列表的頂部。"
 
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
 msgid "Goods will always be resupplied from this warehouse"
-msgstr ""
+msgstr "貨物總是由此倉庫重新供應"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
@@ -1622,12 +1633,12 @@ msgstr "分類方式..."
 #. module: stock
 #: view:procurement.order:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr ""
+msgstr "同組的分揀"
 
 #. module: stock
 #: field:stock.pack.operation,processed:0
 msgid "Has been processed?"
-msgstr ""
+msgstr "已被處理？"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1665,7 +1676,7 @@ msgstr "ID"
 #: code:addons/stock/stock.py:2643 code:addons/stock/stock.py:2808
 #, python-format
 msgid "INV:"
-msgstr ""
+msgstr "INV:"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:97
@@ -1681,7 +1692,7 @@ msgstr "IT供應商"
 #. module: stock
 #: model:product.template,name:stock.product_icecream_product_template
 msgid "Ice Cream"
-msgstr ""
+msgstr "冰淇淋"
 
 #. module: stock
 #: model:product.template,description:stock.product_icecream_product_template
@@ -1696,14 +1707,14 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,name:0
 msgid "Identifier"
-msgstr ""
+msgstr "標識"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
-msgstr ""
+msgstr "如果產品沒有在正確的位置上，設定檢查數量為0，並用正確的位置建立一條新的記錄。"
 
 #. module: stock
 #: help:stock.picking,message_unread:0
@@ -1716,7 +1727,7 @@ msgstr "當有新訊息時通知您。"
 msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
-msgstr ""
+msgstr "如果選中這裡。當之前移動取消或被分割，此移動產生的相關移動也會被取消或分割"
 
 #. module: stock
 #: help:procurement.rule,propagate:0
@@ -1724,36 +1735,36 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr ""
+msgstr "如果選中這裡。當(從下一個需求單生成的)移動的前一個移動被取消或分割，此移動產生的相關移動也會被取消或分割"
 
 #. module: stock
 #: help:stock.move,propagate:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
+msgstr "如果選中，在取消本移動時也取消相關移動。"
 
 #. module: stock
 #: help:procurement.rule,route_id:0
 msgid "If route_id is False, the rule is global"
-msgstr ""
+msgstr "如果route_id設定為假，則該規則是全局的"
 
 #. module: stock
 #: help:stock.pack.operation,result_package_id:0
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "如果設定，此作業即包裝在這個包裹內"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
+msgstr "如果沒有選中“可用”欄位，那麼將隱藏訂貨單記錄且不會刪除它。"
 
 #. module: stock
 #: help:stock.location.route,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
+msgstr "如果active欄位設定為假，允許您在不刪除它的情況下隱藏它。"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -1761,26 +1772,26 @@ msgid ""
 "If there is no product but a source package, this means the source package "
 "was moved entirely.  If there is a product and a source package, the product"
 " was taken from the source package."
-msgstr ""
+msgstr "如果沒有產品只有一個源包裝，這意味著源包裝是被整個移除的。如果有一個產品和一個源包裝，該產品是從源包裝取得的。"
 
 #. module: stock
 #: help:stock.quant,negative_move_id:0
 msgid ""
 "If this is a negative quant, this will be the move that caused this negative"
 " quant."
-msgstr ""
+msgstr "如果這是一個負的份。將會因這個負的份被移動。"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
 msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
-msgstr ""
+msgstr "如果這個裝運被分割，該欄位將連線到包括了已經處理的部分的裝運。"
 
 #. module: stock
 #: help:stock.location.path,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "如果不選中，允許您隱藏規則而無需刪除"
 
 #. module: stock
 #: help:stock.inventory,filter:0
@@ -1790,7 +1801,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr ""
+msgstr "如果您要做全庫盤點，請選擇“所有產品(All Product)”，系統自動用當前庫存產品及數量填充盤點單。如果您只想部分點數，請選擇“手選產品(Manual Selection of Products)”，系統不會自動填充盤點單，需要您手工填寫盤點產品及數量。您也可以只盤點一個產品，系統會自動填充該產品當前庫存數量、批次號。"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1800,14 +1811,14 @@ msgstr "處理中"
 #. module: stock
 #: field:stock.warehouse,in_type_id:0
 msgid "In Type"
-msgstr ""
+msgstr "入庫類型"
 
 #. module: stock
 #: help:procurement.order,partner_dest_id:0
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr ""
+msgstr "當採用供應商直接送貨時，我們要更精確的知道目的地地址"
 
 #. module: stock
 #: field:product.product,incoming_qty:0 field:product.template,incoming_qty:0
@@ -1822,7 +1833,7 @@ msgstr "入庫產品"
 #. module: stock
 #: field:stock.quant,in_date:0
 msgid "Incoming Date"
-msgstr ""
+msgstr "進貨日期"
 
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
@@ -1832,7 +1843,7 @@ msgstr "入庫"
 #. module: stock
 #: help:stock.incoterms,code:0
 msgid "Incoterm Standard Code"
-msgstr ""
+msgstr "國際貿易術語標準程式碼"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -1849,7 +1860,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "貿易術語是一系列的銷售術語,用來劃分交易成本和買賣雙方的責任,反映運輸方法的發展。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1977
@@ -1862,24 +1873,24 @@ msgstr "資訊"
 #: model:stock.location,name:stock.stock_location_company
 #, python-format
 msgid "Input"
-msgstr ""
+msgstr "進貨"
 
 #. module: stock
 #: field:stock.warehouse,wh_input_stock_loc_id:0
 msgid "Input Location"
-msgstr ""
+msgstr "進貨位置"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_picking_wave:0
 msgid ""
 "Install the picking wave module which will help you grouping your pickings "
 "and processing them in batch"
-msgstr ""
+msgstr "安裝stock_picking_wave模組，會幫助您分組分揀的貨物並批量處理它們。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr ""
+msgstr "公司間中轉"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -1913,12 +1924,12 @@ msgstr "內部參照"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "內部調撥"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "內部中轉位置"
 
 #. module: stock
 #: field:stock.warehouse,int_type_id:0
@@ -1935,27 +1946,27 @@ msgstr "內部參考編號，當不同於製造商序號時"
 #. module: stock
 #: field:stock.inventory,location_id:0
 msgid "Inventoried Location"
-msgstr ""
+msgstr "已盤存位置"
 
 #. module: stock
 #: field:stock.inventory,lot_id:0
 msgid "Inventoried Lot/Serial Number"
-msgstr ""
+msgstr "已盤存批次/序列號"
 
 #. module: stock
 #: field:stock.inventory,partner_id:0
 msgid "Inventoried Owner"
-msgstr ""
+msgstr "已盤存所有者"
 
 #. module: stock
 #: field:stock.inventory,package_id:0
 msgid "Inventoried Pack"
-msgstr ""
+msgstr "已盤存包裹"
 
 #. module: stock
 #: field:stock.inventory,product_id:0
 msgid "Inventoried Product"
-msgstr ""
+msgstr "已盤存產品"
 
 #. module: stock
 #: field:stock.inventory,line_ids:0
@@ -1965,7 +1976,7 @@ msgstr "盤點"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
 msgid "Inventories Month"
-msgstr ""
+msgstr "盤存月份"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_inventory
@@ -1978,14 +1989,14 @@ msgstr "庫存"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr ""
+msgstr "存貨調整"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr ""
+msgstr "存貨調整"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -1995,13 +2006,13 @@ msgstr "庫存管理"
 #. module: stock
 #: field:stock.inventory,date:0
 msgid "Inventory Date"
-msgstr ""
+msgstr "盤存時間"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Inventory Details"
-msgstr ""
+msgstr "盤存明細"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
@@ -2011,7 +2022,7 @@ msgstr "盤點明細"
 #. module: stock
 #: help:stock.inventory,line_ids:0
 msgid "Inventory Lines."
-msgstr ""
+msgstr "盤存明細行。"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
@@ -2021,17 +2032,17 @@ msgstr "存貨倉位"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "存貨位置"
 
 #. module: stock
 #: help:stock.inventory,move_ids:0
 msgid "Inventory Moves."
-msgstr ""
+msgstr "盤存移動"
 
 #. module: stock
 #: help:stock.inventory,name:0
 msgid "Inventory Name."
-msgstr ""
+msgstr "盤存名稱"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
@@ -2042,19 +2053,19 @@ msgstr "盤點參考號"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "庫存路徑"
 
 #. module: stock
 #: field:stock.quant,inventory_value:0
 msgid "Inventory Value"
-msgstr ""
+msgstr "存貨價值"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid ""
 "Inventory adjustments will be made by comparing the theoretical and the "
 "checked quantities."
-msgstr ""
+msgstr "庫存調整是通過比較產品在odoo系統中的數量和實際複核的數量再進行調整。"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -2064,7 +2075,7 @@ msgstr "盤點損失"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory of"
-msgstr ""
+msgstr "盤存"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
@@ -2080,7 +2091,7 @@ msgstr "為關注者"
 #. module: stock
 #: field:stock.location,scrap_location:0
 msgid "Is a Scrap Location?"
-msgstr ""
+msgstr "是一個廢品位置？"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -2096,23 +2107,23 @@ msgstr "指定貨物是分批出貨或一次出貨"
 #. module: stock
 #: field:stock.transfer_details,item_ids:0
 msgid "Items"
-msgstr ""
+msgstr "翻譯項"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Last 10 Done Operations"
-msgstr ""
+msgstr "最近10筆已完成的作業"
 
 #. module: stock
 #: field:stock.picking.type,last_done_picking:0
 msgid "Last 10 Done Pickings"
-msgstr ""
+msgstr "最近10筆完成的分揀"
 
 #. module: stock
 #: field:stock.picking,message_last_post:0
 #: field:stock.production.lot,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最後資訊日期"
 
 #. module: stock
 #: field:make.procurement,write_uid:0
@@ -2137,7 +2148,7 @@ msgstr ""
 #: field:stock.warehouse,write_uid:0
 #: field:stock.warehouse.orderpoint,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最後更新人"
 
 #. module: stock
 #: field:make.procurement,write_date:0
@@ -2162,7 +2173,7 @@ msgstr ""
 #: field:stock.warehouse,write_date:0
 #: field:stock.warehouse.orderpoint,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最後更新時間"
 
 #. module: stock
 #: code:addons/stock/stock.py:4191
@@ -2175,18 +2186,18 @@ msgstr "延遲"
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr ""
+msgstr "延遲 (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "延遲調撥"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Latest Inventories & Moves"
-msgstr ""
+msgstr "最近的盤點庫存和移動"
 
 #. module: stock
 #: field:stock.location,parent_left:0 field:stock.quant.package,parent_left:0
@@ -2196,32 +2207,32 @@ msgstr "左父項"
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between companies"
-msgstr ""
+msgstr "如果這個位置是公司間共享的，則此欄位留空"
 
 #. module: stock
 #: help:stock.location.route,company_id:0
 msgid "Let this field empty if this route is shared between all companies"
-msgstr ""
+msgstr "如果路線需共享給所有公司這裡請留空"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
 msgid "Link between stock moves and pack operations"
-msgstr ""
+msgstr "將庫存調撥和包裝作業關聯"
 
 #. module: stock
 #: field:stock.pack.operation,linked_move_operation_ids:0
 msgid "Linked Moves"
-msgstr ""
+msgstr "連結的移動"
 
 #. module: stock
 #: field:stock.move,linked_move_operation_ids:0
 msgid "Linked Operations"
-msgstr ""
+msgstr "連結的作業"
 
 #. module: stock
 #: field:stock.quant,propagated_from_id:0
 msgid "Linked Quant"
-msgstr ""
+msgstr "連結的份"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -2252,12 +2263,12 @@ msgstr "倉位和倉庫"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr ""
+msgstr "位置條碼"
 
 #. module: stock
 #: field:stock.location,loc_barcode:0
 msgid "Location Barcode"
-msgstr ""
+msgstr "位置條碼"
 
 #. module: stock
 #: field:stock.inventory.line,location_name:0
@@ -2269,7 +2280,7 @@ msgstr "地點名稱"
 #: view:stock.location.path:stock.stock_location_path_form
 #: view:stock.location.path:stock.stock_location_path_tree
 msgid "Location Paths"
-msgstr ""
+msgstr "位置路徑"
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -2303,18 +2314,18 @@ msgstr "物流"
 #. module: stock
 #: field:stock.quant.package,ul_id:0
 msgid "Logistic Unit"
-msgstr ""
+msgstr "物流單元"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 msgid "Logistic Units"
-msgstr ""
+msgstr "物流單元"
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 #: view:stock.location:stock.view_location_form
 msgid "Logistics"
-msgstr ""
+msgstr "物流"
 
 #. module: stock
 #: field:stock.move,restrict_lot_id:0 field:stock.move.scrap,restrict_lot_id:0
@@ -2327,7 +2338,7 @@ msgstr "批次"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
 msgid "Lot BarCode"
-msgstr ""
+msgstr "批次條碼"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_tree
@@ -2337,13 +2348,13 @@ msgstr "批次存貨"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "批次/序列號"
 
 #. module: stock
 #: field:stock.pack.operation,lot_id:0
 #: field:stock.transfer_details_items,lot_id:0
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "批次/序列號"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -2354,36 +2365,36 @@ msgstr "批次"
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
 msgid "MTO rule"
-msgstr ""
+msgstr "MTO規則"
 
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
 msgid "Make Procurements"
-msgstr ""
+msgstr "建立補貨"
 
 #. module: stock
 #: code:addons/stock/stock.py:3217
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
-msgstr ""
+msgstr "按訂單生成"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr ""
+msgstr "將包裹放入到特定位置，然後將他們轉移到出貨位置等待送貨(分揀+打包+發貨)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "管理不同的庫存所有者"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr ""
+msgstr "管理批次和序列號"
 
 #. module: stock
 #: model:res.groups,name:stock.group_locations
@@ -2393,17 +2404,17 @@ msgstr "管理多個倉位與倉庫"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr ""
+msgstr "管理包裹"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "管理推式和拉式的庫存流"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_adv_location:0
 msgid "Manage advanced routes for your warehouse"
-msgstr ""
+msgstr "管理倉庫的高階路線"
 
 #. module: stock
 #: field:stock.config.settings,group_uom:0
@@ -2413,7 +2424,7 @@ msgstr "管理產品的不同度量單位"
 #. module: stock
 #: field:stock.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr ""
+msgstr "管理供應商直接送貨"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
@@ -2423,12 +2434,12 @@ msgstr "管理多個倉位與倉庫"
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_owner:0
 msgid "Manage owner on stock"
-msgstr ""
+msgstr "管理庫存所有者"
 
 #. module: stock
 #: field:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage picking wave"
-msgstr ""
+msgstr "管理分揀波次"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -2444,7 +2455,7 @@ msgstr "手動操作"
 #: code:addons/stock/stock.py:2640
 #, python-format
 msgid "Manual Selection of Products"
-msgstr ""
+msgstr "手動選擇產品"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -2459,7 +2470,7 @@ msgstr "最大預計日期"
 #. module: stock
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "最大數量"
 
 #. module: stock
 #. openerp-web
@@ -2487,33 +2498,33 @@ msgstr "方法"
 #: field:res.company,propagation_minimum_delta:0
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
-msgstr ""
+msgstr "關聯移庫的日期變化時傳遞的最小值。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "最小存貨規則"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "最小數量"
 
 #. module: stock
 #: field:procurement.order,orderpoint_id:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "最少庫存規則"
 
 #. module: stock
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "最小庫存規則"
 
 #. module: stock
 #: field:stock.config.settings,propagation_minimum_delta:0
 msgid ""
 "Minimum days to trigger a propagation of date change in pushed/pull flows."
-msgstr ""
+msgstr "觸發推拉式流傳遞的日期變化的最小天數。"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
@@ -2530,22 +2541,22 @@ msgstr "調動"
 #: code:addons/stock/procurement.py:43
 #, python-format
 msgid "Move From Another Location"
-msgstr ""
+msgstr "從其它位置移動"
 
 #. module: stock
 #: field:stock.quant,negative_move_id:0
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "移動負數份"
 
 #. module: stock
 #: field:stock.move,split_from:0
 msgid "Move Split From"
-msgstr ""
+msgstr "移動拆分來自"
 
 #. module: stock
 #: field:procurement.rule,procure_method:0
 msgid "Move Supply Method"
-msgstr ""
+msgstr "移動供應方法"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2557,13 +2568,13 @@ msgstr "調動日期：調動完成前為規劃日期，完成後為實際處理
 #. module: stock
 #: help:procurement.order,move_dest_id:0
 msgid "Move which caused (created) the procurement"
-msgstr ""
+msgstr "補貨引起(建立)的庫存移動"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr ""
+msgstr "已移動的份"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2581,7 +2592,7 @@ msgstr "移動"
 #. module: stock
 #: help:procurement.order,move_ids:0
 msgid "Moves created by the procurement"
-msgstr ""
+msgstr "補貨建立的庫存移動"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,group_id:0
@@ -2589,24 +2600,24 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by procurement rules will be grouped "
 "into one big picking."
-msgstr ""
+msgstr "通過此訂購點建立的移動將放在此補貨組中。如果沒有被提供，由補貨規則產品的移動將被組合為一個大的分揀。"
 
 #. module: stock
 #: help:stock.pack.operation,linked_move_operation_ids:0
 msgid ""
 "Moves impacted by this operation for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "計算剩餘數量時，被這個作業影響的移庫明細。"
 
 #. module: stock
 #: help:stock.quant,history_ids:0
 msgid "Moves that operate(d) on this quant"
-msgstr ""
+msgstr "操作此份的移庫明細。"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
 msgid "Moving Options"
-msgstr ""
+msgstr "移動選項"
 
 #. module: stock
 #: field:product.putaway,name:0 field:product.removal,name:0
@@ -2618,12 +2629,12 @@ msgstr "名稱"
 #. module: stock
 #: field:stock.quant,negative_dest_location_id:0
 msgid "Negative Destination Location"
-msgstr ""
+msgstr "負數目標位置"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Negative Stock"
-msgstr ""
+msgstr "負數庫存"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -2640,7 +2651,7 @@ msgstr "在庫數量調整"
 #: code:addons/stock/static/src/xml/picking.xml:261
 #, python-format
 msgid "Next >"
-msgstr ""
+msgstr "下一個>"
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
@@ -2650,26 +2661,26 @@ msgstr "否"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Inventory yet"
-msgstr ""
+msgstr "無庫存"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/js/widgets.js:649
 #, python-format
 msgid "No Picking Available"
-msgstr ""
+msgstr "無可用分揀"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr ""
+msgstr "無庫存移動"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:195
 #, python-format
 msgid "No picking found."
-msgstr ""
+msgstr "沒有找到分揀"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:84
@@ -2683,7 +2694,7 @@ msgstr "沒有產品可進行退貨（只有完成狀態和未完全退貨的項
 #: code:addons/stock/procurement.py:199
 #, python-format
 msgid "No source location defined!"
-msgstr ""
+msgstr "未定義源位置！"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -2710,7 +2721,7 @@ msgstr "備註"
 #: code:addons/stock/stock.py:880
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "沒有可用數要檢查。"
 
 #. module: stock
 #: field:procurement.rule,delay:0
@@ -2720,13 +2731,13 @@ msgstr "天數"
 #. module: stock
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr ""
+msgstr "完成此中轉需要的天數"
 
 #. module: stock
 #: code:addons/stock/stock.py:4195
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "確定"
 
 #. module: stock
 #. openerp-web
@@ -2744,25 +2755,25 @@ msgstr "現有："
 #: code:addons/stock/stock.py:2554
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr ""
+msgstr "一個批次/序列號"
 
 #. module: stock
 #: code:addons/stock/stock.py:2551
 #, python-format
 msgid "One owner only"
-msgstr ""
+msgstr "僅一個所有者"
 
 #. module: stock
 #: code:addons/stock/stock.py:2552
 #, python-format
 msgid "One product for a specific owner"
-msgstr ""
+msgstr "一個產品給一個指定的所有者"
 
 #. module: stock
 #: code:addons/stock/stock.py:2542
 #, python-format
 msgid "One product only"
-msgstr ""
+msgstr "僅一個產品"
 
 #. module: stock
 #: model:ir.actions.client,name:stock.action_client_warehouse_menu
@@ -2773,7 +2784,7 @@ msgstr "開啟倉庫選單"
 #: field:stock.move.operation.link,operation_id:0
 #: field:stock.transfer_details_items,packop_id:0
 msgid "Operation"
-msgstr ""
+msgstr "作業"
 
 #. module: stock
 #: code:addons/stock/stock.py:1840 code:addons/stock/stock.py:1915
@@ -2798,21 +2809,21 @@ msgstr "作業"
 #: code:addons/stock/static/src/xml/picking.xml:93
 #, python-format
 msgid "Operations Processed"
-msgstr ""
+msgstr "已處理的作業"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:92
 #, python-format
 msgid "Operations ToDo"
-msgstr ""
+msgstr "待辦的作業"
 
 #. module: stock
 #: help:stock.move,linked_move_operation_ids:0
 msgid ""
 "Operations that impact this move for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "此移庫作業將影響餘量的計算"
 
 #. module: stock
 #: help:stock.move,partner_id:0
@@ -2830,22 +2841,22 @@ msgstr "選擇性在地化明細，僅供參考用"
 #. module: stock
 #: help:stock.move,returned_move_ids:0
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "選項: 所有的退貨移動來自此移動"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "選項: 如果是連鎖那會引發庫存移動."
 
 #. module: stock
 #: help:stock.move,move_orig_ids:0
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "選項: 連結它們會引起上個庫存移動"
 
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Order (Origin)"
-msgstr ""
+msgstr "訂單(原始)"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -2860,7 +2871,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
+msgstr "補貨到最大值"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -2876,17 +2887,17 @@ msgstr "來源"
 #. module: stock
 #: field:stock.move,origin_returned_move_id:0
 msgid "Origin return move"
-msgstr ""
+msgstr "原始退貨移動"
 
 #. module: stock
 #: field:stock.move,move_orig_ids:0
 msgid "Original Move"
-msgstr ""
+msgstr "原始移動"
 
 #. module: stock
 #: field:stock.warehouse,out_type_id:0
 msgid "Out Type"
-msgstr ""
+msgstr "出庫類型"
 
 #. module: stock
 #: field:product.product,outgoing_qty:0 field:product.template,outgoing_qty:0
@@ -2896,7 +2907,7 @@ msgstr "外送"
 #. module: stock
 #: field:stock.warehouse,delivery_steps:0
 msgid "Outgoing Shippings"
-msgstr ""
+msgstr "出去的送貨"
 
 #. module: stock
 #: code:addons/stock/stock.py:3353
@@ -2908,7 +2919,7 @@ msgstr "輸出"
 #. module: stock
 #: field:stock.warehouse,wh_output_stock_loc_id:0
 msgid "Output Location"
-msgstr ""
+msgstr "出貨位置"
 
 #. module: stock
 #: field:stock.inventory.line,partner_id:0 field:stock.location,partner_id:0
@@ -2922,18 +2933,18 @@ msgstr "所有者"
 #. module: stock
 #: field:stock.move,restrict_partner_id:0
 msgid "Owner "
-msgstr ""
+msgstr "所有者 "
 
 #. module: stock
 #: help:stock.location,partner_id:0
 msgid "Owner of the location if not internal"
-msgstr ""
+msgstr "如果不是內部位置，則填寫位置所有者"
 
 #. module: stock
 #: help:stock.pack.operation,owner_id:0
 #: help:stock.transfer_details_items,owner_id:0
 msgid "Owner of the quants"
-msgstr ""
+msgstr "份的所有者"
 
 #. module: stock
 #: code:addons/stock/product.py:270
@@ -2951,12 +2962,12 @@ msgstr "包裹"
 #. module: stock
 #: field:stock.picking,pack_operation_exist:0
 msgid "Pack Operation Exists?"
-msgstr ""
+msgstr "打包作業已存在？"
 
 #. module: stock
 #: field:stock.warehouse,pack_type_id:0
 msgid "Pack Type"
-msgstr ""
+msgstr "包裹類型"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view field:stock.quant,package_id:0
@@ -2965,47 +2976,47 @@ msgstr ""
 #: view:stock.quant.package:stock.view_quant_package_tree
 #: view:website:stock.report_inventory
 msgid "Package"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
 msgid "Package BarCode"
-msgstr ""
+msgstr "包裹條碼"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "有內容的包裹條碼"
 
 #. module: stock
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,complete_name:0
 msgid "Package Name"
-msgstr ""
+msgstr "包裹名稱"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,name:0
 msgid "Package Reference"
-msgstr ""
+msgstr "包裹參考"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:57
 #, python-format
 msgid "Package type"
-msgstr ""
+msgstr "包裹類型"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 msgid "Packages"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Packages To Move"
-msgstr ""
+msgstr "待移動的包裹"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -3017,19 +3028,19 @@ msgstr "包裝"
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
 msgid "Packing Location"
-msgstr ""
+msgstr "打包位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "打包作業"
 
 #. module: stock
 #: code:addons/stock/stock.py:3354
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "打包區域"
 
 #. module: stock
 #: field:stock.transfer_details,packop_ids:0
@@ -3050,7 +3061,7 @@ msgstr "上層倉位"
 #. module: stock
 #: field:stock.quant.package,parent_id:0
 msgid "Parent Package"
-msgstr ""
+msgstr "父級包裹"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3060,7 +3071,7 @@ msgstr "部份"
 #. module: stock
 #: field:stock.move,partially_available:0 selection:stock.picking,state:0
 msgid "Partially Available"
-msgstr ""
+msgstr "部分可用"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -3082,7 +3093,7 @@ msgstr "伙伴地點"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
-msgstr ""
+msgstr "實際庫存按月份"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -3092,30 +3103,30 @@ msgstr "實質地點"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "物理包裹"
 
 #. module: stock
 #: code:addons/stock/stock.py:3302
 #, python-format
 msgid "Pick"
-msgstr ""
+msgstr "分揀"
 
 #. module: stock
 #: code:addons/stock/stock.py:3395
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr ""
+msgstr "分揀+打包+發貨"
 
 #. module: stock
 #: code:addons/stock/stock.py:3394
 #, python-format
 msgid "Pick + Ship"
-msgstr ""
+msgstr "分揀+發貨"
 
 #. module: stock
 #: field:stock.warehouse,pick_type_id:0
 msgid "Pick Type"
-msgstr ""
+msgstr "分揀類型"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
@@ -3133,7 +3144,7 @@ msgstr "提貨清單"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "分揀清單"
 
 #. module: stock
 #: field:procurement.rule,picking_type_id:0 field:stock.move,picking_type_id:0
@@ -3141,36 +3152,36 @@ msgstr ""
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "分揀類型"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
 msgid "Picking Type Code"
-msgstr ""
+msgstr "分揀類型程式碼"
 
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr ""
+msgstr "分揀類型名稱"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr ""
+msgstr "分揀類型決定了展示在檢視、報表...等中的分揀方式"
 
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
 msgid "Picking Type for Returns"
-msgstr ""
+msgstr "退貨的分揀類型"
 
 #. module: stock
 #: view:stock.picking.type:stock.view_picking_type_form
 #: view:stock.picking.type:stock.view_picking_type_tree
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "分揀類型"
 
 #. module: stock
 #: view:stock.picking:stock.vpicktree
@@ -3180,17 +3191,17 @@ msgstr "提貨清單"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details
 msgid "Picking wizard"
-msgstr ""
+msgstr "分揀嚮導"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details_items
 msgid "Picking wizard items"
-msgstr ""
+msgstr "分揀嚮導項目"
 
 #. module: stock
 #: view:procurement.group:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr ""
+msgstr "分揀"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3200,12 +3211,12 @@ msgstr "提貨單已處理"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr ""
+msgstr "群組分揀"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr ""
+msgstr "遲於計劃時間的調撥單"
 
 #. module: stock
 #: field:make.procurement,date_planned:0
@@ -3228,35 +3239,35 @@ msgstr "請指定至少一個不為零的數量"
 #: code:addons/stock/wizard/stock_change_product_qty.py:58
 #, python-format
 msgid "Please use the Product Variant view to update the product quantity."
-msgstr ""
+msgstr "請使用產品系列檢視來更新產品數量 "
 
 #. module: stock
 #: code:addons/stock/wizard/make_procurement_product.py:117
 #, python-format
 msgid "Please use the Product Variant vue to request a procurement."
-msgstr ""
+msgstr "請使用產品系列來請求一個補貨。"
 
 #. module: stock
 #: field:stock.move,product_packaging:0
 msgid "Prefered Packaging"
-msgstr ""
+msgstr "首選的包裝形式"
 
 #. module: stock
 #: field:procurement.order,route_ids:0
 msgid "Preferred Routes"
-msgstr ""
+msgstr "Preferred Routes"
 
 #. module: stock
 #: help:stock.move,route_ids:0
 msgid "Preferred route to be followed by the procurement order"
-msgstr ""
+msgstr "優先路徑其次是補貨單"
 
 #. module: stock
 #: help:procurement.order,route_ids:0
 msgid ""
 "Preferred route to be followed by the procurement order. Usually copied from"
 " the generating document (SO) but could be set up manually."
-msgstr ""
+msgstr "優先路徑，其次是補貨單。通常從文件自動生成(如銷售訂單)，也可以手動設定。"
 
 #. module: stock
 #. openerp-web
@@ -3268,14 +3279,14 @@ msgstr "列印"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Print Picking List"
-msgstr ""
+msgstr "列印分揀清單"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:177
 #, python-format
 msgid "Print package label"
-msgstr ""
+msgstr "列印包裹標籤"
 
 #. module: stock
 #: field:stock.fixed.putaway.strat,sequence:0 field:stock.move,priority:0
@@ -3288,7 +3299,7 @@ msgstr "優先次序"
 msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
-msgstr ""
+msgstr "此分揀的優先順序。手動在這設定一個值作為所有移動的優先順序。"
 
 #. module: stock
 #: view:stock.move:stock.view_move_tree
@@ -3316,7 +3327,7 @@ msgstr "採購"
 #: view:stock.picking:stock.view_picking_internal_search
 #: field:stock.picking,group_id:0 field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "補貨組"
 
 #. module: stock
 #: field:procurement.order,location_id:0 field:procurement.rule,location_id:0
@@ -3327,28 +3338,28 @@ msgstr "採購地點"
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "待處理的補貨訂單"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
 #: view:make.procurement:stock.view_make_procurment_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "補貨請求"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "補貨申請"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule field:stock.move,rule_id:0
 msgid "Procurement Rule"
-msgstr ""
+msgstr "補貨規則"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
 msgid "Procurement Rules"
-msgstr ""
+msgstr "補貨規則"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement_action
@@ -3400,7 +3411,7 @@ msgstr "產品分類"
 #. module: stock
 #: field:stock.inventory.line,product_code:0
 msgid "Product Code"
-msgstr ""
+msgstr "產品編碼"
 
 #. module: stock
 #: view:stock.production.lot:stock.search_product_lot_filter
@@ -3445,7 +3456,7 @@ msgstr "產品度量單位"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_variant_config_stock
 msgid "Product Variants"
-msgstr ""
+msgstr "系列產品"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
@@ -3481,7 +3492,7 @@ msgstr "產品"
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Products To Move"
-msgstr ""
+msgstr "待移動產品"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
@@ -3498,13 +3509,13 @@ msgstr "產品： "
 #: code:addons/stock/stock.py:1699
 #, python-format
 msgid "Programming Error!"
-msgstr ""
+msgstr "程式錯誤!"
 
 #. module: stock
 #: field:procurement.rule,propagate:0 field:stock.location.path,propagate:0
 #: field:stock.move,propagate:0
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "沿用取消和拆分"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -3516,84 +3527,84 @@ msgstr "提供退貨量"
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,pull_ids:0
 msgid "Pull Rules"
-msgstr ""
+msgstr "拉式規則"
 
 #. module: stock
 #: field:stock.move,push_rule_id:0
 msgid "Push Rule"
-msgstr ""
+msgstr "推式規則"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,push_ids:0
 msgid "Push Rules"
-msgstr ""
+msgstr "推式規則"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "推式物流"
 
 #. module: stock
 #: field:stock.fixed.putaway.strat,putaway_id:0
 msgid "Put Away Method"
-msgstr ""
+msgstr "上架方法"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: field:stock.location,putaway_strategy_id:0
 msgid "Put Away Strategy"
-msgstr ""
+msgstr "上架策略"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:111
 #, python-format
 msgid "Put in Cart"
-msgstr ""
+msgstr "放入小車"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:110
 #, python-format
 msgid "Put in Pack"
-msgstr ""
+msgstr "放入包裹"
 
 #. module: stock
 #: view:product.putaway:stock.view_putaway
 msgid "Putaway"
-msgstr ""
+msgstr "上架"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr ""
+msgstr "數量倍數"
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "數量倍數必須大於或等於零。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3352
 #, python-format
 msgid "Quality Control"
-msgstr ""
+msgstr "質量管理"
 
 #. module: stock
 #: field:stock.warehouse,wh_qc_stock_loc_id:0
 msgid "Quality Control Location"
-msgstr ""
+msgstr "質量管理位置"
 
 #. module: stock
 #: view:stock.quant:stock.view_stock_quant_form
 msgid "Quant History"
-msgstr ""
+msgstr "份歷史"
 
 #. module: stock
 #: field:stock.picking,quant_reserved_exist:0
 msgid "Quant already reserved ?"
-msgstr ""
+msgstr "份已保留？"
 
 #. module: stock
 #: code:addons/stock/stock.py:1916
@@ -3621,14 +3632,14 @@ msgid "Quantity (UOS)"
 msgstr "數量（量度單位）"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
-msgstr ""
+msgstr "可用數量"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "數量倍數"
 
 #. module: stock
 #: field:product.product,qty_available:0
@@ -3639,12 +3650,12 @@ msgstr "在庫數量"
 #. module: stock
 #: field:stock.pack.operation,qty_done:0
 msgid "Quantity Processed"
-msgstr ""
+msgstr "已處理的數量"
 
 #. module: stock
 #: field:stock.move,reserved_availability:0
 msgid "Quantity Reserved"
-msgstr ""
+msgstr "已保留的數量"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:92
@@ -3655,19 +3666,19 @@ msgstr "數量不能為負。"
 #. module: stock
 #: help:stock.move,availability:0
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr ""
+msgstr "倉庫裡仍然為這次移動保留的數量"
 
 #. module: stock
 #: help:stock.move,product_qty:0
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "此產品預設計量單位的數量"
 
 #. module: stock
 #: help:stock.quant,qty:0
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr ""
+msgstr "預設計量單位下，這份的產品數量。"
 
 #. module: stock
 #: help:product.product,incoming_qty:0
@@ -3676,7 +3687,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "計劃到達的產品數量。\n對於一個位置來說，這包括了將要到達此位置或其子位置的貨物。\n對於一個倉庫來說，這包括了將要到達這個倉庫的的這個位置,或其子位置的貨物。\n另外，這包括了所有“內部”類型位置要到達的貨物。"
 
 #. module: stock
 #: help:product.product,outgoing_qty:0
@@ -3685,7 +3696,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "計劃出庫的產品數量。\n對於一個位置來說，這包括了將要離開此位置或其子位置的貨物。\n對於一個倉庫來說，這包括了將要離開這個倉庫的的這個位置,或其子位置的貨物。\n另外，這包括了所有“內部”類型位置要離開的貨物。"
 
 #. module: stock
 #: help:stock.move.operation.link,qty:0
@@ -3693,12 +3704,12 @@ msgid ""
 "Quantity of products to consider when talking about the contribution of this"
 " pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
-msgstr ""
+msgstr "產品數量會考慮此打包作業產生移動(及反向移動)的剩餘數量。同時參考產品的預設計量單位。"
 
 #. module: stock
 #: help:stock.move,reserved_availability:0
 msgid "Quantity that has already been reserved for this move"
-msgstr ""
+msgstr "已為這次移動保留了數量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3711,14 +3722,14 @@ msgstr ""
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr ""
+msgstr "份"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:218
 #, python-format
 msgid "Quit"
-msgstr ""
+msgstr "退出"
 
 #. module: stock
 #: field:product.template,loc_rack:0
@@ -3735,7 +3746,7 @@ msgstr "就緒"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 msgid "Ready Transfers"
-msgstr ""
+msgstr "已就緒調撥"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -3745,7 +3756,7 @@ msgstr "已準備可運送"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Real Quantity"
-msgstr ""
+msgstr "實際數量"
 
 #. module: stock
 #: view:product.product:stock.product_kanban_stock_view
@@ -3756,25 +3767,25 @@ msgstr "收據"
 #. module: stock
 #: field:stock.warehouse,reception_route_id:0
 msgid "Receipt Route"
-msgstr ""
+msgstr "接收路線"
 
 #. module: stock
 #: code:addons/stock/stock.py:3389
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "1步接收"
 
 #. module: stock
 #: code:addons/stock/stock.py:3390
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "2步接收"
 
 #. module: stock
 #: code:addons/stock/stock.py:3391
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "3步接收"
 
 #. module: stock
 #: code:addons/stock/stock.py:3262
@@ -3784,12 +3795,12 @@ msgstr ""
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr ""
+msgstr "接收"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "接收貨物直接到庫存 (一步)"
 
 #. module: stock
 #: code:addons/stock/product.py:254
@@ -3800,19 +3811,19 @@ msgstr "接收量"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Recheck Availability"
-msgstr ""
+msgstr "重檢查可用性"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:269
 #, python-format
 msgid "Recompute"
-msgstr ""
+msgstr "重新計算"
 
 #. module: stock
 #: field:stock.picking,recompute_pack_op:0
 msgid "Recompute pack operation?"
-msgstr ""
+msgstr "重新計算打包作業？"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search view:stock.move:stock.view_move_tree
@@ -3825,12 +3836,12 @@ msgstr "參照"
 #. module: stock
 #: field:stock.picking.type,sequence_id:0
 msgid "Reference Sequence"
-msgstr ""
+msgstr "參考序列"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr ""
+msgstr "每個公司的參考必須是唯一的！"
 
 #. module: stock
 #: help:stock.picking,origin:0
@@ -3840,65 +3851,65 @@ msgstr "文件參照"
 #. module: stock
 #: field:stock.picking,pack_operation_ids:0
 msgid "Related Packing Operations"
-msgstr ""
+msgstr "相關的打包作業"
 
 #. module: stock
 #: field:stock.pack.operation,remaining_qty:0
 msgid "Remaining Qty"
-msgstr ""
+msgstr "剩餘數量"
 
 #. module: stock
 #: field:stock.move,remaining_qty:0
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "剩餘數量"
 
 #. module: stock
 #: help:stock.move,remaining_qty:0
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr ""
+msgstr "預設計量單位的剩餘數量是和這次移動作業相匹配的"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "部分分揀後的剩餘部分"
 
 #. module: stock
 #: help:stock.pack.operation,remaining_qty:0
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation. "
-msgstr ""
+msgstr " 預設計量單位的剩餘數量是和這次移動作業相匹配的。"
 
 #. module: stock
 #: view:product.removal:stock.view_removal
 msgid "Removal"
-msgstr ""
+msgstr "下架"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: field:stock.location,removal_strategy_id:0
 msgid "Removal Strategy"
-msgstr ""
+msgstr "下架策略"
 
 #. module: stock
 #: code:addons/stock/stock.py:479
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "下架策略 %s 沒有實現."
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:176
 #, python-format
 msgid "Remove from package"
-msgstr ""
+msgstr "從包裹移除"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr ""
+msgstr "重訂貨模式"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_warehouse_2_stock_warehouse_orderpoint
@@ -3911,48 +3922,48 @@ msgstr ""
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_tree
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr ""
+msgstr "重訂貨規則"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "重訂貨規則搜尋"
 
 #. module: stock
 #: field:stock.move.operation.link,reserved_quant_id:0
 msgid "Reserved Quant"
-msgstr ""
+msgstr "保留的份"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr ""
+msgstr "保留的份"
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
 msgid "Reserved for Move"
-msgstr ""
+msgstr "保留給移動"
 
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr ""
+msgstr "保留的份"
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
 msgid "Resupply From Other Warehouses"
-msgstr ""
+msgstr "從其他倉庫補給"
 
 #. module: stock
 #: field:stock.warehouse,resupply_route_ids:0
 msgid "Resupply Routes"
-msgstr ""
+msgstr "補給路線"
 
 #. module: stock
 #: field:stock.warehouse,resupply_wh_ids:0
 msgid "Resupply Warehouses"
-msgstr ""
+msgstr "補給倉庫"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -3967,7 +3978,7 @@ msgstr "退貨提貨單"
 #. module: stock
 #: view:stock.return.picking.line:stock.stock_return_line_form_in
 msgid "Return Picking Memory"
-msgstr ""
+msgstr "退貨分揀記憶"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -4000,18 +4011,18 @@ msgstr "右父項"
 #: field:procurement.rule,route_id:0 field:stock.location.path,route_id:0
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Route"
-msgstr ""
+msgstr "路線"
 
 #. module: stock
 #: field:stock.location.route,name:0
 msgid "Route Name"
-msgstr ""
+msgstr "路線名稱"
 
 #. module: stock
 #: field:procurement.rule,route_sequence:0
 #: field:stock.location.path,route_sequence:0
 msgid "Route Sequence"
-msgstr ""
+msgstr "路線序列"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -4023,14 +4034,14 @@ msgstr ""
 #: view:stock.location.route:stock.stock_location_route_tree
 #: view:stock.warehouse:stock.view_warehouse field:stock.warehouse,route_ids:0
 msgid "Routes"
-msgstr ""
+msgstr "路線"
 
 #. module: stock
 #: help:stock.warehouse,resupply_route_ids:0
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr ""
+msgstr "這些補給倉庫將會建立路線，您可以在產品和產品類別中選擇它們"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4045,14 +4056,14 @@ msgstr "規則"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_proc_schedulers
 msgid "Run Schedulers"
-msgstr ""
+msgstr "執行排程器"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:14
 #, python-format
 msgid "Scan a location or select it in the list below"
-msgstr ""
+msgstr "掃描一個位置或者從下面列表中選擇"
 
 #. module: stock
 #. openerp-web
@@ -4060,21 +4071,21 @@ msgstr ""
 #, python-format
 msgid ""
 "Scan a lot or type it below (leave empty to generate one automatically)"
-msgstr ""
+msgstr "批量掃描或在下面輸入它(留空自動生成一個)"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:122
 #, python-format
 msgid "Scanned"
-msgstr ""
+msgstr "已掃描"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:226
 #, python-format
 msgid "Scanned picking could not be found"
-msgstr ""
+msgstr "找不到掃描的分揀"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -4096,12 +4107,12 @@ msgstr "排定處理此調動的日期"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "計劃時間的第一部分裝運即將進行。在此手動設定一個值表示所有庫存移動的期望時間。"
 
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "待處理的最後一部分裝運的計劃時間"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -4118,7 +4129,7 @@ msgstr "報廢"
 #. module: stock
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap Location"
-msgstr ""
+msgstr "報廢位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap
@@ -4158,19 +4169,19 @@ msgstr "搜尋庫存"
 #: code:addons/stock/static/src/xml/picking.xml:191
 #, python-format
 msgid "Search Results"
-msgstr ""
+msgstr "搜尋結果"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "選擇這條路線可以選擇的位置"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:225
 #, python-format
 msgid "Select your operation"
-msgstr ""
+msgstr "選擇您的作業"
 
 #. module: stock
 #: field:stock.inventory,filter:0
@@ -4197,7 +4208,7 @@ msgstr "序號"
 #. module: stock
 #: field:stock.inventory.line,prodlot_name:0
 msgid "Serial Number Name"
-msgstr ""
+msgstr "序列號名稱"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -4208,7 +4219,7 @@ msgstr "序號"
 #. module: stock
 #: field:procurement.rule,warehouse_id:0
 msgid "Served Warehouse"
-msgstr ""
+msgstr "服務的倉庫"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -4220,7 +4231,7 @@ msgstr "設為可用"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "設定一個特殊的移除策略，它將被使用，而不考慮此產品分類的源位置。"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4239,7 +4250,7 @@ msgstr "假如您在一個固定地點生產，則請設定倉位。假如您有
 msgid ""
 "Setting a product and a source package means that the product will be taken\n"
 "                            out of the package."
-msgstr ""
+msgstr "設定產品和源包裝意味著產品將\n被取出包裝。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -4260,27 +4271,27 @@ msgstr "貨架 (Y)"
 #: code:addons/stock/stock.py:3393
 #, python-format
 msgid "Ship Only"
-msgstr ""
+msgstr "僅發貨"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr ""
+msgstr "直接從倉庫發貨(僅發貨)"
 
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr ""
+msgstr "簡名"
 
 #. module: stock
 #: help:stock.warehouse,code:0
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "利用簡稱來標識倉庫"
 
 #. module: stock
 #: help:stock.move,string_availability_info:0
 msgid "Show various information on stock availability for this move"
-msgstr ""
+msgstr "為這次可用庫存的移動顯示多方面的資訊"
 
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small
@@ -4309,39 +4320,39 @@ msgstr "來源地點"
 #. module: stock
 #: field:stock.pack.operation,package_id:0
 msgid "Source Package"
-msgstr ""
+msgstr "源包裹"
 
 #. module: stock
 #: help:procurement.rule,location_src_id:0
 msgid "Source location is action=move"
-msgstr ""
+msgstr "只有Action為Move情況下需要源位置"
 
 #. module: stock
 #: field:stock.transfer_details_items,package_id:0
 msgid "Source package"
-msgstr ""
+msgstr "源包裹"
 
 #. module: stock
 #: help:stock.inventory,lot_id:0
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
+msgstr "指定批次/序列號使您的存貨有一個特別的批次/序列號。"
 
 #. module: stock
 #: help:stock.inventory,partner_id:0
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "指定所有者來作為一個特別的所有者專注於您的存貨。"
 
 #. module: stock
 #: help:stock.inventory,package_id:0
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "指定包裝以作為特定包裝來專注於您的存貨。"
 
 #. module: stock
 #: help:stock.inventory,product_id:0
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "指定產品以作為特殊產品來專注於您的存貨。"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4351,7 +4362,7 @@ msgstr "分拆"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr ""
+msgstr "開始盤點"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -4422,12 +4433,12 @@ msgstr "庫存調動"
 #. module: stock
 #: view:stock.move:stock.view_move_graph
 msgid "Stock Moves Analysis"
-msgstr ""
+msgstr "庫存移動分析"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr ""
+msgstr "庫存作業"
 
 #. module: stock
 #: field:stock.pack.operation,picking_id:0
@@ -4462,7 +4473,7 @@ msgstr "可庫存"
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Stockable products"
-msgstr ""
+msgstr "可庫存產品"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -4472,7 +4483,7 @@ msgstr "儲存倉位"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Store products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Store products in a different unit of measure than the sales order"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -4483,7 +4494,7 @@ msgstr "摘要"
 #. module: stock
 #: field:stock.location.route,supplied_wh_id:0
 msgid "Supplied Warehouse"
-msgstr ""
+msgstr "供應的倉庫:"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -4494,7 +4505,7 @@ msgstr "供應商"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Supplier Address:"
-msgstr ""
+msgstr "供應商地址:"
 
 #. module: stock
 #: field:res.partner,property_stock_supplier:0
@@ -4510,7 +4521,7 @@ msgstr "供應商倉位"
 #. module: stock
 #: field:stock.location.route,supplier_wh_id:0
 msgid "Supplier Warehouse"
-msgstr ""
+msgstr "供應商倉庫"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -4521,22 +4532,22 @@ msgstr "供應商"
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "Supply Chain Information"
-msgstr ""
+msgstr "供應鏈資訊"
 
 #. module: stock
 #: field:stock.move,procure_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "供應方法"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Take From Stock"
-msgstr ""
+msgstr "從庫存獲取"
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Technical Information"
-msgstr ""
+msgstr "技術資訊"
 
 #. module: stock
 #: help:stock.move.operation.link,reserved_quant_id:0
@@ -4544,54 +4555,54 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "本技術欄位包含建立此連結的作業和移庫之間的份。被用於stock_move_obj.action_done() time來避免再次尋求一個匹配的份。"
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "本技術欄位描述了倉庫中下一補貨（如果有的話）的路線選擇。"
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "本技術欄位用於對屬於此公司之間的倉庫進行補給的路線。"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "該技術欄位用來描述當多份移動標記為’完成‘時的限制"
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "該技術欄位用來描述當所有者的份移動標記為’完成‘時的限制"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
 msgid ""
 "Technical field used to display the correct label on print button in the "
 "picking view"
-msgstr ""
+msgstr "該技術欄位用於在移庫檢視中顯示正確的列印按鈕標籤。"
 
 #. module: stock
 #: help:stock.return.picking,move_dest_exists:0
 msgid "Technical field used to hide help tooltip if not needed"
-msgstr ""
+msgstr "該技術欄位用來隱藏不必要的幫助提示資訊。"
 
 #. module: stock
 #: help:stock.quant,negative_dest_location_id:0
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "該技術欄位是用來記錄已建立負數量移動的目標位置"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -4599,14 +4610,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "該技術欄位用來記錄使用者在分揀確認期間的產品成本變化（在使用 '平均價格' 或'實際價格'的成本方法時）。以公司的當前貨幣及產品的預設計量單位賦值。"
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "技術欄位是用來記錄在偵錯模式分批移動的目標位置"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4619,7 +4630,7 @@ msgstr "在客戶訂單確認和出貨之間的平均延遲天數。這是你承
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "位置編碼必須在公司內唯一！"
 
 #. module: stock
 #: code:addons/stock/stock.py:3874
@@ -4627,31 +4638,31 @@ msgstr ""
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr ""
+msgstr "選擇的產品數量%s不相容四捨五入計量單位。確認後它將會自動轉換"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "該科目的程式碼，每家公司必須是唯一的！"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number, internal reference and product must be "
 "unique !"
-msgstr ""
+msgstr "序列號和內部參考組合必須是唯一的!"
 
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr ""
+msgstr "份所屬於的公司"
 
 #. module: stock
 #: help:stock.inventory,date:0
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "這個日期將被用於：產品的庫存水平和關於盤點的庫存移動確認。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3522
@@ -4659,68 +4670,68 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "預設的補給倉庫應該和自身倉庫不同!"
 
 #. module: stock
 #: code:addons/stock/stock.py:1067
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "分揀動作的目標位置必須相同的"
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr ""
+msgstr "考慮到其父分類，下面的路線將應用到這個分類的產品："
 
 #. module: stock
 #: help:stock.quant,reservation_id:0
 msgid "The move the quant is reserved for"
-msgstr ""
+msgstr "此移動此份是保留給"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "每個公司的財務期間名稱須唯一"
 
 #. module: stock
 #: help:stock.quant,propagated_from_id:0
 msgid "The negative quant this is coming from"
-msgstr ""
+msgstr "這是來自於負庫存"
 
 #. module: stock
 #: help:stock.quant.package,parent_id:0
 msgid "The package containing this item"
-msgstr ""
+msgstr "該包裹包含此項目"
 
 #. module: stock
 #: help:stock.quant,package_id:0
 msgid "The package containing this quant"
-msgstr ""
+msgstr "該包裹包含此份"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "分揀類型決定分揀檢視"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used.  "
-msgstr ""
+msgstr "採購數量將是倍數級別的。若為0，將強制要求確切數值才行，就是說不能為0。"
 
 #. module: stock
 #: help:stock.move,rule_id:0
 msgid "The pull rule that created this stock move"
-msgstr ""
+msgstr "已建立庫存遷移的拉式規則"
 
 #. module: stock
 #: help:stock.move,push_rule_id:0
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "庫存推式遷移規則"
 
 #. module: stock
 #: code:addons/stock/stock.py:1699
@@ -4728,14 +4739,14 @@ msgstr ""
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "請求的作業無法處理，因為一個程式錯誤設定`product_qty`欄位取代了 `product_uom_qty`。"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:268
 #, python-format
 msgid "The reserved stock changed. You might want to"
-msgstr ""
+msgstr "保留庫存改變了。你可能想"
 
 #. module: stock
 #: code:addons/stock/stock.py:2353
@@ -4744,7 +4755,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "在此產品上您的計量單位%s的舍入 在此移動vs. %s 上不允許這些作業，或您沒一次完成分揀調撥。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -4752,35 +4763,35 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
-msgstr ""
+msgstr "產品%s 的所選計量單位與這個產品的預設計量單位類別不同。\n 請選擇一個同類別的計量單位。"
 
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "選擇的庫存選項並不相干。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1070
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "分揀動作的源位置必須相同的"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid ""
 "The source package will be moved entirely.  If you specify a destination "
 "package, the source package will be put in the destination package."
-msgstr ""
+msgstr "源包裝將被完全移除。如果你指定一個目標包裝，源包裝將放入目標包裝裡。"
 
 #. module: stock
 #: help:stock.pack.operation,picking_id:0
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "打包作業執行的地方"
 
 #. module: stock
 #: help:procurement.rule,warehouse_id:0
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "倉庫規則"
 
 #. module: stock
 #: help:procurement.rule,propagate_warehouse_id:0
@@ -4788,12 +4799,12 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr ""
+msgstr "The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)"
 
 #. module: stock
 #: field:stock.inventory.line,theoretical_qty:0
 msgid "Theoretical Quantity"
-msgstr ""
+msgstr "理論數量"
 
 #. module: stock
 #: help:stock.config.settings,module_procurement_jit:0
@@ -4802,7 +4813,7 @@ msgid ""
 "                All procurement orders will be processed immediately, which could in some\n"
 "                cases entail a small performance impact.\n"
 "                This installs the module procurement_jit."
-msgstr ""
+msgstr "這個功能允許補貨單的JIT計算。\n 所有補貨單會被立即處理，這在某些情況下會對效能有少量影響。\n 這會安裝 mrp_jit 模組。"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_lot:0
@@ -4810,7 +4821,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "此處允許這樣打包法。甚至允許你拆包，把一些東西移到另一個包裡頭。"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -4818,31 +4829,31 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "這個允許你給分揀或移動指定一個批次（或序列號）。這個使知道哪個批次的產品被送到了哪個客戶是可能的。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
 msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their today's inventory value."
-msgstr ""
+msgstr "這個分析提供給你一個當前庫存水平的產品-日期庫存數量的快速預覽。"
 
 #. module: stock
 #: help:stock.quant.package,packaging_id:0
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "只有裡面的所有包共享同一個產品時，這個區域才會完成，其他情況下它不起作用"
 
 #. module: stock
 #: help:stock.quant,owner_id:0
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "這是庫存分析所有者"
 
 #. module: stock
 #: help:stock.location.path,picking_type_id:0
 msgid "This is the picking type associated with the different pickings"
-msgstr ""
+msgstr "這是不同與不同分揀相關的分揀類型。"
 
 #. module: stock
 #: help:stock.move,product_uom_qty:0
@@ -4853,28 +4864,28 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr ""
+msgstr "這是一個庫存點的產品數量。對於狀態為“完成”的調撥單，這就是真正完成了調撥的產品數量。對於其它調撥單，就是計劃進行調撥的數量。降低這個數量不會生成欠單。改變這個指定的調撥數量將影響產品預訂，應該慎之又慎。"
 
 #. module: stock
 #: help:stock.location.path,auto:0
 msgid ""
 "This is used to define paths the product has to follow within the location tree.\n"
 "The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
-msgstr ""
+msgstr "這些規則確定了產品在位置樹中的正確移動路徑.\n‘自動移動’ 將在建立庫存移動後自動確認.\n‘手動作業’ 庫存移動需要人工確認. \n‘自動不加入步驟’ 這位置取代移動的源位置."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_adv_location:0
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "此選項通過路線有效實施推拉式物流來滿足倉庫請求"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid ""
 "This picking appears to be chained with another operation. Later, if you "
 "receive the goods you are returning now, make sure to"
-msgstr ""
+msgstr "這個分揀好像與其它作業關聯。如果你接收要退回的產品，請確認"
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -4920,14 +4931,14 @@ msgstr "此倉位將會代替預設倉位，用為進行盤點時建立庫存調
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_owner:0
 msgid "This way you can receive products attributed to a certain owner. "
-msgstr ""
+msgstr "這樣你就可以得到一個歸屬於某個所有者的產品屬性。"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "這將告訴你位置並且允許你定義多個分揀類型和倉庫"
 
 #. module: stock
 #. openerp-web
@@ -4961,7 +4972,7 @@ msgstr "總數量"
 #. module: stock
 #: field:product.category,total_route_ids:0
 msgid "Total routes"
-msgstr ""
+msgstr "路線合計"
 
 #. module: stock
 #: code:addons/stock/stock.py:1564
@@ -4997,18 +5008,18 @@ msgstr "對產品及序號追蹤不同的日期。\n以下的日期可被追蹤�
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "跟蹤批次或序列號碼"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr ""
+msgstr "調撥"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Transfer details"
-msgstr ""
+msgstr "調撥詳情"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -5023,44 +5034,44 @@ msgstr "轉移"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr ""
+msgstr "中轉位置"
 
 #. module: stock
 #: help:stock.picking,recompute_pack_op:0
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "如果保留的份變更了，則為True，這意味著我們需要重新計算包裹作業"
 
 #. module: stock
 #: field:stock.picking.type,code:0
 msgid "Type of Operation"
-msgstr ""
+msgstr "作業類型"
 
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "包裝類型"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
 msgid "Type of the new Operation"
-msgstr ""
+msgstr "新作業的類型"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Types of Operation"
-msgstr ""
+msgstr "作業類型"
 
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
-msgstr ""
+msgstr "唯一序列號碼"
 
 #. module: stock
 #: field:stock.quant,cost:0
 msgid "Unit Cost"
-msgstr ""
+msgstr "成本單價"
 
 #. module: stock
 #: help:stock.pack.operation,cost:0
@@ -5104,24 +5115,24 @@ msgstr "量度單位"
 #: code:addons/stock/stock.py:3736
 #, python-format
 msgid "Unknown Pack"
-msgstr ""
+msgstr "未知包裹"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "在進貨位置卸貨，然後進入庫存（2步）"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr ""
+msgstr "在進貨位置卸貨, 確認庫存之前, 通過質量管理(3步)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Unpack"
-msgstr ""
+msgstr "拆包"
 
 #. module: stock
 #: code:addons/stock/product.py:276
@@ -5138,12 +5149,12 @@ msgstr "未讀訊息"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
-msgstr ""
+msgstr "不保留"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "UoM"
-msgstr ""
+msgstr "計量單位"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -5159,7 +5170,7 @@ msgstr "緊急"
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Use packages: pallets, boxes, ..."
-msgstr ""
+msgstr "使用包裹：托盤，箱子，..."
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -5168,17 +5179,17 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "填充這裡來執行該產品的需求申請。根據產品的配置，這個方法觸發一個採購單草稿、生產訂單或者新的任務。"
 
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
 msgid "Used to choose the lot/serial number of the product returned"
-msgstr ""
+msgstr "被用來為返回的產品選擇批次或序列號"
 
 #. module: stock
 #: help:stock.picking.type,sequence:0
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "歷史訂單的全部作業看板檢視"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -5206,7 +5217,7 @@ msgstr "審核盤點結果"
 #: code:addons/stock/static/src/xml/picking.xml:67
 #, python-format
 msgid "Validate package"
-msgstr ""
+msgstr "驗證包裹"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -5216,7 +5227,7 @@ msgstr "已驗證"
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "非常緊急"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -5226,12 +5237,12 @@ msgstr "檢視"
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "View Contained Packages content"
-msgstr ""
+msgstr "檢視包含的包裹內容"
 
 #. module: stock
 #: field:stock.warehouse,view_location_id:0
 msgid "View Location"
-msgstr ""
+msgstr "檢視位置"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -5259,12 +5270,12 @@ msgstr "等待庫存"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "等待可用調撥"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr ""
+msgstr "等待移動"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -5285,33 +5296,33 @@ msgstr "倉庫"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Warehouse Address:"
-msgstr ""
+msgstr "倉庫地址："
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Warehouse Configuration"
-msgstr ""
+msgstr "倉庫配置"
 
 #. module: stock
 #: field:stock.warehouse,name:0
 msgid "Warehouse Name"
-msgstr ""
+msgstr "倉庫名稱"
 
 #. module: stock
 #: field:procurement.rule,propagate_warehouse_id:0
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "沿用的倉庫"
 
 #. module: stock
 #: help:procurement.order,warehouse_id:0
 msgid "Warehouse to consider for the route selection"
-msgstr ""
+msgstr "倉庫為路線選擇考慮"
 
 #. module: stock
 #: code:addons/stock/stock.py:3550
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "倉庫的路線"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -5349,19 +5360,19 @@ msgstr "警告！"
 #: code:addons/stock/stock.py:3866
 #, python-format
 msgid "Warning: wrong UoM!"
-msgstr ""
+msgstr "警告：錯誤UoM！"
 
 #. module: stock
 #: code:addons/stock/stock.py:3873
 #, python-format
 msgid "Warning: wrong quantity!"
-msgstr ""
+msgstr "警告：錯誤數量！"
 
 #. module: stock
 #: help:product.putaway,fixed_location_ids:0
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "當方法被確定後，這個位置將被用於儲存產品"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -5369,7 +5380,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "當虛擬庫存小於指定的最小數量，Odoo生成補貨單來預測達到最大數量前的數量。"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -5377,14 +5388,14 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "當虛擬庫存低於最小數量， Odoo生成一個採購訂單提供的數量達到規定最大庫存的數量。"
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "當你選擇了一個序列號（批次），數量將按那個序列號（批次）相關的數量\n                            進行修正，而不是按產品的總數量。"
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -5395,7 +5406,7 @@ msgstr "精靈"
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
+msgstr "嚮導檢測所有的庫存最小規則，並生成補貨訂單"
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
@@ -5405,7 +5416,7 @@ msgstr "是"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "本次未盤點的產品行請刪除"
 
 #. module: stock
 #: code:addons/stock/stock.py:368
@@ -5414,13 +5425,13 @@ msgid ""
 "You can not change the unit of measure of a product that has already been "
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
-msgstr ""
+msgstr "You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr ""
+msgstr "您無法儲存負的數量或負的份。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5432,13 +5443,13 @@ msgstr "只能刪除調動草案。"
 #: code:addons/stock/stock.py:2244
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "你不能取消一個標記為‘完成’的庫存遷移"
 
 #. module: stock
 #: code:addons/stock/stock.py:638
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr ""
+msgstr "您不能移動到檢視類型的位置 %s ."
 
 #. module: stock
 #: code:addons/stock/stock.py:2625
@@ -5446,19 +5457,19 @@ msgstr ""
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
-msgstr ""
+msgstr "You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s"
 
 #. module: stock
 #: code:addons/stock/stock.py:2465
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
+msgstr "不能拆分一個移動草稿。你需要先確認它。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2461
 #, python-format
 msgid "You cannot split a move done"
-msgstr ""
+msgstr "您無法分割一個已完成的移動"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:132
@@ -5471,32 +5482,32 @@ msgstr "您有手動建立產品細項，請先刪除以繼續處理。"
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
-msgstr ""
+msgstr "你必須選擇產品預設計量單位的類型一樣的計量單位。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:62
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "您可以只返回已完成的分揀！"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
-msgstr ""
+msgstr "您可能只返回已完成的分揀！"
 
 #. module: stock
 #: code:addons/stock/stock.py:2159
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "您必須為該產品%s指定一個系列號"
 
 #. module: stock
 #: constraint:stock.move:0
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
-msgstr ""
+msgstr "你嘗試遷移的產品使用的計量單位與已遷移產品的計量單位不相容。請在相同計量單位類別中使用一個計量單位。"
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
@@ -5530,7 +5541,7 @@ msgstr "例如：PO0032"
 #. module: stock
 #: help:stock.move,origin_returned_move_id:0
 msgid "move that created the return move"
-msgstr ""
+msgstr "建立退貨移動的移動"
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -5548,39 +5559,39 @@ msgstr "或"
 #: code:addons/stock/static/src/xml/picking.xml:243
 #, python-format
 msgid "picking(s)"
-msgstr ""
+msgstr "分揀"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
-msgstr ""
+msgstr "退回"
 
 #. module: stock
 #: help:stock.inventory,move_ids_exist:0
 #: help:stock.picking,pack_operation_exist:0
 msgid "technical field for attrs in view"
-msgstr ""
+msgstr "檢視屬性的技術欄位"
 
 #. module: stock
 #: help:stock.picking,quant_reserved_exist:0
 msgid ""
 "technical field used to know if there is already at least one quant reserved"
 " on moves of a given picking"
-msgstr ""
+msgstr "本技術欄位用來表明一個移庫表單中明細行是否至少有一份返回記錄。"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:269
 #, python-format
 msgid "the operations."
-msgstr ""
+msgstr "作業"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid ""
 "the returned picking in order to avoid logistic rules to be applied again "
 "(which would create duplicated operations)"
-msgstr ""
+msgstr "為了避免邏輯規則被重複應用（建立重複作業）而返回的分揀。"
 
 #. module: stock
 #: field:product.product,qty_available_text:0
@@ -5599,14 +5610,14 @@ msgstr "不詳"
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Request Procurement"
-msgstr ""
+msgstr "⇒ 請求補貨"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
-msgstr ""
+msgstr "⇒ 設定數量為 0"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Update"
-msgstr ""
+msgstr "⇒ 更新"

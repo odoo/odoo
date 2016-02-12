@@ -755,6 +755,16 @@ class mail_thread(osv.AbstractModel):
         res = dict()
         return res
 
+    def message_get_recipient_values(self, cr, uid, id, notif_message=None, recipient_ids=None, context=None):
+        """ Get specific notification recipient values to store on the notification
+        mail_mail. Basic method just set the recipient partners as mail_mail
+        recipients. Inherit this method to add custom behavior like using
+        recipient email_to to bypass the recipint_ids heuristics in the
+        mail sending mechanism. """
+        return {
+            'recipient_ids': [(4, pid) for pid in recipient_ids]
+        }
+
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
@@ -1460,6 +1470,7 @@ class mail_thread(osv.AbstractModel):
             :param boolean check_followers: check in document followers
         """
         partner_obj = self.pool['res.partner']
+        users_obj = self.pool['res.users']
         partner_ids = []
         obj = None
         if id and (model or self._name != 'mail.thread') and check_followers:
@@ -1485,16 +1496,15 @@ class mail_thread(osv.AbstractModel):
             email_brackets = "<%s>" % email_address
             if not partner_id:
                 # exact, case-insensitive match
-                ids = partner_obj.search(cr, SUPERUSER_ID,
-                                         [('email', '=ilike', email_address),
-                                          ('user_ids', '!=', False)],
+                user_ids = users_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address)],
                                          limit=1, context=context)
+                ids = [users_obj.browse(cr, SUPERUSER_ID, user_ids, context=context).partner_id.id]
                 if not ids:
                     # if no match with addr-spec, attempt substring match within name-addr pair
-                    ids = partner_obj.search(cr, SUPERUSER_ID,
-                                             [('email', 'ilike', email_brackets),
-                                              ('user_ids', '!=', False)],
-                                             limit=1, context=context)
+                    user_ids = users_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets)], limit=1, context=context)
+                    ids = [users_obj.browse(cr, SUPERUSER_ID, user_ids, context=context).partner_id.id]
                 if ids:
                     partner_id = ids[0]
             # third try: check in partners
@@ -1861,7 +1871,7 @@ class mail_thread(osv.AbstractModel):
                 if msg_ids:
                     notification_obj = self.pool.get('mail.notification')
                     notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
-                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    message = message_obj.browse(cr, SUPERUSER_ID, msg_ids[0], context=context)
                     if message.parent_id:
                         partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
                         for partner_id in partner_ids_to_parent_notify:

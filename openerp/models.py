@@ -44,7 +44,6 @@ import functools
 import itertools
 import logging
 import operator
-import pickle
 import pytz
 import re
 import time
@@ -68,7 +67,7 @@ from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, pickle
 from .tools.safe_eval import safe_eval as eval
 from .tools.translate import _
 
@@ -1372,7 +1371,7 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id.strip())
                    for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
@@ -1625,7 +1624,9 @@ class BaseModel(object):
             return len(res)
         return res
 
-    @api.returns('self')
+    @api.returns('self',
+        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
@@ -3875,7 +3876,7 @@ class BaseModel(object):
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
                     if (not totranslate) or not column.translate:
-                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
+                        updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
@@ -3894,7 +3895,7 @@ class BaseModel(object):
                 self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
             )
             params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(ids):
+            for sub_ids in cr.split_for_in_conditions(set(ids)):
                 cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
@@ -4188,7 +4189,7 @@ class BaseModel(object):
         for field in vals:
             current_field = self._columns[field]
             if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+                updates.append((field, current_field._symbol_set[0], current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4421,7 +4422,7 @@ class BaseModel(object):
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                        updates.append((v, column._symbol_set[0], column._symbol_set[1](value[v])))
                     if updates:
                         query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
                             self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
@@ -4445,8 +4446,8 @@ class BaseModel(object):
                                 value = value[0]
                             except:
                                 pass
-                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
-                            self._table, f,
+                        query = 'UPDATE "%s" SET "%s"=%s WHERE id = %%s' % (
+                            self._table, f, column._symbol_set[0],
                         )
                         cr.execute(query, (column._symbol_set[1](value), id))
 
@@ -4849,6 +4850,8 @@ class BaseModel(object):
                     del record['id']
                     # remove source to avoid triggering _set_src
                     del record['source']
+                    # duplicated record is not linked to any module
+                    del record['module']
                     record.update({'res_id': target_id})
                     if user_lang and user_lang == record['lang']:
                         # 'source' to force the call to _set_src
@@ -5306,6 +5309,11 @@ class BaseModel(object):
         """ Returns a new version of this recordset attached to the provided
         environment
 
+        .. warning::
+            The new environment will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
+
         :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
@@ -5315,6 +5323,25 @@ class BaseModel(object):
 
         Returns a new version of this recordset attached to the provided
         user.
+
+        By default this returns a `SUPERUSER` recordset, where access control
+        and record rules are bypassed.
+
+        .. note::
+            Using `sudo` could cause data access to cross the boundaries of
+            record rules, possibly mixing records that are meant to be
+            isolated (e.g. records from different companies in multi-company
+            environments).
+
+            It may lead to un-intuitive results in methods which select one
+            record among many - for example getting the default company, or
+            selecting a Bill of Materials.
+
+        .. note::
+            Because the record rules and access control will have to be
+            re-evaluated, the new recordset will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
         """
         return self.with_env(self.env(user=user))
 

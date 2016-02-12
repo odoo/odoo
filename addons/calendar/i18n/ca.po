@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-31 21:21+0000\n"
+"POT-Creation-Date: 2015-11-25 13:28+0000\n"
+"PO-Revision-Date: 2015-12-19 11:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -47,11 +47,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -166,11 +166,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -292,11 +292,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>                                        \n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -393,22 +393,36 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:20
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [Jo]"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name} - Date has been updated"
-msgstr ""
+msgstr "${object.event_id.name} - La data ha estat actualitzada "
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Recordatori"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:802
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr "%s a %s Per a\n %s a %s (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:800
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr "%s a (%s Per a %s) (%s)"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -427,7 +441,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Un correu electrònic s'ha enviat per especificar que la data s'ha canviat !"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -450,7 +464,7 @@ msgstr "Actiu"
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "Afegir Favorit al Calendari "
 
 #. module: calendar
 #: field:calendar.event,allday:0
@@ -461,7 +475,7 @@ msgstr "Tot el dia"
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "CadaDia , %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -472,23 +486,23 @@ msgstr "Import"
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "Un correu electrònic d'invitació ha estat enviat als assistents %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "Un correu electrònic d'invitació ha estat enviat als assistents"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
 msgid "Attendee"
-msgstr ""
+msgstr "Assistent"
 
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "Estat dels Assistents"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -537,6 +551,13 @@ msgid "Calendar"
 msgstr "Calendari"
 
 #. module: calendar
+#: view:calendar.alarm:calendar.view_calendar_alarm_tree
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
+msgid "Calendar Alarm"
+msgstr ""
+
+#. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
@@ -546,7 +567,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Feu clic aquí per actualitzar només aquesta instància i no pas totes les recurrències."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
@@ -601,7 +622,7 @@ msgstr "Data de l'últim missatge enviat al registre."
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Dia del mes"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
@@ -646,7 +667,7 @@ msgstr "Detalls"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "Esteu segurs d'esborrar aquest filtre dels favorits?"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
@@ -655,15 +676,20 @@ msgid "Duration"
 msgstr "Durada"
 
 #. module: calendar
+#: field:calendar.alarm,duration_minutes:0
+msgid "Duration in minutes"
+msgstr "Duració en minuts"
+
+#. module: calendar
 #: selection:calendar.alarm,type:0 field:calendar.attendee,email:0
 msgid "Email"
 msgstr "Correu electrònic"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1381
+#: code:addons/calendar/calendar.py:1402
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Correu electrònic no trobat "
 
 #. module: calendar
 #: help:calendar.attendee,email:0
@@ -683,7 +709,7 @@ msgstr "Data final"
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "Data i hora de fi"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -693,12 +719,12 @@ msgstr "Data de finalització"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Es finalitza a"
 
 #. module: calendar
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Error! La data de fi no pot ser anterior a la data d'inici."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1260
@@ -714,19 +740,19 @@ msgstr "Esdeveniment"
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "Hora del esdeveniment"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Alarma d'esdeveniment"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Calendaris de tothom"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -747,7 +773,7 @@ msgstr "Primer"
 #: code:addons/calendar/calendar.py:141
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Primer heu d'especificar la data d'invitació. "
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
@@ -789,12 +815,12 @@ msgstr "Agrupa per"
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "L'agrupació per data no està suportada, utilitzeu la vista de calendari al seu lloc."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "Ruta HTTP "
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
@@ -823,9 +849,9 @@ msgstr "Si està marcat hi ha missatges nous pendents."
 #. module: calendar
 #: help:calendar.event,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the event "
+"If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr "Si el camp actiu és verdader, li permetrà ocultar la notificació d'avís de l'esdeveniment sense eliminar-la."
+msgstr "Si el camp actiu és fals,  li permetrà ocultar la notificació d'avís de l'esdeveniment sense esborrar-lo."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
@@ -835,12 +861,12 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Invitació"
 
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "Invitació d'emergència"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -850,12 +876,12 @@ msgstr "Detalls de la invitació"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Invitacions "
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Convida assistent "
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
@@ -889,7 +915,7 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Última notificació marcada com a llegida del calendari base"
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
@@ -909,7 +935,7 @@ msgstr "Localització de l'esdeveniment"
 #. module: calendar
 #: field:calendar.contacts,user_id:0
 msgid "Me"
-msgstr ""
+msgstr "Jo"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -919,29 +945,29 @@ msgstr "Reunió"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Detalls de la reunió"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Tema de la reunió "
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Tipus de reunió"
 
 #. module: calendar
 #: view:calendar.event.type:calendar.view_calendar_event_type_tree
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tipus de reunions "
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Reunió vinculada "
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -982,7 +1008,7 @@ msgstr "Varis"
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Models"
 
 #. module: calendar
 #: field:calendar.event,mo:0
@@ -1007,7 +1033,7 @@ msgstr "Els meus esdeveniments"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Les meves reunions "
 
 #. module: calendar
 #: field:calendar.alarm,name:0 field:calendar.event.type,name:0
@@ -1030,12 +1056,12 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "Notificació "
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Nombre de repeticions "
 
 #. module: calendar
 #. openerp-web
@@ -1099,7 +1125,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Finalització de recurrència"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
@@ -1134,14 +1160,14 @@ msgstr "Regla recurrent"
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "Recordatoris "
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:80
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "Esborra aquest favorit de la llista "
 
 #. module: calendar
 #: field:calendar.event,count:0
@@ -1151,7 +1177,7 @@ msgstr "Repeteix"
 #. module: calendar
 #: field:calendar.event,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Repetir Cada "
 
 #. module: calendar
 #: field:calendar.event,final_date:0
@@ -1187,7 +1213,7 @@ msgstr "Dissabte"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Cercar reunions "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1202,7 +1228,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Enviar correu electrònic"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
@@ -1214,7 +1240,7 @@ msgstr "Mostra temps com"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Migdiada "
 
 #. module: calendar
 #: field:calendar.event,start_date:0
@@ -1224,13 +1250,13 @@ msgstr "Data d'inici"
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "Data i Hora inicial"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "Comença a"
 
 #. module: calendar
 #: field:calendar.attendee,state:0 field:calendar.event,state:0
@@ -1276,7 +1302,7 @@ msgstr "El/La"
 #: code:addons/calendar/calendar.py:1377
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Els següents contactes no tenen adreça de correu electrònic: "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1339,12 +1365,12 @@ msgstr "Missatges pendents de llegir"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "Fins"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Actualitzeu només aquesta instància "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104 code:addons/calendar/calendar.py:141
@@ -1358,7 +1384,7 @@ msgstr "Avís!"
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this "
 "event"
-msgstr ""
+msgstr "Atenció, un camp obligatori ha estat modificat des de la creació d'aquest esdeveniment"
 
 #. module: calendar
 #: field:calendar.event,we:0
@@ -1373,7 +1399,7 @@ msgstr "Dimecres"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Setmana(es)"
 
 #. module: calendar
 #: field:calendar.event,week_list:0
@@ -1385,14 +1411,14 @@ msgstr "Dia de la setmana"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:54
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "Quan"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:58
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "On"
 
 #. module: calendar
 #. openerp-web
@@ -1417,7 +1443,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:104
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "No podeu duplicar un calendari d'assistents."
 
 #. module: calendar
 #: field:calendar.contacts,active:0
@@ -1436,15 +1462,10 @@ msgid "count cannot be negative or 0."
 msgstr ""
 
 #. module: calendar
-#: field:calendar.alarm,duration_minutes:0
-msgid "Duration in minutes"
-msgstr ""
-
-#. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "l'interval no pot ser negatiu."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245 code:addons/calendar/calendar.py:1247

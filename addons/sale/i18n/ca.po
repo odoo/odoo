@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-31 21:21+0000\n"
+"PO-Revision-Date: 2015-12-21 22:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Vendes "
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -115,21 +115,21 @@ msgstr "Nº de qtat"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# de Comandes de Venda "
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') i 'Cites' or 'Ordre'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -227,7 +227,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Adreces a les comandes de venda"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -365,12 +365,12 @@ msgstr ""
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Ens permet seleccionar i mantenir diferents unitats de mesura per als productes."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Permetre-us especificar un compte analític en les comandes de venda."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -387,12 +387,12 @@ msgstr "Compte analític"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Comptabilitat analítica de vendes"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Comptabilitat analítica de vendes"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -410,17 +410,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Per producte"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Per Venedors "
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Per Equip de vendes"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -484,7 +484,7 @@ msgstr "Marqueu aquesta opció per agrupar les factures dels mateixos clients."
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Marqueu per gestionar pressupostos en aquest equip de vendes"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -529,7 +529,7 @@ msgstr "Error de configuració!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Confirmar venda "
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -647,7 +647,7 @@ msgstr "Data de comanda"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Data comanda: "
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -672,12 +672,12 @@ msgstr ""
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Termes i condicions per defecte"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Termes i condicions per defecte"
 
 #. module: sale
 #: help:res.company,sale_note:0
@@ -704,7 +704,7 @@ msgstr "Temps inicial d'entrega"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Adreça d'enviament per la comanda de venda actual."
 
 #. module: sale
 #: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
@@ -724,7 +724,7 @@ msgstr "Descompte (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Descompte a les línies "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -752,7 +752,7 @@ msgstr "Esborrany"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Esborrany de pressupost "
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -768,7 +768,7 @@ msgstr "Plantilles de correu electrònic"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Assistent de composició de correu electrònic"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -791,7 +791,7 @@ msgstr "Excepció"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Filtres estesos"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -938,7 +938,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Acció invàlida!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:127
@@ -1137,7 +1137,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Nou correu"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Obrir menú de vendes "
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1222,7 +1222,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Número de Comanda "
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1314,7 +1314,7 @@ msgstr "Preu"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "Preu reduït "
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1417,12 +1417,12 @@ msgstr "Pressupost / Comanda"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Data de pressupost: "
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Número de pressupost: "
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1432,17 +1432,17 @@ msgstr "Pressupost Nº"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Enviar Pressupost "
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Pressupost enviat"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Pressupost confirmat"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
@@ -1454,7 +1454,7 @@ msgstr ""
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Pressupost enviat"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1469,12 +1469,12 @@ msgstr "Pressuposts"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Anàlisi de Pressupostos "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Pressupostos i Vendes "
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
@@ -1585,7 +1585,7 @@ msgstr "Comanda de venda"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Comanda de venda confirmada "
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1727,7 +1727,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Enviar per correu electrònic "
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1799,7 +1799,7 @@ msgstr "Impostos"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Termes i condicions "
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1917,7 +1917,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Aquest informe realitza una anàlisi dels vostres pressupostos. L'anàlisi verifica els ingressos de les vostres vendes i les ordena per diferents grups de criteris (comercial, empresa, producte, etc.). Utilitzeu aquest informe per realitzar un anàlisi sobre les vostres vendes encara no facturades. Si voleu analitzar els vostres ingressos, hauríeu d'utilitzar l'informe d'anàlisi de factures en l'aplicació de Comptabilitat."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam

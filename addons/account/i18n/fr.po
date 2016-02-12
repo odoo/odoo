@@ -7,15 +7,16 @@
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Florian Hatat, 2015
+# Florian Hatat, 2015-2016
+# Henri Cornuau <hcornuau@gmail.com>, 2015
 # Lionel Sausin <ls@numerigraphe.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-24 12:40+0000\n"
-"Last-Translator: Lionel Sausin <ls@numerigraphe.com>\n"
+"PO-Revision-Date: 2016-01-21 04:39+0000\n"
+"Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1612,7 +1613,7 @@ msgstr "Appliquer"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position if the conditions match."
-msgstr ""
+msgstr "Appliquer automatiquement cette situation fiscale si les conditions sont remplies."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
@@ -1624,14 +1625,14 @@ msgstr "S'applique seulement si le partenaire a un numéro de TVA intracommunaut
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "S'applique lorsque le pays d'expédition ou de facturation est dans ce groupe de pays, et qu'aucune situation ne correspond directement au pays."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "S'applique lorsque le pays d'expédition ou de facturation correspondent. Est prioritaire sur les situations qui correspondent à un groupe de pays."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -3057,7 +3058,7 @@ msgstr "Créer avoir"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr "Créer un ajustement"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -8368,7 +8369,7 @@ msgstr "Arrondir par ligne"
 #: code:addons/account/account_bank_statement.py:899
 #, python-format
 msgid "Rounding error from currency conversion"
-msgstr ""
+msgstr "Erreur d'arrondi due à la conversion de devises"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9666,14 +9667,14 @@ msgstr "L'entité légale qui sera utilisée dans les écritures comptables rela
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "La société du compte de gain de change doit être la même que la société sélectionnée."
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "La société du compte de perte de change doit être la même que la société sélectionnée."
 
 #. module: account
 #: help:account.tax,type:0
@@ -9707,7 +9708,7 @@ msgstr "La position fiscale déterminera les taxes et les comptes comptables uti
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "The fiscal year is created when installing a Chart of Account."
-msgstr ""
+msgstr "L'exercice comptable est créé lors de l'installation d'un plan comptable."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -10025,24 +10026,24 @@ msgstr "Cette année"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Ce compte sera utilisé pour les factures au lieu de celui par défaut pour valoriser les dépenses pour l'article actuel."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Ce compte sera utilisé pour les factures au lieu de celui par défaut pour valoriser les ventes pour l'article actuel."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Ce compte sera utilisé dans les factures pour valoriser les dépenses."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Ce compte sera utilisé dans les factures pour valoriser les ventes."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10373,7 +10374,7 @@ msgstr "Cet assistant validera toutes les pièces comptables pour un journal par
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
-msgstr ""
+msgstr "Astuce : utilisez Ctrl+Entrée pour lettrer toutes les entrées équilibrées."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -11127,6 +11128,13 @@ msgid ""
 msgstr "Vous avez sélectionné des écritures sur des comptes client et fournisseur confondus\n\nAfin de poursuivre, vous devez d'abord désélectionner la ligne %s ."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr "dernier"
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11145,7 +11153,7 @@ msgstr "Impossible d'ajouter/modifier des écritures dans une période fermée %
 msgid ""
 "You can not cancel closing entries if the 'End of Year Entries Journal' "
 "period is closed."
-msgstr ""
+msgstr "Vous ne pouvez pas annuler les écritures de clôture si le \"Journal des écritures de fin d'année\" est clôturé."
 
 #. module: account
 #: code:addons/account/account.py:1057

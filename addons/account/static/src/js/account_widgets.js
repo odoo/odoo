@@ -33,6 +33,7 @@ openerp.account = function (instance) {
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
+            this.monetaryIsZero; // Method that tests if a monetary amount == 0 ; loaded from the server
             this.formatCurrency; // Method that formats the currency ; loaded from the server
     
             // Only for statistical purposes
@@ -176,6 +177,14 @@ openerp.account = function (instance) {
                 })
             );
     
+            // Get the function to compare monetary values
+            deferred_promises.push(new instance.web.Model("decimal.precision")
+                .call("precision_get", ["Account"])
+                .then(function(digits) {
+                    self.monetaryIsZero = _.partial(instance.web.float_is_zero, _, digits);
+                })
+            );
+    
             // Get statement lines
             deferred_promises.push(self.model_bank_statement_line
                 .query(['id'])
@@ -288,7 +297,7 @@ openerp.account = function (instance) {
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
+                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return self.monetaryIsZero(o.get("balance")); }));
             }
         },
 
@@ -574,7 +583,7 @@ openerp.account = function (instance) {
                     .filter([['id', 'in', self.statement_ids]])
                     .all()
                     .then(function(data){
-                        if (_.all(data, function(o) { return o.balance_end_real === o.balance_end })) {
+                        if (_.all(data, function(o) { return self.monetaryIsZero(o.balance_end_real - o.balance_end) })) {
                             self.$(".button_close_statement").show();
                             self.$(".button_close_statement").click(function() {
                                 self.$(".button_close_statement").attr("disabled", "disabled");
@@ -650,6 +659,7 @@ openerp.account = function (instance) {
             this._super(parent);
     
             this.formatCurrency = this.getParent().formatCurrency;
+            this.monetaryIsZero = this.getParent().monetaryIsZero;
             if (context.initial_data_provided) {
                 // Process data
                 _.each(context.reconciliation_proposition, function(line) {
@@ -1047,7 +1057,7 @@ openerp.account = function (instance) {
                 new instance.web.Dialog(this, {
                     title: _t("Warning"),
                     size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), _t("last")))).open();
                 return;
             }
 
@@ -1283,7 +1293,7 @@ openerp.account = function (instance) {
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
-            if (Math.abs(self.get("balance")).toFixed(3) === "0.000") balance_type = "equal";
+            if (self.monetaryIsZero(self.get("balance"))) balance_type = "equal";
             else if (self.get("balance") * self.st_line.amount > 0) balance_type = "greater";
             else if (self.get("balance") * self.st_line.amount < 0) balance_type = "lower";
 
@@ -1303,8 +1313,14 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
-                self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
+                var last_line = _.last(self.get("mv_lines_selected"));
+                var propose_partial = self.getCreatedLines().length === 0
+                    && balance_type === "greater"
+                    && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
+                    && self.get("balance") * (last_line.debit - last_line.credit) < 0
+                    && ! last_line.partial_reconcile
+                    && ! last_line.already_paid;
+                last_line.propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
 
@@ -1403,6 +1419,12 @@ openerp.account = function (instance) {
     
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
+
+            // Reset partial reconciliation
+            _.each(self.get("mv_lines_selected"), function(line) {
+                if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
+                if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
+            });
         
             var added_lines = _.difference(val.newValue, val.oldValue);
             var removed_lines = _.difference(val.oldValue, val.newValue);
@@ -1550,15 +1572,6 @@ openerp.account = function (instance) {
             var self = this;
             var mv_lines_selected = self.get("mv_lines_selected");
             var lines_selected_num = mv_lines_selected.length;
-
-            // Undo partial reconciliation if necessary
-            if (lines_selected_num !== 1) {
-                _.each(mv_lines_selected, function(line) {
-                    if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
-                    if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-                });
-                self.updateAccountingViewMatchedLines();
-            }
 
             // Compute balance
             var balance = 0;

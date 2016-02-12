@@ -3,14 +3,16 @@
 # * sale
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Robin Chatfield <robin.chatfield@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-27 08:53+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-27 07:50+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,12 +97,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Hej ${object.partner_id.name},</p>\n    \n    <p>Här är din ${object.state in ('draft', 'sent') and 'offert' or 'orderbekräftelse'} från ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENSER</strong><br>\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br>\n       &nbsp; Belopp: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br>\n       &nbsp;&nbsp;Datum:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br>\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferens: ${object.origin}<br>\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Din referens: ${object.client_order_ref}<br>\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Din kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    &lt;% set signup_url = object.get_signup_url() %&gt;\n    % if signup_url:\n    <p>\n    Du kan se detta dokument och betala via vår kundportal:\n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Offert' or 'Order'}</a>\n    % endif\n\n    % if object.paypal_url:\n    <br>\n    <p>Det är även möjligt att betala direkt med Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\">\n        </a>\n    % endif\n\n    <br>\n    <p>Tveka inte att kontakta oss om du har några frågor.</p>\n    <p>Tack för att du valde ${object.company_id.name or 'us'}!</p>\n    <br>\n    <br>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Försäljningar"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -284,7 +286,7 @@ msgstr "Andelsföretag"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Tillåt olika adresser för leverans och faktura"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -299,7 +301,7 @@ msgstr "Tillåt automatiska larm knutna till kund och produkt"
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "Tillåt online-offerter och offertmallar"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -317,7 +319,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "Tillåt användning av olika mätenheter"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -420,7 +422,7 @@ msgstr "Efter säljare"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Per säljlag"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -484,12 +486,12 @@ msgstr "Markera checkboxen för att gruppera fakturorna per kund."
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Kryssa denna ruta för att administrera offerter med säljlag"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Klicka för att nå försäljningsanalysen."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -689,7 +691,7 @@ msgstr ""
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
+msgstr "Definiera faktureringsmål för säljlagen, redovisa pediodens uppnådda mål och prognos i en vy."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -791,7 +793,7 @@ msgstr "Undantag"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Utökade filter"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -829,7 +831,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Prognos"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -966,7 +968,7 @@ msgstr "Fakturaundantag"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Faktureringprognos"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -1027,7 +1029,7 @@ msgstr "Faktura betald"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr "Invoice the whole sales order"
+msgstr "Fakturera hela kundordern"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1509,7 +1511,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "Intäkter från bekräftade försäljningsorder per månad."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1564,7 +1566,7 @@ msgstr "Försäljningsanalys"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Säljkanaler"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1696,7 +1698,7 @@ msgstr "Salesperson"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Säljare:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1722,7 +1724,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr "Select how you want to invoice this order. This\n                        will create a draft invoice that can be modified\n                        before validation."
+msgstr "Välj hur du vill fakturera denna order. Du kommer skapa ett fakturaförslag som sedan kan ändras innan det bekräftas."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2080,12 +2082,12 @@ msgstr "Varning!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr "Hemsidemeddelanden"
+msgstr "Webbplatsmeddelanden"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr "Hemsidans kommunikationshistorik"
+msgstr "Webbplatsens kommunikationshistorik"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2139,7 +2141,7 @@ msgstr "Du bör ej fakturerar följande kundorder %s manuellt"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Er referens:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv

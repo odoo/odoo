@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-10-31 17:26+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-8/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,16 @@ msgstr ""
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
@@ -473,7 +483,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "Primjenjivo na"
 
 #. module: stock
 #: field:stock.location.route,product_selectable:0
@@ -777,7 +787,7 @@ msgstr "Kod"
 #. module: stock
 #: field:stock.picking.type,color:0
 msgid "Color"
-msgstr ""
+msgstr "Boja"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -881,7 +891,7 @@ msgstr "Koridor (X)"
 #. module: stock
 #: field:stock.pack.operation,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Cijena koštanja"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -1502,6 +1512,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr ""
 
@@ -1906,7 +1917,7 @@ msgstr "Interna premeštanja"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Interna oznaka"
 
 #. module: stock
 #: code:addons/stock/stock.py:3282
@@ -2191,7 +2202,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,parent_left:0 field:stock.quant.package,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Lijevi roditelj"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -3621,7 +3632,7 @@ msgid "Quantity (UOS)"
 msgstr "Količina (KOL)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -3994,7 +4005,7 @@ msgstr ""
 #: field:stock.location,parent_right:0
 #: field:stock.quant.package,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Desni roditelj"
 
 #. module: stock
 #: field:procurement.rule,route_id:0 field:stock.location.path,route_id:0
@@ -4270,7 +4281,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr ""
+msgstr "Kratki naziv"
 
 #. module: stock
 #: help:stock.warehouse,code:0
@@ -5003,7 +5014,7 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -5541,7 +5552,7 @@ msgstr ""
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "or"
-msgstr ""
+msgstr "ili"
 
 #. module: stock
 #. openerp-web

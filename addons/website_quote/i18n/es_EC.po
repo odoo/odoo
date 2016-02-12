@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-08-25 14:03+0000\n"
+"PO-Revision-Date: 2016-01-23 05:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-8/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -105,26 +105,26 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: website_quote
 #: model:email.template,subject:website_quote.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
 #: view:website:website_quote.pricing
 msgid "% discount"
-msgstr ""
+msgstr "% descuento"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 #: view:website:website_quote.so_template
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -139,7 +139,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
-msgstr ""
+msgstr ": este contenido aparecerá en el presupuesto sólo si el producto se coloca en el presupuesto."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -147,7 +147,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
-msgstr ""
+msgstr ": este contenido aparecerá en el presupuesto sólo si el producto se usa en el presupuesto."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -620,22 +620,22 @@ msgstr ""
 #: model:product.template,name:website_quote.product_template_quote_3
 #: model:sale.quote.option,name:website_quote.website_sale_option_line_1
 msgid "Advanced CRM Functional"
-msgstr ""
+msgstr "CRM funcional avanzado"
 
 #. module: website_quote
 #: field:sale.order,amount_undiscounted:0
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Importe antes del descuento"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ask Changes"
-msgstr ""
+msgstr "Solicitar cambios"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Bill To:"
-msgstr ""
+msgstr "Facturar a:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -650,7 +650,7 @@ msgstr "Limpiar"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us"
-msgstr ""
+msgstr "Contáctenos"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -666,19 +666,19 @@ msgstr ""
 #: field:sale.order.option,create_uid:0 field:sale.quote.line,create_uid:0
 #: field:sale.quote.option,create_uid:0 field:sale.quote.template,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por:"
 
 #. module: website_quote
 #: field:sale.order.option,create_date:0 field:sale.quote.line,create_date:0
 #: field:sale.quote.option,create_date:0
 #: field:sale.quote.template,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creado"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Customer:"
-msgstr ""
+msgstr "Cliente:"
 
 #. module: website_quote
 #: field:sale.order,website_description:0 field:sale.order.option,name:0
@@ -692,12 +692,12 @@ msgstr "Descripción"
 #. module: website_quote
 #: field:product.template,quote_description:0
 msgid "Description for the quote"
-msgstr ""
+msgstr "Descripción para el presupuesto"
 
 #. module: website_quote
 #: field:product.template,website_description:0
 msgid "Description for the website"
-msgstr ""
+msgstr "Descripción para el sitio web"
 
 #. module: website_quote
 #: field:sale.order.option,discount:0 field:sale.quote.line,discount:0
@@ -713,7 +713,7 @@ msgstr ""
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr ""
+msgstr "Editar plantilla"
 
 #. module: website_quote
 #: field:sale.order,validity_date:0
@@ -728,14 +728,14 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Feedback"
-msgstr ""
+msgstr "Comentarios"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
 msgid "Functional Training"
-msgstr ""
+msgstr "Formación funcional"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -768,24 +768,24 @@ msgstr "ID"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "incl. impuestos)"
 
 #. module: website_quote
 #: view:website:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Introducción"
 
 #. module: website_quote
 #: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
 #: field:sale.quote.option,write_uid:0 field:sale.quote.template,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima Actualización por"
 
 #. module: website_quote
 #: field:sale.order.option,write_date:0 field:sale.quote.line,write_date:0
 #: field:sale.quote.option,write_date:0 field:sale.quote.template,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Actualizado en"
 
 #. module: website_quote
 #: model:product.template,description_sale:website_quote.product_product_quote_1_product_template
@@ -795,7 +795,7 @@ msgstr ""
 msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better functional understanding of Odoo"
-msgstr ""
+msgstr "Aprenda directamente de nuestro equipo y red de expertos de Odoo. Escoja entre las sesiones de formación disponible para una mejor comprensión funcional de Odoo"
 
 #. module: website_quote
 #: model:product.template,description_sale:website_quote.product_product_quote_2_product_template
@@ -803,14 +803,14 @@ msgstr ""
 msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better technical understanding of Odoo"
-msgstr ""
+msgstr "Aprenda directamente de nuestro equipo y red de expertos de Odoo. Escoja entre las sesiones de formación disponible para una mejor comprensión técnica de Odoo"
 
 #. module: website_quote
 #: field:sale.order.line,website_description:0
 #: field:sale.order.option,website_description:0
 #: field:sale.quote.line,website_description:0
 msgid "Line Description"
-msgstr ""
+msgstr "Descripción de la línea"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -825,12 +825,12 @@ msgstr ""
 #. module: website_quote
 #: field:sale.quote.option,website_description:0
 msgid "Option Description"
-msgstr ""
+msgstr "Descripción de la opción"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "Producto opcional:"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
@@ -841,7 +841,7 @@ msgstr ""
 #: field:sale.order,options:0 field:sale.order.line,option_line_id:0
 #: field:sale.quote.template,options:0
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Líneas de productos opcionales"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -852,7 +852,7 @@ msgstr "Opciones"
 #: code:addons/website_quote/controllers/main.py:69
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Pedido firmado por %s"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -863,7 +863,7 @@ msgstr "Precio"
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Pricing"
-msgstr ""
+msgstr "Precios"
 
 #. module: website_quote
 #: field:sale.order.option,product_id:0 field:sale.quote.line,product_id:0
@@ -879,7 +879,7 @@ msgstr "Plantilla de producto"
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Product:"
-msgstr ""
+msgstr "Producto:"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -896,34 +896,34 @@ msgstr "Cantidad"
 #. module: website_quote
 #: field:sale.quote.template,name:0
 msgid "Quotation Template"
-msgstr ""
+msgstr "Plantilla de presupuesto"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "Líneas de plantilla de presupuesto"
 
 #. module: website_quote
 #: field:sale.quote.line,quote_id:0 field:sale.quote.option,template_id:0
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "Referencia de la plantilla de presupuesto"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr ""
+msgstr "Plantillas de presupuesto"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:47
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "Presupuesto visto por el cliente"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Quote Date:"
-msgstr ""
+msgstr "Fecha de presupuesto:"
 
 #. module: website_quote
 #: field:sale.quote.template,number_of_days:0
@@ -949,28 +949,28 @@ msgstr ""
 #: view:website:website_quote.quotation_toolbar
 #: view:website:website_quote.so_quotation
 msgid "Reject"
-msgstr ""
+msgstr "Rechazado"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
+msgstr "Rechazar este presupuesto"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Opciones de venta"
 
 #. module: website_quote
 #: field:sale.order.option,order_id:0
 msgid "Sale Order Reference"
-msgstr ""
+msgstr "Referencia del pedido de venta"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Sale Quotation Template"
-msgstr ""
+msgstr "Plantilla de presupuesto de venta"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_tree
@@ -996,12 +996,12 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,access_token:0
 msgid "Security Token"
-msgstr ""
+msgstr "Token de seguridad"
 
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #. module: website_quote
 #: view:website:website_quote.chatter
@@ -1011,7 +1011,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ship To:"
-msgstr ""
+msgstr "Enviar a:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1021,13 +1021,13 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Subtotal:"
-msgstr ""
+msgstr "Subtotal:"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr ""
+msgstr "Productos sugeridos"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
@@ -1044,14 +1044,14 @@ msgstr "Impuestos"
 #: model:product.template,name:website_quote.product_template_quote_2
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
 msgid "Technical Training"
-msgstr ""
+msgstr "Formación técnica"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr ""
+msgstr "Cuéntenos por favor por qué rechaza este presupuesto. Nos ayudará a mejorar en un futuro."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1066,12 +1066,12 @@ msgstr ""
 #. module: website_quote
 #: field:sale.quote.template,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Términos y condiciones..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1088,7 +1088,7 @@ msgstr ""
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
-msgstr ""
+msgstr "El pedido ha sido validado. Gracias por su confianza y no dude en"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1098,7 +1098,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr ""
+msgstr "Este presupuesto ha sido rechazado."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1120,7 +1120,7 @@ msgstr "Precio unitario"
 #: field:sale.order.option,uom_id:0 field:sale.quote.line,product_uom_id:0
 #: field:sale.quote.option,uom_id:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Unidad de medida "
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1130,7 +1130,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Validate Order"
-msgstr ""
+msgstr "Validar pedido"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
@@ -1140,37 +1140,37 @@ msgstr ""
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Website Description"
-msgstr ""
+msgstr "Descripción del sitio web"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
-msgstr ""
+msgstr "Su contacto:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Name:"
-msgstr ""
+msgstr "Su nombre:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Order"
-msgstr ""
+msgstr "Su pedido"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Quotation"
-msgstr ""
+msgstr "Su presupuesto"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Reference:"
-msgstr ""
+msgstr "Su referencia:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your advantage:"
-msgstr ""
+msgstr "Sus condiciones:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1180,22 +1180,22 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your message has been successfully sent!"
-msgstr ""
+msgstr "Su mensaje ha sido enviado correctamente"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "and"
-msgstr ""
+msgstr "y"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "contact us"
-msgstr ""
+msgstr "contáctenos"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "day"
-msgstr ""
+msgstr "día"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -1208,17 +1208,17 @@ msgstr "días"
 msgid ""
 "for\n"
 "                          any question."
-msgstr ""
+msgstr "para cualquier cuestión."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "if you want a new one."
-msgstr ""
+msgstr "si desea uno nuevo."
 
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "on"
-msgstr ""
+msgstr "en"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation

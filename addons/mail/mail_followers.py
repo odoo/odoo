@@ -186,7 +186,7 @@ class mail_notification(osv.Model):
         message = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
 
         # compute partners
-        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=None)
+        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=context)
         if not email_pids:
             return True
 
@@ -211,15 +211,19 @@ class mail_notification(osv.Model):
         chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
         email_ids = []
         for chunk in chunks:
+            if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_recipient_values'):
+                recipient_values = self.pool[message.model].message_get_recipient_values(cr, uid, message.res_id, notif_message=message, recipient_ids=chunk, context=context)
+            else:
+                recipient_values = self.pool['mail.thread'].message_get_recipient_values(cr, uid, message.res_id, notif_message=message, recipient_ids=chunk, context=context)
             mail_values = {
                 'mail_message_id': message.id,
                 'auto_delete': (context or {}).get('mail_auto_delete', True),
                 'mail_server_id': (context or {}).get('mail_server_id', False),
                 'body_html': body_html,
-                'recipient_ids': [(4, id) for id in chunk],
                 'references': references,
             }
             mail_values.update(custom_values)
+            mail_values.update(recipient_values)
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
         # NOTE:
         #   1. for more than 50 followers, use the queue system

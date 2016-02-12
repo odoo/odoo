@@ -129,7 +129,7 @@ class ir_model(osv.osv):
 
     _defaults = {
         'model': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
     }
 
     def _check_model_name(self, cr, uid, ids, context=None):
@@ -207,10 +207,8 @@ class ir_model(osv.osv):
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
-        if context and context.get('manual'):
-            vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+        if vals.get('state','manual')=='manual':
             # add model in registry
             self.instanciate(cr, user, vals['model'], context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
@@ -283,7 +281,7 @@ class ir_model_fields(osv.osv):
         'selection': "",
         'domain': "[]",
         'name': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
         'on_delete': 'set null',
         'select_level': '0',
         'field_description': '',
@@ -369,14 +367,12 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
             if not vals.get('selection',False):
                 raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base') == 'manual':
+        if vals.get('state','manual') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
@@ -409,8 +405,6 @@ class ir_model_fields(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
 
         #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
         if 'serialization_field_id' in vals or 'name' in vals:
@@ -451,7 +445,7 @@ class ir_model_fields(osv.osv):
                         raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
                     if vals['name'] in obj._columns:
                         raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
-                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
                         raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')
@@ -1049,10 +1043,32 @@ class ir_model_data(osv.osv):
                     },context=context)
         else:
             if mode=='init' or (mode=='update' and xml_id):
+                inherit_xml_ids = []
+                if xml_id:
+                    for table, field_name in model_obj._inherits.items():
+                        xml_ids = self.pool['ir.model.data'].search(cr, uid, [
+                            ('module', '=', module),
+                            ('name', '=', xml_id + '_' + table.replace('.', '_')),
+                        ], context=context)
+                        # XML ID found in the database, try to recover an existing record
+                        if xml_ids:
+                            found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
+                            record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
+                            # The record exists, store the id and don't recreate the XML ID
+                            if record.exists():
+                                inherit_xml_ids.append(found_xml_id.model)
+                                values[field_name] = found_xml_id.res_id
+                            # Orphan XML ID, delete it
+                            else:
+                                found_xml_id.unlink()
+
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
                     if model_obj._inherits:
                         for table in model_obj._inherits:
+                            if table in inherit_xml_ids:
+                                continue
+
                             inherit_id = model_obj.browse(cr, uid,
                                     res_id,context=context)[model_obj._inherits[table]]
                             self.create(cr, SUPERUSER_ID, {
@@ -1078,30 +1094,8 @@ class ir_model_data(osv.osv):
         return res_id
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        if isinstance(models[0], (list, tuple)):
-            model,res_id = models[0]
-        else:
-            res_id=None
-            model = models[0]
-
-        if res_id:
-            where = ' and res_id=%s' % (res_id,)
-        else:
-            where = ' and (res_id is null)'
-
-        if key2:
-            where += ' and key2=\'%s\'' % (key2,)
-        else:
-            where += ' and (key2 is null)'
-
-        cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
-        res = cr.fetchone()
         ir_values_obj = openerp.registry(cr.dbname)['ir.values']
-        if not res:
-            ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
-        elif xml_id:
-            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
-            ir_values_obj.invalidate_cache(cr, uid, ['value'])
+        ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         return True
 
     def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):

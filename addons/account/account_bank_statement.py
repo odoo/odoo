@@ -531,8 +531,9 @@ class account_bank_statement_line(osv.osv):
                   ('reconcile_id', '=', False),
                   ('state', '=', 'valid'),
                   ('account_id.reconcile', '=', True),
-                  ('id', 'not in', excluded_ids),
-                  ('partner_id', 'in', (False, st_line.partner_id.id))]
+                  ('id', 'not in', excluded_ids),]
+        if st_line.partner_id:
+            domain.append(('partner_id', '=', st_line.partner_id.id))
         return domain
 
     def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
@@ -946,6 +947,7 @@ class account_bank_statement_line(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line', context=context),
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
+        'sequence': 1,
     }
 
 class account_statement_operation_template(osv.osv):

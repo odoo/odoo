@@ -371,9 +371,15 @@ class account_move_line(osv.osv):
             context = {}
         if not args:
             return []
-        where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
+
+        where = ' AND '.join(
+            '(abs(sum(debit-credit)) %s %%s)' % operator
+            for field, operator, value in args
+        )
+        params = tuple(value for field, operator, value in args)
+
         cursor.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
-                     GROUP BY id, debit, credit having '+where)
+                     GROUP BY id, debit, credit having '+where, params)
         res = cursor.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -741,7 +747,7 @@ class account_move_line(osv.osv):
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
                 part = partner_obj.browse(cr, uid, partner_id, context=context)
-                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
+                tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids, context=context)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
             val['account_tax_id'] = tax_id
@@ -1090,14 +1096,20 @@ class account_move_line(osv.osv):
             if res:
                 res = _('Entries: ')+ (res[0] or '')
             return res
-        if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
+        if (not (context.get('journal_id', False) or context.get('journal_name', False))) or (not context.get('period_id', False)):
             return False
         if context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-        cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
-        j = cr.fetchone()[0] or ''
+        if context.get('journal_name', False):
+            cr.execute('SELECT code FROM account_journal WHERE name ilike %s', (context['journal_name'], ))
+        else:
+            cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
+
+        j = cr.fetchone()
+        j = (j and j[0]) or ''
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
-        p = cr.fetchone()[0] or ''
+        p = cr.fetchone()
+        p = (p and p[0]) or ''
         if j or p:
             return j + (p and (':' + p) or '')
         return False

@@ -5,7 +5,7 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # glovebx <ruinning@163.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # liyes <bodetools@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-25 08:27+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-01-08 09:25+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgid ""
 ": adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ":增加或删除规格\n                            将导致删除和重建已存在的规格，并导致\n                            以前的定制丢失。"
+msgstr ":增加或删除变型\n                            将导致删除和重建已存在的变型，并导致\n                            以前的定制丢失。"
 
 #. module: product
 #: model:product.template,website_description:product.product_product_9_product_template
@@ -1259,7 +1259,7 @@ msgstr "EAN13 条码"
 #. module: product
 #: field:product.ul,weight:0
 msgid "Empty Package Weight"
-msgstr "空包装重量"
+msgstr "空包裹重量"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -1572,21 +1572,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品图片规格(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
 
 #. module: product
 #: help:product.product,image_medium:0
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
 
 #. module: product
 #: help:product.product,image_small:0
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用小尺寸图片模板)"
+msgstr "产品变型图片(如果为Flase,采用小尺寸图片模板)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1660,7 +1660,7 @@ msgstr "是一个关注者"
 #: field:product.product,is_product_variant:0
 #: field:product.template,is_product_variant:0
 msgid "Is product variant"
-msgstr "是多规格产品"
+msgstr "是产品变型"
 
 #. module: product
 #: view:product.pricelist.version:product.product_pricelist_version_form_view
@@ -1771,7 +1771,7 @@ msgstr "长度或距离"
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "List of Variants"
-msgstr "变体列表"
+msgstr "变型列表"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1814,7 +1814,7 @@ msgstr "管理多个计量单位"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "管理产品包装"
+msgstr "管理产品包装形式"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -2036,17 +2036,17 @@ msgstr "PC 组装 SC234"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr "包装"
+msgstr "包裹"
 
 #. module: product
 #: field:product.packaging,ul:0
 msgid "Package Logistic Unit"
-msgstr "物流单元包装"
+msgstr "包裹物流单元"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
 msgid "Package by layer"
-msgstr "包装层"
+msgstr "每层的包裹"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -2056,23 +2056,23 @@ msgstr "包装层"
 #: view:product.packaging:product.product_packaging_tree_view_product
 #: view:product.template:product.product_template_form_view
 msgid "Packaging"
-msgstr "包装"
+msgstr "包装形式"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr "垫板"
+msgstr "托盘"
 
 #. module: product
 #: field:product.packaging,ul_container:0
 msgid "Pallet Logistic Unit"
-msgstr "物流单元托盘"
+msgstr "托盘物流单元"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
 #: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
-msgstr "垫垫板"
+msgstr "托盘化"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -2129,7 +2129,7 @@ msgstr "额外价格"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "价格附加:销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
+msgstr "价格附加:变型的销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2375,7 +2375,7 @@ msgstr "产品计量单位"
 #: view:product.product:product.product_normal_form_view
 #: view:product.template:product.product_template_search_view
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2385,7 +2385,7 @@ msgstr "产品系列"
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "产品规格"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2482,7 +2482,7 @@ msgstr "数量"
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr "包装数量"
+msgstr "每包裹的数量"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -2863,12 +2863,12 @@ msgstr "毛重使用公斤"
 #. module: product
 #: help:product.ul,height:0
 msgid "The height of the package"
-msgstr "包装的高度"
+msgstr "包裹的高度"
 
 #. module: product
 #: help:product.ul,length:0
 msgid "The length of the package"
-msgstr "包装的长度"
+msgstr "包裹的长度"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -2893,12 +2893,12 @@ msgstr "净重使用公斤"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr "层板或箱子的层数"
+msgstr "托盘或箱子的层数"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr "每层包装件数"
+msgstr "每层的包裹数量"
 
 #. module: product
 #: code:addons/product/product.py:397
@@ -2906,7 +2906,7 @@ msgstr "每层包装件数"
 msgid ""
 "The operation cannot be completed:\n"
 "You trying to delete an attribute value with a reference on a product variant."
-msgstr "这个操作不能被完成：\n你不能删除在一个产品属性上已有参考的属性值。"
+msgstr "这个操作不能完成：\n你不能删除在一个产品变型上已有参考的属性值。"
 
 #. module: product
 #: view:product.supplierinfo:product.product_supplierinfo_form_view
@@ -2925,7 +2925,7 @@ msgstr "iPad 也可以支援 Apple Wireless Keyboard。"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr "您可以放入货板或箱子的产品数量。"
+msgstr "您可以放入托盘或箱子的产品数量。"
 
 #. module: product
 #: help:product.template,volume:0
@@ -2935,12 +2935,12 @@ msgstr "这体积是m3"
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr "完整包装的重量，指货板或者包装箱"
+msgstr "完整包裹，托盘或者箱子的重量"
 
 #. module: product
 #: help:product.ul,width:0
 msgid "The width of the package"
-msgstr "包装宽度"
+msgstr "包裹宽度"
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2957,7 +2957,7 @@ msgstr "此处源自该产品表单。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr "该字段保存产品的图片，限制图片大小须小于 1024x1024px."
+msgstr "该字段保存产品变型的图片，限制图片大小须小于 1024x1024px."
 
 #. module: product
 #: help:product.template,image:0
@@ -3048,7 +3048,7 @@ msgstr "碳粉匣"
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr "包装总重量"
+msgstr "包裹总重量"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -3150,17 +3150,17 @@ msgstr "可变的"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Extra Price"
-msgstr "规格附加价格"
+msgstr "变型附加价格"
 
 #. module: product
 #: field:product.product,image_variant:0
 msgid "Variant Image"
-msgstr "系列图片"
+msgstr "变型图片"
 
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "Variant Prices"
-msgstr "系列价格"
+msgstr "变型价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_template_action
@@ -3168,14 +3168,14 @@ msgstr "系列价格"
 #: view:product.attribute.value:product.variants_template_tree_view
 #: view:product.attribute.value:product.variants_tree_view
 msgid "Variant Values"
-msgstr "系列值"
+msgstr "变型值"
 
 #. module: product
 #: field:product.attribute.value,product_ids:0
 #: view:product.template:product.product_template_kanban_view
 #: view:product.template:product.product_template_only_form_view
 msgid "Variants"
-msgstr "系列型号"
+msgstr "变型"
 
 #. module: product
 #: model:product.public.category,name:product.video_acquisition

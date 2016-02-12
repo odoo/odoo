@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-26 02:59+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-01-21 01:27+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -351,7 +351,7 @@ msgstr "地址簿"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr "高级投标流程"
+msgstr "提前招标程序"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -396,23 +396,23 @@ msgstr "允许你选择和维护产品的不同计量单位"
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr "允许在采购订单指定一个辅助核算科目"
+msgstr "允许在采购订单指定一个分析账户"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr "采购的辅助核算"
+msgstr "采购的分析会计"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr "采购的辅助核算"
+msgstr "采购的分析会计"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -488,17 +488,17 @@ msgstr "基于采购订单行"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr "接收的投标"
+msgstr "出价已收到"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "投标被收到关于"
+msgstr "出价已收到于时间"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr "投标有效直至"
+msgstr "出价有效至"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -517,7 +517,7 @@ msgid ""
 "Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
 "            You can configure per product if you directly do a Request for Quotation\n"
 "            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
-msgstr "当你要从几个供应商给一组产品询价时，使用采购招标单。\n                可为每个产品进行配置，如果只有一个供应商就直接询价，如果有多个供应商，就要进行采购谈判。"
+msgstr "招标用在当你要从几个供应商给一组产品询价时。\n                假如直接从某个供应商询价，或者，使用招标来比较多个供应商的出价，可配置每个产品。"
 
 #. module: purchase
 #: view:product.template:purchase.product_template_search_view_purchase
@@ -572,7 +572,7 @@ msgstr "产品类别"
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Choose from several bids in a call for bids"
-msgstr "在一个投标请求的多个投标中进行选择。"
+msgstr "在招标的多个出价中选择。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -683,12 +683,12 @@ msgstr "采购订单审批日期"
 #. module: purchase
 #: help:purchase.order,bid_validity:0
 msgid "Date on which the bid expired"
-msgstr "投标到期日"
+msgstr "出价到期日"
 
 #. module: purchase
 #: help:purchase.order,bid_date:0
 msgid "Date on which the bid was received"
-msgstr "投标接收日期"
+msgstr "出价接收到的日期"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -907,7 +907,7 @@ msgstr "要删除采购订单，你必须先取消它"
 msgid ""
 "In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
-msgstr "在公开投标的流程中，你可以对招标行进行比较并为投标的产品选择\n           采购多少数量"
+msgstr "在公开招标流程中，你可以对出价行进行比较，并为每个招标的产品选择从相应的出价中购买相应的数量"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1086,7 +1086,7 @@ msgstr "请确认至少定义了一个入库分拣类型"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
-msgstr "管理投标请求"
+msgstr "管理招标"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
@@ -1241,12 +1241,12 @@ msgstr "订单月份"
 #: view:purchase.order.line:purchase.purchase_order_line_search
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "单号"
+msgstr "订单参考"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "采购订单号必须在一个公司范围内唯一"
+msgstr "订单参考在一个公司范围内必须唯一"
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -1266,7 +1266,7 @@ msgstr "订单"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
-msgstr "内部订单编号："
+msgstr "我们的订单参考："
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
@@ -1541,7 +1541,7 @@ msgstr "包含未开票明细的采购单"
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr "从采购补货"
+msgstr "采购补给此仓库"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1602,7 +1602,7 @@ msgstr "询价单"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr "询价单和投标"
+msgstr "RFQ  & 出价"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1648,12 +1648,12 @@ msgstr "重新用电邮发送询价单"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Invoice"
-msgstr "接收发票"
+msgstr "收到发票"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Products"
-msgstr "收货"
+msgstr "收到货物"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -1670,7 +1670,7 @@ msgstr "已接收比例"
 #: view:purchase.order:purchase.view_purchase_order_filter
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Reference"
-msgstr "单号"
+msgstr "参考"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
@@ -1690,7 +1690,7 @@ msgid ""
 "Reference of the sales order or bid sent by your supplier. It's mainly used "
 "to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr "你的供应商发给你的销售订单或询价单的参考单号。主要用于当你收到货物时，供应商有可能会把这个参考号写在他们的发货清单上，此时你可以用它来进行单号对照。"
+msgstr "销售订单的参考，或者供应商给出的出价。主要用于当你收到货物时，供应商有可能会把这个参考写在他们的交货单上，此时你可以用它来进行匹配。"
 
 #. module: purchase
 #: view:website:purchase.report_purchasequotation_document
@@ -1860,7 +1860,7 @@ msgstr "供应商发票"
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr "供应商单号"
+msgstr "供应商参考"
 
 #. module: purchase
 #: field:purchase.order,amount_tax:0 field:purchase.order.line,taxes_id:0
@@ -2056,12 +2056,12 @@ msgstr "使用“实时价格”或“平均价格”的成本核算方法。"
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr "在订单上使用多个辅助核算科目"
+msgstr "在订单上使用多重分析账户"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr "在采购订单使用多个辅助核算科目"
+msgstr "在采购订单使用多重分析账户"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2149,7 +2149,7 @@ msgstr "您必须先取消跟此采购单有关的所有发票"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Your Order Reference"
-msgstr "您的订单"
+msgstr "您的订单参考"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration

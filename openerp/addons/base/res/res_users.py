@@ -31,6 +31,7 @@ import openerp
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
+from openerp import api
 from openerp.osv import fields, osv, expression
 from openerp.service.security import check_super
 from openerp.tools.translate import _
@@ -548,8 +549,19 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache(skiparg=2)
+    @api.v7
     def has_group(self, cr, uid, group_ext_id):
+        return self._has_group(cr, uid, group_ext_id)
+    @api.v8
+    def has_group(self, group_ext_id):
+        # use singleton's id if called on a non-empty recordset, otherwise
+        # context uid
+        uid = self.id or self.env.uid
+        return self._has_group(self.env.cr, uid, group_ext_id)
+
+    @api.noguess
+    @tools.ormcache(skiparg=2)
+    def _has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
         :param str group_ext_id: external ID (XML ID) of the group.
@@ -564,6 +576,8 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+    # for a few places explicitly clearing the has_group cache
+    has_group.clear_cache = _has_group.clear_cache
 
 #----------------------------------------------------------
 # Implied groups
@@ -784,6 +798,21 @@ class groups_view(osv.osv):
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
+        """ return the list of groups available to an user to generate virtual fields """
+
+        # TO REMOVE IN 9.0
+        # verify if share column is present on the table
+        # can not be done with override as can not ensure the module share is loaded
+        # during an upgrade of another module (e.g. if has less dependencies than share)
+        # use ir.model.fields as _fields may not have been populated yet
+        got_share = self.pool['ir.model.fields'].search_count(cr, uid, [
+            ('name', '=', 'share'), ('model', '=', 'res.groups')], context=context)
+        if got_share:
+            if domain is None:
+                domain = []
+            # remove non-shared groups in SQL as 'share' may not be in _fields
+            cr.execute("SELECT id FROM res_groups WHERE share IS true")
+            domain.append(('id', 'not in', [gid for (gid,) in cr.fetchall()]))
         return self.search(cr, uid, domain or [])
 
     def get_groups_by_application(self, cr, uid, context=None):

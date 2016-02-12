@@ -102,6 +102,7 @@ class view(osv.osv):
                         self.import_module(cr, uid, mod_name, path, force=force, context=context)
                         success.append(mod_name)
                     except Exception, e:
+                        _logger.exception('Error while importing module')
                         errors[mod_name] = tools.ustr(e)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():

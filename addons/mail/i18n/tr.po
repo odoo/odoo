@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-25 16:18+0000\n"
+"PO-Revision-Date: 2015-12-13 03:39+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "<p class='oe_view_nocontent_create'>\n                            Yeni %
 msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
-msgstr "<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s"
+msgstr "<p class='oe_view_nocontent_create'>Yeni bir %(document)s oluşturmak için tıklayın.</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -171,14 +171,14 @@ msgstr "Etkin alan adı"
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add Followers"
-msgstr "İzleyici Ekle"
+msgstr "Takipçi Ekle"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr "İzleyicilere gönderilmeyecek bir iç not ekle"
+msgstr "Takipçilere gönderilmeyecek bir iç not ekle"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -558,7 +558,7 @@ msgstr "Bu mesajı gerçekten silmek istediğinizden emin misiniz?"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Belge İzleyicileri"
+msgstr "Belge Takipçileri"
 
 #. module: mail
 #. openerp-web
@@ -699,7 +699,7 @@ msgstr "Dosya Türü İkonu"
 #: code:addons/mail/static/src/xml/mail_followers.xml:12
 #, python-format
 msgid "Follow"
-msgstr "İzle"
+msgstr "Takip Et"
 
 #. module: mail
 #. openerp-web
@@ -712,43 +712,43 @@ msgstr "İzle"
 #: field:res.partner,message_follower_ids:0
 #, python-format
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: mail
 #: view:mail.followers:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr "İzleyici Kartı"
+msgstr "Takipçi Formu"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:127
 #, python-format
 msgid "Followers of"
-msgstr "Bunu izleyiciler"
+msgstr "Şunun Takipçileri : "
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Followers of the document and"
-msgstr "Belgenin izleyicileri ve"
+msgstr "Belgenin takipçileri ve"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:131
 #, python-format
 msgid "Followers of this document"
-msgstr "Bu belgenin izleyicileri"
+msgstr "Bu belgenin takipçileri"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr "Yalnızca izleyiciler"
+msgstr "Yalnızca takipçiler"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:14
 #, python-format
 msgid "Following"
-msgstr "İzleniyor"
+msgstr "Takip Ediliyor"
 
 #. module: mail
 #: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
@@ -811,7 +811,7 @@ msgstr "Gizli"
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr "Alt tür takipçisi Seçenekleri gizle"
+msgstr "Takipçi seçeneklerinde alt tipi gizle"
 
 #. module: mail
 #: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
@@ -840,7 +840,7 @@ msgstr "Takma tutan üst kayıt ID (örnek: proje görev oluşturma takma tutara
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
-msgstr "İzlenen kaynağın Id i"
+msgstr "İzlenen kaynağın ID'si"
 
 #. module: mail
 #: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
@@ -853,7 +853,7 @@ msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr "Bu onay kutusu işaretlendiğinde, Ortaklar belgenin takipçileri eklenmiş bir e-posta uyarısı alırsınız."
+msgstr "Bu işaretliyse, iş ortaklarına artık bu belgenin takipçisi olduklarına dair bir bilgilendirme emaili gönderilir."
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
@@ -920,7 +920,7 @@ msgstr "Bildirim mi"
 #: field:mail.thread,message_is_follower:0
 #: field:res.partner,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: mail
 #. openerp-web
@@ -962,7 +962,7 @@ msgstr "Son Güncelleme"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr "Bu belgenin izleyicisi olarak eklenecek iş ortakları."
+msgstr "Bu belgenin takipçisi olarak eklenecek iş ortakları."
 
 #. module: mail
 #. openerp-web
@@ -982,7 +982,7 @@ msgstr "Bir İç Not Ekleme"
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr "Bir iç not ekleme"
+msgstr "Bir iç not ekle"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
@@ -1030,7 +1030,7 @@ msgstr "Grupun orta boyutlu fotoğrafı. En boy oranaı korunarak otomatikman 12
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr "O grubun üyeleri otomatik olarak izleyenler olarak eklenecektir. Gerek duydulduğunda aboneliklerini elle değiştirebileceklerini unutmayın."
+msgstr "O grubun üyeleri otomatik olarak takipçiler olarak eklenecektir. Gerek duydulduğunda aboneliklerini elle değiştirebileceklerini unutmayın."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1162,7 +1162,7 @@ msgstr "Gelen Kutusuna Taşı"
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr "İzleyicilerim"
+msgstr "Takipçilerim"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1195,7 +1195,7 @@ msgstr "Yeni"
 #: code:addons/mail/static/src/js/mail_followers.js:205
 #, python-format
 msgid "No followers"
-msgstr "İzleyici Yok"
+msgstr "Takipçi Yok"
 
 #. module: mail
 #. openerp-web
@@ -1234,26 +1234,26 @@ msgstr "Onaylanmış partnerler"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr "İzleyicileri bilgilendir"
+msgstr "Takipçileri bilgilendir"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr "Belgenin takipçilerini bildir (kütle yazı sadece)"
+msgstr "Belgenin takipçilerini bilgilendir (sadece toplu e-postalama)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:207
 #, python-format
 msgid "One follower"
-msgstr "Bir izleyici"
+msgstr "Bir Takipçi"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
-msgstr "Bu gruptaki görüşmeleri yalnızca\n                                davetli izleyiciler okuyabilr."
+msgstr "Bu gruptaki görüşmeleri yalnızca\n                                davetli takipçiler okuyabilir."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
@@ -1400,7 +1400,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr "Mail gateway'i kullanarak gönderilecek mesajların kurallarını belirleyin:\n Herkes : Herkes eposta alır.\n İş Ortakları : Sadece yetkili iş ortakları. \nTakipçiler : Sadece ilgili doküman veya konunun takipçileri\n"
+msgstr "Mail gateway'i kullanarak gönderilecek mesajların kurallarını belirleyin:\n Herkes : Herkes eposta alır.\n İş Ortakları : Sadece yetkili iş ortakları. \n Takipçiler : Sadece ilgili doküman veya konunun takipçileri\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1444,7 +1444,7 @@ msgstr "Oku"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr "Otomatik Email Bilgilendirmeleri"
+msgstr "Email Bilgilendirmeleri"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1499,7 +1499,7 @@ msgstr "İlişkili alanı"
 #: code:addons/mail/static/src/xml/mail_followers.xml:41
 #, python-format
 msgid "Remove this follower"
-msgstr "Bu izleyiciyi kaldır"
+msgstr "Bu takipçiyi kaldır"
 
 #. module: mail
 #. openerp-web
@@ -1581,7 +1581,7 @@ msgstr "Bir mesaj gönder"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr "Belgenin tüm izleyicilerine bir mesaj gönder"
+msgstr "Belgenin tüm takipçilerine bir mesaj gönder"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1616,7 +1616,7 @@ msgstr "Yapılacak geri ayarlayın"
 #: code:addons/mail/static/src/xml/mail.xml:47
 #, python-format
 msgid "Share with my followers..."
-msgstr "İzleyicilerim ile paylaş ..."
+msgstr "Takipçilerim ile paylaş ..."
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
@@ -1837,7 +1837,7 @@ msgstr "Eposta gönderilemiyor, lütfen alıcının eposta adresini ya da rumuzu
 #: view:mail.group:mail.view_group_kanban
 #, python-format
 msgid "Unfollow"
-msgstr "İzleme"
+msgstr "Takibi Bırak"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
@@ -1910,7 +1910,7 @@ msgstr "Uyarı!"
 msgid ""
 "Warning! \n"
 " %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
-msgstr "Uyarı! \n %s bu belgede herhangi bir eposta veya tartışma ile bilgilendirmeyecektir. İzlenenlerden çıkarmak istediğinizden emin misiniz?"
+msgstr "Uyarı! \n %s bu belgede herhangi bir e-posta veya tartışma ile bilgilendirmeyecektir. Takipçilerden çıkarmak istediğinizden emin misiniz?"
 
 #. module: mail
 #. openerp-web
@@ -2005,14 +2005,14 @@ msgstr "belge"
 #: code:addons/mail/static/src/js/mail_followers.js:209
 #, python-format
 msgid "followers"
-msgstr "izleyiciler"
+msgstr "takipçiler"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:348
 #, python-format
 msgid "like"
-msgstr "gibi"
+msgstr "Beğen"
 
 #. module: mail
 #. openerp-web
@@ -2126,7 +2126,7 @@ msgstr "bitiş"
 #: code:addons/mail/static/src/xml/mail.xml:349
 #, python-format
 msgid "unlike"
-msgstr "farklı"
+msgstr "Beğenmekten vazgeç"
 
 #. module: mail
 #. openerp-web

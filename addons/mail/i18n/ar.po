@@ -3,16 +3,17 @@
 # * mail
 # 
 # Translators:
+# Buggi <buggi@filzmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Muhamed Saad <midoam2003@gmail.com>, 2015
-# Mustafa Rawi <mustafa@cubexco.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-29 06:09+0000\n"
+"PO-Revision-Date: 2016-01-15 08:13+0000\n"
 "Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +53,7 @@ msgstr "(بلا بريد إلكتروني)"
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr ""
+msgstr "<div><p>مرحباً,</p><p>قام %s بدعوتك لمتابعة المستند %s: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -134,7 +135,7 @@ msgid ""
 "                    No message in this group.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    لا توجد رسائل في هذه المجموعة.\n                </p>\n            "
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
@@ -321,7 +322,7 @@ msgstr "المؤلف"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr ""
+msgstr "كاتب الرسالة. إذا لم يتم تحديده، فإن الحقل email_from قد يحتوي عناوين لا تنتمي لأي شريك في النظام."
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
@@ -468,12 +469,12 @@ msgstr "شهر الانشاء"
 #. module: mail
 #: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "المستخدم الحالي قام بتحديد إخطار مقترن بهذه الرسالة كإخطار مهم"
 
 #. module: mail
 #: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
-msgstr ""
+msgstr "المستخدم الحالي لديه إخطار غير مقروء مقترن بهذه الرسالة"
 
 #. module: mail
 #: code:addons/mail/res_partner.py:31
@@ -885,7 +886,7 @@ msgstr "صندوق الوارد"
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "الرسالة الأولى"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:177
@@ -1011,7 +1012,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:257
 #, python-format
 msgid "Mark as Todo"
-msgstr ""
+msgstr "اجعل في انتظار التنفيذ"
 
 #. module: mail
 #: field:mail.group,image_medium:0
@@ -1043,7 +1044,7 @@ msgstr "الرسالة"
 #. module: mail
 #: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
-msgstr ""
+msgstr "اسم سجل الرسالة"
 
 #. module: mail
 #: field:mail.message.subtype,name:0
@@ -1178,7 +1179,7 @@ msgstr "الاسم"
 #. module: mail
 #: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "جلب الاسم للمستند المقترن."
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -1320,7 +1321,7 @@ msgstr "أصل"
 #. module: mail
 #: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
-msgstr ""
+msgstr "الرسالة الأصل"
 
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
@@ -1641,7 +1642,7 @@ msgstr "صورة متوسطة للمجموعة، سيتم إعادة تحجيم�
 #: field:mail.compose.message,starred:0 field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "مُعلَّم"
 
 #. module: mail
 #: help:mail.notification,starred:0
@@ -1706,7 +1707,7 @@ msgstr "إخطارات النظام"
 msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
-msgstr ""
+msgstr "حقل تقني يحتفظ بإخطارات الرسالة. استخدم notified_partner_ids للوصول إلى الشركاء الذين تم إخطارهم."
 
 #. module: mail
 #: help:mail.group,alias_id:0

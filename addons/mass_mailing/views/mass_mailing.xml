@@ -281,10 +281,10 @@
                             string="Test Mailing"/>
                         <button name="send_mail" type="object"
                             attrs="{'invisible': ['|', ('state', '=', 'done'), ('body_html', '=', False)]}"
-                            class="oe_highlight" string="Send to All"/>
+                            class="oe_highlight" string="Send to All" confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="send_mail" type="object"
                             attrs="{'invisible': ['&amp;', ('state', '!=', 'done'), ('body_html', '!=', False)]}"
-                            string="Send to All"/>
+                            string="Send to All" confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">

@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # gezgin biri <gezginbiri@hotmail.com>, 2015
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-31 19:37+0000\n"
-"Last-Translator: gezgin biri <gezginbiri@hotmail.com>\n"
+"PO-Revision-Date: 2016-01-02 19:39+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,7 +234,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Bu tedarikçiden satınalma sipariş yoktur. Yeni bir Teklif İsteği için tıklayın.\n                </p><p>\n                    Teklif isteği satınalma akışının ilk adımıdır. Satınalma\n                    siparişine dönüştürüldüğünde, malların teslşim alınmasını ve tedarikçi\n                    faturasını denetleyebileceksiniz.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Bu tedarikçiden satın alma siparişi yoktur. Yeni bir Teklif Talebi için tıklayın.\n                </p><p>\n                    Teklif talebi satın alma akışının ilk adımıdır. Satın alma\n                    siparişine dönüştürüldüğünde, malların teslim alınmasını ve tedarikçi\n                    faturasını denetleyebileceksiniz.\n                </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -291,7 +292,7 @@ msgid ""
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to create a request for quotation.\n              </p><p>\n                The quotation contains the history of the discussion/negotiation\n                you had with your supplier. Once confirmed, a request for\n                quotation is converted into a purchase order.\n              </p><p>\n                Most propositions of purchase orders are created automatically\n                by Odoo based on inventory needs.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Alım Teklif Talebi oluşturmak için tıklayın.\n              </p><p>\n                Alım teklifleri tedarikçilerinizden yaptığınız fiyat toplama, pazarlık ve yazışmalardır.. Alım siparişine dönüşmeden önceki tüm faaliyetleri bu ekrandan yaparsınız..\n              </p><p>\n                Stok ihtiyaç planlaması ve MRP çalışıyorsa sistem otomatik olarak Alım Teklif Taleplerini oluşturur ve size bu havuzu yönetmek kalır.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -346,7 +347,7 @@ msgstr "Adres Defteri"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr "Gelişmiş ihale süreçi"
+msgstr "Gelişmiş teklif toplama süreçi"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -367,7 +368,7 @@ msgstr "Ürünler üzerinde bildirimler yapılandırmaya ve bir kullanıcının 
 msgid ""
 "Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr "Kullanıcıların birçok analiz planını sürdürmesini sağlar. Çeşitli hesaplar ve analiz planları arasından satınalma siparişleri satırlarını ayırmanızı sağlar.\n-Bu, purchase_anaytic_plans modülünü kurar."
+msgstr "Kullanıcıların birçok analitik planını sürdürmesini sağlar. Çeşitli hesaplar ve analiz planları arasından satınalma siparişleri satırlarını ayırmanızı sağlar.\n-Bu, purchase_anaytic_plans modülünü kurar."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
@@ -396,12 +397,12 @@ msgstr "Satınalma siparişlerine analitik hesap belirlemenizi sağlar."
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+msgstr "Analitik Hesap"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr "Satınalmalar için Analiz Muhasebe"
+msgstr "Satınalmalar için Analitik Muhasebe"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
@@ -483,12 +484,12 @@ msgstr "Satınalma sipariş satırlarına istinaden"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr "Alınan İhale"
+msgstr "Teklif Toplandı"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "İhale Alınması"
+msgstr "Teklif Toplama Tarihi"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
@@ -683,7 +684,7 @@ msgstr "Teklif süresinin sona erme tarihi"
 #. module: purchase
 #: help:purchase.order,bid_date:0
 msgid "Date on which the bid was received"
-msgstr "İhalenin alındığı tarih"
+msgstr "Teklif Toplama Tarihi"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -703,12 +704,12 @@ msgstr "Doğrulama Günler"
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Öntanımlı Satınalma Fiyat Listesi"
+msgstr "Satınalma Fiyat Listesi"
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr "Öntanımlı Satınalma Fiyat Listesi Sürümü"
+msgstr "Satınalma Fiyat Listesi Sürümü"
 
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
@@ -847,7 +848,7 @@ msgstr "Mali Durumu"
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
@@ -902,7 +903,7 @@ msgstr "Bir satınalma siparişi silmek için, önce onu iptal etmeniz gerekir."
 msgid ""
 "In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
-msgstr "Genel ihale işleminde, teklif kalemlerini karşılaştırabilir ve istenen ürünü hangi hangi tekliften hangi miktarda\n            satınaldığınızı seçebilirsiniz"
+msgstr "Genel teklif toplama işleminde, tedarikçilerden gelecek teklif kalemlerini karşılaştırabilir ve istenen ürünü hangi tedarikçinin hangi teklifinden hangi miktarda satın alacağınızı seçebilirsiniz"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1029,7 +1030,7 @@ msgstr "Fatura Ayarları"
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: purchase
 #: help:purchase.order,shipped:0
@@ -1081,7 +1082,7 @@ msgstr "Lütfen asgari olarak bir gelen alım tipi tanımladığınızdan emin o
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
-msgstr "İhaleler için çağrıları yönet"
+msgstr "Satın alma tekliflerini teklif toplama yöntemiyle yönetme ve oluşturma"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
@@ -1183,7 +1184,7 @@ msgstr "Faturalanmadı"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Notes"
-msgstr "Notlar"
+msgstr "Açıklama"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
@@ -1362,7 +1363,7 @@ msgstr "Fiyat Listeleri"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "RQF Yazdır"
+msgstr "Teklif İsteği Yazdır"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1427,7 +1428,7 @@ msgstr "Alınan ürünler"
 msgid ""
 "Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "-This installs the module purchase_double_validation."
-msgstr "Enaz miktarları aşan satınalmalar için bir ikili doğrulama mekanizması sağlayın.\n-purchase_double_validation Modülünü kurar."
+msgstr "Min. miktarları aşan satın almalar için bir ikili doğrulama mekanizması sağlayın.\n-purchase_double_validation Modülünü kurar."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1569,7 +1570,7 @@ msgstr "Doğrudan tedarikçiden müşteriye teslimat yapmak istiyorsanız bir ad
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "Qty"
-msgstr "Mik"
+msgstr "Miktar"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -1592,33 +1593,33 @@ msgstr "Teklifler"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr "Tİ"
+msgstr "Teklif İsteği"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr "Teklif İsteği & İhale"
+msgstr "Teklif Bilgileri"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "Tİ Onaylandı"
+msgstr "Teklif İsteği Onaylandı"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "Tİ Onaylandı"
+msgstr "Teklif İsteği Onaylandı"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "RFQ Biten"
+msgstr "Biten Teklif İsteği"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
-msgstr "RFQ oluşturuldu"
+msgstr "Teklif İsteği oluşturuldu"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
@@ -1628,7 +1629,7 @@ msgstr "RFQ_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "Tİ'leri ve Satınalmalar"
+msgstr "Teklif İstekleri ve Satınalmalar"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1766,7 +1767,7 @@ msgstr "SS Epostayla Gönder"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr "RFQ E-postayla Gönder"
+msgstr "Teklif İsteğini E-postayla Gönder"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -2036,7 +2037,7 @@ msgstr "Okunmamış Mesajlar"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr "Vergisiz"
+msgstr "Vergisiz Tutar"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -2051,12 +2052,12 @@ msgstr "'Gerçek Fiyat' yada 'Ortalama' maliyet yöntemlerini kullan."
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr "Siparişlerde birden çok analitik hesap kullanın"
+msgstr "Siparişlerde analitik dağılım"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr "Satınalma siparişlerinde birden çok analitik hesap kullanma"
+msgstr "Satınalma siparişlerinde analitik dağılım"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
