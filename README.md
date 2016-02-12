@@ -1,5 +1,5 @@
 [![Build Status](http://runbot.odoo.com/runbot/badge/flat/1/9.0.svg)](http://runbot.odoo.com/runbot)
-[![Tech Doc](http://img.shields.io/badge/master-docs-8f8f8f.svg?style=flat)](http://www.odoo.com/documentation/master)
+[![Tech Doc](http://img.shields.io/badge/master-docs-8f8f8f.svg?style=flat)](http://www.odoo.com/documentation/9.0)
 [![Help](http://img.shields.io/badge/master-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](http://img.shields.io/badge/master-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
 
