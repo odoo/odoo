@@ -939,7 +939,7 @@ class AccountMoveLine(models.Model):
             if journal.type_control_ids:
                 type = account.user_type_id
                 for t in journal.type_control_ids:
-                    if type.code == t.code:
+                    if type == t:
                         ok = True
                         break
             if journal.account_control_ids and not ok:
