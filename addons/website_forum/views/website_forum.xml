@@ -768,7 +768,7 @@
                     <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
                     <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
                     <span>By </span>
-                    <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
+                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or '#'"
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
@@ -916,13 +916,17 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
+                <t t-set="user_profile_url" t-attf-value="#"/>
+                <t t-if="answer.create_uid.id == request.session.uid or answer.create_uid.sudo().website_published">
+                    <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), answer.create_uid.id)"/>
+                </t>
                 <div class="o_forum_user_bio_expand" t-if="answer.can_display_biography">
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
+                <a t-att-href="user_profile_url" class="o_forum_user_info">
                     <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                 </a>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
@@ -1006,11 +1010,11 @@
 <!-- Template for user tooltip  -->
 <template id="forum_user_tooltip">
     <div class="o_forum_user_bio text-left panel panel-body">
-        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
+        <a t-att-href="user_profile_url">
             <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
         </a>
         <div class="o_forum_tooltip_header">
-            <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+            <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
                 t-field="answer.create_uid"
                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>

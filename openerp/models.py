@@ -27,7 +27,6 @@ import functools
 import itertools
 import logging
 import operator
-import pickle
 import pytz
 import re
 import time
@@ -51,7 +50,7 @@ from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache, Collector
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, pickle
 from .tools.safe_eval import safe_eval as eval
 from .tools.translate import _
 
@@ -3908,7 +3907,7 @@ class BaseModel(object):
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
                     if not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
-                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
+                        updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
@@ -3927,7 +3926,7 @@ class BaseModel(object):
                 self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
             )
             params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(ids):
+            for sub_ids in cr.split_for_in_conditions(set(ids)):
                 cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
@@ -4228,7 +4227,7 @@ class BaseModel(object):
         for field in vals:
             current_field = self._columns[field]
             if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+                updates.append((field, current_field._symbol_set[0], current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4454,7 +4453,7 @@ class BaseModel(object):
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                        updates.append((v, column._symbol_set[0], column._symbol_set[1](value[v])))
                     if updates:
                         query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
                             self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
@@ -4478,8 +4477,8 @@ class BaseModel(object):
                                 value = value[0]
                             except:
                                 pass
-                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
-                            self._table, f,
+                        query = 'UPDATE "%s" SET "%s"=%s WHERE id = %%s' % (
+                            self._table, f, column._symbol_set[0],
                         )
                         cr.execute(query, (column._symbol_set[1](value), id))
 

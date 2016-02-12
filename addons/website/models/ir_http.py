@@ -158,6 +158,7 @@ class ir_http(orm.AbstractModel):
                     redirect.set_cookie('website_lang', request.lang)
                     return redirect
                 elif url_lang:
+                    request.uid = None
                     path.pop(1)
                     return self.reroute('/'.join(path) or '/')
             if path[1] == request.website.default_lang_code:

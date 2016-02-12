@@ -90,7 +90,9 @@ var FieldTextHtmlSimple = widget.extend({
             setTimeout(reset, 0);
 
             this.$content = this.$('.note-editable:first');
-            transcoder.style_to_class(this.$content);
+            if (this.options['style-inline']) {
+                transcoder.style_to_class(this.$content);
+            }
         }
 
         $(".oe-view-manager-content").on("scroll", function () {
