@@ -558,7 +558,7 @@ class SaleOrderLine(models.Model):
             for proc in line.procurement_ids:
                 qty += proc.product_qty
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                return False
+                continue
 
             if not line.order_id.procurement_group_id:
                 vals = line.order_id._prepare_procurement_group()
