@@ -3048,11 +3048,6 @@ class StockInventory(models.Model):
         if self.filter != 'pack':
             self.package_id = False
 
-    _constraints = [
-        (_check_filter_product, 'The selected inventory options are not coherent.',
-            ['filter', 'product_id', 'lot_id', 'partner_id', 'package_id']),
-    ]
-
 class StockInventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
