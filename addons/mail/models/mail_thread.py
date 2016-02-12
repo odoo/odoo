@@ -1807,7 +1807,7 @@ class MailThread(models.AbstractModel):
         gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_data, channel_data, force=force)
         self.sudo().write({'message_follower_ids': gen})
         for record in self.filtered(lambda self: self.id in part):
-            record.write(part[record.id])
+            record.write({'message_follower_ids': part[record.id]})
 
         self.invalidate_cache()
         return True
