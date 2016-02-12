@@ -133,7 +133,7 @@ class hr_payslip(osv.osv):
                         'date': date,
                         'debit': amt < 0.0 and -amt or 0.0,
                         'credit': amt > 0.0 and amt or 0.0,
-                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
+                        'analytic_account_id': False,
                         'tax_line_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
                     })
                     line_ids.append(credit_line)
