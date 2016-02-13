@@ -18,7 +18,8 @@ msgstr ""
 
 #. module: stock
 #: help:stock.picking,state:0
-msgid "\n"
+msgid ""
+"\n"
 "                * Draft: not confirmed yet and will not be scheduled until confirmed\n"
 "\n"
 "                * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
@@ -66,6 +67,16 @@ msgid " (reserved)"
 msgstr " (xí trước)"
 
 #. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
@@ -105,12 +116,12 @@ msgstr ""
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
 #, python-format
 msgid " Sequence picking"
-msgstr " "
+msgstr ""
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr " Dịch chuyển / biến động kho đã tồn tại?"
+msgstr " Dịch chuyển / Biến động kho đã tồn tại?"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -189,7 +200,8 @@ msgstr "< Trước"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to add a route.\n"
 "              </p>\n"
 "                <p>You can define here the main routes that run through\n"
