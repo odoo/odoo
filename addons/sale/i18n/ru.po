@@ -3,14 +3,15 @@
 # * sale
 # 
 # Translators:
-# SV <svilij@yahoo.com>, 2015
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-11-14 09:35+0000\n"
-"Last-Translator: SV <svilij@yahoo.com>\n"
+"PO-Revision-Date: 2016-02-10 17:45+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -684,11 +685,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Важные сообщения"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Cчёт доходов и расходов"
@@ -841,6 +837,7 @@ msgstr "Счета будут созданы в черновике, так чт�
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Выставление счета"
@@ -1127,6 +1124,12 @@ msgstr "Условия оплаты"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Пожалуйста определите журнал продаж для этой компании."
+
+#. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr "Нет доступных счет-фактуры строк"
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1768,6 +1771,7 @@ msgstr "Единица измерения"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Непрочитанные"
 
