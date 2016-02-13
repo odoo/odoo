@@ -119,7 +119,7 @@ class stock_history(osv.osv):
         tools.drop_view_if_exists(cr, 'stock_history')
         cr.execute("""
             CREATE OR REPLACE VIEW stock_history AS (
-              SELECT MIN(id) as id,
+              SELECT row_number() over (order by move_id ASC)::int AS id,
                 move_id,
                 location_id,
                 company_id,
