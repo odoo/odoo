@@ -3003,7 +3003,7 @@ class StockInventoryLine(models.Model):
         for line in self:
             quant_ids = line._get_quants()
             tot_qty = sum([x.qty for x in quant_ids])
-            if line.productduct_id and line.product_uom_id and line.product_id.uom_id.id != line.product_uom_id.id:
+            if line.product_id and line.product_uom_id and line.product_id.uom_id.id != line.product_uom_id.id:
                 tot_qty = self.env["product.uom"]._compute_qty_obj(line.product_id.uom_id, tot_qty, line.product_uom_id)
             line.theoretical_qty = tot_qty
 
