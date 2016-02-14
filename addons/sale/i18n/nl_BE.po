@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:50+0000\n"
+"PO-Revision-Date: 2016-02-10 10:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -685,11 +685,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Omzetrekening"
@@ -842,6 +837,7 @@ msgstr "Facturen worden aangemaakt als concept, zodat u ze nog kan\nbijwerken vo
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturatie"
@@ -1128,6 +1124,12 @@ msgstr "Betalingsconditie"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "U dient een verkoop dagboek aan te maken voor dit bedrijf."
+
+#. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1769,6 +1771,7 @@ msgstr "Maateenheden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
