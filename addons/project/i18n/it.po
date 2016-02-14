@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Marius Marolla <mariusmarolla@gmail.com>, 2016
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-11-07 14:43+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
+"PO-Revision-Date: 2016-02-13 16:49+0000\n"
+"Last-Translator: Marius Marolla <mariusmarolla@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -549,7 +550,7 @@ msgstr "Data fine"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater than task start-date"
-msgstr "Errore! La data di termine dell'attività deve essere posteriore a quella di inizio"
+msgstr "Errore! La data di termine dell'attività deve essere successiva a quella di inizio"
 
 #. module: project
 #: constraint:project.task:0
@@ -559,7 +560,7 @@ msgstr "Errore ! Non è possibile creare attività ricorsive."
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
-msgstr "Errore ! La data inizio del progetto deve essere antecedente alla data fine."
+msgstr "Errore ! La data di inizio del progetto deve essere antecedente alla data di chiusura."
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -688,7 +689,7 @@ msgid ""
 "- Employees Only: employees see all tasks or issues\n"
 "- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr ""
+msgstr "Consente di visualizzare le attività e le problematiche per il progetto corrente:\n- Pubblico - tutti vedono tutto; se il portale è attivo, gli utenti del portale\n   possono vedere tutte le attività e le problematiche; se è attivata l'opzione di accesso anonimo al portale, anche i visitatori\n   potranno vedere tutte le attività e le problematiche\n- Portale (disponibile esclusivamente se è installato e attivo il modulo \"Portale\") - i collaboratori vedono tutto;\n   se il portale è attivo, gli utenti del portale possono vedere attività e problematiche seguite da loro \n   o da qualcuno della loro zienda\n- Solo collaboratori - i collaboratori vedono tutte le attività e le problematiche\n- Solo Followers: i collaboratori possono vedere solo attività o problematiche seguite da loro; se il portale\n   è attivoi, gli utenti del portale vedranno le attività e le problematiche seguite da loro."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -1449,7 +1450,7 @@ msgstr "Delega Attività"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Percorso attività"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-04 06:06+0000\n"
+"PO-Revision-Date: 2016-02-10 09:44+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -20,27 +20,27 @@ msgstr ""
 #. module: payment
 #: help:account.config.settings,module_payment_adyen:0
 msgid "-It installs the module payment_adyen."
-msgstr ""
+msgstr "將安裝 payment_adyen 模組."
 
 #. module: payment
 #: help:account.config.settings,module_payment_buckaroo:0
 msgid "-It installs the module payment_buckaroo."
-msgstr ""
+msgstr "將安裝 payment_buckaroo 模組."
 
 #. module: payment
 #: help:account.config.settings,module_payment_ogone:0
 msgid "-It installs the module payment_ogone."
-msgstr ""
+msgstr "將安裝 payment_ogone 模組."
 
 #. module: payment
 #: help:account.config.settings,module_payment_paypal:0
 msgid "-It installs the module payment_paypal."
-msgstr ""
+msgstr "將安裝 payment_paypal 模組."
 
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr ""
+msgstr "讓受方"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
@@ -136,7 +136,7 @@ msgstr "電郵"
 #. module: payment
 #: field:payment.acquirer,environment:0
 msgid "Environment"
-msgstr ""
+msgstr "環境"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -146,27 +146,27 @@ msgstr "錯誤"
 #. module: payment
 #: field:payment.transaction,fees:0
 msgid "Fees"
-msgstr ""
+msgstr "費用"
 
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "費用金額: 系統視讓受方設定"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "儲存錯誤或驗證訊息的欄位"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "固定國內費用"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "固定國際費用"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
@@ -181,7 +181,7 @@ msgstr "表單"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "表單按鈕範本"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -268,12 +268,12 @@ msgstr "訊息"
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "完成支付後顯示的訊息."
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "解釋並協助支付的顯示的訊息."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -320,19 +320,19 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_acquirer
 #: view:payment.acquirer:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "款項受讓方"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: view:payment.acquirer:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "款項讓受方"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -340,7 +340,7 @@ msgstr ""
 #: view:payment.transaction:payment.transaction_form
 #: view:payment.transaction:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
@@ -371,12 +371,12 @@ msgstr "生產"
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr ""
+msgstr "提供者"
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "儲存於讓受方資料庫中的 TX 參照"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
@@ -386,7 +386,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "必填欄位未填"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -416,17 +416,17 @@ msgstr "摘要"
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "測試"
 
 #. module: payment
 #: field:payment.acquirer,post_msg:0
 msgid "Thanks Message"
-msgstr ""
+msgstr "感謝訊息"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "支付交易參照不可重覆!"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -463,7 +463,7 @@ msgstr ""
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "可視於 Portal / 網站"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
