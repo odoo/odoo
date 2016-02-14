@@ -603,7 +603,7 @@ class WebsiteForum(http.Controller):
         if (user_id != request.session.uid and not
                 (user.website_published or
                     (count_user_questions and current_user.karma > forum.karma_unlink_all))):
-            return request.website.render("website_forum.private_profile", values)
+            return request.render("website_forum.private_profile", values, status=404)
 
         # limit length of visible posts by default for performance reasons, except for the high
         # karma users (not many of them, and they need it to properly moderate the forum)

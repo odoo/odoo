@@ -3,13 +3,13 @@
 # * sale
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-29 08:51+0000\n"
+"PO-Revision-Date: 2016-02-12 10:47+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -684,11 +684,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Fontos üzenet"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Árbevétel főkönyvi számla"
@@ -841,6 +836,7 @@ msgstr "Számlák vázlatban készülnek, így frissítheti\n                   
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Számlázás"
@@ -1127,6 +1123,12 @@ msgstr "Fizetési feltétel"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Kérem határozzon meg egy főkönyvi számla értékesítési naplót ehhez a vállalathoz."
+
+#. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr "Nincs számlázandó tételsor."
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1768,6 +1770,7 @@ msgstr "Mértékegységek"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
