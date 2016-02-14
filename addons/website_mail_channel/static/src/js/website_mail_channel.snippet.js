@@ -87,7 +87,7 @@ animation.registry.follow_alias = animation.Class.extend({
 
 
 $('.js_follow_btn').on('click', function (ev) {
-    if ($(ev.currentTarget).closest('.js_mg_follow_form')) {
+    if ($(ev.currentTarget).closest('.js_mg_follow_form').length) {
         $('.js_follow_email').val($(ev.currentTarget).closest('.js_mg_follow_form').find('.js_follow_email').val());
     }
 });
