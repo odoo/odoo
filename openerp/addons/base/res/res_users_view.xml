@@ -190,11 +190,11 @@
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
-                                <group string="Multi Companies" groups="base.group_light_multi_company">
+                                <field name="groups_id"/>
+                                <group string="Multi Companies">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags"/>
                                     <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
-                                <field name="groups_id"/>
                             </page>
                             <page string="Preferences">
                                 <group>

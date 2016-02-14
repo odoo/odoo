@@ -9,9 +9,6 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'group_light_multi_company': fields.boolean('Manage multiple companies',
-            help='Work in multi-company environments, with appropriate security access between companies.',
-            implied_group='base.group_light_multi_company'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of Odoo."""),
         'module_portal': fields.boolean('Activate the customer portal',
@@ -22,8 +19,8 @@ class base_config_settings(osv.osv_memory):
                                               help="""This installs the module google_docs."""),
         'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
                                               help="""This installs the module google_calendar."""),
-        'module_inter_company_rules': fields.boolean('Manage Inter Company',
-            help="""This installs the module inter_company_rules.\n Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."""),
+        'module_inter_company_rules': fields.boolean('Sell or purchase products from one of your company to another one',
+            help="""This installs the module inter_company_rules.\nConfigure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."""),
         'company_share_partner': fields.boolean('Share partners to all companies',
             help="Share your partners to all companies defined in your instance.\n"
                  " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"

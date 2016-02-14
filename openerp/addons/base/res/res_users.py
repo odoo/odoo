@@ -850,12 +850,25 @@ class users_view(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
+        values = self._update_multi_companies(cr, uid, values, context=context)
         values = self._remove_reified_groups(values)
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
+        self._update_multi_companies(cr, uid, values, user_ids=ids, context=context)
         values = self._remove_reified_groups(values)
         return super(users_view, self).write(cr, uid, ids, values, context)
+
+    def _update_multi_companies(self, cr, uid, values, user_ids=None, context=None):
+        group_multi_comp_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_multi_company')
+        company_ids = self.browse(cr, uid, user_ids, context=context).mapped('company_ids').ids
+        if group_multi_comp_id:
+            multi_comp_in_group_id = name_boolean_group(group_multi_comp_id)
+            if company_ids and multi_comp_in_group_id in values:
+                values[multi_comp_in_group_id] = True if len(company_ids) > 1 else False
+            if 'company_ids' in values:
+                values[multi_comp_in_group_id] = True if len(parse_m2m(values['company_ids'])) > 1 else False
+        return values
 
     def _remove_reified_groups(self, values):
         """ return `values` without reified group fields """
