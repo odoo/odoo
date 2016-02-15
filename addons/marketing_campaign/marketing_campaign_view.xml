@@ -454,11 +454,4 @@
     <menuitem id="menu_action_marketing_campaign_workitem" parent="report_marketing_campaign" action="action_marketing_campaign_workitem" sequence="3"/>
 
     </data>
-    <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="base.action_open_website"/>
-            <field name="state">open</field>
-        </record>
-    </data>
 </openerp>

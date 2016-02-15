@@ -445,7 +445,6 @@ class module(osv.osv):
                     "Please uninstall your current theme before installing another one.\n"
                     "Warning: switching themes may significantly alter the look of your current website pages!"
                 ) % ("\n".join(themes_list)))
-
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):

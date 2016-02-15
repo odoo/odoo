@@ -614,12 +614,4 @@
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
         <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
     </data>
-
-    <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="base.action_open_website"/>
-            <field name="state">open</field>
-        </record>
-    </data>
 </openerp>

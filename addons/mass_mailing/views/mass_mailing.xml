@@ -17,12 +17,6 @@
         <menuitem name="Configuration" id="mass_mailing_configuration"
             parent="mass_mailing_menu_root" sequence="100" groups="base.group_configuration"/>
 
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="base.action_open_website"/>
-            <field name="state">open</field>
-        </record>
-
         <!--  MAIL MAIL STATISTICS !-->
         <record model="ir.ui.view" id="view_mail_mail_statistics_search">
             <field name="name">mail.mail.statistics.search</field>

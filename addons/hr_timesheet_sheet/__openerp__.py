@@ -35,7 +35,6 @@ The validation can be configured in the company:
         'report/hr_timesheet_report_view.xml',
         'wizard/hr_timesheet_current_view.xml',
         'hr_timesheet_sheet_data.xml',
-        'res_config_view.xml',
         'views/hr_timesheet_sheet.xml',
         'hr_dashboard.xml',
     ],

@@ -34,7 +34,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'wizard/hr_expense_refuse_reason.xml',
         'views/hr_expense_views.xml',
         'security/ir_rule.xml',
-        'views/hr_expense_installer_views.xml',
         'views/report_expense.xml',
         'data/web_tip_data.xml',
         'views/hr_dashboard.xml',

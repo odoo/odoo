@@ -1,16 +1,4 @@
 <openerp>
-    <data>
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="base.action_open_website"/>
-            <field name="state">open</field>
-        </record>
-
-        <!--
-            Update Email template to send right quote url
-        -->
-    </data>
-
     <!-- Mails & quote templates is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
