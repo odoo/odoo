@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-02-06 15:51+0000\n"
+"PO-Revision-Date: 2016-02-13 18:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
+msgstr "\n<p>Gratulujeme, získali ste odznak <strong>${object.badge_id.name}</strong> !\n% if object.sender_id\nTento odznak udelil <strong>${object.sender_id.name}</strong>.\n% endif\n</p>\n\n% if object.comment\n<p><em>${object.comment}</em></p>\n% endif"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -43,7 +43,7 @@ msgid ""
 "    \n"
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr ""
+msgstr "\n<header>\n<strong>Pripomienka ${object.name}</strong>\n</header>\n\n<p>Neaktualizovali ste svoj progres pre cieľ ${object.definition_id.name} (moemntálne dosiahnutý ${object.completeness}%) aspoň ${object.remind_update_delay} dní. Nezabudnite tak urobiť.</p>"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.simple_report_template
@@ -118,7 +118,7 @@ msgid ""
 "    % endfor\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n<header>\n<strong>${object.name}</strong>\n</header>\n<p class=\"oe_grey\">Nasledujúca správa obsahuje aktuálny progres pre výzvu ${object.name}</p>\n\n% if object.visibility_mode == 'personal':\n<table width=\"100%\" border=\"1\">\n<tr>\n<th>Cieľ</th>\n<th>Cieľové</th>\n<th>Aktuálne</th>\n<th>Úplnosť</th>\n</tr>\n% pre riadok v ctx[\"challenge_lines\"]:\n<tr\n% if line['completeness'] >= 100:\nstyle=\"font-weight:bold;\"\n% endif\n>\n<td>${line['name']}</td>\n<td>${line['target']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n<td>${line['current']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n<td>${line['completeness']} %</td>\n</tr>\n% endfor\n</table>\n% iné:\n% pre riadok v ctx[\"challenge_lines\"]:\n<table width=\"100%\" border=\"1\">\n<tr>\n<th colspan=\"4\">${line['name']}</th>\n</tr>\n<tr>\n<th>#</th>\n<th>Osoba</th>\n<th>Úplnosť</th>\n<th>Aktuálny</th>\n</tr>\n% pre cieľ v riadku['goals']:\n<tr\n% if goal.completeness >= 100:\nstyle=\"font-weight:bold;\"\n% endif\n>\n<td>${goal['rank']}</td>\n<td>${goal['name']}</td>\n<td>${goal['completeness']}%</td>\n<td>${goal['current']}/${line['target']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n</tr>\n% endfor\n</table>\n\n<br/><br/>\n\n% endfor\n% endif"
 
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
@@ -137,7 +137,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
+msgstr "<br/>Odmena (odznak %s) za každého úspešného používateľa bol poslaný %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:763
@@ -145,7 +145,7 @@ msgstr ""
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr ""
+msgstr "<br/>Špeciálne odmeny boli poslané používateľom ktorí sa umiestnili na špici. Poradie pre túto výzvu je:"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -221,17 +221,17 @@ msgstr ""
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
-msgstr ""
+msgstr "Cieľ je považovaný za dosiahnutý ked je aktuálna hodnota porovnaná s hodnotou na dosiahnutie"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr ""
+msgstr "Vybraný zoznam používateľov"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "Accept"
-msgstr ""
+msgstr "Akceptovať"
 
 #. module: gamification
 #: field:gamification.goal.definition,action_id:0
@@ -251,70 +251,70 @@ msgstr "Pokročilé možnosti"
 #. module: gamification
 #: field:gamification.badge,rule_auth:0
 msgid "Allowance to Grant"
-msgstr ""
+msgstr "Príspevok na udelenie"
 
 #. module: gamification
 #: help:gamification.challenge,user_domain:0
 msgid "Alternative to a list of users"
-msgstr ""
+msgstr "Alternatíva k zoznamu používateľov"
 
 #. module: gamification
 #: field:gamification.challenge,category:0
 msgid "Appears in"
-msgstr ""
+msgstr "Objavuje sa v"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr ""
+msgstr "Prdeliť výzvu"
 
 #. module: gamification
 #: field:gamification.badge,rule_auth_user_ids:0
 msgid "Authorized Users"
-msgstr ""
+msgstr "Autorizovaný používatelia"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr ""
+msgstr "Automatika: spustiť špecifický Python kód"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: number of records"
-msgstr ""
+msgstr "Automatika: počet záznamov"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: sum on a field"
-msgstr ""
+msgstr "Automatika: súčet na poli"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 #: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
-msgstr ""
+msgstr "Odznak"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Badge Description"
-msgstr ""
+msgstr "Popis odznaku"
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr ""
+msgstr "Odznak udelený"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_list_view
 msgid "Badge List"
-msgstr ""
+msgstr "Zoznam odznakov"
 
 #. module: gamification
 #: field:gamification.badge.user,badge_name:0
 msgid "Badge Name"
-msgstr ""
+msgstr "Názov odznaku"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
@@ -329,28 +329,28 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr ""
+msgstr "Odznaky sú udeľované keď je výzva dokončená. To je buď na konci prebiehajúceho obdobia (napr: koniec mesiaca pre mesačnú výzvu), k dátumu konca výzvy (ak nie je nastavená žiadna periodicita), alebo keď je výzva manuálne uzavretá."
 
 #. module: gamification
 #: field:gamification.goal.definition,batch_mode:0
 msgid "Batch Mode"
-msgstr ""
+msgstr "Mód várky"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "Briliantné"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr ""
+msgstr "Nemožno udeliť"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr ""
+msgstr "Nedá sa upraviť konfigurácia začatého cieľa"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -361,7 +361,7 @@ msgstr "Zrušiť"
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Zrušené"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -373,40 +373,40 @@ msgstr "Kategória"
 #: field:gamification.challenge.line,challenge_id:0
 #: field:gamification.goal,challenge_id:0
 msgid "Challenge"
-msgstr ""
+msgstr "Výzva"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_wizard
 msgid "Challenge Description"
-msgstr ""
+msgstr "Popis výzvy"
 
 #. module: gamification
 #: field:gamification.goal,line_id:0
 msgid "Challenge Line"
-msgstr ""
+msgstr "Riadok výzvy"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 #: view:gamification.challenge.line:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr ""
+msgstr "Riadky výzvy"
 
 #. module: gamification
 #: field:gamification.challenge,name:0
 msgid "Challenge Name"
-msgstr ""
+msgstr "Názov výzvy"
 
 #. module: gamification
 #: field:gamification.badge.user,challenge_id:0
 msgid "Challenge originating"
-msgstr ""
+msgstr "Pôvod výzvy"
 
 #. module: gamification
 #: help:gamification.goal,challenge_id:0
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
-msgstr ""
+msgstr "Výzva ktorá vytvorila cieľ, prideľte výzvu pouźívateľom pre vytvorenie cieľov s hodnotou v tomto poli,"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_kanban
@@ -418,17 +418,17 @@ msgstr "Výzvy"
 #. module: gamification
 #: help:gamification.badge,rule_max:0
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr ""
+msgstr "Zaškrtnite pre nastavenie mesačného limitu na osobu posielania tohoto odznaku"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr ""
+msgstr "Klikateľne ciele"
 
 #. module: gamification
 #: field:gamification.goal,closed:0
 msgid "Closed goal"
-msgstr ""
+msgstr "Zavretý cieľ"
 
 #. module: gamification
 #: field:gamification.badge.user,comment:0
@@ -439,23 +439,23 @@ msgstr "Komentár"
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr ""
+msgstr "Dokončite váš profil"
 
 #. module: gamification
 #: field:gamification.goal,completeness:0
 msgid "Completeness"
-msgstr ""
+msgstr "Úplnosť"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
 #: field:gamification.goal.definition,computation_mode:0
 msgid "Computation Mode"
-msgstr ""
+msgstr "Mód výpočtu"
 
 #. module: gamification
 #: field:gamification.goal,computation_mode:0
 msgid "Computation mode"
-msgstr ""
+msgstr "Mód výpočtu"
 
 #. module: gamification
 #: field:gamification.challenge.line,condition:0
@@ -465,7 +465,7 @@ msgstr "Podmienka"
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr ""
+msgstr "Vytvoriť Používateľa"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -479,7 +479,7 @@ msgstr "Vytvorenie a správa používateľov, ktorí sa môžu pripojiť do syst
 #. module: gamification
 #: field:gamification.badge.user,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "Vytvorené"
 
 #. module: gamification
 #: field:gamification.badge,create_uid:0
@@ -516,13 +516,13 @@ msgstr "Aktuálne"
 #. module: gamification
 #: field:gamification.goal,current:0
 msgid "Current Value"
-msgstr ""
+msgstr "Aktuálna hodnota"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Daily"
-msgstr ""
+msgstr "Denne"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -532,7 +532,7 @@ msgstr "Údaje"
 #. module: gamification
 #: field:gamification.goal.definition,field_date_id:0
 msgid "Date Field"
-msgstr ""
+msgstr "Pole dátumu"
 
 #. module: gamification
 #: help:gamification.badge,message_last_post:0
@@ -1832,7 +1832,7 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Yearly"
-msgstr ""
+msgstr "Ročne"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:240
