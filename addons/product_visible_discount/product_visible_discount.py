@@ -20,7 +20,7 @@ class sale_order_line(osv.osv):
         """Retrieve the price before applying the pricelist"""
         item_obj = self.pool['product.pricelist.item']
         product_obj = self.pool['product.product']
-        field_name = 'list_price'
+        field_name = 'lst_price'
         currency_id = None
         if res_dict.get(pricelist):
             rule_id = res_dict[pricelist][1]
