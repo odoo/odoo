@@ -43,18 +43,15 @@ class stock_return_picking(osv.osv_memory):
                     res.update({'invoice_state': 'none'})
         return res
 
-        
-
     def _create_returns(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         data = self.browse(cr, uid, ids[0], context=context)
         new_picking, picking_type_id = super(stock_return_picking, self)._create_returns(cr, uid, ids, context=context)
-        if data.invoice_state == '2binvoiced':
-            pick_obj = self.pool.get("stock.picking")
-            move_obj = self.pool.get("stock.move")
-            move_ids = [x.id for x in pick_obj.browse(cr, uid, new_picking, context=context).move_lines]
-            move_obj.write(cr, uid, move_ids, {'invoice_state': '2binvoiced'})
+        pick_obj = self.pool.get("stock.picking")
+        move_obj = self.pool.get("stock.move")
+        move_ids = [x.id for x in pick_obj.browse(cr, uid, new_picking, context=context).move_lines]
+        move_obj.write(cr, uid, move_ids, {'invoice_state': data.invoice_state})
         return new_picking, picking_type_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
