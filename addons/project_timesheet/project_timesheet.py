@@ -91,7 +91,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
                 'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
             }),
-        'progress': fields.function(_hours_get, string='Working Time Progress (%)', multi='line_id', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
+        'progress': fields.function(_hours_get, string='Progress (%)', multi='line_id', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
