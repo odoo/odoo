@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-
-    <!-- Snippet loader -->
-    <t t-name="web_editor.snippets_style">
-        <li class="navbar-form">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Block style <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
+    <t t-name="web_editor.snippets">
+        <div id='oe_snippets' class="hidden-xs o_open">
+            <div id="o_arrow">
+                <span class="fa fa-angle-double-right fa-1x" style="top: 10px;"></span>
+                <div>Insert Blocks</div>
+                <span class="fa fa-angle-double-right fa-1x" style="bottom: 10px;"></span>
             </div>
-        </li>
+            <div id="o_left_bar">
+                <span class='snippets_loading'>Snippets are loading...</span>
+            </div>
+        </div>
     </t>
 
     <t t-name="web_editor.snippet_overlay">
