@@ -2,18 +2,6 @@
 <openerp>
     <menuitem id="account_reports_gr_statements_menu" name="Greek Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-    <data noupdate="1">
-        <record id="action_client_l10n_gr_menu" model="ir.actions.client">
-            <field name="name">Open Account Dashboard Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_l10n_gr_menu"/>
-            <field name="state">open</field>
-        </record>
-    </data>
-
     <data noupdate="False">
         <record id="chartgr_38_07" model="account.account.template">
             <field name="code">38.07</field>

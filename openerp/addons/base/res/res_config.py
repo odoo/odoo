@@ -73,7 +73,6 @@ class res_config_configurable(osv.osv_memory):
             if not todo.groups_id or bool(user_groups.intersection((
                 group.id for group in todo.groups_id)))
         ]
-
         if valid_todos_for_user:
             return valid_todos_for_user[0]
 
@@ -87,8 +86,9 @@ class res_config_configurable(osv.osv_memory):
             return next.action_launch(context=context)
 
         return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
         }
 
     def start(self, cr, uid, ids, context=None):

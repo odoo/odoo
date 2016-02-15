@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="0">
-      <!--
-      <record forcecreate="True" id="ir_cron_service_services_reminders" model="ir.cron">
-        <field name="name">Creation of Vehicle services and Services renewals reminders</field>
-        <field eval="True" name="active" />
-        <field name="user_id" ref="base.user_root" />
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-        <field eval="False" name="doall" />
-        <field eval="'fleet.vehicle'" name="model" />
-        <field eval="'run_scheduler'" name="function" />
-        <field eval="'()'" name="args" />
-      </record>
-    -->
-
-      <!-- After installation of the module, open the related menu -->
-      <record id="base.open_menu" model="ir.actions.todo">
-          <field name="action_id" ref="base.action_open_website"/>
-          <field name="state">open</field>
-      </record>
-
       <record forcecreate="True" id="ir_cron_contract_costs_generator" model="ir.cron">
         <field name="name">Generation of contracts costs based on the costs frequency</field>
         <field eval="True" name="active" />
