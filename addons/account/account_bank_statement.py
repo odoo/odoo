@@ -112,7 +112,7 @@ class account_bank_statement(osv.osv):
             res[statement.id] = all([line.journal_entry_id.id or line.account_id.id for line in statement.line_ids])
         return res
 
-    _order = "date desc, id desc"
+    _order = "sequence, date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _inherit = ['mail.thread']
