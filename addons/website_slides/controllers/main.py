@@ -227,7 +227,7 @@ class website_slides(http.Controller):
             return werkzeug.utils.redirect('/web?redirect=/slides/slide/%s' % (slide.id))
         return request.website.render("website.403")
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/promote', type='http', auth='public', website=True)
+    @http.route('/slides/slide/<model("slide.slide"):slide>/promote', type='http', auth='user', website=True)
     def slide_set_promoted(self, slide):
         slide.channel_id.promoted_slide_id = slide.id
         return request.redirect("/slides/%s" % slide.channel_id.id)
