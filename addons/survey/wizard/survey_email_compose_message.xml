@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!--Survey send invitation by email: template -->
         <record id="email_template_survey" model="mail.template">
             <field name="name">Survey - Send by Email</field>
@@ -20,7 +19,7 @@
         <act_window name="Partner Survey Mailing" res_model="survey.mail.compose.message" src_model="res.partner" view_mode="form" multi="True" target="new" key2="client_action_multi" id="survey.action_partner_survey_mail" context="{'default_use_template': True, 'default_template_id': ref('email_template_survey')}" />
 
         <!-- Composition form (context['survey_resent_token'], if True, hide share option, emails list and partner_ids) -->
-        <record model="ir.ui.view" id="survey_email_compose_message">
+        <record id="survey_email_compose_message" model="ir.ui.view">
             <field name="name">survey.mail.compose.message.form</field>
             <field name="model">survey.mail.compose.message</field>
             <field name="arch" type="xml">
@@ -30,7 +29,7 @@
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <group col="2">
-                        <field name="survey_id" readonly="context.get('default_survey_id')" on_change="onchange_survey_id(survey_id)" />
+                        <field name="survey_id" readonly="context.get('default_survey_id')"/>
                         <field name="public" widget="radio" invisible="context.get('survey_resent_token')" />
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
@@ -45,7 +44,7 @@
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
                             <field invisible="context.get('survey_resent_token')" name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}" />
-                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email)" />
+                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..."/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" options="{'style-inline': true}"/>
@@ -69,7 +68,8 @@
                         <group class="oe_right" col="1">
                             <div>
                                 Use template
-                                <field name="template_id" nolabel="1" on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" />
+                                <!-- onchange template id -->
+                                <field name="template_id" nolabel="1"/>
                             </div>
                             <button icon="/email_template/static/src/img/email_template_save.png" type="object" name="save_as_template" string="Save as new template" class="oe_link" help="Save as a new template" />
                         </group>
@@ -77,5 +77,4 @@
                 </form>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

@@ -7,10 +7,10 @@ from collections import Counter
 from itertools import product
 from urlparse import urljoin
 
-from openerp import _
-from openerp.exceptions import UserError
-from openerp.tests.common import TransactionCase
-from openerp.addons.website.models.website import slug
+from odoo import _
+from odoo.exceptions import UserError
+from odoo.tests.common import TransactionCase
+from odoo.addons.website.models.website import slug
 
 
 class TestSurvey(TransactionCase):
@@ -80,7 +80,7 @@ class TestSurvey(TransactionCase):
                 question = self.Question.sudo(self.survey_manager).create({
                     'page_id': self.page1.id, 'question': 'Q0', 'type': question_type, 'constr_mandatory': True, 'constr_error_msg': 'Error'})
             answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-            self.assertDictEqual({answer_tag: "Error"}, self.Question.validate_question(question, {answer_tag: ''}, answer_tag),
+            self.assertDictEqual({answer_tag: "Error"}, question.validate_question({answer_tag: ''}, answer_tag),
                 msg=("Validation function for type %s is unable to generate error if it is mandatory and answer is blank." % question_type))
 
     def test_03_question_textbox(self):
@@ -94,7 +94,7 @@ class TestSurvey(TransactionCase):
         results = [('test @ testcom', _('This answer must be an email address')), ('t', 'Error')]
         for i in range(len(questions)):
             answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, questions[i].id)
-            self.assertEqual(self.Question.validate_question(questions[i], {answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
+            self.assertEqual(questions[i].validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
                 Validation function for textbox is unable to notify if answer is violating the validation rules")
 
     def test_04_question_numerical_box(self):
@@ -104,7 +104,7 @@ class TestSurvey(TransactionCase):
         answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
         results = [('aaa', _('This is not a number')), ('4.5', 'Error'), ('0.1', 'Error')]
         for i in range(len(results)):
-            self.assertEqual(self.Question.validate_question(question, {answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
+            self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
                 Validation function for type numerical_box is unable to notify if answer is violating the validation rules")
 
     def test_05_question_datetime(self):
@@ -114,7 +114,7 @@ class TestSurvey(TransactionCase):
         answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
         results = [('2015-55-10', _('This is not a date/time')), ('2015-03-19 00:00:00', 'Error'), ('2015-03-26 00:00:00', 'Error')]
         for i in range(len(results)):
-            self.assertEqual(self.Question.validate_question(question, {answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
+            self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
                 Validation function for type datetime is unable to notify if answer is violating the validation rules")
 
     def test_06_survey_sharing(self):
@@ -123,8 +123,7 @@ class TestSurvey(TransactionCase):
             'title': "S0", 'stage_id': self.Stage.search([('sequence', '=', 1)]).id,
             'page_ids': [(0, 0, {'title': "P0", 'question_ids': [(0, 0, {'question': "Q0", 'type': 'free_text'})]})]})
         action = correct_survey.action_send_survey()
-        templates = self.env['ir.model.data'].get_object_reference('survey', 'email_template_survey')
-        template_id = templates[1] if len(templates) > 0 else False
+        template_id = self.env.ref('survey.email_template_survey').id
         ctx = dict(self.env.context)
         ctx.update({
             'default_model': 'survey.survey',
@@ -204,14 +203,14 @@ class TestSurvey(TransactionCase):
             'partner_id': self.survey_user.partner_id.id,
             'user_input_line_ids': [(0, 0, {
                 'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'page_id': self.page1, 'question_id': question.id})]})
+                'survey_id': self.survey1.id, 'page_id': self.page1.id, 'question_id': question.id})]})
 
         input_public = self.UserInput.sudo(self.user_public).create({
             'survey_id': self.survey1.id,
             'partner_id': self.survey_user.partner_id.id,
             'user_input_line_ids': [(0, 0, {
                 'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'page_id': self.page1, 'question_id': question.id})]})
+                'survey_id': self.survey1.id, 'page_id': self.page1.id, 'question_id': question.id})]})
 
         answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
         expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}

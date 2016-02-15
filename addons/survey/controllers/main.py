@@ -3,15 +3,13 @@
 
 import json
 import logging
-import werkzeug
-import werkzeug.utils
-from datetime import datetime
 from math import ceil
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
+import werkzeug.utils
+
+from odoo import fields, http
+from odoo.http import request
+from odoo.tools.misc import ustr
 
 
 _logger = logging.getLogger(__name__)
@@ -21,13 +19,13 @@ class WebsiteSurvey(http.Controller):
 
     ## HELPER METHODS ##
 
-    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, token=None, context=None):
+    def _check_bad_cases(self, survey, token=None):
         # In case of bad survey, redirect to surveys list
-        if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
+        if not survey.sudo().exists():
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
-        if survey.auth_required and uid == request.website.user_id.id:
+        if survey.auth_required and request.env.uid == request.website.user_id.id:
             return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
@@ -41,13 +39,13 @@ class WebsiteSurvey(http.Controller):
         # Everything seems to be ok
         return None
 
-    def _check_deadline(self, cr, uid, user_input, context=None):
+    def _check_deadline(self, user_input):
         '''Prevent opening of the survey if the deadline has turned out
 
         ! This will NOT disallow access to users who have already partially filled the survey !'''
         if user_input.deadline:
-            dt_deadline = datetime.strptime(user_input.deadline, DTF)
-            dt_now = datetime.now()
+            dt_deadline = fields.Datetime.from_string(user_input.deadline)
+            dt_now = fields.Datetime.from_string(fields.Datetime.now())
             if dt_now > dt_deadline:  # survey is not open anymore
                 return request.website.render("survey.notopen")
 
@@ -60,41 +58,35 @@ class WebsiteSurvey(http.Controller):
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def start_survey(self, survey, token=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        survey_obj = request.registry['survey.survey']
-        user_input_obj = request.registry['survey.user_input']
+        UserInput = request.env['survey.user_input']
 
         # Test mode
         if token and token == "phantom":
             _logger.info("[survey] Phantom mode")
-            user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
-            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.website.render('survey.survey_init', data)
         # END Test mode
 
         # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, token=token, context=context)
+        errpage = self._check_bad_cases(survey, token=token)
         if errpage:
             return errpage
 
         # Manual surveying
         if not token:
             vals = {'survey_id': survey.id}
-            if request.website.user_id.id != uid:
-                vals['partner_id'] = request.registry['res.users'].browse(cr, uid, uid, context=context).partner_id.id
-            user_input_id = user_input_obj.create(cr, uid, vals, context=context)
-            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            user = request.env.user
+            if request.website.user_id.id != user.id:
+                vals['partner_id'] = user.partner_id.id
+            user_input = UserInput.create(vals)
         else:
-            try:
-                user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)], context=context)[0]
-            except IndexError:  # Invalid token
+            user_input = UserInput.sudo().search([('token', '=', token)])
+            if not user_input:
                 return request.website.render("website.403")
-            else:
-                user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
         # Do not open expired survey
-        errpage = self._check_deadline(cr, uid, user_input, context=context)
+        errpage = self._check_deadline(user_input)
         if errpage:
             return errpage
 
@@ -111,32 +103,27 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='public', website=True)
     def fill_survey(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
-        cr, uid, context = request.cr, request.uid, request.context
-        survey_obj = request.registry['survey.survey']
-        user_input_obj = request.registry['survey.user_input']
+        Survey = request.env['survey.survey']
 
         # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        errpage = self._check_bad_cases(survey)
         if errpage:
             return errpage
 
         # Load the user_input
-        try:
-            user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)])[0]
-        except IndexError:  # Invalid token
+        user_input = request.env['survey.user_input'].sudo().search([('token', '=', token)])
+        if not user_input:
             return request.website.render("website.403")
-        else:
-            user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
         # Do not display expired survey (even if some pages have already been
         # displayed -- There's a time for everything!)
-        errpage = self._check_deadline(cr, uid, user_input, context=context)
+        errpage = self._check_deadline(user_input)
         if errpage:
             return errpage
 
         # Select the right page
         if user_input.state == 'new':  # First page
-            page, page_nr, last = survey_obj.next_page(cr, uid, user_input, 0, go_back=False, context=context)
+            page, page_nr, last = Survey.next_page(user_input, 0)
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
@@ -147,11 +134,11 @@ class WebsiteSurvey(http.Controller):
                                                                'user_input': user_input})
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
-            page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
+            page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=flag)
 
             #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
             if not page:
-                page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=True, context=context)
+                page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=True)
 
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
@@ -165,16 +152,14 @@ class WebsiteSurvey(http.Controller):
                  '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
                 type='http', auth='public', website=True)
     def prefill(self, survey, token, page=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        user_input_line_obj = request.registry['survey.user_input_line']
+        InputLine = request.env['survey.user_input_line']
         ret = {}
 
         # Fetch previous answers
         if page:
-            ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token), ('page_id', '=', page.id)], context=context)
+            previous_answers = InputLine.sudo().search([('user_input_id.token', '=', token), ('page_id', '=', page.id)])
         else:
-            ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token)], context=context)
-        previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
+            previous_answers = InputLine.sudo().search([('user_input_id.token', '=', token)])
 
         # Return non empty answers in a JSON compatible format
         for answer in previous_answers:
@@ -208,13 +193,11 @@ class WebsiteSurvey(http.Controller):
     @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def get_scores(self, survey, token, page=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        user_input_line_obj = request.registry['survey.user_input_line']
+        InputLine = request.env['survey.user_input_line']
         ret = {}
 
         # Fetch answers
-        ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token)], context=context)
-        previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
+        previous_answers = InputLine.sudo().search([('user_input_id.token', '=', token)])
 
         # Compute score for each question
         for answer in previous_answers:
@@ -228,45 +211,44 @@ class WebsiteSurvey(http.Controller):
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
-        cr, uid, context = request.cr, request.uid, request.context
-        survey_obj = request.registry['survey.survey']
-        questions_obj = request.registry['survey.question']
-        questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)], context=context)
-        questions = questions_obj.browse(cr, uid, questions_ids, context=context)
+        questions = request.env['survey.question'].search([('page_id', '=', page_id)])
 
         # Answer validation
         errors = {}
         for question in questions:
             answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-            errors.update(questions_obj.validate_question(cr, uid, question, post, answer_tag, context=context))
+            errors.update(question.validate_question(post, answer_tag))
 
         ret = {}
-        if (len(errors) != 0):
+
+        if errors:
             # Return errors messages to webpage
             ret['errors'] = errors
         else:
             # Store answers into database
-            user_input_obj = request.registry['survey.user_input']
-
-            user_input_line_obj = request.registry['survey.user_input_line']
-            try:
-                user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', post['token'])], context=context)[0]
-            except KeyError:  # Invalid token
+            Input = request.env['survey.user_input']
+            InputLine = request.env['survey.user_input_line']
+            user_input = Input.sudo().search([('token', '=', post['token'])], limit=1)
+            if not user_input:
                 return request.website.render("website.403")
-            user_input = user_input_obj.browse(cr, SUPERUSER_ID, user_input_id, context=context)
-            user_id = uid if user_input.type != 'link' else SUPERUSER_ID
             for question in questions:
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-                user_input_line_obj.save_lines(cr, user_id, user_input_id, question, post, answer_tag, context=context)
+                if user_input.type != 'link':
+                    InputLine.save_lines(user_input.id, question, post, answer_tag)
+                else:
+                    InputLine.sudo().save_lines(user_input.id, question, post, answer_tag)
 
             go_back = post['button_submit'] == 'previous'
-            next_page, _, last = survey_obj.next_page(cr, uid, user_input, page_id, go_back=go_back, context=context)
+            next_page, _, last = request.env['survey.survey'].next_page(user_input, page_id, go_back=go_back)
             vals = {'last_displayed_page_id': page_id}
             if next_page is None and not go_back:
                 vals.update({'state': 'done'})
             else:
                 vals.update({'state': 'skip'})
-            user_input_obj.write(cr, user_id, user_input_id, vals, context=context)
+            if user_input.type != 'link':
+                user_input.write(vals)
+            else:
+                user_input.sudo().write(vals)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'
@@ -289,12 +271,13 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template ='survey.result'
+
+        result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
         filter_finish = False
 
-        survey_obj = request.registry['survey.survey']
+        Survey = request.env['survey.survey']
         if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_template = 'survey.no_result'
         if 'finished' in post:
@@ -302,8 +285,8 @@ class WebsiteSurvey(http.Controller):
             filter_finish = True
         if post or filter_finish:
             filter_data = self.get_filter_data(post)
-            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, survey, filter_data, filter_finish, context=request.context)
-            filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
+            current_filters = survey.filter_input_ids(filter_data, filter_finish)
+            filter_display_data = Survey.get_filter_display_data(filter_data)
         return request.website.render(result_template,
                                       {'survey': survey,
                                        'survey_dict': self.prepare_result_dict(survey, current_filters),
@@ -314,18 +297,14 @@ class WebsiteSurvey(http.Controller):
                                        })
         # Quick retroengineering of what is injected into the template for now:
         # (TODO: flatten and simplify this)
-        #
-        #     survey: a browse record of the survey
-        #     survey_dict: very messy dict containing all the info to display answers
+        # {
+        #     'survey': a browse record of the survey,
+        #     'survey_dict': very messy dict containing all the info to display answers
         #         {'page_ids': [
-        #
         #             ...
-        #
         #                 {'page': browse record of the page,
         #                  'question_ids': [
-        #
         #                     ...
-        #
         #                     {'graph_data': data to be displayed on the graph
         #                      'input_summary': number of answered, skipped...
         #                      'prepare_result': {
@@ -333,32 +312,27 @@ class WebsiteSurvey(http.Controller):
         #                                         }
         #                      'question': browse record of the question_ids
         #                     }
-        #
         #                     ...
-        #
         #                     ]
         #                 }
-        #
         #             ...
-        #
         #             ]
-        #         }
-        #
-        #     page_range: pager helper function
-        #     current_filters: a list of ids
-        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
-        #     filter_finish: boolean => only finished surveys or not
-        #
+        #         },
+        #     'page_range': pager helper function,
+        #     'current_filters': a list of ids,
+        #     'filter_display_data': [{'labels': ['a', 'b'], question_text} ...  ],
+        #     'filter_finish: boolean' => only finished surveys or not,
+        # }
 
-    def prepare_result_dict(self,survey, current_filters=None):
+    def prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
-        survey_obj = request.registry['survey.survey']
+        Survey = request.env['survey.survey']
         result = {'page_ids': []}
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
-                question_dict = {'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
+                question_dict = {'question': question, 'input_summary': Survey.get_input_summary(question, current_filters), 'prepare_result': Survey.prepare_result(question, current_filters), 'graph_data': self.get_graph_data(question, current_filters)}
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
@@ -366,12 +340,12 @@ class WebsiteSurvey(http.Controller):
     def get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
-        for ids in post:
+        for post_id in post:
             #if user add some random data in query URI, ignore it
             try:
-                row_id, answer_id = ids.split(',')
+                row_id, answer_id = post_id.split(',')
                 filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-            except:
+            except ValueError:
                 return filters
         return filters
 
@@ -384,20 +358,20 @@ class WebsiteSurvey(http.Controller):
         '''Returns formatted data required by graph library on basis of filter'''
         # TODO refactor this terrible method and merge it with prepare_result_dict
         current_filters = current_filters if current_filters else []
-        survey_obj = request.registry['survey.survey']
+        Survey = request.env['survey.survey']
         result = []
         if question.type == 'multiple_choice':
             result.append({'key': ustr(question.question),
-                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
+                           'values': Survey.prepare_result(question, current_filters)['answers']
                            })
         if question.type == 'simple_choice':
-            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
+            result = Survey.prepare_result(question, current_filters)['answers']
         if question.type == 'matrix':
-            data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
+            data = Survey.prepare_result(question, current_filters)
             for answer in data['answers']:
                 values = []
-                for row in data['rows']:
-                    values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
+                for key, value in data['rows'].items():
+                    values.append({'text': value, 'count': data['result'].get((key, answer))})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
 

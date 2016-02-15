@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- Survey users -->
-        <record model="res.groups" id="base.group_survey_user">
+        <record id="base.group_survey_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="base.module_category_survey"/>
         </record>
 
         <!-- Survey managers -->
-        <record model="res.groups" id="base.group_survey_manager">
+        <record id="base.group_survey_manager" model="res.groups">
             <field name="name">Manager</field>
             <field name="category_id" ref="base.module_category_survey"/>
             <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
@@ -76,4 +76,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
