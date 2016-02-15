@@ -3,7 +3,9 @@ odoo.define('base_import.import', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var time = require('web.time');
 var ListView = require('web.ListView');
+var KanbanView = require('web_kanban.KanbanView');
 var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -45,6 +47,27 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
+function execute_import_action () {
+    var self = this;
+    this.do_action({
+        type: 'ir.actions.client',
+        tag: 'import',
+        params: {
+            model: this.dataset.model,
+            // this.dataset.get_context() could be a compound?
+            // not sure. action's context should be evaluated
+            // so safer bet. Odd that timezone & al in it
+            // though
+            context: this.getParent().action.context,
+        }
+    }, {
+        on_reverse_breadcrumb: function () {
+            return self.reload();
+        },
+    });
+    return false;
+}
+
 // if true, the 'Import', 'Export', etc... buttons will be shown
 ListView.prototype.defaults.import_enabled = true;
 ListView.include({
@@ -61,28 +84,34 @@ ListView.include({
         }
         this._super.apply(this, arguments); // Sets this.$buttons
         if(add_button) {
-            this.$buttons.on('click', '.o_list_button_import', function() {
-                self.do_action({
-                    type: 'ir.actions.client',
-                    tag: 'import',
-                    params: {
-                        model: self.dataset.model,
-                        // self.dataset.get_context() could be a compound?
-                        // not sure. action's context should be evaluated
-                        // so safer bet. Odd that timezone & al in it
-                        // though
-                        context: self.getParent().action.context,
-                    }
-                }, {
-                    on_reverse_breadcrumb: function () {
-                        return self.reload();
-                    },
-                });
-                return false;
-            });
+            this.$buttons.on('click', '.o_button_import', execute_import_action.bind(this));
         }
-        return this.$buttons;
     }
+});
+
+KanbanView.include({
+    /**
+     * Extend the render_buttons function of KanbanView by adding an event listener
+     * on the import button.
+     * @return {jQuery} the rendered buttons
+     */
+    render_buttons: function() {
+        var self = this;
+        var add_button = false;
+        if (!this.$buttons) { // Ensures that this is only done once
+            add_button = true;
+        }
+        this._super.apply(this, arguments); // Sets this.$buttons
+        if(add_button && this.$buttons) {
+            this.$buttons.on('click', '.o_button_import', execute_import_action.bind(this));
+        }
+    },
+
+    set_default_options: function (options) {
+        this._super(_.defaults(options || {}, {
+            import_enabled: true,
+        }));
+    },
 });
 
 var DataImport = Widget.extend(ControlPanelMixin, {
@@ -92,18 +121,23 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         {name: 'separator', label: _lt("Separator:"), value: ','},
         {name: 'quoting', label: _lt("Quoting:"), value: '"'}
     ],
+    parse_opts: [
+        {name: 'date_format', label: _lt("Date Format:"), value: ''},
+        {name: 'float_thousand_separator', label: _lt("Thousand Separator:"), value: ','},
+        {name: 'float_decimal_separator', label: _lt("Decimal Separator:"), value: '.'}
+    ],
     events: {
         // 'change .oe_import_grid input': 'import_dryrun',
         'change .oe_import_file': 'loaded_file',
         'click .oe_import_file_reload': 'loaded_file',
-        'change input.oe_import_has_header, .oe_import_options input': 'settings_changed',
+        'change input.oe_import_has_header, .js_import_options input': 'settings_changed',
+        'change input.oe_import_advanced_mode': function (e) {
+            this.do_not_change_match = true;
+            this['settings_changed']();
+        },
         'click a.oe_import_toggle': function (e) {
             e.preventDefault();
-            var $el = $(e.target);
-            ($el.next().length
-                    ? $el.next()
-                    : $el.parent().next())
-                .toggle();
+            this.$('.oe_import_options').toggle();
         },
         'click .oe_import_report a.oe_import_report_count': function (e) {
             e.preventDefault();
@@ -145,17 +179,17 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.Import = new Model('base_import.import');
         this.session = session;
         action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
+        this.do_not_change_match = false;
     },
     start: function () {
         var self = this;
         this.setup_encoding_picker();
         this.setup_separator_picker();
+        this.setup_float_format_picker();
 
         return $.when(
             this._super(),
-            this.Import.call('create', [{
-                'res_model': this.res_model
-            }]).done(function (id) {
+            self.create_model().done(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
 
@@ -167,6 +201,11 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.update_control_panel(status);
             })
         );
+    },
+    create_model: function() {
+        return this.Import.call('create', [{
+                'res_model': this.res_model
+            }]);
     },
     render_buttons: function() {
         var self = this;
@@ -217,24 +256,70 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             },
         });
     },
+    setup_float_format_picker: function () {
+        var sug_query = function (q) {
+                    var suggestions = [
+                        {id: ',', text: _t("Comma")},
+                        {id: '.', text: _t("Dot")},
+                    ];
+                    if (q.term) {
+                        suggestions.unshift({id: q.term, text: q.term});
+                    }
+                    q.callback({results: suggestions});
+                };
+        this.$('input.oe_import_float_thousand_separator').select2({
+            width: '160px',
+            query: sug_query,
+            initSelection: function (e, c) {
+                return c({id: ',', text: _t("Comma")});
+            },
+        });
+        this.$('input.oe_import_float_decimal_separator').select2({
+            width: '160px',
+            query: sug_query,
+            initSelection: function (e, c) {
+                return c({id: ',', text: _t("Dot")});
+            },
+        });
+    },
 
     import_options: function () {
         var self = this;
         var options = {
-            headers: this.$('input.oe_import_has_header').prop('checked')
+            headers: this.$('input.oe_import_has_header').prop('checked'),
+            advanced: this.$('input.oe_import_advanced_mode').prop('checked'),
+            keep_matches: this.do_not_change_match
         };
         _(this.opts).each(function (opt) {
             options[opt.name] =
                 self.$('input.oe_import_' + opt.name).val();
         });
+        _(this.parse_opts).each(function (opt) {
+            if (opt.name === 'date_format') {
+                options[opt.name] = time.moment_to_strftime_format(self.$('input.oe_import_date_format').val());
+            }
+            else {
+                options[opt.name] = self.$('input.oe_import_' + opt.name).val();
+            }
+        });
+        options['fields'] = [];
+        if (this.do_not_change_match) {
+            options['fields'] = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
+                return $(el).select2('val') || false;
+            }).get();
+        }
+        this.do_not_change_match = false;
         return options;
     },
 
     //- File & settings change section
     onfile_loaded: function () {
+        var file = this.$('.oe_import_file')[0].files[0];
+        this.$('.oe_import_file_show').val(file !== undefined && file.name || '');
         this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', true);
         if (!this.$('input.oe_import_file').val()) { return; }
+        this.$('.oe_import_date_format').val('');
 
         this.$el.removeClass('oe_import_preview oe_import_error');
         this.$el.find('.oe_import_toggle').toggle((this.$('input.oe_import_file')[0].files[0].type == "text/csv"));
@@ -267,6 +352,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 QWeb.render('ImportView.preview.error', result));
     },
     onpreview_success: function (event, from, to, result) {
+        var self = this;
         this.$buttons.filter('.o_import_import').removeClass('btn-primary');
         this.$buttons.filter('.o_import_validate').addClass('btn-primary');
         this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
@@ -280,6 +366,13 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 type: 'warning',
                 message: _t("A single column was found in the file, this often means the file separator is incorrect")
             }]);
+        }
+
+        this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format));
+        this.$('.oe_import_float_thousand_separator').val(result.options.float_thousand_separator).change();
+        this.$('.oe_import_float_decimal_separator').val(result.options.float_decimal_separator).change();
+        if (result.debug === false){
+            this.$('.oe_import_tracking').hide();
         }
 
         var $fields = this.$('.oe_import_fields input');
@@ -299,58 +392,77 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             }
             return '';
         };
-        $fields.select2({
-            allowClear: true,
-            minimumInputLength: 0,
-            data: data,
-            initSelection: function (element, callback) {
-                var default_value = element.val();
-                if (!default_value) {
-                    callback('');
-                    return;
-                }
+        $fields.each(function (k,v) {
+            var filtered_data = self.generate_fields_completion(result, k);
+            $(v).select2({
+                allowClear: true,
+                minimumInputLength: 0,
+                data: filtered_data,
+                initSelection: function (element, callback) {
+                    var default_value = element.val();
+                    if (!default_value) {
+                        callback('');
+                        return;
+                    }
 
-                callback(item_finder(default_value));
-            },
-            placeholder: _t('Don\'t import'),
-            width: 'resolve',
-            dropdownCssClass: 'oe_import_selector'
+                    callback(item_finder(default_value));
+                },
+                placeholder: _t('Don\'t import'),
+                width: 'resolve',
+                dropdownCssClass: 'oe_import_selector'
+            });
         });
     },
-    generate_fields_completion: function (root) {
+    generate_fields_completion: function (root, index) {
         var basic = [];
         var regulars = [];
         var o2m = [];
-        function traverse(field, ancestors, collection) {
+        var headers_type = root.headers_type;
+        function traverse(field, ancestors, collection, type) {
             var subfields = field.fields;
+            var advanced_mode = self.$('input.oe_import_advanced_mode').prop('checked');
             var field_path = ancestors.concat(field);
             var label = _(field_path).pluck('string').join(' / ');
             var id = _(field_path).pluck('name').join('/');
+            if (type === undefined || (type !== undefined && (type.indexOf('all') !== -1 || type.indexOf(field['type']) !== -1))){
+                // If non-relational, m2o or m2m, collection is regulars
+                if (!collection) {
+                    if (field.name === 'id') {
+                        collection = basic;
+                    } else if (_.isEmpty(subfields)
+                            || _.isEqual(_.pluck(subfields, 'name'), ['id', '.id'])) {
+                        collection = regulars;
+                    } else {
+                        collection = o2m;
+                    }
+                }
 
-            // If non-relational, m2o or m2m, collection is regulars
-            if (!collection) {
-                if (field.name === 'id') {
-                    collection = basic;
-                } else if (_.isEmpty(subfields)
-                        || _.isEqual(_.pluck(subfields, 'name'), ['id', '.id'])) {
-                    collection = regulars;
-                } else {
-                    collection = o2m;
+                collection.push({
+                    id: id,
+                    text: label,
+                    required: field.required
+                });
+
+            }
+            if (advanced_mode){
+                for(var i=0, end=subfields.length; i<end; ++i) {
+                    traverse(subfields[i], field_path, collection, type);
                 }
             }
-
-            collection.push({
-                id: id,
-                text: label,
-                required: field.required
-            });
-
-            for(var i=0, end=subfields.length; i<end; ++i) {
-                traverse(subfields[i], field_path, collection);
-            }
+            
         }
         _(root.fields).each(function (field) {
-            traverse(field, []);
+            if (index === undefined) {
+                traverse(field, []);
+            }
+            else {
+                if (self.$('input.oe_import_advanced_mode').prop('checked')){
+                    traverse(field, [], undefined, ['all']);
+                }
+                else {
+                    traverse(field, [], undefined, headers_type[index]);
+                }
+            }
         });
 
         var cmp = function (field1, field2) {
@@ -359,10 +471,19 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         };
         regulars.sort(cmp);
         o2m.sort(cmp);
-        return basic.concat([
-            { text: _t("Normal Fields"), children: regulars },
-            { text: _t("Relation Fields"), children: o2m }
-        ]);
+        if (!_.isEmpty(regulars) && !_.isEmpty(o2m)){
+            basic = basic.concat([
+                { text: _t("Normal Fields"), children: regulars },
+                { text: _t("Relation Fields"), children: o2m },
+            ]);
+        }
+        else if (!_.isEmpty(regulars)) {
+            basic = basic.concat(regulars);
+        }
+        else if (!_.isEmpty(o2m)) {
+            basic = basic.concat(o2m);
+        }
+        return basic;
     },
     render_fields_matches: function (result, $fields) {
         if (_(result.matches).isEmpty()) { return; }
@@ -517,5 +638,9 @@ StateMachine.create({
         { name: 'import_failed', from: 'importing', to: 'results' }
     ]
 });
+
+return {
+    DataImport: DataImport,
+}
 
 });

@@ -16,12 +16,13 @@ ID_FIELD = {
     'string': "External ID",
     'required': False,
     'fields': [],
+    'type': 'id',
 }
 
-def make_field(name='value', string='unknown', required=False, fields=[]):
+def make_field(name='value', string='unknown', required=False, fields=[], field_type='id'):
     return [
         ID_FIELD,
-        {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields},
+        {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type},
     ]
 
 def sorted_fields(fields):
@@ -40,11 +41,11 @@ class test_basic_fields(BaseImportCase):
 
     def test_base(self):
         """ A basic field is not required """
-        self.assertEqualFields(self.get_fields('char'), make_field())
+        self.assertEqualFields(self.get_fields('char'), make_field(field_type='char'))
 
     def test_required(self):
         """ Required fields should be flagged (so they can be fill-required) """
-        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True))
+        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True, field_type='char'))
 
     def test_readonly(self):
         """ Readonly fields should be filtered out"""
@@ -52,7 +53,7 @@ class test_basic_fields(BaseImportCase):
 
     def test_readonly_states(self):
         """ Readonly fields with states should not be filtered out"""
-        self.assertEqualFields(self.get_fields('char.states'), make_field())
+        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char'))
 
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
@@ -67,9 +68,9 @@ class test_basic_fields(BaseImportCase):
     def test_m2o(self):
         """ M2O fields should allow import of themselves (name_get),
         their id and their xid"""
-        self.assertEqualFields(self.get_fields('m2o'), make_field(fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': []},
+        self.assertEqualFields(self.get_fields('m2o'), make_field(field_type='many2one', fields=[
+            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
         ]))
     
     def test_m2o_required(self):
@@ -77,9 +78,9 @@ class test_basic_fields(BaseImportCase):
         required as well (the client has to handle that: requiredness
         is id-based)
         """
-        self.assertEqualFields(self.get_fields('m2o.required'), make_field(required=True, fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': []},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': []},
+        self.assertEqualFields(self.get_fields('m2o.required'), make_field(field_type='many2one', required=True, fields=[
+            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id'},
         ]))
 
 class test_o2m(BaseImportCase):
@@ -88,14 +89,14 @@ class test_o2m(BaseImportCase):
             .get_fields(self.cr, self.uid, 'base_import.tests.models.' + field)
 
     def test_shallow(self):
-        self.assertEqualFields(self.get_fields('o2m'), make_field(fields=[
+        self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
             ID_FIELD,
             # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'required': False, 'fields': [
-                {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
-                {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': []},
+            {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'type': 'many2one', 'required': False, 'fields': [
+                {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
+                {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
             ]},
-            {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': []},
+            {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': [], 'type': 'integer'},
         ]))
 
 class test_match_headers_single(TransactionCase):
@@ -249,9 +250,9 @@ class test_preview(TransactionCase):
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -259,7 +260,7 @@ class test_preview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -281,9 +282,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -291,7 +292,7 @@ class test_preview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -312,9 +313,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -322,7 +323,7 @@ class test_preview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -343,9 +344,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -353,7 +354,7 @@ class test_preview(TransactionCase):
             ['aux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
 
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
@@ -377,9 +378,9 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
         self.assertItemsEqual(data, [
-            ('foo', '1', '2'),
-            ('bar', '3', '4'),
-            ('qux', '5', '6'),
+            ['foo', '1', '2'],
+            ['bar', '3', '4'],
+            ['qux', '5', '6'],
         ])
 
     def test_filtered(self):
@@ -402,9 +403,9 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
-            ('foo', '2'),
-            ('bar', '4'),
-            ('qux', '6'),
+            ['foo', '2'],
+            ['bar', '4'],
+            ['qux', '6'],
         ])
 
     def test_norow(self):
@@ -427,8 +428,8 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
-            ('foo', '2'),
-            ('', '6'),
+            ['foo', '2'],
+            ['', '6'],
         ])
 
     def test_empty_rows(self):
@@ -450,8 +451,8 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(fields, ['name', 'somevalue'])
         self.assertItemsEqual(data, [
-            ('foo', '1'),
-            ('bar', '2'),
+            ['foo', '1'],
+            ['bar', '2'],
         ])
 
     def test_nofield(self):
@@ -497,7 +498,7 @@ class test_convert_import_data(TransactionCase):
         output = io.BytesIO()
         writer = csv.writer(output, quoting=csv.QUOTE_ALL)
 
-        data_row = ("\tfoo\n\tbar", " \"hello\" \n\n 'world' ")
+        data_row = ["\tfoo\n\tbar", " \"hello\" \n\n 'world' "]
 
         writer.writerow(["name", "Some Value"])
         writer.writerow(data_row)
