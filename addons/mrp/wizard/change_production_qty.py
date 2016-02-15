@@ -69,6 +69,7 @@ class change_production_qty(osv.osv_memory):
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get('product.uom')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
@@ -87,7 +88,7 @@ class change_production_qty(osv.osv_memory):
                 if not bom_id:
                     raise osv.except_osv(_('Error!'), _("Cannot find bill of material for this product."))
 
-                factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
+                factor = uom_obj._compute_qty(cr, uid, prod.product_uom.id, prod.product_qty, bom_point.product_uom.id)
                 product_details, workcenter_details = \
                     bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
                 product_move = dict((mv.product_id.id, mv.id) for mv in prod.picking_id.move_lines)
