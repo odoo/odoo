@@ -307,8 +307,13 @@ class res_partner(osv.Model, format_address):
         if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
             return False
 
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        if self.env.context.get('partner_type') == 'delivery':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'truck.png')
+        elif self.env.context.get('partner_type') == 'invoice':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'money.png')
+        else:
+            img_path = openerp.modules.get_module_resource(
+                'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
@@ -544,6 +549,10 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def create(self, vals):
+        if vals.get('type') == 'delivery':
+            vals['image'] = self.with_context(partner_type='delivery')._get_default_image(False, False)
+        elif vals.get('type') == 'invoice':
+            vals['image'] = self.with_context(partner_type='invoice')._get_default_image(False, False)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
         # function field not correctly triggered at create -> remove me when
