@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-02-06 22:13+0000\n"
+"PO-Revision-Date: 2016-02-07 08:09+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n            \t<p>\n                    Guten Tag ${object.user_id.name or ''},\n                </p>\n                <p>\n                    Wir haben für Sie einen Nutzerzugang auf  ${user.company_id.name}'s ${object.wizard_id.portal_id.name} eingerichtet.\n                </p>\n                <p>\n                    Ihre Logindate nlauten:\n                </p>\n                <ul>\n                    <li>Nutzername: ${object.user_id.login or ''}</li>\n                </ul>\n                <ul>\n                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul>\n                \t<li>Datenbank: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p>\n                \tAuf dieser Seite können Sie Ihr Passwort setzen oder ändern:\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p>---<br />\n                    Odoo - Open Source Business Applications<br />\n                    http://www.odoo.com<br />\n                </p>\n            \n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups

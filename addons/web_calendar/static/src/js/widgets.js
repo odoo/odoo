@@ -222,7 +222,7 @@ var SidebarFilter = Widget.extend({
         var self = this;
         if (!filters) {
             filters = [];
-            _.forEach(self.view.all_filters, function(o) {
+            _.forEach(self.view.get_all_filters_ordered(), function(o) {
                 if (_.contains(self.view.now_filter_ids, o.value)) {
                     filters.push(o);
                 }

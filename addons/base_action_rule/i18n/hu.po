@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Kris Krnacs, 2015
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-15 20:27+0000\n"
-"Last-Translator: Kris Krnacs\n"
+"PO-Revision-Date: 2016-02-10 19:33+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,23 +22,23 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr "<b>Kérem a dokumentum típus kiválasztását a feltételek beállítása előtt.</b>"
+msgstr "<b>Válassza ki a dokumentum típust feltételek beállítása előtt.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
-msgstr "Műveleti előírások"
+msgstr "Műveleti szabályok"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr "Műveleti előírások tesztje"
+msgstr "Műveleti szabály teszt"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr "Műveleti előírások"
+msgstr "Műveleti szabályok"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -74,7 +75,7 @@ msgstr "Időzített feltételek alapján"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr "Domén név frissítése előtt"
+msgstr "Tartomány frissítése előtt"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -84,17 +85,17 @@ msgstr "Szűrő frissítése előtt"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavont"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr "Jelölje be ezt a négyzetet, ha a kapcsolat egy ügyfél is"
+msgstr "Jelölje be ezt a négyzetet, ha a kapcsolat egyben vevő is"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr "Kattintson egy új automatikus művelet szabály beállításához."
+msgstr "Kattintson egy új automatikus műveleti szabály beállításához."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -104,7 +105,7 @@ msgstr "Lezárt"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr "Vesszővel elválasztott mezőnevek listája melyeket változtatáskor kapcsol."
+msgstr "Vesszővel elválasztott mezőnevek listája melyek elindítják a változtatáskori műveletet."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -135,7 +136,7 @@ msgstr "Napok"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
-msgstr "Késedelem az indítás dátuma után"
+msgstr "Késleltetés az indítás dátuma után"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
@@ -143,12 +144,12 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr "A emlékeztető dátumának késleltetése. Negatív számot is írhat ha az emlékeztető kapcsolására az emlékeztető ideje előtt van szüksége, mint emlékeztető küldése 15 perccel a találkozó előtt."
+msgstr "A emlékeztető dátumának késleltetése. Negatív számot is írhat, ha az emlékeztető indítására az emlékeztető ideje előtt van szüksége. Példa: emlékeztető küldése 15 perccel a találkozó előtt."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
 msgid "Delay after trigger date"
-msgstr "Késedelem az indítás dátuma után"
+msgstr "Késleltetés az indítás dátuma után"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range_type
@@ -159,7 +160,7 @@ msgstr "Késedelem típusa"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
@@ -169,12 +170,12 @@ msgstr "Tartomány"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
 msgid "Examples: email reminders, call object service, etc."
-msgstr "Példák: e-mail emlékeztetők, tárgyi szolgáltatás hívása, stb."
+msgstr "Példák: e-mail emlékeztetők, objektum szolgáltatás hívása, stb."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Fields to Change"
-msgstr "Mezők módosítása"
+msgstr "Módosítandó mezők"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
@@ -184,7 +185,7 @@ msgstr "Szűrő"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr "Adja meg a rendezési szempontot a szabályok listájának megjelenítésekor."
+msgstr "Megadja a rendezési szempontot a szabályok listájának megjelenítésekor."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -192,7 +193,7 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr "Menjen az \"Idevonatkozó dokumentum modell\" oldalra és álítsa b a szűrő paramétereket a \"Keresés\" nézetben (Például az Érdeklődések/Lehetőségek alapján keresés: Létrehozás dátuma \"egyenlő ezzel\" 01/01/2012)"
+msgstr "Menjen a \"Vonatkozó dokumentum modell\" oldalra és állítsa be a szűrő paramétereket a \"Keresés\" nézetben (Például az Érdeklődések/Lehetőségek alapján keresés: Létrehozás dátuma \"egyenlő ezzel\" 01/01/2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -237,7 +238,7 @@ msgstr "Ugyanebben a \"Keresés\" nézetben, válassza ki a \"Mentse a jelenlegi
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr "Vásárló"
+msgstr "Vevő"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -259,13 +260,13 @@ msgstr "Utolsó futás"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -295,12 +296,12 @@ msgstr "Mezők megváltoztatásakor kapcsol"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation"
-msgstr "Létrehozásnál"
+msgstr "Létrehozáskor"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr "Létrehozásnál & Frissítéskor"
+msgstr "Létrehozáskor & Frissítéskor"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -320,12 +321,12 @@ msgstr "Partner"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
-msgstr "Függőben lévő"
+msgstr "Függő"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
 msgid "Related Document Model"
-msgstr "Ide vonatkozó dokumentum modell"
+msgstr "Vonatkozó dokumentum modell"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_user_id

@@ -103,9 +103,33 @@ class Channel(models.Model):
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
     # not stored access fields, depending on each user
-    can_see = fields.Boolean('Can See', compute='_compute_access')
+    can_see = fields.Boolean('Can See', compute='_compute_access', search='_search_can_see')
     can_see_full = fields.Boolean('Full Access', compute='_compute_access')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
+
+    def _search_can_see(self, operator, value):
+        if operator not in ('=', '!=', '<>'):
+            raise ValueError('Invalid operator: %s' % (operator,))
+
+        if not value:
+            operator = operator == "=" and '!=' or '='
+
+        if self._uid == SUPERUSER_ID:
+            return [(1, '=', 1)]
+
+        # Better perfs to split request and use inner join that left join
+        req = """
+            SELECT id FROM slide_channel WHERE visibility='public'
+                UNION
+            SELECT c.id
+                FROM slide_channel c
+                    INNER JOIN rel_channel_groups rg on c.id = rg.channel_id
+                    INNER JOIN res_groups g on g.id = rg.group_id
+                    INNER JOIN res_groups_users_rel u on g.id = u.gid and uid = %s
+        """
+        op = operator == "=" and "inselect" or "not inselect"
+        # don't use param named because orm will add other param (test_active, ...)
+        return [('id', op, (req, (self._uid)))]
 
     @api.one
     @api.depends('visibility', 'group_ids', 'upload_group_ids')
