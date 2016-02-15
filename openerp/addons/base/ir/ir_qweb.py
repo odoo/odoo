@@ -1254,18 +1254,23 @@ class AssetsBundle(object):
     def save_attachment(self, type, content, inc=None):
         ira = self.registry['ir.attachment']
 
-        values = {}
-        values["name"] = "/web/content/%s" % type
-        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
-        values["res_model"] = 'ir.ui.view'
-        values["public"] = True
-        values["type"] = 'binary'
+        fname = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+        values = {
+            'name': "/web/content/%s" % type,
+            'datas_fname': fname,
+            'res_model': 'ir.ui.view',
+            'res_id': False,
+            'type': 'binary',
+            'public': True,
+            'datas': content.encode('utf8').encode('base64'),
+        }
         attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
-        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
-        values["name"] = url
-        values["url"] = url
-        values["datas"] = content.encode('utf8').encode('base64')
 
+        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, fname)
+        values = {
+            'name': url,
+            'url': url,
+        }
         ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
 
         if self.context.get('commit_assetsbundle') is True:
@@ -1283,7 +1288,6 @@ class AssetsBundle(object):
         return attachments[0]
 
     def css(self):
-        ira = self.registry['ir.attachment']
         attachments = self.get_attachments('css')
         if not attachments:
             # get css content
@@ -1337,7 +1341,7 @@ class AssetsBundle(object):
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
-                assets_domain = [('name', 'in', [asset.html_url % asset.url  for asset in assets])]
+                assets_domain = [('name', 'in', [asset.html_url % asset.url for asset in assets])]
                 ira_ids = self.registry['ir.attachment'].search(self.cr, uid, assets_domain)
                 if len(ira_ids) != len(assets):
                     preprocessed = False
@@ -1377,6 +1381,7 @@ class AssetsBundle(object):
                     if debug:
                         try:
                             ira = self.registry['ir.attachment']
+                            fname = os.path.basename(asset.url)
                             url = asset.html_url % asset.url
                             with self.cr.savepoint():
                                 ira.create(self.cr, openerp.SUPERUSER_ID, dict(
@@ -1385,6 +1390,9 @@ class AssetsBundle(object):
                                     type='binary',
                                     name=url,
                                     url=url,
+                                    datas_fname=fname,
+                                    res_model=False,
+                                    res_id=False,
                                 ), context=self.context)
 
                             if self.context.get('commit_assetsbundle') is True:
