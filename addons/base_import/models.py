@@ -5,6 +5,7 @@ import itertools
 import logging
 import operator
 import os
+import re
 
 from openerp.tools.mimetypes import guess_mimetype
 
@@ -114,6 +115,7 @@ class ir_import(orm.TransientModel):
             'string': _("External ID"),
             'required': False,
             'fields': [],
+            'type': 'id',
         }]
         fields_got = model_obj.fields_get(cr, uid, context=context)
         blacklist = orm.MAGIC_COLUMNS + [model_obj.CONCURRENCY_CHECK_FIELD]
@@ -133,7 +135,6 @@ class ir_import(orm.TransientModel):
                            for attr, value in itertools.chain.from_iterable(
                                 states.itervalues())):
                     continue
-
             f = {
                 'id': name,
                 'name': name,
@@ -141,18 +142,19 @@ class ir_import(orm.TransientModel):
                 # Y U NO ALWAYS HAS REQUIRED
                 'required': bool(field.get('required')),
                 'fields': [],
+                'type': field['type'],
             }
 
             if field['type'] in ('many2many', 'many2one'):
                 f['fields'] = [
-                    dict(f, name='id', string=_("External ID")),
-                    dict(f, name='.id', string=_("Database ID")),
+                    dict(f, name='id', string=_("External ID"), type='id'),
+                    dict(f, name='.id', string=_("Database ID"), type='id'),
                 ]
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
                     cr, uid, field['relation'], context=context, depth=depth-1)
                 if self.user_has_groups(cr, uid, 'base.group_no_one'):
-                    f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
+                    f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
 
             fields.append(f)
 
@@ -263,6 +265,105 @@ class ir_import(orm.TransientModel):
             if any(x for x in row if x.strip())
         )
 
+    def _try_match_column(self, cr, uid, index, preview_values, fields, options):
+        # If all values are empty in preview than can be any field
+        if all([v == '' for v in preview_values]):
+            return ['all']
+        # If all values starts with __export__ this is probably an id
+        if all(v.startswith('__export__') for v in preview_values):
+            return ['id', 'many2many', 'many2one', 'one2many']
+        # If all values can be cast to int type is either id, float or monetary
+        # Exception: if we only have 1 and 0, it can also be a boolean
+        try:
+            field_type = ['id', 'integer', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
+            res = set(int(v) for v in preview_values)
+            if {0, 1}.issuperset(res):
+                field_type.append('boolean')
+            return field_type
+        except ValueError:
+            pass
+        # If all values are either True or False, type is boolean
+        if all(val.lower() in ('true','false','t','f','') for val in preview_values):
+            return ['boolean']
+        # If all values can be cast to float, type is either float or monetary
+        try:
+            thousand_separator = decimal_separator = False
+            for val in preview_values:
+                if val == '':
+                    continue
+                # value might have the currency symbol left or right from the value
+                val = self._remove_currency_symbol(cr, uid, val)
+                if val:
+                    if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                        val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
+                    # We are now sure that this is a float, but we still need to find the 
+                    # thousand and decimal separator
+                    else:
+                        if val.count('.') > 1:
+                            options['float_thousand_separator'] = '.'
+                            options['float_decimal_separator'] = ','
+                        elif val.count(',') > 1:
+                            options['float_thousand_separator'] = ','
+                            options['float_decimal_separator'] = '.'
+                        elif val.find('.') > val.find(','):
+                            thousand_separator = ','
+                            decimal_separator = '.'
+                        elif val.find(',') > val.find('.'):
+                            thousand_separator = '.'
+                            decimal_separator = ','
+                else:
+                    # This is not a float so exit this try
+                    float('a')
+            if thousand_separator and not options.get('float_decimal_separator'):
+                options['float_thousand_separator'] = thousand_separator
+                options['float_decimal_separator'] = decimal_separator
+            return ['float', 'monetary']
+        except ValueError:
+            pass
+        # Try to see if all values are a date or datetime
+        dt = datetime.datetime
+        separator = [' ','/','-']
+        date_format = ['%dr%mr%Y', '%mr%dr%Y', '%Yr%mr%d', '%Yr%dr%m']
+        date_patterns = [options['date_format']] if options.get('date_format') else []
+        if not date_patterns:
+            date_patterns = [pattern.replace('r', sep) for sep in separator for pattern in date_format]
+            date_patterns.extend([p.replace('Y','y') for p in date_patterns])
+        current_date_pattern = False
+        for date_pattern in date_patterns:
+            date_ok = True
+            datetime_ok = False
+            for val in preview_values:
+                if val == '':
+                    continue
+                try:
+                    dt.strptime(val, date_pattern)
+                except ValueError:
+                    date_ok = False
+                    try:
+                        dt.strptime(val, date_pattern+' %H:%M:%S')
+                        datetime_ok = True
+                    except ValueError:
+                        datetime_ok = False
+                        break
+            if date_ok or datetime_ok:
+                current_date_pattern = date_pattern
+                break
+        if current_date_pattern:
+            options['date_format'] = current_date_pattern
+            return ['date'] if date_ok else ['datetime']
+
+        return ['text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+
+    def _find_type_from_preview(self, cr, uid, fields, options, preview):
+        type_fields = []
+        if preview:
+            for column in range(0,len(preview[0])):
+                preview_values = [value[column].strip() for value in preview]
+                type_field = self._try_match_column(cr, uid, column, preview_values, fields, options)
+                type_fields.append(type_field)
+        return type_fields
+
+
     def _match_header(self, header, fields, options):
         """ Attempts to match a given header to a field of the
         imported model.
@@ -327,7 +428,7 @@ class ir_import(orm.TransientModel):
             return None, None
 
         headers = next(rows)
-        return headers, {
+        return headers, { 
             index: [field['name'] for field in self._match_header(header, fields, options)] or None
             for index, header in enumerate(headers)
         }
@@ -348,22 +449,31 @@ class ir_import(orm.TransientModel):
         :returns: {fields, matches, headers, preview} | {error, preview}
         :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}
         """
+
         (record,) = self.browse(cr, uid, [id], context=context)
         fields = self.get_fields(cr, uid, record.res_model, context=context)
-
         try:
             rows = self._read_file(record.file_type, record, options)
-
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
             # the ``count`` next rows for preview
             preview = list(itertools.islice(rows, count))
             assert preview, "CSV file seems to have no content"
+            header_types = self._find_type_from_preview(cr, uid, fields, options, preview)
+            if options.get('keep_matches', False) and len(options.get('fields', [])):
+                matches = {}
+                for index, match in enumerate(options.get('fields')):
+                    if match:
+                        matches[index] = match.split('/')
+
             return {
                 'fields': fields,
                 'matches': matches or False,
                 'headers': headers or False,
+                'headers_type': header_types or False,
                 'preview': preview,
+                'options': options,
+                'debug': self.user_has_groups(cr, uid, 'base.group_no_one'),
             }
         except Exception, e:
             # Due to lazy generators, UnicodeDecodeError (for
@@ -410,13 +520,76 @@ class ir_import(orm.TransientModel):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)
         data = [
-            row for row in itertools.imap(mapper, rows_to_import)
+            list(row) for row in itertools.imap(mapper, rows_to_import)
             # don't try inserting completely empty rows (e.g. from
             # filtering out o2m fields)
             if any(row)
         ]
 
         return data, import_fields
+
+    def _remove_currency_symbol(self, cr, uid, value):
+        value = value.strip()
+        negative = False
+        # Careful that some countries use () for negative so replace it by - sign
+        if value.startswith('(') and value.endswith(')'):
+            value = value[1:-1]
+            negative = True
+        float_regex = re.compile(r'([-]?[0-9.,]+)')
+        split_value = filter(None, float_regex.split(value))
+        if len(split_value) > 2:
+            # This is probably not a float
+            return False
+        if len(split_value) == 1:
+            if float_regex.search(split_value[0]) is not None:
+                return split_value[0] if not negative else '-'+split_value[0]
+            return False 
+        else:
+            # String has been split in 2, locate which index contains the float and which does not
+            currency_index = 0
+            if float_regex.search(split_value[0]) is not None:
+                currency_index = 1
+            # Check that currency exists
+            currency = self.pool.get('res.currency').search(cr, uid, [('symbol', '=', split_value[currency_index].strip())])
+            if len(currency):
+                return split_value[currency_index+1%2] if not negative else '-'+split_value[currency_index+1%2]
+            # Otherwise it is not a float with a currency symbol
+            return False
+
+    def _parse_float_from_data(self, cr, uid, data, index, name, options, context=None):
+        thousand_separator = options.get('float_thousand_separator', ' ')
+        decimal_separator = options.get('float_decimal_separator', '.')
+        for line in data:
+            if not line[index]:
+                continue
+            line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
+            old_value = line[index]
+            line[index] = self._remove_currency_symbol(cr, uid, line[index])
+            if line[index] == False:
+                raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
+
+    def _parse_import_data(self, cr, uid, data, import_fields, record, options, context=None):
+        # Get fields of type date/datetime
+        all_fields = self.pool[record.res_model].fields_get(cr, uid, context=context)
+        for name, field in all_fields.iteritems():
+            if field['type'] in ('date', 'datetime') and name in import_fields:
+                # Parse date
+                index = import_fields.index(name)
+                dt = datetime.datetime
+                field_date_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
+                if options.get('date_format', field_date_format) != field_date_format:
+                    for line in data:
+                        if line[index]:
+                            try:
+                                line[index] = dt.strftime(dt.strptime(line[index], options['date_format']), field_date_format)
+                            except ValueError:
+                                raise ValueError(_("Column %s contains incorrect values (value: %s does not match date format" % (name, line[index])))
+            elif field['type'] in ('float', 'monetary') and name in import_fields:
+                # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
+                # We should be able to manage both case 
+                index = import_fields.index(name)
+                self._parse_float_from_data(cr, uid, data, index, name, options, context=context)
+        return data
 
     def do(self, cr, uid, id, fields, options, dryrun=False, context=None):
         """ Actual execution of the import
@@ -444,6 +617,8 @@ class ir_import(orm.TransientModel):
         try:
             data, import_fields = self._convert_import_data(
                 record, fields, options, context=context)
+            # Parse date and float field
+            data = self._parse_import_data(cr, uid, data, import_fields, record, options, context=context)
         except ValueError, e:
             return [{
                 'type': 'error',
