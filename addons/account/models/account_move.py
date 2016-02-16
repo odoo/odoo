@@ -1251,7 +1251,28 @@ class AccountPartialReconcile(models.Model):
     def unlink(self):
         """ When removing a link between entries, we need to revert the eventual journal entries we created to book the
             fluctuation of the foreign currency's exchange rate.
+            We need also to reconcile together the origin currency difference line and its reversal in order to completly
+            cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
+            for example).
         """
         exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
-        exchange_rate_entries.reverse_moves()
-        return super(AccountPartialReconcile, self).unlink()
+        # revert the currency difference entry
+        reversed_moves = exchange_rate_entries.reverse_moves()
+        # find the origin currency difference line on the partner account and its newly created reversal, and store them in a list
+        pairs_to_rec = []
+        for rev_move in self.env['account.move'].browse(reversed_moves):
+            if not rev_move.rate_diff_partial_rec_id:
+                continue
+            origin_move = exchange_rate_entries.filtered(lambda x: x.rate_diff_partial_rec_id == rev_move.rate_diff_partial_rec_id)
+            for acm_line in rev_move.line_ids:
+                if acm_line.account_id.reconcile:
+                    for origin_line in origin_move.line_ids:
+                        if origin_line.account_id == acm_line.account_id and origin_line.debit == acm_line.credit and origin_line.credit == acm_line.debit:
+                            to_rec = origin_line + acm_line
+                            pairs_to_rec.append(to_rec)
+        # the call to super() had to be delayed in order to mark the move lines to reconcile together (to use 'rate_diff_partial_rec_id')
+        res = super(AccountPartialReconcile, self).unlink()
+        # now that the origin currency difference line is not reconciled anymore, we can reconcile it with its reversal entry to cancel it completly
+        for to_rec in pairs_to_rec:
+            to_rec.reconcile()
+        return res
