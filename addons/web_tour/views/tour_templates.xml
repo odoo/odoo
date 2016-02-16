@@ -8,12 +8,14 @@
                 <script type="text/javascript" src="/web_tour/static/src/js/tip.js"></script>
                 <script type="text/javascript" src="/web_tour/static/src/js/tour_manager.js"></script>
                 <script type="text/javascript" src="/web_tour/static/src/js/tour_service.js"></script>
+                <link rel="alternate" type="application/xml" href="/web_tour/static/src/xml/tip.xml"/>
             </xpath>
         </template>
 
         <template id="assets_backend" name="tours backend assets" inherit_id="web.assets_backend">
             <xpath expr="//script[last()]" position="after">
                 <script type="text/javascript" src="/web_tour/static/src/js/debug_manager.js"></script>
+                <link rel="alternate" type="application/xml" href="/web_tour/static/src/xml/debug_manager.xml"/>
             </xpath>
         </template>
     </data>

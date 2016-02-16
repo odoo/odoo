@@ -19,6 +19,5 @@ Odoo E-Commerce
     'demo': [
         'data/product_demo.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

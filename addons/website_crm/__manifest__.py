@@ -15,7 +15,6 @@ Odoo Contact Form
         'views/website_crm_templates.xml',
         'views/website_crm_config_settings_views.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': True,
 }

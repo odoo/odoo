@@ -18,6 +18,5 @@ Allows users to create custom dashboard.
         'views/board_views.xml',
         'views/board_templates.xml',
     ],
-    'qweb': ['static/src/xml/board.xml'],
     'application': True,
 }

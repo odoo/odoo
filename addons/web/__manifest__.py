@@ -17,8 +17,5 @@ This module provides the core of the Odoo Web Client.
     'data': [
         'views/webclient_templates.xml',
     ],
-    'qweb': [
-        "static/src/xml/*.xml",
-    ],
-    'bootstrap': True,  # load translations for login screen
+    'bootstrap': True, # load translations for login screen
 }

@@ -33,9 +33,6 @@ following:
     'demo': [
         'data/pos_mercury_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/pos_mercury.xml',
-    ],
     'installable': True,
     'auto_install': False,
 }

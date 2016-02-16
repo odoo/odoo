@@ -18,8 +18,5 @@ Report
         'views/base_config_settings_views.xml',
         'views/ir_actions_report_views.xml',
     ],
-    'qweb' : [
-        'static/src/xml/*.xml',
-    ],
     'auto_install': True,
 }

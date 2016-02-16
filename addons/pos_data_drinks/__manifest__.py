@@ -15,8 +15,6 @@
     'data': [
         'data/pos_data_drinks.xml',
     ],
-    'qweb': [
-    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,

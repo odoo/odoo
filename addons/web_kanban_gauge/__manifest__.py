@@ -12,7 +12,5 @@ This widget allows to display gauges using d3 library.
     'data' : [
         'views/web_kanban_gauge_templates.xml',
     ],
-    'qweb': [
-    ],
     'auto_install': True,
 }

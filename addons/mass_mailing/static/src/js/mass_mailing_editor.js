@@ -138,8 +138,6 @@ $.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, i
     $("span.o_table_handler, div.note-table").remove();
 };
 
-ajax.loadXML("/mass_mailing/static/src/xml/mass_mailing.xml", core.qweb);
-
 snippets_editor.Class.include({
     _get_snippet_url: function () {
         var url = (typeof snippets_url !== "undefined" ? window["snippets_url"] : this._super.apply(this, arguments));

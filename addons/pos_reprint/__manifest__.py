@@ -19,9 +19,6 @@ Allow cashier to reprint receipts
         'views/pos_reprint_templates.xml',
         'views/pos_config_views.xml',
     ],
-    'qweb': [
-        'static/src/xml/reprint.xml',
-    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
 }

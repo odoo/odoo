@@ -27,8 +27,6 @@ Odoo Blog
     ],
     'test': [
     ],
-    'qweb': [
-    ],
     'installable': True,
     'application': True,
 }

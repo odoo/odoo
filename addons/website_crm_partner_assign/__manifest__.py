@@ -29,6 +29,5 @@ Publish and Assign Partner
         'data/crm_lead_demo.xml',
         'data/res_partner_grade_demo.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

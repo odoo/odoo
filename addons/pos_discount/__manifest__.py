@@ -21,9 +21,6 @@ sale discount to a customer.
         'views/pos_discount_views.xml',
         'views/pos_discount_templates.xml'
     ],
-    'qweb': [
-        'static/src/xml/discount_templates.xml',
-    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
 }

@@ -15,8 +15,5 @@ Odoo Web Calendar view.
     'data' : [
         'views/web_calendar_templates.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'auto_install': True
 }
