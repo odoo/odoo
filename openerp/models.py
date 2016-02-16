@@ -5965,28 +5965,33 @@ class BaseModel(object):
         """
         onchange = onchange.strip()
 
+        def process(res):
+            if not res:
+                return
+            if res.get('value'):
+                res['value'].pop('id', None)
+                self.update(self._convert_to_cache(res['value'], validate=False))
+            if res.get('domain'):
+                result.setdefault('domain', {}).update(res['domain'])
+            if res.get('warning'):
+                if result.get('warning'):
+                    # Concatenate multiple warnings
+                    warning = result['warning']
+                    warning['message'] = '\n\n'.join(filter(None, [
+                        warning.get('title'),
+                        warning.get('message'),
+                        res['warning'].get('title'),
+                        res['warning'].get('message'),
+                    ]))
+                    warning['title'] = _('Warnings')
+                else:
+                    result['warning'] = res['warning']
+
         # onchange V8
         if onchange in ("1", "true"):
             for method in self._onchange_methods.get(field_name, ()):
                 method_res = method(self)
-                if not method_res:
-                    continue
-                if 'domain' in method_res:
-                    result.setdefault('domain', {}).update(method_res['domain'])
-                if 'warning' in method_res:
-                    if result.get('warning'):
-                        if method_res['warning']:
-                            # Concatenate multiple warnings
-                            warning = result['warning']
-                            warning['message'] = '\n\n'.join(filter(None, [
-                                warning.get('title'),
-                                warning.get('message'),
-                                method_res['warning'].get('title'),
-                                method_res['warning'].get('message')
-                            ]))
-                            warning['title'] = _('Warnings')
-                    else:
-                        result['warning'] = method_res['warning']
+                process(method_res)
             return
 
         # onchange V7
@@ -6018,28 +6023,8 @@ class BaseModel(object):
                 method_res = getattr(self._model, method)(*args, context=self._context)
             except TypeError:
                 method_res = getattr(self._model, method)(*args)
+            process(method_res)
 
-            if not isinstance(method_res, dict):
-                return
-            if 'value' in method_res:
-                method_res['value'].pop('id', None)
-                self.update(self._convert_to_cache(method_res['value'], validate=False))
-            if 'domain' in method_res:
-                result.setdefault('domain', {}).update(method_res['domain'])
-            if 'warning' in method_res:
-                if result.get('warning'):
-                    if method_res['warning']:
-                        # Concatenate multiple warnings
-                        warning = result['warning']
-                        warning['message'] = '\n\n'.join(filter(None, [
-                            warning.get('title'),
-                            warning.get('message'),
-                            method_res['warning'].get('title'),
-                            method_res['warning'].get('message')
-                        ]))
-                        warning['title'] = _('Warnings')
-                else:
-                    result['warning'] = method_res['warning']
     @api.multi
     def onchange(self, values, field_name, field_onchange):
         """ Perform an onchange on the given field.
