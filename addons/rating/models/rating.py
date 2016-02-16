@@ -6,7 +6,7 @@ class Rating(models.Model):
 
     _name = "rating.rating"
     _description = "Rating"
-    _order = 'create_date desc'
+    _order = 'write_date desc'
     _rec_name = 'res_name'
     _sql_constraints = [
         ('rating_range', 'check(rating >= -1 and rating <= 10)', 'Rating should be between -1 to 10'),
@@ -43,11 +43,21 @@ class Rating(models.Model):
 
 
 class RatingMixin(models.AbstractModel):
-
     _name = 'rating.mixin'
     _description = "Rating Mixin"
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)])
+    rating_last_value = fields.Float('Last Value', related='rating_ids.rating', store=True)
+    rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
+
+    @api.multi
+    def _compute_rating_count(self):
+        read_group_res = self.env['rating.rating'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids)], ['res_id'], groupby=['res_id'])
+        result = dict.fromkeys(self.ids, 0)
+        for data in read_group_res:
+            result[data['res_id'][0]] += data['__count']
+        for record in self:
+            record.rating_count = result[record.id]
 
     @api.multi
     def rating_get_request(self,  partner_id, rated_partner_id, reuse_rating=True):
