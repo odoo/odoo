@@ -11,3 +11,8 @@ class TestAssetsBundleController(Controller):
         bundle = env.ref('test_assetsbundle.bundle1')
         views = env['ir.ui.view'].search([('inherit_id', '=', bundle.id)])
         return views.with_context(check_view_ids=views.ids).render_template('test_assetsbundle.template1')
+
+    @route('/test_assetsbundle/xml', type='http', auth='user')
+    def bundle_xml(self, debug=None):
+        env = request.env(user=SUPERUSER_ID)
+        return env['ir.ui.view'].render_template('test_assetsbundle.template2')
