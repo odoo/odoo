@@ -1,56 +1,52 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website_portal.controllers.main import website_account
-from openerp.addons.website_sale.controllers.main import WebsiteSale
 from cStringIO import StringIO
 from werkzeug.utils import redirect
+from odoo import http
+from odoo.http import request
+from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
-
-class website_sale_digital_confirmation(WebsiteSale):
-
+class WebsiteSaleDigitalConfirmation(WebsiteSale):
     @http.route([
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
-        response = super(website_sale_digital_confirmation, self).payment_confirmation(**post)
+        response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
         digital_content = map(lambda x: x.product_id.type == 'digital', order_lines)
         response.qcontext.update(digital=any(digital_content))
         return response
 
 
-class website_sale_digital(website_account):
-
+class WebsiteSaleDigital(website_account):
     orders_page = '/my/orders'
 
     @http.route([
         '/my/orders/<int:order>',
     ], type='http', auth='user', website=True)
     def orders_followup(self, order=None, **post):
-        response = super(website_sale_digital, self).orders_followup(order=order, **post)
+        response = super(WebsiteSaleDigital, self).orders_followup(order=order, **post)
         if not 'order' in response.qcontext:
             return response
-
-        order_products_attachments = {}
         order = response.qcontext['order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
 
         purchased_products_attachments = {}
         for il in invoiced_lines:
-            p_obj = il.product_id
+            product = il.product_id
             # Ignore products that do not have digital content
-            if not p_obj.product_tmpl_id.type == 'digital':
+            if not product.product_tmpl_id.type == 'digital':
                 continue
 
             # Search for product attachments
-            A = request.env['ir.attachment']
-            p_id = p_obj.id
-            template = p_obj.product_tmpl_id
-            att = A.search_read(
-                domain=['|', '&', ('res_model', '=', p_obj._name), ('res_id', '=', p_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
+            Attachment = request.env['ir.attachment']
+            product_id = product.id
+            template = product.product_tmpl_id
+            att = Attachment.search_read(
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
@@ -59,7 +55,7 @@ class website_sale_digital(website_account):
             if not att:
                 continue
 
-            purchased_products_attachments[p_id] = att
+            purchased_products_attachments[product_id] = att
 
         response.qcontext.update({
             'digital_attachments': purchased_products_attachments,
@@ -81,11 +77,10 @@ class website_sale_digital(website_account):
         else:
             return redirect(self.orders_page)
 
-
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = request.env['account.invoice.line'].get_digital_purchases(request.uid)
+        purchased_products = request.env['account.invoice.line'].get_digital_purchases()
 
         if res_model == 'product.product':
             if res_id not in purchased_products:

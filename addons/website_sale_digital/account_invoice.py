@@ -2,12 +2,11 @@
 from openerp import models
 
 
-class account_invoice_line(models.Model):
+class AccountInvoiceLine(models.Model):
     _inherit = ['account.invoice.line']
 
-    def get_digital_purchases(self,uid):
-        user = self.env['res.users'].browse(uid)
-        partner = user.partner_id
+    def get_digital_purchases(self):
+        partner = self.env.user.partner_id
 
         # Get paid invoices
         purchases = self.sudo().search_read(
