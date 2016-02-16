@@ -294,9 +294,9 @@ class sale_order(osv.osv):
         # create draft invoice if transaction is ok
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
-                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+                self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
             message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
-            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
 

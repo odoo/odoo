@@ -312,6 +312,8 @@ class SaleOrder(models.Model):
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
         for invoice in invoices.values():
+            if not invoice.invoice_line_ids:
+                raise UserError(_('There is no invoicable line.'))
             # If invoice is negative, do a refund invoice instead
             if invoice.amount_untaxed < 0:
                 invoice.type = 'out_refund'
@@ -556,7 +558,7 @@ class SaleOrderLine(models.Model):
             for proc in line.procurement_ids:
                 qty += proc.product_qty
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                return False
+                continue
 
             if not line.order_id.procurement_group_id:
                 vals = line.order_id._prepare_procurement_group()
