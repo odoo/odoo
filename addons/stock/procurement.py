@@ -327,6 +327,9 @@ class procurement_order(osv.osv):
                 [order_point.product_id.id],
                 context={'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
+    def _get_orderpoint_domain(self, cr, uid, company_id=False, context=False):
+        return company_id and [('company_id', '=', company_id)] or []
+
     def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
         '''
         Create procurement based on Orderpoint
@@ -341,7 +344,7 @@ class procurement_order(osv.osv):
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
 
         procurement_obj = self.pool.get('procurement.order')
-        dom = company_id and [('company_id', '=', company_id)] or []
+        dom = self._get_orderpoint_domain(cr, uid, company_id=company_id, context=context)
         orderpoint_ids = orderpoint_obj.search(cr, uid, dom)
         prev_ids = []
         while orderpoint_ids:
