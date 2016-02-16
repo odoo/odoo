@@ -1137,6 +1137,7 @@ class pos_order(osv.osv):
             inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
                 inv['account_id'] = acc
+            inv['fiscal_position_id'] = order.fiscal_position_id.id
             inv_id = inv_ref.create(cr, SUPERUSER_ID, inv, context=local_context)
 
             self.write(cr, uid, [order.id], {'invoice_id': inv_id, 'state': 'invoiced'}, context=local_context)
@@ -1154,14 +1155,12 @@ class pos_order(osv.osv):
                 #Oldlin trick
                 invoice_line = inv_line_ref.new(cr, SUPERUSER_ID, inv_line, context=local_context)
                 invoice_line._onchange_product_id()
-                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
-                fiscal_position_id = line.order_id.fiscal_position_id
-                if fiscal_position_id:
-                    invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
-                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
-                inv_line.update(price_unit=line.price_unit, discount=line.discount)
+                inv_line.update(
+                    price_unit=line.price_unit,
+                    discount=line.discount,
+                    invoice_line_tax_ids=[(6, 0, line.tax_ids.filtered(lambda t: t.company_id.id == company_id).ids)])
                 inv_line_ref.create(cr, SUPERUSER_ID, inv_line, context=local_context)
             inv_ref.compute_taxes(cr, SUPERUSER_ID, [inv_id], context=local_context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
@@ -1200,10 +1199,7 @@ class pos_order(osv.osv):
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
-        account_move_obj = self.pool.get('account.move')
-        account_tax_obj = self.pool.get('account.tax')
         property_obj = self.pool.get('ir.property')
-        cur_obj = self.pool.get('res.currency')
 
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
@@ -1221,7 +1217,6 @@ class pos_order(osv.osv):
 
             current_company = order.sale_journal.company_id
 
-            group_tax = {}
             account_def = property_obj.get(cr, uid, 'property_account_receivable_id', 'res.partner', context=context)
 
             order_account = order.partner_id and \
@@ -1232,8 +1227,6 @@ class pos_order(osv.osv):
             if move_id is None:
                 # Create an entry for the sale
                 move_id = self._create_account_move(cr, uid, order.session_id.start_at, order.name, order.sale_journal.id, order.company_id.id, context=context)
-
-            move = account_move_obj.browse(cr, SUPERUSER_ID, move_id, context=context)
 
             def insert_data(data_type, values):
                 # if have_to_group_by:
@@ -1322,13 +1315,10 @@ class pos_order(osv.osv):
                 })
 
                 # Create the tax lines
-                taxes = []
-                for t in line.tax_ids_after_fiscal_position:
-                    if t.company_id.id == current_company.id:
-                        taxes.append(t.id)
+                taxes = line.tax_ids.filtered(lambda t: t.company_id.id == current_company.id)
                 if not taxes:
                     continue
-                for tax in account_tax_obj.browse(cr,uid, taxes, context=context).compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
+                for tax in taxes.compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
                     insert_data('tax', {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
@@ -1412,7 +1402,7 @@ class pos_order_line(osv.osv):
                 res[line.id]['price_subtotal_incl'] = taxes['total_included']
         return res
 
-    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
+    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, fiscal_position_id=False, context=None):
         context = context or {}
         if not product_id:
            return {}
@@ -1428,7 +1418,12 @@ class pos_order_line(osv.osv):
         result['value']['price_unit'] = price
 
         prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        result['value']['tax_ids'] = prod.taxes_id.ids
+        FiscalPosition = self.pool['account.fiscal.position']
+        tax_ids = prod.taxes_id.ids
+        if fiscal_position_id:
+            fiscal_position = FiscalPosition.browse(cr, uid, fiscal_position_id, context=context)
+            tax_ids = fiscal_position.map_tax(prod.taxes_id)
+        result['value']['tax_ids'] = tax_ids
 
         return result
 
@@ -1452,12 +1447,6 @@ class pos_order_line(osv.osv):
             result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
-    def _get_tax_ids_after_fiscal_position(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
-        return res
-
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.char('Line No', required=True, copy=False),
@@ -1471,7 +1460,6 @@ class pos_order_line(osv.osv):
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'tax_ids': fields.many2many('account.tax', string='Taxes'),
-        'tax_ids_after_fiscal_position': fields.function(_get_tax_ids_after_fiscal_position, type='many2many', relation='account.tax', string='Taxes')
     }
 
     _defaults = {
