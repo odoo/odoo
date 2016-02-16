@@ -23,4 +23,41 @@
     <template id="test_assetsbundle.bundle3">
         <link rel="stylesheet" href="/test_assetsbundle/static/src/less/test_lessfile1.less"/>
     </template>
+
+    <template id="test_assetsbundle.bundle4">
+        <!-- lib -->
+        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <!-- end -->
+
+        <!-- dependencies -->
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
+        <!-- end -->
+
+        <link rel="alternate" type="application/xml" href="/test_assetsbundle/static/src/xml/assetsbundle.xml"/>
+
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile5.js"></script>
+    </template>
+
+    <template id="test_assetsbundle.template2" name="test template 2">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle4"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
 </openerp>

@@ -16,6 +16,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_xmlid = 'test_assetsbundle.bundle1'
         self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
+        self.xmlbundle_xmlid = 'test_assetsbundle.bundle4'
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -309,6 +310,15 @@ class TestAssetsBundleInBrowser(HttpCase):
         self.phantom_js(
             "/test_assetsbundle/js",
             "a + b + c + d === 10 ? console.log('ok') : console.log('error')",
+            login="admin",
+        )
+
+    def test_02_xml_qweb_interpretation(self):
+        """ Checks that the xml converted in javascript of a bundle is correctly interpreted
+        """
+        self.phantom_js(
+            "/test_assetsbundle/xml",
+            "",
             login="admin",
         )
 
