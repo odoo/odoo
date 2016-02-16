@@ -1204,6 +1204,7 @@ class mrp_production(osv.osv):
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
             'date': production.date_planned,
+            'date_expected': production.date_planned,
             'product_id': product.id,
             'product_uom_qty': qty,
             'product_uom': uom_id,
