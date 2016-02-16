@@ -3126,18 +3126,19 @@ class BaseModel(object):
         """ Setup recomputation triggers, and complete the model setup. """
         cls = type(self)
 
-        # set up field triggers
-        for field in cls._fields.itervalues():
-            field.setup_triggers(self.env)
+        if isinstance(self, Model):
+            # set up field triggers (on database-persisted models only)
+            for field in cls._fields.itervalues():
+                field.setup_triggers(self.env)
 
-        # add invalidation triggers on model dependencies
-        if cls._depends:
-            for model_name, field_names in cls._depends.iteritems():
-                model = self.env[model_name]
-                for field_name in field_names:
-                    field = model._fields[field_name]
-                    for dependent in cls._fields.itervalues():
-                        model._field_triggers.add(field, (dependent, None))
+            # add invalidation triggers on model dependencies
+            if cls._depends:
+                for model_name, field_names in cls._depends.iteritems():
+                    model = self.env[model_name]
+                    for field_name in field_names:
+                        field = model._fields[field_name]
+                        for dependent in cls._fields.itervalues():
+                            model._field_triggers.add(field, (dependent, None))
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
@@ -6221,7 +6222,7 @@ class Model(AbstractModel):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _transient = False          # not transient
 
-class TransientModel(AbstractModel):
+class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily
     persisted, and regularly vacuum-cleaned.
 
