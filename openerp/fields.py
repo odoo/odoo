@@ -437,6 +437,10 @@ class Field(object):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
+        if attrs.get('company_dependent'):
+            # by default, company-dependent fields are not stored and not copied
+            attrs['store'] = attrs.get('store', False)
+            attrs['copy'] = attrs.get('copy', False)
 
         # fix for function fields overridden by regular columns
         if not isinstance(attrs.get('origin'), (NoneType, fields.function)):
@@ -699,7 +703,7 @@ class Field(object):
         if self.column:
             return self.column
 
-        if not self.store and (self.compute or not self.origin):
+        if not self.store and (self.compute or not self.origin) and not self.company_dependent:
             # non-stored computed fields do not have a corresponding column
             return None
 
