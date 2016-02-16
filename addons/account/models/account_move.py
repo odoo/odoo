@@ -535,7 +535,7 @@ class AccountMoveLine(models.Model):
 
         # Return lines formatted
         if len(pairs) > 0:
-            target_currency = self.currency_id or self.company_id.currency_id
+            target_currency = (self.currency_id and self.amount_currency) and self.currency_id or self.company_id.currency_id
             lines = self.browse(list(pairs[0]))
             return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
         return []
@@ -630,7 +630,7 @@ class AccountMoveLine(models.Model):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'currency_id': line.currency_id.id or False,
+                'currency_id': (line.currency_id and line.amount_currency) and line.currency_id.id or False,
             }
 
             debit = line.debit
@@ -645,7 +645,7 @@ class AccountMoveLine(models.Model):
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency
-            line_currency = line.currency_id or company_currency
+            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
             if line_currency != company_currency:
