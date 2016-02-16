@@ -1220,6 +1220,7 @@ class AccountPartialReconcile(models.Model):
                         'move_id': move.id,
                         'currency_id': rec.currency_id.id,
                         'amount_currency': 0.0,
+                        'partner_id': rec.debit_move_id.partner_id.id,
                     })
                     rec.env['account.move.line'].create({
                         'name': _('Currency exchange rate difference'),
@@ -1228,6 +1229,7 @@ class AccountPartialReconcile(models.Model):
                         'account_id': amount_diff > 0 and rec.company_id.currency_exchange_journal_id.default_debit_account_id.id or rec.company_id.currency_exchange_journal_id.default_credit_account_id.id,
                         'move_id': move.id,
                         'currency_id': rec.currency_id.id,
+                        'partner_id': rec.debit_move_id.partner_id.id,
                     })
                     rec.env['account.partial.reconcile'].create({
                         'debit_move_id': amount_diff < 0 and line_to_reconcile.id or rec.debit_move_id.id,
