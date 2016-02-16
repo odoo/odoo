@@ -1339,21 +1339,28 @@ class AssetsBundle(object):
         uid = openerp.SUPERUSER_ID
         preprocessed = True
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
-            assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
+            outdated = False
+            assets = dict((asset.html_url % asset.url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
-                assets_domain = [('name', 'in', [asset.html_url % asset.url for asset in assets])]
+                assets_domain = [('url', 'in', assets.keys())]
                 ira_ids = self.registry['ir.attachment'].search(self.cr, uid, assets_domain)
-                if len(ira_ids) != len(assets):
+                ira_records = self.registry['ir.attachment'].browse(self.cr, uid, ira_ids)
+                for ira_record in ira_records:
+                    asset = assets[ira_record.url]
+                    if asset.last_modified > Datetime.from_string(ira_record['__last_update']):
+                        outdated = True
+                        break
+                    if asset._content is None:
+                        asset._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8')
+
+                if any(asset._content is None for asset in assets.itervalues()):
+                    outdated = True
+
+                if outdated:
+                    if ira_ids:
+                        self.registry['ir.attachment'].unlink(self.cr, uid, ira_ids)
                     preprocessed = False
-                else:
-                    ira_records = self.registry['ir.attachment'].browse(self.cr, uid, ira_ids)
-                    for ira_record in ira_records:
-                        stylesheet = next(stylesheet for stylesheet in self.stylesheets if stylesheet.html_url % stylesheet.url == ira_record.url)
-                        if stylesheet.last_modified > Datetime.from_string(ira_record['__last_update']):
-                            self.registry['ir.attachment'].unlink(self.cr, self.uid, ira_ids)
-                            preprocessed = False
-                            break
-                        stylesheet._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8')
+
         return preprocessed
 
     def preprocess_css(self, debug=False):
