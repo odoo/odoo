@@ -23,14 +23,12 @@ class Task(models.Model):
 
     @api.multi
     def write(self, values):
+        res = super(Task, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            template = self.env['project.task.type'].browse(values.get('stage_id')).rating_template_id
+            template = self.env['project.task.type'].browse(values['stage_id']).rating_template_id
             if template:
-                rated_partner_id = self.user_id.partner_id
-                partner_id = self.partner_id
-                if partner_id and rated_partner_id:
-                    self.rating_send_request(template, partner_id, rated_partner_id)
-        return super(Task, self).write(values)
+                self.rating_send_request(template)
+        return res
 
 
 class Project(models.Model):
@@ -66,24 +64,3 @@ class Project(models.Model):
     def action_view_all_rating(self):
         """ return the action to see all the rating about the all sort of activity of the project (tasks, issues, ...) """
         return self.action_view_task_rating()
-
-
-
-class Rating(models.Model):
-
-    _inherit = "rating.rating"
-
-    @api.model
-    def apply_rating(self, rate, res_model=None, res_id=None, token=None):
-        """ check if the auto_validation_kanban_state is activated. If so, apply the modification of the
-            kanban state according to the given rating.
-        """
-        rating = super(Rating, self).apply_rating(rate, res_model, res_id, token)
-        if rating.res_model == 'project.task':
-            task = self.env[rating.res_model].sudo().browse(rating.res_id)
-            if task.stage_id.auto_validation_kanban_state:
-                if rating.rating > 5:
-                    task.write({'kanban_state' : 'done'})
-                else:
-                    task.write({'kanban_state' : 'blocked'})
-        return rating

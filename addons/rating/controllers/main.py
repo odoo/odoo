@@ -14,10 +14,10 @@ class Rating(http.Controller):
         if rating:
             is_rated = bool(rating.rating != -1)
             if not is_rated:
-                request.env['rating.rating'].apply_rating(rate, token=token)
-            # redirect to the form view if logged person
-            if request.session.uid and not is_rated:
-                record = request.env[rating.res_model].browse(rating.res_id)
-                return werkzeug.utils.redirect('/web#model=%s&id=%s&view_type=form' % (record._name, record.id))
+                record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
+                record_sudo.rating_apply(rate, token=token)
+                # redirect to the form view if logged person
+                if request.session.uid:
+                    return werkzeug.utils.redirect('/web#model=%s&id=%s&view_type=form' % (record_sudo._name, record_sudo.id))
             return request.render('rating.rating_external_page_view', {'rating': rate, 'is_rated': is_rated})
         return request.not_found()

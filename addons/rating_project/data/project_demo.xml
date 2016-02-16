@@ -27,10 +27,10 @@
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
         </record>
 
-        <function model="rating.rating" name="apply_rating" eval="(10, 'project.task', ref('project.project_task_3'))"/>
-        <function model="rating.rating" name="apply_rating" eval="(0, 'project.task', ref('project.project_task_8'))"/>
-        <function model="rating.rating" name="apply_rating" eval="(5, 'project.task', ref('project.project_task_15'))"/>
-        <function model="rating.rating" name="apply_rating" eval="(10, 'project.task', ref('project.project_task_18'))"/>
-        <function model="rating.rating" name="apply_rating" eval="(10, 'project.task', ref('project.project_task_24'))"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_18')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 0, 'project.task', )"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_15')], 5, 'project.task', )"/>
     </data>
 </openerp>

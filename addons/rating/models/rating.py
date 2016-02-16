@@ -33,41 +33,13 @@ class Rating(models.Model):
 
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
 
-    @api.model
-    def apply_rating(self, rate, res_model=None, res_id=None, token=None):
-        """ apply a rating for given res_model/res_id or token. If the res_model is a mail.thread
-            object, a message will be posted in the chatter.
-            :param rate : the rating value to apply
-            :type rate : float
-            :param res_id : id of the rated object.
-            :param res_model : name of model.
-            :param token : access token
-            :returns rating.rating record
-        """
-        domain = [('access_token', '=', token)] if token else [('res_model', '=', res_model), ('res_id', '=', res_id)]
-        rating = self.search(domain, limit=1)
-        if rating:
-            if token:
-                rating = rating.sudo()
-            rating.write({'rating' : rate})
-            if hasattr(self.env[rating.res_model], 'message_post'):
-                record = self.env[rating.res_model].sudo().browse(rating.res_id)
-                record.sudo().message_post(
-                    body="%s %s <br/><img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>"
-                    % (rating.sudo().partner_id.name, _('rated it'), rate),
-                    subtype='mail.mt_comment',
-                    author_id=rating.partner_id and rating.partner_id.id or None # None will set the default author in mail_thread.py
-                )
-        return rating
-
-    @api.multi
+    @api.one
     def reset(self):
-        for record in self:
-            record.write({
-                'rating': -1,
-                'access_token': record.new_access_token(),
-                'feedback' : False
-            })
+        self.write({
+            'rating': -1,
+            'access_token': self.new_access_token(),
+            'feedback' : False
+        })
 
 
 class RatingMixin(models.AbstractModel):
@@ -78,48 +50,81 @@ class RatingMixin(models.AbstractModel):
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)])
 
     @api.multi
-    def rating_send_request(self, template, partner_id, rated_partner_id, reuse_rating=True):
-        """ This method create (empty) rating objects for the current recordsets
-            and send this request by mail (given email template) with the given
-            rated_partner_id and partner_id as recipient and sender of the email.
-            :param template : the email template to send. The res_model of the
-                template  must be 'rating.rating'.
-            :type template : mail.template
-            :param res_model : model name of the object to rated_partner_id
-            :type res_model : string
-            :param res_id : id the record to rate
-            :type res_id : int
-            :param partner_id : the recipient partner
-            :type partner : res.partner
-            :param rated_partner_id : the sender partner
-            :type rated_partner_id : res.partner
-            :param reuse_rating : if True, the rating of the current objects will
-                be reset. Otherwise a new rating will be create
-            :type reuse_rating : boolean
-        """
+    def rating_get_request(self,  partner_id, rated_partner_id, reuse_rating=True):
+        """ This method fetches ratings related to the given records. It either
+        creates empty rating objects or search existing one to reset and resue
+        depending on the reuse_rating parameter. """
+        ratings = self.env['rating.rating']
         if not rated_partner_id.email or not partner_id.email:
-            return False
-        Rating = self.env['rating.rating']
-        res_model = self._name
+            return ratings
         for record in self:
-            res_id = record.id
             values = {
-                'res_model': res_model,
-                'res_id': res_id,
+                'res_model': self._name,
+                'res_id': record.id,
                 'partner_id': partner_id.id,
                 'rated_partner_id': rated_partner_id.id
             }
+            rating = None
             if reuse_rating:
-                # search the existing rating for the given res_model/res_id
-                rating = Rating.search([('res_id', '=', res_id), ('res_model', '=', res_model), ('partner_id', '=', partner_id.id)], limit=1)
-                if rating: # reset the rating
-                    rating.reset()
-                else: # create a new one
-                    rating = Rating.create(values)
+                rating = ratings.search([('res_id', '=', record.id), ('res_model', '=', self._name), ('partner_id', '=', partner_id.id)], limit=1)
+            if rating:
+                rating.reset()
             else:
-                rating = Rating.create(values)
-            # send the mail
+                rating = ratings.create(values)
+            ratings |= rating
+        return ratings
+
+    def _rating_get_partner_id(self):
+        if hasattr(self, 'partner_id') and self.partner_id:
+            return self.partner_id
+        return self.env['res.partner']
+
+    def _rating_get_rated_partner_id(self):
+        if hasattr(self, 'user_id') and self.user_idpartner_id:
+            return self.user_idpartner_id
+        return self.env['res.partner']
+
+    @api.multi
+    def rating_send_request(self, template, partner_id=None, rated_partner_id=None, reuse_rating=True):
+        """ This method send rating request by email, using a template given
+        in parameter. """
+        if partner_id is None:
+            partner_id = self._rating_get_partner_id()
+        if rated_partner_id is None:
+            rated_partner_id = self._rating_get_rated_partner_id()
+        ratings = self.rating_get_request(partner_id, rated_partner_id, reuse_rating=reuse_rating)
+        for rating in ratings:
             template.send_mail(rating.id, force_send=True)
+
+    @api.multi
+    def rating_apply(self, rate, token=None):
+        """ Apply a rating given a token. If the current model inherits from
+        mail.thread mixing, a message is posted on its chatter.
+
+        :param rate : the rating value to apply
+        :type rate : float
+        :param token : access token
+        :returns rating.rating record
+        """
+        if token:
+            rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
+        else:
+            rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
+        if rating:
+            rating.write({'rating': rate})
+            if hasattr(self, 'message_post'):
+                self.message_post(
+                    body="%s %s <br/><img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>"
+                    % (rating.sudo().partner_id.name, _('rated it'), rate),
+                    subtype='mail.mt_comment',
+                    author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
+                )
+            if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
+                if rating.rating > 5:
+                    self.write({'kanban_state': 'done'})
+                else:
+                    self.write({'kanban_state': 'blocked'})
+        return rating
 
     @api.multi
     def rating_get_repartition(self, add_stats=False, domain=None):
