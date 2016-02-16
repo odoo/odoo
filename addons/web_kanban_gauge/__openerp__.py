@@ -9,7 +9,5 @@ This widget allows to display gauges using justgage library.
     'data' : [
         'views/web_kanban_gauge.xml',
     ],
-    'qweb': [
-    ],
     'auto_install': True,
 }

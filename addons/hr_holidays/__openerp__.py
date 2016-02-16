@@ -42,9 +42,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'hr_dashboard.xml',
         ],
     'demo': ['hr_holidays_demo.xml',],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'test': ['test/test_hr_holiday.yml',
              'test/hr_holidays_report.yml',
     ],

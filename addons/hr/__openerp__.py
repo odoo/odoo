@@ -54,5 +54,4 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [],
 }

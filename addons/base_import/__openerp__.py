@@ -29,5 +29,4 @@ Re-implement openerp's file import system:
         'security/ir.model.access.csv',
         'views/base_import.xml',
     ],
-    'qweb': ['static/src/xml/import.xml'],
 }

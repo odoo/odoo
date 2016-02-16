@@ -24,6 +24,12 @@
   </xpath>
 </template>
 
+<template id="assets_backend" name="website_sale backend assets" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <link rel="alternate" type="application/xml" href="/website_sale/static/src/xml/website_sale.xml"/>
+    </xpath>
+</template>
+
 <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
   <xpath expr="//header//ul[@id='top_menu']/li" position="before">
       <t t-set="website_sale_order" t-value="website.sale_get_order()"/>

@@ -17,7 +17,6 @@ Online Event's Tickets
         'security/ir.model.access.csv',
         'security/website_event_sale.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': True
 }

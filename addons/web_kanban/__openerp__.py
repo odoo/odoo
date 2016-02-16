@@ -11,8 +11,5 @@ Odoo Web kanban view.
     'data' : [
         'views/web_kanban.xml',
     ],
-    'qweb' : [
-        'static/src/xml/*.xml',
-    ],
     'auto_install': True
 }

@@ -11,8 +11,5 @@ Openerp Web Diagram view.
     'data' : [
         'views/web_diagram.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'auto_install': True,
 }

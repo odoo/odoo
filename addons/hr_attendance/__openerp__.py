@@ -33,5 +33,4 @@ actions(Sign in/Sign out) performed by them.
     'installable': True,
     'auto_install': False,
     #web
-    'qweb': ["static/src/xml/attendance.xml"],
 }

@@ -12,7 +12,6 @@
         'views/web_planner_templates.xml',
         'views/web_planner_views.xml',
     ],
-    'qweb': ['static/src/xml/web_planner.xml'],
     'installable': True,
     'auto_install': True,
 }

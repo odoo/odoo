@@ -32,7 +32,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         'data/lunch_data.xml',
     ],
     'demo': ['data/lunch_demo.xml'],
-    'qweb': ['static/src/xml/lunch.xml', ],
     'installable': True,
     'application': True,
     'certificate': '001292377792581874189',

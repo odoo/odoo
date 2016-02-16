@@ -16,9 +16,6 @@ Ask your functional question directly to the Odoo Operators with the livechat su
         "views/im_odoo_support.xml"
     ],
     'depends' : ["web", "mail"],
-    'qweb': [
-        'static/src/xml/im_odoo_support.xml'
-    ],
     'installable': True,
     'auto_install': True,
     'application': False,

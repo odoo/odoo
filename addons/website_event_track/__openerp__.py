@@ -27,7 +27,6 @@ Adds support for:
         'security/ir.model.access.csv',
         'security/event.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/event_demo.xml',
         'data/website_event_track_demo.xml'

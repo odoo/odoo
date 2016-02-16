@@ -18,6 +18,5 @@ Translate you website in one click
     'data': [
         'views/website_gengo.xml',
     ],
-    'qweb': [],
     'installable': True,
 }

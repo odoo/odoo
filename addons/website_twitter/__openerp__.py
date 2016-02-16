@@ -14,9 +14,8 @@ Display best tweets
         'security/ir.model.access.csv',
         'data/twitter_data.xml',
         'views/twitter_view.xml',
-        'views/twitter_snippet.xml'
+        'views/twitter_snippet.xml',
     ],
     'demo': [],
-    'qweb': [],
     'installable': True,
 }

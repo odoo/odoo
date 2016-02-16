@@ -29,9 +29,6 @@ Ask questions, get answers, no distractions
         'data/badges_participation.xml',
         'data/badges_moderation.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml'
-    ],
     'demo': [
         'data/forum_demo.xml',
     ],

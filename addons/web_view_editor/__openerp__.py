@@ -11,6 +11,5 @@ Odoo Web to edit views.
     'data' : [
         'views/web_view_editor.xml',
     ],
-    'qweb': ['static/src/xml/view_editor.xml'],
     'auto_install': True,
 }

@@ -43,5 +43,4 @@ The validation can be configured in the company:
     'installable': True,
     'auto_install': False,
     'application': True,
-    'qweb': ['static/src/xml/timesheet.xml',],
 }

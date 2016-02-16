@@ -28,6 +28,5 @@ Odoo Website CMS
     'demo': [
         'data/demo.xml',
     ],
-    'qweb': ['static/src/xml/website.backend.xml'],
     'application': True,
 }

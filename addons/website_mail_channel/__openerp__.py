@@ -13,6 +13,5 @@ Odoo Mail Group : Mailing List Archives
         'views/website_mail_channel.xml',
         'views/snippets.xml',
     ],
-    'qweb': [],
     'installable': True,
 }

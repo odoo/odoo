@@ -19,7 +19,6 @@ Allows users to create custom dashboard.
         'board_mydashboard_view.xml',
         'views/board.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
     'auto_install': False,

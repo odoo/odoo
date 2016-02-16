@@ -16,6 +16,5 @@ Publish and Assign Partner
     'demo': [
         'data/res_partner_grade_demo.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

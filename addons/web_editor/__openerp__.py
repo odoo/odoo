@@ -13,8 +13,5 @@ Odoo Web Editor widget.
         'views/iframe.xml',
         'views/snippets.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'auto_install': True
 }
