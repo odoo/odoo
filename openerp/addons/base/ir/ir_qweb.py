@@ -7,6 +7,7 @@ import hashlib
 import json
 import itertools
 import logging
+import operator
 import math
 import os
 import re
@@ -34,8 +35,9 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
 from openerp.tools.misc import find_in_path
-from openerp.tools.translate import _
+from openerp.tools.translate import xml_translate, _
 from openerp.modules.module import get_resource_path
+
 
 _logger = logging.getLogger(__name__)
 
@@ -1291,15 +1293,62 @@ class AssetsBundle(object):
             return self.save_attachment('js', content)
         return attachments[0]
 
+    def xml_translations(self, modules=None, lang=None):
+        if modules is None:
+            m = self.registry.get('ir.module.module')
+            modules = [x['name'] for x in m.search_read(self.cr, openerp.SUPERUSER_ID,
+                [('state', '=', 'installed')], ['name'])]
+
+        res_lang = self.registry.get('res.lang')
+        ids = res_lang.search(self.cr, openerp.SUPERUSER_ID, [("code", "=", lang)])
+        lang_params = None
+        if ids:
+            lang_params = res_lang.read(self.cr, openerp.SUPERUSER_ID, ids[0],
+                ["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        ir_translation = self.registry.get('ir.translation')
+        translations_per_module = {}
+        messages = ir_translation.search_read(self.cr, openerp.SUPERUSER_ID, [('module', 'in', modules),
+                                            ('lang', '=', lang),
+                                            ('comments', 'like', 'openerp-web'),
+                                            ('name', '=like', lang),
+                                            ('value', '!=', '%.js'), ('value', '!=', '')],
+                                            ['module', 'src', 'value', 'lang'], order='module')
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+            translations_per_module.setdefault(mod, {'messages':[]})
+            translations_per_module[mod]['messages'].extend({'id': m['src'], 'string': m['value']} for m in msg_group)
+        return {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(res_lang.get_installed(self.cr, openerp.SUPERUSER_ID)) > 1,
+        }
+
     def xml(self, minify=True):
         inc = '' if minify else 'debug.'
-        inc += self.context.get('lang', 'en_US')
+        lang = self.context.get('lang', 'en_US')
+        inc += lang
         attachments = self.get_attachments('xml', inc=inc)
         if not attachments:
             if minify:
                 content = self.xmlsheets[0].to_js(self.xmlid, '\n\n'.join(asset.minify() for asset in self.xmlsheets))
             else:
                 content = '\n'.join(asset.to_js() for asset in self.xmlsheets)
+
+            modules = list(set([asset.url.split("/" if "/static/" in asset.url else ".", 1)[0]
+                        for asset in (self.xmlsheets + self.javascripts) if asset.url]))
+            if modules:
+                js = [
+                    'odoo.define("base.ir.translation.%s", function (require) {' % self.xmlid,
+                    '"use strict"',
+                    'var translation = require("web.translation");',
+                    '/* lang: %s, modules: %s */' % (lang, ','.join(modules)),
+                    'translation._t.database.set_bundle(%s)' % json.dumps(self.xml_translations(modules, lang)),
+                    '});'
+                ]
+                content += '\n\n' + '\n'.join(js)
+
             return self.save_attachment('xml', content, inc=inc)
         return attachments[0]
 
@@ -1584,6 +1633,38 @@ class XMLsheetAsset(WebAsset):
             return self._ir_attach['datas'].decode('utf-8')
 
         datas = super(XMLsheetAsset, self)._fetch_content()
+
+        if not self.context.get('lang'):
+            return datas
+
+        trans = {t['src']: t['value'] for t in self.registry['ir.translation'].search_read(self.cr, openerp.SUPERUSER_ID,
+            [('comments', 'like', 'openerp-web'),
+             ('type', '=', 'code'),
+             ('name', 'like', self.url),
+             ('lang', '=', self.context.get('lang'))],
+            ['src', 'value'], context=self.context, order="value ASC")}
+
+        missing_trans = set()
+        def callback(term):
+            if trans.get(term):
+                return trans[term]
+            if term not in trans and re.search(r'\w', term):
+                missing_trans.add(term)
+            return term
+        datas = xml_translate(callback, datas)
+
+        if missing_trans:
+            query = """ INSERT INTO ir_translation (lang, type, name, src, value, module, comments)
+                        SELECT l.code, 'code', %(name)s, %(src)s, %(src)s, %(module)s, 'openerp-web'
+                        FROM res_lang l
+                        WHERE l.active AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='code' AND name=%(name)s AND src=%(src)s AND module=%(module)s
+                        );
+                    """
+            for src in missing_trans:
+                self.cr.execute(query, {'name': self.url, 'src': src, 'module': self.url.split("/", 1)[0]})
+
         return datas
 
     def with_header(self, content=None):

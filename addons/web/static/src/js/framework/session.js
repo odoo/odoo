@@ -183,7 +183,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = $.when(self.load_currencies(), self.load_translations());
+            var loaded = self.load_currencies();
             var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
             var file_list = [ locale ];
             if(to_load.length) {
@@ -213,9 +213,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                         self.currencies[k.id] = {'symbol': k.symbol, 'position': k.position, 'digits': [69,k.decimal_places]};
                     });
                 });
-    },
-    load_translations: function() {
-        return _t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
         var self = this;

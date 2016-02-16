@@ -17,7 +17,6 @@ var get_context = function (dict) {
 
 var data = {
     'get_context': get_context,
-    'url_translations': '/web/webclient/translations',
 };
 
 var dom_ready = $.Deferred();

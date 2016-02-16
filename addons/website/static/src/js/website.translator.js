@@ -92,6 +92,7 @@ var TranslatorDialog = Widget.extend({
     template: 'website.TranslatorDialog',
     start: function () {
         this.$el.modal();
+        this.$('[data-oe-translation-id]').removeAttr('data-oe-translation-id').removeAttr('data-oe-model').removeAttr('data-oe-translation-state');
     },
 });
 
