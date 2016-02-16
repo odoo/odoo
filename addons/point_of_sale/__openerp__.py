@@ -53,7 +53,6 @@ Main Features
         'res_partner_view.xml',
         'res_config_view.xml',
         'views/report_statement.xml',
-        'views/report_usersproduct.xml',
         'views/report_saleslines.xml',
         'views/report_detailsofsales.xml',
         'views/report_payment.xml',
