@@ -23,6 +23,13 @@ KanbanRecord.include({
 });
 
 var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
+    init: function(parent, context) {
+        this.__quantity_listener = _.bind(this._set_quantity_listener, this);
+        BarcodeHandlerMixin.init.apply(this, arguments);
+
+        return this._super.apply(this, arguments);
+    },
+
     start: function() {
         this._super();
         this.form_view = this.field_manager;
@@ -44,7 +51,64 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             this.map_barcode_method['O-CMD.PAGER-NEXT'] = _.bind(this.form_view.pager.next, this.form_view.pager);
         }
     },
-    
+
+    _display_no_edit_mode_warning: function() {
+        this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
+    },
+
+    _display_no_last_scanned_warning: function() {
+        this.do_warn(_t('Error : No last scanned barcode'), _t('To set the quantity please scan a barcode first.'));
+    },
+
+    _set_quantity_listener: function(event) {
+        var self = this;
+        var character = String.fromCharCode(event.which);
+
+        if (this.form_view.get('actual_mode') === 'view') {
+            this._display_no_edit_mode_warning();
+        } else if ($(event.target).is('body') && /[0-9]/.test(character)) { // only catch the event if we're not focused in
+                                                                            // another field and it's a number
+            var field = this.form_view.fields[this.m2x_field];
+            var view = field.viewmanager.active_view;
+
+            if (this.last_scanned_barcode) {
+                var new_qty = window.prompt(_t('Set quantity'), character) || "0";
+                new_qty = new_qty.replace(',', '.');
+                var record = this._get_records(field).find(function(record) {
+                    return record.get('product_barcode') === self.last_scanned_barcode;
+                });
+                if (record) {
+                    var values = {};
+                    values[this.quantity_field] = parseFloat(new_qty);
+                    field.data_update(record.get('id'), values).then(function () {
+                        view.controller.reload_record(record);
+                    });
+                } else {
+                    this._display_no_last_scanned_warning();
+                }
+            } else {
+                this._display_no_last_scanned_warning();
+            }
+        }
+    },
+
+    start_listening: function() {
+        if (this.quantity_field && ! this.is_listening) {
+            core.bus.on('keypress', this, this.__quantity_listener);
+        }
+
+        BarcodeHandlerMixin.start_listening.call(this);
+    },
+
+    stop_listening: function() {
+        if (this.quantity_field && this.is_listening) {
+            core.bus.off('keypress', this, this.__quantity_listener);
+            delete this.last_scanned_barcode;
+        }
+
+        BarcodeHandlerMixin.stop_listening.call(this);
+    },
+
     // Let subclasses add custom behaviour before onchange. Must return a deferred.
     // Resolve the deferred with true proceed with the onchange, false to prevent it.
     pre_onchange_hook: function(barcode) {
@@ -53,6 +117,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
 
     on_barcode_scanned: function(barcode) {
         var self = this;
+        self.last_scanned_barcode = barcode;
         // Execute a harcoded action
         var action = this.map_barcode_method[barcode];
         if (typeof action === "function")
@@ -61,7 +126,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             return;
         // Warn the user if form view is not editable
         else if (this.form_view.get('actual_mode') === 'view')
-            this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
+            this._display_no_edit_mode_warning();
         else {
             // Call hook method possibly implemented by subclass
             this.pre_onchange_hook(barcode).then(function(proceed) {
