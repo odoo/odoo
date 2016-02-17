@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ipdb
 
 import time
 from openerp import api, fields, models, _
@@ -803,6 +804,8 @@ class AccountMoveLine(models.Model):
             raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
         #reconcile everything that can be
+        ipdb.set_trace()  ######### Break Point ###########
+        
         remaining_moves = self.auto_reconcile_lines()
 
         #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
@@ -1191,6 +1194,8 @@ class AccountPartialReconcile(models.Model):
             items is matched with the other lines to ensure having the residual amount in company currency that
             reflects perfectly the residual amount in foreign currency.
         """
+        ipdb.set_trace()  ######### Break Point ###########
+        
         for rec in self:
             if rec.currency_id and rec.debit_move_id.amount_currency and rec.credit_move_id.amount_currency:
                 #create exchange rate difference journal entry

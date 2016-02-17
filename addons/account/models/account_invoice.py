@@ -538,7 +538,32 @@ class AccountInvoice(models.Model):
         line_to_reconcile = self.env['account.move.line']
         for inv in self:
             line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
-        return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
+        if self.env.context.get('payment_difference') and line_to_reconcile and writeoff_acc_id and writeoff_journal_id:
+            payment_difference = self.env.context.get('payment_difference')
+            company_currency = line_to_reconcile[0].account_id.company_id.currency_id
+            writeoff_currency = line_to_reconcile[0].currency_id or company_currency
+            writeoff_vals = {
+                'account_id': writeoff_acc_id.id,
+                'journal_id': writeoff_journal_id.id,
+                'debit': 0.0,
+                'credit': 0.0,
+            }
+            if writeoff_currency != company_currency:
+                writeoff_vals['currency_id'] = writeoff_currency.id
+                if payment_difference > 0:
+                    writeoff_vals['credit'] = abs(writeoff_currency.compute(payment_difference, company_currency))
+                else:
+                    writeoff_vals['debit'] = abs(writeoff_currency.compute(payment_difference, company_currency))
+                sign = 1 if writeoff_vals['debit'] > 0 else -1
+                writeoff_vals['amount_currency'] = sign * payment_difference
+            else:
+                if payment_difference > 0:
+                    writeoff_vals['credit'] = abs(payment_difference)
+                else:
+                    writeoff_vals['debit'] = abs(payment_difference)
+            writeoff = line_to_reconcile._create_writeoff(writeoff_vals)
+
+        return (line_to_reconcile + writeoff + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.v7
     def assign_outstanding_credit(self, cr, uid, id, credit_aml_id, context=None):
