@@ -5,10 +5,10 @@ import re
 import string
 
 from lxml.html import parse
-from urllib import urlencode
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
+from werkzeug import url_encode
 
 from openerp import models, fields, api, _
 
@@ -101,7 +101,7 @@ class link_tracker(models.Model):
             if attr:
                 utms[key] = attr
 
-        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, urlencode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, url_encode(utms), parsed.query, parsed.fragment)
 
     @api.model
     @api.depends('url')

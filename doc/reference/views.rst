@@ -862,6 +862,8 @@ Possible children of the view element are:
     a :meth:`~openerp.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
+  ``formats``
+    the :js:class:`web.formats` module to manipulate and convert values
   ``read_only_mode``
     self-explanatory
 
@@ -1013,26 +1015,40 @@ take the following attributes:
   and the end date will be set to the start date
 ``date_delay``
   name of the field providing the duration of the event
-``progress``
-  name of a field providing the completion percentage for the record's event,
-  between 0 and 100
+``duration_unit``
+  one of ``minute``, ``hour`` (default), ``day``, ``week``, ``month``, ``year``
+
 ``default_group_by``
   name of a field to group tasks by
-``fold_last_level``
-  If a value is set, the last grouping level is folded
-``round_dnd_dates``
-  enables rounding the task's start and end dates to the nearest scale marks
+``type``
+  ``gantt`` classic gantt view (default)
+
+  ``consolidate`` values of the first children are consolidated in the gantt's task
+  
+  ``planning`` children are displayed in the gantt's task
 ``consolidation``
   field name to display consolidation value in record cell
 ``consolidation_max``
   dictionary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
+  (e.g. ``{"user_id": 100}``)
+
+  .. warning::
+      The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
+      not a valid value
+``consolidation_label``
+  string to display next to the consolidation value, if not specified, the label
+  of the consolidation field will be used
+``fold_last_level``
+  If a value is set, the last grouping level is folded
+``round_dnd_dates``
+  enables rounding the task's start and end dates to the nearest scale marks
+
+.. ``progress``
+    name of a field providing the completion percentage for the record's event,
+    between 0 and 100
 .. consolidation_exclude
 .. consolidation_color
-..  ``type``
-      ``gantt`` classic gantt view (default)
-      ``consolidate`` values of the first children are consolidated in the gantt's task
-      ``planning`` children are displayed in the gantt's task
 
 .. _reference/views/diagram:
 

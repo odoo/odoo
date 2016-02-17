@@ -653,25 +653,24 @@ class AccountTax(models.Model):
             else:
                 tax_amount = currency.round(tax_amount)
 
-            if tax_amount:
-                if tax.price_include:
-                    total_excluded -= tax_amount
-                    base -= tax_amount
-                else:
-                    total_included += tax_amount
+            if tax.price_include:
+                total_excluded -= tax_amount
+                base -= tax_amount
+            else:
+                total_included += tax_amount
 
-                if tax.include_base_amount:
-                    base += tax_amount
+            if tax.include_base_amount:
+                base += tax_amount
 
-                taxes.append({
-                    'id': tax.id,
-                    'name': tax.name,
-                    'amount': tax_amount,
-                    'sequence': tax.sequence,
-                    'account_id': tax.account_id.id,
-                    'refund_account_id': tax.refund_account_id.id,
-                    'analytic': tax.analytic,
-                })
+            taxes.append({
+                'id': tax.id,
+                'name': tax.name,
+                'amount': tax_amount,
+                'sequence': tax.sequence,
+                'account_id': tax.account_id.id,
+                'refund_account_id': tax.refund_account_id.id,
+                'analytic': tax.analytic,
+            })
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),

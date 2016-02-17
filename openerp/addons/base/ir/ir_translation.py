@@ -9,7 +9,7 @@ from openerp import api, tools, SUPERUSER_ID
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -546,7 +546,7 @@ class ir_translation(osv.osv):
                     value1 = field.translate({trans.src: trans.value}.get, value0)
                     value2 = field.translate({trans.value: trans.src}.get, value1)
                     if value2 != value0:
-                        raise ValueError(_("Translation is not valid:\n%s") % trans.value)
+                        raise ValidationError(_("Translation is not valid:\n%s") % trans.value)
 
     @api.model
     def create(self, vals):
@@ -660,7 +660,7 @@ class ir_translation(osv.osv):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
             'view_id': self.env.ref('base.view_translation_dialog_tree').id,
-            'target': 'new',
+            'target': 'current',
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }

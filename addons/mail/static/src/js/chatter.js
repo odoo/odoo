@@ -33,7 +33,6 @@ var Followers = form_common.AbstractField.extend({
         this.image = this.node.attrs.image || 'image_small';
         this.comment = this.node.attrs.help || false;
         this.ds_model = new data.DataSetSearch(this, this.view.model);
-        this.ds_users = new data.DataSetSearch(this, 'res.users');
 
         this.value = [];
         this.followers = [];
@@ -191,23 +190,9 @@ var Followers = form_common.AbstractField.extend({
     fetch_followers: function (value_) {
         this.value = value_ || [];
         return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
-            .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
+            .then(this.proxy('display_followers'), this.proxy('display_generic'))
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
-    },
-
-    /** Read on res.partner failed: fall back on a generic case
-        - fetch current user partner_id (call because no other smart solution currently) FIXME
-        - then display a generic message about followers */
-    fetch_generic: function () {
-        var self = this;
-
-        return this.ds_users.call('read', [[session.uid], ['partner_id']])
-            .then(function (results) {
-                var pid = results[0].partner_id[0];
-                self.message_is_follower = (_.indexOf(self.value, pid) !== -1);
-            })
-            .then(self.proxy('display_generic'));
     },
 
     _format_followers: function (count){
@@ -222,9 +207,11 @@ var Followers = form_common.AbstractField.extend({
         return str;
     },
 
-    /* Display generic info about follower, for people not having access to res_partner */
+    /** Read on res.partner failed: only display the number of followers */
     display_generic: function () {
-        this.$('.o_followers_list').empty();
+        this.$('.o_followers_actions').hide();
+        this.$('.o_followers_list').hide();
+        this.$('.o_followers_title_box > button').prop('disabled', true);
         this.$('.o_followers_count').html(this._format_followers(this.value.length));
     },
 

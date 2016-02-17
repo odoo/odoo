@@ -3,13 +3,14 @@
 # * base_action_rule
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-02 21:36+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-02-07 13:41+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,18 +21,18 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr ""
+msgstr "<b>Prosím vyberte typ dokumentu pred nastavením podmienok.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
-msgstr ""
+msgstr "Pravidlo akcie"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Test pravidla akcie"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -52,7 +53,7 @@ msgstr "Aktívny"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
 msgid "Add Followers"
-msgstr ""
+msgstr "Pridať odberateľov"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -63,22 +64,22 @@ msgstr "Automatizované akcie"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Založené na úprave formulára"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "Založené na časovanej podmienke"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Pred aktualizáciou domény"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Pred aktualizáciou filtra"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -93,7 +94,7 @@ msgstr "Zaškrtnite toto pole, pokiaľ je kontakt zákazník."
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "Kliknite pre nastavenie nového automatizovaného pravidla akcie."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -103,7 +104,7 @@ msgstr "Uzavreté"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Čiarkami oddelený zoznam názvov polí, ktoré spúšťajú zmenu."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -134,7 +135,7 @@ msgstr "Dní"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Meškanie po Dátume spustenia"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
@@ -142,17 +143,17 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "Meškanie po dátume spustenia. Môžete zadať záporné číslo ak potrebujete zdržanie pred dátumom spustenia, ako poslať pripomienku 15 min pred stretnutím."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Meškanie po dátume spustenia"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range_type
 msgid "Delay type"
-msgstr ""
+msgstr "Typ meškania"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
@@ -168,12 +169,12 @@ msgstr "Doména"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Príklady: emailové pripomienky, volacie služby, atď."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Fields to Change"
-msgstr ""
+msgstr "Polia na zmenenie"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
@@ -183,7 +184,7 @@ msgstr "Filter"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu pravidiel."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -191,7 +192,7 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
+msgstr "Choďte na vašu stránku \"Modul súvisiaceho dokumentu\" a nastavte parametre filtra v zobrazení \"Vyhľadávanie\" (Príklad filtra založeného na Iniciatívach/Príležitostiach: Dátum vytvorenia \"sa rovná\" 01/01/2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -210,7 +211,7 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "Ak prítomné, táto podmienka musí byť naplnená pred vykonaním pravidla akcie."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -218,7 +219,7 @@ msgstr ""
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "Ak prítomné, táto podmienka musí byť naplnená pred aktualizáciou záznamu."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -231,7 +232,7 @@ msgid ""
 "In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr ""
+msgstr "V tomto istom zobrazení \"Vyhľadávanie\", zvoľte menu \"Uložiť aktuálny filter\", zadajte názov (napr. Vytvoriť 01/01/2012) a pridajte možnosť \"Zdielať so všetkými používateľmi\""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -252,7 +253,7 @@ msgstr "Posledná modifikácia"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
 msgid "Last Run"
-msgstr ""
+msgstr "Naposledy spustené"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
@@ -289,27 +290,27 @@ msgstr "Nové"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Spustenie na poliach zmeny"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation"
-msgstr ""
+msgstr "Pri vytvorení"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "Pri vytvorení & Aktualizácii"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Pri zmazaní"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Update"
-msgstr ""
+msgstr "Pri aktualizácii"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
@@ -341,7 +342,7 @@ msgstr "Meno pravidla"
 msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
-msgstr ""
+msgstr "Vyberte kedy má byť akcia spustená, a zvoľte záznamy a/alebo časové podmienky."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -357,17 +358,17 @@ msgstr "Akcie servera"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Server actions to run"
-msgstr ""
+msgstr "Serverové akcie na spustenie"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
 msgid "Set Responsible"
-msgstr ""
+msgstr "Nastaviť zodpovedného"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Nastaviť výber založený na filtri vyhľadávania :"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -382,17 +383,17 @@ msgstr "Predmet"
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "Testovacia iniciatíva v stave 'hotové'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "Testovacia iniciatíva v stave 'koncept'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "Testovacia iniciatíva v stave 'otvorené'"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -402,7 +403,7 @@ msgstr "Dátum spúštača"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Použiť kalendár"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -412,35 +413,35 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "Používajte automatické akcie, ktoré automaticky spustia akcie pre \nrôzne obrazovky. Príklad: Iniciatíva vytvorená konkrétnym užívateľom môže \nbyť automaticky nastavené na špecifický predajný tím, alebo \npríležitosť ktorá má stále status nevybavené po 14 dňoch by mohla \nspustiť automatický pripomienkový e-mail."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "Pri výpočte podmienky založenej na dennej báze, je možné použiť kalendár pre výpočet dátumu na základe pracovných dní."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "Kedy by mala byť podmienka spustená. Ak prítomné, bude skontrolované plánovačom. Ak prázdne, bude skontrolované pri vytvorení a aktualizácii."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
 msgid "When to Run"
-msgstr ""
+msgstr "Kedy spustiť"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Ak nezaškrtnuté, pravidlo je skryté a nebude vykonané."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr ""
+msgstr "Môžete použiť tiež filtre namiesto vyberania záznamov. Aby ste mohli vytvoriť nový filter:"
