@@ -9,6 +9,7 @@ var data = require('web.data');
 var form_common = require('web.form_common');
 var Pager = require('web.Pager');
 var View = require('web.View');
+var ajax = require('web.ajax');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -33,7 +34,15 @@ var DiagramView = View.extend({
     },
 
     view_loading: function(r) {
-        return this.load_diagram(r);
+        if (window.Raphael) {
+            return this.load_diagram(r);
+        }
+        var self = this;
+        return $.when(
+            ajax.loadJS('/web_diagram/static/lib/js/jquery.mousewheel.js'),
+            ajax.loadJS('/web_diagram/static/lib/js/raphael.js')).then(function () {
+                return self.load_diagram(r);
+            });
     },
 
     toTitleCase: function(str) {
