@@ -158,16 +158,26 @@ class ir_import(orm.TransientModel):
         return fields
 
     def _read_file(self, file_type, record, options):
+        # try reading with user-provided mimetype
         (file_extension, handler, req) = FILE_TYPE_DICT.get(file_type, (None, None, None))
         if handler:
-            return getattr(self, '_read_' + file_extension)(record, options)
+            try:
+                return getattr(self, '_read_' + file_extension)(record, options)
+            except Exception:
+                _logger.warn("Failed to read file '%s' (transient id %d) using user-provided mimetype %s",
+                             record.file_name or '<unknown>', record.id, file_type)
+
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
         # leading to browser not sending mime types)
         if record.file_name:
             p, ext = os.path.splitext(record.file_name)
-            if ext and EXTENSIONS.get(ext):
-                return getattr(self, '_read_' + ext[1:])(record, options)
+            if ext in EXTENSIONS:
+                try:
+                    return getattr(self, '_read_' + ext[1:])(record, options)
+                except Exception:
+                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension",
+                                 record.file_name, record.id)
 
         if req:
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
