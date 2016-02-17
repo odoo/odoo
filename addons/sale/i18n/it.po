@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-01 17:56+0000\n"
+"PO-Revision-Date: 2016-02-12 10:21+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -268,7 +268,7 @@ msgstr "Riga contabilità analitica"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
 msgid "Analytic accounting for sales"
-msgstr "Contabilità analitiche su vendite"
+msgstr "Contabilità analitica sulle vendite"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -847,7 +847,7 @@ msgstr "Fatturazione"
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Politica di fatturazione"
+msgstr "Metodo di fatturazione"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1125,6 +1125,12 @@ msgstr "Termine di pagamento"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Definire un sezionale vendite per questa società."
+
+#. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:654

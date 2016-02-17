@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-15 08:00+0000\n"
+"PO-Revision-Date: 2016-02-10 10:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -840,6 +840,7 @@ msgstr "发票将被创建为草稿以便你在验证前能更新它们。"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "开票"
@@ -1126,6 +1127,12 @@ msgstr "付款条款"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "请为本公司定义一个会计销售科目。"
+
+#. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:654
