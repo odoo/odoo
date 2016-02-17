@@ -9,8 +9,42 @@ class Rating(models.Model):
     _order = 'write_date desc'
     _rec_name = 'res_name'
     _sql_constraints = [
-        ('rating_range', 'check(rating >= -1 and rating <= 10)', 'Rating should be between -1 to 10'),
+        ('rating_range', 'check(rating >= 0 and rating <= 10)', 'Rating should be between 0 to 10'),
     ]
+
+    @api.one
+    @api.depends('res_model', 'res_id')
+    def _compute_res_name(self):
+        name = self.env[self.res_model].sudo().browse(self.res_id).name_get()
+        self.res_name = name and name[0][1] or ('%s/%s') % (self.res_model, self.res_id)
+
+    res_name = fields.Char(string='Resource Name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
+    res_model = fields.Char(string='Document Model', required=True, help="Model name of the rated object", index=True)
+    res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
+    rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated resource")
+    partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
+    rating = fields.Float(string="Rating", group_operator="avg", help="Rating value")
+    feedback = fields.Text('Feedback reason', help="Reason of the rating")
+
+    message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
+
+    @api.one
+    def reset(self):
+        self.write({
+            'rating': 0,
+            'feedback': False
+        })
+
+
+class RatingToken(models.TransientModel):
+    _name = "rating.token"
+    _description = "Token of rating"
+    _rec_name = 'res_name'
+
+    # Clear access tokens older than 1 month
+    def _register_hook(self, cr):
+        cls = type(self)
+        cls._transient_max_hours = 720.0  # 30 Days * 24 Hours = 720 Hours
 
     @api.one
     @api.depends('res_model', 'res_id')
@@ -27,19 +61,8 @@ class Rating(models.Model):
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating", group_operator="avg", default=-1, help="Rating value")
-    feedback = fields.Text('Feedback reason', help="Reason of the rating")
+    rating_id = fields.Many2one('rating.rating', string='Rating')
     access_token = fields.Char(string='Security Token', default=new_access_token, help="Access token to set the rating of the value")
-
-    message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
-
-    @api.one
-    def reset(self):
-        self.write({
-            'rating': -1,
-            'access_token': self.new_access_token(),
-            'feedback' : False
-        })
 
 
 class RatingMixin(models.AbstractModel):
@@ -55,7 +78,7 @@ class RatingMixin(models.AbstractModel):
         read_group_res = self.env['rating.rating'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids)], ['res_id'], groupby=['res_id'])
         result = dict.fromkeys(self.ids, 0)
         for data in read_group_res:
-            result[data['res_id'][0]] += data['__count']
+            result[data['res_id']] += data['res_id_count']
         for record in self:
             record.rating_count = result[record.id]
 
@@ -65,8 +88,9 @@ class RatingMixin(models.AbstractModel):
         creates empty rating objects or search existing one to reset and resue
         depending on the reuse_rating parameter. """
         ratings = self.env['rating.rating']
+        Token = self.env['rating.token']
         if not rated_partner_id.email or not partner_id.email:
-            return ratings
+            return Token
         for record in self:
             values = {
                 'res_model': self._name,
@@ -78,11 +102,11 @@ class RatingMixin(models.AbstractModel):
             if reuse_rating:
                 rating = ratings.search([('res_id', '=', record.id), ('res_model', '=', self._name), ('partner_id', '=', partner_id.id)], limit=1)
             if rating:
+                values['rating_id'] = rating.id
                 rating.reset()
-            else:
-                rating = ratings.create(values)
-            ratings |= rating
-        return ratings
+            token = Token.create(values)
+            Token |= token
+        return Token
 
     def _rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
@@ -90,8 +114,8 @@ class RatingMixin(models.AbstractModel):
         return self.env['res.partner']
 
     def _rating_get_rated_partner_id(self):
-        if hasattr(self, 'user_id') and self.user_idpartner_id:
-            return self.user_idpartner_id
+        if hasattr(self, 'user_id') and self.user_id.partner_id:
+            return self.user_id.partner_id
         return self.env['res.partner']
 
     @api.multi
@@ -102,31 +126,46 @@ class RatingMixin(models.AbstractModel):
             partner_id = self._rating_get_partner_id()
         if rated_partner_id is None:
             rated_partner_id = self._rating_get_rated_partner_id()
-        ratings = self.rating_get_request(partner_id, rated_partner_id, reuse_rating=reuse_rating)
-        for rating in ratings:
-            template.send_mail(rating.id, force_send=True)
+        tokens = self.rating_get_request(partner_id, rated_partner_id, reuse_rating=reuse_rating)
+        for token in tokens:
+            template.send_mail(token.id, force_send=True)
 
     @api.multi
-    def rating_apply(self, rate, token=None):
+    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         """ Apply a rating given a token. If the current model inherits from
         mail.thread mixing, a message is posted on its chatter.
 
         :param rate : the rating value to apply
         :type rate : float
         :param token : access token
+        :param feedback : additional feedback
+        :type feedback : string
+        :param subtype : subtype for mail
+        :type subtype : string
         :returns rating.rating record
         """
+        Rating, rating = self.env['rating.rating'], None
         if token:
-            rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
+            token_rec = self.env['rating.token'].search([('access_token', '=', token)], limit=1)
+            if token_rec.rating_id:
+                rating = token_rec.rating_id
+            else:
+                rating = Rating.create({
+                        'res_model': token_rec.res_model,
+                        'res_id': token_rec.res_id,
+                        'partner_id': token_rec.partner_id.id,
+                        'rated_partner_id': token_rec.rated_partner_id.id
+                    })
+                token_rec.rating_id = rating
         else:
-            rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
+            rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
-            rating.write({'rating': rate})
+            rating.write({'rating': rate, 'feedback': feedback})
             if hasattr(self, 'message_post'):
                 self.message_post(
-                    body="%s %s <br/><img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>"
-                    % (rating.sudo().partner_id.name, _('rated it'), rate),
-                    subtype='mail.mt_comment',
+                    body="<img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>%s"
+                    % (rate, '<br/>' + feedback if feedback else ''),
+                    subtype=subtype or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
@@ -149,12 +188,12 @@ class RatingMixin(models.AbstractModel):
                 otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
                 containing the same dict if add_stats was False.
         """
-        base_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 0)]
+        base_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 1)]
         if domain:
             base_domain += domain
         data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
-        # init dict with all posible rate value, except -1 (no value for the rating)
-        values = dict.fromkeys(range(11), 0)
+        # init dict with all posible rate value, except 0 (no value for the rating)
+        values = dict.fromkeys(range(1, 11), 0)
         values.update((d['rating'], d['rating_count']) for d in data)
         # add other stats
         if add_stats:
@@ -200,7 +239,7 @@ class RatingMixin(models.AbstractModel):
         result = {
             'avg': data['avg'],
             'total': data['total'],
-            'percent': dict.fromkeys(range(11), 0),
+            'percent': dict.fromkeys(range(1, 11), 0),
         }
         for rate in data['repartition']:
             result['percent'][rate] = (data['repartition'][rate] * 100) / data['total'] if data['total'] > 0 else 0

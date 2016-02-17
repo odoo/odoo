@@ -52,7 +52,7 @@
                                         <templates>
                                             <t t-name="kanban-box">
                                                 <div class="oe_group_details" style="min-height: 40px">
-                                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value and record.rating.raw_value or 0}.png" class="oe_kanban_image" style="float:left; margin-right: 10px;"/>
+                                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value and record.rating.raw_value or 1}.png" class="oe_kanban_image" style="float:left; margin-right: 10px;"/>
                                                     <span t-if="record.feedback.raw_value">
                                                         <t t-esc="record.feedback.raw_value"/>
                                                     </span>
