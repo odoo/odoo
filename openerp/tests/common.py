@@ -132,10 +132,8 @@ class BaseCase(unittest.TestCase):
             return self._assertRaises(exception)
 
     def shortDescription(self):
-        doc = self._testMethodDoc or None
-        if doc is None:
-            return None
-        return ' '.join(filter(None, map(str.strip, doc.splitlines())))
+        doc = self._testMethodDoc
+        return doc and ' '.join(filter(None, map(str.strip, doc.splitlines()))) or None
 
 
 class TransactionCase(BaseCase):
