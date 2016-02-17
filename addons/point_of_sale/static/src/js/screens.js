@@ -1962,6 +1962,7 @@ return {
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
     ProductListWidget: ProductListWidget,
+    ClientListScreenWidget: ClientListScreenWidget,
 };
 
 });

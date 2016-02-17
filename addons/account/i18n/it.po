@@ -7,6 +7,7 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2015
 # Liliana Stronciu <liliana.stronciu@aeromnia.aero>, 2016
 # Luca Tralli, 2015
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
 # Monica Parvanova <monicaparvanova@gmail.com>, 2015
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # tom becca <tombecc@hotmail.com>, 2016
@@ -15,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-02 10:08+0000\n"
+"PO-Revision-Date: 2016-02-12 10:46+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -416,7 +417,7 @@ msgstr "<strong>Bilancio :</strong>"
 msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement importation."
-msgstr "<strong>Interfaccia bancario:</strong> con questa funzione è possibile sincronizzare i dati bancari e importare l'estratto conto bancario."
+msgstr "<strong>Interfaccia bancaria:</strong> con questa funzione è possibile sincronizzare i dati bancari e importare gli estratti conto bancari."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -935,7 +936,7 @@ msgstr "Conto di debito"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
-msgstr "Proprietà dell'account"
+msgstr "Impostazioni contabili"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_receivable_id
@@ -1420,7 +1421,7 @@ msgstr "Consenti valute multiple"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_proforma_invoices
 msgid "Allow pro-forma invoices"
-msgstr "Consentire fatture proforma"
+msgstr "Consenti fatture pro-forma"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
@@ -1646,9 +1647,8 @@ msgstr "Richiesta Nota di Credito"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Asset management: questo modulo consente la gestione dei beni di proprietà di una società o di una persona. Tiene traccia del'ammortamento di tali beni e crea le relative scritture.\n\nRiconoscimento dei ricavi: questo permette di gestire la rilevazione dei ricavi nella vendita di prodotti. Tiene traccia della quota dei ricavi da riconoscere e crea le rispettive scritture.\n\n- Questo installa il modulo account_asset. Se non si seleziona questa casella, sarà possibile eseguire fatturazione e pagamenti ma non la contabilità (scritture contabili, piano dei conti, ...)"
+msgstr "Asset management: questo modulo consente la gestione dei beni di proprietà di una società o di una persona. Tiene traccia del'ammortamento di tali beni e crea le relative scritture.\n\n- Questo installa il modulo account_asset. Se non si seleziona questa casella, sarà possibile eseguire fatturazione e pagamenti ma non la contabilità (scritture contabili, piano dei conti, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1657,8 +1657,8 @@ msgstr "Immobilizzazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Gestione asset e riconoscimento dei ricavi"
+msgid "Assets management"
+msgstr "Gestione Immobilizzazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1800,7 +1800,7 @@ msgstr "Spese bancarie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_yodlee
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr "Interfaccia bancario - Sincronizza i dati bancari automaticamente"
+msgstr "Interfaccia bancaria - Sincronizza i dati bancari automaticamente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
@@ -3024,7 +3024,7 @@ msgstr "Note di Credito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
 msgid "Customer Taxes"
-msgstr "Imposte Cliente"
+msgstr "Imposte cliente"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3147,17 +3147,17 @@ msgstr "Conto predefinito di debito"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_default_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "Imposta di default per gli acquisti"
+msgstr "Imposta predefinita di acquisto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_default_sale_tax_id
 msgid "Default Sale Tax"
-msgstr "Imposta di default per le vendite"
+msgstr "Imposta predefinita di vendita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_id
 msgid "Default Sales Tax"
-msgstr "Imposta di default per le vendite"
+msgstr "Imposta predefinita di vendita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tax_ids
@@ -3170,7 +3170,7 @@ msgstr "Imposte predefinite"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_id
 msgid "Default company currency"
-msgstr "Valuta di default aziendale"
+msgstr "Valuta aziendale predefinita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_id
@@ -3180,7 +3180,7 @@ msgstr "Tassa di default sugli acquisti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_id
 msgid "Default sale tax"
-msgstr "Imposta sulle vendite di default"
+msgstr "Imposta predefinita di vendita"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_bank_account_code_prefix
@@ -3677,7 +3677,7 @@ msgstr "Spesa"
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_expense_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Expense Account"
-msgstr "Conto di Costo"
+msgstr "Conto di costo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_id
@@ -4002,7 +4002,7 @@ msgstr "Generare scritture delle imposte in base al principio di cassa durante l
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports
 msgid "Get dynamic accounting reports"
-msgstr "Genera report di contabilità dinamici"
+msgstr "Report di contabilità dinamici"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4382,12 +4382,12 @@ msgstr "Pagamento immediato"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_qif
 msgid "Import .qif files"
-msgstr "Importa file .qif"
+msgstr "Importa file in formato .qif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
-msgstr "Importa in formato .ofx"
+msgstr "Importa file in formato .ofx"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4399,7 +4399,7 @@ msgstr "Importa usando il tasto \"Importa\" in alto a sinistra di"
 msgid ""
 "Importing your statements in via a supported file format (QIF, OFX, CODA or "
 "CSV format)"
-msgstr "Importa l'estratto conto nei formati supportati  (QIF, OFX, CODA o CSV)"
+msgstr "Importa estratti conto nei formati supportati  (QIF, OFX, CODA o CSV)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5304,7 +5304,7 @@ msgstr "Data blocco per non-consulenti"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Lock Entries"
-msgstr "Blocca le scritture"
+msgstr "Blocco scritture"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5808,7 +5808,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr "Odoo crea automaticamente la scrittura per il documento contabile: fattura, nota di credito, pagamento fornitore, estratto conto bancario, etc. In questo modo, è solo necessario registrare manualmente solo/principalmente le rimanenti operazioni."
+msgstr "Odoo crea automaticamente le scritture per i documenti contabili: fatture, note di credito, pagamenti a fornitore, etc. In questo modo, è necessario registrare manualmente solo le operazioni rimanenti."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6444,7 +6444,7 @@ msgstr "Lunghezza periodo (giorni)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_plaid
 msgid "Plaid Connector"
-msgstr "Connettore"
+msgstr "Connettore con Plaid"
 
 #. module: account
 #: model:ir.model,name:account.model_web_planner
@@ -8418,7 +8418,7 @@ msgstr "Questo termine di pagamento verrà usato al posto di quello di default p
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_purchase_tax_id
 msgid "This purchase tax will be assigned by default on new products."
-msgstr "Questa imposta sugli acquisti sarà assegnata di default sui nuovi prodotti."
+msgstr "Questa imposta di acquisto sarà assegnata automaticamente ai nuovi prodotti."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8429,7 +8429,7 @@ msgstr "Questo ruolo è adeguato per gestire le operazioni contabili giornaliere
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
 msgid "This sale tax will be assigned by default on new products."
-msgstr "Questa imposta sulle vendite sarà assegnata di default sui nuori prodotti."
+msgstr "Questa imposta di vendita sarà assegnata automaticamente ai nuovi prodotti."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_account_id
@@ -8922,7 +8922,7 @@ msgstr "Fattura fornitore"
 #: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
-msgstr "Fatture fornitori"
+msgstr "Fatture Fornitori"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9121,7 +9121,7 @@ msgstr "Spuntare la casella se la registrazione e' in contestazione con il partn
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "                what you purchased or received."
-msgstr "E' possibile controllare la fattura dal fornitore in base a cosa si è comprato o ricevuto."
+msgstr "E' possibile gestire le fatture a fornitori in base a cosa si è stato comprato o ricevuto."
 
 #. module: account
 #: code:addons/account/models/res_config.py:229
