@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-29 21:12+0000\n"
+"PO-Revision-Date: 2016-02-13 16:55+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1647,9 +1647,8 @@ msgstr "Запросить возврат"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Управление активами: позволяет управлять активами, принадлежащими компании или человеку. Следит за амортизацией активов, и генерирует движения по счёту для позиций амортизации.\nДетектирование дохода: позволяет управлять распознаванием дохода для продаваемого товара. Следит за поступлениями партий товара, для которого включено детектирование дохода, и генерирует движения по счёту для этих позиций.\n- Устанавливает модуль account_asset. Если данный флажок не установлен, вы сможете выставлять и оплачивать счета, но бухучет (журналы, планы счетов, ...) будет недоступен."
+msgstr "Управление активами: позволяет управлять активами, принадлежащими компании или человеку. Отслеживает амортизацию произошедшую по таким активам, и создает движения по счёту для этих позиций амортизации.\n\n- Это устанавливает модуль account_asset. Если данный флажок не установлен, вы сможете выставлять и оплачивать счета-фактуры, но нет бухгалтерского учета (Записи Журнала, План Счетов, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1658,8 +1657,8 @@ msgstr "Основные средства"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Управление активами & признание Дохода"
+msgid "Assets management"
+msgstr "Управление активами"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -5404,7 +5403,7 @@ msgstr "Март"
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
 msgid "Mark invoice as fully paid"
-msgstr "Отметить счет как полностью оплаченный"
+msgstr "Отметить счет-фактуру как полностью оплаченную"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids

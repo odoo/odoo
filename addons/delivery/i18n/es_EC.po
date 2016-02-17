@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-20 12:32+0000\n"
+"PO-Revision-Date: 2016-02-12 07:51+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -968,7 +968,7 @@ msgstr "Tiempo de vida producto"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_manager
 msgid "Product Manager"
-msgstr "Responsable de producto"
+msgstr "Gerente de producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
@@ -1136,6 +1136,14 @@ msgstr "Configurar precio"
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Porte enviado al tranposrte %s para expedición con número de seguimiento %s"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "El método de entrega no tiene ninguna redirección en el sitio del proveedor de mensajería para realizar un seguimiento de este orden."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price

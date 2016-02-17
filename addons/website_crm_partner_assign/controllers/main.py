@@ -131,7 +131,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'searches': post,
             'search_path': "%s" % werkzeug.url_encode(post),
         }
-        return request.website.render("website_crm_partner_assign.index", values)
+        return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)
+
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
