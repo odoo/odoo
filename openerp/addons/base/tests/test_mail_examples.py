@@ -107,11 +107,7 @@ QUOTE_BLOCKQUOTE_IN = ["""<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_j
 QUOTE_BLOCKQUOTE_OUT = ["""-- 
 Opener B.V. - Business solutions driven by open source collaboration
 
-Stefan Rijnhart - Consultant/developer
-
-mail: <a class="moz-txt-link-abbreviated" href="mailto:stefan@opener.am">stefan@opener.am</a>
-tel: +31 (0) 20 3090 139
-web: <a class="moz-txt-link-freetext" href="https://opener.am">https://opener.am</a"""]
+Stefan Rijnhart - Consultant/developer"""]
 
 
 QUOTE_THUNDERBIRD_HTML = """<html>
@@ -174,7 +170,10 @@ To: tartelette@example.com grosbedon@example.com<br><br>
 </div>-- <br><div class="ecxgmail_signature">
 Raoul Poilvache</div>
 </div></div></div></body></html>"""
-
+QUOTE_HOTMAIL_HTML_IN = ["""I don't like that.<br><br>"""]
+QUOTE_HOTMAIL_HTML_OUT = [
+    """<hr id="stopSpelling" data-o-mail-quote="1">""",
+    """<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>"""]
 
 QUOTE_THUNDERBIRD_1 = """<div>On 11/08/2012 05:29 PM,
       <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
@@ -284,9 +283,9 @@ GMAIL_1_IN = ['Ok for me. I am replying directly in gmail, without signature.', 
 GMAIL_1_OUT = []
 
 HOTMAIL_1 = """<div>
-    <div dir="ltr"><br>&nbsp;
+    <div dir="ltr"><br>
         I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly.
-        <br>&nbsp;<br>Kindest regards,<br>xxx<br>
+        <br><br>Kindest regards,<br>xxx<br>
         <div>
             <div id="SkyDrivePlaceholder">
             </div>
@@ -310,10 +309,17 @@ HOTMAIL_1 = """<div>
         </div>
     </div>
 </div>"""
-
-HOTMAIL_1_IN = ["I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly."]
-HOTMAIL_1_OUT = ["Subject: Re: your OpenERP.com registration", " I noticed you recently created an OpenERP.com account to access OpenERP Apps.",
-    "We would like to know more about your your business needs and requirements", "Belgium: +32.81.81.37.00"]
+HOTMAIL_1_IN = ["""<div dir="ltr"><br>
+        I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly.
+        <br><br>Kindest regards,<br>xxx<br>"""]
+HOTMAIL_1_OUT = [
+    """<hr id="stopSpelling" data-o-mail-quote="1">""",
+    """<pre data-o-mail-quote="1">
+                <a href="http://openerp.com" target="_blank" data-o-mail-quote="1">http://openerp.com</a>
+                Belgium: +32.81.81.37.00
+                U.S.: +1 (650) 307-6736
+                India: +91 (79) 40 500 100
+            </pre>"""]
 
 MSOFFICE_1 = """
 <div>
@@ -420,235 +426,6 @@ MSOFFICE_1 = """
 MSOFFICE_1_IN = ['Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module.']
 MSOFFICE_1_OUT = ['I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.', 'Belgium: +32.81.81.37.00']
 
-MSOFFICE_2 = """
-<div>
-  <div class="WordSection1">
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Nicolas,</span></p><p></p>
-    <p></p>
-    <p class="MsoNormal" style="text-indent:.5in">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">We are currently investigating the possibility of moving away from our current ERP </span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-      
-    <p></p>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Thank You</span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Matt</span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-      
-    <p></p>
-    <div>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Raoul Petitpoil</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Poil Industries</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Information Technology</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">920 Super Street</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Sanchez, Pa 17046 USA</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Tel: xxx.xxx</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Fax: xxx.xxx</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Email: </span>
-        <a href="mailto:raoul@petitpoil.com">
-          <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue">raoul@petitpoil.com</span>
-        </a>
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-          </span></p><p></p>
-        
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.poilindustries.com</span></p><p></p>
-      <p></p>
-      <p class="MsoNormal">
-        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.superproducts.com</span></p><p></p>
-      <p></p>
-    </div>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-      
-    <p></p>
-    <div>
-      <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in 0in 0in">
-        <p class="MsoNormal">
-          <b>
-            <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">From:</span>
-          </b>
-          <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Sent:</b> Wednesday, April 17, 2013 1:31 PM<br><b>To:</b> Matt Witters<br><b>Subject:</b> Re: your OpenERP.com registration</span></p><p></p>
-        <p></p>
-      </div>
-    </div>
-    <p class="MsoNormal"></p>
-    <p>&nbsp;</p>
-    <p>Hello Raoul Petitpoil, </p>
-    <p></p>
-    <p>I noticed you recently downloaded OpenERP. </p>
-    <p></p>
-    <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ? </p>
-    <p></p>
-    <p>Best regards, </p>
-    <p></p>
-    <pre>      <p>&nbsp;</p>
-    </pre>
-    <pre>--<p></p></pre>
-    <pre>Nicolas<p></p></pre>
-    <pre>      <a href="http://openerp.com">http://openerp.com</a>
-      <p></p>
-    </pre>
-    <pre>Belgium: +32.81.81.37.00<p></p></pre>
-    <pre>U.S.: +1 (650) 307-6736<p></p></pre>
-    <pre>India: +91 (79) 40 500 100<p></p></pre>
-    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <p></p></pre>
-  </div>
-</div>"""
-
-MSOFFICE_2_IN = ['We are currently investigating the possibility']
-MSOFFICE_2_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']
-
-MSOFFICE_3 = """<div>
-  <div class="WordSection1">
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Hi Nicolas&nbsp;!</span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-      
-    <p></p>
-    <p class="MsoNormal">
-      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Yes I’d be glad to hear about your offers as we struggle every year with the planning/approving of LOA. </span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">I saw your boss yesterday on tv and immediately wanted to test the interface. </span></p><p></p>
-    <p></p>
-    <p class="MsoNormal">
-      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-
-    <p></p>
-    <div>
-      <p class="MsoNormal">
-        <b>
-          <span lang="NL-BE" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Bien à vous, </span></b></p><p></p><b>
-        </b>
-      <p></p>
-      <p class="MsoNormal">
-        <b>
-          <span lang="NL-BE" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Met vriendelijke groeten, </span></b></p><p></p><b>
-        </b>
-      <p></p>
-      <p class="MsoNormal">
-        <b>
-          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Best regards,</span></b></p><p></p><b>
-        </b>
-      <p></p>
-      <p class="MsoNormal">
-        <b>
-          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">
-            </span></b></p><p><b>&nbsp;</b></p><b>
-          
-        </b>
-      <p></p>
-      <p class="MsoNormal">
-        <b>
-          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">R. Petitpoil&nbsp;&nbsp;&nbsp; <br></span>
-        </b>
-        <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Human Resource Manager<b><br><br>Field Resource s.a n.v.&nbsp;&nbsp;<i> <br></i></b>Hermesstraat 6A <br>1930 Zaventem</span>
-        <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:gray"><br></span>
-        <b>
-          <span lang="FR" style="font-size:10.0pt;font-family:Wingdings;color:#1F497D">(</span>
-        </b>
-        <b>
-          <span lang="FR" style="font-size:9.0pt;font-family:Wingdings;color:#1F497D"> </span>
-        </b>
-        <b>
-          <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">xxx.xxx &nbsp;</span>
-        </b>
-        <b>
-          <span lang="EN-GB" style="font-size:9.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray"><br></span>
-        </b>
-        <b>
-          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Wingdings 2&quot;;color:#1F497D">7</span>
-        </b>
-        <b>
-          <span lang="FR" style="font-size:9.0pt;font-family:&quot;Wingdings 2&quot;;color:#1F497D"> </span>
-        </b>
-        <b>
-          <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">+32 2 727.05.91<br></span>
-        </b>
-        <span lang="EN-GB" style="font-size:24.0pt;font-family:Webdings;color:green">P</span>
-        <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:green"> <b>&nbsp;&nbsp; </b></span>
-        <b>
-          <span lang="EN-GB" style="font-size:9.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:green">Please consider the environment before printing this email.</span>
-        </b>
-        <span lang="EN-GB" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy"> </span>
-        <span lang="EN-GB" style="font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy">
-          </span></p><p></p>
-        
-      <p></p>
-    </div>
-    <p class="MsoNormal">
-      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
-        </span></p><p>&nbsp;</p>
-      
-    <p></p>
-    <div>
-      <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm">
-        <p class="MsoNormal">
-          <b>
-            <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span>
-          </b>
-          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Envoyé&nbsp;:</b> jeudi 18 avril 2013 11:31<br><b>À&nbsp;:</b> Paul Richard<br><b>Objet&nbsp;:</b> Re: your OpenERP.com registration</span></p><p></p>
-        <p></p>
-      </div>
-    </div>
-    <p class="MsoNormal"></p>
-    <p>&nbsp;</p>
-    <p>Hello Raoul PETITPOIL, </p>
-    <p></p>
-    <p>I noticed you recently registered to our OpenERP Online solution. </p>
-    <p></p>
-    <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ? </p>
-    <p></p>
-    <p>Best regards, </p>
-    <p></p>
-    <pre>      <p>&nbsp;</p>
-    </pre>
-    <pre>--<p></p></pre>
-    <pre>Nicolas<p></p></pre>
-    <pre>      <a href="http://openerp.com">http://openerp.com</a>
-      <p></p>
-    </pre>
-    <pre>Belgium: +32.81.81.37.00<p></p></pre>
-    <pre>U.S.: +1 (650) 307-6736<p></p></pre>
-    <pre>India: +91 (79) 40 500 100<p></p></pre>
-    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <p></p></pre>
-  </div>
-</div>"""
-
-MSOFFICE_3_IN = ['I saw your boss yesterday']
-MSOFFICE_3_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']
-
 
 # ------------------------------------------------------------
 # Test cases coming from bugs
@@ -732,10 +509,10 @@ REMOVE_CLASS = """
     </div>
 </div>
 """
-
 REMOVE_CLASS_IN = [
-    'An error occured in a modal and I will send you back the html to try opening one on your end'
-]
+    '<div style="color: #000000; font-size: 12pt; font-family: \'Times New Roman\'">',
+    'An error occured in a modal and I will send you back the html to try opening one on your end']
 REMOVE_CLASS_OUT = [
-    '<div class="modal-backdrop in">'
-]
+    '<div class="modal-backdrop in">',
+    '<div class="modal-content openerp">',
+    '<div class="modal-header">']

@@ -8,7 +8,7 @@ import cgi
 import lxml
 import unittest
 
-from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
+from openerp.tools import html_sanitize, append_content_to_html, plaintext2html, email_split
 import test_mail_examples
 
 
@@ -144,6 +144,13 @@ class TestSanitizer(unittest.TestCase):
             for text in out_lst:
                 self.assertNotIn(text, new_html)
 
+    def test_style_class(self):
+        html = html_sanitize(test_mail_examples.REMOVE_CLASS, strict=True, strip_style=False, strip_classes=True)
+        for ext in test_mail_examples.REMOVE_CLASS_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+            self.assertNotIn(ext, html,)
+
     def test_edi_source(self):
         html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
         self.assertIn(
@@ -156,13 +163,10 @@ class TestSanitizer(unittest.TestCase):
 
     def test_quote_blockquote(self):
         html = html_sanitize(test_mail_examples.QUOTE_BLOCKQUOTE)
-        # print '\n\n----- TEXT blockquote------'
-        # print html
-        # print '\n\n'
         for ext in test_mail_examples.QUOTE_BLOCKQUOTE_IN:
             self.assertIn(ext, html)
-        # for ext in test_mail_examples.QUOTE_BLOCKQUOTE_OUT:
-        #     self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(ext.decode('utf-8')), html)
+        for ext in test_mail_examples.QUOTE_BLOCKQUOTE_OUT:
+            self.assertIn('<span data-o-mail-quote="1">%s' % cgi.escape(ext.decode('utf-8')), html)
 
     def test_quote_thunderbird(self):
         html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_1)
@@ -173,6 +177,16 @@ class TestSanitizer(unittest.TestCase):
 
     def test_quote_hotmail_html(self):
         html = html_sanitize(test_mail_examples.QUOTE_HOTMAIL_HTML)
+        for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.QUOTE_HOTMAIL_HTML_OUT:
+            self.assertIn(ext, html)
+
+        html = html_sanitize(test_mail_examples.HOTMAIL_1)
+        for ext in test_mail_examples.HOTMAIL_1_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.HOTMAIL_1_OUT:
+            self.assertIn(ext, html)
 
     def test_quote_thunderbird_html(self):
         html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
@@ -208,6 +222,13 @@ class TestSanitizer(unittest.TestCase):
             for text in out_lst:
                 self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(text), new_html)
 
+    def test_quote_gmail(self):
+        html = html_sanitize(test_mail_examples.GMAIL_1)
+        for ext in test_mail_examples.GMAIL_1_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.GMAIL_1_OUT:
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(ext), html)
+
     def test_quote_text(self):
         html = html_sanitize(test_mail_examples.TEXT_1)
         for ext in test_mail_examples.TEXT_1_IN:
@@ -229,15 +250,17 @@ class TestSanitizer(unittest.TestCase):
             self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(ext.decode('utf-8')), html)
 
     def test_misc(self):
+        # False / void should not crash
+        html = html_sanitize('')
+        self.assertEqual(html, '')
         html = html_sanitize(False)
         self.assertEqual(html, False)
 
         # Message with xml and doctype tags don't crash
         html = html_sanitize(u'<?xml version="1.0" encoding="iso-8859-1"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n <head>\n  <title>404 - Not Found</title>\n </head>\n <body>\n  <h1>404 - Not Found</h1>\n </body>\n</html>\n')
-        print '\n\n----- TEXT misc2 ------'
-        print html
-        print '\n\n'
-        # self.assertNotIn('encoding', new_html, 'html_email_cleaner did not remove correctly encoding attributes')
+        self.assertNotIn('encoding', html)
+        self.assertNotIn('<title>404 - Not Found</title>', html)
+        self.assertIn('<h1>404 - Not Found</h1>', html)
 
     # def test_30_email_msoffice(self):
     #     new_html = html_email_clean(test_mail_examples.MSOFFICE_1, remove=True)
@@ -245,46 +268,6 @@ class TestSanitizer(unittest.TestCase):
     #         self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
-
-    #     new_html = html_email_clean(test_mail_examples.MSOFFICE_2, remove=True)
-    #     for ext in test_mail_examples.MSOFFICE_2_IN:
-    #         self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
-    #     for ext in test_mail_examples.MSOFFICE_2_OUT:
-    #         self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
-
-    #     new_html = html_email_clean(test_mail_examples.MSOFFICE_3, remove=True)
-    #     for ext in test_mail_examples.MSOFFICE_3_IN:
-    #         self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
-    #     for ext in test_mail_examples.MSOFFICE_3_OUT:
-    #         self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
-
-    def test_40_email_hotmail(self):
-        html = html_sanitize(test_mail_examples.HOTMAIL_1)
-        # print '\n\n----- TEXT hotmail_1 ------'
-        # print html
-        # print '\n\n'
-        # for ext in test_mail_examples.HOTMAIL_1_IN:
-        #     self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
-        # for ext in test_mail_examples.HOTMAIL_1_OUT:
-        #     self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
-
-    def test_50_email_gmail(self):
-        html = html_sanitize(test_mail_examples.GMAIL_1)
-        for ext in test_mail_examples.GMAIL_1_IN:
-            self.assertIn(ext, html)
-        for ext in test_mail_examples.GMAIL_1_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(ext), html)
-
-
-class TestCleaner(unittest.TestCase):
-    """ Test the email cleaner function that filters the content of incoming emails """
-
-    def test_80_remove_classes(self):
-        new_html = html_email_clean(test_mail_examples.REMOVE_CLASS, remove=True)
-        for ext in test_mail_examples.REMOVE_CLASS_IN:
-            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed classes')
-        for ext in test_mail_examples.REMOVE_CLASS_OUT:
-            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed correctly unwanted classes')
 
 
 class TestHtmlTools(unittest.TestCase):
