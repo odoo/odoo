@@ -131,6 +131,12 @@ class BaseCase(unittest.TestCase):
         else:
             return self._assertRaises(exception)
 
+    def shortDescription(self):
+        doc = self._testMethodDoc or None
+        if doc is None:
+            return None
+        return ' '.join(filter(None, map(str.strip, doc.splitlines())))
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
