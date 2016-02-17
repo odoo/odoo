@@ -423,6 +423,18 @@ class SaleOrder(models.Model):
             })
             order.project_id = analytic
 
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        group_user = self.env.ref('base.group_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
