@@ -121,7 +121,7 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            product_qty = self.product_uom._compute_qty_obj(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
@@ -169,15 +169,14 @@ class SaleOrderLine(models.Model):
             #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
             #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                qty += move.product_uom._compute_qty_obj(move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
     def _check_package(self):
-        default_uom = self.product_id.uom_id
         pack = self.product_packaging
         qty = self.product_uom_qty
-        q = self.env['product.uom']._compute_qty_obj(default_uom, pack.qty, self.product_uom)
+        q = self.product_id.uom_id._compute_qty_obj(pack.qty, self.product_uom)
         if qty and q and (qty % q):
             newqty = qty - (qty % q) + q
             return {
@@ -290,8 +289,8 @@ class AccountInvoiceLine(models.Model):
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
-                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
+                qty_done = sum([x.uom_id._compute_qty_obj(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = self.uom_id._compute_qty_obj(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
                 for procurement in s_line.procurement_ids:
@@ -318,7 +317,7 @@ class AccountInvoiceLine(models.Model):
                     if qty_delivered == quantity:
                         break
                 price_unit = average_price_unit or price_unit
-                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
+                price_unit = self.uom_id._compute_qty_obj(price_unit, self.product_id.uom_id)
         return price_unit
 
 

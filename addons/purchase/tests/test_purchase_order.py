@@ -63,7 +63,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id), 'Purchase: the partner should be in the list of the product suppliers')
 
-        seller = self.product_id_2._select_seller(self.product_id_2, partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
+        seller = self.product_id_2._select_seller(partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
         price_unit = seller.price if seller else 0.0
         if price_unit and seller and self.po.currency_id and seller.currency_id != self.po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.po.currency_id)

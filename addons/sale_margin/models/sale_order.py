@@ -20,7 +20,7 @@ class SaleOrderLine(models.Model):
                 to_cur = line.order_id.pricelist_id.currency_id
                 purchase_price = line.product_id.standard_price
                 if line.product_uom != line.product_id.uom_id:
-                    purchase_price = self.env['product.uom']._compute_price(line.product_id.uom_id.id, purchase_price, to_uom_id=line.product_uom.id)
+                    purchase_price = line.product_id.uom_id._compute_price(purchase_price, to_uom_id=line.product_uom.id)
                 ctx = self.env.context.copy()
                 ctx['date'] = line.order_id.date_order
                 price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
