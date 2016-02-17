@@ -125,7 +125,7 @@ class stock_history(osv.osv):
                 product_categ_id,
                 SUM(quantity) as quantity,
                 date,
-                price_unit_on_quant,
+                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
                 source
                 FROM
                 ((SELECT
@@ -193,5 +193,5 @@ class stock_history(osv.osv):
                     dest_location.usage not in ('internal', 'transit'))
                 ))
                 AS foo
-                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source
+                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, source
             )""")
