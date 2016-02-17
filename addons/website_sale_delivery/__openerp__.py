@@ -8,7 +8,7 @@
 Delivery Costs
 ==============
 """,
-    'depends': ['website_sale', 'delivery'],
+    'depends': ['website_sale', 'delivery', 'website_sale_stock'],
     'data': [
         'views/website_sale_delivery.xml',
         'views/website_sale_delivery_view.xml',
