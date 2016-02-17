@@ -148,7 +148,7 @@ function add_message (data, options) {
     var msg = _.findWhere(messages, { id: data.id });
 
     if (!msg) {
-        msg = make_message(data);
+        msg = chat_manager.make_message(data);
         // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
@@ -298,7 +298,7 @@ function add_channel (data, options) {
             chat_manager.bus.trigger("channel_toggle_fold", channel);
         }
     } else {
-        channel = make_channel(data, options);
+        channel = chat_manager.make_channel(data, options);
         channels.push(channel);
         channels = _.sortBy(channels, function (channel) { return channel.name.toLowerCase(); });
         if (!options.silent) {
@@ -677,6 +677,10 @@ function on_presence_notification (data) {
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
+    // these two functions are exposed for extensibility purposes and shouldn't be called by other modules
+    make_message: make_message,
+    make_channel: make_channel,
+
     post_message: function (data, options) {
         options = options || {};
         var msg = {
@@ -773,9 +777,9 @@ var chat_manager = {
             return $.when();
         }
     },
-    mark_all_as_read: function (channel) {
-        if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : []);
+    mark_all_as_read: function (channel, domain) {
+        if ((channel.id === "channel_inbox" && needaction_counter) || (channel && channel.needaction_counter)) {
+            return MessageModel.call('mark_all_as_read', [], {channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain});
         }
         return $.when();
     },

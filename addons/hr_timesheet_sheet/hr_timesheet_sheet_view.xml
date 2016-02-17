@@ -134,14 +134,16 @@
                                     <field name="is_timesheet" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
-                                    <field name="date"/>
-                                    <field name="account_id"/>
-                                    <field name="name"/>
-                                    <field name="unit_amount" widget="float_time"/>
-                                    <field name="amount"/>
-                                    <field name="general_account_id"/>
-                                    <field name="user_id" required="1"/>
-                                    <field name="is_timesheet" invisible="1"/>
+                                    <group>
+                                        <field name="date"/>
+                                        <field name="account_id"/>
+                                        <field name="name"/>
+                                        <field name="unit_amount" widget="float_time"/>
+                                        <field name="amount"/>
+                                        <field name="general_account_id"/>
+                                        <field name="user_id" required="1"/>
+                                        <field name="is_timesheet" invisible="1"/>
+                                    </group>
                                 </form>
                             </field>
                         </page>
