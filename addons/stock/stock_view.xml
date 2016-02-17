@@ -563,7 +563,7 @@
                                         <field name="wh_pack_stock_loc_id" readonly="1"/>
                                         <field name="wh_output_stock_loc_id" readonly="1"/>
                                     </group>
-                                    <group string="Picking Types">
+                                    <group strinsg="Operation Types">
                                         <field name="in_type_id" readonly="1"/>
                                         <field name="int_type_id" readonly="1"/>
                                         <field name="pick_type_id" readonly="1"/>
@@ -1613,7 +1613,7 @@
             <field name="name">Picking types</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <tree string="Picking Types">
+                <tree string="Operation Types">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="warehouse_id"/>
@@ -1622,10 +1622,10 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_picking_type_form">
-            <field name="name">Picking Types</field>
+            <field name="name">Operation Types</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <form string="Picking Types">
+                <form string="Operation Types">
                     <sheet>
                         <group>
                             <group>
@@ -1677,7 +1677,7 @@
             <field name="name">stock.picking.type.list</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <tree string="Picking Types">
+                <tree string="Operation Types">
                     <field name="name"/>
                     <field name="sequence_id"/>
                     <field name="warehouse_id"/>
@@ -1704,8 +1704,6 @@
             </field>
 
         </record>
-
-        <menuitem id="stock_picking_type_config" action="action_picking_type_list" name="Picking Types" parent="stock.menu_routes_config" sequence="2" groups="base.group_no_one"/>
 
         <menuitem
             action="stock_picking_type_action"
