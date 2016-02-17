@@ -6,6 +6,8 @@ import logging
 import operator
 import os
 
+from openerp.tools.mimetypes import guess_mimetype
+
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -158,6 +160,16 @@ class ir_import(orm.TransientModel):
         return fields
 
     def _read_file(self, file_type, record, options):
+        # guess mimetype from file content
+        mimetype = guess_mimetype(record.file)
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
+        if handler:
+            try:
+                return getattr(self, '_read_' + file_extension)(record, options)
+            except Exception:
+                _logger.warn("Failed to read file '%s' (transient id %d) using guessed mimetype %s",
+                             record.file_name or '<unknown>', record.id, mimetype)
+
         # try reading with user-provided mimetype
         (file_extension, handler, req) = FILE_TYPE_DICT.get(file_type, (None, None, None))
         if handler:
