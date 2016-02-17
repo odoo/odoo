@@ -246,7 +246,7 @@ class ir_attachment(osv.osv):
         'file_size': fields.integer('File Size', readonly=True),
         'checksum': fields.char("Checksum/SHA1", size=40, select=True, readonly=True),
         'mimetype': fields.char('Mime Type', readonly=True),
-        'index_content': fields.text('Indexed Content', readonly=True),
+        'index_content': fields.text('Indexed Content', readonly=True, _prefetch=False),
         'public': fields.boolean('Is public document'),
     }
 
@@ -397,9 +397,8 @@ class ir_attachment(osv.osv):
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = [a.store_fname
-                        for a in self.browse(cr, uid, ids, context=context)
-                            if a.store_fname]
+        to_delete = set([a.store_fname for a in self.browse(cr, uid, ids, context=context)
+                         if a.store_fname])
         res = super(ir_attachment, self).unlink(cr, uid, ids, context)
         for file_path in to_delete:
             self._file_delete(cr, uid, file_path)
