@@ -6,8 +6,21 @@ var utils = require('web.utils');
 var common = require('web.form_common');
 var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
+var KanbanRecord = require('web_kanban.Record');
 
 var _t = core._t;
+
+// web_kanban.Record and web.list_common.Record do not implement the
+// same interface and are thus inherently incompatible with each
+// other. Luckily barcodes keeps things pretty simple when it comes to
+// the records it wants to use. So if we give the KanbanRecord a get()
+// function that behaves like the one of web.list.Record, everything
+// is fine.
+KanbanRecord.include({
+    get: function (key) {
+        return this.values[key] && this.values[key].value;
+    },
+});
 
 var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     start: function() {
@@ -70,6 +83,11 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
                 }
             });
         }
+    },
+
+    _get_records: function(field) {
+        return field.viewmanager.active_view.controller.records || // tree view
+            field.viewmanager.active_view.controller.widgets; // kanban view
     },
 });
 
