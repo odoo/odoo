@@ -112,7 +112,7 @@ var GaugeWidget = AbstractField.extend({
             .style("fill", "hsl(0,80%,50%)")
             .attr("d", arc);
 
-        var ratio = value/max_value;
+        var ratio = max_value ? value/max_value : 0;
         var hue = Math.round(ratio*120);
 
         foreground.transition()
