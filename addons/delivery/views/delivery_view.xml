@@ -63,6 +63,10 @@
                             <page string="Pricing">
                                 <group>
                                     <field name="delivery_type" widget="radio"/>
+                                    <label for="margin"/>
+                                    <div>
+                                        <field name="margin" class="oe_inline"/>%
+                                    </div>
                                 </group>
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
                                     <group>
