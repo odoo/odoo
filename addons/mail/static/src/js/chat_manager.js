@@ -2,6 +2,7 @@ odoo.define('mail.chat_manager', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -33,6 +34,7 @@ var mention_partner_suggestions = [];
 var discuss_ids = {};
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
+var client_action_open = false;
 
 // Utils: Window focus/unfocus, beep, tab title, parsing html strings
 //----------------------------------------------------------------------------------
@@ -51,31 +53,44 @@ bus.on("window_focus", null, function() {
     web_client.set_title_part("_chat");
 });
 
+// to do: move this to mail.utils
+function send_native_notification(title, content) {
+    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
+    notification.onclick = function (e) {
+        window.focus();
+        if (this.cancel) {
+            this.cancel();
+        } else if (this.close) {
+            this.close();
+        }
+    };
+}
+
 function notify_incoming_message (msg, options) {
+    if (bus.is_odoo_focused() && options.is_displayed) {
+        // no need to notify
+        return;
+    }
     var title = _t('New message');
     if (msg.author_id[1]) {
         title = _.escape(msg.author_id[1]);
     }
     var content = parse_and_transform(msg.body, strip_html).substr(0, preview_msg_max_size);
 
-    if (bus.is_odoo_focused()) {
-        if (!options.is_displayed) {
-            web_client.do_notify(title, content);
-        }
-    } else {
+    if (!bus.is_odoo_focused()) {
         global_unread_counter++;
         var tab_title = _.str.sprintf(_t("%d Messages"), global_unread_counter);
         web_client.set_title_part("_chat", tab_title);
+    }
 
-        if (Notification && Notification.permission === "granted") {
-            if (bus.is_master) {
-                new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png", silent: false});
-            }
-        } else {
-            web_client.do_notify(title, content);
-            if (bus.is_master) {
-                beep();
-            }
+    if (Notification && Notification.permission === "granted") {
+        if (bus.is_master) {
+            send_native_notification(title, content);
+        }
+    } else {
+        web_client.do_notify(title, content);
+        if (bus.is_master) {
+            beep();
         }
     }
 }
@@ -119,7 +134,7 @@ function strip_html (node, transform_children) {
 function inline (node, transform_children) {
     if (node.nodeType === 3) return node.data;
     if (node.tagName === "BR") return " ";
-    if (node.tagName.match(/^(A|P|DIV|PRE)$/)) return transform_children();
+    if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) return transform_children();
     node.innerHTML = transform_children();
     return node.outerHTML;
 }
@@ -133,7 +148,7 @@ function add_message (data, options) {
     var msg = _.findWhere(messages, { id: data.id });
 
     if (!msg) {
-        msg = make_message(data);
+        msg = chat_manager.make_message(data);
         // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
@@ -152,6 +167,10 @@ function add_message (data, options) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
                     if (channel.is_chat && options.show_notification) {
+                        if (!client_action_open && config.device.size_class !== config.device.SIZES.XS) {
+                            // automatically open chat window
+                            chat_manager.bus.trigger('open_chat', channel, { passively: true });
+                        }
                         var query = {is_displayed: false};
                         chat_manager.bus.trigger('anyone_listening', channel, query);
                         notify_incoming_message(msg, query);
@@ -279,7 +298,7 @@ function add_channel (data, options) {
             chat_manager.bus.trigger("channel_toggle_fold", channel);
         }
     } else {
-        channel = make_channel(data, options);
+        channel = chat_manager.make_channel(data, options);
         channels.push(channel);
         channels = _.sortBy(channels, function (channel) { return channel.name.toLowerCase(); });
         if (!options.silent) {
@@ -516,13 +535,16 @@ function on_needaction_notification (message) {
 
 function on_channel_notification (message) {
     var def;
+    var channel_already_in_cache = true;
     if (message.channel_ids.length === 1) {
+        channel_already_in_cache = !!chat_manager.get_channel(message.channel_ids[0]);
         def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
     } else {
         def = $.when();
     }
     def.then(function () {
-        add_message(message, { show_notification: true, increment_unread: true });
+        // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
+        add_message(message, { show_notification: true, increment_unread: channel_already_in_cache });
         invalidate_caches(message.channel_ids);
     });
 }
@@ -639,7 +661,7 @@ function on_chat_session_notification (chat_session) {
         channel = chat_manager.get_channel(chat_session.id);
         if (channel) {
             channel.is_detached = false;
-            chat_manager.bus.trigger("close_chat", channel);
+            chat_manager.bus.trigger("close_chat", channel, {keep_open_if_unread: true});
         }
     }
 }
@@ -655,6 +677,10 @@ function on_presence_notification (data) {
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
+    // these two functions are exposed for extensibility purposes and shouldn't be called by other modules
+    make_message: make_message,
+    make_channel: make_channel,
+
     post_message: function (data, options) {
         options = options || {};
         var msg = {
@@ -694,6 +720,9 @@ var chat_manager = {
         }
     },
 
+    get_message: function (id) {
+        return _.findWhere(messages, {id: id});
+    },
     get_messages: function (options) {
         var channel;
 
@@ -748,9 +777,9 @@ var chat_manager = {
             return $.when();
         }
     },
-    mark_all_as_read: function (channel) {
-        if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : []);
+    mark_all_as_read: function (channel, domain) {
+        if ((channel.id === "channel_inbox" && needaction_counter) || (channel && channel.needaction_counter)) {
+            return MessageModel.call('mark_all_as_read', [], {channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain});
         }
         return $.when();
     },
@@ -873,6 +902,9 @@ var chat_manager = {
     open_and_detach_dm: function (partner_id) {
         return ChannelModel.call('channel_get_and_minimize', [[partner_id]]).then(add_channel);
     },
+    open_channel: function (channel) {
+        chat_manager.bus.trigger(client_action_open ? 'open_channel' : 'detach_channel', channel);
+    },
 
     unsubscribe: function (channel) {
         var def;
@@ -946,22 +978,22 @@ var chat_manager = {
             }
             return info;
         });
+        var missing_channels = _.where(channels_preview, {last_message: undefined});
         if (!channels_preview_def) {
-            var missing_channel_ids = _.pluck(_.where(channels_preview, {last_message: undefined}), 'id');
-            if (missing_channel_ids.length) {
-                channels_preview_def = ChannelModel
-                    .call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true})
-                    .then(function (channels) {
-                        _.each(channels, function (channel) {
-                            var msg = add_message(channel.last_message);
-                            _.findWhere(channels_preview, {id: channel.id}).last_message = msg;
-                        });
-                    });
+            if (missing_channels.length) {
+                var missing_channel_ids = _.pluck(missing_channels, 'id');
+                channels_preview_def = ChannelModel.call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true});
             } else {
                 channels_preview_def = $.when();
             }
         }
-        return channels_preview_def.then(function () {
+        return channels_preview_def.then(function (channels) {
+            _.each(missing_channels, function (channel_preview) {
+                var channel = _.findWhere(channels, {id: channel_preview.id});
+                if (channel) {
+                    channel_preview.last_message = add_message(channel.last_message);
+                }
+            });
             return _.filter(channels_preview, function (channel) {
                 return channel.last_message;  // remove empty channels
             });
@@ -984,7 +1016,13 @@ var chat_manager = {
             return values;
         });
     },
+
+    send_native_notification: send_native_notification,
 };
+
+chat_manager.bus.on('client_action_open', null, function (open) {
+    client_action_open = open;
+});
 
 // Initialization
 // ---------------------------------------------------------------------------------

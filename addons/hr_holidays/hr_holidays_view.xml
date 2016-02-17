@@ -34,13 +34,15 @@
                     <separator/>
                     <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
                     <separator/>
-                    <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
                     <filter name="year" string="Current"
                         domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves and Allocations"/>
                     <separator/>
                     <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="leaves" string="Leaves" domain="[('type', '=', 'remove')]"/>
+                    <filter name="allocations" string="Allocations" domain="[('type', '=', 'add')]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
