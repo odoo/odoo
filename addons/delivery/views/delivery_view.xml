@@ -4,6 +4,22 @@
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
         <menuitem id="sale_menu_delivery" name="Delivery" parent="base.menu_sale_config" groups="base.group_sale_manager" sequence="12"/>
 
+        <record id="view_delivery_carrier_search" model="ir.ui.view">
+            <field name="name">delivery.carrier.search</field>
+            <field name="model">delivery.carrier</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Carrier Search">
+                    <field name="name" string="Carrier" />
+                    <field name="partner_id" operator="child_of"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By" >
+                        <filter string="Price Computation" name="delivery_type" context="{'group_by':'delivery_type'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
@@ -23,6 +39,13 @@
             <field name="arch" type="xml">
                 <form string="Carrier">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title" name="title">
                             <label for="name" string="Name" class="oe_edit_only"/>
                             <h1>
