@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <record id="tax_tag_sale_07" model="account.account.tag">
         <field name="name">ITBMS 7% Venta</field>
         <field name="applicability">taxes</field>
@@ -33,6 +33,4 @@
         <field name="account_id" ref="231"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_07')])]"/>
     </record>
-
-  </data>
-</openerp>
+</odoo>
