@@ -24,6 +24,11 @@ class project_configuration(osv.osv_memory):
             help='Lets the company customize which Pad installation should be used to link to new pads '
                  '(for example: http://ietherpad.com/).\n'
                  '-This installs the module pad.'),
+        'module_rating_project': fields.selection([
+            (0, "No customer rating"),
+            (1, "Allow activating customer rating on projects at task")
+            ], "Rating on task",
+            help="This allows customers to give rating on task"),
         'module_project_timesheet': fields.selection([
             (0, "Do not record timesheets on tasks"),
             (1, "Record timesheet lines per tasks")
@@ -32,11 +37,11 @@ class project_configuration(osv.osv_memory):
                  'the timesheet line entries for particular date and user, with the effect of creating, '
                  'editing and deleting either ways.\n'
                  '-This installs the module project_timesheet.'),
-        'module_rating_project': fields.selection([
+        'module_rating_project_issue': fields.selection([
             (0, "No customer rating"),
-            (1, 'Allow activating customer rating on projects, at issue completion')
-            ], "Rating",
-            help="This allows customers to give rating on provided services"),
+            (1, 'Allow activating customer rating on projects at issue')
+            ], "Rating on issue",
+            help="This allows customers to give rating on issue"),
         'module_project_issue_sheet': fields.selection([
             (0, "Do not track working hours on issues"),
             (1, "Activate timesheets on issues")

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from datetime import datetime, timedelta
+from openerp import api, fields, models, _
 
 
 class ProjectTaskType(models.Model):
@@ -21,26 +22,54 @@ class Task(models.Model):
     _name = 'project.task'
     _inherit = ['project.task', 'rating.mixin']
 
+    rating_latest = fields.Float(default=-1)
+    rating_count = fields.Integer(compute="_compute_rating_count")
+
     @api.multi
     def write(self, values):
+        result = super(Task, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            template = self.env['project.task.type'].browse(values.get('stage_id')).rating_template_id
-            if template:
-                rated_partner_id = self.user_id.partner_id
-                partner_id = self.partner_id
-                if partner_id and rated_partner_id:
-                    self.rating_send_request(template, partner_id, rated_partner_id)
-        return super(Task, self).write(values)
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail()
+        return result
+
+    def _send_task_rating_mail(self):
+        for task in self:
+            rating_template = task.stage_id.rating_template_id
+            if rating_template:
+                partner = self._get_partner_to_send_rating_mail(task)
+                rated_partner = task.user_id.partner_id
+                if partner and rated_partner:
+                    task.rating_send_request(rating_template, partner, rated_partner, False)
+
+    def _get_partner_to_send_rating_mail(self, task):
+        return task.partner_id or task.project_id.partner_id or None
+
+    def _compute_rating_count(self):
+        for task in self:
+            task.rating_count = len(task.rating_ids)
 
 
 class Project(models.Model):
 
     _inherit = "project.project"
 
-    @api.one
+    # This method should be called once a day by the scheduler
+    @api.model
+    def _send_rating_all(self):
+        projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
+        projects._send_rating_mail()
+        projects._compute_rating_request_deadline()
+
+    def _send_rating_mail(self):
+        for project in self:
+            project.task_ids._send_task_rating_mail()
+
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
-        self.percentage_satisfaction_project = self.percentage_satisfaction_task
+        domain = [('create_date', '>=', fields.Datetime.to_string(datetime.today() - timedelta(days=30)))]
+        for project in self:
+            activity = project.tasks.rating_get_grades(domain)
+            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
 
     @api.one
     @api.depends('tasks.rating_ids.rating')
@@ -52,9 +81,20 @@ class Project(models.Model):
         compute='_compute_percentage_satisfaction_task', string='% Happy', store=True, default=-1)
     percentage_satisfaction_project = fields.Integer(
         compute="_compute_percentage_satisfaction_project", string="% Happy", store=True, default=-1)
-    is_visible_happy_customer = fields.Boolean(string="Customer Satisfaction", default=False,
-        help="Display information about rating of the project on kanban and form view. This buttons will only be displayed if at least a rating exists.")
+    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
+    rating_status = fields.Selection([('stage', 'Rating on Stage'), ('periodic', 'Periodical Rating')], 'Customer Ratings', help="How to send rating mail?:\n"
+                    "- Rating on stage : Rating mail will be sent when a stage of a task/issue is changed\n"
+                    "- Periodical Rating: Rating mail will be sent periodically on a task/issue")
+    rating_status_period = fields.Selection([
+            ('daily', 'Every Day'), ('weekly', 'Every Week'), ('bimonthly', 'Twice a Month'),
+            ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
+        ], 'Rating Frequency')
 
+    @api.depends('rating_status', 'rating_status_period')
+    def _compute_rating_request_deadline(self):
+        periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
+        for project in self:
+            project.rating_request_deadline = datetime.today() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.multi
     def action_view_task_rating(self):
@@ -81,6 +121,7 @@ class Rating(models.Model):
         rating = super(Rating, self).apply_rating(rate, res_model, res_id, token)
         if rating.res_model == 'project.task':
             task = self.env[rating.res_model].sudo().browse(rating.res_id)
+            task.rating_latest = rating.rating
             if task.stage_id.auto_validation_kanban_state:
                 if rating.rating > 5:
                     task.write({'kanban_state' : 'done'})

@@ -26,6 +26,9 @@
         <record id="project.project_stage_2" model="project.task.type">
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
         </record>
+        <record id="project.project_project_3" model="project.project">
+            <field name="rating_status">stage</field>
+        </record>
 
         <function model="rating.rating" name="apply_rating" eval="(10, 'project.task', ref('project.project_task_3'))"/>
         <function model="rating.rating" name="apply_rating" eval="(0, 'project.task', ref('project.project_task_8'))"/>

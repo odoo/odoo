@@ -6,7 +6,7 @@ class Rating(models.Model):
 
     _name = "rating.rating"
     _description = "Rating"
-    _order = 'create_date desc'
+    _order = 'id desc'
     _rec_name = 'res_name'
     _sql_constraints = [
         ('rating_range', 'check(rating >= -1 and rating <= 10)', 'Rating should be between -1 to 10'),
