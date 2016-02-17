@@ -65,7 +65,8 @@ class SaleOrder(models.Model):
                     if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
                         price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
 
-                order._create_delivery_line(carrier, price_unit)
+                final_price = price_unit * (1.0 + (float(self.carrier_id.margin) / 100.0))
+                order._create_delivery_line(carrier, final_price)
 
             else:
                 raise UserError(_('No carrier set for this order.'))

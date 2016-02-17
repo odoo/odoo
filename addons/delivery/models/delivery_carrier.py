@@ -52,6 +52,11 @@ class DeliveryCarrier(models.Model):
     fixed_price = fields.Float(compute='_compute_fixed_price', inverse='_set_product_fixed_price', store=True, string='Fixed Price',help="Keep empty if the pricing depends on the advanced pricing per destination")
     shipping_enabled = fields.Boolean(string="Shipping enabled", default=True, help="Uncheck this box to disable package shipping while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
+    margin = fields.Integer(help='This percentage will be added to the shipping price.')
+
+    _sql_constraints = [
+        ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
+    ]
 
     @api.one
     def toggle_prod_environment(self):
@@ -99,24 +104,26 @@ class DeliveryCarrier(models.Model):
             order = SaleOrder.browse(order_id)
             if self.delivery_type not in ['fixed', 'base_on_rule']:
                 try:
-                    self.price = self.get_shipping_price_from_so(order)[0]
+                    computed_price = self.get_shipping_price_from_so(order)[0]
                     self.available = True
                 except UserError as e:
                     # No suitable delivery method found, probably configuration error
                     _logger.info("Carrier %s: %s, not found", self.name, e.name)
-                    self.price = 0.0
+                    computed_price = 0.0
             else:
                 carrier = self.verify_carrier(order.partner_shipping_id)
                 if carrier:
                     try:
-                        self.price = carrier.get_price_available(order)
+                        computed_price = carrier.get_price_available(order)
                         self.available = True
-                    except UserError, e:
+                    except UserError as e:
                         # No suitable delivery method found, probably configuration error
                         _logger.info("Carrier %s: %s", carrier.name, e.name)
-                        self.price = 0.0
+                        computed_price = 0.0
                 else:
-                    self.price = 0.0
+                    computed_price = 0.0
+
+            self.price = computed_price * (1.0 + (float(self.margin) / 100.0))
 
     # -------------------------- #
     # API for external providers #
