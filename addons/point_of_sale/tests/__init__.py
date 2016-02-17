@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pos_box
-import pos_discount
-import pos_open_statement
-import pos_payment
+from . import test_point_of_sale_flow
