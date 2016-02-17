@@ -777,9 +777,9 @@ var chat_manager = {
             return $.when();
         }
     },
-    mark_all_as_read: function (channel) {
-        if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : []);
+    mark_all_as_read: function (channel, domain) {
+        if ((channel.id === "channel_inbox" && needaction_counter) || (channel && channel.needaction_counter)) {
+            return MessageModel.call('mark_all_as_read', [], {channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain});
         }
         return $.when();
     },

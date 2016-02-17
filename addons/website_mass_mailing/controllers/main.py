@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from openerp import http, SUPERUSER_ID
+from openerp.addons.mass_mailing.controllers.main import MassMailController
 from openerp.http import request
 
 
-class MassMailController(http.Controller):
+class MassMailController(MassMailController):
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
             if mailing.mailing_model == 'mail.mass_mailing.contact':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', 'ilike', email)])
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
                 return request.website.render('website_mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
                     'email': email,
                     'mailing_id': mailing_id})
             else:
-                mailing.update_opt_out(mailing_id, email, [res_id], True)
+                super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
                 return request.website.render('website_mass_mailing.page_unsubscribed')
 
     @http.route(['/mail/mailing/unsubscribe'], type='json', auth='none')
