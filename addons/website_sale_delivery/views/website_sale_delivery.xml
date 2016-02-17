@@ -85,5 +85,19 @@
         </xpath>
     </template>
 
+    <template id="shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.orders_followup_shipping">
+        <xpath expr="//div[@id='picking_info']" position="after">
+            <div t-if="i.carrier_tracking_ref">
+                Tracking: <span t-field="i.carrier_id.name"/>
+                <t t-if="i.carrier_id and i.carrier_id.delivery_type not in ['fixed', 'base_on_rule']">
+                    <a t-att-href="i.carrier_id.get_tracking_link(i)[0]" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                </t>
+                <t t-if="not i.carrier_id or i.carrier_id.delivery_type in ['fixed', 'base_on_rule']">
+                    <span t-field="i.carrier_tracking_ref"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
 </data>
 </openerp>
