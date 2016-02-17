@@ -33,6 +33,7 @@ class pos_order_report(osv.osv):
         'pos_categ_id': fields.many2one('pos.category','Public Category', readonly=True),
         'stock_location_id': fields.many2one('stock.location', 'Warehouse', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
+        'session_id;: fields.many2one('pos.session', string='Session', readonly=True),
     }
     _order = 'date desc'
 
@@ -63,6 +64,7 @@ class pos_order_report(osv.osv):
                     pt.pos_categ_id,
                     pc.stock_location_id,
                     s.pricelist_id,
+                    s.session_id,
                     s.invoice_id IS NOT NULL AS invoiced
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
@@ -73,6 +75,14 @@ class pos_order_report(osv.osv):
                     left join pos_config pc on (ps.config_id=pc.id)
                 group by
                     s.date_order, s.partner_id,s.state, pt.categ_id,
-                    s.user_id,s.location_id,s.company_id,s.sale_journal,s.pricelist_id,s.invoice_id,l.product_id,s.create_date,pt.categ_id,pt.pos_categ_id,p.product_tmpl_id,ps.config_id,pc.stock_location_id
-                having
-                    sum(l.qty * u.factor) != 0)""")
+                    s.user_id, s.location_id, s.company_id, s.sale_journal,
+                    s.pricelist_id, s.invoice_id, s.create_date, s.session_id,
+                    l.product_id,
+                    pt.categ_id, pt.pos_categ_id,
+                    p.product_tmpl_id,
+                    ps.config_id,
+                    pc.stock_location_id
+                HAVING
+                    SUM(l.qty * u.factor) != 0
+            )
+        """)
