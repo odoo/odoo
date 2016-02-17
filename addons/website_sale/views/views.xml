@@ -23,6 +23,8 @@
                     <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
+                    <field name="availability" widget="selection"/>
+                    <field name="availability_warning" attrs="{'invisible': [('availability', '!=', 'warning')]}"/>
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
