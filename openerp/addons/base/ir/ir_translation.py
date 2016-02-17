@@ -660,7 +660,7 @@ class ir_translation(osv.osv):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
             'view_id': self.env.ref('base.view_translation_dialog_tree').id,
-            'target': 'new',
+            'target': 'current',
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }
