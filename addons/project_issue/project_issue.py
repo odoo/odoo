@@ -324,12 +324,17 @@ class project_issue(osv.Model):
         recipients. Indeed those will have specific action in their notification
         emails: creating tasks, assigning it. """
         group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        group_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
             if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
                 group_data['group_project_user'] |= recipient
-                done_ids.add(recipient.id)
+            elif not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
         return super(project_issue, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
