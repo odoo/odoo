@@ -1,4 +1,4 @@
-Spain, 2015-04-09
+Portugal, 2016-01-30
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Alejandro Santana hi@alejandrosantana.eu https://github.com/alejandrosantana
+Kevin Chappell kevin.b.chappell@gmail.com https://github.com/kevinchappell
