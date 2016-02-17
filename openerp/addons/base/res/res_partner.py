@@ -548,10 +548,8 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def create(self, vals):
-        if vals.get('type') == 'delivery':
-            vals['image'] = self.with_context(partner_type='delivery')._get_default_image(False, False)
-        elif vals.get('type') == 'invoice':
-            vals['image'] = self.with_context(partner_type='invoice')._get_default_image(False, False)
+        if vals.get('type') and not self._context.get('partner_type'):
+            self = self.with_context(partner_type=vals['type'])
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
         # function field not correctly triggered at create -> remove me when
