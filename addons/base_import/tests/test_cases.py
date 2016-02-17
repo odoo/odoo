@@ -3,7 +3,7 @@ import unittest
 
 from openerp.tests.common import TransactionCase, can_import
 from openerp.modules.module import get_module_resource
-
+from openerp.tools import mute_logger
 
 from .. import models
 
@@ -197,6 +197,7 @@ class test_preview(TransactionCase):
         })
         return Import, id
 
+    @mute_logger('openerp.addons.base_import.models')
     def test_encoding(self):
         Import, id = self.make_import()
         result = Import.parse_preview(self.cr, self.uid, id, {
@@ -205,6 +206,7 @@ class test_preview(TransactionCase):
         })
         self.assertTrue('error' in result)
 
+    @mute_logger('openerp.addons.base_import.models')
     def test_csv_errors(self):
         Import, id = self.make_import()
 
