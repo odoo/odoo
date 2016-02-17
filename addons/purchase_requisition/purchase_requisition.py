@@ -148,7 +148,6 @@ class purchase_requisition(osv.osv):
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
         seller = requisition_line.product_id._select_seller(
-            requisition_line.product_id,
             partner_id=supplier,
             quantity=qty,
             date=date_order and date_order[:10],
