@@ -90,6 +90,9 @@ class ir_http(orm.AbstractModel):
                 record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
+    def get_page_key(self):
+        return (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -155,12 +158,13 @@ class ir_http(orm.AbstractModel):
                     redirect.set_cookie('website_lang', request.lang)
                     return redirect
                 elif url_lang:
+                    request.uid = None
                     path.pop(1)
                     return self.reroute('/'.join(path) or '/')
             if path[1] == request.website.default_lang_code:
                 request.context['edit_translations'] = False
             if not request.context.get('tz'):
-                request.context['tz'] = request.session['geoip'].get('time_zone')
+                request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
             # bind modified context
             request.website = request.website.with_context(request.context)
 
@@ -169,7 +173,7 @@ class ir_http(orm.AbstractModel):
         cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
         cache_response = None
         if cache_enable:
-            key = (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+            key = self.get_page_key()
             try:
                 r = self.pool.cache[key]
                 if r['time'] + cache_time > time.time():
@@ -272,7 +276,8 @@ class ir_http(orm.AbstractModel):
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'],
+                                            context=request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True and not v.page]
                     values['views'] = to_reset
             elif code == 403:
@@ -291,6 +296,18 @@ class ir_http(orm.AbstractModel):
             except Exception:
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+        env = env or request.env
+        obj = None
+        if xmlid:
+            obj = env.ref(xmlid, False)
+        elif id and model in self.pool:
+            obj = env[model].browse(int(id))
+        if obj and 'website_published' in obj._fields:
+            if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
+                env = env(user=openerp.SUPERUSER_ID)
+        return super(ir_http, self).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):

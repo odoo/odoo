@@ -3,6 +3,7 @@
 
 import logging
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 _logger = logging.getLogger(__name__)
@@ -44,10 +45,6 @@ class sale_configuration(osv.TransientModel):
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')
             ], "Margins"),
-        'module_website_sale_digital': fields.selection([
-            (0, 'No digital products'),
-            (1, 'Allows to sell downloadable content from the portal')
-            ], "Digital Products"),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
@@ -65,9 +62,16 @@ class sale_configuration(osv.TransientModel):
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
             ], 'Default Invoicing', default_model='product.template'),
-        'deposit_product_id_setting': fields.many2one('product.product', 'Default Advance Product',\
+        'deposit_product_id_setting': fields.many2one('product.product', 'Deposit Product',\
             domain="[('type', '=', 'service')]",\
             help='Default product used for payment advances'),
+        'auto_done_setting': fields.selection([
+            (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
+            (1, "Never allow to modify a confirmed sale order")
+            ], "Sale Order Modification"),
+        'module_sale_contract': fields.boolean("Manage subscriptions and recurring invoicing"),
+        'module_website_sale_digital': fields.boolean("Sell digital products - provide downloadable content on your customer portal"),
+        'module_website_portal': fields.boolean("Enable customer portal to track orders, delivery and invoices"),
     }
 
     _defaults = {
@@ -77,12 +81,17 @@ class sale_configuration(osv.TransientModel):
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         sale_price = self.browse(cr, uid, ids, context=context).sale_pricelist_setting
-        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
         return res
 
     def set_deposit_product_id_defaults(self, cr, uid, ids, context=None):
         deposit_product_id = self.browse(cr, uid, ids, context=context).deposit_product_id_setting
-        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
+        return res
+
+    def set_auto_done_defaults(self, cr, uid, ids, context=None):
+        auto_done = self.browse(cr, uid, ids, context=context).auto_done_setting
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'auto_done_setting', auto_done)
         return res
 
     def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):

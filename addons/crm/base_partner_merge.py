@@ -766,9 +766,9 @@ class MergePartnerAutomatic(osv.TransientModel):
             # don't update the partners if they are more of one who have invoice
             cr.execute("""  SELECT *
                             FROM res_partner as p
-                            WHERE p.id != %s AND p.email LIKE '%%%s' AND
+                            WHERE p.id != %s AND p.email LIKE %s AND
                                 EXISTS (SELECT * FROM account_invoice as a WHERE p.id = a.partner_id AND a.state in ('open','paid'))
-                    """ % (id, email))
+                    """, (id, '%' + email))
 
             if len(cr.fetchall()) > 1:
                 _logger.info("%s MORE OF ONE COMPANY", email)
@@ -777,13 +777,13 @@ class MergePartnerAutomatic(osv.TransientModel):
             # to display changed values
             cr.execute("""  SELECT id,email
                             FROM res_partner
-                            WHERE parent_id != %s AND id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE parent_id != %s AND id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
             _logger.info("%r", cr.fetchall())
 
             # upgrade
             cr.execute("""  UPDATE res_partner
                             SET parent_id = %s
-                            WHERE id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
         return False

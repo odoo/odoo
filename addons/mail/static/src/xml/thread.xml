@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatThread">
+        <t t-if="messages.length">
+            <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.ASC"
+               t-call="mail.ChatThread.LoadMore"/>
+            <t t-call="mail.ChatThread.Content"/>
+            <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.DESC"
+               t-call="mail.ChatThread.LoadMore"/>
+        </t>
+        <t t-if="options.display_empty_channel">
+            <t t-call="mail.EmptyChannel" />
+        </t>
+        <div t-if="options.display_no_match" class="o_mail_no_content">
+            <div class="o_thread_title">No matches found</div>
+            <div>No message matches your search. Try to change your search filters.</div>
+        </div>
+    </t>
+
+    <!-- When a channel is empty-->
+    <div t-name="mail.EmptyChannel" class="o_mail_no_content">
+        <t t-if="options.channel_id==='channel_inbox'">
+            <div class="o_thread_title">Congratulations, your inbox is empty</div>
+            <div>New messages appear here.</div>
+        </t>
+        <t t-if="options.channel_id==='channel_starred'">
+            <div class="o_thread_title">No starred message</div>
+            <div> You can mark any message as 'starred', and it shows up in this channel.</div>
+        </t>
+    </div>
+
+    <t t-name="mail.ChatThread.Content">
+        <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
+        <t t-set="current_day" t-value="0"/>
+        <t t-foreach="messages" t-as="message">
+            <div t-if="current_day != message.day" class="o_thread_date_separator">
+                <span class="o_thread_date">
+                    <t t-esc="message.day"/>
+                </span>
+                <t t-set="current_day" t-value="message.day"/>
+            </div>
+
+            <t t-call="mail.ChatThread.Message"/>
+        </t>
+    </t>
+
+    <t t-name="mail.ChatThread.Message">
+        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '')" t-att-data-message-id="message.id">
+            <div t-if="options.display_avatar" class="o_thread_message_sidebar">
+                <t t-if="!message.mailto &amp;&amp; message.author_id[0]">
+                    <img t-if="message.avatar_src &amp;&amp; message.display_author"
+                        t-att-src="message.avatar_src"
+                        data-oe-model="res.partner"
+                        t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
+                        t-attf-class="o_thread_message_avatar #{message.author_redirect ? 'o_mail_redirect' : ''}"/>
+                </t>
+                <t t-if="message.mailto || !message.author_id[0]">
+                    <img t-if="message.avatar_src &amp;&amp; message.display_author"
+                        t-att-src="message.avatar_src"
+                        class="o_thread_message_avatar"/>
+                </t>
+                <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
+                    <t t-esc="message.date.format('hh:mm')"/>
+                </span>
+                <i t-if="!message.display_author &amp;&amp; options.display_stars &amp;&amp; message.message_type != 'notification'"
+                    t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                    t-att-data-message-id="message.id" title="Mark as Todo"/>
+            </div>
+            <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
+                <p t-if="message.display_author" class="o_mail_info">
+                    <t t-if="message.is_note">
+                        Note by
+                    </t>
+
+                    <strong t-if="message.mailto">
+                        <a class="o_mail_mailto" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
+                            <t t-esc="message.mailto"/>
+                        </a>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; message.author_id[0]"
+                            data-oe-model="res.partner" t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
+                            t-attf-class="#{message.author_redirect ? 'o_mail_redirect' : ''}">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; !message.author_id[0]">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
+
+                    <small t-att-title="message.date">
+                        - <t t-esc="message.hour"/>
+                    </small>
+                    <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
+                        on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
+                    </t>
+                    <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
+                        (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
+                    </t>
+                    <span>
+                        <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
+                            t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                            t-att-data-message-id="message.id" title="Mark as Todo"/>
+                       <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
+                           class="fa fa-reply o_thread_message_reply"
+                           t-att-data-message-id="message.id" title="Reply"/>
+                        <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
+                           class="fa fa-check o_thread_message_needaction"
+                           t-att-data-message-id="message.id" title="Mark as Read"/>
+                    </span>
+                </p>
+                <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
+                    <t t-if="message.subtype_description">
+                        <p t-esc="message.subtype_description"/>
+                    </t>
+                    <t t-call="mail.ChatThread.MessageTracking"/>
+                </t>
+                <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
+                <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
+                    <t t-if="options.shorten_messages &amp;&amp; message.body_short">
+                        <div class="o_mail_body_short">
+                            <t t-raw="message.body_short"/>
+                        </div>
+                        <div class="o_mail_body_long">
+                            <t t-raw="message.body"/>
+                        </div>
+                    </t>
+                    <t t-if="!options.shorten_messages || !message.body_short">
+                        <div><t t-raw="message.body"/></div>
+                    </t>
+                </t>
+                <t t-foreach="message.attachment_ids" t-as="attachment">
+                    <t t-call="mail.Attachment"/>
+                </t>
+            </div>
+        </div>
+        <t t-if="options.messages_separator_position == message.id">
+            <t t-call="mail.MessagesSeparator"/>
+        </t>
+    </t>
+
+    <t t-name="mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
+        </div>
+    </t>
+
+    <t t-name="mail.ChatThread.MessageTracking">
+        <ul class="o_mail_thread_message_tracking">
+            <t t-foreach='message.tracking_value_ids' t-as='value'>
+                <li>
+                    <t t-esc="value.changed_field"/>:
+                    <t t-if="value.old_value">
+                        <span> <t t-esc="value.old_value"/> </span>
+                        <span class="fa fa-long-arrow-right"/>
+                    </t>
+                    <span> <t t-esc="value.new_value"/> </span>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+    <t t-name="mail.ChatComposer.Attachments">
+        <div class="o_attachments">
+            <t t-foreach="attachments" t-as='attachment'>
+                <t t-call="mail.Attachment">
+                     <t t-set="editable" t-value="true"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.Attachment">
+        <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
+            <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                <span class='o_attachment_name'><t t-esc='attachment.name'/></span>
+            </a>
+            <t t-if="editable">
+                <div class="o_attachment_delete">
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class="o_attachment_progress_bar">
+                    Uploading
+                </div>
+            </t>
+        </div>
+    </t>
+
+     <t t-name="mail.ChatThread.LoadMore">
+        <div t-if="!all_messages_loaded" class="o_thread_show_more">
+            <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
+        </div>
+    </t>
+
+</templates>

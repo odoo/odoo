@@ -4,7 +4,8 @@
 {
     'name': 'Dashboards',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
+    'summary': 'Create your custom dashboard',
     'description': """
 Lets the user create a custom dashboard.
 ========================================
@@ -20,5 +21,6 @@ Allows users to create custom dashboard.
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+    'application': True,
     'auto_install': False,
 }

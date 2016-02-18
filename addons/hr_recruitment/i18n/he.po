@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"PO-Revision-Date: 2016-01-28 15:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -183,7 +183,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
 msgid "Alias"
-msgstr ""
+msgstr "שם נוסף"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
@@ -337,7 +337,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
 msgid "Assigned"
-msgstr ""
+msgstr "משויך ל"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
@@ -725,7 +725,7 @@ msgstr "דוא\"ל"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr ""
+msgstr "שיוך דוא\"ל"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -896,6 +896,11 @@ msgid "HR Department"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -958,13 +963,6 @@ msgstr ""
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "חשובה"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
-msgstr ""
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1798,6 +1796,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "הודעות שלא נקראו"
 

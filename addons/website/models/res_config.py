@@ -20,10 +20,12 @@ class website_config_settings(osv.osv_memory):
         'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
         'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
         'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
-        'compress_html': fields.related('website_id', 'compress_html', type="boolean", string='Compress HTML'),
-        'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use CDN'),
+        'compress_html': fields.related('website_id', 'compress_html', type="boolean", string='Compress rendered HTML for a better Google PageSpeed result'),
+        'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use a Content Delivery Network (CDN)'),
         'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
+        'module_website_form_editor': fields.boolean("Form builder: create and customize forms"),
+        'module_website_version': fields.boolean("A/B testing and versioning"),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):

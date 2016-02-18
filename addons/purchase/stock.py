@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -12,6 +11,14 @@ class stock_picking(osv.osv):
         'purchase_id': fields.related('move_lines', 'purchase_line_id', 'order_id', string="Purchase Orders",
             readonly=True, relation="many2one"),
     }
+
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        for m in op.linked_move_operation_ids:
+            if m.move_id.purchase_line_id and m.move_id.product_id == product:
+                res['purchase_line_id'] = m.move_id.purchase_line_id.id
+                break
+        return res
 
 
 class stock_move(osv.osv):
@@ -40,7 +47,7 @@ class stock_move(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse', 
+        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse',
                                           help="When products are bought, they can be delivered to this warehouse"),
         'buy_pull_id': fields.many2one('procurement.rule', 'Buy rule'),
     }

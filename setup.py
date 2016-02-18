@@ -35,16 +35,19 @@ def py2exe_datafiles():
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
-    dudir = dirname(docutils.__file__)
-    for root, _, filenames in os.walk(dudir):
-        base = join('docutils', root[len(dudir) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
-
     import passlib
-    pl = dirname(passlib.__file__)
-    for root, _, filenames in os.walk(pl):
-        base = join('passlib', root[len(pl) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+    import requests
+    data_mapping = ((docutils, 'docutils'),
+                    (passlib, 'passlib'),
+                    (requests, 'requests'))
+
+    for mod, datadir in data_mapping:
+        basedir = dirname(mod.__file__)
+        for root, _, filenames in os.walk(basedir):
+            base = join(datadir, root[len(basedir) + 1:])
+            data_files[base] = [join(root, f)
+                                for f in filenames
+                                if not f.endswith(('.py', '.pyc', '.pyo'))]
 
     return data_files.items()
 
@@ -96,13 +99,13 @@ def py2exe_options():
                         'reportlab',
                         'requests',
                         'select',
-                        'simplejson',
                         'smtplib',
                         'suds',
                         'uuid',
                         'vatnumber',
                         'vobject',
                         'win32service', 'win32serviceutil',
+                        'xlrd',
                         'xlwt',
                         'xml', 'xml.dom',
                         'yaml',
@@ -148,7 +151,7 @@ setup(
         'psycopg2 >= 2.2',
         'python-chart',
         'pydot',
-        'pyparsing < 2',
+        'pyparsing',
         'pypdf',
         'pyserial',
         'python-dateutil',
@@ -160,9 +163,7 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'simplejson',
         'suds-jurko',
-        'unittest2',
         'vatnumber',
         'vobject',
         'werkzeug',
@@ -172,7 +173,6 @@ setup(
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'unittest2',
         'mock',
     ],
     **py2exe_options()

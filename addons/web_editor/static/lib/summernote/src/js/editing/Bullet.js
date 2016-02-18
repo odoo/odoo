@@ -5,9 +5,17 @@ define([
   'summernote/core/range'
 ], function (list, func, dom, range) {
 
+  /**
+   * @class editing.Bullet
+   *
+   * @alternateClassName Bullet
+   */
   var Bullet = function () {
     /**
+     * @method insertOrderedList
+     *
      * toggle ordered list
+     *
      * @type command
      */
     this.insertOrderedList = function () {
@@ -15,7 +23,10 @@ define([
     };
 
     /**
+     * @method insertUnorderedList
+     *
      * toggle unordered list
+     *
      * @type command
      */
     this.insertUnorderedList = function () {
@@ -23,7 +34,10 @@ define([
     };
 
     /**
+     * @method indent
+     *
      * indent
+     *
      * @type command
      */
     this.indent = function () {
@@ -50,7 +64,10 @@ define([
     };
 
     /**
+     * @method outdent
+     *
      * outdent
+     *
      * @type command
      */
     this.outdent = function () {
@@ -78,7 +95,10 @@ define([
     };
 
     /**
+     * @method toggleList
+     *
      * toggle list
+     *
      * @param {String} listName - OL or UL
      */
     this.toggleList = function (listName) {
@@ -86,13 +106,16 @@ define([
       var rng = range.create().wrapBodyInlineWithPara();
 
       var paras = rng.nodes(dom.isPara, { includeAncestor: true });
+      var bookmark = rng.paraBookmark(paras);
       var clustereds = list.clusterBy(paras, func.peq2('parentNode'));
 
       // paragraph to list
       if (list.find(paras, dom.isPurePara)) {
+        var wrappedParas = [];
         $.each(clustereds, function (idx, paras) {
-          self.wrapList(paras, listName);
+          wrappedParas = wrappedParas.concat(self.wrapList(paras, listName));
         });
+        paras = wrappedParas;
       // list to paragraph or change list style
       } else {
         var diffLists = rng.nodes(dom.isList, {
@@ -106,16 +129,19 @@ define([
             dom.replace(listNode, listName);
           });
         } else {
-          this.releaseList(clustereds, true);
+          paras = this.releaseList(clustereds, true);
         }
       }
 
-      rng.select();
+      range.createFromParaBookmark(bookmark, paras).select();
     };
 
     /**
+     * @method wrapList
+     *
      * @param {Node[]} paras
      * @param {String} listName
+     * @return {Node[]}
      */
     this.wrapList = function (paras, listName) {
       var head = list.head(paras);
@@ -127,7 +153,7 @@ define([
       var listNode = prevList || dom.insertAfter(dom.create(listName || 'UL'), last);
 
       // P to LI
-      paras = $.map(paras, function (para) {
+      paras = paras.map(function (para) {
         return dom.isPurePara(para) ? dom.replace(para, 'LI') : para;
       });
 
@@ -138,9 +164,13 @@ define([
         dom.appendChildNodes(listNode, list.from(nextList.childNodes));
         dom.remove(nextList);
       }
+
+      return paras;
     };
 
     /**
+     * @method releaseList
+     *
      * @param {Array[]} clustereds
      * @param {Boolean} isEscapseToBody
      * @return {Node[]}
@@ -157,19 +187,23 @@ define([
         var lastList = headList.childNodes.length > 1 ? dom.splitTree(headList, {
           node: last.parentNode,
           offset: dom.position(last) + 1
-        }, true) : null;
+        }, {
+          isSkipPaddingBlankHTML: true
+        }) : null;
 
         var middleList = dom.splitTree(headList, {
           node: head.parentNode,
           offset: dom.position(head)
-        }, true);
+        }, {
+          isSkipPaddingBlankHTML: true
+        });
 
         paras = isEscapseToBody ? dom.listDescendant(middleList, dom.isLi) :
                                   list.from(middleList.childNodes).filter(dom.isLi);
 
         // LI to P
         if (isEscapseToBody || !dom.isList(headList.parentNode)) {
-          paras = $.map(paras, function (para) {
+          paras = paras.map(function (para) {
             return dom.replace(para, 'P');
           });
         }

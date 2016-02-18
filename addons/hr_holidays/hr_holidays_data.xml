@@ -68,7 +68,7 @@
 
         <!-- Department related subtypes for messaging / Chatter -->
         <record id="mt_department_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations: first approval</field>
+            <field name="name">Leaves/Allocations Confirmed</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('mt_holidays_confirmed')"/>
@@ -76,7 +76,7 @@
             <field name="sequence" eval="6"/>
         </record>
         <record id="mt_department_holidays_first_validated" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations: second approval</field>
+            <field name="name">Leaves/Allocations First Approval</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_holidays_first_validated')"/>

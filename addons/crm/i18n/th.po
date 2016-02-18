@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-12-03 08:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -161,15 +161,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
+msgid "<span class=\"oe_grey\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -581,6 +581,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "เปิดใช้งาน"
@@ -1020,6 +1021,11 @@ msgid "Consumers"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
 msgstr "ชื่อผู้ติดต่อ"
@@ -1191,7 +1197,7 @@ msgstr "วันที่สร้าง"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Month"
-msgstr ""
+msgstr "Creation Month"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1201,7 +1207,7 @@ msgstr "สกุลเงิน"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Current"
-msgstr ""
+msgstr "ปัจจุบัน"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_current_line_id
@@ -1520,6 +1526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr ""
@@ -1573,7 +1580,7 @@ msgstr ""
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Finished"
-msgstr ""
+msgstr "สิ้นสุดแล้ว"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
@@ -1619,6 +1626,11 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "For every deal, review the next action, the expected closing, the pain "
@@ -1634,6 +1646,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr ""
@@ -1642,13 +1661,6 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:558
 #, python-format
 msgid "From %s : %s"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: crm
@@ -1665,7 +1677,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Gamification"
-msgstr ""
+msgstr "Gamification"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1865,10 +1877,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "รับเข้า"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1880,6 +1897,11 @@ msgstr ""
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
 msgstr ""
 
 #. module: crm
@@ -1926,11 +1948,6 @@ msgstr "การกระทำล่าสุด"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_last_activity_id
 msgid "Last Activity"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Last Message"
 msgstr ""
 
 #. module: crm
@@ -2582,6 +2599,12 @@ msgid "Odoo Default"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
@@ -2757,7 +2780,7 @@ msgstr "โอกาสสำเร็จแล้ว"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "Opt-Out"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2795,12 +2818,12 @@ msgstr "เจ้าของ"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Parent"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_parent_id
 msgid "Parent Company"
-msgstr ""
+msgstr "Parent Company"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_model_id
@@ -3128,6 +3151,7 @@ msgid "Search Leads"
 msgstr "ค้นหา"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "ค้นหาโอกาส"
@@ -3545,7 +3569,7 @@ msgstr ""
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr ""
+msgstr "นี่คือชื่อที่จะช่วยให้คุณสามารถติดตามของความพยายามในการรณรงค์ที่แตกต่างกันของคุณ Ex: Fall_Drive, Christmas_Special"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3556,7 +3580,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_medium_id
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_source_id
@@ -3564,7 +3588,7 @@ msgstr ""
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of"
 " email list"
-msgstr ""
+msgstr "นี่คือที่มาของการเชื่อมโยงอดีต ที่: Search Engine, โดเมนอื่น หรือชื่อของรายชื่ออีเมล"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -3623,7 +3647,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
-msgstr ""
+msgstr "ติดตาม"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type
@@ -3785,6 +3809,11 @@ msgid "Very High"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
@@ -3842,12 +3871,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ข้อความเว็บไซต์"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ประวัติการสื่อสารเว็บไซต์"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

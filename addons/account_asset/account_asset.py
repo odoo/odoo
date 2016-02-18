@@ -14,7 +14,7 @@ class AccountAssetCategory(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
     account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
     account_income_recognition_id = fields.Many2one('account.account', string='Recognition Income Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_expense_depreciation_id')
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
@@ -35,10 +35,6 @@ class AccountAssetCategory(models.Model):
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
     open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
-
-    @api.onchange('account_asset_id')
-    def onchange_account_asset(self):
-        self.account_depreciation_id = self.account_asset_id
 
     @api.onchange('type')
     def onchange_type(self):

@@ -3,13 +3,14 @@
 # * account_voucher
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 21:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-09-22 19:16+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr " * A 'Tervezet' állapotot használja amint egy felhasználó létrehoz egy új és még le nem igazolt nyugtát.                         \n*  'Pro-forma' állapotú lesz, ha a nyugtának még nincs nyugta száma.                         \n*  'Könyvelt' állapotú, ha egy felhasználó létrehozta a nyugtát, egy nyugta számot generált hozzá, és a könyvelésben egy nyugta bevitel létre lett hozva                         \n* A 'Érvénytelenítve' állapot lesz, ha egy felhasználó érvénytelenítette a nyugtát."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -35,7 +36,7 @@ msgstr "Főkönyvi számla"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Könyvelés dátuma"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -45,7 +46,7 @@ msgstr "Könyvelési bizonylat"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Művelet szükséges"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -76,7 +77,7 @@ msgstr "Számla információ"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Számla hivatkozás"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -102,12 +103,12 @@ msgstr "Nem lehet olyan nyugtá(ka)t törölni, melyek meg lettek nyitva vagy ki
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Kattintson egy új bevételi bizonylat létrehozásához."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Kattintson egy új kiadási bizonylat létrehozásához."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -161,7 +162,7 @@ msgstr "Leírás"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Név megjelenítése"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -196,17 +197,17 @@ msgstr "Követők"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Követők (csatornák)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Követők (Partnerek)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "Ennek a tételsornak a sorszámát adja, amikor a nyugta kijelzésre kerül."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -229,13 +230,13 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr ""
+msgstr "Ha kerekítési problémánk van az adóknál, javításra használja ezt a mezőt"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -246,7 +247,7 @@ msgstr "Belső jegyzetek"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -276,7 +277,7 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
@@ -313,17 +314,17 @@ msgstr "Sorszám"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Műveletek száma"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -354,7 +355,7 @@ msgstr "Azonnali kifizetés"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Fizessen később"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -396,7 +397,7 @@ msgstr "Elküldött nyugták"
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr "Pro-forma"
+msgstr "Pro-forma, díjbekérő"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
@@ -411,13 +412,13 @@ msgstr "Beszerzés"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr "Vásárlási bevételi bizonylatok"
+msgstr "Beszerzés bevételi bizonylata"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr "Vásárlások bevételi bizonylatai"
+msgstr "Beszerzések bevételi bizonylatai"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -489,17 +490,17 @@ msgstr "Állapot megváltoztatva"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
 msgid "Tax"
-msgstr "ÁFA"
+msgstr "Adó"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Adó összege"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Adó korrekció"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -514,7 +515,7 @@ msgstr "A kiválasztott termékre vonatkozó árbevétel vagy beszerzés főkön
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "Ennek a dokumentumnak a partner hivatkozása."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -550,7 +551,7 @@ msgstr "Olvasatlan üzenetek"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -563,12 +564,12 @@ msgstr "Jóváhagyás"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr ""
+msgstr "Kereskedő"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Kereskedői nyugta"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:28
@@ -622,14 +623,14 @@ msgstr "Weboldal  kommunikáció történet"
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr ""
+msgstr "Ha egy beszerzési bizonylat leigazolt, akkor adatbázis bejegyzést rögzíthető a kereskedő kifizetéséről, mely összefügg ezzel a beszerzési bizonylattal."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr ""
+msgstr "Ha az értékesítési bizonylat leigazolt, akkor adatbázis bejegyzést rögzíthet a vásárlói fizetésekről az ide vonatkozó értékesítési bizonylathoz."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:345

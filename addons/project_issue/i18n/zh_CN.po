@@ -3,13 +3,15 @@
 # * project_issue
 # 
 # Translators:
+# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:24+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"PO-Revision-Date: 2015-12-24 08:13+0000\n"
+"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +35,7 @@ msgid "# of Issues"
 msgstr "问题编号"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:209
+#: code:addons/project_issue/project_issue.py:212
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -41,17 +43,17 @@ msgstr "%s (副本)"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Category:</b>"
-msgstr ""
+msgstr "<b>类别:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>项目:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
@@ -65,7 +67,7 @@ msgstr "问题的看板状态显示了影响它的特殊状况:\n * 正常状态
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "所需行动"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -85,7 +87,7 @@ msgstr "分析账户"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "存档"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -140,12 +142,12 @@ msgstr "渠道"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "勾选这个框可以通过这个项目管理客户的活动"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid "Click to create an issue."
-msgstr ""
+msgstr "点击创建问题"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -205,13 +207,13 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:364
+#: code:addons/project_issue/project_issue.py:367
 #, python-format
 msgid "Customer"
 msgstr "客户"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:366
+#: code:addons/project_issue/project_issue.py:369
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -219,7 +221,7 @@ msgstr "客户邮件"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
-msgstr ""
+msgstr "定制问题标签，例如根据项目"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -295,7 +297,7 @@ msgstr "执行上个动作的日期到今天的天数"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -305,7 +307,7 @@ msgstr "持续时间"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "编辑问题"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -335,12 +337,12 @@ msgstr "关注者"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "关注者(频道)"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "关注者（合作伙伴）"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -355,10 +357,10 @@ msgid "High"
 msgstr "高"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:342
+#: code:addons/project_issue/project_issue.py:345
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "我来做"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -374,18 +376,18 @@ msgstr "查看是否有需要留意的新信息。"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "确认后, 会出现新消息."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Important Messages"
-msgstr ""
+msgstr "重要信息"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "是否关注者"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -404,13 +406,13 @@ msgstr "等待"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "打开的问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "准备好的问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -420,7 +422,7 @@ msgstr "问题阶段已改变"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "问题汇总"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -440,12 +442,12 @@ msgstr "等待"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "待决问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next sStage"
-msgstr ""
+msgstr "可以进入下一阶段的问题"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -473,9 +475,24 @@ msgid "Issues Analysis"
 msgstr "问题分析"
 
 #. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "看板阻塞说明"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "看板进展中说明"
+
+#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
 msgid "Kanban State"
 msgstr "看板状态"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
+msgid "Kanban Valid Explanation"
+msgstr "看板有效解释"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -537,10 +554,10 @@ msgid "New"
 msgstr "新建"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:344
+#: code:addons/project_issue/project_issue.py:347
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "新的问题"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -548,7 +565,7 @@ msgid "Next Action"
 msgstr "下一行动"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:387
+#: code:addons/project_issue/project_issue.py:390
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -562,7 +579,7 @@ msgstr "一般"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "动作的序列号"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -577,12 +594,12 @@ msgstr "问题开始的天数"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "需要动作的消息编号"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "未读的消息数量"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -590,12 +607,12 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:477
+#: code:addons/project_issue/project_issue.py:480
 #, python-format
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr ""
+msgstr "请移除关联到这个你想删除的账户的问题"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -699,7 +716,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Odoo的问题跟踪可以让你很方便的管理事物例如，内部需求，软件开的bug，客户投诉等等，项目问题，材料故障等等"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -707,7 +724,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Odoo的问题跟踪可以让你很方便的管理事物例如，内部需求，软件开的bug，客户投诉等等，项目问题，材料故障等等"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -746,7 +763,7 @@ msgstr "未读消息"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "未读消息计数器"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -756,12 +773,12 @@ msgstr "更新日期"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "Use Issues"
-msgstr ""
+msgstr "使用提问"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "把问题当做"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
@@ -798,17 +815,17 @@ msgstr "离关闭剩余小时数"
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr ""
+msgstr "你可以在这里把问题和任务链接起来，也可以直接创建一个"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid ""
 "You can track your issues from this menu and the action we     \n"
 "                will take."
-msgstr ""
+msgstr "你可以在这里追踪问题并查看相关的动作"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:257
+#: code:addons/project_issue/project_issue.py:260
 #, python-format
 msgid "issues"
 msgstr "问题"

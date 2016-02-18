@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:56+0000\n"
+"POT-Creation-Date: 2015-09-21 09:20+0000\n"
+"PO-Revision-Date: 2015-11-04 07:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -318,6 +318,12 @@ msgid "A tag must be unique!"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
+msgid "Action Needed"
+msgstr "الاجراء المطلوب"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "الإجراءات"
@@ -507,7 +513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
@@ -647,13 +653,13 @@ msgstr "المتابعون"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "المتابعون (القنوات)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "المتابعون (الشرماء)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -702,12 +708,16 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread
-#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread
 msgid "If checked new messages require your attention."
 msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "عند التفعيل، توجد رسالة جديدة"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -750,7 +760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_last_post
@@ -846,18 +856,6 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
@@ -898,6 +896,12 @@ msgid "Not Published"
 msgstr "غير منشور"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الاجراءات"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -924,14 +928,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "عدد الرسائل الواجب اجراءها"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "عدد الرسائل غير المقروءة"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
@@ -1277,7 +1281,7 @@ msgstr "الـ"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_4
@@ -1383,7 +1387,7 @@ msgstr "رسائل غير مقروءة"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "عداد الرسائل الغير مقروءة"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1504,6 +1508,11 @@ msgstr "الكلمات الدلالية بالموقع"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_meta_title
 msgid "Website meta title"
 msgstr "العنوان الدلالي بالموقع"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

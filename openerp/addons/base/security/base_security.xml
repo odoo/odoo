@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!--
             Users Groups
@@ -23,7 +23,6 @@
 
         <record model="res.groups" id="group_user">
             <field name="name">Employee</field>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
         <record model="res.groups" id="group_light_multi_company">
@@ -44,6 +43,7 @@
         </record>
         <record model="res.groups" id="group_user">
             <field name="implied_ids" eval="[(4, ref('group_no_one'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
         <record id="group_sale_salesman" model="res.groups">
@@ -79,7 +79,16 @@
         </record>
 
         <record id="public_user" model="res.users">
-            <field name="groups_id" eval="[(6,0,[ref('base.group_public')])]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_public'))]"/>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <record model="ir.rule" id="res_users_log_rule">
+            <field name="name">res.users.log per user</field>
+            <field name="model_id" ref="model_res_users_log"/>
+            <field name="domain_force">[('create_uid','=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
         </record>
 
         <record model="ir.rule" id="res_partner_rule">

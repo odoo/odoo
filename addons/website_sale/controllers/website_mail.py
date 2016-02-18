@@ -29,7 +29,7 @@ class WebsiteMailController(WebsiteMail):
             })
         return message_data
 
-    @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
+    @http.route(['/website_mail/post/post'], type='http', methods=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
         params = kw.copy()
         params.pop('rating')
@@ -44,7 +44,6 @@ class WebsiteMailController(WebsiteMail):
                     'res_id': res_id,
                     'message_id': message_id,
                 })
-                print rating
             except Exception:
                 pass
         return response

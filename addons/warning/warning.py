@@ -97,6 +97,7 @@ class purchase_order(osv.Model):
                 'message': message
                 }
             if partner.purchase_warn == 'block':
+                self.update({'partner_id': False})
                 return {'warning': warning}
 
         if warning:
@@ -108,7 +109,7 @@ class purchase_order(osv.Model):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
         result =  super(account_invoice, self)._onchange_partner_id()
         partner = self.partner_id
@@ -195,7 +196,7 @@ class sale_order_line(osv.osv):
             fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
-            return {'value': {'th_weight' : 0, 'product_packaging': False,
+            return {'value': {'product_packaging': False,
                 'product_uom_qty': qty}, 'domain': {'product_uom': [],
                    'product_uom': []}}
         product_obj = self.pool.get('product.product')

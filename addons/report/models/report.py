@@ -5,6 +5,7 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
+from openerp.sql_db import TestCursor
 from openerp.tools import config
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
@@ -87,7 +88,7 @@ class Report(osv.Model):
 
         view_obj = self.pool['ir.ui.view']
 
-        user = self.pool['res.users'].browse(cr, uid, uid)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
@@ -130,8 +131,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_html(self, records, report_name, data=None):
-        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
-                                    data=data, context=self._context)
+        return Report.get_html(self._model, self._cr, self._uid, records.ids,
+                               report_name, data=data, context=self._context)
 
     @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
@@ -140,8 +141,26 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
+        # As the assets are generated during the same transaction as the rendering of the
+        # templates calling them, there is a scenario where the assets are unreachable: when
+        # you make a request to read the assets while the transaction creating them is not done.
+        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        # table.
+        # This scenario happens when you want to print a PDF report for the first time, as the
+        # assets are not in cache and must be generated. To workaround this issue, we manually
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        if not config['test_enable']:
+            context = dict(context, commit_assetsbundle=True)
+
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
+
+        # The test cursor prevents the use of another environnment while the current
+        # transaction is not finished, leading to a deadlock when the report requests
+        # an asset bundle during the execution of test scenarios. In this case, return
+        # the html version.
+        if isinstance(cr, TestCursor):
+            return html
 
         html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
@@ -157,7 +176,6 @@ class Report(osv.Model):
             paperformat = report.paperformat_id
 
         # Preparing the minimal html pages
-        css = ''  # Will contain local css
         headerhtml = []
         contenthtml = []
         footerhtml = []
@@ -174,17 +192,14 @@ class Report(osv.Model):
             root = lxml.html.fromstring(html)
             match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
-            for node in root.xpath("//html/head/style"):
-                css += node.text
-
             for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
-                header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                header = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
             for node in root.xpath(match_klass.format('footer')):
                 body = lxml.html.tostring(node)
-                footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                footer = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
             for node in root.xpath(match_klass.format('page')):
@@ -205,7 +220,7 @@ class Report(osv.Model):
 
                 # Extract the body
                 body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
+                reportcontent = render_minimal(dict(subst=False, body=body, base_url=base_url))
 
                 contenthtml.append(tuple([reportid, reportcontent]))
 
@@ -230,8 +245,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_pdf(self, records, report_name, html=None, data=None):
-        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+        return Report.get_pdf(self._model, self._cr, self._uid, records.ids,
+                              report_name, html=html, data=data, context=self._context)
 
     @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
@@ -264,8 +279,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_action(self, records, report_name, data=None):
-        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
-                                      data=data, context=self._context)
+        return Report.get_action(self._model, self._cr, self._uid, records.ids,
+                                 report_name, data=data, context=self._context)
 
     #--------------------------------------------------------------------------
     # Report generation helpers
@@ -311,8 +326,8 @@ class Report(osv.Model):
 
     @api.v8
     def _check_attachment_use(self, records, report):
-        return self._model._check_attachment_use(
-            self._cr, self._uid, records.ids, report, context=self._context)
+        return Report._check_attachment_use(
+            self._model, self._cr, self._uid, records.ids, report, context=self._context)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state

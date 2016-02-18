@@ -95,11 +95,15 @@ class ir_config_parameter(osv.osv):
         if ids:
             param = self.browse(cr, uid, ids[0], context=context)
             old = param.value
-            self.write(cr, uid, ids, vals, context=context)
+            if value is not False and value is not None:
+                self.write(cr, uid, ids, vals, context=context)
+            else:
+                self.unlink(cr, uid, ids, context=context)
             return old
         else:
             vals.update(key=key)
-            self.create(cr, uid, vals, context=context)
+            if value is not False and value is not None:
+                self.create(cr, uid, vals, context=context)
             return False
 
     def write(self, cr, uid, ids, vals, context=None):

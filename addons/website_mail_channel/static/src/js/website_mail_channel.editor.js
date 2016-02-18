@@ -10,7 +10,7 @@ var website = require('website.website');
 
 var _t = core._t;
 
-options.subscribe = options.Class.extend({
+options.registry.subscribe = options.Class.extend({
     select_mailing_list: function (type, value) {
         var self = this;
         if (type !== "click") return;

@@ -3,13 +3,19 @@
 # * purchase
 # 
 # Translators:
+# Falk Scholze, 2015
+# Maik Steinfeld <info@streward.de>, 2015
+# Philipp Hug <philipp@hug.cx>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Renko Spiekermann <renkosp@gmail.com>, 2015
+# Wolfgang Taferner, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-12 19:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2016-02-06 16:44+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +27,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -54,18 +60,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -81,13 +76,13 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n\n    <p>Hier ist ein ${object.state in ('draft', 'sent') and 'Angebotsanfrage' or 'Auftragsbestätigung\n'} von ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENZ</strong><br />\n       &nbsp;&nbsp;Bestellnummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Bestellmenge gesamt: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Bestelldatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Bestellreferenz: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Ihr Zeichen: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;Ihr Kontakt: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Falls Sie Fragen haben, kontaktieren Sie uns einfach.</p>\n    <p>Vielen Dank!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -119,18 +114,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -146,7 +130,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n\n    <p>Hier ist ein ${object.state in ('draft', 'sent') and 'Angebotsanfrage' or 'Auftragsbestätigung'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENZ</strong><br />\n       &nbsp;&nbsp;RFQ Nummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;RFQ Datum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;RFQ Referenz: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Ihr Zeichen: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;Ihr Kontakt: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Falls Sie Fragen haben, kontaktieren Sie uns einfach.</p>\n    <p>Vielen Dank!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -156,7 +140,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/stock.py:63
+#: code:addons/purchase/stock.py:62
 #, python-format
 msgid " Buy"
 msgstr " Einkaufen"
@@ -170,7 +154,7 @@ msgstr "# Bestellungen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr ""
+msgstr "# Eingangsrechnungen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
@@ -190,12 +174,12 @@ msgstr "Anzahl Bestellungen"
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Bestellung (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Auftrag (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -206,33 +190,33 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Beschreibung</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
+msgstr "<strong>Geplantes Datum</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Net Price</strong>"
-msgstr ""
+msgstr "<strong>Nettopreis</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr ""
+msgstr "<strong>Bestelldatum:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Unsere Bestellreferenz:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Menge</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -243,27 +227,37 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Steuern</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Total ohne Steuer</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Total</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Einzelpreis</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Ihre Bestellreferenz</strong>"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
+msgid "Add Purchase Order"
+msgstr "Beschaffungsauftrag hinzufügen"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
@@ -271,8 +265,23 @@ msgid "Advance bidding process"
 msgstr "Ausschreibungen im Einkauf"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid "Advanced Calls for Tenders"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Advanced call for tender (choose products from different RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
+msgstr "Erlauben Sie Lieferanten direkt an Ihre Kunden zu liefern"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Allow using and importing vendor pricelists"
 msgstr ""
 
 #. module: purchase
@@ -329,7 +338,7 @@ msgstr "Anwenden"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_approve
 msgid "Approval Date"
-msgstr ""
+msgstr "Genehmigungsdatum"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -339,6 +348,13 @@ msgstr "Bestellung genehmigen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_procurement_ids
 msgid "Associated Procurements"
+msgstr "Verknüpfte Beschaffungsaufträge"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
+msgid ""
+"Associated Purchase Order. Filled in automatically when a PO is chosen on "
+"the vendor bill."
 msgstr ""
 
 #. module: purchase
@@ -354,10 +370,10 @@ msgstr "Durchschnittspreis"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
-msgstr ""
+msgstr "Verrechnete Menge"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:611 code:addons/purchase/stock.py:57
+#: code:addons/purchase/purchase.py:605 code:addons/purchase/stock.py:56
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -394,7 +410,7 @@ msgid "Can be Purchased"
 msgstr "Kann eingekauft werden"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:627
+#: code:addons/purchase/purchase.py:621
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -402,7 +418,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/stock.py:60
+#: code:addons/purchase/stock.py:59
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Es kann keine allgemein gültige Beschaffungsroute gefunden werden."
@@ -419,7 +435,7 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:474
+#: code:addons/purchase/purchase.py:529
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Es kann keine Bestellposition im Status '%s' gelöscht werden."
@@ -427,23 +443,23 @@ msgstr "Es kann keine Bestellposition im Status '%s' gelöscht werden."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr ""
+msgstr "Klicken Sie hier zur Erstellung einer neuen Lieferantenrechnung."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a draft invoice."
-msgstr ""
+msgstr "Klicken Sie, um einen Rechnungsentwurf zu erstellen."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
-msgstr ""
+msgstr "Klicken um ein Angebot zu erstellen. Dieses wird dann in eine Bestellung umgewandelt."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr ""
+msgstr "Klicken um eine Angebotsanfrage zu erstellen."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -474,7 +490,7 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:236
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Compose Email"
 msgstr "E-Mail schreiben"
@@ -503,7 +519,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
 msgid "Control"
-msgstr ""
+msgstr "Steuerung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
@@ -514,7 +530,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_costing_method
 msgid "Costing Methods"
-msgstr ""
+msgstr "Kalkulationsverfahren"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_create_uid
@@ -590,7 +606,7 @@ msgstr "Beschreibung"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Anzeigename"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -605,7 +621,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "Entwurf Einkauf"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -620,12 +636,19 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Streckengeschäft"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "E-Mail Assistent"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
+msgid ""
+"Encoding help. When selected, the associated purchase order lines are added "
+"to the vendor bill. Several PO can be selected."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -652,12 +675,12 @@ msgstr "Followers"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Beobachter (Kanäle)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Beobachter (Partner)"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -687,21 +710,32 @@ msgstr "ID"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"If a purchase order is done, you can not modify it manually anymore. But you"
-" will still be able to bill or receive."
+"If a purchase order is done, you cannot modify it manually anymore. You will"
+" not be able to receive invoices anymore for this purchase order."
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:183
+#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:184
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Um eine Bestellung zu löschen, muss sie zunächst storniert werden."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid ""
+"In the process of a public tendering, you can compare the tender lines and "
+"choose for each requested product which quantity you will buy from each bid."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -774,7 +808,7 @@ msgstr "Rechnungen und Anlieferungen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Ist Beobachter"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_last_post
@@ -812,6 +846,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
 msgstr "Lagerort & Lager"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_manage_vendor_price
+msgid "Manage Vendor Price"
+msgstr "Preise der Lieferanten verwalten"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Manage vendor price on the product form"
+msgstr "Lieferantenpreise im Produkt-Formular verwalten"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -859,16 +903,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New Mail"
 msgstr "Neue E-Mail"
@@ -876,7 +910,7 @@ msgstr "Neue E-Mail"
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Keine Produktvarianten"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:771
@@ -901,24 +935,29 @@ msgid "Notes"
 msgstr "Notizen"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
-msgstr ""
+msgstr "Auf bestellte Mengen"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
-msgstr ""
+msgstr "Auf erhaltene Mengen"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
@@ -973,7 +1012,7 @@ msgstr "Postausgang"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -984,12 +1023,12 @@ msgstr "Partner"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "Partnerland"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "Land des Partner"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
@@ -1006,7 +1045,7 @@ msgstr "Konto-Preisdifferenz"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Vendor"
-msgstr ""
+msgstr "Preis je Lieferant"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
@@ -1081,7 +1120,7 @@ msgstr "Produktvarianten"
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Products"
-msgstr "Produktverzeichnis"
+msgstr "Produkte"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
@@ -1093,12 +1132,12 @@ msgstr "Produktpreis"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Produkte können mehrere Attribute haben, die Varianten definieren (Beispiele: Größe, Farbe...)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "Produkte haben nur eine Maßeinheit (einfacher)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
@@ -1131,7 +1170,7 @@ msgstr "Durchschnittliche Lieferzeit"
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
@@ -1145,8 +1184,8 @@ msgstr "Beschaffungsauftrag"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Purchase Order Confirmation N°"
-msgstr "Bestellnummer"
+msgid "Purchase Order Confirmation #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1185,7 +1224,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Statistik Bestellungen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:475
+#: code:addons/purchase/purchase.py:530
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1264,7 +1303,7 @@ msgstr "Angebotsanfrage verschickt"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1333,8 +1372,8 @@ msgstr "Anfrage eines Angebots"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Request for Quotation N°"
-msgstr "Angebotsanfrage Nr."
+msgid "Request for Quotation #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1379,12 +1418,12 @@ msgstr "Sende Anfrage per E-Mail"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Set a fixed cost price on each product"
-msgstr ""
+msgstr "Ein einziger Preis pro Produkt"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "Als erledigt markieren"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1402,6 +1441,11 @@ msgid "Shipment"
 msgstr "Lieferung"
 
 #. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Simple call for tender (only choose from one RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different unit of measures (advanced)"
@@ -1413,6 +1457,7 @@ msgid "Source Document"
 msgstr "Quelle Dokument"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_state
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1422,7 +1467,7 @@ msgstr "Status"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr "Lieferauftrag"
+msgstr "Lagerbuchung"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1437,7 +1482,7 @@ msgstr "Zwischensumme"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
 msgid "Supplier Currency"
-msgstr ""
+msgstr "Lieferantenwährung"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -1447,7 +1492,7 @@ msgstr "Lieferantenpreisliste"
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
-msgstr ""
+msgstr "Verkäufer liefern direkt zu ihren Lager(n)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
@@ -1531,7 +1576,7 @@ msgstr "Zur Genehmigung"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_total
 msgid "Total"
-msgstr "Bruttobetrag"
+msgstr "Gesamtbetrag"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_total
@@ -1554,7 +1599,7 @@ msgid "Transfer"
 msgstr "Lieferung vornehmen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:299
+#: code:addons/purchase/purchase.py:283
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1562,7 +1607,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:286
 #, python-format
 msgid ""
 "Unable to cancel this purchase order.i You must first cancel related vendor "
@@ -1582,7 +1627,7 @@ msgstr "Einheiten Kategorien"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
 msgid "Unit of Measures"
-msgstr ""
+msgstr "Mengeneinheiten"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1598,7 +1643,7 @@ msgstr "Ungelesene Mitteilungen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Zähler der ungelesenen Nachrichten"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1613,7 +1658,7 @@ msgstr "Nettobetrag"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
-msgstr ""
+msgstr "Benutzen Sie 'Fest-', 'Einkaufs-' oder 'Durchschnittspreis' zur Bestandsbewertung"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -1631,7 +1676,7 @@ msgid ""
 "                references, vendor, products, etc. For each purchase order,\n"
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
-msgstr ""
+msgstr "Nutze dieses Menü, um innerhalb deiner Bestellungen nach Referenzen, Verkäufer, Produkte, usw. zu suchen. Für jede Bestellung kannst du die entsprechende Diskussion mit dem Verkäufer nachvollziehen, die eingetroffenen Produkte kontrollieren und die Verkäufer Rechnungen prüfen."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1652,7 +1697,7 @@ msgstr "USt."
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr ""
+msgstr "Lieferant"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -1661,17 +1706,22 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Eingangsrechnungen"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills."
-msgstr ""
+msgstr "Eingangsrechnungen"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
+msgid "Vendor Price"
+msgstr "Einkaufspreis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
-msgstr ""
+msgstr "Lieferantenreferenz"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1685,7 +1735,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
-msgstr ""
+msgstr "Wartet auf Abrechnungen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse

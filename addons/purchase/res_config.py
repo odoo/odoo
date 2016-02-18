@@ -34,6 +34,12 @@ class purchase_config_settings(osv.osv_memory):
             help="""Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.
                     You can configure per product if you directly do a Request for Quotation
                     to one vendor or if you want a Call for Tenders to compare offers from several vendors."""),
+        'group_advance_purchase_requisition': fields.selection([
+            (0, 'Simple call for tender (only choose from one RFQ)'),
+            (1, 'Advanced call for tender (choose products from different RFQ)')
+            ], "Advanced Calls for Tenders",
+            implied_group='purchase.group_advance_bidding',
+            help="""In the process of a public tendering, you can compare the tender lines and choose for each requested product which quantity you will buy from each bid."""),
         'module_stock_dropshipping': fields.selection([
             (0, 'Suppliers always deliver to your warehouse(s)'),
             (1, "Allow suppliers to deliver directly to your customers")

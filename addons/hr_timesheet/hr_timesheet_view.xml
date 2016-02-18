@@ -90,6 +90,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_timesheet_line_form"/>
+            <field name="domain">[('is_timesheet', '=', True)]</field>
             <field name="context">{"search_default_today":1, "default_is_timesheet":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">

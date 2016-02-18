@@ -683,6 +683,50 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
+    @api.onchange('employee_id', 'date_from')
+    def onchange_employee(self):
+
+        if (not self.employee_id) or (not self.date_from) or (not self.date_to):
+            return
+
+        employee_id = self.employee_id
+        date_from = self.date_from
+        date_to = self.date_to
+
+        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
+        self.name = _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y')))
+        self.company_id = employee_id.company_id
+
+        if not self.env.context.get('contract') or not self.contract_id:
+            contract_ids = self.get_contract(employee_id, date_from, date_to)
+            if not contract_ids:
+                return
+            self.contract_id = self.contract_id.browse(contract_ids[0])
+
+        if not self.contract_id.struct_id:
+            return
+        self.struct_id = self.contract_id.struct_id
+
+        #computation of the salary input
+        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
+        worked_days_lines = self.worked_days_line_ids.browse([])
+        for r in worked_days_line_ids:
+            worked_days_lines += worked_days_lines.new(r)
+        self.worked_days_line_ids = worked_days_lines
+
+        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        input_lines = self.input_line_ids.browse([])
+        for r in input_line_ids:
+            input_lines += input_lines.new(r)
+        self.input_line_ids = input_lines
+        return
+
+    @api.onchange('contract_id')
+    def onchange_contract(self):
+        if not self.contract_id:
+            self.struct_id = False
+        self.with_context(contract=True).onchange_employee()
+        return
 
 class hr_payslip_worked_days(osv.osv):
     '''
@@ -924,24 +968,6 @@ class hr_employee(osv.osv):
     _inherit = 'hr.employee'
     _description = 'Employee'
 
-    def _calculate_total_wage(self, cr, uid, ids, name, args, context):
-        if not ids: return {}
-        res = {}
-        current_date = datetime.now().strftime('%Y-%m-%d')
-        for employee in self.browse(cr, uid, ids, context=context):
-            if not employee.contract_ids:
-                res[employee.id] = {'basic': 0.0}
-                continue
-            cr.execute( 'SELECT SUM(wage) '\
-                        'FROM hr_contract '\
-                        'WHERE employee_id = %s '\
-                        'AND date_start <= %s '\
-                        'AND (date_end > %s OR date_end is NULL)',
-                         (employee.id, current_date, current_date))
-            result = dict(cr.dictfetchone())
-            res[employee.id] = {'basic': result['sum']}
-        return res
-
     def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
         Payslip = self.pool['hr.payslip']
         return {
@@ -951,6 +977,5 @@ class hr_employee(osv.osv):
 
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
         'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips', groups="base.group_hr_user"),
     }

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"PO-Revision-Date: 2016-02-04 16:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:374
+#: code:addons/fleet/fleet.py:373
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:650
+#: code:addons/fleet/fleet.py:649
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr ""
@@ -73,7 +73,7 @@ msgstr "تاريخ الاستحواذ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "الاجراء المطلوب"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -278,7 +278,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid "Click to create a new vehicle."
-msgstr ""
+msgstr "إنقر هنا لإضافة مركبة جديدة."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
@@ -490,7 +490,7 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
 msgid "Current state of the vehicle"
 msgstr "الحالة الراهنة للسيارة"
 
@@ -562,7 +562,7 @@ msgstr "ديزل"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
@@ -585,7 +585,7 @@ msgid "Driver of the vehicle"
 msgstr "سائق المركبة"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr ""
@@ -618,7 +618,7 @@ msgid "Emissions"
 msgstr "الانبعاثات"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:29
+#: code:addons/fleet/fleet.py:31
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr ""
@@ -667,12 +667,12 @@ msgstr "المتابعون"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "المتابعون (القنوات)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "المتابعون (الشرماء)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -839,7 +839,7 @@ msgstr "هجين"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2813
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -855,7 +855,7 @@ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتب�
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، توجد رسالة جديدة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -924,7 +924,7 @@ msgstr "مرجع الفاتورة"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1000,7 +1000,7 @@ msgid "License Plate"
 msgstr "رقم اللوحة"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:398
+#: code:addons/fleet/fleet.py:397
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr ""
@@ -1080,17 +1080,17 @@ msgid "Manual"
 msgstr "يدوي"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
+msgid "Medium-sized image"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
 msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
-msgid "Medium-sized photo"
-msgstr "صورة متوسطة الحجم"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
@@ -1108,7 +1108,7 @@ msgid "Miles"
 msgstr "أميال"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1137,12 +1137,12 @@ msgid "Model of a vehicle"
 msgstr "طراز مركبة"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
 msgid "Model of the vehicle"
 msgstr "طراز المركبة"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:387
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr ""
@@ -1186,8 +1186,8 @@ msgid "No"
 msgstr "كلا"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386 code:addons/fleet/fleet.py:390
-#: code:addons/fleet/fleet.py:394 code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
+#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
 #, python-format
 msgid "None"
 msgstr "لا شيء"
@@ -1202,7 +1202,7 @@ msgstr "الملاحظات"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "عدد الاجراءات"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
@@ -1212,7 +1212,7 @@ msgstr "عدد أبواب المركبة"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "عدد الرسائل الواجب اجراءها"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
@@ -1222,7 +1222,7 @@ msgstr "عدد مقاعد المركبة"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "عدد الرسائل غير المقروءة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1446,7 +1446,7 @@ msgid "Refueling Details"
 msgstr "تفاصيل التزود بالوقود"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:721
+#: code:addons/fleet/fleet.py:720
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1573,13 +1573,13 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
-msgid "Smal-sized photo"
+msgid "Small-sized image"
 msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
-"Small-sized photo of the brand. It is automatically resized as a 64x64px "
+"Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
@@ -1600,7 +1600,7 @@ msgid "Starter Replacement"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "المحافظة"
@@ -1611,7 +1611,7 @@ msgid "State name already exists"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:395
+#: code:addons/fleet/fleet.py:394
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr ""
@@ -1775,7 +1775,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2879
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
 msgid "Unit"
 msgstr "وحدة القياس"
 
@@ -1792,7 +1792,7 @@ msgstr "رسائل غير مقروءة"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "عداد الرسائل الغير مقروءة"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1918,7 +1918,7 @@ msgstr "عدادات مسافات المركبات"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vendor_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vendor_id
 msgid "Vendor"
-msgstr ""
+msgstr "المورّد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_vendors

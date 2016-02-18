@@ -9,7 +9,7 @@ from openerp import api, fields as fields2
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
-import simplejson as json
+import json
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -20,7 +20,7 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
-        date = context.get('date') or time.strftime('%Y-%m-%d')
+        date = context.get('date') or fields2.Datetime.now()
         company_id = context.get('company_id') or self.pool['res.users']._get_company(cr, uid, context=context)
         for id in ids:
             cr.execute("""SELECT rate FROM res_currency_rate 
@@ -261,6 +261,24 @@ class res_currency(osv.osv):
                 company_currency_format = return_str
         function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
+
+    def _select_companies_rates(self):
+        return """
+            SELECT
+                r.currency_id,
+                COALESCE(r.company_id, c.id) as company_id,
+                r.rate,
+                r.name AS date_start,
+                (SELECT name FROM res_currency_rate r2
+                 WHERE r2.name > r.name AND
+                       r2.currency_id = r.currency_id AND
+                       (r2.company_id is null  or r2.company_id = r.company_id)
+                 ORDER BY r2.name ASC
+                 LIMIT 1) AS date_end
+            FROM res_currency_rate r
+            JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
+        """
+
 
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"

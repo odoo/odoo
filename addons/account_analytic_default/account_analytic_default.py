@@ -4,6 +4,7 @@
 import time
 
 from openerp.osv import fields, osv
+from openerp import api
 
 class account_analytic_default(osv.osv):
     _name = "account.analytic.default"
@@ -12,7 +13,7 @@ class account_analytic_default(osv.osv):
     _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of analytic distribution"),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Select a product which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)"),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', help="Select a partner which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade', help="Select a user which will use analytic account specified in analytic default."),
@@ -58,8 +59,9 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _description = "Invoice Line"
 
-    def product_id_change(self):
-        res = super(account_invoice_line, self).product_id_change()
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        res = super(account_invoice_line, self)._onchange_product_id()
         rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self._uid,
                                                                time.strftime('%Y-%m-%d'), company_id=self.company_id.id, context=self._context)
         if rec:
@@ -85,21 +87,13 @@ class stock_picking(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
-    # Method overridden to set the analytic account by default on criterion match
-    def invoice_line_create(self, cr, uid, ids, invoice_id, quantity, context=None):
-        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, invoice_id, quantity, context=context)
-        if not ids:
-            return create_ids
-        sale_line = self.browse(cr, uid, ids[0], context=context)
-        inv_line_obj = self.pool.get('account.invoice.line')
-        anal_def_obj = self.pool.get('account.analytic.default')
-
-        for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, sale_line.order_id.user_id.id, time.strftime('%Y-%m-%d'), context=context)
-
-            if rec:
-                inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
-        return create_ids
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(sale_order_line, self)._prepare_invoice_line(qty)
+        default_analytic_account = self.env['account.analytic.default'].account_get(self.product_id.id, self.order_id.partner_id.id, self.order_id.user_id.id, time.strftime('%Y-%m-%d'))
+        if default_analytic_account:
+            res.update({'account_analytic_id': default_analytic_account.analytic_id.id})
+        return res
 
 
 class product_product(osv.Model):
@@ -119,7 +113,6 @@ class product_template(osv.Model):
     _inherit = 'product.template'
     
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
-        Analytic = self.pool['account.analytic.default']
         res = {}
         for product_tmpl_id in self.browse(cr, uid, ids, context=context):
             res[product_tmpl_id.id] = sum([p.rules_count for p in product_tmpl_id.product_variant_ids])
@@ -137,3 +130,17 @@ class product_template(osv.Model):
         # Remove context so it is not going to filter on product_id with active_id of template
         result['context'] = "{}"
         return result
+
+
+class stock_move(osv.Model):
+    _inherit = 'stock.move'
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        # It will set the default analtyic account on the invoice line
+        partner_id = self.pool['account.invoice'].browse(cr, uid, invoice_line_vals.get('invoice_id'), context=context).partner_id.id
+        if 'account_analytic_id' not in invoice_line_vals or not invoice_line_vals.get('account_analytic_id'):
+            rec = self.pool['account.analytic.default'].account_get(cr, uid, move.product_id.id, partner_id, uid, time.strftime('%Y-%m-%d'), company_id=move.company_id.id, context=context)
+            if rec:
+                invoice_line_vals.update({'account_analytic_id': rec.analytic_id.id})
+        res = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        return res

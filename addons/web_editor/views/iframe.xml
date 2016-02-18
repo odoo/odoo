@@ -15,7 +15,7 @@
                 var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
             </script>
-            <link t-if="inline_mode" rel="stylesheet" href="/web_editor/static/src/css/inline.css" type="text/css"/>
+            <link t-if="enable_editor and inline_mode" rel="stylesheet" href="/web_editor/static/src/css/inline.css" type="text/css"/>
             <t t-if="not dont_load_assets">
                 <t t-call-assets="web_editor.assets_editor"/>
                 <style>
@@ -39,10 +39,17 @@
                         }
                     };
                 }
+                if(window['odoo']) {
+                    odoo.define('web.csrf', function (require) {
+                        var token = "<t t-esc="request.csrf_token(None)"/>";
+                        require('web.core').csrf_token = token;
+                        require('qweb').default_dict.csrf_token = token;
+                    });
+                }
             </script>
             <t t-raw="head or ''"/>
         </head>
-        <body onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
+        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
             <div id="wrapwrap">
                 <main>
                     <t t-raw="0"/>

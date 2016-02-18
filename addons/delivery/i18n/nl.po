@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 11:13+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-11 13:41+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,7 +282,7 @@ msgstr "Voorwaarde"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr "Controleer aankooprekeningen"
+msgstr "Controleer leveranciersfactuur"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -631,7 +633,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr "Indien u aan kost factureert, dan zal de declaratie gefactureerd worden aan de kost van de kostenplaatslijn; indien u factureert aan verkoopprijs, dan zal de productprijs gehanteerd worden."
+msgstr "Indien u aan kost factureert, dan zal de declaratie gefactureerd worden aan de kost van de kostenplaatsregel; indien u factureert aan verkoopprijs, dan zal de productprijs gehanteerd worden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -684,12 +686,17 @@ msgstr "Internationaal artikelnummer voor product identificatie"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Voorraadtellingen locatie"
+msgstr "Voorraadverschillen locatie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
 msgid "Inventory Valuation"
 msgstr "Voorraadwaardering"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr "Factuurverzending bij levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -756,16 +763,6 @@ msgid "Logistical Units"
 msgstr "Logistieke eenheden"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_id
-msgid "Main Vendor"
-msgstr "Standaardleverancier"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr "Standaardleverancier met de hoogste prioriteit in de leverancierslijst"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
 msgstr "Productietijd"
@@ -828,13 +825,13 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:56
+#: code:addons/delivery/models/sale_order.py:62
 #, python-format
 msgid "No carrier matching."
 msgstr "Geen overeenkomende vervoerder."
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:85
+#: code:addons/delivery/models/sale_order.py:70
 #, python-format
 msgid "No carrier set for this order."
 msgstr "Geen vervoerder aangeduid voor dit order."
@@ -997,11 +994,6 @@ msgid "Product Use Time"
 msgstr "Product gebruiksduur"
 
 #. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Production"
-msgstr "Productie"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
 msgstr "Productielocatie"
@@ -1025,11 +1017,6 @@ msgstr "Inkoopkloof"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Inkoop maateenheid"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_price
-msgid "Purchase price from main vendor."
-msgstr "Inkoopprijs van de standaardleverancier."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1122,12 +1109,7 @@ msgid ""
 msgstr "Selecteer evenement soorten, voor als we dit product willen gebruiken in de verkoop orderregels, zal het evenementen van dit soort filteren."
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_selected_seller_id
-msgid "Selected Seller"
-msgstr "Geselecteerde verkoper"
-
-#. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:258
+#: code:addons/delivery/models/delivery_carrier.py:250
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1151,10 +1133,18 @@ msgid "Set price"
 msgstr "Bepaal prijs"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:86
+#: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Levering verzonden naar vervoerder %s voor expeditie met traceernummer %s"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "Uw leveringsmethode heeft geen doorverwijzing naar de website van de koerier om dit order te volgen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1198,14 +1188,14 @@ msgid ""
 msgstr "Kostprijs: De kostprijs wordt handmatig bijgewerkt (meestal aan het eind van het jaar). \nGemiddelde prijs: De kostprijs wordt bij elke binnenkomst van producten opnieuw berekend en gebruikt voor de voorraadwaarde.\nWerkelijke prijs: De kostprijs is de prijs van het laatste verkochte product (wordt bijvoorbeeld gebruikt in het geval van een voorraadverschil)."
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "State"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
+msgid "States"
 msgstr "Provincie/Staat"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
-msgid "States"
-msgstr "Statussen"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
+msgid "Status"
+msgstr "Status"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1256,21 +1246,9 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "Totale hoeveelheid over leveranciersfacturen"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr "Technisch veld dat een verkoper selecteert gebaseerd op prioriteit (sequentie) en een optionele relatie en/of een minimale hoeveelheid in de context"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Sjabloonnaam"
-
-#. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Testing"
-msgstr "Testen"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1287,7 +1265,7 @@ msgid ""
 msgstr "De gemiddelde vertraging in dagen tussen de bevestiging door de klant en de levering van de producten. Dit is de levertijd die u aan uw klanten beloofd."
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:47
+#: code:addons/delivery/models/sale_order.py:53
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "De order moet in status \"Concept\" zijn om leveringsregels toe te voegen."
@@ -1347,19 +1325,6 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr "Dit veld bevat de afbeelding die gebruikt wordt voor de product variant, gelimiteerd tot 1024x2014px."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr "De minimale bestelhoeveelheid bij de hoofdleverancier."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr "Dit is de gemiddelde vertraging in dagen tussen een aankooporderbevestiging en de kassabon voor dit product en voor de standaard fabrikant."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
@@ -1511,27 +1476,12 @@ msgstr "Variant afbeelding"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr "Fabrikant"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_delay
-msgid "Vendor Lead Time"
-msgstr "Levertermijn van leverancier"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_price
-msgid "Vendor Price"
-msgstr "Fabrikant prijs"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_qty
-msgid "Vendor Quantity"
-msgstr "Fabrikant hoeveelheid"
+msgstr "Leverancier"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Leveranciersbelastingen"
+msgstr "Inkoop belastingen"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1633,7 +1583,7 @@ msgstr "Naar postcode"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "e.g. USPS Express"
+msgid "e.g. UPS Express"
 msgstr "bijv. UPS Express"
 
 #. module: delivery

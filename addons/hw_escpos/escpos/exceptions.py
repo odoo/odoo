@@ -86,7 +86,7 @@ class NoStatusError(Error):
         self.resultcode = 70
 
     def __str__(self):
-        return "Impossible to get status from the printer"
+        return "Impossible to get status from the printer: " + str(self.msg)
 
 class TicketNotPrinted(Error):
     def __init__(self, msg=""):
@@ -95,7 +95,7 @@ class TicketNotPrinted(Error):
         self.resultcode = 80
 
     def __str__(self):
-        return "A part of the ticket was not been printed"
+        return "A part of the ticket was not been printed: " + str(self.msg)
 
 class NoDeviceError(Error):
     def __init__(self, msg=""):
@@ -104,7 +104,7 @@ class NoDeviceError(Error):
         self.resultcode = 90
 
     def __str__(self):
-        return "Impossible to find the printer Device"
+        return str(self.msg)
 
 class HandleDeviceError(Error):
     def __init__(self, msg=""):
@@ -113,4 +113,4 @@ class HandleDeviceError(Error):
         self.resultcode = 100
 
     def __str__(self):
-        return "Impossible to handle device"
+        return str(self.msg)

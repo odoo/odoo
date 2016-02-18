@@ -6,6 +6,7 @@ var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var core = require('web.core');
 var Model = require('web.DataModel');
+var formats = require('web.formats');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -201,7 +202,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -210,9 +211,8 @@ exports.PosModel = Backbone.Model.extend({
                 self.taxes_by_id[tax.id] = tax;
             });
             _.each(self.taxes_by_id, function(tax) {
-                tax.child_taxes = {};
-                _.each(tax.child_ids, function(child_tax_id) {
-                    tax.child_taxes[child_tax_id] = self.taxes_by_id[child_tax_id];
+                tax.children_tax_ids = _.map(tax.children_tax_ids, function (child_tax_id) {
+                    return self.taxes_by_id[child_tax_id];
                 });
             });
         },
@@ -287,7 +287,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
     },{
         model: 'res.currency',
-        fields: ['name','symbol','position','rounding','accuracy'],
+        fields: ['name','symbol','position','rounding'],
         ids:    function(self){ return [self.pricelist.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
@@ -325,7 +325,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.bank.statement',
-        fields: ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+        fields: ['account_id','currency_id','journal_id','state','name','user_id','pos_session_id'],
         domain: function(self){ return [['state', '=', 'open'],['pos_session_id', '=', self.pos_session.id]]; },
         loaded: function(self, cashregisters, tmp){
             self.cashregisters = cashregisters;
@@ -337,7 +337,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.journal',
-        fields: [],
+        fields: ['type', 'sequence'],
         domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
         loaded: function(self, journals){
             var i;
@@ -371,6 +371,40 @@ exports.PosModel = Backbone.Model.extend({
             });
 
         },
+    },  {
+        model:  'account.fiscal.position',
+        fields: [],
+        domain: function(self){ return [['id','in',self.config.fiscal_position_ids]]; },
+        loaded: function(self, fiscal_positions){
+            self.fiscal_positions = fiscal_positions;
+        }
+    }, {
+        model:  'account.fiscal.position.tax',
+        fields: [],
+        domain: function(self){
+            var fiscal_position_tax_ids = [];
+
+            self.fiscal_positions.forEach(function (fiscal_position) {
+                fiscal_position.tax_ids.forEach(function (tax_id) {
+                    fiscal_position_tax_ids.push(tax_id);
+                });
+            });
+
+            return [['id','in',fiscal_position_tax_ids]];
+        },
+        loaded: function(self, fiscal_position_taxes){
+            self.fiscal_position_taxes = fiscal_position_taxes;
+            self.fiscal_positions.forEach(function (fiscal_position) {
+                fiscal_position.fiscal_position_taxes_by_id = {};
+                fiscal_position.tax_ids.forEach(function (tax_id) {
+                    var fiscal_position_tax = _.find(fiscal_position_taxes, function (fiscal_position_tax) {
+                        return fiscal_position_tax.id === tax_id;
+                    });
+
+                    fiscal_position.fiscal_position_taxes_by_id[fiscal_position_tax.id] = fiscal_position_tax;
+                });
+            });
+        }
     },  {
         label: 'fonts',
         loaded: function(){
@@ -1037,8 +1071,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         this.product = options.product;
         this.price   = options.product.price;
-        this.quantity = 1;
-        this.quantityStr = '1';
+        this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
         this.type = 'unit';
@@ -1059,10 +1092,11 @@ exports.Orderline = Backbone.Model.extend({
     clone: function(){
         var orderline = new exports.Orderline({},{
             pos: this.pos,
-            order: null,
+            order: this.order,
             product: this.product,
             price: this.price,
         });
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
@@ -1101,7 +1135,8 @@ exports.Orderline = Backbone.Model.extend({
             if(unit){
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    var decimals = this.pos.dp['Product Unit of Measure'];
+                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1225,9 +1260,8 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_display_price: function(){
-        return this.get_base_price();
         if (this.pos.config.iface_tax_included) {
-            return this.get_all_prices().priceWithTax;
+            return this.get_price_with_tax();
         } else {
             return this.get_base_price();
         }
@@ -1269,19 +1303,35 @@ exports.Orderline = Backbone.Model.extend({
         }
         return taxes;
     },
+    _map_tax_fiscal_position: function(tax) {
+        var current_order = this.pos.get_order();
+        var order_fiscal_position = current_order && current_order.fiscal_position;
+
+        if (order_fiscal_position) {
+            var mapped_tax = _.find(order_fiscal_position.fiscal_position_taxes_by_id, function (fiscal_position_tax) {
+                return fiscal_position_tax.tax_src_id[0] === tax.id;
+            });
+
+            if (mapped_tax) {
+                tax = this.pos.taxes_by_id[mapped_tax.tax_dest_id[0]];
+            }
+        }
+
+        return tax;
+    },
     _compute_all: function(tax, base_amount, quantity) {
         if (tax.amount_type === 'fixed') {
             var ret = tax.amount * quantity;
             return base_amount >= 0 ? ret : ret * -1;
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
-            return (base_amount * tax.amount / 100) * quantity;
+            return base_amount * tax.amount / 100;
         }
         if (tax.amount_type === 'percent' && tax.price_include){
-            return (base_amount - (base_amount / (1 + tax.amount / 100))) * quantity;
+            return base_amount - (base_amount / (1 + tax.amount / 100));
         }
         if (tax.amount_type === 'division' && !tax.price_include) {
-            return (base_amount / (1 - tax.amount / 100) - base_amount) * quantity;
+            return base_amount / (1 - tax.amount / 100) - base_amount;
         }
         return false;
     },
@@ -1295,15 +1345,16 @@ exports.Orderline = Backbone.Model.extend({
            currency_rounding = currency_rounding * 0.00001;
         }
         _(taxes).each(function(tax) {
+            tax = self._map_tax_fiscal_position(tax);
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
                 base = ret.total_excluded;
                 total_included = ret.total_included;
-                list_taxes.concat(ret.taxes)
+                list_taxes = list_taxes.concat(ret.taxes);
             }
             else {
-                var tax_amount = self._compute_all(tax, price_unit, quantity);
+                var tax_amount = self._compute_all(tax, base, quantity);
                 tax_amount = round_pr(tax_amount, currency_rounding);
 
                 if (tax_amount){
@@ -1321,8 +1372,8 @@ exports.Orderline = Backbone.Model.extend({
                         id: tax.id,
                         amount: tax_amount,
                         name: tax.name,
-                    }
-                    list_taxes.push(data)
+                    };
+                    list_taxes.push(data);
                 }
             }
         });
@@ -1475,7 +1526,7 @@ exports.Order = Backbone.Model.extend({
         return this;
     },
     save_to_db: function(){
-        if (!this.init_locked) {
+        if (!this.temporary && !this.init_locked) {
             this.pos.db.save_unpaid_order(this);
         } 
     },
@@ -1540,6 +1591,7 @@ exports.Order = Backbone.Model.extend({
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.creation_date,
+            fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false
         };
     },
     export_for_printing: function(){

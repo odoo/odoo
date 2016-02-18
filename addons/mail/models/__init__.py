@@ -15,4 +15,5 @@ import res_users
 import res_config
 import update
 import ir_actions
+import ir_autovacuum
 import html2text

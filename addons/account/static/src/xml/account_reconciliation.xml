@@ -5,7 +5,7 @@
     <!-- abstract or shared templates -->
 
     <t t-name="reconciliation">
-        <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
+        <div class="o_form_view"><div class="oe_form_sheetbg o_form_sheet_bg"><div class="oe_form_sheet oe_form_sheet_width o_form_sheet">
             <h1><t t-esc="title"/></h1>
             <div t-if="! hide_progress" class="progress progress-striped">
                 <div class="progress-text"><span class="valuenow">0</span> / <span class="valuemax"><t t-esc="total_lines"/></span></div>
@@ -18,7 +18,7 @@
             <div class="reconciliation_lines_container"></div>
             <div class="show_more_container"><button class="show_more btn btn-default btn-sm">Show more... (<span class="num_items_remaining"></span> remaining)</button></div>
             <p class='protip'>Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet.</p>
-        </div></div>
+        </div></div></div>
     </t>
 
     <t t-name="nothing_to_reconcile">

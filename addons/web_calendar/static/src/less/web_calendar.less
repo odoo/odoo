@@ -24,6 +24,10 @@
     }
     .underline_color_loop(1);
 
+    > .row {
+        height: 100%;
+    }
+
     .o_calendar_view {
         height: 100%;
 
@@ -40,6 +44,9 @@
                 margin-left: 1px;
                 width: 18px;
                 height: 18px;
+            }
+            .fc-view {
+                overflow-x: auto;
             }
         }
     }
@@ -116,7 +123,6 @@
             padding: 8px;
             background: @odoo-view-background-color;
         }
-        
     }
 }
 

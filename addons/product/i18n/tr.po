@@ -3,13 +3,15 @@
 # * product
 # 
 # Translators:
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Taner HASRET <tanerhasret@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-01-18 15:58+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +22,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "ürün kategorisi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -32,7 +34,7 @@ msgstr "Ürün Varyant Sayısı"
 #: code:addons/product/pricelist.py:288
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "% indirim"
 
 #. module: product
 #: code:addons/product/pricelist.py:290
@@ -41,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:739 code:addons/product/product.py:1135
+#: code:addons/product/product.py:710 code:addons/product/product.py:1134
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -128,7 +130,7 @@ msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core gr
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "Yüzde 75 daha az yansıma."
 
 #. module: product
 #: model:product.product,name:product.product_product_51
@@ -137,29 +139,36 @@ msgid "8-port Switch"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Para Birimi</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Açıklama:</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Fiyat Listesi Adı</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Yazdırma tarihi:</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -170,7 +179,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:981 sql_constraint:product.product:0
+#: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -250,7 +259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Eylem Gerekiyor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -274,7 +283,7 @@ msgstr "Tüm Ürünler"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Bu ürün hakkında genel ayarları yönet"
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -328,7 +337,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arşiv"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -545,7 +554,7 @@ msgstr "Kategori Türü"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Kategori Adı"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
@@ -557,7 +566,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Karakteristik"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -581,17 +590,17 @@ msgstr "Alt Kategoriler"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Yeni bir ölçü birimi kategorisi eklemek için tıklayın."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "Yeni bir ölçü birimi eklemek için tıklayın."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Yeni bir fiyat listesi oluşturmak için tıklayın."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -600,12 +609,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Yeni bir ürün tanımlamak için tıklayın."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "Kodlar"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -649,7 +658,7 @@ msgstr "Bileşenler"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Fiyat Hesaplama"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -674,6 +683,12 @@ msgid "Computers"
 msgstr "Bigisayarlar"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Sarf Malzeme"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -681,7 +696,7 @@ msgid ""
 msgstr "Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse olur. Dönüşümler oranlara göre yapılacaktır."
 
 #. module: product
-#: code:addons/product/product.py:118
+#: code:addons/product/product.py:119
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -851,7 +866,7 @@ msgstr "Teklif Açıklaması"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "Tedarikçiler için Açıklama"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -902,7 +917,7 @@ msgstr "Aygıtlar"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Adı Göster"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1089,7 +1104,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Sabit Fiyat"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1106,13 +1121,13 @@ msgstr "İzleyiciler"
 #: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "İzleyiciler (Kanallar)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "İzleyiciler (İş ortakları)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
@@ -1143,7 +1158,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "Çevre dostu"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_44
@@ -1367,7 +1382,7 @@ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1479,25 +1494,25 @@ msgstr "Envanter"
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Takipçi mi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Ürün varyantı mı?"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr ""
+msgstr "Temiz tut."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "Kilit Özellikler"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
@@ -1638,18 +1653,6 @@ msgid "Logistical Units"
 msgstr "Lojistik Birimleri"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_id
-#: model:ir.model.fields,help:product.field_product_template_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
-
-#. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Çoklu Ölçü Birim Yönetimi"
@@ -1657,7 +1660,7 @@ msgstr "Çoklu Ölçü Birim Yönetimi"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Fiyat Listesi Öğelerini Yönet"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1668,7 +1671,7 @@ msgstr "Ürün Paketleme Yönetimi"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Ürün Varyantlarını Yönet"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1826,19 +1829,19 @@ msgstr "Notlar"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "İşlem Sayısı"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Eylem gerektiren mesaj sayısı"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Okunmamış mesaj sayısı"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1877,11 +1880,6 @@ msgid "Other Pricelist"
 msgstr "Diğer FiyatListesi"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Other Pricelist  -"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
@@ -1903,7 +1901,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr ""
+msgstr "Paketlemeler"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1945,7 +1943,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Fiziksel"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2063,7 +2061,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Fiyat Listesi Öğeleri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2208,6 +2206,7 @@ msgid "Product Unit of Measure"
 msgstr "Ürün Ölçü Birimi"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -2265,7 +2264,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:846
+#: code:addons/product/product.py:817
 #, python-format
 msgid "Products: "
 msgstr "Ürünler: "
@@ -2275,11 +2274,6 @@ msgstr "Ürünler: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Genel Fiyat"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Public Price  -"
-msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2297,12 +2291,6 @@ msgstr "Satınalma Açıklaması"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Satınalma Ölçü Birimi"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_price
-#: model:ir.model.fields,help:product.field_product_template_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
@@ -2495,12 +2483,6 @@ msgid "Select category for the current product"
 msgstr "Geçerli ürün için kategori belirtin"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
 #: model:ir.model.fields,field_description:product.field_product_category_sequence
@@ -2518,6 +2500,12 @@ msgstr "Sıra"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "Sunucu"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Hizmet"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2695,14 +2683,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
 msgstr "Şablon Adı"
@@ -2745,7 +2725,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Bu hesaplanan fiyat, ürünün Varsayılan Ölçü Biriminde tanımlanır."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2802,7 +2782,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:328
+#: code:addons/product/product.py:329
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2936,21 +2916,6 @@ msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "Bu, Varsayılan Ölçü Birimine dönüştürülmüş bir miktardır."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_qty
-#: model:ir.model.fields,help:product.field_product_template_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_delay
-#: model:ir.model.fields,help:product.field_product_template_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr ""
@@ -2996,7 +2961,7 @@ msgstr "Toner Kartuşu"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
-msgstr ""
+msgstr "İki, birden daha iyidir."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
@@ -3056,7 +3021,7 @@ msgstr "Kategori Ölçü Birimleri"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "Kategori Ölçü Birimi"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -3114,12 +3079,12 @@ msgstr "Okunmamış Mesajlar"
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "Geçerlilik"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3171,51 +3136,33 @@ msgstr "Varyantlar"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "Tedarikçi"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_delay
-#: model:ir.model.fields,field_description:product.field_product_template_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_price
-#: model:ir.model.fields,field_description:product.field_product_template_seller_price
-msgid "Vendor Price"
-msgstr ""
+msgstr "Tedarikçi Bilgisi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Tedarikçi Ürün Kodu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_qty
-#: model:ir.model.fields,field_description:product.field_product_template_seller_qty
-msgid "Vendor Quantity"
-msgstr ""
+msgstr "Tedarikçi Ürün Adı"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Tedarikçi Ölçü Birimi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Bu ürününün tedarikçisi"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3276,6 +3223,13 @@ msgstr "Ağırlıklar"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"When this field is filled in, the vendor data will only apply to the "
+"variant."
 msgstr ""
 
 #. module: product
@@ -3572,7 +3526,7 @@ msgstr "ana şirket"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "ürün şablonu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

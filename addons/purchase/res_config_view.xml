@@ -27,6 +27,8 @@
                         <field name="group_uom" widget="radio"/>
                         <field name="group_costing_method" widget="radio"/>
                         <field name="module_purchase_requisition" widget="radio"/>
+                        <field name="group_advance_purchase_requisition" widget="radio"
+                            attrs="{'invisible': [('module_purchase_requisition', '=', 0)]}"/>
                         <field name="group_manage_vendor_price" widget="radio"/>
                     </group>
                     <group string="Location &amp; Warehouse">

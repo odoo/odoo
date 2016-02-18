@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-12-29 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
-msgstr ""
+msgstr ", nếu phân hệ kế toán hoặc mua hàng đã được cài đặt"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -161,15 +161,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
+msgid "<span class=\"oe_grey\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -581,6 +581,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "Kích hoạt"
@@ -1020,6 +1021,11 @@ msgid "Consumers"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
 msgstr "Tên liên hệ"
@@ -1354,7 +1360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1520,6 +1526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Ngày đóng dự kiến"
@@ -1583,7 +1590,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Follow-up"
-msgstr ""
+msgstr "Theo sát"
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_demo_followup_quote
@@ -1619,6 +1626,11 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "For every deal, review the next action, the expected closing, the pain "
@@ -1634,6 +1646,13 @@ msgid ""
 msgstr "Vì lý do an toàn, bạn không thể trộn nhiều hơn 3 liên hệ cùng nhau. Bạn có thể mở lại đồ thuật một vài lần nếu cần."
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr ""
@@ -1643,13 +1662,6 @@ msgstr ""
 #, python-format
 msgid "From %s : %s"
 msgstr "Từ %s : %s"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
@@ -1865,10 +1877,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Sắp về"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1880,6 +1897,11 @@ msgstr ""
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
 msgstr ""
 
 #. module: crm
@@ -1929,11 +1951,6 @@ msgid "Last Activity"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Last Message"
-msgstr "Last Message"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_last_post
 msgid "Last Message Date"
 msgstr "Ngày thông điệp cuối cùng"
@@ -1954,7 +1971,7 @@ msgstr "Ngày thông điệp cuối cùng"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sửa lần cuối vào"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2582,6 +2599,12 @@ msgid "Odoo Default"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
@@ -3128,6 +3151,7 @@ msgid "Search Leads"
 msgstr "Tìm kiếm Đầu mối"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "Tìm kiếm các Cơ hội"
@@ -3785,6 +3809,11 @@ msgid "Very High"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
@@ -3842,12 +3871,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Thông điệp Website"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-10-09 09:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -64,18 +64,7 @@ msgid "\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -221,14 +210,14 @@ msgid "Allow discounts on sales order lines"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
-msgid "Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+#: selection:sale.config.settings,auto_done_setting:0
+msgid "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"
 msgstr ""
 
 #. module: sale
-#: selection:sale.config.settings,module_website_sale_digital:0
-msgid "Allows to sell downloadable content from the portal"
+#: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
+msgid "Allows to manage different prices based on rules per category of customers.\n"
+"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
 
 #. module: sale
@@ -410,6 +399,11 @@ msgid "Customer Taxes"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_config
+msgid "Customer portal"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
 msgstr ""
@@ -427,11 +421,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
 msgid "Date on which sales order is created."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
-msgid "Default Advance Product"
 msgstr ""
 
 #. module: sale
@@ -485,37 +474,14 @@ msgid "Delivery address for current sales order."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
-#, python-format
 msgid "Deposit"
 msgstr ""
 
 #. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Deposit (fixed amount)"
-msgstr ""
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Deposit (percentage)"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
-msgid "Deposit Amount"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:67
-#, python-format
-msgid "Deposit of %s%%"
 msgstr ""
 
 #. module: sale
@@ -527,11 +493,6 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Different prices per customer segment"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
-msgid "Digital Products"
 msgstr ""
 
 #. module: sale
@@ -578,6 +539,38 @@ msgid "Done"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
+#, python-format
+msgid "Down Payment"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
+msgid "Down Payment Amount"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
+msgid "Down Payment Product"
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Down payment (fixed amount)"
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Down payment (percentage)"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:67
+#, python-format
+msgid "Down payment of %s%%"
+msgstr ""
+
+#. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
 msgstr ""
@@ -585,6 +578,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
+msgid "Enable customer portal to track orders, delivery and invoices"
 msgstr ""
 
 #. module: sale
@@ -666,11 +664,6 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr ""
@@ -686,7 +679,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:712
+#: code:addons/sale/sale.py:785
 #, python-format
 msgid "Invoice %s paid"
 msgstr ""
@@ -774,7 +767,7 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Invoiceable lines (deduce deposits)"
+msgid "Invoiceable lines (deduct down payments)"
 msgstr ""
 
 #. module: sale
@@ -819,6 +812,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr ""
@@ -882,6 +876,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
+msgid "Manage subscriptions and recurring invoicing"
+msgstr ""
+
+#. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
 msgstr ""
@@ -912,13 +911,13 @@ msgid "My Sales Order Lines"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotation_form
-msgid "New Quotation"
+#: selection:sale.config.settings,auto_done_setting:0
+msgid "Never allow to modify a confirmed sale order"
 msgstr ""
 
 #. module: sale
-#: selection:sale.config.settings,module_website_sale_digital:0
-msgid "No digital products"
+#: model:ir.actions.act_window,name:sale.action_quotation_form
+msgid "New Quotation"
 msgstr ""
 
 #. module: sale
@@ -999,6 +998,11 @@ msgid "Order"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Order #"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 msgid "Order Date"
 msgstr ""
@@ -1018,11 +1022,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Order N°"
 msgstr ""
 
 #. module: sale
@@ -1089,13 +1088,19 @@ msgid "Payment Term"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:202
+#: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:588
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:654
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d) - or for its category: \"%s\"."
 msgstr ""
@@ -1226,6 +1231,11 @@ msgid "Quotation"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Quotation #"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
 msgstr ""
@@ -1238,11 +1248,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Quotation N°"
 msgstr ""
 
 #. module: sale
@@ -1317,6 +1322,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 msgid "Sale Order Lines"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
+msgid "Sale Order Modification"
 msgstr ""
 
 #. module: sale
@@ -1467,6 +1477,11 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
+msgid "Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
 msgstr ""
@@ -1536,6 +1551,11 @@ msgid "Status"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_config
+msgid "Subscriptions"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
 msgid "Subtotal"
 msgstr ""
@@ -1564,6 +1584,12 @@ msgid "Terms and conditions"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale_analytic.py:54
+#, python-format
+msgid "The Sale Order %s linked to the Analytic Account must be validated before registering expenses."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
 msgstr ""
@@ -1579,21 +1605,21 @@ msgid "The printed reports will display the incoterms for the sale orders and th
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:122
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
 #, python-format
-msgid "The product used to invoice a deposit should have an invoice policy set to \"Ordered quantities\". Please update your deposit product to be able to create a deposit invoice."
+msgid "The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:122
 #, python-format
-msgid "The product used to invoice an deposit should be of type 'Service'. Please use another product or update this product."
+msgid "The product used to invoice a down payment should have an invoice policy set to \"Ordered quantities\". Please update your deposit product to be able to create a deposit invoice."
 msgstr ""
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
 #, python-format
-msgid "The value of the deposit amount must be positive."
+msgid "The value of the down payment amount must be positive."
 msgstr ""
 
 #. module: sale
@@ -1680,6 +1706,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr ""
 
@@ -1742,14 +1769,14 @@ msgid "Wrong value entered!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:668
+#: code:addons/sale/sale.py:741
 #, python-format
 msgid "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:133
+#: code:addons/sale/sale.py:153
 #, python-format
 msgid "You can only delete draft quotations!"
 msgstr ""

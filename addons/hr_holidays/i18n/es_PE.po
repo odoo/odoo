@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:20+0000\n"
+"PO-Revision-Date: 2016-02-11 23:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
 "MIME-Version: 1.0\n"
@@ -87,6 +87,11 @@ msgid "Able to see Remaining Leaves"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
 msgstr ""
@@ -105,7 +110,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Se Necesita Acción"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
@@ -203,7 +208,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Approve"
-msgstr ""
+msgstr "Aprobado"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -275,12 +280,12 @@ msgstr "Cancelar"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_category_id
@@ -317,7 +322,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_company_id
 msgid "Company"
-msgstr ""
+msgstr "Compañia"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
@@ -327,12 +332,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -375,7 +380,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablero"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
@@ -416,7 +421,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a Mostrar"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -557,11 +562,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
 msgid "Is Follower"
 msgstr ""
@@ -584,7 +584,7 @@ msgstr "Fecha del último mensaje"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee___last_update
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima Modificación en"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_uid
@@ -1025,7 +1025,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
 msgid "Reports"
-msgstr ""
+msgstr "Reportes"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_type
@@ -1101,7 +1101,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_state
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1240,6 +1240,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Mensajes no leidos"
 
@@ -1257,7 +1258,7 @@ msgstr "Usuario"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1316,7 +1317,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Year"
-msgstr ""
+msgstr "Año"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal

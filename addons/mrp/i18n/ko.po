@@ -1,0 +1,2303 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:230
+#, python-format
+msgid " Manufacture"
+msgstr "  제조"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
+msgid "# Bill of Material"
+msgstr "# 재료 명세서"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
+msgid "# Manufacturing Orders"
+msgstr "# 생산주문"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:332
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:1009
+#, python-format
+msgid "%s produced"
+msgstr "%s 생산됨"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
+msgid ""
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
+msgstr "'소비' 모드는 선택된 상품의 양을 소비하는 것입니다.\n'소비 및 생산' 모드는 소비 뿐만 아니라 선택된 상품의 양을 생산하고, 총 주문 수량이 생산될 때 생산 주문을 완료하는 것입니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Consumed Products</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Destination Location</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Name</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Cycles</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Hours</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Partner Ref:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Printing date:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Products to Consume</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>SO Number:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Scheduled Date:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Sequence</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Document:</strong><br/>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Location</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Work Orders</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>WorkCenter</strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
+msgid "A factor of 0.9 means a loss of 10% during the production process."
+msgstr "0.9 계수는 생산 과정 동안 10%의 손실을 의미합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
+msgid "A factor of 0.9 means a loss of 10% within the production process."
+msgstr "0.9 계수는 생산 진행 내에서 10%의 손실을 의미합니다."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"A manufacturing order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_active
+msgid "Active"
+msgstr "활성"
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:51
+#, python-format
+msgid "Active Id not found"
+msgstr "활성 아이디를 찾을 수 없습니다."
+
+#. module: mrp
+#: sql_constraint:mrp.bom.line:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
+msgstr "모든 상품의 숫자는 0보다 커야 합니다.\n재료 명세서에 여분의 상품을 관리하려면 mrp_byproduct 모듈을 설치해야 합니다!"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_rounding_efficiency
+msgid ""
+"Allow to manage product rounding on quantity and product efficiency during "
+"production process"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Apply"
+msgstr "적용"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Approve"
+msgstr "승인"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,help:mrp.field_product_template_produce_delay
+msgid ""
+"Average delay in days to produce this product. In the case of multi-level "
+"BOM, the manufacturing lead times of the components will be added."
+msgstr "제품 생산을 위한 일 평균 지연. 다단계 재료 명세서의 경우 부품의 제조 지시 시간이 추가될 것입니다."
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr "원자재 대기 중"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Name"
+msgstr "재료 명세서 명"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
+msgid "BOM Product Variants needed form apply this line."
+msgstr "변형 제품 재료 명세서는 명세서에 적용할 양식이 필요합니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Ref"
+msgstr "참조 재료 명세서"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Structure"
+msgstr "재료 명세서 구조"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
+msgid "BOM lines of the referred bom"
+msgstr "참조된 재료 명세서의 재료 명세"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:25
+#, python-format
+msgid ""
+"Because the product %s requires it, you must assign a serial number to your "
+"raw material %s to proceed further in your production. Please use the "
+"'Produce' button to do so."
+msgstr "%s 부품을 필요로 하기 때문에 생산을 진행하기 위해 원자재 %s의 일련 번호를 지정해야 합니다. '생산' 버튼을 사용하세요."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Bill Of Material"
+msgstr "재료 명세서"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_bom_id
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Bill of Material"
+msgstr "재료 명세서"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.actions.act_window,name:mrp.product_open_bom
+#: model:ir.actions.act_window,name:mrp.template_open_bom
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_ids
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Bill of Materials"
+msgstr "재료 명세서"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action2
+msgid "Bill of Materials Structure"
+msgstr "재료 명세서 구조"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
+msgid ""
+"Bill of Materials allow you to define the list of required raw materials to "
+"make a finished product."
+msgstr "재료 명세서는 완성된 제품을 만드는데 필요한 원자재 목록을 정의할 수 있습니다."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
+"                order or a pack of products."
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "Bills of materials may produce residual products (A + B --> C + D)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
+msgid "BoM"
+msgstr "재료 명세서"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:303
+#, python-format
+msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
+msgstr "\"%s\" 재료 명세서는 반복 제품과 함께 재료 명세를 포함합니다 : \"%s\""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
+msgid "BoM Lines"
+msgstr "재료 명세"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
+msgid "BoM Type"
+msgstr "재료 명세서 유형"
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "By Lots"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "By Unique Serial Number"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
+msgid "By-Products"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/stock.py:227
+#, python-format
+msgid "Can't find any generic Manufacture route."
+msgstr "일반 제조 경로를 찾을 수 없습니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Cancel"
+msgstr "취소"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Cancel Production"
+msgstr "생산 취소"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:149
+#, python-format
+msgid "Cannot consume a move with negative or zero quantity."
+msgstr "0 또는 음수 수량 이동은 소모되지 않습니다."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:639
+#, python-format
+msgid "Cannot delete a manufacturing order in state '%s'."
+msgstr "'%s' 상태의 제조 주문을 삭제할 수 없습니다."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:709
+#, python-format
+msgid "Cannot find a bill of material for this product."
+msgstr "상품을 위한 재료 명세서를 찾을 수 없습니다."
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:66
+#: code:addons/mrp/wizard/change_production_qty.py:71
+#, python-format
+msgid "Cannot find bill of material for this product."
+msgstr "상품을 위한 재료 명세서를 찾을 수 없습니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Capacity Information"
+msgstr "생산용량 정보"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
+msgid "Capacity per Cycle"
+msgstr "사이클당 생산용량"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_change_production_qty
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Change Product Qty"
+msgstr "상품 수량 변경"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Change Quantity"
+msgstr "변경 수량"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "상품의 수량을 변경"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid "Click to add a work center."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid "Click to create a bill of material."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid "Click to create a group of properties."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid "Click to create a manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid "Click to create a new property."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid "Click to create a new routing."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid "Click to start a new manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_code
+msgid "Code"
+msgstr "코드"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_company_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Company"
+msgstr "회사"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_component_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Components"
+msgstr "부품"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Compute Data"
+msgstr "데이터 계산"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+msgid "Configuration"
+msgstr "환경 설정"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Configure Manufacturing"
+msgstr "제조 구성"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Confirm"
+msgstr "확인"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Confirm Production"
+msgstr "생산 확인"
+
+#. module: mrp
+#: selection:mrp.product.produce,mode:0
+msgid "Consume & Produce"
+msgstr "소모 및 생산"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Consume Lines"
+msgstr "소모 명세"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.move_consume
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Consume Move"
+msgstr "소모 이동"
+
+#. module: mrp
+#: selection:mrp.product.produce,mode:0
+msgid "Consume Only"
+msgstr "소모만"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_move_consume
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Consume Products"
+msgstr "소모 제품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Consumed Products"
+msgstr "소모된 제품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
+msgid "Consumed for"
+msgstr "소모"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
+msgid "Cost per cycle"
+msgstr "회전당 원가"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour
+msgid "Cost per hour"
+msgstr "시간당 원가"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Costing Information"
+msgstr "원가 계산 정보"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle_account_id
+msgid "Cycle Account"
+msgstr "회전 계정"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_last_post
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_last_post
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Default Unit of Measure"
+msgstr "기본 측정 단위"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"Define specific property groups that can be assigned to your\n"
+"                bill of materials and sales orders. Properties allows Odoo\n"
+"                to automatically select the right bill of materials according\n"
+"                to properties selected in the sales order by salesperson."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
+msgid "Define the schedule of resource"
+msgstr "자원 일정 정의"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_note
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Description"
+msgstr "설명"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
+msgid ""
+"Description of the Work Center. Explain here what's a cycle according to "
+"this Work Center."
+msgstr "작업장 설명. 작업장에 따르면 회전이 무엇인지 설명합니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Destination Loc."
+msgstr "목적지 위치."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Do not use a planning for the work orders "
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Done"
+msgstr "완료"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
+msgid "Efficiency Factor"
+msgstr "효율 계수"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_finished
+msgid "End Date"
+msgstr "마감일"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Extra Information"
+msgstr "추가 정보"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle_account_id
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour_account_id
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr "생산 주문에 자동 분석 회계 항목을 원하는 경우에만 입력하세요."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
+msgid ""
+"Fill this product to easily track your production costs in the analytic "
+"accounting."
+msgstr "손쉽게 분석 회계에서 생산 비용을 추적하기 위해 상품을 채웁니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Finished Products"
+msgstr "완제품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_dest_id
+msgid "Finished Products Location"
+msgstr "완제품 위치"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
+"                on the propoerties selected in the sales order, Odoo will\n"
+"                schedule a production using the matching bill of materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Force Reservation"
+msgstr "강제 예약"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_general_account_id
+msgid "General Account"
+msgstr "일반 계정"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "General Information"
+msgstr "일반 정보"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
+msgid "Gives the sequence order when displaying a list of bills of material."
+msgstr "재료 명세서 목록을 표시할 때 주문 순서를 제공합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
+msgid ""
+"Gives the sequence order when displaying a list of routing Work Centers."
+msgstr "작업장 경로 목록을 표시할 때 주문 순서를 제공합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
+msgid "Gives the sequence order when displaying a list of work orders."
+msgstr "작업 주문 목록을 표시할 때 주문 순서를 제공합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
+msgid "Gives the sequence order when displaying."
+msgstr "표시할 때 주문 순서를 제공합니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Group By..."
+msgstr "그룹화..."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour_account_id
+msgid "Hour Account"
+msgstr "시간 계정"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
+msgid ""
+"If a product variant is defined the BOM is available only for this product."
+msgstr "이 제품에만 사용할 수 있는 BOM이 정의된 변형 제품인 경우."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_unread
+msgid "If checked new messages require your attention."
+msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 재료 명세서를 숨길 수 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 경로를 숨길 수 있습니다."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "In Production"
+msgstr "생산 중"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Inactive"
+msgstr "비활성"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
+msgid "Internal Reference"
+msgstr "내부 참조"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
+msgid ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+msgstr "완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우에는 위치를 설정하십시오. 제조 작업을 하청 계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_last_post
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_last_post
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_last_post
+msgid "Last Message Date"
+msgstr "최근 메시지 날짜"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Late"
+msgstr "늦음"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
+msgid "Location"
+msgstr "차고"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
+msgid "Location where the system will look for components."
+msgstr "부품을 찾을 위치"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
+msgid "Location where the system will stock the finished products."
+msgstr "위치는 시스템이 완성된 상품을 보관하는 장소입니다."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_restrict_lot_id
+msgid "Lot"
+msgstr "작업 단위"
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_mrp_routings
+msgid "Manage Work Order Operations"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by manufacturing orders"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by work orders"
+msgstr ""
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_rounding_efficiency
+msgid "Manage rounding and efficiency of BoM components"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "Manage rounding and efficiency of bills of materials components"
+msgstr ""
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_mrp_manager
+msgid "Manager"
+msgstr "관리자"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:224
+#: model:stock.location.route,name:mrp.route_warehouse0_manufacture
+#, python-format
+msgid "Manufacture"
+msgstr "제조"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
+msgid "Manufacture Rule"
+msgstr "제조 규칙"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
+msgid "Manufacture in this Warehouse"
+msgstr "이 창고에서 제조"
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Manufacture this product"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Manufacturing"
+msgstr "제조"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_efficiency
+msgid "Manufacturing Efficiency"
+msgstr "제조 효율성"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_product_template_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_res_company_manufacturing_lead
+msgid "Manufacturing Lead Time"
+msgstr "생산 소요 시간"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_production_id
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Manufacturing Order"
+msgstr "생산 주문"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:112
+#, python-format
+msgid "Manufacturing Order <em>%s</em> created."
+msgstr "<em>%s</em> 제조 주문이 작성됨."
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_mrp_production
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_production_calendar
+#: model:ir.ui.view,arch_db:mrp.view_production_graph
+#: model:ir.ui.view,arch_db:mrp.view_production_pivot
+msgid "Manufacturing Orders"
+msgstr "제조 주문"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are currently in production."
+msgstr "현재 생산되는 제조 주문"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are ready to start production."
+msgstr "생산을 준비 중인 제조 주문"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are waiting for raw materials."
+msgstr "원자재 대기중인 제조 주문"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Manufacturing Reference"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:774
+#, python-format
+msgid "Manufacturing order cancelled."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
+"                stock rule."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Mark as Started"
+msgstr "시작으로 표시"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Master Data"
+msgstr "전체 데이터"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_ids
+msgid "Messages and communication history"
+msgstr "메시지 및 대화 기록"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_mode
+msgid "Mode"
+msgstr "방법"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Mrp Workcenter"
+msgstr "자재소요계획 작업장"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Name"
+msgstr "이름"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "New"
+msgstr "신규"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:108
+#, python-format
+msgid "No BoM exists for this product!"
+msgstr "이 제품의 BOM이 존재하지 않습니다!"
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "No Tracking"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "No by-products in bills of materials (A + B --> C)"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "No rounding and efficiency on bills of materials"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_product_variant:0
+msgid "No variants on products"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Normal"
+msgstr "보통"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr "긴급하지 않음"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_property_composition
+msgid "Not used in computations, for information purpose only."
+msgstr "계산용이 아닌 정보 용도"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Notes"
+msgstr "노트"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_cycle
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_cycle_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_cycle
+msgid "Number of Cycles"
+msgstr "회전 횟수"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_hour
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_hour_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_hour
+msgid "Number of Hours"
+msgstr "시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_cycle_nbr
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
+msgstr "연결 경로의 지정된 작업을 해야 하는 작업장 반복 횟수."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity_per_cycle
+msgid ""
+"Number of operations this Work Center can do in parallel. If this Work "
+"Center represents a team of 5 workers, the capacity per cycle is 5."
+msgstr "병렬로 할 수 있는 작업장의 작업 횟수. 작업장이 5명이 한 팀인 경우 회전 용량은 5입니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Odoo uses these BoMs to automatically propose manufacturing\n"
+"                orders according to procurement needs."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Ok"
+msgstr "OK"
+
+#. module: mrp
+#: model:ir.actions.client,name:mrp.action_client_mrp_menu
+msgid "Open MRP Menu"
+msgstr "자재소요계획 메뉴 열기"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Operation"
+msgstr "작업"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr "주문 계획"
+
+#. module: mrp
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr "주문 수량은 음수 또는 0이 될 수 없습니다!"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
+msgid "Parent BoM"
+msgstr "상위 재료명세서"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
+msgid "Parent Routing"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Pending"
+msgstr "보류"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_planning
+msgid "Planning"
+msgstr "계획"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:135
+#, python-format
+msgid "Please provide proper quantity."
+msgstr "적절한 수량을 제공하십시오."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
+msgid "Priority"
+msgstr "우선 순위"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_procurement_order
+msgid "Procurement"
+msgstr "조달"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "조달 규칙"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_produce_id
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Produce"
+msgstr "생산"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Produced Products"
+msgstr "생산된 상품"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_product_product
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Product"
+msgstr "제품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
+msgid "Product Move"
+msgstr "상품 이동"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_product_produce
+msgid "Product Produce"
+msgstr "상품 생산"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_product_produce_line
+msgid "Product Produce Consume lines"
+msgstr "상품 생산 소비 명세"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
+msgid "Product Qty"
+msgstr "상품 수량"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
+msgid "Product Quantity"
+msgstr "상품 수량"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_rounding
+msgid "Product Rounding"
+msgstr "상품 반올림"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_product_template
+msgid "Product Template"
+msgstr "제품 양식"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_uom
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_uom
+msgid "Product Unit of Measure"
+msgstr "제품 측정 단위"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_id
+msgid "Product Variant"
+msgstr "파생 상품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_product_variant
+msgid "Product Variants"
+msgstr "파생 제품"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Production"
+msgstr "생산"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+msgid "Production Location"
+msgstr "생산 위치"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_production_order
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_production_id
+msgid "Production Order"
+msgstr "생산 주문"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Production Order # :"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
+msgid "Production Order for Produced Products"
+msgstr "생산 상품에 대한 생산 주문"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
+msgid "Production Order for Raw Materials"
+msgstr "원료에 대한 생산 주문"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_product_line
+msgid "Production Scheduled Product"
+msgstr "생산 예정 상품"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Production Started"
+msgstr "생산 시작"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Production Work Centers"
+msgstr "생산 작업 센터"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
+msgid "Production progress"
+msgstr "생산 진행"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Production started late"
+msgstr "생산 시작 지연"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_production_gantt
+msgid "Productions"
+msgstr "생산"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.product_template_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
+msgid "Products"
+msgstr "제품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
+msgid "Products Consumed"
+msgstr "소모된 제품"
+
+#. module: mrp
+#: selection:mrp.config.settings,group_product_variant:0
+msgid ""
+"Products can have several attributes, defining variants (Example: size, "
+"color,...)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Consume"
+msgstr "소모될 제품"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Finish"
+msgstr "완료될 상품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Produce"
+msgstr "생산할 상품"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_property_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_property_ids
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_property_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_tree_view
+msgid "Properties"
+msgstr "속성"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+msgid "Properties categories"
+msgstr "속성 분류"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
+msgid "Properties composition"
+msgstr "속성 구성"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property
+msgid "Property"
+msgstr "속성"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property_group
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9783
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Property Group"
+msgstr "속성 그룹"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_group_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
+msgid "Property Groups"
+msgstr "속성 그룹"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "Quantity"
+msgstr "수량"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
+msgid "Quantity (in default UoM)"
+msgstr "수량(기본 측정 단위)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
+msgid "Raw Materials Location"
+msgstr "원자재 위치"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Ready"
+msgstr "준비"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_ready_production
+msgid "Ready for production"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Ready to Produce"
+msgstr "생산 준비"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_name
+msgid "Reference"
+msgstr "참조"
+
+#. module: mrp
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "참조는 회사마다 고유합니다!"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_origin
+msgid ""
+"Reference of the document that generated this production order request."
+msgstr "생산 주문 요청을 생성한 문서의 참조"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_position
+msgid "Reference to a position in an external plan."
+msgstr "외부 계획에 위치를 참조합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "이것에 접근을 관리하는 자원에 대한 관련된 사용자 이름."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reserve"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
+msgid "Resource"
+msgstr "자원"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
+msgid "Resource Leaves"
+msgstr "휴가 자원"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_type
+msgid "Resource Type"
+msgstr "자원 유형"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_pm_resources_config
+msgid "Resources"
+msgstr "리소스"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_user_id
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_rounding
+msgid "Rounding applied on the product quantity."
+msgstr "제품 수량에 적용된 반올림"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_rounding_efficiency
+msgid "Rounding efficiency"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Routing"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
+msgid "Routing Work Centers"
+msgstr "연결 경로 작업장"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_routing_action
+#: model:ir.model,name:mrp.model_mrp_routing
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
+#: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Routings"
+msgstr "연결 경로"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
+msgid ""
+"Routings indicates all the Work Centers used, for how long and/or cycles.If "
+"Routings is set then,the third tab of a production order (Work Centers) will"
+" be automatically pre-completed."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
+msgid "Scheduled Date"
+msgstr "예정 날짜"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date by Month"
+msgstr "월별 예정일"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Month"
+msgstr "예정월"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_tree_view
+msgid "Scheduled Products"
+msgstr "예약된 상품"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_lines
+msgid "Scheduled goods"
+msgstr "계획된 제품"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Scrap Products"
+msgstr "상품 부산물"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Search"
+msgstr "검색"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Search Bill Of Material"
+msgstr "자재 명세서 검색"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Search Bill Of Material Components"
+msgstr "부품 명세서 검색"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Search Production"
+msgstr "생산 검색"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Search for mrp workcenter"
+msgstr "자재소요계획 작업장 검색"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
+msgid "Security days for each manufacturing operation."
+msgstr "각 생산 작업을 위한 여유 기간(일)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
+msgid "Select Quantity"
+msgstr "선택 수량"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_type
+msgid ""
+"Set: When processing a sales order for this product, the delivery order will"
+" contain the raw materials, instead of the finished product."
+msgstr "설정 : 제품에 대한 판매 주문이 진행중이면 배송 주문은 완제품 대신에 원자재를 포함하게 됩니다."
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Ship this product as a set of components (kit)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
+msgid "Source Document"
+msgstr "자재 문서"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
+msgid "Specify Cost of Work Center per cycle."
+msgstr "주기 당 작업장의 비용을 지정합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
+msgid "Specify Cost of Work Center per hour."
+msgstr "시간 당 작업장의 비용을 지정합니다."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_state
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Status"
+msgstr "상태"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_move
+msgid "Stock Move"
+msgstr "재고 이동"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_value
+msgid "Stock value"
+msgstr "재고 값"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_form
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_graph
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_tree
+msgid "Stock value variation"
+msgstr "재고 값 변동"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
+msgid "Technical field used to make the traceability of produced products"
+msgstr "기술 필드는 생산된 제품을 추적하는데 사용"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr "상품 측정 단위는 상품 형태와는 다른 분류를 선택합니다."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"The Properties in Odoo are used to select the right bill of\n"
+"                materials for manufacturing a product when you have different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several properties\n"
+"                and Odoo will automatically select the BoM to use according\n"
+"                the needs."
+msgstr ""
+
+#. module: mrp
+#: constraint:mrp.workcenter:0
+msgid "The capacity per cycle must be strictly positive."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"plannification."
+msgstr "완제품을 생산하는 작업 목록(작업장 목록). 연결 경로는 주로 작업 중에 작업장을 평가하고 체계적인 계획 생산에 기반으로 작업장에 향후 적재를 계획합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"planning."
+msgstr "완제품을 생산하는 작업 목록(작업장 목록). 연결 경로는 주로 작업 중에 작업장을 평가하고 계획 생산에 기반으로 작업장에 향후 적재를 계획합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
+msgid ""
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
+"-This installs the module mrp_operations."
+msgstr "생산 주문 작업 명세에 상태, 시작_날짜, 마감_날짜를 추가할 수 있습니다(\"작업장\" 탭에서).\n- mrp_operations 모듈을 설치합니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr "이 필드는 완료 작업에 자원 효율을 묘사한다. 예를 들어 자원을 그에게 할당된 5개의 업무를 5일에 걸쳐 혼자 하도록 한다면 기본적으로 이 단계를 100% 부하로 표시합니다. 그런데 효율을 200%로 놓을 경우 부하는 50%가 됩니다."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
+msgid "Time after prod."
+msgstr "생산 뒷정리 시간"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_start
+msgid "Time before prod."
+msgstr "생산 준비 시간"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_cycle
+msgid "Time for 1 cycle (hour)"
+msgstr "1 주기(시간) 시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_cycle
+msgid "Time in hours for doing one cycle."
+msgstr "한 주기를 수행하는 시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
+msgid "Time in hours for the cleaning."
+msgstr "청소 시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
+msgid "Time in hours for the setup."
+msgstr "설정 시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_hour_nbr
+msgid ""
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
+msgstr "지정된 연결 경로의 작업을 달성하기 위한 작업장에 대한 시간"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "To Consume"
+msgstr "소비"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Cycles"
+msgstr "총 주기"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_hour_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Hours"
+msgstr "총 시간"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Qty"
+msgstr "총 수량"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Type"
+msgstr "유형"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Unit of Measure"
+msgstr "측정 단위"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_uom
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for the "
+"inventory control"
+msgstr "측정 단위(UOM)는 재고 관리를 위한 측정 단위입니다."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread
+msgid "Unread Messages"
+msgstr "읽지 않은 메시지"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Update"
+msgstr "갱신"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Urgent"
+msgstr "긴급"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_user_id
+#: model:res.groups,name:mrp.group_mrp_user
+msgid "User"
+msgstr "사용자"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_start
+msgid "Valid From"
+msgstr "유효 시작일"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Valid From Date by Month"
+msgstr "유효 일"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Valid From Month"
+msgstr "유효월"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_stop
+msgid "Valid Until"
+msgstr "유효 마감일"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
+msgid "Validity of component. Keep empty if it's always valid."
+msgstr "부품의 유효성. 항상 유효한 경우 비워두십시오."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
+msgid "Validity of this BoM. Keep empty if it's always valid."
+msgstr "BoM 유효성. 항상 유효한 경우 비워두십시오."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
+msgid "Variants"
+msgstr "변형"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Very Urgent"
+msgstr "매우 긴급"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_warehouse
+msgid "Warehouse"
+msgstr "창고"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
+#, python-format
+msgid "Warning"
+msgstr "경고"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_date
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_name
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
+msgid "Week"
+msgstr "주"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+msgid "Weekly Stock Value Variation"
+msgstr "주간 재고 값 변동"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
+msgid ""
+"Weekly Stock Value Variation enables you to track the stock value evolution "
+"linked to manufacturing activities, receipts of products and delivery "
+"orders."
+msgstr "주간 재고 값 변동은 제조 활동, 제품 및 배송 주문 영수증에 연결된 재고 값의 변화를 추적할 수 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
+msgid ""
+"When products are manufactured, they can be manufactured in this warehouse."
+msgstr "제품이 제조된 경우 이 창고에서 제조할 수 있습니다."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_state
+msgid ""
+"When the production order is created the status is set to 'Draft'.\n"
+"If the order is confirmed the status is set to 'Waiting Goods.\n"
+"If any exceptions are there, the status is set to 'Picking Exception.\n"
+"If the stock is available then the status is set to 'Ready to Produce.\n"
+"When the production gets started then the status is set to 'In Production.\n"
+"When the production is over, the status is set to 'Done'."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_workcenter_id
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Work Center"
+msgstr "작업장"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Work Center Load"
+msgstr "작업장 부하"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
+msgid "Work Center Loads"
+msgstr "작업장 부하"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Work Center Operations"
+msgstr "작업장 운영"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
+msgid "Work Center Product"
+msgstr "작업장 제품"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing_workcenter
+msgid "Work Center Usage"
+msgstr "작업장 사용"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
+msgid "Work Center load"
+msgstr "작업장 부하"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
+msgid "Work Centers"
+msgstr "작업장"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
+msgid "Work Centers Utilisation"
+msgstr "작업장 활용도"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as capacity\n"
+"                and planning forecast."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_name
+msgid "Work Order"
+msgstr "작업 지시"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
+msgid ""
+"Work Order Operations allow you to create and manage the manufacturing "
+"operations that should be followed within your work centers in order to "
+"produce a product. They are attached to bills of materials that will define "
+"the required raw materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
+msgid "Work Order Planning"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Work Orders"
+msgstr "작업 지시"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
+msgid "Working Time"
+msgstr "근무 시간"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
+msgid ""
+"You can configure by-products in the bill of material.\n"
+"Without this module: A + B + C -> D.\n"
+"With this module: A + B + C -> D + E.\n"
+"-This installs the module mrp_byproduct."
+msgstr "재료 명세서에 부산물을 구성할 수 있습니다.\n모듈이 없는 경우 : A + B + C -> D.\n모듈을 설치한 경우 : A + B + C -> D + E.\n- mrp_byproduct 모듈을 설치합니다."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:348
+#, python-format
+msgid ""
+"You can not delete a Bill of Material with running manufacturing orders.\n"
+"Please close or cancel it first."
+msgstr "제조 주문을 진행 중에는 재료 명세서를 삭제할 수 없습니다.\n먼저 닫거나 취소하십시오."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
+msgid "days"
+msgstr "일"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "max"
+msgstr "최대"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "min"
+msgstr "최소"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom_line
+msgid "mrp.bom.line"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_config_settings
+msgid "mrp.config.settings"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "plus"
+msgstr "더하기"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
+msgid "report.mrp.report_mrpbomstructure"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
+msgid "unknown"
+msgstr "알 수 없음"

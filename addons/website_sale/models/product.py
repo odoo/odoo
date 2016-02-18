@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import openerp
 from openerp import tools
 from openerp.osv import osv, fields
+from openerp.tools.translate import html_translate
 
 class product_style(osv.Model):
     _name = "product.style"
@@ -43,45 +45,45 @@ class product_public_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the category, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
     }
+
+    # NOTE: there is no 'default image', because by default we don't show
+    # thumbnails for categories. However if we have a thumbnail for at least one
+    # category, then we display a default image on the other, so that the
+    # buttons have consistent styling.
+    # In this case, the default image is set by the js code.
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as image for the category, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of the category. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of the category. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
 class product_template(osv.Model):
     _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
@@ -104,7 +106,7 @@ class product_template(osv.Model):
             ],
             string='Website Comments',
         ),
-        'website_description': fields.html('Description for the website', translate=True),
+        'website_description': fields.html('Description for the website', sanitize=False, translate=html_translate),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Suggested Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
@@ -189,3 +191,10 @@ class product_attribute_value(osv.Model):
     _columns = {
         'color': fields.char("HTML Color Index", help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."),
     }
+
+    # TODO in master: remove this function and change 'color' field name
+    def write(self, cr, uid, ids, vals, context=None):
+        # ignore write coming from many2many_tags color system
+        if vals.keys() == ['color'] and isinstance(vals['color'], (int, long)):
+            vals = {}
+        return super(product_attribute_value, self).write(cr, uid, ids, vals, context=context)

@@ -27,18 +27,9 @@ class stock_inventory(osv.osv):
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
-    _columns = {
-        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock transfer, specify the reference to the related stock move."),
-    }
-
-    def move_line_get(self, cr, uid, invoice_id, context=None):
-        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
-        if self.company_id.anglo_saxon_accounting:
-            inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
-            if inv.type in ('out_invoice','out_refund'):
-                for i_line in inv.invoice_line_ids:
-                    res.extend(self._anglo_saxon_sale_move_lines(cr, uid, i_line, res, context=context))
-        return res
+    def _get_anglo_saxon_price_unit(self):
+        self.ensure_one()
+        return self.product_id.standard_price
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
@@ -48,16 +39,28 @@ class account_invoice_line(osv.osv):
             price = price_unit * i_line.quantity
         return round(price, inv.currency_id.decimal_places)
 
-    @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
-        if self.company_id.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
-            accounts = product.product_tmpl_id.get_product_accounts(fpos)
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type in ('consu', 'product'):
+            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
-            return accounts['stock_ouput']
+            return accounts['stock_output']
         return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
-    def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
+class account_invoice(osv.osv):
+    _inherit = "account.invoice"
+
+    @api.model
+    def invoice_line_move_line_get(self):
+        res = super(account_invoice,self).invoice_line_move_line_get()
+        if self.company_id.anglo_saxon_accounting:
+            if self.type in ('out_invoice','out_refund'):
+                for i_line in self.invoice_line_ids:
+                    res.extend(self._anglo_saxon_sale_move_lines(i_line))
+        return res
+
+    @api.model
+    def _anglo_saxon_sale_move_lines(self, i_line):
         """Return the additional move lines for sales invoices and refunds.
 
         i_line: An account.invoice.line object.
@@ -66,56 +69,41 @@ class account_invoice_line(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id.type == 'product' and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
+            fpos = i_line.invoice_id.fiscal_position_id
+            accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             # debit account dacc will be the output account
-            # first check the product, if empty check the category
-            dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-            if not dacc:
-                dacc = i_line.product_id.categ_id.property_stock_account_output_categ_id and i_line.product_id.categ_id.property_stock_account_output_categ_id.id
-            # in both cases the credit account cacc will be the expense account
-            # first check the product, if empty check the category
-            cacc = i_line.product_id.property_account_expense_id and i_line.product_id.property_account_expense_id.id
-            if not cacc:
-                cacc = i_line.product_id.categ_id.property_account_expense_categ_id and i_line.product_id.categ_id.property_account_expense_categ_id.id
+            dacc = accounts['stock_output'].id
+            # credit account cacc will be the expense account
+            cacc = accounts['expense'].id
             if dacc and cacc:
-                if i_line.move_id:
-                    price = i_line.move_id.product_id.standard_price
-                    from_unit = i_line.move_id.product_tmpl_id.uom_id.id
-                    to_unit = i_line.move_id.product_uom.id
-                    price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price, to_uom_id=to_unit)
-                else:
-                    price_unit = i_line.product_id.standard_price
+                price_unit = i_line._get_anglo_saxon_price_unit()
                 return [
                     {
                         'type':'src',
                         'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                        'price_unit': price_unit,
+                        'quantity': i_line.quantity,
+                        'price': self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
 
                     {
                         'type':'src',
                         'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                        'price_unit': price_unit,
+                        'quantity': i_line.quantity,
+                        'price': -1 * self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
                 ]
         return []
-
-class account_invoice(osv.osv):
-    _inherit = "account.invoice"
 
     def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
         invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,
@@ -252,7 +240,7 @@ class stock_quant(osv.osv):
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
@@ -283,6 +271,12 @@ class stock_quant(osv.osv):
             acc_valuation = acc_valuation.id
         if not accounts.get('stock_journal', False):
             raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
+        if not acc_src:
+            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (move.product_id.name))
+        if not acc_dest:
+            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (move.product_id.name))
+        if not acc_valuation:
+            raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
@@ -304,6 +298,9 @@ class stock_quant(osv.osv):
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        #check that all data is correct
+        if move.company_id.currency_id.is_zero(valuation_amount):
+            raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -371,16 +368,16 @@ class stock_move(osv.osv):
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        if any([q.qty <= 0 for q in move.quant_ids]):
+        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
             #if there is a negative quant, the standard price shouldn't be updated
             return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
         average_valuation_price = 0.0
         for q in move.quant_ids:
             average_valuation_price += q.qty * q.cost
         average_valuation_price = average_valuation_price / move.product_qty
         # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        ctx = dict(context, force_company=move.company_id.id)
+        ctx = dict(context or {}, force_company=move.company_id.id)
         product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
         self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 
@@ -431,7 +428,7 @@ class AccountChartTemplate(models.Model):
     @api.multi
     def generate_properties(self, acc_template_ref, company, property_list=None):
         super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
-        PropertyObj = self.env['ir.property'] # Property Stock Journal
+        PropertyObj = self.env['ir.property']  # Property Stock Journal
         value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
         if value:
             field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
@@ -449,7 +446,7 @@ class AccountChartTemplate(models.Model):
                 #create the property
                 PropertyObj.create(vals)
 
-        todo_list = [ # Property Stock Accounts
+        todo_list = [  # Property Stock Accounts
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
@@ -464,7 +461,6 @@ class AccountChartTemplate(models.Model):
                     'company_id': company.id,
                     'fields_id': field.id,
                     'value': value,
-                    'res_id': 'product.category,'+str(self.env['ir.model.data'].xmlid_to_res_id('product.product_category_all')),
                 }
                 properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
                 if properties:

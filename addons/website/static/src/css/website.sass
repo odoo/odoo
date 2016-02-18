@@ -90,9 +90,8 @@ hr
 .para_large
     font-size: 120%
 
-.jumbotron.para_large p{
-  font-size: 150%;
-}
+.jumbotron.para_large p
+    font-size: 150%
 
 .readable
     font-size: 120%
@@ -106,7 +105,7 @@ hr
     .container
         padding-left: 0
         padding-right: 0
-        width: auto
+        width: auto!important
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
@@ -186,6 +185,8 @@ ul.nav-stacked > li > a
 .logo-img
     width: 220px
 
+.o_normalwhitespace
+    white-space: normal
 
 .oe_demo
     position: relative
@@ -544,6 +545,7 @@ table.well tr
     width: 121px
     input
         text-align: center
+        min-width: 50px
 
 div.carousel
     .container
@@ -615,6 +617,10 @@ div.carousel
         font-size: 13px
     .navbar-nav.navbar-right:last-child
         margin-right: 0 !important
+
+/* ---- footer style ---- {{{ */
+#footer div.row
+    word-wrap: break-word
 
 .container
     nav#oe_main_menu_navbar

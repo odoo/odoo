@@ -1,3 +1,4 @@
+import base64
 from operator import itemgetter
 import psycopg2
 import werkzeug
@@ -9,13 +10,15 @@ from openerp import http
 from openerp.exceptions import AccessError
 from openerp.http import request
 
+from openerp.addons.web.controllers.main import binary_content
+
 
 class MailController(http.Controller):
     _cp_path = '/mail'
 
     def _redirect_to_messaging(self):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web?%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/receive', type='json', auth='none')
@@ -41,6 +44,7 @@ class MailController(http.Controller):
             result.append({
                 'id': follower.id,
                 'name': follower.partner_id.name or follower.channel_id.name,
+                'email': follower.partner_id.email if follower.partner_id else None,
                 'res_model': 'res.partner' if follower.partner_id else 'mail.channel',
                 'res_id': follower.partner_id.id or follower.channel_id.id,
                 'is_editable': is_editable,
@@ -115,7 +119,7 @@ class MailController(http.Controller):
         if not record_sudo:
             # record does not seem to exist -> redirect to login
             return self._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()[0]
+        record_action = record_sudo.get_access_action()
 
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
@@ -139,6 +143,7 @@ class MailController(http.Controller):
             'id': res_id,
             'active_id': res_id,
             'view_id': record_sudo.get_formview_id(),
+            'action': record_action.get('id'),
         }
         url = '/web?%s#%s' % (url_encode(query), url_encode(url_params))
         return werkzeug.utils.redirect(url)
@@ -160,7 +165,7 @@ class MailController(http.Controller):
             return self._redirect_to_messaging()
         Model = request.env[model]
         try:
-            Model.browse(res_id).message_unsubscribe_users()
+            Model.browse(res_id).sudo().message_unsubscribe_users([request.uid])
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
@@ -170,8 +175,8 @@ class MailController(http.Controller):
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}
-        if kwargs.get('view_id'):
-            params['action'] = kwargs['view_id']
+        if kwargs.get('action_id'):
+            params['action'] = kwargs['action_id']
         return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
 
     @http.route('/mail/method', type='http', auth='user')
@@ -182,7 +187,7 @@ class MailController(http.Controller):
         Model = request.env[model]
         try:
             record = Model.browse(int(res_id)).exists()
-            getattr(record, method)
+            getattr(record, method)()
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
@@ -209,6 +214,26 @@ class MailController(http.Controller):
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
 
+    @http.route('/mail/<string:res_model>/<int:res_id>/avatar/<int:partner_id>', type='http', auth='public')
+    def avatar(self, res_model, res_id, partner_id):
+        headers = [[('Content-Type', 'image/png')]]
+        content = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='  # default image is one white pixel
+        if res_model in request.env:
+            try:
+                # if the current user has access to the document, get the partner avatar as sudo()
+                request.env[res_model].browse(res_id).check_access_rule('read')
+                if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
+                    status, headers, content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    if status == 304:
+                        return werkzeug.wrappers.Response(status=304)
+            except AccessError:
+                pass
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
+
     @http.route('/mail/needaction', type='json', auth='user')
     def needaction(self):
         return request.env['res.partner'].get_needaction_count()
@@ -217,7 +242,7 @@ class MailController(http.Controller):
     def mail_client_action(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
-            'chatter_needaction_auto': request.env.user.chatter_needaction_auto,
-            'channel_slots': request.env['mail.channel'].channel_fetch_slot()
+            'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
+            'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
         }
         return values

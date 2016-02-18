@@ -290,15 +290,18 @@ class gamification_challenge(osv.Model):
         cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg,
                              gamification_challenge as gc,
-                             res_users as ru
+                             res_users as ru,
+                             res_users_log as log
                        WHERE gg.challenge_id = gc.id
                          AND gg.user_id = ru.id
-                         AND gg.write_date < ru.login_date
+                         AND ru.id = log.create_uid
+                         AND gg.write_date < log.create_date
                          AND gg.closed IS false
                          AND gc.id IN %s
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached'
                                   AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+                      GROUP BY gg.id
         """, (tuple(ids), yesterday.strftime(DF)))
         goal_ids = [res[0] for res in cr.fetchall()]
         # update every running goal already generated linked to selected challenges
@@ -734,11 +737,11 @@ class gamification_challenge(osv.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished." % challenge.name)
+                message_body = _("The challenge %s is finished.") % challenge.name
 
                 if rewarded_users:
                     user_names = self.pool['res.users'].name_get(cr, uid, rewarded_users, context=context)
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names])))
+                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names]))
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 

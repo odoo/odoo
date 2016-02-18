@@ -749,6 +749,7 @@ $sheet-padding: 16px
 
         .oe_client_action
             height: 100%
+            overflow: auto
             position: relative
     // }}}
     // ViewManager common {{{
@@ -1058,14 +1059,14 @@ $sheet-padding: 16px
             > select, > input
                 width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
-            .oe_datepicker_main
+            .o_datepicker
                 width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
-            .oe_datepicker_master
-                width: 100%
-            .fa-calendar
-                margin-left: -21px
-                cursor: pointer
+                .o_datepicker_input
+                    width: 100%
+                .o_datepicker_button
+                    margin-left: -21px
+                    cursor: pointer
         span.remove-filter
             position: absolute
             top: 6px
@@ -1262,6 +1263,7 @@ $sheet-padding: 16px
             margin: 0
     .oe_form_sheetbg
         padding: 16px 0
+        position: relative
     .oe_form_sheet_width
         min-width: 650px
         max-width: $sheet-max-width
@@ -1856,12 +1858,15 @@ $sheet-padding: 16px
                     background-color: #d2d2ff
                 td.oe_readonly
                     background-color: #eee
-
     $row-height: 27px
-    .oe_list_editable .oe_list_content td.oe_list_field_cell
-        padding: 4px 6px 3px
+    .oe_list_editable
+        .oe_list_content td.oe_list_field_cell
+            padding: 4px 6px 3px
+        .o_temp_visible
+            opacity: 0
+            display: block !important
     .oe_list.oe_list_editable.oe_editing
-        .oe_edition .oe_list_field_cell
+        .oe_edition .oe_list_field_cell:not(.oe-button)
             *
                 visibility: hidden
             color: transparent
@@ -1897,9 +1902,9 @@ $sheet-padding: 16px
                     width: 100% !important
                     text-align: right
             &.oe_form_field_datetime,&.oe_form_field_date
-                input.oe_datepicker_master
+                input.o_datepicker_input
                     width: 100% !important
-                .oe_datepicker_main
+                .o_datepicker
                     width: -webkit-calc(100% - 20px)
                     width: calc(100% - 20px)
             &.oe_form_field_reference
@@ -2408,6 +2413,7 @@ body.oe_single_form
             height: auto !important
         .oe-view-manager
             display: block
+            overflow: visible
         .oe_application, .oe_view_manager_wrapper
             height: auto !important
         .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body

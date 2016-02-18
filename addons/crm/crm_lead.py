@@ -59,6 +59,14 @@ class crm_lead(format_address, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
+    def _get_default_probability(self, cr, uid, context=None):
+        """ Gives default probability """
+        stage_id = self._get_default_stage_id(cr, uid, context=None)
+        if stage_id:
+            return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
+        else:
+            return 10
+
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         team_id = self.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=context, user_id=uid)
@@ -239,7 +247,7 @@ class crm_lead(format_address, osv.osv):
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
-        'probability': 10,
+        'probability': lambda s, cr, uid, c: s._get_default_probability(cr, uid, c),
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }
@@ -282,6 +290,10 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if user_id and context.get('team_id'):
+            team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
+            if user_id in team.member_ids.ids:
+                return {}
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
@@ -662,7 +674,7 @@ class crm_lead(format_address, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
+            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', 'in', [merged_data.get('type'), 'both'])], order='sequence', context=context)
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
@@ -916,7 +928,7 @@ class crm_lead(format_address, osv.osv):
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 dynamic_help = '<p>%s</p>' % _("""All email incoming to %(link)s  will automatically create new opportunity.
 Update your business card, phone book, social media,... Send an email right now and see it here.""") % {
-                    'link': "<a href='mailto:%s'>%s</a>" % (alias_record.alias_name, alias_record.alias_domain)
+                    'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
                 }
                 return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
                     _('Click to add a new opportunity'),
@@ -1222,50 +1234,16 @@ class crm_lead_tag(osv.Model):
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
+
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'active': fields.boolean('Active'),
     }
 
-
-class crm_team(osv.Model):
-    _inherit = "crm.team"
-    def action_your_pipeline(self, cr, uid, context={}):
-        imd = self.pool.get('ir.actions.act_window')
-        imd2 = self.pool.get('ir.model.data')
-        action = imd.for_xml_id(cr, uid, 'crm', "crm_lead_opportunities_tree_view", context=context)
-        view_form = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_form_view_oppor')[2]
-        view_tree = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_tree_view_oppor')[2]
-        view_kanban = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_kanban_view_leads')[2]
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        team_id = user.sale_team_id.id
-        if not team_id:
-            team_id = self.search(cr, uid, [], context=context, limit=1)
-            team_id = team_id and team_id[0]
-            action['help'] = """
-                <p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
-                    Looks like you are not a member of a sales team. You should add yourself
-                    as a member of one of the sales team.
-                </p>"""
-            if team_id:
-                action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
-        newcontext = eval(action['context'], {'uid': uid})
-        if team_id:
-            newcontext.update({
-                    'default_team_id': team_id,
-                    'search_default_team_id': team_id
-                })
-        result = {
-            'name': action['name'],
-            'help': action['help'],
-            'type': action['type'],
-            'views': [[view_kanban, 'kanban'], [view_tree, 'tree'], [view_form, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
-            'target': action['target'],
-            'context': newcontext,
-            'res_model': action['res_model'],
-        }
-        return result
-
+    _defaults = {
+        'active': True,
+    }

@@ -42,11 +42,11 @@ odoo.define('rating.rating', function (require) {
         attachTo: function(el){
             this._super.apply(this, arguments);
             // set the default value and bind event
-            var default_value = this.$('input').data('default');
+            var default_value = this.$('input').data('default') || this.options['rating_default_value'];
             default_value = this.roundToHalf(default_value);
             this.set('star_value', default_value);
             // is_editable value from DOM
-            this.is_editable = !this.$input.data('is_disabled');
+            this.is_editable = !this.$input.data('is_disabled') || this.options['rating_disabled'];
         },
         changeStars: function(){
             var val = this.get("star_value");

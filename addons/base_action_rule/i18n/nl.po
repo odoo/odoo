@@ -3,13 +3,14 @@
 # * base_action_rule
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-19 11:02+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-11-22 13:55+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr ""
+msgstr "<b>Kies aub het soort document voordat u de voorwaarden instelt.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -32,7 +33,7 @@ msgstr "Actieregel"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Actieregel test"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -64,7 +65,7 @@ msgstr "Geautomatiseerde acties"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Gebaseerd op formulier wijziging"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -74,7 +75,7 @@ msgstr "Gebaseerd op tijd"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Voor domein update"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -87,9 +88,14 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: base_action_rule
+#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Check this box if this contact is a customer."
+msgstr "Vink dit aan indien deze relatie een klant is."
+
+#. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "Klik om een nieuwe automatische actieregel op te zetten."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -99,7 +105,7 @@ msgstr "Gesloten"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Komma gesplitste lijst van veldnamen die de onchange doen afgaan."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -230,6 +236,11 @@ msgid ""
 msgstr "In dezelfde ¨Zoek¨ weergave, selecteer in het menu ¨Sla huidig filter op¨ en geef een naam in (Bijv. Aanmaakdatum 01/01/2012) en selecteer de optie ¨Deel met alle gebruikers¨"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Is a Customer"
+msgstr "Is een klant"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
 msgid "Last Action"
 msgstr "Laatste actie"
@@ -280,7 +291,7 @@ msgstr "Nieuw"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "On change veld trigger"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -295,7 +306,7 @@ msgstr "Bij aanmaken & bijwerken"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Bij het verwijderen"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -332,7 +343,7 @@ msgstr "Naam regel"
 msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
-msgstr ""
+msgstr "Selecteer wanneer de actie moet uitgevoerd worden, en kies items en/of tijdscondities."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -358,7 +369,7 @@ msgstr "Verantwoordelijke instellen"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Zet selectie gebaseerd op een zoekfilter:"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -369,6 +380,21 @@ msgstr "Status"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
 msgid "Subject"
 msgstr "Onderwerp"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr "Test lead in status 'gereed'"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr "Test lead in status 'concept'"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr "Test lead in status 'open'"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -388,7 +414,7 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "Gebruik automatisch acties om automatisch acties te doen afgaan voor\nverschillende schermen. Bijvoorbeeld: een lead die aangemaakt wordt door een specifieke gebruiker\nmag automatisch toegewezen worden aan een specifiek verkoopteam, of een\nprospect die na 14 dagen nog de status in afwachting heeft kan\neen automatische herinnering e-mail doen afgaan."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -419,4 +445,4 @@ msgstr "Wanneer uitgevinkt, is de regel onzichtbaar en zal deze niet worden uitg
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr ""
+msgstr "U kan ook filters gebruiken in plaats van items te kiezen. Om een nieuwe filter aan te maken:"

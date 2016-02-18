@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:40+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-11-12 13:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>Datum</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -50,7 +50,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Date</strong>"
-msgstr ""
+msgstr "<strong>Geplande datum</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -81,6 +81,11 @@ msgid ""
 "            vendors. Once the tenders have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others."
 msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -156,7 +161,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:291
+#: code:addons/purchase_requisition/purchase_requisition.py:302
 #, python-format
 msgid ""
 "Cancelled by the call for tenders associated to this request for quotation."
@@ -287,7 +292,7 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Schermnaam"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -312,11 +317,18 @@ msgstr "Volgers"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Volgers (Kanalen)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
 msgid "Followers (Partners)"
+msgstr "Volgers (Partners)"
+
+#. module: purchase_requisition
+#. openerp-web
+#: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
+#, python-format
+msgid "Generate PO"
 msgstr ""
 
 #. module: purchase_requisition
@@ -333,15 +345,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Als dit is ingeschakeld, zijn er nieuwe berichten die uw aandacht vragen."
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Is Volger"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
@@ -354,7 +370,7 @@ msgstr "Datum laatste bericht"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Laatst Aangepast op"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_uid
@@ -398,16 +414,6 @@ msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New"
 msgstr "Nieuw"
@@ -418,14 +424,19 @@ msgid "New Call for Tenders"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Aantal ongelezen berichten"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -445,7 +456,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
 msgid "Picking Type"
-msgstr ""
+msgstr "Type levering"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
@@ -537,7 +548,7 @@ msgid "Purchase Requisition Partner"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:411
+#: code:addons/purchase_requisition/purchase_requisition.py:431
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -571,7 +582,7 @@ msgid "Quantity Tendered"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:190
+#: code:addons/purchase_requisition/purchase_requisition.py:201
 #, python-format
 msgid "RFQ created"
 msgstr ""
@@ -722,17 +733,17 @@ msgstr "Ongelezen berichten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Teller ongelezen berichten"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
 msgid "Vendor"
-msgstr ""
+msgstr "Fabrikant"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_partner_ids
 msgid "Vendors"
-msgstr ""
+msgstr "Fabrikanten"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
@@ -756,17 +767,23 @@ msgid "You can not confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:238
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have already generate the purchase order(s)."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:187
+#: code:addons/purchase_requisition/purchase_requisition.py:198
 #, python-format
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:258
+#, python-format
+msgid "You have no line selected for buying."
 msgstr ""
 
 #. module: purchase_requisition

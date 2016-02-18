@@ -66,20 +66,20 @@ class website_slides(http.Controller):
         })
 
     @http.route([
-        '/slides/<model("slide.channel"):channel>',
-        '/slides/<model("slide.channel"):channel>/page/<int:page>',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>''',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/page/<int:page>''',
 
-        '/slides/<model("slide.channel"):channel>/<string:slide_type>',
-        '/slides/<model("slide.channel"):channel>/<string:slide_type>/page/<int:page>',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>''',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>/page/<int:page>''',
 
-        '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>',
-        '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>''',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
 
-        '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>',
-        '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/page/<int:page>',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>''',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
 
-        '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>',
-        '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'],
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>''',
+        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
         type='http', auth="public", website=True)
     def channel(self, channel, category=None, tag=None, page=1, slide_type=None, sorting='creation', search=None, **kw):
         user = request.env.user
@@ -153,21 +153,21 @@ class website_slides(http.Controller):
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True)]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
         values = self._get_slide_detail(slide)
         if not values.get('private'):
             self._set_viewed_slide(slide, 'slide')
         return request.website.render('website_slides.slide_detail_view', values)
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/pdf_content', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas.decode('base64')
+        response.data = slide.datas and slide.datas.decode('base64') or ''
         response.mimetype = 'application/pdf'
         return response
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/comment', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True)]"):slide>/comment''', type='http', auth="public", methods=['POST'], website=True)
     def slide_comment(self, slide, **post):
         """ Controller for message_post. Public user can post; their name and
         email is used to find or create a partner and post as admin with the
@@ -213,7 +213,7 @@ class website_slides(http.Controller):
         )
         return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/download', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('download_security', '=', 'public')]"):slide>/download''', type='http', auth="public", website=True)
     def slide_download(self, slide):
         if slide.download_security == 'public' or (slide.download_security == 'user' and request.session.uid):
             filecontent = base64.b64decode(slide.datas)
@@ -227,7 +227,7 @@ class website_slides(http.Controller):
             return werkzeug.utils.redirect('/web?redirect=/slides/slide/%s' % (slide.id))
         return request.website.render("website.403")
 
-    @http.route('/slides/slide/<model("slide.slide"):slide>/promote', type='http', auth='public', website=True)
+    @http.route('''/slides/slide/<model("slide.slide"):slide>/promote''', type='http', auth='user', website=True)
     def slide_set_promoted(self, slide):
         slide.channel_id.promoted_slide_id = slide.id
         return request.redirect("/slides/%s" % slide.channel_id.id)
@@ -282,11 +282,11 @@ class website_slides(http.Controller):
             return preview
         existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
         if existing_slide:
-            preview['error'] = _('This video already exists in this channel <a target="_blank" href="/slides/slide/%s">click here to view it </a>' % existing_slide.id)
+            preview['error'] = _('This video already exists in this channel <a target="_blank" href="/slides/slide/%s">click here to view it </a>') % existing_slide.id
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
-            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s' % values['error'])
+            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s') % values['error']
             return preview
         return values
 
@@ -318,7 +318,7 @@ class website_slides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s' % e.message)}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------
@@ -348,4 +348,4 @@ class website_slides(http.Controller):
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
             slide = request.env['slide.slide'].sudo().browse(slide_id)
-            return request.website.render('website_slides.embed_slide_forbidden', {'slide' : slide})
+            return request.website.render('website_slides.embed_slide_forbidden', {'slide': slide})

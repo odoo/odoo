@@ -4,7 +4,6 @@ import json
 import logging
 import random
 import select
-import simplejson
 import threading
 import time
 
@@ -21,7 +20,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return simplejson.dumps(v, separators=(',', ':'))
+    return json.dumps(v, separators=(',', ':'))
 
 def hashable(key):
     if isinstance(key, list):
@@ -56,15 +55,24 @@ class ImBus(models.Model):
             if random.random() < 0.01:
                 self.gc()
         if channels:
-            with openerp.sql_db.db_connect('postgres').cursor() as cr2:
-                cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
+            # We have to wait until the notifications are commited in database.
+            # When calling `NOTIFY imbus`, some concurrent threads will be
+            # awakened and will fetch the notification in the bus table. If the
+            # transaction is not commited yet, there will be nothing to fetch,
+            # and the longpolling will return no notification.
+            def notify():
+                with openerp.sql_db.db_connect('postgres').cursor() as cr:
+                    cr.execute("notify imbus, %s", (json_dump(list(channels)),))
+            self._cr.after('commit', notify)
 
     @api.model
     def sendone(self, channel, message):
         self.sendmany([[channel, message]])
 
     @api.model
-    def poll(self, channels, last=0):
+    def poll(self, channels, last=0, options=None, force_status=False):
+        if options is None:
+            options = {}
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
@@ -79,9 +87,18 @@ class ImBus(models.Model):
         for notif in notifications:
             result.append({
                 'id': notif['id'],
-                'channel': simplejson.loads(notif['channel']),
-                'message': simplejson.loads(notif['message']),
+                'channel': json.loads(notif['channel']),
+                'message': json.loads(notif['message']),
             })
+
+        if result or force_status:
+            partner_ids = options.get('bus_presence_partner_ids')
+            if partner_ids:
+                partners = self.env['res.partner'].browse(partner_ids)
+                result += [{
+                    'id': -1,
+                    'channel': (self._cr.dbname, 'bus.presence'),
+                    'message': {'id': r.id, 'im_status': r.im_status}} for r in partners]
         return result
 
 
@@ -92,7 +109,9 @@ class ImDispatch(object):
     def __init__(self):
         self.channels = {}
 
-    def poll(self, dbname, channels, last, timeout=TIMEOUT):
+    def poll(self, dbname, channels, last, options=None, timeout=TIMEOUT):
+        if options is None:
+            options = {}
         # Dont hang ctrl-c for a poll request, we need to bypass private
         # attribute access because we dont know before starting the thread that
         # it will handle a longpolling request
@@ -106,7 +125,7 @@ class ImDispatch(object):
 
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
-            notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
+            notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last, options)
         # or wait for future ones
         if not notifications:
             event = self.Event()
@@ -115,7 +134,7 @@ class ImDispatch(object):
             try:
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
-                    notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
+                    notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last, options, force_status=True)
             except Exception:
                 # timeout
                 pass

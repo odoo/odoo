@@ -3,13 +3,15 @@
 # * purchase_requisition
 # 
 # Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-11-28 20:28+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,32 +27,32 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>Datum</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Opis</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr ""
+msgstr "<strong>JM proizvoda</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Kol</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Reference </strong>"
-msgstr ""
+msgstr "<strong>Vezna oznaka</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Date</strong>"
-msgstr ""
+msgstr "<strong>Planirani datum</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -65,12 +67,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Izvor:</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
-msgstr ""
+msgstr "<strong>Dobavljač </strong>"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -83,6 +85,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
 msgid "Analytic Account"
@@ -91,7 +98,7 @@ msgstr "Konto analitike"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Approved by Vendor"
-msgstr ""
+msgstr "Odobrio dobavljač"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
@@ -112,22 +119,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Natječaji"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Call for Tenders Reference"
-msgstr ""
+msgstr "Vezna oznaka natječaja"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders in negotiation"
-msgstr ""
+msgstr "Natječaji u pregovorima"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders where tenders are closed"
-msgstr ""
+msgstr "Zatvoreni natječaji"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
@@ -143,7 +150,7 @@ msgstr "Otkaži poziv"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
 msgid "Cancel Choice"
-msgstr ""
+msgstr "Otkaži odabir"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -156,7 +163,7 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:291
+#: code:addons/purchase_requisition/purchase_requisition.py:302
 #, python-format
 msgid ""
 "Cancelled by the call for tenders associated to this request for quotation."
@@ -171,7 +178,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr ""
+msgstr "Promijeni količinu u stavci natječaja"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -190,27 +197,27 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
-msgstr ""
+msgstr "Odaberi dobavljača"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Choose product lines"
-msgstr ""
+msgstr "Odaberi stavke"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new Call for Tenders process."
-msgstr ""
+msgstr "Kliknite za pokretanje novog natječaja"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Tenders"
-msgstr ""
+msgstr "Zatvori natječaje"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Tenders"
-msgstr ""
+msgstr "Zatvoreni natječaji"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -221,7 +228,7 @@ msgstr "Tvrtka"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm Call"
-msgstr ""
+msgstr "Potvrdi poziv"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -242,12 +249,12 @@ msgstr "Potvrđeno"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr ""
+msgstr "Kreiraj Zahtjev za ponudom"
 
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr ""
+msgstr "Kreiraj nacrt naloga za nabavu"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_uid
@@ -287,7 +294,7 @@ msgstr "Opis"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Naziv za prikaz"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -302,7 +309,7 @@ msgstr "Nacrt"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "End Month"
-msgstr ""
+msgstr "Kraj mjeseca"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
@@ -312,12 +319,19 @@ msgstr "Pratitelji"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratitelji (Kanali)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratitelji (Partneri)"
+
+#. module: purchase_requisition
+#. openerp-web
+#: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
+#, python-format
+msgid "Generate PO"
+msgstr "Kreiraj nalog za nabavu"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -333,15 +347,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je pratitelj"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
@@ -354,7 +372,7 @@ msgstr "Datum zadnje poruke"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja promjena"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_uid
@@ -390,22 +408,12 @@ msgstr "Poruke i povijest"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
-msgstr ""
+msgstr "Višestruki zahtjevi za ponudom po dobavljaču"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "Višestruki zahtjevi"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -415,17 +423,22 @@ msgstr "Novi"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
-msgstr ""
+msgstr "Novi natječaj"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Broj nepročitanih poruka"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -435,17 +448,17 @@ msgstr "Datum naloga"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "Datum naručivanja"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
-msgstr ""
+msgstr "Narudžba kreirana"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
 msgid "Picking Type"
-msgstr ""
+msgstr "Tip branja"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
@@ -462,7 +475,7 @@ msgstr "Proizvod"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Product Lines"
-msgstr ""
+msgstr "Stavke"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
@@ -483,7 +496,7 @@ msgstr "Proizvodi"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_po_line_ids
 msgid "Products by vendor"
-msgstr ""
+msgstr "Proizvodi po dobavljačima"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_ids
@@ -493,7 +506,7 @@ msgstr "Artikli za nabavu"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Predloži natječaj"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -537,10 +550,10 @@ msgid "Purchase Requisition Partner"
 msgstr "Partner za zahtjev u nabavi"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:411
+#: code:addons/purchase_requisition/purchase_requisition.py:431
 #, python-format
 msgid "Purchase Requisition created"
-msgstr ""
+msgstr "Zahtjev nabave kreiran"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -551,7 +564,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Tenders"
-msgstr ""
+msgstr "Nabavni natječaji"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -568,10 +581,10 @@ msgstr "Količina"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line_quantity_tendered
 msgid "Quantity Tendered"
-msgstr ""
+msgstr "Količine u tenderu"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:190
+#: code:addons/purchase_requisition/purchase_requisition.py:201
 #, python-format
 msgid "RFQ created"
 msgstr ""
@@ -686,7 +699,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Tender Lines"
-msgstr ""
+msgstr "Stavke tendera"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_exclusive
@@ -712,7 +725,7 @@ msgstr "Nedodjeljen"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Nedodijeljeni zahtjev"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
@@ -722,12 +735,12 @@ msgstr "Nepročitane poruke"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Brojač nepročitanih poruka"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
 msgid "Vendor"
-msgstr ""
+msgstr "Dobavljač"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_partner_ids
@@ -747,7 +760,7 @@ msgstr "Website poruke"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
@@ -756,13 +769,13 @@ msgid "You can not confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:238
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have already generate the purchase order(s)."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:187
+#: code:addons/purchase_requisition/purchase_requisition.py:198
 #, python-format
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
@@ -770,6 +783,12 @@ msgid ""
 msgstr "Već imate jedan %s nabavni nalog za tog partnera. Morate poništiti ovaj nabavni nalog kako bi kreirali novi upit."
 
 #. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:258
+#, python-format
+msgid "You have no line selected for buying."
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
-msgstr ""
+msgstr "npr. PO0025"

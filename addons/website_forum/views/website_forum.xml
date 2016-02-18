@@ -25,7 +25,7 @@
 <template id="header_footer_custom" inherit_id="website.footer_default"
     name="Footer Questions Link">
     <xpath expr="//ul[@id='products']" position="inside">
-        <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;A</a></li>
+        <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;amp;A</a></li>
         <li><a href="/forum">Forums</a></li>
     </xpath>
 </template>
@@ -33,6 +33,7 @@
 <!-- helper -->
 <template id="link_button">
     <form method="POST" t-att-action="url">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <button t-attf-class="fa btn-link #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}">
             <t t-esc="label"/></button>
     </form>
@@ -41,6 +42,12 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
+        <t groups="base.group_website_designer" t-set="is_designer" t-value="True"/>
+        <t t-if="not is_designer">
+            <t t-set="head">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
+        </t>
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -479,6 +486,7 @@
             posts will be featured.
         </p>
         <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal js_website_submit_form">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <div class="form-group">
@@ -521,6 +529,7 @@
             <b>Share</b> Something Awesome.
         </p>
         <form t-attf-action="/forum/#{slug(forum)}/new?post_type=discussion" method="post" role="form" class="tag_text js_website_submit_form">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Discussion Title..."/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -558,6 +567,7 @@
             <li>Provide enough details and, if possible, give an example.</li>
         </ul>
         <form t-attf-action="/forum/#{slug(forum)}/new?post_type=question" method="post" role="form" class="tag_text js_website_submit_form">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Question Title..." title="Title must not be empty"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -583,6 +593,7 @@
         <h3 t-if="not is_answer">Edit <span t-field="post.post_type"/></h3>
         <h3 t-if="is_answer">Edit reply</h3>
         <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div t-if="not is_answer">
                 <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post.name}"
                     class="form-control mb8" placeholder="Edit your Post" title="Title must not be empty"/>
@@ -620,6 +631,7 @@
             them.
         </p>
         <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="form-horizontal mt32 mb64 js_website_submit_form">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
                 <label class="col-md-3 control-label" for="reason">Post:</label>
@@ -659,6 +671,7 @@
         <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse js_website_submit_form"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" t-attf-id="content-#{str(object.id)}" class="form-control load_editor" required="True"
                 t-att-data-karma="forum.karma_editor"/>
@@ -678,6 +691,7 @@
         - it really helps to select the best questions and answers!
     </p>
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"
                 t-att-data-karma="forum.karma_editor"/>
@@ -754,7 +768,7 @@
                     <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
                     <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
                     <span>By </span>
-                    <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
+                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or '#'"
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
@@ -902,13 +916,17 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
+                <t t-set="user_profile_url" t-attf-value="#"/>
+                <t t-if="answer.create_uid.id == request.session.uid or answer.create_uid.sudo().website_published">
+                    <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), answer.create_uid.id)"/>
+                </t>
                 <div class="o_forum_user_bio_expand" t-if="answer.can_display_biography">
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
+                <a t-att-href="user_profile_url" class="o_forum_user_info">
                     <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                 </a>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
@@ -992,11 +1010,11 @@
 <!-- Template for user tooltip  -->
 <template id="forum_user_tooltip">
     <div class="o_forum_user_bio text-left panel panel-body">
-        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
+        <a t-att-href="user_profile_url">
             <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
         </a>
         <div class="o_forum_tooltip_header">
-            <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+            <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
                 t-field="answer.create_uid"
                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
@@ -1043,6 +1061,7 @@
             <div class="css_editable_mode_hidden">
                 <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey js_website_submit_form"
                         t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
                     <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
                     <button type="submit" class="btn btn-primary mt8">Post</button>
@@ -1066,18 +1085,16 @@
             <ul class="pagination mt0 mb0">
                 <li class="disabled"><a><i class="fa fa-filter"></i></a></li>
                 <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{tuple_char[1]}"><t t-esc="tuple_char[0]"/></a></li>
+                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}"><t t-esc="tuple_char[0]"/></a></li>
                 </t>
             </ul>
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
+                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times'/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
                     <span t-field="tag.name"/>
                 </a>
-                <span>
-                    X <t t-esc="tag.posts_count"/>
-                </span>
             </div>
         </div>
     </t>
@@ -1249,6 +1266,7 @@
             </div>
             <div class="col-md-10">
             <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input name="user_id" t-att-value="user.id" type="hidden"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label mb16" for="user_name">Real name</label>

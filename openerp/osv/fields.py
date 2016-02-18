@@ -25,32 +25,18 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
-from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
 import openerp.tools as tools
+from openerp.sql_db import LazyCursor
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
-import simplejson
-from openerp import SUPERUSER_ID, registry
+import json
+from openerp import SUPERUSER_ID
 
-@contextmanager
-def _get_cursor():
-    # yield a valid cursor from any environment or create a new one if none found
-    from openerp.api import Environment
-    from openerp.http import request
-    try:
-        request.env     # force request's env to be computed
-    except RuntimeError:
-        pass    # ignore if not in a request
-    for env in Environment.envs:
-        if not env.cr.closed:
-            yield env.cr
-            break
-    else:
-        with registry().cursor() as cr:
-            yield cr
+# deprecated; kept for backward compatibility only
+_get_cursor = LazyCursor
 
 EMPTY_DICT = frozendict()
 
@@ -367,6 +353,7 @@ class html(text):
     def to_field_args(self):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
+        args['strip_style'] = self._strip_style
         return args
 
 import __builtin__
@@ -388,7 +375,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -582,6 +569,7 @@ class datetime(_column):
 class binary(_column):
     _type = 'binary'
     _classic_read = False
+    _classic_write = property(lambda self: not self.attachment)
 
     # Binary values may be byte strings (python 2.6 byte array), but
     # the legacy OpenERP convention is to transfer and store binaries
@@ -594,35 +582,69 @@ class binary(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
-    __slots__ = ['filters']
+    __slots__ = ['attachment', 'filters']
 
     def __init__(self, string='unknown', filters=None, **args):
         args['_prefetch'] = args.get('_prefetch', False)
+        args['attachment'] = args.get('attachment', False)
         _column.__init__(self, string=string, filters=filters, **args)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
-            context = {}
-        if not values:
-            values = []
-        res = {}
-        for i in ids:
-            val = None
-            for v in values:
-                if v['id'] == i:
-                    val = v[name]
-                    break
+    def to_field_args(self):
+        args = super(binary, self).to_field_args()
+        args['attachment'] = self.attachment
+        return args
 
-            # If client is requesting only the size of the field, we return it instead
-            # of the content. Presumably a separate request will be done to read the actual
-            # content if it's needed at some point.
-            # TODO: after 6.0 we should consider returning a dict with size and content instead of
-            #       having an implicit convention for the value
-            if val and context.get('bin_size_%s' % name, context.get('bin_size')):
-                res[i] = tools.human_size(long(val))
+    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+        result = dict.fromkeys(ids, False)
+
+        if self.attachment:
+            # values are stored in attachments, retrieve them
+            atts = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context)
+            domain = [
+                ('res_model', '=', obj._name),
+                ('res_field', '=', name),
+                ('res_id', 'in', ids),
+            ]
+            for att in atts.search(domain):
+                # the 'bin_size' flag is handled by the field 'datas' itself
+                result[att.res_id] = att.datas
+        else:
+            # If client is requesting only the size of the field, we return it
+            # instead of the content. Presumably a separate request will be done
+            # to read the actual content if it's needed at some point.
+            context = context or {}
+            if context.get('bin_size') or context.get('bin_size_%s' % name):
+                postprocess = lambda val: tools.human_size(long(val))
             else:
-                res[i] = val
-        return res
+                postprocess = lambda val: val
+            for val in (values or []):
+                result[val['id']] = postprocess(val[name])
+
+        return result
+
+    def set(self, cr, obj, id, name, value, user=None, context=None):
+        assert self.attachment
+        # retrieve the attachment that stores the value, and adapt it
+        att = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context).search([
+            ('res_model', '=', obj._name),
+            ('res_field', '=', name),
+            ('res_id', '=', id),
+        ])
+        if value:
+            if att:
+                att.write({'datas': value})
+            else:
+                att.create({
+                    'name': name,
+                    'res_model': obj._name,
+                    'res_field': name,
+                    'res_id': id,
+                    'type': 'binary',
+                    'datas': value,
+                })
+        else:
+            att.unlink()
+        return []
 
 class selection(_column):
     _type = 'selection'
@@ -814,12 +836,9 @@ class one2many(_column):
                     else:
                         cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
                 elif act[0] == 4:
-                    # table of the field (parent_model in case of inherit)
-                    field = obj.pool[self._obj]._fields[self._fields_id]
-                    field_model = field.base_field.model_name
-                    field_table = obj.pool[field_model]._table
-                    cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
-                    if not cr.fetchone():
+                    # check whether the given record is already linked
+                    rec = obj.browse(cr, SUPERUSER_ID, act[1], {'prefetch_fields': False})
+                    if int(rec[self._fields_id]) != id:
                         # Must use write() to recompute parent_store structure if needed and check access rules
                         obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
                 elif act[0] == 5:
@@ -1016,6 +1035,25 @@ class many2many(_column):
             return
         rel, id1, id2 = self._sql_names(model)
         obj = model.pool[self._obj]
+
+        def link(ids):
+            # beware of duplicates when inserting
+            query = """ INSERT INTO {rel} ({id1}, {id2})
+                        (SELECT %s, unnest(%s)) EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1}=%s)
+                    """.format(rel=rel, id1=id1, id2=id2)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute(query, (id, list(sub_ids), id))
+
+        def unlink_all():
+            # remove all records for which user has access rights
+            clauses, params, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+            cond = " AND ".join(clauses) if clauses else "1=1"
+            query = """ DELETE FROM {rel} USING {tables}
+                        WHERE {rel}.{id1}=%s AND {rel}.{id2}={table}.id AND {cond}
+                    """.format(rel=rel, id1=id1, id2=id2,
+                               table=obj._table, tables=','.join(tables), cond=cond)
+            cr.execute(query, [id] + params)
+
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
@@ -1029,23 +1067,12 @@ class many2many(_column):
             elif act[0] == 3:
                 cr.execute('delete from '+rel+' where ' + id1 + '=%s and '+ id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+' = %s and '+id2+' = %s', (id, act[1]))
-                if not cr.fetchone():
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s,%s)', (id, act[1]))
+                link([act[1]])
             elif act[0] == 5:
-                cr.execute('delete from '+rel+' where ' + id1 + ' = %s', (id,))
+                unlink_all()
             elif act[0] == 6:
-
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-                if d1:
-                    d1 = ' and ' + ' and '.join(d1)
-                else:
-                    d1 = ''
-                cr.execute('delete from '+rel+' where '+id1+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
-
-                for act_nbr in act[2]:
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s, %s)', (id, act_nbr))
+                unlink_all()
+                link(act[2])
 
     #
     # TODO: use a name_search
@@ -1324,7 +1351,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -1408,8 +1435,12 @@ class function(_column):
     def to_field_args(self):
         args = super(function, self).to_field_args()
         args['store'] = bool(self.store)
+        args['company_dependent'] = False
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
+        elif self._type in ('binary',):
+            # limitation: binary function fields cannot be stored in attachments
+            args['attachment'] = False
         elif self._type in ('selection', 'reference'):
             args['selection'] = self.selection
         elif self._type in ('many2one', 'one2many', 'many2many'):
@@ -1687,10 +1718,10 @@ class serialized(_column):
     __slots__ = []
 
     def _symbol_set_struct(val):
-        return simplejson.dumps(val)
+        return json.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return simplejson.loads(val or '{}')
+        return json.loads(val or '{}')
 
     _symbol_c = '%s'
     _symbol_f = _symbol_set_struct

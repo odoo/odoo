@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"PO-Revision-Date: 2016-02-11 23:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "Total"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -45,7 +45,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Se Necesita Acción"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -54,9 +54,14 @@ msgid "Air Flight"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+msgid "Analytic Account"
+msgstr "Cuenta Analítica"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Approve"
-msgstr ""
+msgstr "Aprobado"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -118,23 +123,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_company_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Company"
-msgstr ""
+msgstr "Compañia"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Confirmed Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "Contract"
 msgstr ""
 
 #. module: hr_expense
@@ -152,7 +150,7 @@ msgstr "Creado en"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
@@ -179,7 +177,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a Mostrar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -397,7 +395,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento Contable"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -413,7 +411,7 @@ msgstr "Fecha del último mensaje"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima Modificación en"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_uid
@@ -530,7 +528,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Pagado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
@@ -553,13 +551,13 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Price"
-msgstr ""
+msgstr "Precio"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
@@ -574,7 +572,7 @@ msgstr "Cant."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Cantidad"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
@@ -629,7 +627,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
@@ -651,7 +649,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -661,7 +659,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_tax_ids
 msgid "Taxes"
-msgstr ""
+msgstr "Impuestos"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_journal_id
@@ -698,7 +696,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
@@ -710,7 +708,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Unit Price"
-msgstr ""
+msgstr "Precio unitario"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_uom_id

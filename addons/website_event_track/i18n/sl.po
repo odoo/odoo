@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:54+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-11-13 13:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,11 @@ msgstr "Tehnična razlaga Odoo kot CMS in eCommerce platforme za verzijo 8"
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Author"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Potreben je ukrep"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -208,7 +213,7 @@ msgstr "Odkrijte Odoo prodajno točko: uporabna trgovina v 30 minutah."
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaz naziva"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -312,12 +317,12 @@ msgstr "Sledilci"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledilci (kanali)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledilci (partnerji)"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -383,9 +388,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: website_event_track
@@ -396,7 +405,7 @@ msgstr "Slika"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Pomembna sporočila"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -406,7 +415,7 @@ msgstr "Uvodna predstavitev"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -525,16 +534,6 @@ msgid "Morning break"
 msgstr "Jutranji odmor"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program (valid from Oct. 2013)."
 msgstr "Nov program certificiranja (veljaven od oktobra 2013)."
@@ -573,14 +572,19 @@ msgid "No tracks found!"
 msgstr "Ni najdenih tematik!"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Število aktivnosti"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Število sporočil, ki zahtevajo dejavnost"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Število neprebranih sporočil"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -700,7 +704,7 @@ msgid "Responsible"
 msgstr "Odgovoren"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Soba"
@@ -800,7 +804,7 @@ msgstr "Ključna beseda"
 #. module: website_event_track
 #: sql_constraint:event.track.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Označba že obstaja!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_ids
@@ -850,7 +854,7 @@ msgstr "Umetnost priprave Odoo predstavitvenih programov."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Polna URL povezava za dostop do dokumenta preko spletne strani."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track29
@@ -949,7 +953,7 @@ msgstr "Neprebrana sporočila"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Števec neprebranih sporočil"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social

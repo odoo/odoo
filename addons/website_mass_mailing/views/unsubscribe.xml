@@ -4,7 +4,8 @@
         <template id="unsubscribe">
             <div class="container o_unsubscribe_form">
                 <div class="row">
-                    <form t-attf-action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form">
+                    <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <input type="hidden" name="email" t-att-value="email"/>
                         <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
                         

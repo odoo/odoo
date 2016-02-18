@@ -129,10 +129,11 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var view = this.views[view_type];
         var old_view = this.active_view;
-        var switched = $.Deferred();
 
-        if (!view) {
+        if (!view || this.currently_switching) {
             return $.Deferred().reject();
+        } else {
+            this.currently_switching = true;  // prevent overlapping switches
         }
 
         if (view.multi_record) {
@@ -142,12 +143,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             this.view_stack.pop();
         }
         this.view_stack.push(view);
-
-        // Hide active view (at first rendering, there is no view to hide)
-        if (this.active_view && this.active_view !== view) {
-            if (this.active_view.controller) this.active_view.controller.do_hide();
-            if (this.active_view.$container) this.active_view.$container.hide();
-        }
         this.active_view = view;
 
         if (!view.created) {
@@ -163,11 +158,21 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.searchview.do_search();
             });
         }
-        $.when(view.created, this.active_search).done(function () {
-            self._display_view(view_options, old_view).done(function() {
+        var switched = $.when(view.created, this.active_search).then(function () {
+            return self._display_view(view_options, old_view).then(function () {
                 self.trigger('switch_mode', view_type, no_store, view_options);
-                switched.resolve();
             });
+        });
+        switched.fail(function(e) {
+            if (!(e && e.code === 200 && e.data.exception_type)) {
+                self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+            }
+            // Restore internal state
+            self.active_view = old_view;
+            self.view_stack.pop();
+        });
+        switched.always(function () {
+            self.currently_switching = false;
         });
         return switched;
     },
@@ -191,10 +196,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             };
             self.update_control_panel(cp_status);
 
-            // Detach the old view but not ui-autocomplete elements to let
-            // jquery-ui garbage-collect them
             if (old_view) {
+                // Detach the old view but not ui-autocomplete elements to let
+                // jquery-ui garbage-collect them
                 old_view.$container.contents().not('.ui-autocomplete').detach();
+
+                // Hide old view (at first rendering, there is no view to hide)
+                if (self.active_view !== old_view) {
+                    if (old_view.controller) old_view.controller.do_hide();
+                    if (old_view.$container) old_view.$container.hide();
+                }
             }
 
             // Append the view fragment to its $container
@@ -242,7 +253,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     select_view: function (index) {
         var view_type = this.view_stack[index].type;
-        this.view_stack.splice(index);
         return this.switch_mode(view_type);
     },
     /**
@@ -265,10 +275,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             });
 
             // Add onclick event listener
-            this.control_elements.$switch_buttons.siblings('button').click(function(event) {
+            this.control_elements.$switch_buttons.siblings('button').click(_.debounce(function(event) {
                 var view_type = $(event.target).data('view-type');
                 self.switch_mode(view_type);
-            });
+            }, 200, true));
         }
     },
     /**

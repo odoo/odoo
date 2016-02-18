@@ -3,12 +3,14 @@
 # * google_account
 # 
 # Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:35+0000\n"
+"POT-Creation-Date: 2016-01-13 13:41+0000\n"
+"PO-Revision-Date: 2016-01-14 10:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +32,7 @@ msgstr "Datum kreiranja"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Naziv za prikaz"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_id
@@ -40,7 +42,7 @@ msgstr "ID"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja promjena"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
@@ -53,12 +55,36 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:98
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
+msgstr ""
+
+#. module: google_account
 #: code:addons/google_account/google_account.py:173
 #, python-format
 msgid "Something went wrong with your request to google"
-msgstr ""
+msgstr "Nešto je pogrešno u vašem zahtjevu prema Google-u"
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

@@ -38,6 +38,8 @@ position.
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
+        'report',
     ],
     'data': [
         'account_chart_template.xml',
@@ -46,6 +48,8 @@ position.
         'account_tax.xml',
         'fiscal_templates.xml',
         'account_chart_template.yml',
+        'data/res_company.xml',
     ],
     'installable': True,
+    'post_init_hook': 'load_translations',
 }

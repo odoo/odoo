@@ -18,7 +18,7 @@ class website_payment(http.Controller):
             acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': '/my/payment_method', 'json': False, 'bootstrap_formatting': True})[0]
         return request.website.render("website_payment.pay_methods", values)
 
-    @http.route(['/website_payment/delete/'], method=['POST'], type='http', auth="user", website=True)
+    @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
         if delete_pm_id:
             pay_meth = request.env['payment.method'].browse(int(delete_pm_id))
@@ -41,11 +41,7 @@ class website_payment(http.Controller):
         acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',
                                                         submit_txt=_('Pay Now')).browse(acquirer_id)
         # auto-increment reference with a number suffix if the reference already exists
-        ref_suffix = 1
-        init_ref = reference
-        while request.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
-            reference = init_ref + '-' + str(ref_suffix)
-            ref_suffix += 1
+        reference = request.env['payment.transaction'].get_next_reference(reference)
 
         partner_id = user.partner_id.id if user.partner_id.id != request.website.partner_id.id else False
 

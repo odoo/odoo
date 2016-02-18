@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-11 10:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -103,7 +103,7 @@ msgstr "Зөвхөн дотоод мэдээллийн зорилгоор хэр
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Үйлдэл Шаардлагатай"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -450,7 +450,7 @@ msgstr "Харуулах эрэмийг тодорхойлно"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -513,7 +513,7 @@ msgstr "Зардлын данс"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "Зардал Нэхэмжлэх Бодлого"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
@@ -534,12 +534,12 @@ msgstr "Дагагчид"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Дагагчид (Сувагууд)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Дагагчид (Харилцагчид)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -597,7 +597,7 @@ msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зур�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -629,7 +629,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr ""
+msgstr "Хэрэв өртөг дээр нэхэмжилбэл борлуулалтын захиалгын мөр дээр өртөгийн харгалзах шинжилгээний дансаар нэхэмжлэнэ. Хэрэв борлуулах үнээр нэхэмжилбэл барааны үнэ нь хэрэглэгдэх болно."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -690,6 +690,11 @@ msgid "Inventory Valuation"
 msgstr "Тооллогын Үнэлгээ"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
 msgstr "Нэхэмжлэлийн төлөв"
@@ -702,7 +707,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
@@ -729,7 +734,7 @@ msgstr "Сүүлийн зурвасын огноо"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
@@ -752,16 +757,6 @@ msgstr "Байрлал"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Logistical Units"
 msgstr "Логистик нэгж"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -826,13 +821,13 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:56
+#: code:addons/delivery/models/sale_order.py:62
 #, python-format
 msgid "No carrier matching."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:85
+#: code:addons/delivery/models/sale_order.py:70
 #, python-format
 msgid "No carrier set for this order."
 msgstr ""
@@ -856,7 +851,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Үйлдлийн тоо"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -866,12 +861,12 @@ msgstr "Савлагааны дугаар"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоо"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -886,7 +881,7 @@ msgstr "Гаргалт"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Баглаа"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -896,7 +891,7 @@ msgstr "Харилцагч"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Бодит Баглаанууд"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -995,11 +990,6 @@ msgid "Product Use Time"
 msgstr "Хэрэглэх хугацаа"
 
 #. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Production"
-msgstr "Үйлдвэрлэлийн"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
 msgstr "Үйлдвэрлэлийн байрлал"
@@ -1023,11 +1013,6 @@ msgstr "Худалдааны Цоорхой"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Худалдан авалтын нэгж"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1120,12 +1105,7 @@ msgid ""
 msgstr "Үйл явдлын төрлийг сонгоно уу, ингэснээр энэ барааг борлуулалтын захиалгын мөрөнд хэрэглэхэд зөвхөн эдгээр төрлийн үйл явдлыг шүүнэ."
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:258
+#: code:addons/delivery/models/delivery_carrier.py:250
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1149,9 +1129,17 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:86
+#: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery
@@ -1196,14 +1184,14 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "State"
-msgstr "Төлөв"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
 msgstr "Төлөв"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
+msgid "Status"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1254,21 +1242,9 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Тэмплэйт Нэр"
-
-#. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Testing"
-msgstr "Тестлэлт"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1285,7 +1261,7 @@ msgid ""
 msgstr "Захиалагч батласнаас барааг хүргэж дуусах хүртэлх дундаж хүлээлт өдөрөөр. Энэ нь захиалагчид таны амлаж чадах огноо байна."
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:47
+#: code:addons/delivery/models/sale_order.py:53
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "Хүргэлтийн мөр нэмэхийн тулд захиалгын төлөв ноорог байх ёстой."
@@ -1345,19 +1321,6 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr "Энэ талбар нь барааны хувилбарын зурагийг хадгалахад зориулагдсан, 1024x1024px-р хязгаарлагдана."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
@@ -1484,7 +1447,7 @@ msgstr "Уншаагүй Зурвасууд"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1509,22 +1472,7 @@ msgstr "Хувилбарын зураг"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_price
-msgid "Vendor Price"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_qty
-msgid "Vendor Quantity"
-msgstr ""
+msgstr "Нийлүүлэгч"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1631,7 +1579,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "e.g. USPS Express"
+msgid "e.g. UPS Express"
 msgstr ""
 
 #. module: delivery

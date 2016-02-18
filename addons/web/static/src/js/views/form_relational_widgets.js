@@ -466,7 +466,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.starting_ids = [];
         // don't set starting_ids for the new record
         if (record.id && record[this.name] && (!isNaN(record.id) || record.id.indexOf(this.dataset.virtual_id_prefix) === -1)) {
-            this.starting_ids =  record[this.name].slice();
+            this.starting_ids =  this.get('value').slice();
         }
         this.trigger("load_record", record);
     },
@@ -655,6 +655,10 @@ var AbstractManyField = common.AbstractField.extend({
                 if (record.to_create) {
                     command_list.push(COMMANDS.create(values));
                 } else {
+                    if (index === -1) {
+                        // because the UPDATE below does not imply LINK_TO
+                        command_list.push(COMMANDS.link_to(id));
+                    }
                     command_list.push(COMMANDS.update(record.id, values));
                 }
                 return;
@@ -954,24 +958,30 @@ var X2ManyListView = ListView.extend({
         if (_.isEmpty(this.records.records)){
             return true;
         }
+        var fields = this.editor.form.fields;
         var current_values = {};
-        _.each(this.editor.form.fields, function(field){
+        _.each(fields, function(field){
             field._inhibit_on_change_flag = true;
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var valid = _.every(this.records.records, function(record){
-            _.each(self.editor.form.fields, function(field){
-                field.set_value(record.attributes[field.name]);
+        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values)});
+        var valid = _.every(cached_records, function(record){
+            _.each(fields, function(field){
+                var value = record.values[field.name];
+                var tmp = field.no_rerender;
+                field.no_rerender = true;
+                field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
+                field.no_rerender = tmp;
             });
-            return _.every(self.editor.form.fields, function(field){
+            return _.every(fields, function(field){
                 field.process_modifiers();
                 field._check_css_flags();
                 return field.is_valid();
             });
         });
-        _.each(this.editor.form.fields, function(field){
-            field.set('value', current_values[field.name]);
+        _.each(fields, function(field){
+            field.set('value', current_values[field.name], {silent: true});
             field._inhibit_on_change_flag = false;
             field.no_rerender = false;
         });
@@ -1149,6 +1159,9 @@ var One2ManyListView = X2ManyListView.extend({
         return this._super();
     },
     _on_focus_one2many: function () {
+        if(!this.editor.is_editing()) {
+            return;
+        }
         this.dataset.x2m.internal_dataset_changed = true;
         this._dataset_changed = false;
         this.__focus = true;
@@ -1409,6 +1422,9 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
                     }
                 }
             });
+            this.many2one.get_search_blacklist = function () {
+                return self.get('value');
+            };
         }
     },
     destroy_content: function() {
@@ -1420,7 +1436,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     get_render_data: function(ids){
         var self = this;
         return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
             return self.dataset.read_ids(ids, fields);
         });
     },
@@ -1467,17 +1483,18 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     open_color_picker: function(ev){
+        this.mutex.exec(function(){
+            if (this.fields.color) {
+                this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
+                    'widget': this,
+                    'tag_id': $(ev.currentTarget).data('id'),
+                }));
 
-        if (this.fields.color) {
-            this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
-                'widget': this,
-                'tag_id': $(ev.currentTarget).data('id'),
-            }));
-
-            $(ev.currentTarget).append(this.$color_picker);
-            this.$color_picker.dropdown('toggle');
-            this.$color_picker.attr("tabindex", 1).focus();
-        }
+                $(ev.currentTarget).append(this.$color_picker);
+                this.$color_picker.dropdown('toggle');
+                this.$color_picker.attr("tabindex", 1).focus();
+            }
+        }.bind(this));
     },
     close_color_picker: function(){
         this.$color_picker.remove();
@@ -1489,7 +1506,9 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         var id = $(ev.currentTarget).data('id');
 
         var self = this;
-        this.dataset._model.call('write', [id, {'color': color}]).done(function(){
+        this.dataset.call('write', [id, {'color': color}]).done(function(){
+            self.dataset.cache[id].from_read = {};
+            self.dataset.evict_record(id);
             var tag = self.$el.find("span.badge[data-id='" + id + "']");
             var old_color = tag.data('color');
             tag.removeClass('o_tag_color_' + old_color);

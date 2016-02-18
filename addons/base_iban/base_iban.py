@@ -7,7 +7,7 @@ from openerp.exceptions import UserError, ValidationError
 
 
 def normalize_iban(iban):
-    return re.sub('[\W_]', '', iban)
+    return re.sub('[\W_]', '', iban or '')
 
 def pretty_iban(iban):
     """ return iban in groups of four characters separated by a single space """
@@ -32,7 +32,7 @@ def validate_iban(iban):
     iban_template = _map_iban_template[country_code]
     if len(iban) != len(iban_template.replace(' ', '')):
         raise ValidationError(_("The IBAN does not seem to be correct. You should have entered something like this %s\n"\
-            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit" % iban_template))
+            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit") % iban_template)
 
     check_chars = iban[4:] + iban[:4]
     digits = int(''.join(str(int(char, 36)) for char in check_chars))  # BASE 36: 0..9,A..Z -> 0..35
@@ -44,7 +44,7 @@ class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
     @api.one
-    @api.depends('acc_type')
+    @api.depends('acc_number')
     def _compute_acc_type(self):
         try:
             validate_iban(self.acc_number)
@@ -63,23 +63,17 @@ class ResPartnerBank(models.Model):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).create(vals)
 
-    @api.model
+    @api.multi
     def write(self, vals):
         if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).write(vals)
 
     @api.one
-    @api.constrains('acc_type', 'acc_number')
+    @api.constrains('acc_number')
     def _check_iban(self):
         if self.acc_type == 'iban':
             validate_iban(self.acc_number)
-
-    @api.one
-    @api.constrains('acc_type', 'bank_bic')
-    def _check_bank_bic(self):
-        if self.acc_type == 'iban' and not self.bank_bic:
-            raise ValidationError(_("Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments."))
 
 
 # Map ISO 3166-1 -> IBAN template, as described here :

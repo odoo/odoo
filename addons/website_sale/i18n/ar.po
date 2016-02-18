@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-12 22:29+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-10-27 10:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -67,10 +67,8 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid ""
-"<br/>\n"
-"    <strong>Payment Status:</strong>"
+#: model:ir.ui.view,arch_db:website_sale.order_state_message
+msgid "<i class=\"fa fa-cog\"/> Configure Transfer Details"
 msgstr ""
 
 #. module: website_sale
@@ -355,7 +353,7 @@ msgid "<strong>Order Details:</strong>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+#: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Method:</strong>"
 msgstr ""
@@ -428,9 +426,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>See it in action</strong><br/>\n"
-"                    <iframe width=\"100%\" height=\"300\" src=\"//www.youtube.com/embed/204DbheXfWw\" frameborder=\"0\" allowfullscreen=\"True\"/>"
+msgid "<strong>See it in action</strong><br/>"
 msgstr ""
 
 #. module: website_sale
@@ -810,6 +806,11 @@ msgid "Customize your Payment message"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_dhl
+msgid "DHL integration"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_currency_id
 msgid "Default Currency"
 msgstr "العملة الافتراضية"
@@ -820,10 +821,25 @@ msgid "Default Pricelist"
 msgstr "قائمة الأسعار الافتراضية"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "Default Sales Team"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "Default Salesperson"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "Defining a good delivery strategy is difficult: you don't want to cut into "
 "your margins, but you want to be attractive to customers."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Delivery Strategy"
 msgstr ""
 
 #. module: website_sale
@@ -847,7 +863,7 @@ msgstr "تحديد ترتيب العرض في موقع التجارة الإلك
 #: model:ir.model.fields,field_description:website_sale.field_product_style_display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: website_sale
 #. openerp-web
@@ -957,6 +973,11 @@ msgid "Extra Step"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_fedex
+msgid "Fedex integration"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Field 1"
 msgstr ""
@@ -1048,7 +1069,7 @@ msgstr "خفي"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11178
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11237
 msgid "ID"
 msgstr "المعرف"
 
@@ -1075,6 +1096,11 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Import Your Products"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "In order to take money from customers, you need a way of accepting payments.<br/>\n"
 "                        That's what a payment gateway is for: it helps you make money, but that does cost money.<br/>\n"
@@ -1094,7 +1120,7 @@ msgid "Increase your chances to make a sale by displaying suggested products."
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:529
+#: code:addons/website_sale/controllers/main.py:559
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -1157,6 +1183,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "Merchant Connectors"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "رسالة لخط طلب المشتروات"
@@ -1186,7 +1217,7 @@ msgstr "الاسم (شحن)"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:921
+#: code:addons/website_sale/controllers/main.py:957
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1282,7 +1313,7 @@ msgid "Partner"
 msgstr "الشريك"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:737
+#: code:addons/website_sale/controllers/main.py:769
 #, python-format
 msgid "Pay Now"
 msgstr "ادفع الآن"
@@ -1313,6 +1344,11 @@ msgid "Payment Method:"
 msgstr "طريقة الدفع:"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Payment Methods"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "معاملة السداد"
@@ -1338,7 +1374,7 @@ msgid "Policies"
 msgstr "سياسات"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Price"
 msgstr "السعر"
@@ -1366,7 +1402,7 @@ msgstr "التوريدات"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_product
-#: model:ir.ui.view,arch_db:website_sale.cart
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Product"
 msgstr "المنتج"
@@ -1380,6 +1416,11 @@ msgstr "سمة المنتج"
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Product Name"
 msgstr "اسم المنتج"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Product Pages"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -1483,7 +1524,7 @@ msgid "Qty:"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Quantity"
@@ -1611,6 +1652,16 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Sell"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Sell More"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
@@ -1638,6 +1689,11 @@ msgstr "شحن"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Shipping &amp;"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "Shipping Connectors"
 msgstr ""
 
 #. module: website_sale
@@ -1714,8 +1770,8 @@ msgstr "تجاوز"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_small
-msgid "Smal-sized image"
-msgstr "صورة صغيرة الحجم"
+msgid "Small-sized image"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image_small
@@ -1731,7 +1787,7 @@ msgid "Some customers prefer to pay this way"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:551
+#: code:addons/website_sale/controllers/main.py:581
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -1817,7 +1873,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 #: model:ir.model.fields,help:website_sale.field_product_template_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
@@ -1890,6 +1946,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type
 msgid "Type"
 msgstr "النوع"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_ups
+msgid "UPS integration"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_usps
+msgid "USPS integration"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1983,7 +2049,7 @@ msgid "Website Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:348
+#: code:addons/website_sale/models/sale_order.py:344
 #, python-format
 msgid "Website Pricelist for %s"
 msgstr ""
@@ -2087,7 +2153,7 @@ msgid "Your Order"
 msgstr "طلبك"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "عربة التسوق الخاصة بك فارغة!"
@@ -2138,6 +2204,16 @@ msgid "comments"
 msgstr "تعليقات"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
+msgid "eBay connector"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "eCommerce"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "items)"
 msgstr ""
@@ -2154,7 +2230,7 @@ msgstr "أو"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
-msgid "pagination form-inline col-md-3"
+msgid "pagination form-inline"
 msgstr ""
 
 #. module: website_sale
@@ -2166,11 +2242,6 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_product_style
 msgid "product.style"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.product
-msgid "pull-right"
-msgstr "pull-right"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout

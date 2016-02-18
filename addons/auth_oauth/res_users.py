@@ -3,7 +3,7 @@ import logging
 import werkzeug.urls
 import urlparse
 import urllib2
-import simplejson
+import json
 
 import openerp
 from openerp.addons.auth_signup.res_users import SignupError
@@ -33,16 +33,16 @@ class res_users(osv.Model):
             url = endpoint + '?' + params
         f = urllib2.urlopen(url)
         response = f.read()
-        return simplejson.loads(response)
+        return json.loads(response)
 
     def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
         """ return the validation data corresponding to the access token """
         p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
-        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
+        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token, context=context)
         if validation.get("error"):
             raise Exception(validation['error'])
         if p.data_endpoint:
-            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token, context=context)
             validation.update(data)
         return validation
 
@@ -82,7 +82,7 @@ class res_users(osv.Model):
         except openerp.exceptions.AccessDenied, access_denied_exception:
             if context and context.get('no_user_creation'):
                 return None
-            state = simplejson.loads(params['state'])
+            state = json.loads(params['state'])
             token = state.get('t')
             values = self._generate_signup_values(cr, uid, provider, validation, params, context=context)
             try:
@@ -98,7 +98,7 @@ class res_users(osv.Model):
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+        validation = self._auth_oauth_validate(cr, uid, provider, access_token, context=context)
         # required check
         if not validation.get('user_id'):
             # Workaround: facebook does not send 'user_id' in Open Graph Api

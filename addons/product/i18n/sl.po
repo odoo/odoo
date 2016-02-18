@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "Kategorija proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -33,16 +33,16 @@ msgstr "# različic proizvoda"
 #: code:addons/product/pricelist.py:288
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s %% popust"
 
 #. module: product
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% popust in %s pribitek"
 
 #. module: product
-#: code:addons/product/product.py:739 code:addons/product/product.py:1135
+#: code:addons/product/product.py:710 code:addons/product/product.py:1134
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -138,6 +138,13 @@ msgid "8-port Switch"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
 msgstr ""
@@ -145,22 +152,22 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Valuta</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Opis</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Naziv cenika</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Natisnjeno dne</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -171,7 +178,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:981 sql_constraint:product.product:0
+#: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -251,7 +258,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potreben je ukrep"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -329,7 +336,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -675,6 +682,12 @@ msgid "Computers"
 msgstr "Računalniki"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -682,7 +695,7 @@ msgid ""
 msgstr "Pretvorba med enotami mere je možna samo v isti kategoriji."
 
 #. module: product
-#: code:addons/product/product.py:118
+#: code:addons/product/product.py:119
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -903,7 +916,7 @@ msgstr "Naprave"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaz naziva"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1107,13 +1120,13 @@ msgstr "Sledilci"
 #: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledilci (kanali)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledilci (partnerji)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
@@ -1368,7 +1381,7 @@ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1480,7 +1493,7 @@ msgstr "Zaloga"
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1637,18 +1650,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
 msgid "Logistical Units"
 msgstr "Logistične enote"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_id
-#: model:ir.model.fields,help:product.field_product_template_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
 
 #. module: product
 #: model:res.groups,name:product.group_uom
@@ -1827,19 +1828,19 @@ msgstr "Beležke"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Število aktivnosti"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Število sporočil, ki zahtevajo dejavnost"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Število neprebranih sporočil"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1876,11 +1877,6 @@ msgstr "Ostale informacije"
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "drugi cenik"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Other Pricelist  -"
-msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2209,6 +2205,7 @@ msgid "Product Unit of Measure"
 msgstr "Enota mere izdelka"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -2266,7 +2263,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:846
+#: code:addons/product/product.py:817
 #, python-format
 msgid "Products: "
 msgstr "Izdelki: "
@@ -2276,11 +2273,6 @@ msgstr "Izdelki: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Priporočna cena"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Public Price  -"
-msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2298,12 +2290,6 @@ msgstr "Opis za nabavo"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Nabavna enota mere"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_price
-#: model:ir.model.fields,help:product.field_product_template_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
@@ -2496,12 +2482,6 @@ msgid "Select category for the current product"
 msgstr "Izbira kategorije za trenutni izdelek"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
 #: model:ir.model.fields,field_description:product.field_product_category_sequence
@@ -2519,6 +2499,12 @@ msgstr "Zaporedje"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "Strežnik"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2696,14 +2682,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
 msgstr "Ime predloge"
@@ -2803,7 +2781,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:328
+#: code:addons/product/product.py:329
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2935,21 +2913,6 @@ msgstr "V tem polju je slika izdelka v velikosti 1024x1024 px"
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "Ta količina je pretvorjena v privzeto enoto mere."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_qty
-#: model:ir.model.fields,help:product.field_product_template_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_delay
-#: model:ir.model.fields,help:product.field_product_template_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
@@ -3115,7 +3078,7 @@ msgstr "Neprebrana sporočila"
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Števec neprebranih sporočil"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3181,18 +3144,6 @@ msgid "Vendor Information"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_delay
-#: model:ir.model.fields,field_description:product.field_product_template_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_price
-#: model:ir.model.fields,field_description:product.field_product_template_seller_price
-msgid "Vendor Price"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
 msgstr ""
@@ -3200,12 +3151,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_qty
-#: model:ir.model.fields,field_description:product.field_product_template_seller_qty
-msgid "Vendor Quantity"
 msgstr ""
 
 #. module: product
@@ -3277,6 +3222,13 @@ msgstr "Teže"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"When this field is filled in, the vendor data will only apply to the "
+"variant."
 msgstr ""
 
 #. module: product

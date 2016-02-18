@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-12-25 03:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -161,15 +161,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
+msgid "<span class=\"oe_grey\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -557,12 +557,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr ""
+msgstr "قبول ایمیل دریافتی از طرف"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "اقدام مورد نیاز است"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_search
@@ -581,6 +581,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "فعال"
@@ -700,14 +701,14 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr ""
+msgstr "بایگانی"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Archived"
-msgstr ""
+msgstr "بایگانی شده"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -762,7 +763,7 @@ msgstr "مولف"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr ""
+msgstr "ویزارد ادغام خودکار"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_generate_sales_team_alias
@@ -827,7 +828,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity_report
 msgid "CRM Opportunity Analysis"
-msgstr ""
+msgstr "تحلیل فرصت‌های CRM"
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_call
@@ -878,7 +879,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
 msgid "Change Probability Automatically"
-msgstr ""
+msgstr "میزان شانس‌موفقیت به صورت خودکار تغییر کند"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -971,7 +972,7 @@ msgstr "بسته"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr ""
+msgstr "سرنخ‌های با وضعیت بسته/شکست‌خورده نمی‌توانند به فرصت تبدیل شوند."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
@@ -1017,6 +1018,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
 msgstr ""
 
 #. module: crm
@@ -1247,7 +1253,7 @@ msgstr "تاریخ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
@@ -1354,7 +1360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1366,7 +1372,7 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr ""
+msgstr "به مشتری انتساب نشود"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1465,7 +1471,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr ""
+msgstr "تخمین تاریخی که این فرصت به نتیجه موفقیت‌آمیز می‌رسد."
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -1520,20 +1526,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
-msgstr ""
+msgstr "تاریخ تخمینی قرارداد"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
 msgid "Expected Revenue"
-msgstr ""
+msgstr "پیش‌بینی تخمینی درآمد"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
-msgstr ""
+msgstr "پیش‌بینی تخمینی درآمد"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1550,7 +1557,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "فیلترهای بسط یافته"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1611,11 +1618,16 @@ msgstr "دنبال‌کنندگان"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "پیروان (کانال ها)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_partner_ids
 msgid "Followers (Partners)"
+msgstr "پیروان (شرکاء)"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
 msgstr ""
 
 #. module: crm
@@ -1634,6 +1646,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr ""
@@ -1642,13 +1661,6 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:558
 #, python-format
 msgid "From %s : %s"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: crm
@@ -1695,7 +1707,7 @@ msgstr "گروه‌بندی برمبنای"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
 msgid "Group of Contacts"
-msgstr ""
+msgstr "گروه تماس‌ها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1794,12 +1806,12 @@ msgstr "شناسه ها"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_opt_out
@@ -1851,7 +1863,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Important Messages"
-msgstr ""
+msgstr "پیام‌های مهم"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1862,6 +1874,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "In Odoo, there are 3 different ways to manage your products prices.<br/>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
 msgstr ""
 
 #. module: crm
@@ -1883,6 +1900,11 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Internal Notes"
@@ -1901,17 +1923,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_is_company
 msgid "Is Company"
-msgstr ""
+msgstr "یک شرکت است"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "دنبال می کند"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr ""
+msgstr "سرفصل حساب انتساب داده شده به این تماس"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1927,11 +1949,6 @@ msgstr "آخرین اقدام"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_last_activity_id
 msgid "Last Activity"
 msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Last Message"
-msgstr "آخرین پیام"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_last_post
@@ -1954,7 +1971,7 @@ msgstr "تاریخ آخرین پیام"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "تاریخ آخرین به‌روزرسانی"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2103,7 +2120,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
 msgid "Leads from USA"
-msgstr ""
+msgstr "سرنخ از آمریکا"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2153,7 +2170,7 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
-msgstr ""
+msgstr "انتساب به یک مشتری موجود"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_id
@@ -2205,19 +2222,19 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark As Lost"
-msgstr ""
+msgstr "درج در لیست باخته‌ها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
-msgstr ""
+msgstr "درج در لیست باخته‌ها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr ""
+msgstr "درج در لیست بردها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2574,11 +2591,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "تعداد پیام‌های خوانده نشده"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Odoo Default"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
 msgstr ""
 
 #. module: crm
@@ -2966,12 +2989,12 @@ msgstr ""
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
-msgstr ""
+msgstr "پیشنهاد"
 
 #. module: crm
 #: model:crm.stage,name:crm.crm_stage_2_2 model:crm.stage,name:crm.stage_lead2
 msgid "Qualification"
-msgstr ""
+msgstr "تایید صلاحیت"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3002,7 +3025,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_referred
 msgid "Referred By"
-msgstr ""
+msgstr "ارجاع شده توسط"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
@@ -3128,6 +3151,7 @@ msgid "Search Leads"
 msgstr "جستجوی سرنخ ها"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "جستجوی فرصت ها"
@@ -3666,7 +3690,7 @@ msgstr "پیام های ناخوانده"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
@@ -3785,6 +3809,11 @@ msgid "Very High"
 msgstr "خیلی زیاد"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
@@ -3842,12 +3871,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "پیام‌های وب‌سایت"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

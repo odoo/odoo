@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import unittest2
+import unittest
 
 from ..controllers import main
 
 
-class ActionMungerTest(unittest2.TestCase):
+class ActionMungerTest(unittest.TestCase):
     def test_actual_treeview(self):
         action = {
             "views": [[False, "tree"], [False, "form"],

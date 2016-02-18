@@ -150,17 +150,19 @@ Here are 2 examples of database upgrade request creation using:
 
         CREATE_URL = "https://upgrade.odoo.com/database/v1/create"
         CONTRACT = "M123456-abcdef"
-        EMAIL = "john.doe@example.com"
-        TARGET = "8.0"
         AIM = "test"
+        TARGET = "8.0"
+        EMAIL = "john.doe@example.com"
         FILENAME = "db_name.dump"
 
-        postfields = urlencode([
-            ('contract', CONTRACT),
-            ('email', EMAIL),
-            ('target', TARGET),
+        fields = dict([
             ('aim', AIM),
-            ('filename', FILENAME)])
+            ('email', EMAIL),
+            ('filename', DB_SOURCE),
+            ('contract', CONTRACT),
+            ('target', TARGET),
+        ])
+        postfields = urlencode(fields)
 
         c = pycurl.Curl()
         c.setopt(pycurl.URL, CREATE_URL)

@@ -614,7 +614,9 @@ var Tour = {
 
         if (state.mode === "test") {
             setTimeout(function () {
-                Tour.autoNextStep(state.tour, step, state);
+                if (Tour.check(step)) { // re-test because if click on a link to change page, don't want to click again after
+                    Tour.autoNextStep(state.tour, step, state);
+                }
                 if (next && Tour.getState()) {
                     Tour.waitNextStep();
                 }

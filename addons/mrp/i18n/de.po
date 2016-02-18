@@ -1,0 +1,2306 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# Pascal <paesce@gentlemansclub.de>, 2015
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Wolfgang Taferner, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"PO-Revision-Date: 2016-02-06 19:04+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:230
+#, python-format
+msgid " Manufacture"
+msgstr " Fertigung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
+msgid "# Bill of Material"
+msgstr "# Stücklisten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
+msgid "# Manufacturing Orders"
+msgstr "# Fertigungsaufträge"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:332
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copy)"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:1009
+#, python-format
+msgid "%s produced"
+msgstr "%s gefertigt"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
+msgid ""
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
+msgstr "Der Modus 'Verbrauchen' bucht nur den Abgang der Komponenten mit der angegebenen Menge.\nDer Modus 'Verbrauchen & Produziere' bucht sowohl die Abgänge, als auch den Zugang im Fertigprodukte Lager, \nbeendet außerdem auch den Fertigungsauftrag, wenn die geplante Anzahl vollständig produziert wurde."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Consumed Products</strong>"
+msgstr "<strong>Konsumierte Produkte</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Destination Location</strong>"
+msgstr "<strong>Ziellagerort</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Name</strong>"
+msgstr "<strong>Name</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Cycles</strong>"
+msgstr "<strong>Anzahl der Zyklen</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Hours</strong>"
+msgstr "<strong>Anzahl der Stunden</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Partner Ref:</strong><br/>"
+msgstr "Partner Referenz"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Printing date:</strong><br/>"
+msgstr "<strong>Druckdatum:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product:</strong><br/>"
+msgstr "<strong>Produkt:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product</strong>"
+msgstr "<strong>Produkt</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Products to Consume</strong>"
+msgstr "Zu verwendende Produkte"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity:</strong><br/>"
+msgstr "<strong>Menge:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>Menge</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>SO Number:</strong><br/>"
+msgstr "<strong>SO Nummer:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Scheduled Date:</strong><br/>"
+msgstr "<strong>Geplantes Datum:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Sequence</strong>"
+msgstr "<strong>Sequenz</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Document:</strong><br/>"
+msgstr "<strong>Quelldokument:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Location</strong>"
+msgstr "<strong>Ursprungsort</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Work Orders</strong>"
+msgstr "<strong>Arbeitsaufträge</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>WorkCenter</strong>"
+msgstr "Arbeitsplatz"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
+msgid "A factor of 0.9 means a loss of 10% during the production process."
+msgstr "Ein Faktor von 0,9 bedeutet einen eingeplanten Fertigungsausschuss von 10%."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
+msgid "A factor of 0.9 means a loss of 10% within the production process."
+msgstr "Ein Faktor 0,90 bedeutet, dass ein Ausschuss von 10% bei der Produktion anfallen wird."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"A manufacturing order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products."
+msgstr "Ein Fertigungsauftrag mit Stückliste verbraucht Rohwaren und produziert fertige Produkte."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:51
+#, python-format
+msgid "Active Id not found"
+msgstr "Aktive ID wurde nicht gefunden"
+
+#. module: mrp
+#: sql_constraint:mrp.bom.line:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
+msgstr "Sämtliche Mengen müssen grösser als 0 sein.\nSie sollten das Modul mrp_byproduct installieren, wenn Sie auch Kuppelprodukte in \nStücklisten verwalten wollen."
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr "Detailierte Planung der Arbeitsauftrage ermöglichen"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_rounding_efficiency
+msgid ""
+"Allow to manage product rounding on quantity and product efficiency during "
+"production process"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Apply"
+msgstr "Anwenden"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Approve"
+msgstr "Genehmigen"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,help:mrp.field_product_template_produce_delay
+msgid ""
+"Average delay in days to produce this product. In the case of multi-level "
+"BOM, the manufacturing lead times of the components will be added."
+msgstr "Durchschnittliche Dauer zur Produktion dieses Produkts. Im Fall einer mehrdimensionalen Stückliste muss die Dauer für alle Komponenten summiert werden."
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr "Erwartetetes Rohmaterial"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Name"
+msgstr "Stücklistenbezeichnung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
+msgid "BOM Product Variants needed form apply this line."
+msgstr "Anzuwendende Position für diese Produktvariante"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Ref"
+msgstr "Stückliste Referenz"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "BOM Structure"
+msgstr "Struktur der Stückliste"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
+msgid "BOM lines of the referred bom"
+msgstr "Stücklistenzeilen der bezeichneten Stückliste"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:25
+#, python-format
+msgid ""
+"Because the product %s requires it, you must assign a serial number to your "
+"raw material %s to proceed further in your production. Please use the "
+"'Produce' button to do so."
+msgstr "Da das Produkt %s  eine Seriennummer für die Komponente %s erfordert, müssen Sie diese hier eingeben, um weiter fortzufahren. Bitte klicken Sie hierzu auf 'Produziere'."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Bill Of Material"
+msgstr "Stückliste"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_bom_id
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Bill of Material"
+msgstr "Stückliste"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.actions.act_window,name:mrp.product_open_bom
+#: model:ir.actions.act_window,name:mrp.template_open_bom
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_ids
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Bill of Materials"
+msgstr "Stückliste"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action2
+msgid "Bill of Materials Structure"
+msgstr "Stücklistenstruktur"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
+msgid ""
+"Bill of Materials allow you to define the list of required raw materials to "
+"make a finished product."
+msgstr "Die Stückliste ermöglicht die Definition der benötigten Komponenten zur Erstellung eines Endprodukts."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
+"                order or a pack of products."
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "Bills of materials may produce residual products (A + B --> C + D)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
+msgid "BoM"
+msgstr "BoM"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:303
+#, python-format
+msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
+msgstr "Die Stückliste \"%s\" beinhaltet eine rekursive Position: \"%s\"."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
+msgid "BoM Lines"
+msgstr "Stücklistenpositionen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
+msgid "BoM Type"
+msgstr "Stücklisten Typ"
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "By Lots"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "By Unique Serial Number"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
+msgid "By-Products"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/stock.py:227
+#, python-format
+msgid "Can't find any generic Manufacture route."
+msgstr "Ein passender Fertigungsablaufplan kann nicht ermittelt werden."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Cancel Production"
+msgstr "Fertigung abbrechen"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:149
+#, python-format
+msgid "Cannot consume a move with negative or zero quantity."
+msgstr "Es kann keine Buchung vorgenommen werden mit negativer Menge oder '0'."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:639
+#, python-format
+msgid "Cannot delete a manufacturing order in state '%s'."
+msgstr "Ein Fertigungsauftrag mit Status '%s' kann nicht gelöscht werden."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:709
+#, python-format
+msgid "Cannot find a bill of material for this product."
+msgstr "Es konnte keine Stückliste gefunden werden."
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:66
+#: code:addons/mrp/wizard/change_production_qty.py:71
+#, python-format
+msgid "Cannot find bill of material for this product."
+msgstr "Es konnte keine Stückliste für dieses Produkt gefunden werden."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Capacity Information"
+msgstr "Kapazitätsinformation"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
+msgid "Capacity per Cycle"
+msgstr "Kapazität pro Zyklus"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_change_production_qty
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Change Product Qty"
+msgstr "Produktanzahl ändern"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+msgid "Change Quantity"
+msgstr "Anzahl ändern"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "Menge der Produkte ändern"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid "Click to add a work center."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid "Click to create a bill of material."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid "Click to create a group of properties."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid "Click to create a manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid "Click to create a new property."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid "Click to create a new routing."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid "Click to start a new manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_code
+msgid "Code"
+msgstr "Code"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_company_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_component_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Components"
+msgstr "Komponenten"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Compute Data"
+msgstr "Berechne Daten"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Configure Manufacturing"
+msgstr "Konfiguration Fertigung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Confirm Production"
+msgstr "Fertigungsauftrag bestätigen"
+
+#. module: mrp
+#: selection:mrp.product.produce,mode:0
+msgid "Consume & Produce"
+msgstr "Verbrauche & Produziere"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Consume Lines"
+msgstr "Verbrauchpositionen"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.move_consume
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Consume Move"
+msgstr "Verbrauchsbuchung"
+
+#. module: mrp
+#: selection:mrp.product.produce,mode:0
+msgid "Consume Only"
+msgstr "Nur Verbrauchen"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_move_consume
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Consume Products"
+msgstr "Verbrauche Produkte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Consumed Products"
+msgstr "Verbrauchte Produkte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
+msgid "Consumed for"
+msgstr "Verbraucht für"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
+msgid "Cost per cycle"
+msgstr "Kosten pro Zyklus"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour
+msgid "Cost per hour"
+msgstr "Kosten pro Stunde"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Costing Information"
+msgstr "Kosten Informationen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_uid
+msgid "Created by"
+msgstr "Angelegt von"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_date
+msgid "Created on"
+msgstr "Angelegt am"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle_account_id
+msgid "Cycle Account"
+msgstr "Kostenstelle Zyklus"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_last_post
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_last_post
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Datum der letzten Nachricht."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Default Unit of Measure"
+msgstr "Standard Mengeneinheit"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"Define specific property groups that can be assigned to your\n"
+"                bill of materials and sales orders. Properties allows Odoo\n"
+"                to automatically select the right bill of materials according\n"
+"                to properties selected in the sales order by salesperson."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
+msgid "Define the schedule of resource"
+msgstr "Definieren Sie den Einsatzplan für diese Ressource"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_note
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
+msgid ""
+"Description of the Work Center. Explain here what's a cycle according to "
+"this Work Center."
+msgstr "Beschreibung des Arbeitsplatz. Es kann z.B. ein Zyklus dieses Arbeitsplatz beschrieben werden."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Destination Loc."
+msgstr "Fertigprodukte Lager"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Do not use a planning for the work orders "
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Done"
+msgstr "Erledigt"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
+msgid "Efficiency Factor"
+msgstr "Effizienzfaktor"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_finished
+msgid "End Date"
+msgstr "Enddatum"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Extra Information"
+msgstr "Zusätzliche Informationen"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle_account_id
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour_account_id
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr "Tragen Sie nur Werte ein, wenn Sie automatische Kostenstellen Buchungen durch die Fertigung erstellen wollen."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
+msgid ""
+"Fill this product to easily track your production costs in the analytic "
+"accounting."
+msgstr "Tragen Sie hier ein Produkt ein, zur Verfolgung der Fertigungskosten in der Kostenstellenrechnung."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Finished Products"
+msgstr "Fertigprodukte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_dest_id
+msgid "Finished Products Location"
+msgstr "Lagerort für Fertigprodukte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_follower_ids
+msgid "Followers"
+msgstr "Beobachter"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Beobachter (Kanäle)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Beobachter (Partner)"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
+"                on the propoerties selected in the sales order, Odoo will\n"
+"                schedule a production using the matching bill of materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Force Reservation"
+msgstr "Reservierung erzwingen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_general_account_id
+msgid "General Account"
+msgstr "Sachkonto"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "General Information"
+msgstr "Allgemeine Informationen"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
+msgid "Gives the sequence order when displaying a list of bills of material."
+msgstr "Reihenfolge bei der Anzeige einer Stücklisten Übersicht."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
+msgid ""
+"Gives the sequence order when displaying a list of routing Work Centers."
+msgstr "Bestimmt die Reihenfolge der angezeigten Arbeitsplätze"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
+msgid "Gives the sequence order when displaying a list of work orders."
+msgstr "Bestimmt die Anzeigereihenfolge der Arbeitsaufträge."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
+msgid "Gives the sequence order when displaying."
+msgstr "Zeigt die Reihenfolge an."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Group By"
+msgstr "Gruppiere nach"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Group By..."
+msgstr "Gruppieren nach ..."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour_account_id
+msgid "Hour Account"
+msgstr "Kostenstelle Arbeitskosten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
+msgid ""
+"If a product variant is defined the BOM is available only for this product."
+msgstr "Wenn eine Produktvariante ausgewählt wird, bezieht sich die Stückliste nur auf dieses Produkt."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
+msgstr "Durch Deaktivierung der Checkbox können Sie die Stückliste ausblenden ohne diese Löschen zu müssen."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "Bei Deaktivierung kann die Ansicht der Ressource ausgeblendet werden."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr "Durch Deaktivierung können Sie den Arbeitsplan ausblenden."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "In Production"
+msgstr "In Produktion"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
+msgid "Internal Reference"
+msgstr "Interne Referenz"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_is_follower
+msgid "Is Follower"
+msgstr "Ist Beobachter"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
+msgid ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+msgstr "Leer lassen, wenn die Produktion an jenen Orten erfolgt, an denen die Fertigprodukte gebraucht werden.\r\nSetze einen Ort, wenn an fixen Orten produziert wird.\r\nDas kann auch ein Partner-Ort sein, wenn Sie Subkontrakte haben."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_last_post
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_last_post
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_last_post
+msgid "Last Message Date"
+msgstr "Letzte Benachrichtigung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Late"
+msgstr "Verspätet"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
+msgid "Location"
+msgstr "Lagerort"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
+msgid "Location where the system will look for components."
+msgstr "Lagerort für Komponenten der Produktion."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
+msgid "Location where the system will stock the finished products."
+msgstr "Lagerort, wo das System die Fertigprodukte lagert."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_restrict_lot_id
+msgid "Lot"
+msgstr "Fertigungslos"
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_mrp_routings
+msgid "Manage Work Order Operations"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by manufacturing orders"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by work orders"
+msgstr ""
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_rounding_efficiency
+msgid "Manage rounding and efficiency of BoM components"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "Manage rounding and efficiency of bills of materials components"
+msgstr ""
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_mrp_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:224
+#: model:stock.location.route,name:mrp.route_warehouse0_manufacture
+#, python-format
+msgid "Manufacture"
+msgstr "Fertigung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
+msgid "Manufacture Rule"
+msgstr "Fertigungsregel"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
+msgid "Manufacture in this Warehouse"
+msgstr "Herstellung an diesem Lagerstandort"
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Manufacture this product"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Manufacturing"
+msgstr "Fertigung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_efficiency
+msgid "Manufacturing Efficiency"
+msgstr "Fertigungseffizienz"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_product_template_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_res_company_manufacturing_lead
+msgid "Manufacturing Lead Time"
+msgstr "Durchlaufzeit der Fertigung"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_production_id
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Manufacturing Order"
+msgstr "Fertigungsauftrag"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:112
+#, python-format
+msgid "Manufacturing Order <em>%s</em> created."
+msgstr "Fertigungsauftrag <em>%s</em> wurde erstellt."
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_mrp_production
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_production_calendar
+#: model:ir.ui.view,arch_db:mrp.view_production_graph
+#: model:ir.ui.view,arch_db:mrp.view_production_pivot
+msgid "Manufacturing Orders"
+msgstr "Fertigungsaufträge"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are currently in production."
+msgstr "In Arbeit befindliche Fertigungsaufträge"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are ready to start production."
+msgstr "Startbereite Fertigungsaufträge"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Manufacturing Orders which are waiting for raw materials."
+msgstr "Fertigungsaufträge in Erwartung von Material"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Manufacturing Reference"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:774
+#, python-format
+msgid "Manufacturing order cancelled."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
+"                stock rule."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Mark as Started"
+msgstr "Fertigung starten"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Master Data"
+msgstr "Stammdaten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_ids
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_ids
+msgid "Messages and communication history"
+msgstr "Nachrichten- und Kommunikationshistorie"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_mode
+msgid "Mode"
+msgstr "Modus"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Mrp Workcenter"
+msgstr "Arbeitsplatz"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Name"
+msgstr "Name"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "New"
+msgstr "Neu"
+
+#. module: mrp
+#: code:addons/mrp/procurement.py:108
+#, python-format
+msgid "No BoM exists for this product!"
+msgstr "Es gibt keine Stückliste für dieses Produkt!"
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "No Tracking"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "No by-products in bills of materials (A + B --> C)"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "No rounding and efficiency on bills of materials"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.config.settings,group_product_variant:0
+msgid "No variants on products"
+msgstr "Keine Produktvarianten"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr "Nicht dringend"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_property_composition
+msgid "Not used in computations, for information purpose only."
+msgstr "Nicht genutzt für die Berechnung, nur zu Informationszwecken"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Notes"
+msgstr "Notizen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_cycle
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_cycle_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_cycle
+msgid "Number of Cycles"
+msgstr "Anzahl der Zyklen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_hour
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_hour_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_hour
+msgid "Number of Hours"
+msgstr "Anzahl der Stunden"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_cycle_nbr
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
+msgstr "Anzahl Wiederholungen, die an diesem Arbeitsplatz für gegebene Vorgänge des Arbeitsplans erforderlich sind."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity_per_cycle
+msgid ""
+"Number of operations this Work Center can do in parallel. If this Work "
+"Center represents a team of 5 workers, the capacity per cycle is 5."
+msgstr "Anzahl der parallel durchführbaren Arbeitsaufträge je Arbeitsplatz. Wenn der Arbeitsplatz 5 Mitarbeiter darstellt, dann beträgt die Kapazität 5."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Anzahl ungelesener Nachrichten"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Odoo uses these BoMs to automatically propose manufacturing\n"
+"                orders according to procurement needs."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Ok"
+msgstr "Ok"
+
+#. module: mrp
+#: model:ir.actions.client,name:mrp.action_client_mrp_menu
+msgid "Open MRP Menu"
+msgstr "Menü Fertigungsplanung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Operation"
+msgstr "Vorgang"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr "Auftragsplanung"
+
+#. module: mrp
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr "Die Bestellmenge muss positiv sein!"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
+msgid "Parent BoM"
+msgstr "Mutterstückliste"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
+msgid "Parent Routing"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Pending"
+msgstr "Anstehend"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_planning
+msgid "Planning"
+msgstr "Planung"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:135
+#, python-format
+msgid "Please provide proper quantity."
+msgstr "Bitte geben Sie eine korrekte Menge an."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
+msgid "Priority"
+msgstr "Priorität"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_procurement_order
+msgid "Procurement"
+msgstr "Beschaffung"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Beschaffungsregel"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_produce_id
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Produce"
+msgstr "Produziere"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Produced Products"
+msgstr "Erzeugte Produkte"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_product_product
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Product"
+msgstr "Produkt"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
+msgid "Product Move"
+msgstr "Produkt Lagerbuchung"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_product_produce
+msgid "Product Produce"
+msgstr "Produkt fertigen"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_product_produce_line
+msgid "Product Produce Consume lines"
+msgstr "Produktverbräuche bei Fertigung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
+msgid "Product Qty"
+msgstr "Produktmenge"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
+msgid "Product Quantity"
+msgstr "Produktmenge"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_rounding
+msgid "Product Rounding"
+msgstr "Produkt Rundung"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_product_template
+msgid "Product Template"
+msgstr "Produktvorlage"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_uom
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_uom
+msgid "Product Unit of Measure"
+msgstr "Mengeneinheit des Produkts"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_id
+msgid "Product Variant"
+msgstr "Produktvarianten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_product_variant
+msgid "Product Variants"
+msgstr "Produktvarianten"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Production"
+msgstr "Produktionsstätte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+msgid "Production Location"
+msgstr "Fertigungort (virtuelles Lager)"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_production_order
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_production_id
+msgid "Production Order"
+msgstr "Fertigungsauftrag"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Production Order # :"
+msgstr "Fertigungsauftrag #:"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
+msgid "Production Order for Produced Products"
+msgstr "Fertigungsauftrag für Fertigprodukte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
+msgid "Production Order for Raw Materials"
+msgstr "Fertigungsauftrag für Komponenten"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_product_line
+msgid "Production Scheduled Product"
+msgstr "Geplantes anzufertigendes Produkt"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Production Started"
+msgstr "Produktion begonnen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Production Work Centers"
+msgstr "Arbeitsplätze der Produktion"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
+msgid "Production progress"
+msgstr "Fertigungsfortschritt"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Production started late"
+msgstr "Produktion begann zu spät"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_production_gantt
+msgid "Productions"
+msgstr "Produktion"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.product_template_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
+msgid "Products"
+msgstr "Produktvorlagen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
+msgid "Products Consumed"
+msgstr "Produktverbrauch"
+
+#. module: mrp
+#: selection:mrp.config.settings,group_product_variant:0
+msgid ""
+"Products can have several attributes, defining variants (Example: size, "
+"color,...)"
+msgstr "Produkte können mehrere Attribute haben, die Varianten definieren (Beispiele: Größe, Farbe...)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Consume"
+msgstr "Benötigte Produkte"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Finish"
+msgstr "Fertigzustellende Produkte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Products to Produce"
+msgstr "Zu fertigende Produkte"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_property_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_property_ids
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_property_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_tree_view
+msgid "Properties"
+msgstr "Eigenschaften"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+msgid "Properties categories"
+msgstr "Kategorien von Eigenschaften"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
+msgid "Properties composition"
+msgstr "Konfiguration Eigenschaften"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property
+msgid "Property"
+msgstr "Eigenschaften"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property_group
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9783
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Property Group"
+msgstr "Gruppe von Eigenschaften"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_group_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
+msgid "Property Groups"
+msgstr "Gruppe von Eigenschaften"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+msgid "Quantity"
+msgstr "Anzahl"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
+msgid "Quantity (in default UoM)"
+msgstr "Menge (in Standard ME)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
+msgid "Raw Materials Location"
+msgstr "Komponenten Lager"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Ready"
+msgstr "Bereit"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_ready_production
+msgid "Ready for production"
+msgstr "Bereit zur Fertigung"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Ready to Produce"
+msgstr "Bereit für Produktion"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_name
+msgid "Reference"
+msgstr "Referenz"
+
+#. module: mrp
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "Die Referenz muss pro Unternehmen eindeutig sein!"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_origin
+msgid ""
+"Reference of the document that generated this production order request."
+msgstr "Referenz zu Dokument, welches den Fertigungsauftrag ausgelöst hat."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_position
+msgid "Reference to a position in an external plan."
+msgstr "Referenz auf Position in externem Plan."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Der mit der Ressource verbunden Benutzer für die Zugriffsberechtigung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reserve"
+msgstr "Reservieren"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
+msgid "Resource"
+msgstr "Ressource (Objekt)"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
+msgid "Resource Leaves"
+msgstr "Ressource Abwesenheiten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_type
+msgid "Resource Type"
+msgstr "Ressource Typ"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_pm_resources_config
+msgid "Resources"
+msgstr "Ressourcen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_user_id
+msgid "Responsible"
+msgstr "Verantwortlich"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_rounding
+msgid "Rounding applied on the product quantity."
+msgstr "Rundung wird auf die Produktmenge angewandt"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_rounding_efficiency
+msgid "Rounding efficiency"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Routing"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
+msgid "Routing Work Centers"
+msgstr "Arbeitzplätze der Arbeitspläne"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_routing_action
+#: model:ir.model,name:mrp.model_mrp_routing
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
+#: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Routings"
+msgstr "Arbeitspläne"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
+msgid ""
+"Routings indicates all the Work Centers used, for how long and/or cycles.If "
+"Routings is set then,the third tab of a production order (Work Centers) will"
+" be automatically pre-completed."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
+msgid "Scheduled Date"
+msgstr "Geplantes Datum"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date by Month"
+msgstr "Plandatum nach Monat"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Month"
+msgstr "Geplanter Monat"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_tree_view
+msgid "Scheduled Products"
+msgstr "Terminierte Produkte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_lines
+msgid "Scheduled goods"
+msgstr "Planverbrauch"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Scrap Products"
+msgstr "Ausschuss buchen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+msgid "Search"
+msgstr "Suche"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Search Bill Of Material"
+msgstr "Stücklisten durchsuchen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Search Bill Of Material Components"
+msgstr "Komponenten in Stückliste suchen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Search Production"
+msgstr "Fertigungsauftrag suchen"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Search for mrp workcenter"
+msgstr "Suche nach Arbeitsplatz"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
+msgid "Security days for each manufacturing operation."
+msgstr "Sicherheitstage für jede Position in Arbeitsaufträgen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
+msgid "Select Quantity"
+msgstr "Menge wählen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_sequence
+msgid "Sequence"
+msgstr "Reihenfolge"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_type
+msgid ""
+"Set: When processing a sales order for this product, the delivery order will"
+" contain the raw materials, instead of the finished product."
+msgstr "Set: Bei Fortführung eines Produktverkaufs, enthält dieser Auslieferungsauftrag die Produktkomponenten anstelle des fertigen Produkts."
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Ship this product as a set of components (kit)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
+msgid "Source Document"
+msgstr "Quelle Dokument"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
+msgid "Specify Cost of Work Center per cycle."
+msgstr "Arbeitsplatzkosten je Zyklus"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
+msgid "Specify Cost of Work Center per hour."
+msgstr "Definieren Sie die Kosten des Arbeitsplatzes pro Stunde"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_state
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_value
+msgid "Stock value"
+msgstr "Bestandswert"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_form
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_graph
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_tree
+msgid "Stock value variation"
+msgstr "Bestandwertsveränderung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
+msgid "Technical field used to make the traceability of produced products"
+msgstr "Datenfeld, das zur Verfolgung der Fertigungsprodukte eingesetzt wird"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr "Die ausgewählte Mengeneinheit ist in einer anderen Kategorie als die dieses Produkts"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"The Properties in Odoo are used to select the right bill of\n"
+"                materials for manufacturing a product when you have different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several properties\n"
+"                and Odoo will automatically select the BoM to use according\n"
+"                the needs."
+msgstr ""
+
+#. module: mrp
+#: constraint:mrp.workcenter:0
+msgid "The capacity per cycle must be strictly positive."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"plannification."
+msgstr "Die Vorgangsliste (Arbeitsplatzliste) für die Herstellung eines Endprodukts. Die Arbeitspläne werden primär genutzt, um die Auslastung und die Kosten der Arbeitsplätze aktuell und auf Basis der Produktionsplanung für die Zukunft zu kalkulieren."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"planning."
+msgstr "Liste der Vorgänge (an Arbeitsplätzen), um ein Fertigteil zu produzieren. Arbeitspläne werden primär zur Berechnung der Auslastung von Arbeitsplätzen und deren Kosten genutzt, sowie um die zukünftige Auslastung der Arbeitsplätze über einen Fertigungsplan zu ermitteln."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
+msgid ""
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
+"-This installs the module mrp_operations."
+msgstr "Hierdurch können Sie Status, das Anfangsdatum, das voraussichtliche Enddatum für die einzelnen Arbeitsaufträge (im Aktenreiter Arbeitsaufträge) definieren. \n- Es wird das Modul mrp_operations installiert."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr "Dieses Feld beschreibt die Effizienz von Ressourcen, bei der Erledigung von Arbeitsaufträgen. Wenn Sie z.B. im Standard einer einzige Ressource einer Phase über 5 Tagen mit 5 Aufgaben zuweisen, wird bei ihm eine Auslastung von 100% für diese Phase standardmäßig angezeigt, wenn wir allerdings die Effizienz auf 200% ändern, würde seine Auslastung im Ergebnis nur noch 50% betragen."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
+msgid "Time after prod."
+msgstr "Abrüstzeit"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_start
+msgid "Time before prod."
+msgstr "Aufrüstzeit"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_cycle
+msgid "Time for 1 cycle (hour)"
+msgstr "Zeit für einen Zyklus (Stunden)"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_cycle
+msgid "Time in hours for doing one cycle."
+msgstr "Zeit in Stunden für einen Zyklus"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
+msgid "Time in hours for the cleaning."
+msgstr "Zeit in Stunden für die Abrüstung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
+msgid "Time in hours for the setup."
+msgstr "Rüstzeit in Stunden"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_hour_nbr
+msgid ""
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
+msgstr "Zeitbedarf dieses Arbeitsplatzes in Stunden um die Aufgabe für die spezifizierte Arbeit zu erledigen."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "To Consume"
+msgstr "Benötigte Produkte"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Cycles"
+msgstr "Gesamtzyklen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_hour_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Hours"
+msgstr "Gesamtstunden"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Total Qty"
+msgstr "Gesamtmenge"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Type"
+msgstr "Typ"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Unit of Measure"
+msgstr "Mengeneinheit"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_uom
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for the "
+"inventory control"
+msgstr "Mengeneinheit (ME) ist die Einheit, in der der Lagerbestand geführt wird."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread
+msgid "Unread Messages"
+msgstr "Ungelesene Nachrichten"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Zähler der ungelesenen Nachrichten"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Update"
+msgstr "Aktualisieren"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Urgent"
+msgstr "Dringend"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_user_id
+#: model:res.groups,name:mrp.group_mrp_user
+msgid "User"
+msgstr "Benutzer"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_start
+msgid "Valid From"
+msgstr "Gültig ab"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Valid From Date by Month"
+msgstr "Gültig ab Datum nach Monat"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+msgid "Valid From Month"
+msgstr "Gültig ab Monat"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_stop
+msgid "Valid Until"
+msgstr "Gültig bis"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
+msgid "Validity of component. Keep empty if it's always valid."
+msgstr "Gültig ab Datum einer Komponente. Leer lassen , wenn immer Gültig."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
+msgid "Validity of this BoM. Keep empty if it's always valid."
+msgstr "Gültig ab Datum einer Komponente. Leer lassen , wenn immer Gültig."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
+msgid "Variants"
+msgstr "Varianten"
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Very Urgent"
+msgstr "Sehr dringend"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Lager"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_website_message_ids
+msgid "Website Messages"
+msgstr "Website Nachrichten"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_website_message_ids
+msgid "Website communication history"
+msgstr "Website Kommunikationshistorie"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_date
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_name
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
+msgid "Week"
+msgstr "Woche"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+msgid "Weekly Stock Value Variation"
+msgstr "Wöchentliche Bestandsveränderung"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
+msgid ""
+"Weekly Stock Value Variation enables you to track the stock value evolution "
+"linked to manufacturing activities, receipts of products and delivery "
+"orders."
+msgstr "Die wöchentliche Bestandsentwicklung, ermöglicht die Verfolgung von Veränderungen durch Fertigung, Zu und -abgang von Produkten."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
+msgid ""
+"When products are manufactured, they can be manufactured in this warehouse."
+msgstr "Wenn Produkte gefertigt werden, erfolgt dies in diesem Lager."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_state
+msgid ""
+"When the production order is created the status is set to 'Draft'.\n"
+"If the order is confirmed the status is set to 'Waiting Goods.\n"
+"If any exceptions are there, the status is set to 'Picking Exception.\n"
+"If the stock is available then the status is set to 'Ready to Produce.\n"
+"When the production gets started then the status is set to 'In Production.\n"
+"When the production is over, the status is set to 'Done'."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_workcenter_id
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Work Center"
+msgstr "Arbeitsplatz"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Work Center Load"
+msgstr "Arbeitsplatzauslastung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
+msgid "Work Center Loads"
+msgstr "Arbeitsplätzeauslastung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "Work Center Operations"
+msgstr "Arbeitsplatzvorgänge"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
+msgid "Work Center Product"
+msgstr "Arbeitsplatz Ergebnisprodukt"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing_workcenter
+msgid "Work Center Usage"
+msgstr "Arbeitsplatz Auslastung"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
+msgid "Work Center load"
+msgstr "Arbeitsplatzauslastung"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
+msgid "Work Centers"
+msgstr "Arbeitsplätze"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
+msgid "Work Centers Utilisation"
+msgstr "Arbeitsplätzeauslastung"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as capacity\n"
+"                and planning forecast."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_name
+msgid "Work Order"
+msgstr "Arbeitsauftrag"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
+msgid ""
+"Work Order Operations allow you to create and manage the manufacturing "
+"operations that should be followed within your work centers in order to "
+"produce a product. They are attached to bills of materials that will define "
+"the required raw materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
+msgid "Work Order Planning"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Work Orders"
+msgstr "Arbeitsaufträge"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
+msgid "Working Time"
+msgstr "Arbeitszeit"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
+msgid ""
+"You can configure by-products in the bill of material.\n"
+"Without this module: A + B + C -> D.\n"
+"With this module: A + B + C -> D + E.\n"
+"-This installs the module mrp_byproduct."
+msgstr "Sie können Kuppelprodukte in einer Stückliste definieren.\n                Ohne diese Module: A + B + C -> D.\n                Mit diesem Modul: A + B + C -> D + E.\n                - Sie installieren hier das Modul mrp_byproduct."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:348
+#, python-format
+msgid ""
+"You can not delete a Bill of Material with running manufacturing orders.\n"
+"Please close or cancel it first."
+msgstr "Sie können eine Stückliste nicht löschen, wenn dazu noch Fertigungsaufträge laufen. Bitte schließen Sie die entsprechenden Fertigungsaufträge zuerst."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
+msgid "days"
+msgstr "Tage"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "max"
+msgstr "max"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "min"
+msgstr "min"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom_line
+msgid "mrp.bom.line"
+msgstr "mrp.bom.line"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_config_settings
+msgid "mrp.config.settings"
+msgstr "mrp.config.settings"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "plus"
+msgstr "plus"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
+msgid "report.mrp.report_mrpbomstructure"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
+msgid "unknown"
+msgstr "unbekannt"

@@ -124,7 +124,7 @@ class project_issue(osv.Model):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -184,6 +184,9 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'legend_blocked': fields.related("stage_id", "legend_blocked", type="char", string='Kanban Blocked Explanation'),
+        'legend_done': fields.related("stage_id", "legend_done", type="char", string='Kanban Valid Explanation'),
+        'legend_normal': fields.related("stage_id", "legend_normal", type="char", string='Kanban Ongoing Explanation'),
     }
 
     _defaults = {
@@ -213,7 +216,7 @@ class project_issue(osv.Model):
         context = dict(context or {})
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
-        if vals.get('user_id'):
+        if vals.get('user_id') and not vals.get('date_open'):
             vals['date_open'] = fields.datetime.now()
         if 'stage_id' in vals:
             vals.update(self.onchange_stage_id(cr, uid, None, vals.get('stage_id'), context=context)['value'])
@@ -229,8 +232,8 @@ class project_issue(osv.Model):
             vals['date_last_stage_update'] = fields.datetime.now()
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
-        # user_id change: update date_start
-        if vals.get('user_id'):
+        # user_id change: update date_open
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
@@ -334,7 +337,7 @@ class project_issue(osv.Model):
 
         new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project_issue.project_issue_categ_act0')
         take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
-        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_id=new_action_id)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
 
         task_record = self.browse(cr, uid, ids[0], context=context)
         actions = []
@@ -394,7 +397,7 @@ class project_issue(osv.Model):
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         email_list = self.email_split(cr, uid, [res_id], msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
 
@@ -402,7 +405,7 @@ class project_issue(osv.Model):
         """ Override to update the issue according to the email. """
 
         email_list = self.email_split(cr, uid, ids, msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, ids, email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
@@ -424,7 +427,9 @@ class project(osv.Model):
     _inherit = "project.project"
 
     def _get_alias_models(self, cr, uid, context=None):
-        return [('project.task', "Tasks"), ("project.issue", "Issues")]
+        res = super(project, self)._get_alias_models(cr, uid, context=context)
+        res.append(("project.issue", "Issues"))
+        return res
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
@@ -433,10 +438,18 @@ class project(osv.Model):
             for project_id in ids
         }
 
+    def _issue_needaction_count(self, cr, uid, ids, field_name, arg, context=None):
+        Issue = self.pool['project.issue']
+        res = dict.fromkeys(ids, 0)
+        projects = Issue.read_group(cr, uid, [('project_id', 'in', ids), ('message_needaction', '=', True)], ['project_id'], ['project_id'], context=context)
+        res.update({project['project_id'][0]: int(project['project_id_count']) for project in projects})
+        return res
+
     _columns = {
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                     domain=[('stage_id.fold', '=', False)]),
+        'issue_needaction_count': fields.function(_issue_needaction_count, type='integer', string="Issues",),
     }
 
     @api.multi

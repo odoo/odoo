@@ -65,6 +65,7 @@ animation.registry.newsletter_popup = animation.Class.extend({
     start: function (editable_mode) {
         var self = this;
         var popupcontent = self.$target.find(".o_popup_content_dev").empty();
+        if (!self.$target.data('list-id')) return;
 
         ajax.jsonRpc('/website_mass_mailing/get_content', 'call', {
             newsletter_id: self.$target.data('list-id')
@@ -123,6 +124,8 @@ animation.registry.newsletter_popup = animation.Class.extend({
 
 
 odoo.define('mass_mailing.unsubscribe', function (require) {
+var ajax = require('web.ajax');
+require('web_editor.base');  // wait for implicit dependencies to load
 
 if(!$('.o_unsubscribe_form').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");

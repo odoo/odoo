@@ -12,10 +12,9 @@ import datetime
 import hashlib
 import os
 import re
-import simplejson
+import json
 import sys
 import time
-import urllib2
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -33,13 +32,12 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
-from openerp.modules import get_module_resource
+from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp import http
-import mimetypes
-from openerp.http import request, serialize_exception as _serialize_exception, STATIC_CACHE
+from openerp.http import request, serialize_exception as _serialize_exception
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -52,7 +50,7 @@ else:
     loader = jinja2.PackageLoader('openerp.addons.web', "views")
 
 env = jinja2.Environment(loader=loader, autoescape=True)
-env.filters["json"] = simplejson.dumps
+env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
@@ -78,7 +76,7 @@ def serialize_exception(f):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
+            return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
 
 def redirect_with_hash(*args, **kw):
@@ -421,93 +419,20 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     return res
 
 def content_disposition(filename):
-    filename = ustr(filename)
-    escaped = urllib2.quote(filename.encode('utf8'))
-    browser = request.httprequest.user_agent.browser
-    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-    if browser == 'msie' and version < 9:
-        return "attachment; filename=%s" % escaped
-    elif browser == 'safari':
-        return u"attachment; filename=%s" % filename
-    else:
-        return "attachment; filename*=UTF-8''%s" % escaped
+    return request.registry['ir.http'].content_disposition(filename)
+
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
-    """ Get file, attachment or downloadable content
+    return request.registry['ir.http'].binary_content(
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
+        download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
-    If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
-    binary field (via ``default_get``), otherwise fetches the field for
-    that precise record.
-
-    :param str xmlid: xmlid of the record
-    :param str model: name of the model to fetch the binary from
-    :param int id: id of the record from which to fetch the binary
-    :param str field: binary field
-    :param bool unique: add a max-age for the cache control
-    :param str filename: choose a filename
-    :param str filename_field: if not create an filename with model-id-field
-    :param bool download: apply headers to download the file
-    :param str mimetype: mintype of the field (for headers)
-    :param str default_mimetype: default mintype if no mintype found
-    :param Environment env: by default use request.env
-    :returns: (status, headers, content)
-    """
-    env = env or request.env
-    # get object and content
-    obj = None
-    if xmlid:
-        obj = env.ref(xmlid, False)
-    elif id and model in env.registry:
-        obj = env[model].browse(int(id))
-
-    # obj exists
-    if not obj or not obj.exists() or field not in obj:
-        return (404, [], None)
-
-    # check read access
-    try:
-        last_update = obj['__last_update']
-    except AccessError:
-        return (403, [], None)
-    status = 200
-
-    # filename
-    if not filename:
-        if filename_field in obj:
-            filename = obj[filename_field]
-        else:
-            filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
-
-    # mimetype
-    if not mimetype:
-        if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
-            mimetype = obj.mimetype
-        elif filename:
-            mimetype = mimetypes.guess_type(filename)[0]
-        if not mimetype:
-            mimetype = default_mimetype
-    headers = [('Content-Type', mimetype)]
-
-    # cache
-    etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
-    retag = hashlib.md5(last_update).hexdigest()
-    if etag == retag:
-        status = 304
-    headers.append(('ETag', retag))
-
-    if unique:
-        headers.append(('Cache-Control', 'max-age=%s' % STATIC_CACHE))
-    else:
-        headers.append(('Cache-Control', 'max-age=0'))
-
-    # content-disposition default name
-    if download:
-        headers.append(('Content-Disposition', content_disposition(filename)))
-
-    # get content after cache control
-    content = obj[field] or ''
-
-    return (status, headers, content)
+def db_info():
+    version_info = openerp.service.common.exp_version()
+    return {
+        'server_version': version_info.get('server_version'),
+        'server_version_info': version_info.get('server_version_info'),
+    }
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -529,7 +454,7 @@ class Home(http.Controller):
 
         request.uid = request.session.uid
         menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info())})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -563,12 +488,6 @@ class Home(http.Controller):
             request.uid = old_uid
             values['error'] = "Wrong login/password"
         return request.render('web.login', values)
-
-    @http.route('/login', type='http', auth="none")
-    def login(self, db, login, key, redirect="/web", **kw):
-        if not http.db_filter([db]):
-            return werkzeug.utils.redirect('/', 303)
-        return login_and_redirect(db, login, key, redirect_url=redirect)
 
 class WebClient(http.Controller):
 
@@ -735,7 +654,7 @@ class Database(http.Controller):
     def manager(self, **kw):
         return self._render_template()
 
-    @http.route('/web/database/create', type='http', auth="none")
+    @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
             request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
@@ -745,7 +664,7 @@ class Database(http.Controller):
             error = "Database creation error: %s" % e
         return self._render_template(error=error)
 
-    @http.route('/web/database/duplicate', type='http', auth="none")
+    @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
             request.session.proxy("db").duplicate_database(master_pwd, name, new_name)
@@ -754,7 +673,7 @@ class Database(http.Controller):
             error = "Database duplication error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/drop', type='http', auth="none")
+    @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
         try:
             request.session.proxy("db").drop(master_pwd, name)
@@ -763,7 +682,7 @@ class Database(http.Controller):
             error = "Database deletion error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/backup', type='http', auth="none")
+    @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
             openerp.service.db.check_super(master_pwd)
@@ -781,7 +700,7 @@ class Database(http.Controller):
             error = "Database backup error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/restore', type='http', auth="none")
+    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
             data = base64.b64encode(backup_file.read())
@@ -791,7 +710,7 @@ class Database(http.Controller):
             error = "Database restore error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/change_password', type='http', auth="none")
+    @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
         try:
             request.session.proxy("db").change_admin_password(master_pwd, master_pwd_new)
@@ -1045,6 +964,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200:
             response = request.not_found()
         else:
@@ -1076,21 +997,23 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200 and download:
             return request.not_found()
 
-        if content and width and height:
+        if content and (width or height):
             # resize maximum 500*500
             if width > 500:
                 width = 500
             if height > 500:
                 height = 500
-            content = openerp.tools.image_resize_image(base64_source=content, size=(width, height), encoding='base64', filetype='PNG')
+            content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
 
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
-        response.status = str(status)
+        response.status_code = status
         return response
 
     # backward compatibility
@@ -1117,7 +1040,7 @@ class Binary(http.Controller):
                     ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
@@ -1141,9 +1064,9 @@ class Binary(http.Controller):
                 'id':  attachment_id
             }
         except Exception:
-            args = {'error': "Something horrible happened"}
+            args = {'error': _("Something horrible happened")}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route([
         '/web/binary/company_logo',
@@ -1152,7 +1075,7 @@ class Binary(http.Controller):
     ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo.png'
-        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
+        placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1391,7 +1314,7 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
-        params = simplejson.loads(data)
+        params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
@@ -1399,7 +1322,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context)
+        ids = ids or Model.search(domain, 0, False, False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
@@ -1517,7 +1440,7 @@ class Reports(http.Controller):
     @http.route('/web/report', type='http', auth="user")
     @serialize_exception
     def index(self, action, token):
-        action = simplejson.loads(action)
+        action = json.loads(action)
 
         report_srv = request.session.proxy("report")
         context = dict(request.context)
@@ -1555,7 +1478,7 @@ class Reports(http.Controller):
         if 'name' not in action:
             reports = request.session.model('ir.actions.report.xml')
             res_id = reports.search([('report_name', '=', action['report_name']),],
-                                    0, False, False, context)
+                                    context=context)
             if len(res_id) > 0:
                 file_name = reports.read(res_id[0], ['name'], context)['name']
             else:

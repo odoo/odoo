@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 10:51+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/odoo/odoo-9/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,11 @@ msgstr ""
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
+msgid "Action Needed"
 msgstr ""
 
 #. module: sales_team
@@ -196,9 +201,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
 msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sales_team
@@ -285,16 +294,6 @@ msgid "My Salesteams"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
@@ -309,8 +308,13 @@ msgid "Next Actions"
 msgstr "Próximas acciones"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: sales_team
@@ -320,7 +324,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -530,7 +534,7 @@ msgstr "Horas laborales"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Wrong value entered!"
 msgstr ""

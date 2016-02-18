@@ -31,9 +31,9 @@ class ResCompany(models.Model):
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
-    property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
-    property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
-    property_stock_valuation_account_id = fields.Many2one('account.account')
+    property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
+    property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
+    property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
         default='''Dear Sir/Madam,
@@ -54,7 +54,7 @@ Best Regards,''')
         self = self[0]
         last_month = self.fiscalyear_last_month
         last_day = self.fiscalyear_last_day
-        if (date.month < last_month or (date.month == last_month and date.date <= last_day)):
+        if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
             date = date.replace(month=last_month, day=last_day)
         else:
             date = date.replace(month=last_month, day=last_day, year=date.year + 1)
@@ -64,9 +64,7 @@ Best Regards,''')
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
-        new_prefix_length = len(new_prefix)
-        number = current_code[len(old_prefix):]
-        return new_prefix + '0' * (digits - new_prefix_length - len(number)) + number
+        return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code, digits):
         accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
@@ -74,6 +72,11 @@ Best Regards,''')
         for account in accounts:
             if account.code.startswith(old_code):
                 account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
+
+    def reflect_code_digits_change(self, digits):
+        accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
+        for account in accounts:
+            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
 
     @api.multi
     def write(self, values):
@@ -86,4 +89,6 @@ Best Regards,''')
             if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
+            if values.get('accounts_code_digits'):
+                company.reflect_code_digits_change(digits)
         return super(ResCompany, self).write(values)

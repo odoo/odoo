@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-11 10:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -103,7 +103,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "اقدام مورد نیاز است"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -358,7 +358,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
@@ -450,7 +450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -534,12 +534,12 @@ msgstr "دنبال‌کنندگان"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "پیروان (کانال ها)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "پیروان (شرکاء)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -592,12 +592,12 @@ msgstr "شناسه"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -690,6 +690,11 @@ msgid "Inventory Valuation"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
 msgstr ""
@@ -697,12 +702,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "خط مشی صدور فاکتور"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "دنبال می کند"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
@@ -729,7 +734,7 @@ msgstr "تاریخ آخرین پیام"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "تاریخ آخرین به‌روزرسانی"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
@@ -751,16 +756,6 @@ msgstr "مکان"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Logistical Units"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_id
-msgid "Main vendor who has highest priority in vendor list."
 msgstr ""
 
 #. module: delivery
@@ -786,7 +781,7 @@ msgstr "حداکثر مقدار"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "تصویر با اندازه متوسط"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
@@ -826,13 +821,13 @@ msgid "Name"
 msgstr "نام"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:56
+#: code:addons/delivery/models/sale_order.py:62
 #, python-format
 msgid "No carrier matching."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:85
+#: code:addons/delivery/models/sale_order.py:70
 #, python-format
 msgid "No carrier set for this order."
 msgstr ""
@@ -871,7 +866,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "تعداد پیام‌های خوانده نشده"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -886,7 +881,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "بسته‌ها"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -995,11 +990,6 @@ msgid "Product Use Time"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Production"
-msgstr "تولید"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
 msgstr ""
@@ -1023,11 +1013,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "واحد اندازه گیری خرید"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1105,7 +1090,7 @@ msgstr "سفارش فروش"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "سطر سفارش‌فروش"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1120,12 +1105,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:258
+#: code:addons/delivery/models/delivery_carrier.py:250
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1149,9 +1129,17 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:86
+#: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery
@@ -1196,14 +1184,14 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "State"
-msgstr "استان"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
 msgstr "وضعیت ها"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
+msgid "Status"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1254,20 +1242,8 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
-msgstr ""
-
-#. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Testing"
 msgstr ""
 
 #. module: delivery
@@ -1285,7 +1261,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:47
+#: code:addons/delivery/models/sale_order.py:53
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -1347,19 +1323,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr ""
@@ -1408,7 +1371,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "سرویس ردگیری"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
@@ -1484,7 +1447,7 @@ msgstr "پیام های ناخوانده"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1509,21 +1472,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_price
-msgid "Vendor Price"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_qty
-msgid "Vendor Quantity"
 msgstr ""
 
 #. module: delivery
@@ -1631,7 +1579,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "e.g. USPS Express"
+msgid "e.g. UPS Express"
 msgstr ""
 
 #. module: delivery

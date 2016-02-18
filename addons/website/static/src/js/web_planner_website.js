@@ -19,8 +19,9 @@ var WebsitePlannerLauncher = Widget.extend({
     start: function() {
         var self = this;
         var res = this._super.apply(this, arguments);
+        this.$('.progress').show();
         return res.then(this.get_website_planner.bind(this)).then(function(planner) {
-            self.$el.filter('.o_planner_systray').on('click', self, self.show_dialog.bind(self));
+            self.$el.on('click', self, self.show_dialog.bind(self));
             if (planner.length) {
                 self.planner = planner[0];
                 self.planner.data = $.parseJSON(planner[0].data) || {};
@@ -50,9 +51,9 @@ var WebsitePlannerLauncher = Widget.extend({
 });
 
 return ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
-            var websitePlannerLauncher = new WebsitePlannerLauncher();
-            websitePlannerLauncher.prependTo($('#oe_systray'));
-        });
+    var websitePlannerLauncher = new WebsitePlannerLauncher();
+    websitePlannerLauncher.prependTo($('#oe_systray'));
+});
 
 });
 

@@ -53,11 +53,11 @@ class sale_quote(http.Controller):
             'tx_id': tx_id,
             'tx_state': tx.state if tx else False,
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
-            'need_payment': not tx_id and order.state == 'manual',
+            'need_payment': order.invoice_status == 'to invoice' and (not tx or tx.state in ['draft', 'cancel', 'error']),
             'token': token,
         }
 
-        if order.require_payment or (not tx_id and order.state == 'manual'):
+        if order.require_payment or values['need_payment']:
             payment_obj = request.registry.get('payment.acquirer')
             acquirer_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=request.context)
             values['acquirers'] = list(payment_obj.browse(request.cr, token and SUPERUSER_ID or request.uid, acquirer_ids, context=request.context))
@@ -85,18 +85,22 @@ class sale_quote(http.Controller):
             return request.website.render('website.404')
         if order.require_payment:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return False
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.action_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
         _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
         return True
 
-    @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
+    @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, token, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
@@ -192,9 +196,15 @@ class sale_quote(http.Controller):
                 'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+            # update quotation
+            request.registry['sale.order'].write(
+                cr, SUPERUSER_ID, [order.id], {
+                    'payment_acquirer_id': acquirer_id,
+                    'payment_tx_id': tx_id
+                }, context=context)
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=dict(request.context, send_email=True))
 
         return tx_id

@@ -47,13 +47,13 @@ def url_for(path_or_uri, lang=None):
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang
+                    ps[1] = lang.encode('utf-8')
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.website.default_lang_code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang)
+                ps.insert(1, lang.encode('utf-8'))
             location = '/'.join(ps)
 
     return location.decode('utf-8')
@@ -125,6 +125,8 @@ DEFAULT_CDN_FILTERS = [
     "^/web/(css|js)/",
     "^/web/image",
     "^/web/content",
+    # retrocompatibility
+    "^/website/image/",
 ]
 
 def unslug(s):
@@ -177,7 +179,7 @@ class website(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
         'compress_html': False,
         'cdn_activated': False,
-        'cdn_url': '//localhost:8069/',
+        'cdn_url': '',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
@@ -212,7 +214,7 @@ class website(osv.osv):
         website_id = context.get('website_id')
         key = template_module+'.'+page_name
         page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
-        page = view.browse(cr, uid, page_id, context=context)
+        page = view.browse(cr, uid, page_id, context=dict(context, lang=None))
         page.write({
             'arch': page.arch.replace(template, page_xmlid),
             'name': page_name,
@@ -288,12 +290,12 @@ class website(osv.osv):
             for page in View.browse(cr, uid, pages, context=context):
                 if page.page:
                     dep[page_key].append({
-                        'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
+                        'text': _('Page <b>%s</b> seems to have a link to this page !') % page.key,
                         'link': '/page/%s' % page.key
                     })
                 else:
                     dep[page_key].append({
-                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !' % (page.key, page.id)),
+                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !') % (page.key, page.id),
                         'link': '#'
                     })
 
@@ -309,7 +311,7 @@ class website(osv.osv):
                 dep[menu_key] = []
             for menu in Menu.browse(cr, uid, menus, context=context):
                 dep[menu_key].append({
-                    'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
+                    'text': _('Menu <b>%s</b> seems to have a link to this page !') % menu.name,
                     'link': False
                 })
 
@@ -335,7 +337,7 @@ class website(osv.osv):
 
     def get_cdn_url(self, cr, uid, uri, context=None):
         # Currently only usable in a website_enable request context
-        if request and request.website and not request.debug:
+        if request and request.website and not request.debug and request.website.user_id.id == request.uid:
             cdn_url = request.website.cdn_url
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
@@ -372,11 +374,8 @@ class website(osv.osv):
 
     @openerp.tools.ormcache('domain_name')
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
-        if ids:
-            return ids[0]
-        else:
-            return self.search(cr, uid, [], limit=1)[0]
+        ids = self.search(cr, uid, [('domain', '=', domain_name)], limit=1, context=context)
+        return ids and ids[0] or self.search(cr, uid, [], limit=1)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
@@ -466,7 +465,8 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = rule.methods or ['GET']
+        methods = endpoint.routing.get('methods') or ['GET']
+
         converters = rule._converters.values()
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
@@ -550,14 +550,6 @@ class website(osv.osv):
                     break
         return res
 
-    def _image_placeholder(self, response):
-        logger.warning("Deprecated _image_placeholder method, please use this method on ir.attachment")
-        return self.pool['ir.attachment']._image_placeholder(response)
-
-    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
-        logger.warning("Deprecated _image method, please use this method on ir.attachment")
-        return self.pool['ir.attachment']._image(cr, uid, model, id, field, response, max_width=max_width, max_height=max_height, cache=cache, context=context)
-
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
         sudo_record = record.sudo()
@@ -627,7 +619,7 @@ class website_menu(osv.osv):
             self.unlink(cr, uid, to_delete, context=context)
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, str):
+            if isinstance(mid, basestring):
                 new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
                 replace_id(mid, new_id)
         for menu in data['data']:
@@ -655,11 +647,11 @@ class res_partner(osv.osv):
         }
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+    def google_map_link(self, cr, uid, ids, zoom=10, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
             'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': 10
+            'z': zoom,
         }
         return urlplus('https://maps.google.com/maps' , params)
 

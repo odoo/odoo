@@ -635,16 +635,21 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
-            if (self.records.length === 0 && self.dataset.size() > 0) {
-                //Trigger previous manually to navigate to previous page, 
-                //If all records are deleted on current page.
-                self.$pager.find('ul li:first a').trigger('click');
-            } else if (self.dataset.size() == self._limit) {
-                //Reload listview to update current page with next page records 
-                //because pager going to be hidden if dataset.size == limit
-                self.reload();
+            // Hide the table if there is no more record in the dataset
+            if (self.dataset.size() === 0) {
+                self.no_result();
             } else {
-                self.configure_pager(self.dataset);
+                if (self.records.length === 0 && self.dataset.size() > 0) {
+                    //Trigger previous manually to navigate to previous page,
+                    //If all records are deleted on current page.
+                    self.$pager.find('ul li:first a').trigger('click');
+                } else if (self.dataset.size() === self._limit) {
+                    //Reload listview to update current page with next page records
+                    //because pager going to be hidden if dataset.size == limit
+                    self.reload();
+                } else {
+                    self.configure_pager(self.dataset);
+                }
             }
             self.compute_aggregates();
         });
@@ -1020,7 +1025,10 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                     $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
                 }
-                $row.replaceWith(self.render_record(record));
+
+                var $newRow = $(self.render_record(record));
+                $newRow.find('.oe_list_record_selector input').prop('checked', !!$row.find('.oe_list_record_selector input').prop('checked'));
+                $row.replaceWith($newRow);
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
@@ -1065,6 +1073,10 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                 e.stopPropagation();
                 var $row = $(e.target).closest('tr');
                 $(self).trigger('deleted', [[self.row_id($row)]]);
+                // IE Edge go crazy when we use confirm dialog and remove the focused element
+                if(document.hasFocus && !document.hasFocus()) {
+                    $('<input />').appendTo('body').focus().remove();
+                }
             })
             .delegate('td.oe_list_field_cell button', 'click', function (e) {
                 e.stopPropagation();
@@ -1165,7 +1177,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                     ids = value;
                 }
                 new Model(column.relation)
-                    .call('name_get', [ids, this.dataset.context]).done(function (names) {
+                    .call('name_get', [ids, this.dataset.get_context()]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
                                    _(names).pluck(1).join(', '));
@@ -1183,10 +1195,10 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     render: function () {
         var self = this;
         this.$current.html(
-            QWeb.render('ListView.rows', _.extend({
+            QWeb.render('ListView.rows', _.extend({}, this, {
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
-                }, this)));
+                })));
         this.pad_table_to(4);
     },
     pad_table_to: function (count) {
@@ -1633,32 +1645,34 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
                     return;
                 }
 
-                list.records.remove(to_move);
+                list.records.remove(to_move, {silent: true});
                 var to = target_id ? list.records.indexOf(target) + 1 : 0;
-                list.records.add(to_move, { at: to });
+                list.records.add(to_move, { at: to, silent: true });
 
                 // resequencing time!
                 var record, index = to,
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
+                var defs = [];
                 var fct = function (dataset, id, seq) {
-                    $.async_when().done(function () {
+                    defs.push($.async_when().then(function () {
                         var attrs = {};
                         attrs[seqname] = seq;
-                        dataset.write(id, attrs);
-                    });
+                        return dataset.write(id, attrs, {internal_dataset_changed: true});
+                    }));
                 };
                 while (++seq, (record = list.records.at(index++))) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
-                    // FIXME: breaks on o2ms (e.g. Accounting > Financial
-                    //        Accounting > Taxes > Taxes, child tax accounts)
-                    //        when synchronous (without setTimeout)
                     fct(dataset, record.get('id'), seq);
                     record.set(seqname, seq);
                 }
+                $.when.apply($, defs).then(function () {
+                    // use internal_dataset_changed and trigger one onchange after all writes
+                    dataset.trigger("dataset_changed");
+                });
             }
         });
     },

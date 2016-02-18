@@ -3,12 +3,13 @@
 # * hr_holidays
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:20+0000\n"
+"PO-Revision-Date: 2016-01-20 10:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -87,6 +88,11 @@ msgid "Able to see Remaining Leaves"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
 msgstr ""
@@ -105,7 +111,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Απαιτείται ενέργεια"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
@@ -115,7 +121,7 @@ msgstr "Ενεργό"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Types"
-msgstr ""
+msgstr "Ενεργοί Τύποι"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -141,7 +147,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days_temp
 msgid "Allocation"
-msgstr ""
+msgstr "Επιμερισμός"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_holiday_type
@@ -231,7 +237,7 @@ msgstr "Μαύρο"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Blue"
-msgstr ""
+msgstr "Μπλε"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -302,7 +308,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
-msgstr ""
+msgstr "Χρώμα"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_color_name
@@ -317,7 +323,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_company_id
 msgid "Company"
-msgstr ""
+msgstr "Εταιρεία"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
@@ -375,12 +381,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Ταμπλό"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Ημερομηνία του τελευταίου μηνύματος "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
@@ -416,7 +422,7 @@ msgstr "Περιγραφή"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -435,7 +441,7 @@ msgstr "Υπάλληλος"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_category_id
 msgid "Employee Tag"
-msgstr ""
+msgstr "Ετικέτα Υπαλλήλου"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -472,12 +478,12 @@ msgstr "Ακόλουθοι"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Ακόλουθοι (Κανάλια)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Ακόλουθοι (Συνεργάτες)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -488,7 +494,7 @@ msgstr "Από"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leave_date_from
 msgid "From Date"
-msgstr "Από Ημερ/νία"
+msgstr "Από Ημερομηνία"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_payslip_status
@@ -539,7 +545,7 @@ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζοντ�
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
@@ -557,14 +563,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -584,7 +585,7 @@ msgstr "Τελευταία ημερομηνία μηνύματος"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee___last_update
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Τελευταία αλλαγή στις"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_uid
@@ -592,7 +593,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_date
@@ -600,7 +601,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -615,7 +616,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "Λεπτομέρεια Άδειας"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_employee_leaves
@@ -681,7 +682,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Leaves"
-msgstr ""
+msgstr "Άδειες"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_allocation_approve
@@ -913,7 +914,7 @@ msgstr "Νέο"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Αριθμός ενεργειών"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
@@ -931,12 +932,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
@@ -957,7 +958,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "Άνοιγμα Μενού HR"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1193,7 +1194,7 @@ msgstr "Προς Έγκριση"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leave_date_to
 msgid "To Date"
-msgstr "Σε Ημερ/νία"
+msgstr "Σε Ημερομηνία"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1236,17 +1237,18 @@ msgstr "Τύπος"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Μη Εξοφλημένο"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1272,17 +1274,17 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Αναμονή Έγκρισης"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "Waiting Second Approval"
-msgstr ""
+msgstr "Αναμονή Δεύτερης Έγκρισης"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_first_validated
 msgid "Waiting Second Validation"
-msgstr ""
+msgstr "Αναμονή Δεύτερης Επικύρωσης"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:554
@@ -1294,12 +1296,12 @@ msgstr "Προειδοποίηση"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

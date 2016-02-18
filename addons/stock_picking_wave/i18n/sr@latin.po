@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-08 09:04+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-11-02 22:02+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: sr@latin\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "Action Needed"
+msgstr "Potrebna akcija"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -30,12 +35,8 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
-msgid "Add to Wave"
-msgstr ""
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Add to wave"
+msgid "Add to Wave"
 msgstr ""
 
 #. module: stock_picking_wave
@@ -84,13 +85,13 @@ msgstr "Kreiran"
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnje poslate poruke na slog."
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Ime za prikaz"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -106,17 +107,17 @@ msgstr "Priprema"
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Pratioci"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratioci (kanali)"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratioci (partneri)"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -155,10 +156,14 @@ msgid "Ice Cream Vanilla"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -168,30 +173,30 @@ msgstr "U Progresu"
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je pratioc"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnje poruke"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_uid
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_picking_ids
@@ -206,21 +211,11 @@ msgstr "Poruke"
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Poruke i istorija komunikacije"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Need Action Counter"
 msgstr ""
 
 #. module: stock_picking_wave
@@ -230,14 +225,19 @@ msgid "Nothing to print."
 msgstr ""
 
 #. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtjevaju akciju"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Broj nepročitanih poruka"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
@@ -248,7 +248,7 @@ msgstr ""
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -271,7 +271,7 @@ msgid "Picking Waves not finished"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
 msgid "Picking wave associated to this picking"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: stock_picking_wave
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
@@ -372,7 +372,7 @@ msgstr "Nepročitane poruke"
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Brojač nepročitanih poruka"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -387,9 +387,9 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Poruke sa web stranice"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istorija komunikacije sa web sajta"

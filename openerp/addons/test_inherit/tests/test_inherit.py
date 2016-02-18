@@ -36,7 +36,7 @@ class test_inherits(common.TransactionCase):
         # the field daughter.name must have required=False and "Baz" as default
         field = daughter._fields['name']
         self.assertFalse(field.required)
-        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(field.default(daughter), "Baz")
         self.assertEqual(daughter._defaults.get('name'), "Baz")
         self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
 
@@ -64,3 +64,32 @@ class test_inherits(common.TransactionCase):
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
         self.assertEqual(mother._columns['state'].selection,
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+
+    def test_50_search_one2many(self):
+        """ check search on one2many field based on inherited many2one field. """
+        # create a daughter record attached to partner Demo
+        partner_demo = self.env.ref('base.partner_demo')
+        daughter = self.env['test.inherit.daughter'].create({'partner_id': partner_demo.id})
+        self.assertEqual(daughter.partner_id, partner_demo)
+        self.assertIn(daughter, partner_demo.daughter_ids)
+
+        # search the partner from the daughter record
+        partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
+        self.assertIn(partner_demo, partners)
+
+
+class test_override_property(common.TransactionCase):
+
+    def test_override_with_function_field(self):
+        """ test overriding a property field by a function field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_foo is not a property field
+        self.assertEqual(record.property_foo, 42)
+        self.assertFalse(type(record).property_foo.company_dependent)
+
+    def test_override_with_computed_field(self):
+        """ test overriding a property field by a computed field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_bar is not a property field
+        self.assertEqual(record.property_bar, 42)
+        self.assertFalse(type(record).property_bar.company_dependent)

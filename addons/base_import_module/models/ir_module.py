@@ -7,7 +7,7 @@ from os.path import join as opj
 import openerp
 from openerp import fields
 from openerp.osv import osv
-from openerp.tools import convert_file
+from openerp.tools import convert_file, exception_to_unicode
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -105,7 +105,8 @@ class ir_module_module(osv.osv):
                         self.import_module(cr, uid, mod_name, path, force=force, context=context)
                         success.append(mod_name)
                     except Exception, e:
-                        errors[mod_name] = str(e)
+                        _logger.exception('Error while importing module')
+                        errors[mod_name] = exception_to_unicode(e)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
             r.append("Error while importing module '%s': %r" % (mod, error))

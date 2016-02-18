@@ -32,8 +32,10 @@ class CashBox(models.TransientModel):
 
     @api.one
     def _create_bank_statement_line(self, record):
+        if record.state == 'confirm':
+            raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
         values = self._calculate_values_for_statement_line(record)
-        return self.env['account.bank.statement.line'].create(values[0])
+        return record.write({'line_ids': [(0, False, values[0])]})
 
 
 class CashBoxIn(CashBox):
@@ -46,6 +48,7 @@ class CashBoxIn(CashBox):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
+            'date': record.date,
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
             'amount': self.amount or 0.0,
@@ -64,6 +67,7 @@ class CashBoxOut(CashBox):
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         amount = self.amount or 0.0
         return {
+            'date': record.date,
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
             'amount': -amount if amount > 0.0 else amount,

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:20+0000\n"
+"PO-Revision-Date: 2016-02-10 09:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -84,6 +84,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_show_leaves
 msgid "Able to see Remaining Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
 msgstr ""
 
 #. module: hr_holidays
@@ -302,7 +307,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
-msgstr ""
+msgstr "顏色"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_color_name
@@ -317,7 +322,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_company_id
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
@@ -380,7 +385,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "釋出到記錄上的最後資訊的日期"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
@@ -416,7 +421,7 @@ msgstr "說明"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "顯示名稱"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -557,11 +562,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
 msgid "Is Follower"
 msgstr ""
@@ -584,7 +584,7 @@ msgstr "最後訊息日期"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee___last_update
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "最後修改:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_uid
@@ -1240,6 +1240,7 @@ msgstr "未付"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "未讀訊息"
 

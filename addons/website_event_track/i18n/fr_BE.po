@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:54+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2016-01-15 10:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (Belgium) (http://www.transifex.com/odoo/odoo-9/language/fr_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -75,6 +75,11 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Author"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
 msgstr ""
 
 #. module: website_event_track
@@ -383,19 +388,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Si coché, les nouveaux messages requierent votre attention. "
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_image
-msgid "Image"
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Important Messages"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_image
+msgid "Image"
 msgstr ""
 
 #. module: website_event_track
@@ -425,7 +429,7 @@ msgstr "Date du dernier message"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location___last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_uid
@@ -525,16 +529,6 @@ msgid "Morning break"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program (valid from Oct. 2013)."
 msgstr ""
@@ -573,8 +567,13 @@ msgid "No tracks found!"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: website_event_track
@@ -700,7 +699,7 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr ""
@@ -943,6 +942,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
 msgstr "Messages non lus"
 
@@ -964,7 +964,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Visible sur le site web"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1026,7 +1026,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Name"
-msgstr ""
+msgstr "Votre nom"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal

@@ -3,13 +3,16 @@
 # * product
 # 
 # Translators:
+# Giuseppe Castellani <giuseppecastellani@gmail.com>, 2015
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-13 22:25+0000\n"
+"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +23,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "Categoria Prodotto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -32,16 +35,16 @@ msgstr "# di Varianti Prodotto"
 #: code:addons/product/pricelist.py:288
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s %% sconto"
 
 #. module: product
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% sconto e %s ricarico"
 
 #. module: product
-#: code:addons/product/product.py:739 code:addons/product/product.py:1135
+#: code:addons/product/product.py:710 code:addons/product/product.py:1134
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -96,13 +99,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
+msgstr "2.7GHz quad-core Intel Core i5\n                Turbo Boost fino a 3.2GHz\n                8GB (two 4GB) RAM\n                1TB hard disk\n                Intel Iris Pro graphics\n            "
 
 #. module: product
 #: model:product.product,name:product.product_product_52
 #: model:product.template,name:product.product_product_52_product_template
 msgid "30m RJ45 wire"
-msgstr ""
+msgstr "Cavo RJ45, 30m"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -134,32 +137,39 @@ msgstr ""
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
-msgstr ""
+msgstr "Switch 8 porte"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Prezzo al Pubblico  -  </span>\n<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Altro Listino  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Valuta</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Descrizione</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Nome Listino Prezzi</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Data di stampa</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -167,13 +177,13 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ""
+msgstr "<strong>Attenzione</strong>: l'aggiunta o la cancellazione di attributi\ndeterminerà la perdita delle varianti già esistenti e\ndelle loro eventuali personalizzazioni."
 
 #. module: product
-#: code:addons/product/product.py:981 sql_constraint:product.product:0
+#: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Un codice a barre può essere assegnato a un solo prodotto!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -188,7 +198,7 @@ msgstr "Una categoria di tipo vista è una categoria virtuale che può essere us
 msgid ""
 "A consumable is a product for which you don't manage stock, a service is a "
 "non-material product provided by a company or an individual."
-msgstr ""
+msgstr "Un bene di consumo è un prodotto per il quale non viene gestita la scorta a magazzino, un servizio è un bene non materiale fornito da un'azienda o da un individuo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
@@ -206,13 +216,13 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "Una descrizione del prodotto da mostrare ai fornitori. La descrizione sarà inserita in ogni Ordine di Acquisto, Spedizione in Ingresso e Nota di Credito."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Una grande Tastiera. Cordless."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -227,7 +237,7 @@ msgstr "Una descrizione precisa del Prodotto, visualizzata solo internamente all
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr ""
+msgstr "Un listino prezzi contiene le regole per il calcolo\ndel prezzo di vendita dei prodotti."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -250,7 +260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Azione Necessaria"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -274,7 +284,7 @@ msgstr "Tutti i Prodotti"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Tutte le impostazioni generali di questo prodotto sono gestite su"
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -300,7 +310,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "Ad essendo così facile da usare è facile innamorarsi di lui."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -317,18 +327,18 @@ msgstr "Tastiera Wireless Apple"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
-msgstr ""
+msgstr "Applica a"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Applicare A"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Archiviato"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -339,7 +349,7 @@ msgstr "Costo servizio di assemblaggio"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Assegna la priorità alla lista dei fornitori del prodotto."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -362,7 +372,7 @@ msgstr "Prezzo Attributo"
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 #: model:ir.ui.menu,name:product.menu_variants_action
 msgid "Attribute Values"
-msgstr "Valori Attributo"
+msgstr "Valori Attributi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -540,24 +550,24 @@ msgstr "Annulla"
 #: model:ir.model.fields,field_description:product.field_product_category_type
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category Type"
-msgstr "Tipo categoria"
+msgstr "Tipo di categoria"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Nome categoria"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Categoria: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Caratteristiche"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -600,7 +610,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Fai click per creare un nuovo prodotto."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -649,7 +659,7 @@ msgstr "Componenti"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Calcolo del Prezzo"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -674,6 +684,12 @@ msgid "Computers"
 msgstr "Computer"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Consumabile"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -681,7 +697,7 @@ msgid ""
 msgstr "Conversioni tra diverse unità di misura sono permesse solo se appartengono alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti di conversione delle unità di misura."
 
 #. module: product
-#: code:addons/product/product.py:118
+#: code:addons/product/product.py:119
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -702,12 +718,12 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "Prezzo di costo per il modello di prodotto da usare nella valutazione standard in contabilità e come prezzo base per gli ordini di acquisto. Espresso per singola unità di misura standard del prodotto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
-msgstr ""
+msgstr "Costo del prodotto, nell'unità di misura di default del prodotto."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -835,7 +851,7 @@ msgstr "Tempo di consegna"
 #: model:product.product,name:product.product_product_49
 #: model:product.template,name:product.product_product_49_product_template
 msgid "Dell Inspiron Laptop without OS"
-msgstr ""
+msgstr "Dell Inspiron Laptop senza OS"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -851,7 +867,7 @@ msgstr "Descrizione per preventivi"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "Descrizione per fornitori"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -865,7 +881,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_55
 #: model:product.template,name:product.product_product_55_product_template
 msgid "Desktop Computer Table"
-msgstr ""
+msgstr "Computer Desktop"
 
 #. module: product
 #: model:product.product,name:product.product_product_56
@@ -902,7 +918,7 @@ msgstr "Dispositivi"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visualizza Nome"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -915,7 +931,7 @@ msgstr "Dozzina/e"
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
-msgstr ""
+msgstr "Tastiera Dvorak \n            mouse per mancini"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -940,7 +956,7 @@ msgstr "Data finale"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Data finale per il prezzo del fornitore"
 
 #. module: product
 #: selection:product.template,state:0
@@ -950,13 +966,13 @@ msgstr "Fine del Ciclo di Vita"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "Fine validità per la voce di listino"
 
 #. module: product
 #: model:product.product,name:product.product_product_54
 #: model:product.template,name:product.product_product_54_product_template
 msgid "Ergonomic Mouse"
-msgstr ""
+msgstr "Mouse Ergonomico"
 
 #. module: product
 #: constraint:product.category:0
@@ -1089,7 +1105,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Prezzo Fisso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1106,13 +1122,13 @@ msgstr "Followers"
 #: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Followers (Canali)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Followers (Partner)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
@@ -1230,7 +1246,7 @@ msgstr "HDD SH-1"
 #: model:product.product,name:product.product_product_18
 #: model:product.template,name:product.product_product_18_product_template
 msgid "HDD SH-2 (mto)"
-msgstr ""
+msgstr "HDD SH-2 (mto)"
 
 #. module: product
 #: model:product.product,name:product.product_product_19
@@ -1280,7 +1296,7 @@ msgstr "Cuffie standard"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "Ascolta, ascolta."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1367,13 +1383,13 @@ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
-msgstr ""
+msgstr "Se è compatibile con iPad, è compatibile con iPad mini."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
@@ -1429,7 +1445,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "Informazioni sul fornitore del prodotto"
 
 #. module: product
 #: model:product.product,name:product.product_product_38
@@ -1479,13 +1495,13 @@ msgstr "Inventario"
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "E' Follower"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "È una variante di prodotto"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1497,7 +1513,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "Caratteristiche Chiave"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
@@ -1618,7 +1634,7 @@ msgstr "Righe"
 #: model:product.product,name:product.product_product_50
 #: model:product.template,name:product.product_product_50_product_template
 msgid "Linutop"
-msgstr ""
+msgstr "Linutop"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1629,25 +1645,13 @@ msgstr "Litro/i"
 #: model:product.product,name:product.product_product_58
 #: model:product.template,name:product.product_product_58_product_template
 msgid "Little server"
-msgstr ""
+msgstr "Piccolo server"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
 msgid "Logistical Units"
 msgstr "Unità logistica"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_id
-#: model:ir.model.fields,help:product.field_product_template_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
 
 #. module: product
 #: model:res.groups,name:product.group_uom
@@ -1657,7 +1661,7 @@ msgstr "Gestisci unità di misura multiple"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Gestisci le voci del Listino"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1668,7 +1672,7 @@ msgstr "Gestisci il confezionamento dei prodotti"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Gestisci le Varianti del Prodotto"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1745,13 +1749,13 @@ msgstr "Quantità Minima"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "More energy efficient."
-msgstr ""
+msgstr "Energicamente più efficiente"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "More features."
-msgstr ""
+msgstr "Altre caratteristiche."
 
 #. module: product
 #: model:product.product,name:product.product_product_21
@@ -1826,19 +1830,19 @@ msgstr "Note"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Numero di Azioni"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Numero di messaggi non letti"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1877,11 +1881,6 @@ msgid "Other Pricelist"
 msgstr "Altro listino prezzi"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Other Pricelist  -"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
@@ -1898,12 +1897,12 @@ msgstr "Confezionamento"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Packaging Type"
-msgstr ""
+msgstr "Tipo di Confezione"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr ""
+msgstr "Confezionamenti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1935,17 +1934,17 @@ msgstr "Pen drive, SP-4"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Percentuale (sconto)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Prezzo Percentuale"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Fisico"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2063,7 +2062,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Oggetti Listino"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2085,12 +2084,12 @@ msgstr "Listini prezzi"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Listino sulla scheda del Prodotto"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Listini sono gestiti su"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2200,7 +2199,7 @@ msgstr "Modello Prodotto"
 #: model:ir.model.fields,field_description:product.field_product_product_type
 #: model:ir.model.fields,field_description:product.field_product_template_type
 msgid "Product Type"
-msgstr "Tipo Prodotto"
+msgstr "Tipo di prodotto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -2208,6 +2207,7 @@ msgid "Product Unit of Measure"
 msgstr "Unità di Misura Prodotto"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -2262,10 +2262,10 @@ msgstr "Ricerca prezzo prodotti"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Products your store in the inventory"
-msgstr ""
+msgstr "I Prodotti sono conservarti nel magazzino"
 
 #. module: product
-#: code:addons/product/product.py:846
+#: code:addons/product/product.py:817
 #, python-format
 msgid "Products: "
 msgstr "Prodotti "
@@ -2275,11 +2275,6 @@ msgstr "Prodotti "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Prezzo al Pubblico"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Public Price  -"
-msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2297,12 +2292,6 @@ msgstr "Descrizione Acquisto"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Unità di misura di acquisto"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_price
-#: model:ir.model.fields,help:product.field_product_template_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
@@ -2495,12 +2484,6 @@ msgid "Select category for the current product"
 msgstr "Selezionare la categoria per il prodotto corrente"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
 #: model:ir.model.fields,field_description:product.field_product_category_sequence
@@ -2520,6 +2503,12 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Servizio"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2537,7 +2526,7 @@ msgstr "Impostare il prezzo come multiplo di questo valore.\nL'arrotondamento è
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Condividi il prodotto con tutte le aziende"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2695,14 +2684,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
 msgstr "Nome Template"
@@ -2768,7 +2749,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "Il primo della sequenza è quello di default."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2799,20 +2780,20 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr ""
+msgstr "La quantità minima per gli acquisti da questo fornitore, espressa nell'unità di misura del fornitore se specificata, altrimenti nell'unità di misura di default del prodotto."
 
 #. module: product
-#: code:addons/product/product.py:328
+#: code:addons/product/product.py:329
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr ""
+msgstr "L'operazione non può essere completata:\nStai cercando di cancellare il valore di un attributo che ha un riferimento all'interno di una variante prodotto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Il prezzo di acquisto di un prodotto"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2822,14 +2803,14 @@ msgid ""
 "The product form contains information to simplify the sale\n"
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
-msgstr ""
+msgstr "Il form del prodotto contiene informazioni che semplificano il\nprocesso di vendita: prezzo, note per i preventivi, informazioni contabili,\nmetodi di approvvigionamento, ecc..."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
-msgstr ""
+msgstr "Il form del prodotto contiene informazioni che semplificano il\nprocesso di vendita: prezzo, note per i preventivi, informazioni contabili,\nmetodi di approvvigionamento, ecc..."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2874,7 +2855,7 @@ msgstr "Il volume in mc"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Il peso del contenuto in Kg, non comprende alcun imballo, ecc."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2921,7 +2902,7 @@ msgstr "Deriva dal form del prodotto"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Questo campo contiene l'immagine usata per la variante del prodotto, limitata a 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2936,21 +2917,6 @@ msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "Questa è una quantità che viene convertità nell'unità di misura di default."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_qty
-#: model:ir.model.fields,help:product.field_product_template_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_delay
-#: model:ir.model.fields,help:product.field_product_template_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Questa è la somma del prezzo extra di tutti gli attributi."
@@ -2958,12 +2924,12 @@ msgstr "Questa è la somma del prezzo extra di tutti gli attributi."
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation."
-msgstr ""
+msgstr "Questa descrizione sarà mostrata all'interno delle richieste di preventivo a fornitori."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "Questa descrizione sarà mostrata all'interno dei preventivi."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2977,14 +2943,14 @@ msgstr "Questo listino sarà usato, al posto di quello di default, per le vendit
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Questo codice di prodotto fornitore verrà usato nella stampa di una richiesta di preventivo. Lasciare vuoto per usare quello interno."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Questo nome di prodotto fornitore verrà usato nella stampa di una richiesta di preventivo. Lasciare vuoto per usare quello interno."
 
 #. module: product
 #: model:product.product,name:product.product_product_39
@@ -2996,7 +2962,7 @@ msgstr "Toner"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
-msgstr ""
+msgstr "Due è meglio di uno."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
@@ -3056,7 +3022,7 @@ msgstr "Categorie Unità di Misura"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "Categoria di Unità di Misura"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -3084,7 +3050,7 @@ msgid ""
 "                converted between each others. For example, in the category\n"
 "                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days."
-msgstr ""
+msgstr "Le unità di misura della stessa categoria possono essere convertite fra loro. Ad esempio, nella categoria <i>'Tempo'</i>, \npuoi avere le seguenti unità di misura:\nOre, Giorni."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3114,12 +3080,12 @@ msgstr "Messaggi Non Letti"
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contatore di messsaggi non letti"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "Validità"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3144,7 +3110,7 @@ msgstr "Immagine Variante"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informazione Variante"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3156,7 +3122,7 @@ msgstr "Prezzi Variante"
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Valori Variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
@@ -3171,51 +3137,33 @@ msgstr "Varianti"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "Fornitore"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_delay
-#: model:ir.model.fields,field_description:product.field_product_template_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_price
-#: model:ir.model.fields,field_description:product.field_product_template_seller_price
-msgid "Vendor Price"
-msgstr ""
+msgstr "Informazioni Fornitore"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Codice prodotto del fornitore"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_qty
-#: model:ir.model.fields,field_description:product.field_product_template_seller_qty
-msgid "Vendor Quantity"
-msgstr ""
+msgstr "Nome prodotto del fornitore"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Unità di misura del fornitore"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Fornitore di questo prodotto"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3279,6 +3227,13 @@ msgid "When one playlist isn’t enough."
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"When this field is filled in, the vendor data will only apply to the "
+"variant."
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
 msgstr "Bianco"
@@ -3330,7 +3285,7 @@ msgstr ""
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr " Lavorare con prodotti diversi aiuta a definire alcune varianti dello stesso prodotto ,gestiscilo nel tuo ecommerce per esempio  "
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3342,7 +3297,7 @@ msgstr "Tempo di lavoro"
 msgid ""
 "You must define a conversion rate between several Units of\n"
 "                Measure within the same category."
-msgstr ""
+msgstr "Devi definire un fattore di conversione tra le diverse Unità di\nMisura appartenenti alla stessa categoria."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3352,14 +3307,14 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr ""
+msgstr "Devi configurare un prodotto per ogni cosa tu voglia vendere, che sia\nun prodotto fisico a magazzino, un consumabile o un servizio che offri ai tuoi clienti."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to  customers."
-msgstr ""
+msgstr "Devi configurare un prodotto per ogni cosa tu voglia vendere, che sia un prodotto fisico a magazzino, un consumabile o un servizio che offri ai tuoi clienti."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3403,17 +3358,17 @@ msgstr "decimal.precision"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "es. Lampade"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Susbcription"
-msgstr ""
+msgstr "es. Sottoscrizione Odoo Enterprise"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "es. Rivenditori Italiani"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
@@ -3521,22 +3476,22 @@ msgstr "once"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
@@ -3549,7 +3504,7 @@ msgstr "qt"
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr ""
+msgstr "raid 1 \n            512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_59
@@ -3557,12 +3512,12 @@ msgstr ""
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr ""
+msgstr "raid 10 \n            2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -3572,7 +3527,7 @@ msgstr "l'azienda padre"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "Modello prodotto"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

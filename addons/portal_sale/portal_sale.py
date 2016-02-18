@@ -36,12 +36,13 @@ class sale_order(osv.Model):
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
         return self.pool['res.partner']._get_signup_url_for_action(
-            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            cr, uid, [document.partner_id.id], action='/mail/view',
             model=self._name, res_id=document.id, context=contex_signup,
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             document = self.browse(cr, uid, id, context=context)
             action_xmlid = 'action_quotations_portal' if document.state in ('draft', 'sent') else 'action_orders_portal'
@@ -78,12 +79,13 @@ class account_invoice(osv.Model):
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
         return self.pool['res.partner']._get_signup_url_for_action(
-            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            cr, uid, [document.partner_id.id], action='/mail/view',
             model=self._name, res_id=document.id, context=contex_signup,
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
         return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)

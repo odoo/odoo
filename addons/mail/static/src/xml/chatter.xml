@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+        Chatter composer
+    -->
+    <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
+        <!-- Insert information before the composer -->
+        <t t-jquery=".o_composer_attachments_list" t-operation="before">
+            <!-- Internal note composer -->
+            <t t-if="widget.options.is_log">
+                <span class="o_chatter_composer_info">
+                    Log an internal note which will not be sent to followers, but which can be read
+                    by users accessing this document.
+                </span>
+                <!-- Internal subtypes -->
+                <div t-att-class="'o_chatter_composer_subtypes ' +
+                    (widget.options.internal_subtypes.length &lt;= 1 ? ' hide' : '')">
+                    <label>Activity</label>
+                    <select class="o_chatter_composer_subtype_select">
+                        <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
+                            <option t-att-value="subtype['id']"><t t-esc="subtype['name']"/></option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+            <!-- New message composer -->
+            <t t-if="!widget.options.is_log">
+                <!-- Text for followers -->
+                <span class="o_chatter_composer_info">
+                    To: Followers of
+                    <t t-if="widget.options.record_name">
+                        &quot;<t t-esc="widget.options.record_name"/>&quot;
+                    </t>
+                    <t t-if="!widget.options.record_name">
+                        this document
+                    </t>
+                </span>
+                <!-- List of followers -->
+                <div class="o_composer_suggested_partners">
+                    <t t-foreach='widget.suggested_partners' t-as='recipient'>
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                            <input type="checkbox"
+                                   t-att-checked="recipient.checked ? 'checked' : undefined"
+                                   t-att-data-fullname="recipient.full_name"/>
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                            <t t-if="!recipient.email_address">(no email address)</t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+
+        <!-- Add a button to open the full composer dialog -->
+        <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
+            <button tabindex="6" class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
+        </t>
+    </t>
+
+    <!--
+        Chatter main div
+    -->
+    <t t-name="mail.Chatter">
+        <div class="o_chatter">
+            <div class="o_chatter_topbar">
+                <button type="button" class="btn btn-sm btn-primary o_chatter_button_new_message" title="Send a message">
+                    New message
+                </button>
+                <button t-if="widget.options.display_log_button" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified.">
+                    Log an internal note
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Followers: main buttons
+        Template used to display the followers, the actions and the subtypes in a record.
+    -->
+    <t t-name="mail.Followers">
+        <div class="o_followers">
+            <div t-attf-class="o_followers_title_box">
+                <button t-attf-class="btn btn-sm btn-default dropdown-toggle"
+                        data-toggle="dropdown" aria-expanded="false">
+                    <span class="o_followers_count"/>
+                    <span class="caret"/>
+                </button>
+                <ul class="dropdown-menu o_followers_list" role="menu"></ul>
+            </div>
+            <div class="o_followers_actions">
+                <div t-attf-class="btn-group btn-group-sm o_subtypes_list">
+                    <button class="btn btn-sm btn-primary o_followers_follow_button o_followers_notfollow">
+                        <span class="o_follow">Follow</span>
+                        <span class="fa fa-times o_followers_unfollow"/>
+                        <span class="o_followers_unfollow"> Unfollow</span>
+                        <span class="fa fa-check o_followers_following"/>
+                        <span class="o_followers_following"> Following</span>
+                    </button><button t-attf-class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"/>
+                    </button>
+                    <ul class="dropdown-menu" role="menu"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Followers: Partner
+        Template used to display a partner following the record
+    -->
+    <t t-name="mail.Followers.partner">
+        <li class='o_partner'>
+            <img t-att-src="record.avatar_url"/>
+            <a class="o_mail_redirect"
+               t-attf-href="#"
+               t-att-title="record.name"
+               t-att-data-oe-model="record.res_model"
+               t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
+            <i t-if="record.is_editable and (widget.records_length &gt; 1)"
+               class="fa fa-pencil o_edit_subtype hide" title="Edit subscription"
+               t-att-data-id="record.id"
+               t-att-data-oe-id="record.res_id"
+               t-att-data-oe-model="record.res_model"/>
+            <i t-if="widget.view_is_editable" class="fa fa-remove o_remove_follower"
+               title="Remove this follower"/>
+        </li>
+    </t>
+
+    <!--
+        Followers: 'Add followers' and 'Add channels' buttons
+    -->
+    <t t-name="mail.Followers.add_more">
+        <t t-if="widget.view_is_editable">
+            <li class="o_add_follower">
+                <a href="#"> Add Followers </a>
+            </li>
+            <li class="o_add_follower_channel">
+                <a href="#"> Add Channels </a>
+            </li>
+            <li t-if="widget.followers.length > 0" class="divider"/>
+        </t>
+    </t>
+
+    <!--
+        Followers: Subtype
+        Template used to display message subtypes of a follower subscription
+    -->
+    <t t-name="mail.Followers.subtype">
+        <li class="o_subtype">
+            <input type="checkbox" t-att-checked="record.followed"
+                   t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
+                   t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
+            <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
+                <t t-esc="record.name"/>
+            </span>
+            <i t-if="display_warning" class="fa fa-warning text-warning"/>
+        </li>
+    </t>
+    <t t-name="mail.Followers.subtypes.warning">
+        <span class="text-warning">
+            <i class="fa fa-warning"/> Be careful with channels following internal notifications
+        </span>
+    </t>
+
+</templates>

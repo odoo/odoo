@@ -32,6 +32,7 @@ from openerp.modules import get_module_resource
 from openerp.tools import ormcache
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
+from openerp.tools import html_sanitize
 from openerp.osv import osv, orm, fields
 from openerp import api, fields as fields2
 
@@ -158,7 +159,7 @@ class module(osv.osv):
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
-                    res[module.id] = lxml.html.tostring(html)
+                    res[module.id] = html_sanitize(lxml.html.tostring(html))
             else:
                 overrides = {
                     'embed_stylesheet': False,
@@ -167,7 +168,7 @@ class module(osv.osv):
                     'xml_declaration': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
-                res[module.id] = output
+                res[module.id] = html_sanitize(output)
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -544,7 +545,6 @@ class module(osv.osv):
             'params': {'menu_id': menu_ids and menu_ids[0] or False}
         }
 
-    #TODO remove me in master, not called anymore
     def button_immediate_uninstall(self, cr, uid, ids, context=None):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -606,10 +606,6 @@ class module(osv.osv):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
 
-    def button_update_translations(self, cr, uid, ids, context=None):
-        self.update_translations(cr, uid, ids)
-        return True
-
     @staticmethod
     def get_values_from_terp(terp):
         return {
@@ -625,8 +621,8 @@ class module(osv.osv):
             'auto_install': terp.get('auto_install', False),
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
+            'url': terp.get('url') or terp.get('live_test_url', ''),
         }
-
 
     def create(self, cr, uid, vals, context=None):
         new_id = super(module, self).create(cr, uid, vals, context=context)
@@ -800,7 +796,7 @@ class module(osv.osv):
             filter_lang = [lang.code for lang in res_lang.browse(cr, uid, lang_ids)]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
-        modules = [m.name for m in self.browse(cr, uid, ids) if m.state == 'installed']
+        modules = [m.name for m in self.browse(cr, uid, ids) if m.state in ('installed', 'to install', 'to upgrade')]
         self.pool.get('ir.translation').load_module_terms(cr, modules, filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):

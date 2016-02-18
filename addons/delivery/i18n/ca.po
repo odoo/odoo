@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 10:32+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-12 21:44+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
 msgid "# Analytic Rules"
-msgstr ""
+msgstr "# Regles analítiques"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
@@ -50,12 +50,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
 msgid "# Sales"
-msgstr ""
+msgstr "# Vendes "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# of Product Variants"
-msgstr ""
+msgstr "# de Variants de Producte"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -103,7 +103,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Cal fer alguna acció"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -263,7 +263,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
 msgid "Color Index"
-msgstr ""
+msgstr "Índex de color"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
@@ -358,7 +358,7 @@ msgstr "Data des de la qual el soci està actiu."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data de l'últim missatge enviat al registre."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
@@ -450,7 +450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostra Nom"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -529,17 +529,17 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidors"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Followers (Canals)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidors (Socis)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -592,12 +592,12 @@ msgstr "ID"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si està marcat hi ha missatges nous pendents."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -690,6 +690,11 @@ msgid "Inventory Valuation"
 msgstr "Valoració del inventari"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
 msgstr "Estat factura"
@@ -702,7 +707,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "És seguidor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
@@ -723,7 +728,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Últim Missatge"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
@@ -754,16 +759,6 @@ msgid "Logistical Units"
 msgstr "Unitats de logística"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
 msgstr "Termini de lliurament de fabricació"
@@ -786,7 +781,7 @@ msgstr "Valor màxim"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Imatge de mida mitjana"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
@@ -811,7 +806,7 @@ msgstr "Missatges"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historial de missatges i comunicació"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
@@ -826,13 +821,13 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:56
+#: code:addons/delivery/models/sale_order.py:62
 #, python-format
 msgid "No carrier matching."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:85
+#: code:addons/delivery/models/sale_order.py:70
 #, python-format
 msgid "No carrier set for this order."
 msgstr ""
@@ -856,7 +851,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Nombre d'accions"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -866,12 +861,12 @@ msgstr "Número de paquets"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Nombre de missatges que requereixen una atenció"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Nombre de missatges no llegits"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -995,11 +990,6 @@ msgid "Product Use Time"
 msgstr "Temps d'ús del producte"
 
 #. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Production"
-msgstr "Producció"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
 msgstr "Ubicació de producció"
@@ -1023,11 +1013,6 @@ msgstr "Diferència compra"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Unitat de mesura de compra"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1120,12 +1105,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:258
+#: code:addons/delivery/models/delivery_carrier.py:250
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1149,9 +1129,17 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:86
+#: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery
@@ -1167,7 +1155,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Imatge de mida petita "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uos_id
@@ -1196,14 +1184,14 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "State"
-msgstr "Estat"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
 msgstr "Estats"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
+msgid "Status"
+msgstr "Estat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1254,21 +1242,9 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
-msgstr ""
-
-#. module: delivery
-#: selection:delivery.carrier,state:0
-msgid "Testing"
-msgstr "En proves"
+msgstr "Nom de plantilla"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1285,7 +1261,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:47
+#: code:addons/delivery/models/sale_order.py:53
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "L'ordre ha d'estar en estat esborrany per afegir-hi línies d'enviament."
@@ -1344,19 +1320,6 @@ msgstr "Aquest mètode de lliurament serà utilitzat quan es facturi a partir de
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
 msgstr ""
 
 #. module: delivery
@@ -1419,7 +1382,7 @@ msgstr "Seguiment"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transferència"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
@@ -1479,12 +1442,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Missatges pendents de llegir"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Comptador de missatges no llegits"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1509,27 +1472,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_price
-msgid "Vendor Price"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_qty
-msgid "Vendor Quantity"
-msgstr ""
+msgstr "Proveïdor "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Impostos de Proveïdor"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1631,7 +1579,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "e.g. USPS Express"
+msgid "e.g. UPS Express"
 msgstr ""
 
 #. module: delivery

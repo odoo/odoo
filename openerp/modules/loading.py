@@ -162,12 +162,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
+            # Update translations for all installed languages
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+
+            registry._init_modules.add(package.name)
+
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            registry._init_modules.add(package.name)
             # validate all the views at a whole
             registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
 
@@ -188,8 +192,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
-            # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -276,12 +278,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
 
-        if tools.config['load_language'] or update_module:
+        load_lang = tools.config.pop('load_language')
+        if load_lang or update_module:
             # some base models are used below, so make sure they are set up
             registry.setup_models(cr, partial=True)
 
-        if tools.config['load_language']:
-            for lang in tools.config['load_language'].split(','):
+        if load_lang:
+            for lang in load_lang.split(','):
                 tools.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated

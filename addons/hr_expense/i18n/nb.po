@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"PO-Revision-Date: 2016-01-15 08:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Beløp</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -45,12 +45,17 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Handling"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_expense
@@ -131,13 +136,6 @@ msgid "Confirmed Expenses"
 msgstr "Bekreftede utgifter."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "Contract"
-msgstr "Kontrakt"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_create_uid
 msgid "Created by"
@@ -162,7 +160,7 @@ msgstr "Dato"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for siste melding på denne posten."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
@@ -407,13 +405,13 @@ msgstr "Journal Elementer."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Siste meldingsdato"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sist oppdatert "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_uid
@@ -467,7 +465,7 @@ msgstr "Ny utgift."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Ny e-post"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:260
@@ -497,7 +495,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Antall handlinger"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
@@ -507,12 +505,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Antall meldinger som krever handling"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Antall uleste meldinger"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -740,12 +738,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Meldinger fra Nettsted"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historikk for kommuniksjon på nettsted"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state

@@ -20,7 +20,7 @@ Tour.register({
     id:   'rte',
     name: "Test RTE",
     mode: 'test',
-    path: '/web_editor/field/html?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
+    path: '/web_editor/field/html?debug&callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
     steps: [
         {
             title:     "Change html for this test",
@@ -132,7 +132,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
-            element:   '.note-air-popover button[data-event="undo"]',
+            element:   '.note-image-popover button[data-event="undo"]',
             title:     "undo",
         },
         {
@@ -373,15 +373,15 @@ Tour.register({
             }
         },
         {
-            waitFor:   '#wrapwrap img:first[style*="border-bottom-left-radius:50%"][style*="border-top-width"][style*="padding-top"]',
+            waitFor:   '#wrapwrap img:first[width][height][style*="-radius"][style*="1px"][style*="padding"]',
             title:     "check the image style",
         },
         {
-            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/27"]',
+            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/32"]',
             title:     "check the font image src",
         },
         {
-            waitFor:   '#wrapwrap img:eq(1)[style*="height:2em"]',
+            waitFor:   '#wrapwrap img:eq(1)[height]:not([class*="fa"])',
             title:     "check the font class to css",
         },
         {

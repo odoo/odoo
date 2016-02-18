@@ -123,8 +123,8 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 
-var fn_popover_update = $.summernote.eventHandler.popover.update;
-$.summernote.eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
+var fn_popover_update = $.summernote.eventHandler.modules.popover.update;
+$.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
     $("span.o_table_handler, div.note-table").remove();
 };
@@ -132,6 +132,7 @@ $.summernote.eventHandler.popover.update = function ($popover, oStyle, isAirMode
 web_editor.Class.include({
     start: function () {
         var self = this;
+        $('[data-toggle="tooltip"]').tooltip();
         if (location.search.indexOf("enable_editor") !== -1) {
             this.on('rte:start', this, function () {
                 $("#choose_template").off("click").on("click", _.bind(self.on_choose_template, self));
@@ -192,6 +193,7 @@ web_editor.Class.include({
     set_snippet_theme: function (theme) {
         $("#o_left_bar .o_panel_body > div").addClass("hidden");
         $("#o_left_bar .o_panel_body > div."+theme).removeClass("hidden");
+        $("#editable_area").trigger("content_changed");
     },
     get_snippet_template: function (mailing_model) {
         var self = this;

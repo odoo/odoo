@@ -49,7 +49,7 @@
                         <notebook>
                             <page string="Messages">
                                 <field name="messages">
-                                    <tree name="Messages">
+                                    <tree string="Messages">
                                         <field name="name"/>
                                         <field name="body"/>
                                     </tree>
@@ -65,7 +65,11 @@
                                 </field>
                             </page>
                             <page string="Participants">
-                                <field name="participants"/>
+                                <field name="participants">
+                                    <tree string="Participants">
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                         <group>

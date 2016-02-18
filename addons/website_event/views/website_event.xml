@@ -67,7 +67,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin_located" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end_located" t-field-options='{"hide_seconds":"True"}'> </span> (<span t-field="event.date_tz"/>)
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span> (<span t-field="event.date_tz"/>)
                                 </div>
                                 <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
@@ -165,10 +165,10 @@
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
-                <li t-if="type['type']"
-                    t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
-                        <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
+                <li t-if="type['event_type_id']"
+                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}"><t t-esc="type['event_type_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -257,13 +257,21 @@
     </t>
 </template>
 
+<template id="default_page">
+    <t t-call="website.layout">
+        <div class="oe_structure oe_empty"/>
+    </t>
+</template>
+
+
 <template id="event_details">
     <t t-call="website_event.layout">
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin_located" t-field-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.date_end_located" t-field-options='{"hide_seconds":"True"}'/>
+                <i class="fa fa-clock-o"></i>
+                <span itemprop="startDate"><t t-esc="event.date_begin_located[:-3]"/></span> to
+                <span itemprop="endDate"><t t-esc="event.date_end_located[:-3]"/></span>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
@@ -339,8 +347,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-esc="event.date_begin_located[:-3]"> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-esc="event.date_end_located[:-3]"> </span>
                 </div>
             </div>
 
@@ -379,6 +387,7 @@
 <!-- Registration Templates -->
 <template id="registration_template">
     <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <table itemprop="offers" class="table table-striped">
             <thead>
                 <tr>
@@ -394,7 +403,7 @@
                     <td>Event Subscription</td>
                     <td>
                         <t t-if="event.date_begin">
-                            <span t-field="event.date_begin"/>
+                            <span t-esc="event.date_begin_located[:-3]"/>
                         </t>
                         <t t-if="not event.date_begin">
                             <span>Unlimited</span>
@@ -428,6 +437,7 @@
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -488,7 +498,7 @@
                 </div>
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
-                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                             "widget": "contact",
                             "fields": ["address", "phone", "mobile", "fax", "email"]

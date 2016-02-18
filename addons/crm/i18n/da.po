@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-12-19 11:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -161,15 +161,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "<span class=\"oe_grey\"> at </span>"
+msgid ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid ""
-"<span class=\"oe_read_only oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
-"</span>"
+msgid "<span class=\"oe_grey\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -207,7 +207,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Importér én fil</strong><br/>\n                                        <span class=\"small\">Anbefalet hvis &gt;100 producter</span>\n                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -217,7 +217,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Importér</strong><br/>\n                                        <span class=\"small\">&gt; 200 kontakter</span>\n                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -237,7 +237,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Opret mauelt</strong><br/>\n                                        <span class=\"small\">&lt; 200 kontakter</span>\n                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -247,7 +247,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Opret manuelt</strong><br/>\n                                        <span class=\"small\">Anbefalet &lt;100 produkter</span>\n                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -562,7 +562,7 @@ msgstr "Acceptér mails fra"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aktion påkrævet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_search
@@ -581,6 +581,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
 msgstr "Aktiv"
@@ -1020,6 +1021,11 @@ msgid "Consumers"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
 msgstr "Kontaktnavn"
@@ -1354,7 +1360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Vist navn"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1520,6 +1526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Forventet lukning"
@@ -1611,11 +1618,16 @@ msgstr "Followers"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Følgere (kanaler)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_partner_ids
 msgid "Followers (Partners)"
+msgstr "Følgere (partnere)"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Followup"
 msgstr ""
 
 #. module: crm
@@ -1634,6 +1646,13 @@ msgid ""
 msgstr "Af sikkerhedsmæssige grunde kan du ikke sammenlægge mere end 3 kontakter. Du kan gen-åbne wizard'en om nødvendigt."
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                          Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
 msgstr "Tving tildeling"
@@ -1643,13 +1662,6 @@ msgstr "Tving tildeling"
 #, python-format
 msgid "From %s : %s"
 msgstr "Fra %s : %s"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"From the Odoo Team,<br/>\n"
-"                          Fabien Pinckaers, Founder"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
@@ -1799,7 +1811,7 @@ msgstr "Hvis afmærket, kræver nye beskeder din attention"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_opt_out
@@ -1865,10 +1877,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+msgid "Include archived"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Indkommende"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1880,6 +1897,11 @@ msgstr ""
 msgid ""
 "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
+msgid "Integration with Asterisk"
 msgstr ""
 
 #. module: crm
@@ -1906,7 +1928,7 @@ msgstr "Er et firma"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Følger"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -1929,11 +1951,6 @@ msgid "Last Activity"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Last Message"
-msgstr "Sidste besked"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_last_post
 msgid "Last Message Date"
 msgstr "Sidste dato for besked"
@@ -1954,7 +1971,7 @@ msgstr "Sidste dato for besked"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sidst ændret den"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2582,6 +2599,12 @@ msgid "Odoo Default"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Odoo Sign"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
@@ -3128,6 +3151,7 @@ msgid "Search Leads"
 msgstr "Søg emner"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "Søg kval. emner"
@@ -3785,6 +3809,11 @@ msgid "Very High"
 msgstr "Meget høj"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
+msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
@@ -3842,12 +3871,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Website beskeder"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Website kommunikations historik"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

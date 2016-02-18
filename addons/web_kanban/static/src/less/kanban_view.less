@@ -190,10 +190,7 @@
         }
     }
 
-    &.o_kanban_mobile {
-        .o_kanban_record {
-            width: 400px;
-        }
+    &.o_kanban_mobile .o_kanban_record {
         span {
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -293,6 +290,9 @@
             height: 40px;
             width: 40px;
             box-shadow: 0 1px 4px @gray-light;
+
+            float: left;
+            margin-right: 5px;
         }
 
         .o_kanban_attachment_image {
@@ -327,6 +327,7 @@
 
         .oe_kanban_colorpicker {
             margin: 0;
+            white-space: nowrap;
 
             > li {
                 display: inline-block;

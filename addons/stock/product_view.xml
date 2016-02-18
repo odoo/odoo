@@ -182,8 +182,8 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
             </field>
@@ -199,11 +199,11 @@
                         <button string="Update Qty On Hand"
                             type="action"
                             name="%(action_view_change_product_quantity)d"
-                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request"
                             type="action"
                             name="%(stock.act_make_procurement)d"
-                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button"
@@ -266,8 +266,8 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button type="object"
@@ -281,10 +281,9 @@
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
                             <div class="o_form_field o_stat_info">
-                                <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
+                                <span class="o_stat_value"><field name="virtual_available" widget="integer"/>
                                     <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}" groups="base.group_no_one">
-                                        (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>
-                                        +<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
+                                        (-<field name="outgoing_qty" widget="integer"/>+<field name="incoming_qty" widget="integer"/>)
                                     </span>
                                 </span>
                                 <span class="o_stat_text">Forecasted</span>

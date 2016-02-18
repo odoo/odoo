@@ -33,7 +33,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, oldname="payment_method")
     payment_method_code = fields.Char(related='payment_method_id.code',
-        help="Technical field used to adapt the interface to the payment type selected.")
+        help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -81,12 +81,18 @@ class account_abstract_payment(models.AbstractModel):
 
     def _compute_total_invoices_amount(self):
         """ Compute the sum of the residual of invoices, expressed in the payment currency """
-        total = 0
         payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
-        for inv in self._get_invoices():
-            total += inv.residual_company_signed
-        if self.company_id and self.company_id.currency_id != payment_currency:
-            total = self.company_id.currency_id.with_context(date=self.payment_date).compute(total, payment_currency)
+        invoices = self._get_invoices()
+
+        if all(inv.currency_id == payment_currency for inv in invoices):
+            total = sum(invoices.mapped('residual_signed'))
+        else:
+            total = 0
+            for inv in invoices:
+                if inv.company_currency_id != payment_currency:
+                    total += inv.company_currency_id.with_context(date=self.payment_date).compute(inv.residual_company_signed, payment_currency)
+                else:
+                    total += inv.residual_company_signed
         return abs(total)
 
 
@@ -114,14 +120,14 @@ class account_register_payments(models.TransientModel):
         if not active_model or not active_ids:
             raise UserError(_("Programmation error: wizard action executed without active_model or active_ids in context."))
         if active_model != 'account.invoice':
-            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
+            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'.") % active_model)
 
         # Checks on received invoice records
         invoices = self.env[active_model].browse(active_ids)
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
-        if any(inv.partner_id != invoices[0].partner_id for inv in invoices):
-            raise UserError(_("In order to pay multiple invoices at once, they must belong to the same partner."))
+        if any(inv.commercial_partner_id != invoices[0].commercial_partner_id for inv in invoices):
+            raise UserError(_("In order to pay multiple invoices at once, they must belong to the same commercial partner."))
         if any(MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type] for inv in invoices):
             raise UserError(_("You cannot mix customer invoices and vendor bills in a single payment."))
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
@@ -132,7 +138,7 @@ class account_register_payments(models.TransientModel):
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
-            'partner_id': invoices[0].partner_id.id,
+            'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
         })
         return rec
@@ -191,7 +197,7 @@ class account_payment(models.Model):
     destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', 'in', ('bank', 'cash'))])
 
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
-    has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usablity purposes")
+    has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usability purposes")
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
     payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
@@ -253,21 +259,6 @@ class account_payment(models.Model):
     def _get_invoices(self):
         return self.invoice_ids
 
-    @api.model
-    def create(self, vals):
-        self._check_communication(vals['payment_method_id'], vals.get('communication', ''))
-        return super(account_payment, self).create(vals)
-
-    def _check_communication(self, payment_method_id, communication):
-        """ This method is to be overwritten by payment type modules. The method body would look like :
-            if payment_method_id == self.env.ref('my_module.payment_method_id').id:
-                try:
-                    communication.decode('ascii')
-                except UnicodeError:
-                    raise ValidationError(_("The communication cannot contain any special character"))
-        """
-        pass
-
     @api.multi
     def button_journal_entries(self):
         return {
@@ -326,7 +317,7 @@ class account_payment(models.Model):
                 raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
-                raise ValidationError(_("The payment cannot be processed because an invoice of the payment is not open !"))
+                raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
 
             # Use the right sequence to set the name
             if rec.payment_type == 'transfer':

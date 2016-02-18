@@ -208,7 +208,7 @@ field:
         <field name="name">Res Partner Server Action</field>
         <field name="model_id" ref="model_res_partner"/>
         <field name="code">
-            print self, object
+raise Warning(object.name)
         </field>
     </record>
 
@@ -233,7 +233,7 @@ field:
             </field>
         </record>
 
-    will ask the client to open a form for the record if it fullfils some
+    will ask the client to open a form for the record if it fulfills some
     condition
 
 This tends to be the only action type created from :ref:`data files

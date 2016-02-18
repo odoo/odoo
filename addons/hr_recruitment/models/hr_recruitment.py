@@ -86,10 +86,12 @@ class Applicant(models.Model):
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            return self.env['hr.recruitment.stage'].search([
+            ids = self.env['hr.recruitment.stage'].search([
                 ('job_ids', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids[0]
+            ], order='sequence asc', limit=1).ids
+            if ids:
+                return ids[0]
         return False
 
     def _default_company_id(self):
@@ -226,10 +228,11 @@ class Applicant(models.Model):
             department_id = job.department_id.id
             user_id = job.user_id.id
             if not self.stage_id:
-                stage_id = self.env['hr.recruitment.stage'].search([
+                stage_ids = self.env['hr.recruitment.stage'].search([
                     ('job_ids', '=', job.id),
                     ('fold', '=', False)
-                ], order='sequence asc', limit=1).ids[0]
+                ], order='sequence asc', limit=1).ids
+                stage_id = stage_ids[0] if stage_ids else False
 
         return {'value': {
             'department_id': department_id,
@@ -312,13 +315,12 @@ class Applicant(models.Model):
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
-        partners = self.partner_id
-        if self.department_id and self.department_id.manager_id and self.department_id.manager_id.user_id:
-            partners |= self.department_id.manager_id.user_id.partner_id
+        partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         res['context'] = {
+            'search_default_partner_ids': self.partner_id.name,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
@@ -440,13 +442,11 @@ class Applicant(models.Model):
 
     @api.multi
     def archive_applicant(self):
-        """ Archive an hr.applicant as it was refused """
-        for applicant in self:
-            applicant.write({'active': False})
+        self.write({'active': False})
 
     @api.multi
     def reset_applicant(self):
-        """ Reinsert the applicant into the recruitment pipe"""
+        """ Reinsert the applicant into the recruitment pipe in the first stage"""
         for applicant in self:
             first_stage_obj = self.env['hr.recruitment.stage'].search([('job_ids', 'in', applicant.job_id.id)], order="sequence asc", limit=1)
             applicant.write({'active': True, 'stage_id': first_stage_obj.id})

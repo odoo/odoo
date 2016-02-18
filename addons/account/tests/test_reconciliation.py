@@ -1,6 +1,6 @@
 from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 import time
-import unittest2
+import unittest
 
 class TestReconciliation(AccountingTestCase):
 
@@ -209,7 +209,7 @@ class TestReconciliation(AccountingTestCase):
             self.account_rcv.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
         })
 
-    @unittest2.skip('adapt to new accounting')
+    @unittest.skip('adapt to new accounting')
     def test_balanced_exchanges_gain_loss(self):
         # The point of this test is to show that we handle correctly the gain/loss exchanges during reconciliations in foreign currencies.
         # For instance, with a company set in EUR, and a USD rate set to 0.033,

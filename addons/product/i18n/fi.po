@@ -3,13 +3,15 @@
 # * product
 # 
 # Translators:
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Timo Koukkari <timo.koukkari@seamk.fi>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-09 15:10+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +22,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "Tuoteryhmä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -41,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:739 code:addons/product/product.py:1135
+#: code:addons/product/product.py:710 code:addons/product/product.py:1134
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -128,12 +130,19 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75% vähemmän heijastusta."
 
 #. module: product
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
+msgstr "8-porttinen kytkin."
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
 #. module: product
@@ -170,7 +179,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:981 sql_constraint:product.product:0
+#: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -250,7 +259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vaatii toimia"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -328,7 +337,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arkistoitu"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -350,7 +359,7 @@ msgstr "Attribuutti"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Attribuutin hintalisä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
@@ -362,7 +371,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 #: model:ir.ui.menu,name:product.menu_variants_action
 msgid "Attribute Values"
-msgstr ""
+msgstr "Attribuuttien arvot"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -591,7 +600,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Klikkaa luodaksesi hintalista."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -600,12 +609,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Klikkaa luodaksesi uuden tuotteen. "
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "Koodit"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -649,7 +658,7 @@ msgstr "Komponentit"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Laske hinta"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -674,6 +683,12 @@ msgid "Computers"
 msgstr "Tietokoneet"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -681,7 +696,7 @@ msgid ""
 msgstr "Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. Konversio tehdään käyttäen kertoimena suhdetta."
 
 #. module: product
-#: code:addons/product/product.py:118
+#: code:addons/product/product.py:119
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -851,7 +866,7 @@ msgstr "Kuvaus tarjoukseen"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "Tuotekuvaus toimittajille"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -902,7 +917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näytä nimi"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -940,7 +955,7 @@ msgstr "Loppupäivä"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Tämä toimittajahinta voimassa asti"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1094,7 +1109,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Kiinteä hinta"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
@@ -1367,7 +1382,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1406,14 +1421,14 @@ msgstr ""
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Tuotevariantin kuva (ellei määritellä niin tuotteen keskikokoinen kuva)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Tuotevariantin kuva (ellei määritellä niin tuotteen pienikokoinen kuva)."
 
 #. module: product
 #: selection:product.template,state:0
@@ -1551,7 +1566,7 @@ msgstr "Viimeinen viestipvm"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimeksi muokattu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
@@ -1597,7 +1612,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
+msgstr "Ostotilauksen hyväksymisen ja tuotteiden varastoon saapumisen välinen aika päivissä. Käytetään automaattisessa ostotilausten suunnittelussa."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1638,18 +1653,6 @@ msgid "Logistical Units"
 msgstr "Logistiset yksiköt"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_seller_id
-msgid "Main Vendor"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_id
-#: model:ir.model.fields,help:product.field_product_template_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr ""
-
-#. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Hallitse useita (mitta)yksiköitä"
@@ -1668,7 +1671,7 @@ msgstr "Hallitse tuotteen pakkaamista"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Hallitse tuotevariantteja"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1707,7 +1710,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
-msgstr ""
+msgstr "Muisti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_ids
@@ -1838,7 +1841,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Lukemattomia viestejä"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1875,11 +1878,6 @@ msgstr "Otra Información"
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "Muu hinnasto"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Other Pricelist  -"
-msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1945,7 +1943,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Fyysinen"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2208,6 +2206,7 @@ msgid "Product Unit of Measure"
 msgstr "Tuotteen yksikkö"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -2265,7 +2264,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:846
+#: code:addons/product/product.py:817
 #, python-format
 msgid "Products: "
 msgstr "Tuotteet: "
@@ -2275,11 +2274,6 @@ msgstr "Tuotteet: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Julkinen hinta"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Public Price  -"
-msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2297,12 +2291,6 @@ msgstr "Ostojen kuvaus"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Ostoyksikkö"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_price
-#: model:ir.model.fields,help:product.field_product_template_seller_price
-msgid "Purchase price from main vendor."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
@@ -2495,12 +2483,6 @@ msgid "Select category for the current product"
 msgstr "Valitse nykyiselle tuotteelle ryhmä (kategoria)"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
-msgid "Selected Seller"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
 #: model:ir.model.fields,field_description:product.field_product_category_sequence
@@ -2517,6 +2499,12 @@ msgstr "Järjestysluku"
 #: model:product.public.category,name:product.server
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
+msgstr "Palvelin"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
 msgstr ""
 
 #. module: product
@@ -2589,7 +2577,7 @@ msgstr "Ohjelmisto"
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr ""
+msgstr "Kaiuttimet"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
@@ -2644,7 +2632,7 @@ msgstr "Alkupäivä"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Tämä toimittajahinta voimassa alkaen"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
@@ -2692,14 +2680,6 @@ msgid ""
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
 msgstr ""
 
 #. module: product
@@ -2802,7 +2782,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:328
+#: code:addons/product/product.py:329
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2934,21 +2914,6 @@ msgstr "Tämä kenttä sisältää tuotteen kuvan, joka on rajoitettu kokoon 102
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "Tämä on määrä, joka muunnetaan oletusyksiköksi."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_qty
-#: model:ir.model.fields,help:product.field_product_template_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_delay
-#: model:ir.model.fields,help:product.field_product_template_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
@@ -3139,24 +3104,24 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Variantin kuva"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Variantin tiedot"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "Varianttien hinnat"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Varianttisäännöt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
@@ -3171,7 +3136,7 @@ msgstr "Variaatiot"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "Toimittaja"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3180,47 +3145,29 @@ msgid "Vendor Information"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_delay
-#: model:ir.model.fields,field_description:product.field_product_template_seller_delay
-msgid "Vendor Lead Time"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_price
-#: model:ir.model.fields,field_description:product.field_product_template_seller_price
-msgid "Vendor Price"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Toimittajan tuotekoodi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_qty
-#: model:ir.model.fields,field_description:product.field_product_template_seller_qty
-msgid "Vendor Quantity"
-msgstr ""
+msgstr "Toimittajan tuotenimi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Toimittajan mittayksikkö"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Tuotteen toimittaja"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr ""
+msgstr "Toimittajat"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3276,6 +3223,13 @@ msgstr "Painot"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"When this field is filled in, the vendor data will only apply to the "
+"variant."
 msgstr ""
 
 #. module: product

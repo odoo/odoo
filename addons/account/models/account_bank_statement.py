@@ -26,7 +26,7 @@ class AccountCashboxLine(models.Model):
     coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
     number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
-    cashbox_id = fields.Many2one('account.bank.statement.cashbox')
+    cashbox_id = fields.Many2one('account.bank.statement.cashbox', string="Cashbox")
 
 
 class AccountBankStmtCashWizard(models.Model):
@@ -78,6 +78,11 @@ class AccountBankStatement(models.Model):
         self.balance_end = self.balance_start + self.total_entry_encoding
         self.difference = self.balance_end_real - self.balance_end
 
+    @api.multi
+    def _is_difference_zero(self):
+        for bank_stmt in self:
+            bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, precision_digits=bank_stmt.currency_id.decimal_places)
+
     @api.one
     @api.depends('journal_id')
     def _compute_currency(self):
@@ -99,27 +104,23 @@ class AccountBankStatement(models.Model):
         return False
 
     @api.multi
+    def _get_opening_balance(self, journal_id):
+        last_bnk_stmt = self.search([('journal_id', '=', journal_id)], limit=1)
+        if last_bnk_stmt:
+            return last_bnk_stmt.balance_end
+        return 0
+
+    @api.multi
     def _set_opening_balance(self, journal_id):
-        last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date_done desc", limit=1)
-        for bank_stmt in self:
-            if last_bnk_stmt:
-                bank_stmt.balance_start = last_bnk_stmt.balance_end
-            else:
-                bank_stmt.balance_start = 0
+        self.balance_start = self._get_opening_balance(journal_id)
 
     @api.model
     def _default_opening_balance(self):
         #Search last bank statement and set current opening balance as closing balance of previous one
         journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
         if journal_id:
-            last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date_done desc", limit=1)
-
-            if last_bnk_stmt:
-                return last_bnk_stmt.balance_end
-            else:
-                return 0
-        else:
-            return 0
+            return self._get_opening_balance(journal_id)
+        return 0
 
     _name = "account.bank.statement"
     _description = "Bank Statement"
@@ -132,7 +133,7 @@ class AccountBankStatement(models.Model):
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency')
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
@@ -146,9 +147,9 @@ class AccountBankStatement(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'statement_id', string='Entry lines', states={'confirm': [('readonly', True)]})
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled')
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
-    cashbox_start_id = fields.Many2one('account.bank.statement.cashbox')
-    cashbox_end_id = fields.Many2one('account.bank.statement.cashbox')
-
+    cashbox_start_id = fields.Many2one('account.bank.statement.cashbox', string="Starting Cashbox")
+    cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
+    is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
@@ -345,10 +346,8 @@ class AccountBankStatement(models.Model):
     def link_bank_to_partner(self):
         for statement in self:
             for st_line in statement.line_ids:
-                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    bank_vals = st_line.bank_account_id.onchange_partner_id(st_line.partner_id.id)['value']
-                    bank_vals.update({'partner_id': st_line.partner_id.id})
-                    st_line.bank_account_id.write(bank_vals)
+                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id != st_line.partner_id:
+                    st_line.bank_account_id.partner_id = st_line.partner_id
 
 
 class AccountBankStatementLine(models.Model):
@@ -568,6 +567,13 @@ class AccountBankStatementLine(models.Model):
             match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_recs and len(match_recs) == 1:
                 return match_recs
+            elif len(match_recs) == 0:
+                move = self.env['account.move'].search([('name', '=', self.name)], limit=1)
+                if move:
+                    domain = [('move_id', '=', move.id)]
+                    match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()
@@ -820,10 +826,7 @@ class AccountBankStatementLine(models.Model):
             ctx = dict(self._context, date=self.date)
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
-                aml_dict['date'] = self.statement_id.date
                 aml_dict['partner_id'] = self.partner_id.id
-                aml_dict['journal_id'] = self.journal_id.id
-                aml_dict['company_id'] = self.company_id.id
                 aml_dict['statement_id'] = self.statement_id.id
                 if st_line_currency.id != company_currency.id:
                     aml_dict['amount_currency'] = aml_dict['debit'] - aml_dict['credit']

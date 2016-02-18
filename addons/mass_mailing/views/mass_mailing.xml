@@ -274,11 +274,11 @@
                             <h1>
                                 <field name="name" placeholder="e.g. Consumer Newsletter"/>
                             </h1>
-                            <group>
+                            <group groups="mass_mailing.group_website_popup_on_exit">
                                 <field name="popup_redirect_url"/>
                             </group>
                         </div>
-                        <notebook>
+                        <notebook groups="mass_mailing.group_website_popup_on_exit">
                             <page string="Popup Content">
                                 <field name="popup_content" widget="html_frame" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
                             </page>
@@ -384,7 +384,8 @@
                 <form string="Mass Mailing">
                     <header style="min-height:31px;">
                         <button name="action_test_mailing" type="object" class="oe_highlight" string="Test Mailing"/>
-                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"/>
+                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"
+                            confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
@@ -466,7 +467,10 @@
                                         placeholder="Select mailing lists..." class="oe_inline"
                                         on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
                                 </div>
-                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
+                            </div>
+                            <label for="attachment_ids"/>
+                            <div>
+                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                             </div>
                         </group>
                         <notebook>
@@ -568,7 +572,7 @@
                                                 </div>
                                             </div>
                                             <div class='o_kanban_primary_bottom'>
-                                                <field name="delivered" widget="progress" options="{'title': 'Delivered', 'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
+                                                <field name="delivered" widget="progress" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
                                             </div>
                                         </t>
                                     </div>

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"PO-Revision-Date: 2015-10-30 13:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Потребна е акција"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -105,31 +105,18 @@ msgstr "Примени"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
-msgid "Asset Categories"
-msgstr ""
+msgstr "Средство"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5393
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
 msgid "Asset Category"
-msgstr ""
+msgstr "Категорија на средства"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
 msgid "Asset Name"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
-#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
-msgid "Assets"
-msgstr ""
+msgstr "Име на средство"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
@@ -181,7 +168,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Available"
-msgstr ""
+msgstr "Достапно"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -339,7 +326,7 @@ msgstr "Опис"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_display_name
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Прикажи име"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -370,6 +357,7 @@ msgid "Employee"
 msgstr "Вработен"
 
 #. module: hr_equipment
+#: model:ir.model,name:hr_equipment.model_hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_count
 msgid "Equipment"
 msgstr ""
@@ -382,6 +370,8 @@ msgid "Equipment Assigned"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 msgid "Equipment Categories"
 msgstr ""
@@ -392,7 +382,12 @@ msgid "Equipment Name"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_ids
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
+#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 msgid "Equipments"
 msgstr ""
@@ -426,14 +421,14 @@ msgstr "Пратители"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Пратители (Канали)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Пратители (Партнери)"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
@@ -475,13 +470,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
-#: model:ir.model,name:hr_equipment.model_hr_equipment
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
-msgid "IT Assets"
-msgstr ""
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
@@ -493,7 +481,7 @@ msgstr "Доколку е штиклирано, новите пораки го �
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -518,7 +506,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "е следач"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
@@ -562,7 +550,7 @@ msgstr "Последно ажурирање на"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
 msgid "Location"
-msgstr ""
+msgstr "Локација"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
@@ -653,7 +641,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "My Assets"
+msgid "My Equipments"
 msgstr ""
 
 #. module: hr_equipment
@@ -688,25 +676,25 @@ msgstr "Белешка"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Број на акции"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Број на пораки за кои ѝм е потребна акција"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Број на непрочитани пораки"
 
 #. module: hr_equipment
 #: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Assets Menu"
+msgid "Open Equipments Menu"
 msgstr ""
 
 #. module: hr_equipment
@@ -792,7 +780,7 @@ msgstr "Поправено"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
 msgid "Request"
-msgstr ""
+msgstr "Барање"
 
 #. module: hr_equipment
 #: model:mail.message.subtype,name:hr_equipment.mt_req_created
@@ -877,7 +865,7 @@ msgstr "Подесувања"
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_software
 msgid "Software"
-msgstr ""
+msgstr "Софтвер"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_stage_id
@@ -941,19 +929,20 @@ msgid ""
 msgstr "Сопственик на записите креирани по примањето на пораките на овој алијас. Доколку ова поле не е конфигурирано, системот ќе се обиде да го пронајде вистинскиот сопственик врз база на адресата на испраќачот или ќе ја користи администраторската сметка доколку не се пронајде системски корисник за таа адреса."
 
 #. module: hr_equipment
+#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
+msgid ""
+"This application helps you to track equipments used by employees.\n"
+"                Create some laptop, printer or phone and link each equipment to\n"
+"                an employee or departement. You will manage allocations, issues\n"
+"                and maintenance of equipment."
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
 "                You will manage allocations, issues and mainteannce of equipment."
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
-msgid ""
-"This application helps you to track equipments used by employees.\n"
-"                Create some laptops, printers or phones and link each asset to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
 #. module: hr_equipment
@@ -1005,12 +994,12 @@ msgstr "Корисници"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Vendor"
-msgstr ""
+msgstr "Добавувачи"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_ref
 msgid "Vendor Reference"
-msgstr ""
+msgstr "Референци на добавувачи"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
@@ -1020,7 +1009,7 @@ msgstr "Многу ниско"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Гаранција"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids

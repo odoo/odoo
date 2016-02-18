@@ -53,7 +53,7 @@ class event_track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', compute='_compute_image', readonly=True, store=True)
+    image = fields.Binary('Image', compute='_compute_image', store=True, attachment=True)
 
     @api.one
     @api.depends('speaker_ids.image')
@@ -213,4 +213,4 @@ class event_sponsors(models.Model):
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
     sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence')
-    image_medium = fields.Binary(string='Logo', type='binary', related='partner_id.image_medium', store=True)
+    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True)

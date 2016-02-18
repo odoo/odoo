@@ -120,7 +120,7 @@ hr {
   font-size: 120%;
 }
 
-.jumbotron.para_large p{
+.jumbotron.para_large p {
   font-size: 150%;
 }
 
@@ -135,7 +135,7 @@ hr {
 .container .container, .readable .container {
   padding-left: 0;
   padding-right: 0;
-  width: auto;
+  width: auto!important;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -184,7 +184,6 @@ body > nav.navbar {
   }
 }
 /* ----- BOOTSTRAP FIX ----- */
-
 @-moz-document url-prefix() {
   .table .img-responsive {
     width: 100%;
@@ -237,6 +236,10 @@ ul.nav-stacked > li > a {
 
 .logo-img {
   width: 220px;
+}
+
+.o_normalwhitespace {
+  white-space: normal;
 }
 
 .oe_demo {
@@ -672,6 +675,7 @@ table.well tr td {
 }
 .oe_website_spinner input {
   text-align: center;
+  min-width: 50px;
 }
 
 div.carousel .container > .carousel-caption {
@@ -753,6 +757,10 @@ div.carousel .item.text_only .container > .carousel-image {
   margin-right: 0 !important;
 }
 
+/* ---- footer style ---- {{{ */
+#footer div.row {
+  word-wrap: break-word;
+}
 .container nav#oe_main_menu_navbar {
   position: inherit;
 }

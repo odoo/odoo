@@ -15,7 +15,7 @@ import unittest
 import threading
 from os.path import join as opj
 
-import unittest2
+import unittest
 
 import openerp
 import openerp.tools as tools
@@ -46,7 +46,7 @@ class AddonsImportHook(object):
     thus `import openerp.addons.module`.
     """
 
-    def find_module(self, module_name, package_path):
+    def find_module(self, module_name, package_path=None):
         module_parts = module_name.split('.')
         if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
             return self # We act as a loader too.
@@ -302,6 +302,8 @@ def init_module_models(cr, module_name, obj_list):
     todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
+    if obj_list:
+        obj_list[0].recompute(cr, openerp.SUPERUSER_ID, {})
     cr.commit()
 
 def load_openerp_module(module_name):
@@ -377,7 +379,7 @@ def adapt_version(version):
 
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
-    feed unittest2.TestLoader.loadTestsFromModule() """
+    feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
     modpath = 'openerp.addons.' + module
     try:
@@ -446,14 +448,14 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     threading.currentThread().testing = True
     r = True
     for m in mods:
-        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
-        suite = unittest2.TestSuite(itertools.ifilter(position, tests))
+        tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
+        suite = unittest.TestSuite(itertools.ifilter(position, tests))
 
         if suite.countTestCases():
             t0 = time.time()
             t0_sql = openerp.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
-            result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+            result = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
             if time.time() - t0 > 5:
                 _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():
@@ -471,8 +473,8 @@ def unwrap_suite(test):
     test suites). These can then be checked for run/skip attributes
     individually.
 
-    An alternative would be to use a variant of @unittest2.skipIf with a state
-    flag of some sort e.g. @unittest2.skipIf(common.runstate != 'at_install'),
+    An alternative would be to use a variant of @unittest.skipIf with a state
+    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
     but then things become weird with post_install as tests should *not* run
     by default there
     """

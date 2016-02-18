@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-10 15:20+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2016-01-28 20:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -54,18 +54,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -87,7 +76,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -119,18 +108,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -156,7 +134,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/stock.py:63
+#: code:addons/purchase/stock.py:62
 #, python-format
 msgid " Buy"
 msgstr ""
@@ -165,7 +143,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_count
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_count
 msgid "# Purchases"
-msgstr ""
+msgstr "# Покупки"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
@@ -175,7 +153,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
 msgid "# of Invoices"
-msgstr ""
+msgstr "бр. фактури"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr
@@ -185,7 +163,7 @@ msgstr "# от редове"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "Поръчка за покупка"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -206,7 +184,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Описание</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -232,13 +210,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>К.во</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>Адрес на доставка:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -248,12 +226,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Обща сума без данък</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Общо</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -266,13 +244,38 @@ msgid "<strong>Your Order Reference</strong>"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
+msgid "Action Needed"
+msgstr "Нужно е действие"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
+msgid "Add Purchase Order"
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid "Advanced Calls for Tenders"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Advanced call for tender (choose products from different RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Allow using and importing vendor pricelists"
 msgstr ""
 
 #. module: purchase
@@ -342,6 +345,13 @@ msgid "Associated Procurements"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
+msgid ""
+"Associated Purchase Order. Filled in automatically when a PO is chosen on "
+"the vendor bill."
+msgstr ""
+
+#. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
 msgstr ""
@@ -357,7 +367,7 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:611 code:addons/purchase/stock.py:57
+#: code:addons/purchase/purchase.py:605 code:addons/purchase/stock.py:56
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -394,7 +404,7 @@ msgid "Can be Purchased"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:627
+#: code:addons/purchase/purchase.py:621
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -402,7 +412,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/stock.py:60
+#: code:addons/purchase/stock.py:59
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -419,7 +429,7 @@ msgid "Cancelled"
 msgstr "Отказанa"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:474
+#: code:addons/purchase/purchase.py:529
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -474,10 +484,10 @@ msgid "Company"
 msgstr "Фирма"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:236
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Съставяне на имейл"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -590,7 +600,7 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -625,6 +635,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
+msgstr "Помощник за създаване на имейл"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
+msgid ""
+"Encoding help. When selected, the associated purchase order lines are added "
+"to the vendor bill. Several PO can be selected."
 msgstr ""
 
 #. module: purchase
@@ -635,7 +652,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Разширени филтри"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -687,20 +704,31 @@ msgstr "ID"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"If a purchase order is done, you can not modify it manually anymore. But you"
-" will still be able to bill or receive."
+"If a purchase order is done, you cannot modify it manually anymore. You will"
+" not be able to receive invoices anymore for this purchase order."
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
 msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:183
+#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:184
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid ""
+"In the process of a public tendering, you can compare the tender lines and "
+"choose for each requested product which quantity you will buy from each bid."
 msgstr ""
 
 #. module: purchase
@@ -774,7 +802,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "е последовател"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_last_post
@@ -787,7 +815,7 @@ msgstr "Дата на последното съобщение"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_report___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Последно променено на"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_write_uid
@@ -811,6 +839,16 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_manage_vendor_price
+msgid "Manage Vendor Price"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Manage vendor price on the product form"
 msgstr ""
 
 #. module: purchase
@@ -859,16 +897,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New Mail"
 msgstr ""
@@ -876,7 +904,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Без варианти на продуктите"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:771
@@ -901,14 +929,19 @@ msgid "Notes"
 msgstr "Бележки"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Брой действия"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Брой непрочетени съобщения"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1131,7 +1164,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
-#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
@@ -1145,7 +1178,7 @@ msgstr "Поръчка за покупка"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Purchase Order Confirmation N°"
+msgid "Purchase Order Confirmation #"
 msgstr ""
 
 #. module: purchase
@@ -1185,7 +1218,7 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:475
+#: code:addons/purchase/purchase.py:530
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1333,7 +1366,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "Request for Quotation N°"
+msgid "Request for Quotation #"
 msgstr ""
 
 #. module: purchase
@@ -1384,7 +1417,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "Установи на Готов"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1402,6 +1435,11 @@ msgid "Shipment"
 msgstr ""
 
 #. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Simple call for tender (only choose from one RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different unit of measures (advanced)"
@@ -1413,6 +1451,7 @@ msgid "Source Document"
 msgstr "Изходен документ"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_state
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1554,7 +1593,7 @@ msgid "Transfer"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:299
+#: code:addons/purchase/purchase.py:283
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1562,7 +1601,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:286
 #, python-format
 msgid ""
 "Unable to cancel this purchase order.i You must first cancel related vendor "
@@ -1582,7 +1621,7 @@ msgstr "Категории мерни единици"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
 msgid "Unit of Measures"
-msgstr ""
+msgstr "Мерни единици"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1652,7 +1691,7 @@ msgstr "ДДС:"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr ""
+msgstr "Доставчик"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -1666,6 +1705,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
+msgid "Vendor Price"
 msgstr ""
 
 #. module: purchase

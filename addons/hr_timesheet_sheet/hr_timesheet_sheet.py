@@ -23,18 +23,24 @@ class hr_timesheet_sheet(osv.osv):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
         """
+        res = dict.fromkeys(ids, {
+            'total_attendance': 0.0,
+            'total_timesheet': 0.0,
+            'total_difference': 0.0,
+        })
 
-        res = {}
-        for sheet in self.browse(cr, uid, ids, context=context or {}):
-            res.setdefault(sheet.id, {
-                'total_attendance': 0.0,
-                'total_timesheet': 0.0,
-                'total_difference': 0.0,
-            })
-            for period in sheet.period_ids:
-                res[sheet.id]['total_attendance'] += period.total_attendance
-                res[sheet.id]['total_timesheet'] += period.total_timesheet
-                res[sheet.id]['total_difference'] += period.total_attendance - period.total_timesheet
+        cr.execute("""
+            SELECT sheet_id as id,
+                   sum(total_attendance) as total_attendance,
+                   sum(total_timesheet) as total_timesheet,
+                   sum(total_difference) as  total_difference
+            FROM hr_timesheet_sheet_sheet_day
+            WHERE sheet_id IN %s
+            GROUP BY sheet_id
+        """, (tuple(ids),))
+
+        res.update(dict((x.pop('id'), x) for x in cr.dictfetchall()))
+
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -165,7 +171,7 @@ class hr_timesheet_sheet(osv.osv):
             return (datetime.today() + relativedelta(weekday=0, days=-6)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-01-01')
-        return time.strftime('%Y-%m-%d')
+        return fields.date.context_today(self, cr, uid, context)
 
     def _default_date_to(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -176,7 +182,7 @@ class hr_timesheet_sheet(osv.osv):
             return (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-12-31')
-        return time.strftime('%Y-%m-%d')
+        return fields.date.context_today(self, cr, uid, context)
 
     def _default_employee(self, cr, uid, context=None):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
@@ -218,7 +224,8 @@ class hr_timesheet_sheet(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        return [(r['id'], _('Week ')+datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U')) \
+        # week number according to ISO 8601 Calendar
+        return [(r['id'], _('Week ')+str(datetime.strptime(r['date_from'], '%Y-%m-%d').isocalendar()[1])) \
                 for r in self.read(cr, uid, ids, ['date_from'],
                     context=context, load='_classic_write')]
 
@@ -290,6 +297,8 @@ class account_analytic_line(osv.osv):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
         for ts_line in self.browse(cursor, user, ids, context=context):
+            if not ts_line.is_timesheet:
+                continue
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
                  ('employee_id.user_id', '=', ts_line.user_id.id),
@@ -309,6 +318,7 @@ class account_analytic_line(osv.osv):
                     WHERE %(date_to)s >= l.date
                         AND %(date_from)s <= l.date
                         AND %(user_id)s = l.user_id
+                        AND l.is_timesheet = True
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})
@@ -364,8 +374,12 @@ class hr_attendance(osv.osv):
                                INNER JOIN resource_resource r
                                        ON (e.resource_id = r.id)
                             ON (a.employee_id = e.id)
-                        WHERE %(date_to)s >= date_trunc('day', a.name)
-                              AND %(date_from)s <= a.name
+                         LEFT JOIN res_users u
+                         ON r.user_id = u.id
+                         LEFT JOIN res_partner p
+                         ON u.partner_id = p.id
+                         WHERE %(date_to)s >= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
+                              AND %(date_from)s <= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
                               AND %(user_id)s = r.user_id
                          GROUP BY a.id""", {'date_from': ts.date_from,
                                             'date_to': ts.date_to,

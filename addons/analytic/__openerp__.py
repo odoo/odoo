@@ -6,7 +6,7 @@
     'version': '1.1',
     'website' : 'https://www.odoo.com/page/accounting',
     'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
+    'depends' : ['base', 'decimal_precision', 'mail', 'report'],
     'description': """
 Module for defining analytic accounting object.
 ===============================================
@@ -19,7 +19,6 @@ that have no counterpart in the general financial accounts.
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
         'views/analytic_view.xml',
-        'data/analytic_data.xml',
         'wizard/account_analytic_chart_view.xml',
     ],
     'demo': [

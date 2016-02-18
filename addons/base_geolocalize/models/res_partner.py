@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    import simplejson as json
-except ImportError:
-    import json     # noqa
+import json
 import urllib
 
 from openerp.osv import osv, fields

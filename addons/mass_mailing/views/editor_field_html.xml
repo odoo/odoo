@@ -30,7 +30,7 @@
         <div id="templates" class="o_not_editable o_css_editor hidden" t-if="enable_editor">
             <h1 class="page-header mt16 email_head panel-primary">
                 Select a theme 
-                <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can design your own template from scratch by selecting your favorite theme."></button>
+                <button type="button" class="btn btn-sm btn-default fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Here you can design your own template from scratch by selecting your favorite theme."></button>
             </h1>  
             <t t-call="mass_mailing.mass_mail_theme_list"/>
 
@@ -66,18 +66,9 @@
             <div class="modal-content o_popup_modal_content">
                 <div class="o_popup_modal_body text-center">
                     <div class="o_popup_content_dev">
-                        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
+                        <div id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
                             <!-- Can be removed once default values are ok for the editor -->
                             <t t-raw="content">
-                                <div class="modal-header text-center">
-                                  <h3 class="modal-title mt8">Odoo Presents</h3>
-                                </div>
-                                <div class="o_popup_message">
-                                    <font>7</font>
-                                    <strong>Business Hacks</strong>
-                                    <span> to<br/>boost your marketing</span>
-                                </div>
-                                <p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>
                             </t>
                         </div>
                     </div>
