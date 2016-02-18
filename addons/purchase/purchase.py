@@ -975,8 +975,8 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.mapped('id')),
         ]
         r = {}
-        for group in self.env['purchase.report'].read_group(domain, ['product_id', 'quantity'], ['product_id']):
-            r[group['product_id'][0]] = group['quantity']
+        for group in self.env['purchase.report'].read_group(domain, ['product_id', 'unit_quantity'], ['product_id']):
+            r[group['product_id'][0]] = group['unit_quantity']
         for product in self:
             product.purchase_count = r.get(product.id, 0)
         return True
