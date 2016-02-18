@@ -26,14 +26,13 @@ The validation can be configured in the company:
 * Maximal difference between timesheet and attendances
     """,
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['hr_timesheet'],
+    'depends': ['hr_timesheet', 'hr_attendance'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
         'report/hr_timesheet_report_view.xml',
-        'wizard/hr_timesheet_current_view.xml',
         'hr_timesheet_sheet_data.xml',
         'views/hr_timesheet_sheet.xml',
         'hr_dashboard.xml',
