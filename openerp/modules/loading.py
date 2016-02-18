@@ -104,7 +104,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     loaded_modules = []
     registry = openerp.registry(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    _logger.info('loading %d modules...', len(graph))
+    module_count = len(graph)
+    _logger.info('loading %d modules...', module_count)
 
     registry.clear_manual_fields()
 
@@ -112,13 +113,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     t0 = time.time()
     t0_sql = openerp.sql_db.sql_counter
 
-    for index, package in enumerate(graph):
+    for index, package in enumerate(graph, 1):
         module_name = package.name
         module_id = package.id
 
         if skip_modules and module_name in skip_modules:
             continue
 
+        _logger.info('loading module %s (%d/%d)', module_name, index, module_count)
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
