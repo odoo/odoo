@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import ipdb
 
 
 """
@@ -4107,9 +4106,6 @@ class BaseModel(object):
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
         self.check_access_rights('create')
-        if self._name == 'account.move.line':
-            ipdb.set_trace()  ######### Break Point ###########
-            
 
         # add missing defaults, and drop fields that may not be set by user
         vals = self._add_missing_default_values(vals)
