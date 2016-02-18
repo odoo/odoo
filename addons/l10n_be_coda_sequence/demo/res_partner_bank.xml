@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Bank account (res.partner.bank) -->
+        <!--information based on CODA example file into this module-->
+        <record id="partner_bank_demo1" model="res.partner.bank">
+            <field name="state">iban</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="acc_number">BE68 5390 0754 7034</field>
+            <field name="bank_name">Demo Bank</field>
+            <field name="bank_bic">KREDBEBB</field>
+            <field name="journal_id" ref="l10n_be_coda_sequence.account_journal_demo1"/>
+        </record>
+    </data>
+</openerp>

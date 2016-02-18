@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Account period for Demo (year 2016 from january to december) -->
+        <record id="account_period_1" model="account.period">
+            <field name="name">2016-01 (Jan)</field>
+            <field name="code">DMO2016-01</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-01-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-01-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_2" model="account.period">
+            <field name="name">2016-02 (Feb)</field>
+            <field name="code">DMO2016-02</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-02-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-02-29', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_3" model="account.period">
+            <field name="name">2016-03 (Mar)</field>
+            <field name="code">DMO2016-03</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-03-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-03-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_4" model="account.period">
+            <field name="name">2016-04 (Apr)</field>
+            <field name="code">DMO2016-04</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-04-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-04-30', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_5" model="account.period">
+            <field name="name">2016-05 (May)</field>
+            <field name="code">DMO2016-05</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-05-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-05-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_6" model="account.period">
+            <field name="name">2016-06 (Jun)</field>
+            <field name="code">DMO2016-06</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-06-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-06-30', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_7" model="account.period">
+            <field name="name">2016-07 (Jul)</field>
+            <field name="code">DMO2016-07</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-07-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-07-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_8" model="account.period">
+            <field name="name">2016-08 (Aug)</field>
+            <field name="code">DMO2016-08</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-08-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-08-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_9" model="account.period">
+            <field name="name">2016-09 (Sep)</field>
+            <field name="code">DMO2016-09</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-09-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-09-30', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_10" model="account.period">
+            <field name="name">2016-10 (Oct)</field>
+            <field name="code">DMO2016-10</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-10-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-10-31', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_11" model="account.period">
+            <field name="name">2016-11 (Nov)</field>
+            <field name="code">DMO2016-11</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-11-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-11-30', '%Y-%m-%d')"/>
+        </record>
+
+        <record id="account_period_12" model="account.period">
+            <field name="name">2016-12 (Dec)</field>
+            <field name="code">DMO2016-12</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="fiscalyear_id" ref="l10n_be_coda_sequence.account_fiscalyear_demo_2016"/>
+            <field name="date_start" eval="datetime.strptime('2016-12-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-12-31', '%Y-%m-%d')"/>
+        </record>
+    </data>
+</openerp>
