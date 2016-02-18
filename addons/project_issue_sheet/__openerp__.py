@@ -15,7 +15,6 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     'depends': [
         'project_issue',
         'hr_timesheet_sheet',
-        'project_timesheet',
     ],
     'data': [
         'project_issue_sheet_view.xml',

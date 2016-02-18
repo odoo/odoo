@@ -9,7 +9,7 @@ class res_company(osv.osv):
     _columns = {
         'project_time_mode_id': fields.many2one('product.uom', 'Project Time Unit',
             help='This will set the unit of measure used in projects and tasks.\n' \
-"If you use the timesheet linked to projects (project_timesheet module), don't " \
+"If you use the timesheet linked to projects, don't " \
 "forget to setup the right unit of measure in your employees.",
         ),
     }

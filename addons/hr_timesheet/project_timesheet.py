@@ -1,47 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
-import datetime
-from dateutil.relativedelta import relativedelta
 
-from openerp.addons.analytic.models import analytic
 from openerp.osv import fields, osv
-from openerp import tools
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
-
-class project_project(osv.osv):
-    _inherit = 'project.project'
-
-    def open_timesheets(self, cr, uid, ids, context=None):
-        """ open Timesheets view """
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
-
-        project = self.browse(cr, uid, ids[0], context)
-        view_context = {
-            'search_default_account_id': [project.analytic_account_id.id],
-            'default_account_id': project.analytic_account_id.id,
-            'default_is_timesheet':True
-        }
-        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
-
-        res = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
-        id = res and res[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['name'] = _('Timesheets')
-        result['context'] = view_context
-        result['help'] = help
-        return result
-
-    def open_contract(self, cr, uid, ids, context=None):
-        """ open Contract view """
-
-        res = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'project_timesheet', 'action_project_analytic_account', context=context)
-        contract_ids = self.browse(cr, uid, ids, context=context)
-        account_ids = [x.analytic_account_id.id for x in contract_ids]
-        res['res_id'] = account_ids and account_ids[0] or None
-        return res
 
 
 class task(osv.osv):
@@ -102,42 +62,8 @@ class task(osv.osv):
                 'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
             }),
         'timesheet_ids': fields.one2many('account.analytic.line', 'task_id', 'Timesheets'),
-        'analytic_account_id': fields.related('project_id', 'analytic_account_id',
-            type='many2one', relation='account.analytic.account', string='Analytic Account', store=True),
     }
 
     _defaults = {
         'progress': 0,
-    }
-
-    def _prepare_delegate_values(self, cr, uid, ids, delegate_data, context=None):
-        vals = super(task, self)._prepare_delegate_values(cr, uid, ids, delegate_data, context)
-        for task in self.browse(cr, uid, ids, context=context):
-            vals[task.id]['planned_hours'] += task.effective_hours
-        return vals
-
-    def onchange_project(self, cr, uid, ids, project_id, context=None):
-        result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
-        if not project_id:
-            return result
-        if 'value' not in result:
-            result['value'] = {}
-        project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
-        return result
-
-
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-
-    def unlink(self, cursor, user, ids, context=None):
-        parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
-        if parnter_id:
-            raise UserError(_('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
-        return super(res_partner,self).unlink(cursor, user, ids,
-                context=context)
-
-class account_analytic_line(osv.osv):
-    _inherit = "account.analytic.line"
-    _columns = {
-        'task_id' : fields.many2one('project.task', 'Task'),
     }

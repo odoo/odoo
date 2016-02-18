@@ -24,14 +24,6 @@ class project_configuration(osv.osv_memory):
             help='Lets the company customize which Pad installation should be used to link to new pads '
                  '(for example: http://ietherpad.com/).\n'
                  '-This installs the module pad.'),
-        'module_project_timesheet': fields.selection([
-            (0, "Do not record timesheets on tasks"),
-            (1, "Record timesheet lines per tasks")
-            ], "Timesheets on Project",
-            help='This allows you to transfer the entries under tasks defined for Project Management to '
-                 'the timesheet line entries for particular date and user, with the effect of creating, '
-                 'editing and deleting either ways.\n'
-                 '-This installs the module project_timesheet.'),
         'module_rating_project': fields.selection([
             (0, "No customer rating"),
             (1, 'Allow activating customer rating on projects, at issue completion')
@@ -57,11 +49,6 @@ class project_configuration(osv.osv_memory):
         'module_project_timesheet_synchro': fields.boolean("Timesheet app for Chrome/Android/iOS"),
         'module_project_forecast': fields.boolean("Forecasts, planning and Gantt charts"),
     }
-
-    def onchange_time_estimation_project_timesheet(self, cr, uid, ids, group_time_work_estimation_tasks):
-        if group_time_work_estimation_tasks:
-            return {'value': {'group_tasks_work_on_tasks': True}}
-        return {}
 
     def set_default_generate_project_alias(self, cr, uid, ids, context=None):
         config_value = self.browse(cr, uid, ids, context=context).generate_project_alias
