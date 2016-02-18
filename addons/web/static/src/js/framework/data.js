@@ -82,21 +82,28 @@ var Query = Class.extend({
     },
     _execute: function (options) {
         var self = this;
+        var url = '/web/dataset/search_read';
         options = options || {};
-        return session.rpc('/web/dataset/search_read', {
-            model: this._model.name,
-            fields: this._fields || false,
-            domain: pyeval.eval('domains',
-                    [this._model.domain(this._filter)]),
-            context: pyeval.eval('contexts',
-                    [this._model.context(this._context)]),
-            offset: this._offset,
-            limit: this._limit,
-            sort: serialize_sort(this._order_by)
-        }, options).then(function (results) {
-            self._count = results.length;
-            return results.records;
-        }, null);
+        var datas = {
+            'model': options.model || this._model.name,
+            'fields': options.fields || this._fields || false,
+            'domain': options.domain || pyeval.eval('domains', [this._model.domain(this._filter)]),
+            'offset': options.offset || this._offset,
+            'limit': options.limit || this._limit,
+            'sort': options.sort || serialize_sort(this._order_by),
+            'context': pyeval.eval('contexts', [this._model.context(this._context)]),
+        };
+        if (options.multi_search) {
+            url = '/web/dataset/multi_search_read';
+            datas.multi_context = options.context;
+            if (options.context instanceof Array) {
+                datas.multi_context = _.map(options.context, function (context) {
+                    return pyeval.eval('contexts', [context]);
+                });
+            }
+        }
+        options = _.omit(options, 'model', 'fields', 'domain', 'offset', 'limit', 'sort', 'context', 'multi_search');
+        return session.rpc(url, datas, options);
     },
     /**
      * Fetches the first record matching the query, or null
@@ -106,9 +113,9 @@ var Query = Class.extend({
      */
     first: function (options) {
         var self = this;
-        return this.clone({limit: 1})._execute(options).then(function (records) {
+        return this.clone({limit: 1})._execute(options).then(function (results) {
             delete self._count;
-            if (records.length) { return records[0]; }
+            if (results.records.length) { return results.records[0]; }
             return null;
         });
     },
@@ -119,7 +126,10 @@ var Query = Class.extend({
      * @returns {jQuery.Deferred<Array<>>}
      */
     all: function (options) {
-        return this._execute(options);
+        return this._execute(options).then(function (results) {
+            self._count = results.length;
+            return results.records;
+        });
     },
     /**
      * Fetches the number of records matching the query in the database
@@ -684,12 +694,31 @@ var DataSetSearch = DataSet.extend({
             .context(options.context)
             .offset(options.offset || 0)
             .limit(options.limit || false);
-        q = q.order_by.apply(q, this._sort);
+        q = q.order_by.apply(q, options.sort || this._sort);
 
-        return q.all().done(function (records) {
+        return q.all(options).done(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
             q.count().done(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');
+        });
+    },
+    /*
+     * Return the search for a list of domains, can apply different options for each domain.
+     * (by default use the dataset configuration)
+     *
+     * datas:
+     *   domain: list of domain is required
+     *   fields: (optional) field list, or list of field list
+     *   context: (optional) context, or list of context
+     *   limit: (optional) limit, or list of limit
+     *   offset: (optional) offset, or list of offset
+     *   sort: (optional) sort, or list of sort
+     *   context: (optional) context, or list of context
+     */
+    multi_read_slice: function (datas) {
+        return this._model.query()._execute(_.extend({'multi_search': true}, datas)).done(function (results) {
+            self._length = _.reduce(_.pluck(results, 'length'), function (a, b) {return a + b;});
+            self.ids = _.uniq(_.pluck(_.flatten(_.pluck(results, 'records')), 'id'));
         });
     },
     get_domain: function (other_domain) {

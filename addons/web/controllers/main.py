@@ -819,9 +819,20 @@ class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
-        return self.do_search_read(model, fields, offset, limit, domain, sort)
+        return self.do_search_read(model, fields, offset, limit, domain, sort, request.context)
+    @http.route('/web/dataset/multi_search_read', type='json', auth="user")
+    def multi_search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None, multi_context=None):
+        return [self.do_search_read(
+                        model[index] if isinstance(model, list) else model,
+                        fields[index] if isinstance(fields, list) and isinstance(fields[0], list) else fields,
+                        offset[index] if isinstance(offset, list) else offset,
+                        limit[index] if isinstance(limit, list) else limit,
+                        dom,
+                        sort[index] if isinstance(sort, list) else sort,
+                        dict(request.context, **(multi_context[index] if isinstance(multi_context, list) else multi_context or {})))
+                    for index, dom in enumerate(domain)]
     def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None
-                       , sort=None):
+                       , sort=None, context=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -832,6 +843,7 @@ class DataSet(http.Controller):
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
         :param list sort: sorting directives
+        :param dict context: optional context
         :returns: A structure (dict) with two keys: ids (all the ids matching
                   the (domain, context) pair) and records (paginated records
                   matching fields selection set)
@@ -839,15 +851,14 @@ class DataSet(http.Controller):
         """
         Model = request.session.model(model)
 
-        records = Model.search_read(domain, fields, offset or 0, limit or False, sort or False,
-                           request.context)
+        records = Model.search_read(domain, fields, offset or 0, limit or False, sort or False, context)
         if not records:
             return {
                 'length': 0,
                 'records': []
             }
         if limit and len(records) == limit:
-            length = Model.search_count(domain, request.context)
+            length = Model.search_count(domain, context)
         else:
             length = len(records) + (offset or 0)
         return {
