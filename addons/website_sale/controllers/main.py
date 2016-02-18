@@ -194,11 +194,12 @@ class website_sale(http.Controller):
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
-        if not context.get('pricelist'):
+        pricelist_context = dict(context)
+        if not pricelist_context.get('pricelist'):
             pricelist = self.get_pricelist()
-            context['pricelist'] = int(pricelist)
+            pricelist_context['pricelist'] = int(pricelist)
         else:
-            pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
+            pricelist = pool.get('product.pricelist').browse(cr, uid, pricelist_context['pricelist'], context)
         url = "/shop"
         if search:
             post["search"] = search
@@ -229,7 +230,7 @@ class website_sale(http.Controller):
         product_count = product_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
-        products = product_obj.browse(cr, uid, product_ids, context=context)
+        products = product_obj.browse(cr, uid, product_ids, context=pricelist_context)
 
         attributes_obj = request.registry['product.attribute']
         if product_ids:
@@ -269,7 +270,7 @@ class website_sale(http.Controller):
         category_obj = pool['product.public.category']
         template_obj = pool['product.template']
 
-        context.update(active_id=product.id)
+        product_context = dict(context, active_id=product.id)
 
         if category:
             category = category_obj.browse(cr, uid, int(category), context=context)
@@ -297,9 +298,9 @@ class website_sale(http.Controller):
         rating_message_values = dict([(record.message_id.id, record.rating) for record in ratings])
         rating_product = product.rating_get_stats([('website_published', '=', True)])
 
-        if not context.get('pricelist'):
-            context['pricelist'] = int(self.get_pricelist())
-            product = template_obj.browse(cr, uid, int(product), context=context)
+        if not product_context.get('pricelist'):
+            product_context['pricelist'] = int(self.get_pricelist())
+            product = template_obj.browse(cr, uid, int(product), context=product_context)
 
         values = {
             'search': search,
