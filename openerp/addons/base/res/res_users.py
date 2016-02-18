@@ -221,9 +221,10 @@ class res_users(osv.osv):
             return {'value': {'email': login}}
         return {}
 
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
+    @api.multi
+    @api.onchange("state_id")
+    def _onchange_state_id(self):
+        return self.partner_id._onchange_state_id()
 
     def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
         """ Wrapper on the user.partner onchange_address, because some calls to the

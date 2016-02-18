@@ -996,11 +996,11 @@ Update your business card, phone book, social media,... Send an email right now 
         message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (html_time, meeting_subject, duration)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        if state_id:
-            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
-        return {}
+    @api.multi
+    @api.onchange("state_id")
+    def _onchange_state_id(self):
+        if self.state_id:
+            self.country_id = self.state_id.country_id
 
     def message_partner_info_from_emails(self, cr, uid, ids, emails, link_mail=False, context=None):
         res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, ids, emails, link_mail=link_mail, context=context)

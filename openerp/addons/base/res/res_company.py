@@ -110,11 +110,12 @@ class res_company(osv.osv):
             self.rml_footer_readonly = res
             self.rml_footer = res
 
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        if state_id:
-            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
-        return {}
-        
+    @api.multi
+    @api.onchange("state_id")
+    def _onchange_state_id(self):
+        if self.state_id:
+            self.country_id = self.state_id.country_id
+
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
         """ To change default header style of all <para> and drawstring. """
 
