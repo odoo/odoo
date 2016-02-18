@@ -1924,6 +1924,17 @@ gui.define_screen({name:'payment', widget: PaymentScreenWidget});
 
 var set_fiscal_position_button = ActionButtonWidget.extend({
     template: 'SetFiscalPositionButton',
+    init: function (parent, options) {
+        this._super(parent, options);
+
+        this.pos.get('orders').bind('add remove change', function () {
+            this.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
+    },
     button_click: function () {
         var self = this;
         var selection_list = _.map(self.pos.fiscal_positions, function (fiscal_position) {
@@ -1942,6 +1953,20 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
             }
         });
     },
+    get_current_fiscal_position_name: function () {
+        var name = _t('Tax');
+        var order = this.pos.get_order();
+
+        if (order) {
+            var fiscal_position = order.fiscal_position;
+
+            if (fiscal_position) {
+                name = fiscal_position.display_name;
+            }
+        }
+
+        return name;
+    }
 });
 
 define_action_button({
