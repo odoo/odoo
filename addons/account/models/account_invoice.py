@@ -536,6 +536,7 @@ class AccountInvoice(models.Model):
     def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
         """ Reconcile payable/receivable lines from the invoice with payment_line """
         line_to_reconcile = self.env['account.move.line']
+        writeoff = self.env['account.move.line']
         for inv in self:
             line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
         if self.env.context.get('payment_difference') and line_to_reconcile and writeoff_acc_id and writeoff_journal_id:
