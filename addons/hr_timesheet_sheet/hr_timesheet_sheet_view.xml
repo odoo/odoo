@@ -39,10 +39,13 @@
 
 
         <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet">
-            <field name="context">{'search_default_sheet_id': [active_id], 'default_is_timesheet' : 1}</field>
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
             <field name="name">Timesheet Activities</field>
             <field name="res_model">account.analytic.line</field>
             <field name="src_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})]"/>
         </record>
 
 
@@ -120,25 +123,21 @@
                             </widget>
                         </page>
                         <page string="Details">
-                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'default_is_timesheet' : 1}" name="timesheet_ids" nolabel="1">
+                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
                                 <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field name="account_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="name"/>
+                                    <field name="project_id" required="1"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field invisible="1" name="user_id" required="1"/>
-                                    <field name="is_timesheet" invisible="1"/>
+                                    <field name="user_id" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <group>
                                         <field name="date"/>
-                                        <field name="account_id"/>
                                         <field name="name"/>
-                                        <field name="unit_amount" widget="float_time"/>
-                                        <field name="amount"/>
-                                        <field name="general_account_id"/>
-                                        <field name="user_id" required="1"/>
-                                        <field name="is_timesheet" invisible="1"/>
+                                        <field name="project_id"/>
+                                        <field name="unit_amount" widget="float_time" string="Hours"/>
+                                        <field name="user_id" invisible="1"/>
                                     </group>
                                 </form>
                             </field>
@@ -217,7 +216,7 @@
             </field>
         </record>
 
-        <menuitem action="act_hr_timesheet_sheet_my_timesheets" id="menu_act_hr_timesheet_sheet_my_timesheets" parent="hr_timesheet.menu_timesheets_reports"
+        <menuitem action="act_hr_timesheet_sheet_my_timesheets" id="menu_act_hr_timesheet_sheet_my_timesheets" parent="hr_timesheet.menu_hr_time_tracking"
              sequence="3"/>
 
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
@@ -226,7 +225,7 @@
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_to_approve':1, 'default_is_timesheet':1}</field>
+            <field name="context">{'search_default_to_approve':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -249,7 +248,9 @@
             <field name="act_window_id" ref="act_hr_timesheet_sheet_form"/>
         </record>
 
-        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_to_approve"
+        <menuitem id="menu_hr_to_approve" name="To Approve" parent="hr_timesheet.timesheet_menu_root" sequence="7"/>
+
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="menu_hr_to_approve"
              sequence="11" groups="base.group_hr_user"/>
 
 
@@ -386,7 +387,7 @@
         <field name="view_type">form</field>
         <field name="name">Timesheets</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id , 'default_is_timesheet' : 1}</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
     </record>
 
       <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">

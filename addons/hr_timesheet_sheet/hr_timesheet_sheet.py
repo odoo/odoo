@@ -297,7 +297,7 @@ class account_analytic_line(osv.osv):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
         for ts_line in self.browse(cursor, user, ids, context=context):
-            if not ts_line.is_timesheet:
+            if not ts_line.project_id:
                 continue
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
@@ -318,7 +318,7 @@ class account_analytic_line(osv.osv):
                     WHERE %(date_to)s >= l.date
                         AND %(date_from)s <= l.date
                         AND %(user_id)s = l.user_id
-                        AND l.is_timesheet = True
+                        AND l.project_id IS NOT NULL
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})

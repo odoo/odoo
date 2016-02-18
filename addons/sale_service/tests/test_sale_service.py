@@ -27,11 +27,10 @@ class TestSaleService(TestSale):
         # register timesheet on task
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': project.id,
+            'project_id': project.id,
             'task_id': task.id,
             'unit_amount': 50,
             'user_id': self.manager.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Service: there should be something to invoice after registering timesheets')
         so.action_invoice_create()

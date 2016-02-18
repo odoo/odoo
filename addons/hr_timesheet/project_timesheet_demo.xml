@@ -9,7 +9,7 @@
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location">Building 1, Second Floor</field>
             <field name="work_phone">+3282623500</field>
-            <field name="image" type="base64" file="project_timesheet/static/img/employee_phu-image.jpg"/>
+            <field name="image" type="base64" file="hr_timesheet/static/img/employee_phu-image.jpg"/>
         </record>
 
         <record id="hr.employee_fpi" model="hr.employee">
@@ -31,7 +31,7 @@
             <field name="work_email">alice@openerp.com</field>
             <field name="department_id" ref="hr.dep_rd"/>
             <field name="job_id" ref="hr.job_developer"/>
-            <field name="image" type="base64" file="project_timesheet/static/img/employee7-image.jpg"/>
+            <field name="image" type="base64" file="hr_timesheet/static/img/employee7-image.jpg"/>
         </record>
         <record id="hr.employee_fp" model="hr.employee">
             <field name="calendar_id" ref="resource.timesheet_group1"/>
