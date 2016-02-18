@@ -35,7 +35,7 @@
             <field name="model">hr.timesheet.report</field>
             <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_report_search"/>
             <field name="arch" type="xml">
-                <field name="account_id"  position="before">
+                <field name="project_id"  position="before">
                     <filter string="Draft" domain="[('state','=','draft')]"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]"/>
                     <filter string="Done" domain="[('state','=','done')]"/>

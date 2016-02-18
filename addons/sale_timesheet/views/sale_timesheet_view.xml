@@ -42,6 +42,16 @@
                            <field name="timesheet_count" widget="statinfo" string="Timesheet"/>
                        </button>
                     </xpath>
+                    <xpath expr="//button[@name='action_view_invoice']" position="before">
+                       <field name="project_project_id" invisible="1"/>
+                       <button type="object"
+                           name="action_view_project_project"
+                           class="oe_stat_button"
+                           icon="fa-tasks"
+                           string="Project"
+                           attrs="{'invisible': [('project_project_id', '=', False)]}" groups="base.group_user">
+                       </button>
+                    </xpath>
                 </data>
            </field>
         </record>
