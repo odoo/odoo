@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         
         <!--  Change Product Quantity -->
         
@@ -10,6 +9,8 @@
             <field name="arch" type="xml">
                 <form string="Change Product Qty">
                     <group>
+                        <separator string="Change Quantity" colspan="4"/>
+                        <newline/>
                         <field name="product_qty"/>
                     </group>
                     <footer>
@@ -30,5 +31,4 @@
             <field name="target">new</field>            
         </record>
        
-    </data>
-</openerp>    
+</odoo>    
