@@ -52,9 +52,9 @@ class TestPacking(TransactionCase):
         self.assertEqual(len(reco_id), 3, "The number of quants created is not correct")
         for rec in reco_id:
             if rec.package_id.name == 'Pallet 1':
-                self.assertEqual(rec.qty, 120, "Should have 120 pieces on pallet 1, got " + str(rec.qty)
+                self.assertEqual(rec.qty, 120, "Should have 120 pieces on pallet 1, got " + str(rec.qty))
             elif rec.package_id.name == 'Pallet 2':
-                self.assertEqual(rec.qty, 120, "Should have 120 pieces on pallet 2, got " + str(rec.qty)
+                self.assertEqual(rec.qty, 120, "Should have 120 pieces on pallet 2, got " + str(rec.qty))
             elif rec.package_id.name == 'Pallet 3':
                 self.assertEqual(rec.qty, 60, "Should have 60 pieces on pallet 3")
 
