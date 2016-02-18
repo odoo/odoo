@@ -1128,11 +1128,11 @@ their root element is ``<gantt>``.
 
 .. code-block:: xml
 
-    <gantt string="Ideas" date_start="invent_date" color="inventor_id">
-        <level object="idea.idea" link="id" domain="[]">
-            <field name="inventor_id"/>
-        </level>
-    </gantt>
+    <gantt string="Ideas"
+           date_start="invent_date"
+           date_stop="date_finished"
+           progress="progress"
+           default_group_by="inventor_id" />
 
 .. exercise:: Gantt charts
 
