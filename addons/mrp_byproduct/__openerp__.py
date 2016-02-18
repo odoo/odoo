@@ -24,10 +24,8 @@ With this module:
     'depends': ['base', 'mrp'],
     'data': [
        'security/ir.model.access.csv',
-       'mrp_byproduct_view.xml'
+       'views/mrp_byproduct_view.xml',
     ],
     'demo': [],
-    'test': ['test/mrp_byproduct.yml'],
     'installable': True,
-    'auto_install': False,
 }
