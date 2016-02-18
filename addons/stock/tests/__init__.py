@@ -7,4 +7,5 @@ from . import test_inventory
 from . import test_move
 from . import test_packing
 from . import test_procrule
+from . import test_shipment
 from . import test_packingneg
