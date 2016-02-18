@@ -66,7 +66,7 @@ class ChangeProductionQty(models.TransientModel):
             for move in production.move_raw_ids:
                 bom_point = production.bom_id
                 if not bom_point:
-                    bom_point = MrpBom._bom_find(product=production.product_id)
+                    bom_point = MrpBom._bom_find(product=production.product_id, picking_type=production.picking_type_id)
                     if not bom_point:
                         raise UserError(_("Cannot find bill of material for this production."))
                     production.write({'bom_id': bom_point.id})

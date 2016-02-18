@@ -63,10 +63,8 @@ class ProcurementOrder(models.Model):
         newdate = self._get_date_planned()
         if self.bom_id:
             bom = self.bom_id
-            routing_id = self.bom_id.routing_id.id
         else:
-            bom = self.env['mrp.bom'].with_context(dict(force_company=self.company_id.id))._bom_find(product=self.product_id)
-            routing_id = bom.routing_id.id
+            bom = self.env['mrp.bom'].with_context(dict(force_company=self.company_id.id))._bom_find(product=self.product_id, picking_type=self.rule_id.picking_type_id)
         return {
             'origin': self.origin,
             'product_id': self.product_id.id,
@@ -75,10 +73,10 @@ class ProcurementOrder(models.Model):
             'location_src_id': self.rule_id.location_src_id.id or self.location_id.id,
             'location_dest_id': self.location_id.id,
             'bom_id': bom.id,
-            'routing_id': routing_id,
             'date_planned': self.date_planned,
             'date_planned_finished': self.date_planned,
             'date_planned_start': fields.Datetime.to_string(newdate),
+            'picking_type_id': self.rule_id.picking_type_id.id,
             'move_prod_id': res_id,
             'company_id': self.company_id.id,
         }

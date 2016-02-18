@@ -2,7 +2,7 @@
 {
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
-    "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
+    "depends" : ["mrp", "stock_account"],
     "category" : "Generic Modules/Inventory Control",
     "description": """
 Product extension. This module adds:

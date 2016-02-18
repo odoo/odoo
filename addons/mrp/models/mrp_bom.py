@@ -25,9 +25,9 @@ class MrpBom(models.Model):
     active = fields.Boolean(string='Active', default=True, help="If the active field is set to False, it will allow you to hide the bills of material without removing it.")
     bom_type = fields.Selection([('normal', 'Manufacture this product'), ('phantom', 'Ship this product as a set of components (kit)')], string='BoM Type', required=True, default='normal',
                                 help="Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product.", oldname='type')
-    product_tmpl_id = fields.Many2one('product.template', string='Product', domain="[('type', 'not in', ['product', 'consu'])]", required=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product', domain="[('type', 'in', ['product', 'consu'])]", required=True)
     product_id = fields.Many2one('product.product', string='Product Variant',
-                                 domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type','not in', ['product', 'consu'])]",
+                                 domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type','in', ['product', 'consu'])]",
                                  help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', string='BoM Lines', copy=True)
     categ_id = fields.Many2one('product.category', related='product_tmpl_id.categ_id', string='Product Category', readonly=True, store=True)
@@ -37,13 +37,13 @@ class MrpBom(models.Model):
     routing_id = fields.Many2one('mrp.routing', string='Routing', help="The list of operations (list of work centers) to produce the finished product. "
                                  "The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning.")
     ready_to_produce = fields.Selection([('all_available', 'All components available'), ('asap', 'The components of 1st operation')], string='Ready when are available', required=True, default='asap',)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type', domain=[('code', '=', 'manufacturing')], help="When a procurement has a ‘produce’ route with a picking type set, it will try to create a Manufacturing Order for that product using a BOM of the same picking type. That allows to define pull rules for products with different routing (different BOMs)")
+    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type', domain=[('code', '=', 'mrp_operation')], help="When a procurement has a ‘produce’ route with a picking type set, it will try to create a Manufacturing Order for that product using a BOM of the same picking type. That allows to define pull rules for products with different routing (different BOMs)")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('mrp.bom'))
     operation_id = fields.Many2one('mrp.routing.workcenter', string='Produced at Operation')
 
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None):
+    def _bom_find(self, product_tmpl=None, product=None, picking_type=None):
         """ Finds BoM for particular product and product uom.
         :param product_tmpl_id: Selected product.
         :param product_uom_id: Unit of measure of a product.
@@ -55,10 +55,12 @@ class MrpBom(models.Model):
                 product_tmpl = product.product_tmpl_id
             domain = ['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl.id)]
         elif product_tmpl:
-            domain = [('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl.id)]
+            domain = [('product_tmpl_id', '=', product_tmpl.id)]
         else:
             # neither product nor template, makes no sense to search
             return False
+        if picking_type:
+            domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if self.env.context.get('company_id'):
             domain = domain + [('company_id', '=', self.env.context['company_id'])]
         # order to prioritize bom with product_id over the one without
@@ -77,7 +79,7 @@ class MrpBom(models.Model):
                 raise UserError(_('BoM "%s" contains a BoM line with a product recursion: "%s".') % (self.display_name, bom_line.product_id.display_name))
 
             # This is very slow, can we improve that?
-            bom = self._bom_find(product=bom_line.product_id)
+            bom = self._bom_find(product=bom_line.product_id, picking_type=self.picking_type_id)
             if not bom or bom.bom_type != "phantom":
                 quantity = bom_line.product_uom_id._compute_qty(quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
                 if method: method(bom_line, quantity)
@@ -140,7 +142,8 @@ class MrpBomLine(models.Model):
         for bom_line in self:
             child_bom = self.env['mrp.bom']._bom_find(
                 product_tmpl=bom_line.product_id.product_tmpl_id,
-                product=bom_line.product_id)
+                product=bom_line.product_id, 
+                picking_type=bom_line.bom_id.picking_type_id)
             if child_bom:
                 bom_line.write({'child_line_ids': (6, 0, [bom.id for bom in child_bom.bom_line_ids])})
             else:

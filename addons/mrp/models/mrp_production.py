@@ -186,8 +186,7 @@ class MrpProduction(models.Model):
         # Create all work orders if not already created
         for order in orders_new:
             quantity = order.product_uom_id._compute_qty(order.product_qty, order.bom_id.product_uom_id.id)
-            order.bom_id.explode(self.product_id, quantity, method_wo=order._workorders_create)
-
+            order.bom_id.explode(order.product_id, quantity, method_wo=order._workorders_create)
         orders_new.write({'state': 'planned'})
         for order in orders_plan:
             order.work_order_ids.write({'date_planned_start': False, 'date_planned_end': False})
@@ -234,32 +233,15 @@ class MrpProduction(models.Model):
         return super(MrpProduction, self).unlink()
 
     @api.multi
-    @api.onchange('product_tmpl_id')
-    def onchange_product_tmpl_id(self):
-        if not self.product_tmpl_id:
-            if self.product_id:
-                self.product_id = False
-        else:
-            if len(self.product_tmpl_id.product_variant_ids)==1:
-                self.product_id = self.product_tmpl_id.product_variant_ids[0]
-
-    @api.multi
-    @api.onchange('product_id', 'company_id')
+    @api.onchange('product_id', 'company_id', 'picking_type_id')
     def onchange_product_id(self):
         if not self.product_id:
             self.product_uom_id = False
             self.bom_id = False
-            self.routing_id = False
-            self.product_tmpl_id = False
         else:
-            bom_point = self.env['mrp.bom']._bom_find(product=self.product_id)
-            routing_id = False
-            if bom_point:
-                routing_id = bom_point.routing_id
+            bom_point = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id)
             self.product_uom_id = self.product_id.uom_id.id
             self.bom_id = bom_point.id
-            self.routing_id = routing_id and routing_id.id or False
-            self.product_tmpl_id = self.product_id.product_tmpl_id.id
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
 
     @api.onchange('bom_id')
@@ -294,6 +276,7 @@ class MrpProduction(models.Model):
         for order in self:
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_do.move_validate()
+            
             #order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel')).move_validate()
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_finish.move_validate()
@@ -405,7 +388,7 @@ class MrpProduction(models.Model):
     def _generate_moves(self):
         for production in self:
             production._make_production_produce_line()
-            factor = self.product_uom_id._compute_qty(self.product_qty, production.bom_id.product_uom_id.id)
+            factor = self.product_uom_id._compute_qty(production.product_qty, production.bom_id.product_uom_id.id)
             production.bom_id.explode(production.product_id, factor / production.bom_id.product_qty, self._generate_move)
             production.move_raw_ids.action_confirm()
         return True
