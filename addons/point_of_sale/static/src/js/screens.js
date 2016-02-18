@@ -1937,12 +1937,18 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
     },
     button_click: function () {
         var self = this;
-        var selection_list = _.map(self.pos.fiscal_positions, function (fiscal_position) {
+
+        var no_fiscal_position = [{
+            label: _t("None"),
+        }];
+        var fiscal_positions = _.map(self.pos.fiscal_positions, function (fiscal_position) {
             return {
                 label: fiscal_position.name,
                 item: fiscal_position
             };
         });
+
+        var selection_list = no_fiscal_position.concat(fiscal_positions);
         self.gui.show_popup('selection',{
             title: _t('Select tax'),
             list: selection_list,
