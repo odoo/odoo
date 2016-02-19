@@ -211,7 +211,7 @@ class AccountMove(models.Model):
             reversed_moves._post_validate()
             reversed_moves.post()
             return [x.id for x in reversed_moves]
-        return True
+        return []
 
     @api.multi
     def open_reconcile_view(self):

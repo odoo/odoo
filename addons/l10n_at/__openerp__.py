@@ -5,7 +5,7 @@
 
 {
     'name': 'Austria - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'author': 'conexus.at',
     'website': 'http://www.conexus.at',
     'category': 'Localization/Account Charts',

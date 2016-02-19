@@ -338,7 +338,7 @@ function make_channel (data, options) {
     } else if (data.public === "private") {
         channel.type = "private";
     }
-    if ('direct_partner' in data) {
+    if (_.size(data.direct_partner) > 0) {
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
         channel.direct_partner_id = data.direct_partner[0].id;
