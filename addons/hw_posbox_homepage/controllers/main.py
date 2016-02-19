@@ -59,7 +59,7 @@ index_template = """
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
-        <p>For any other question, please contact the Odoo support at <a href='mailto:support@odoo.com'>support@odoo.com</a>
+        <p>For any other question, please contact the Odoo support at <a href='mailto:help@odoo.com'>help@odoo.com</a>
         </p>
     </body>
 </html>
