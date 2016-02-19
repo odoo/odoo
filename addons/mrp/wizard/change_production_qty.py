@@ -73,7 +73,7 @@ class ChangeProductionQty(models.TransientModel):
                 if not bom_point:
                     raise UserError(_("Cannot find bill of material for this production."))
                 factor = (production.product_qty - production.qty_produced) * production.product_uom_id.factor / bom_point.product_uom_id.factor
-                production.bom_id.explode(factor / production.bom_id.product_qty, production._update_move)
+                production.bom_id.explode(production.product_id, factor / production.bom_id.product_qty, production._update_move)
             self._update_product_to_produce(production, production.product_qty - production.qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves.do_unreserve()
