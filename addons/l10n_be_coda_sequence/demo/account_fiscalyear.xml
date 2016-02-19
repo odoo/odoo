@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Account fiscal year for Demo -->
+        <record id="account_fiscalyear_demo_2016" model="account.fiscalyear">
+            <field name="code">DMO2016</field>
+            <field name="name">2016 demo</field>
+            <field name="state">draft</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="date_start" eval="datetime.strptime('2016-01-01', '%Y-%m-%d')"/>
+            <field name="date_stop" eval="datetime.strptime('2016-12-31', '%Y-%m-%d')"/>
+        </record>
+    </data>
+</openerp>
