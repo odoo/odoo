@@ -311,7 +311,8 @@ class res_partner(osv.Model, format_address):
         colorize, img_path, image = False, False, False
 
         if partner_type in ['contact', 'other'] and parent_id:
-            image = self.browse(parent_id).image.decode('base64')
+            parent_image = self.browse(parent_id).image
+            image = parent_image and parent_image.decode('base64') or None
 
         if not image and partner_type == 'invoice':
             img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'money.png')
