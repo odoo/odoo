@@ -204,14 +204,12 @@ class Project(models.Model):
         """ copy and map tasks from old to new project """
         self.ensure_one()
         map_task_id = {}
-        Tasks = self.env['project.task']
         for task in self.tasks:
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
                         'name': task.name}
             map_task_id[task.id] =  task.copy(defaults).id
         project.write({'tasks':[(6, 0, map_task_id.values())]})
-        Tasks.duplicate_task(map_task_id)
 
     @api.multi
     def duplicate_template(self):
@@ -349,8 +347,6 @@ class Task(models.Model):
     date_deadline = fields.Date('Deadline', index=True, copy=False)
     date_last_stage_update = fields.Datetime('Last Stage Update', index=True, copy=False, readonly=True, default=fields.Datetime.now)
     project_id = fields.Many2one('project.project', string='Project', ondelete='set null', index=True, track_visibility='onchange', change_default=True)
-    parent_ids = fields.Many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', string='Parent Tasks')
-    child_ids = fields.Many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', string='Delegated Tasks')
     notes = fields.Text()
     planned_hours = fields.Float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.')
     remaining_hours = fields.Float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
@@ -366,35 +362,6 @@ class Task(models.Model):
     legend_blocked = fields.Char(related="stage_id.legend_blocked", string='Kanban Blocked Explanation')
     legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation')
     legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation')
-
-    @api.constrains('parent_ids', 'child_ids')
-    def _check_recursion(self):
-        for task in self:
-            visited_branch = set()
-            visited_node = set()
-            res = task._check_cycle(visited_branch, visited_node)
-            if not res:
-                raise UserError(_("Error ! You cannot create recursive tasks."))
-
-    def _check_cycle(self, visited_branch, visited_node):
-        self.ensure_one()
-        if self.id in visited_branch: #Cycle
-            return False
-
-        if self.id in visited_node: #Already tested don't work one more time for nothing
-            return True
-
-        visited_branch.add(self.id)
-        visited_node.add(self.id)
-
-        #visit child using DFS
-        for child in self.child_ids:
-            res = child._check_cycle(visited_branch, visited_node)
-            if not res:
-                return False
-
-        visited_branch.remove(self.id)
-        return True
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
@@ -462,11 +429,6 @@ class Task(models.Model):
         if any(item in vals for item in ['stage_id', 'remaining_hours', 'user_id', 'kanban_state']):
             self._store_history()
         return result
-
-    @api.multi
-    def unlink(self):
-        self._check_child_task()
-        return super(Task, self).unlink()
 
     @api.multi
     def copy_data(self, default=None, context=None):
@@ -553,13 +515,6 @@ class Task(models.Model):
         # perform search, return the first found
         stage = self.env['project.task.type'].search(search_domain, order=order, limit=1)
         return stage.id
-
-    def _check_child_task(self):
-        for task in self:
-            for child in task.child_ids:
-                if child.stage_id and not child.stage_id.fold:
-                    raise UserError(_("Child task still open.\nPlease cancel or complete child task first."))
-        return True
 
     def _store_history(self):
         for task in self:
@@ -760,16 +715,6 @@ class Task(models.Model):
             headers['X-Odoo-Tags'] = ','.join([tag.name for tag in self.tag_ids])
         res['headers'] = repr(headers)
         return res
-
-    @api.model
-    def duplicate_task(self, map_ids):
-        mapper = lambda t: map_ids.get(t.id, t.id)
-        for task in self.browse(map_ids.values()):
-            new_child_ids = set(map(mapper, task.child_ids))
-            new_parent_ids = set(map(mapper, task.parent_ids))
-            if new_child_ids or new_parent_ids:
-                task.write({'parent_ids': [(6, 0, list(new_parent_ids))],
-                            'child_ids':  [(6, 0, list(new_child_ids))]})
 
 
 class AccountAnalyticAccount(models.Model):
