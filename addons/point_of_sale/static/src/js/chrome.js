@@ -759,7 +759,13 @@ var Chrome = PosBaseWidget.extend({
 
 return {
     Chrome: Chrome,
+    DebugWidget: DebugWidget,
+    HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
+    ProxyStatusWidget: ProxyStatusWidget,
+    StatusWidget: StatusWidget,
+    SynchNotificationWidget: SynchNotificationWidget,
+    UsernameWidget: UsernameWidget,
 };
 });
 
