@@ -97,6 +97,7 @@ class PosConfig(models.Model):
     tip_product_id = fields.Many2one('product.product', string='Tip Product',
         help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
+    default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
@@ -147,6 +148,11 @@ class PosConfig(models.Model):
     def _check_company_payment(self):
         if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
             raise UserError(_("The company of a payment method is different than the one of point of sale"))
+
+    @api.constrains('fiscal_position_ids', 'default_fiscal_position_id')
+    def _check_default_fiscal_position(self):
+        if self.default_fiscal_position_id and self.default_fiscal_position_id not in self.fiscal_position_ids:
+            raise UserError(_("The default fiscal position must be included in the available fiscal positions of the point of sale"))
 
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):

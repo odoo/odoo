@@ -25,6 +25,7 @@
                         <field name="barcode_nomenclature_id" />
                         <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
                         <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="default_fiscal_position_id" options="{'no_create': True}"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
                     <separator string="Available Payment Methods" colspan="4"/>
