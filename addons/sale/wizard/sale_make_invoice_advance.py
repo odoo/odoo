@@ -133,7 +133,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'tax_id': [(6, 0, self.product_id.taxes_id.ids)],
                 })
                 self._create_invoice(order, so_line, amount)
-        if self._context.get('open_invoices', False):
+        invoice_ids = sale_orders.mapped('invoice_ids')
+        if not invoice_ids:
+            raise UserError(_("There is nothing to invoice."))
+        elif self._context.get('open_invoices', False):
             return sale_orders.action_view_invoice()
         return {'type': 'ir.actions.act_window_close'}
 
