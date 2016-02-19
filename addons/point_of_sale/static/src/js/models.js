@@ -1537,6 +1537,19 @@ exports.Order = Backbone.Model.extend({
         this.session_id    = json.pos_session_id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
+
+        if (json.fiscal_position_id) {
+            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+                return fp.id === json.fiscal_position_id;
+            });
+
+            if (fiscal_position) {
+                this.fiscal_position = fiscal_position;
+            } else {
+                console.error('ERROR: trying to load a fiscal position not available in the pos');
+            }
+        }
+
         if (json.partner_id) {
             client = this.pos.db.get_partner_by_id(json.partner_id);
             if (!client) {
