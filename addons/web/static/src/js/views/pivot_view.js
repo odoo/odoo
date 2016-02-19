@@ -57,6 +57,7 @@ var PivotView = View.extend({
         this.headers = {};
         this.cells = {};
         this.has_data = false;
+        this.flipped = false;
 
         this.last_header_selected = null;
         this.sorted_column = {};
@@ -186,12 +187,14 @@ var PivotView = View.extend({
         this.measures.__count__ = {string: _t("Quantity"), type: "integer"};
     },
     do_search: function (domain, context, group_by) {
-        if (!this.ready) {
-            this.initial_row_groupby = context.pivot_row_groupby || this.initial_row_groupby;
-            this.initial_col_groupby = context.pivot_col_groupby || this.initial_col_groupby;
+        this.initial_row_groupby = context.pivot_row_groupby || this.initial_row_groupby;
+        this.initial_col_groupby = context.pivot_column_groupby || this.initial_col_groupby;
+
+        this.main_row.groupbys = this.initial_row_groupby.slice(0);
+        this.main_col.groupbys = this.initial_col_groupby.slice(0);
+        if(group_by.length) {
+            this[this.flipped ? 'main_col' : 'main_row'].groupbys = group_by;
         }
-        this.main_row.groupbys = group_by.length ? group_by : this.initial_row_groupby.slice(0);
-        this.main_col.groupbys = context.pivot_column_groupby || this.initial_col_groupby.slice(0);
         this.active_measures = context.pivot_measures || this.active_measures;
 
         this.domain = domain;
@@ -764,6 +767,7 @@ var PivotView = View.extend({
         var temp = this.main_col;
         this.main_col = this.main_row;
         this.main_row = temp;
+        this.flipped = !this.flipped;
         this.display_table();
     },
     toggle_measure: function (field) {
