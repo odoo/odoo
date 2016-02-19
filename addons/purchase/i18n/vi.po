@@ -608,7 +608,7 @@ msgstr "Bạn chắc chắn muốn trộn các đơn hàng này?"
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
 msgid "Associated procurements"
-msgstr "Associated procurements"
+msgstr "Cung ứng liên quan"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -623,32 +623,32 @@ msgstr "Giá trung bình"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "Dựa trên Hạng mục của đơn hàng"
+msgstr "Theo Hạng mục của đơn hàng"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
-"Based on generated invoice: create a draft invoice you can validate later.\n"
-"Based on incoming shipments: let you create an invoice when receipts are validated."
+msgstr "Theo các hạng mục đơn hàng: chọn một hay nhiều dòng (hạng mục) trong trình đơn 'Mua hàng / Kiểm soát hoá đơn / Theo hạng mục trên đơn hàng' để tạo hoá đơn cho các hạng mục đó.\n"
+"Tạo hoá đơn tự động: tự động tạo hoá đơn nhà cung cấp (dự thảo) khi xác nhận đơn hàng mua và xác nhận hoá đơn sau đó (khi nhận hoá đơn thực tế từ nhà cung cấp.\n"
+"Dựa trên lô hàng về: cho phép bạn tạo hoá đơn khi hoàn thành việc nhận hàng (xác nhận phiếu nhập kho)."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr "Dựa trên việc tạo hóa đơn dự thảo"
+msgstr "Tạo hoá đơn tự động"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr "Dựa trên hàng sắp về"
+msgstr "Dựa trên lô hàng về"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr "Dựa trên hạng mục của đơn hàng"
+msgstr "Theo các hạng mục đơn hàng"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -659,12 +659,12 @@ msgstr "Nhận thầu"
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "Nhận thầu trên"
+msgstr "Nhận thầu vào"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr "Bid Valid Until"
+msgstr "Ngày hết hạn"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1274
@@ -1069,12 +1069,12 @@ msgstr "ID"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 msgid "In Shipments"
-msgstr "Trong Lô hàng nhập"
+msgstr "Lô hàng về"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
@@ -1220,12 +1220,12 @@ msgstr "Là một Người dõi theo"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr "Nó chỉ ra rằng một lô hàng xuất kho đã hoàn thành"
+msgstr "Chỉ ra rằng lô hàng liên quan đến đơn hàng mua này đã được nhận về kho"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been validated"
-msgstr "Nó chỉ ra rằng một hóa đơn đã được xác nhận"
+msgstr "Chỉ ra rằng một hóa đơn đã được xác nhận"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -1329,17 +1329,17 @@ msgstr "Lịch sử thông điệp và liên lạc"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr "Monthly Purchases"
+msgstr "Mua hàng tháng"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Net Price"
-msgstr "Net Price"
+msgstr "Giá Net"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "New Mail"
-msgstr "New Mail"
+msgstr "Có thư mới"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1329
@@ -1357,13 +1357,13 @@ msgstr "Không có nhà cung cấp mặc định được định nghĩa cho s�
 #: code:addons/purchase/purchase.py:1325
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr "Không có nhà cung cấp được định nghĩa cho sản phẩm này !"
+msgstr "Không có nhà cung cấp được xác định cho sản phẩm này!"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Not Invoiced"
-msgstr "Không xuất hóa đơn"
+msgstr "Chưa xuất hóa đơn"
 
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
@@ -1380,7 +1380,7 @@ msgstr "Theo hóa đơn dự thảo"
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr "Theo lô hàng sắp về"
+msgstr "Theo lô hàng sắp nhận"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -1391,7 +1391,7 @@ msgstr "Theo hạng mục trên đơn hàng"
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr "Open Purchase Menu"
+msgstr "Mở Trình đơn Mua hàng"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -1437,7 +1437,7 @@ msgstr "Tình trạng đơn hàng"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr "Order of Day"
+msgstr "Đơn hàng trong ngày"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
@@ -1463,7 +1463,7 @@ msgstr "PO: %s"
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr "PO_${(object.name or '').replace('/','_')}"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1504,15 +1504,15 @@ msgid "Please note that: \n"
 " \n"
 " Lines will only be merged if: \n"
 " * Order lines are exactly the same except for the product,quantity and unit"
-msgstr "Please note that: \n"
+msgstr "Hãy lưu ý rằng: \n"
 " \n"
-" Orders will only be merged if: \n"
-" * Purchase Orders are in draft \n"
-" * Purchase Orders belong to the same supplier \n"
-" * Purchase Orders are have same stock location, same pricelist, same currency \n"
+" Các Đơn hàng sẽ chỉ được trộn nếu: \n"
+" * Tình trạng của chúng là dự thảo \n"
+" * Các đơn hàng đều mua từ cùng một nhà cung cấp \n"
+" * Đơn hàng có cùng địa điểm nhận hàng (stock), cùng bảng giá, cùng loại tiền tệ \n"
 " \n"
-" Lines will only be merged if: \n"
-" * Order lines are exactly the same except for the product,quantity and unit"
+" Các dòng (hạng mục) trong đơn hàng sẽ chỉ được trộn nếu: \n"
+" * Các dòng có nội dung hoàn toàn giống nhau, ngoại trừ sản phẩm, số lượng và đơn vị tính"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:45
@@ -1523,12 +1523,12 @@ msgstr "Vui lòng chọn nhiều đơn hàng để trộn."
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Pre-generate draft invoices based on purchase orders"
-msgstr "Tạo lại hóa đơn dự thảo dựa trên đơn hàng"
+msgstr "Tạo trước hóa đơn dự thảo dựa trên đơn hàng"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Supplier"
-msgstr "Price Per Supplier"
+msgstr "Giá mỗi nhà cung cấp"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1561,7 +1561,7 @@ msgstr "In RFQ"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr "Procurement"
+msgstr "Mua sắm/Cung ứng"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
@@ -1648,7 +1648,7 @@ msgstr "Đơn hàng được xác nhận"
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Thời gian chờ hàng mua"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
@@ -1793,7 +1793,7 @@ msgstr "RFQ"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr "RFQ & Bid"
+msgstr "RFQ & Chào thầu"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -2085,18 +2085,18 @@ msgstr "Sản phẩm \"%s\" được xác định với công ty của bạn nh�
 #: code:addons/purchase/purchase.py:1236
 #, python-format
 msgid "The selected supplier has a minimal quantity set to %s %s, you should not purchase less."
-msgstr "The selected supplier has a minimal quantity set to %s %s, you should not purchase less."
+msgstr "Nhà cung cấp được chọn có số lượng tối thiểu đươc thiết lập là %s %s, không không được mua với số lượng ít hơn thế."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1232
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr "The selected supplier only sells this product by %s"
+msgstr "Nhà cung cấp bạn chọn chỉ bán sản phẩm này theo %s"
 
 #. module: purchase
 #: help:purchase.order,state:0
 msgid "The status of the purchase order or the quotation request. A request for quotation is a purchase order in a 'Draft' status. Then the order has to be confirmed by the user, the status switch to 'Confirmed'. Then the supplier must confirm the order to change the status to 'Approved'. When the purchase order is paid and received, the status becomes 'Done'. If a cancel action occurs in the invoice or in the receipt of goods, the status becomes in exception."
-msgstr "The status of the purchase order or the quotation request. A request for quotation is a purchase order in a 'Draft' status. Then the order has to be confirmed by the user, the status switch to 'Confirmed'. Then the supplier must confirm the order to change the status to 'Approved'. When the purchase order is paid and received, the status becomes 'Done'. If a cancel action occurs in the invoice or in the receipt of goods, the status becomes in exception."
+msgstr "Tình trạng của đơn hàng bán hoặc yêu cầu chào giá. Một yêu cầu chào giá (RFQ) cũng chính là một đơn hàng mua (PO) ở tình trạng 'Dự thảo'. Khi một đơn hàng được xác nhận bởi người dùng, trạng thái của nó sẽ chuyển thành 'Đã xác nhận'. Lúc đó, nhà cung cấp phải xác nhận đơn hàng để chuyển tình trạng sang 'Đã duyệt'. Khi đơn hàng được thanh toán đầy đủ và hàng hoá/dịch vụ được nhận đủ, tình trạng của đơn hàng sẽ tự động chuyển thành 'Hoàn thành'. Nếu có hành động huỷ xảy ra đối với hoá đơn hoặc phiếu nhận hàng, trạng thái của đơn hàng sẽ chuyển sang 'Ngoại lệ'."
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -2112,7 +2112,7 @@ msgstr "Tổng giá trị"
 #: code:addons/purchase/purchase.py:422
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr "There is no default company for the current user!"
+msgstr "Không có công ty mặc định được thiết lập cho người dùng hiện tại!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1494
@@ -2123,12 +2123,12 @@ msgstr "Không có nhà cung cấp liên kết tới sản phẩm %s"
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid "This is computed as the minimum scheduled date of all purchase order lines' products."
-msgstr "This is computed as the minimum scheduled date of all purchase order lines' products."
+msgstr "Trường này sẽ được tự tính toán bằng ngày hàng về nhỏ nhất trong tất các dòng hàng (hạng mục) trong đơn hàng mua này. Ví dụ đơn hàng có 2 hàng mục: một về ngày 3/8/2015, một về ngày 9 tháng 10/2015 thì giá trị của trường này sẽ được tự động tính thành 3/8/2015."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid "This is the list of receipts that have been generated for this purchase order."
-msgstr "This is the list of receipts that have been generated for this purchase order."
+msgstr ""
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -2138,7 +2138,7 @@ msgstr "Bảng giá này sẽ được sử dụng, thay cho bảng giá mặc �
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr "Nó sẽ xác định loại đóng gói của lô hàng sắp về"
+msgstr "Thiết lập này sẽ xác định kiểu nhận hàng của lô hàng về"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
