@@ -396,7 +396,7 @@ class MrpProduction(models.Model):
             'procure_method': bom_line.procure_method,
             'price_unit': bom_line.product_id.standard_price,
             'origin': self.name,
-            'warehouse_id': source_location.get_warehouse(),
+            'warehouse_id': self.env['stock.location'].get_warehouse(source_location),
             'group_id': self.move_prod_id and self.move_prod_id.group_id.id or False,
         }
         return self.env['stock.move'].create(data)
