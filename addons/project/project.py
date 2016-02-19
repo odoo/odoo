@@ -200,10 +200,6 @@ class Project(models.Model):
     def set_template(self):
         return self.setActive(value=False)
 
-    @api.multi
-    def reset_project(self):
-        return self.setActive(value=True)
-
     def map_tasks(self, project):
         """ copy and map tasks from old to new project """
         self.ensure_one()
@@ -259,11 +255,6 @@ class Project(models.Model):
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
             }
-
-    @api.multi
-    def setActive(self, value=True):
-        """ Set a project as active/inactive, and its tasks as well. """
-        self.write({'active': value})
 
     @api.multi
     def attachment_tree_view(self):
