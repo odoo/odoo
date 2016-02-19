@@ -532,44 +532,6 @@ class Task(models.Model):
     def _get_total_hours(self):
         return self.remaining_hours
 
-    @api.v7
-    def _generate_task(self, cr, uid, tasks, ident=4, context=None):
-        return tasks._generate_task(ident=ident)
-
-    @api.v8
-    def _generate_task(self, ident=4):
-        result = ""
-        ident = ' '*ident
-        company = self.env.user.company_id
-        duration_uom = {
-            'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
-            'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
-            'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
-            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
-        }.get(company.project_time_mode_id.name.lower(), "hour(s)")
-        for task in self:
-            if task.stage_id and task.stage_id.fold:
-                continue
-            result += '''
-%sdef Task_%s():
-%s  todo = \"%.2f%s\"
-%s  effort = \"%.2f%s\"''' % (ident, task.id, ident, task.remaining_hours, duration_uom, ident, task._get_total_hours(), duration_uom)
-            start = []
-            for t2 in task.parent_ids:
-                start.append("up.Task_%s.end" % (t2.id,))
-            if start:
-                result += '''
-%s  start = max(%s)
-''' % (ident,','.join(start))
-
-            if task.user_id:
-                result += '''
-%s  resource = %s
-''' % (ident, 'User_'+str(task.user_id.id))
-
-        result += "\n"
-        return result
-
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
