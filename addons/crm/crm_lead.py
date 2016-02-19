@@ -323,7 +323,7 @@ class crm_lead(format_address, osv.osv):
         else:
             search_domain = [('team_id', '=', False)]
         # AND with the domain in parameter
-        search_domain = ['&'] + list(domain) + search_domain
+        search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('crm.stage').search(cr, uid, search_domain, order=order, limit=1, context=context)
         if stage_ids:
