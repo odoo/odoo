@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
-import time
-
 from lxml import etree
 
 from odoo import api, fields, models, tools, _
@@ -196,10 +193,6 @@ class Project(models.Model):
         AnalyticAccount.unlink()
         return res
 
-    @api.multi
-    def set_template(self):
-        return self.setActive(value=False)
-
     def map_tasks(self, project):
         """ copy and map tasks from old to new project """
         self.ensure_one()
@@ -210,49 +203,6 @@ class Project(models.Model):
                         'name': task.name}
             map_task_id[task.id] =  task.copy(defaults).id
         project.write({'tasks':[(6, 0, map_task_id.values())]})
-
-    @api.multi
-    def duplicate_template(self):
-        context = dict(self.env.context)
-        result = []
-        for proj in self:
-            context.update({'analytic_project_copy': True})
-            new_date_start = time.strftime('%Y-%m-%d')
-            new_date_end = False
-            if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = proj.copy(default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
-                                    'date_start':new_date_start,
-                                    'date':new_date_end}).id
-            result.append(new_id)
-
-        if result and len(result):
-            res_id = result[0]
-            form = self.env.ref('project.edit_project')
-            form_view_id = form.id
-            form_view = form.res_id
-            tree = self.env.ref('project.view_project')
-            tree_view_id = tree.id
-            tree_view = tree.res_id
-            search = self.env.ref('project.view_project_project_filter')
-            search_view_id = search.id
-            search_view = search.res_id
-            return {
-                'name': _('Projects'),
-                'view_type': 'form',
-                'view_mode': 'form, tree',
-                'res_model': 'project.project',
-                'view_id': False,
-                'res_id': res_id,
-                'views': [(form_view['res_id'], 'form'),(tree_view['res_id'], 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view['res_id'],
-            }
 
     @api.multi
     def attachment_tree_view(self):
