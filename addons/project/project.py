@@ -412,14 +412,6 @@ class task(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
 
-    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
-        if remaining and not planned:
-            return {'value': {'planned_hours': remaining}}
-        return {}
-
-    def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
-        return {'value': {'remaining_hours': planned - effective}}
-
     def onchange_project(self, cr, uid, id, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
