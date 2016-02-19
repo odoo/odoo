@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import urlparse
 
 from odoo import api, fields, models
 from odoo.http import request
 
 
-class actions_server(models.Model):
+class ActionsServer(models.Model):
     """ Add website option in server actions. """
     _name = 'ir.actions.server'
     _inherit = 'ir.actions.server'
@@ -43,7 +43,7 @@ class actions_server(models.Model):
     @api.model
     def _get_eval_context(self, action):
         """ Override to add the request object in eval_context. """
-        eval_context = super(actions_server, self)._get_eval_context(action)
+        eval_context = super(ActionsServer, self)._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
         return eval_context
@@ -53,5 +53,5 @@ class actions_server(models.Model):
         """ Override to allow returning response the same way action is already
         returned by the basic server action behavior. Note that response has
         priority over action, avoid using both. """
-        res = super(actions_server, self).run_action_code_multi(action, eval_context)
+        res = super(ActionsServer, self).run_action_code_multi(action, eval_context)
         return eval_context.get('response', res)
