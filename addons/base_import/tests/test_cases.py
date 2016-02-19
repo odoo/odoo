@@ -262,6 +262,7 @@ class test_convert_import_data(TransactionCase):
                     'foo,1,2\n'
                     'bar,3,4\n'
                     'qux,5,6\n'
+                    '"foo\nbar",7,8\n'
         })
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
@@ -273,6 +274,7 @@ class test_convert_import_data(TransactionCase):
             ('foo', '1', '2'),
             ('bar', '3', '4'),
             ('qux', '5', '6'),
+            ('foo\nbar', '7', '8'),
         ])
 
     def test_filtered(self):
