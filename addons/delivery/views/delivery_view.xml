@@ -240,7 +240,11 @@
                 <form string="Package">
                     <group>
                         <field name="packaging_id" domain="[('package_carrier_type', '=', context.get('current_package_carrier_type'))]"/>
-                        <field name="shipping_weight"/>
+                        <label for="shipping_weight"/>
+                        <div class="o_row">
+                            <field name="shipping_weight"/>
+                            <span>kg</span>
+                        </div>
                     </group>
                     <footer>
                         <button name="write" type="object" string="Save" class="btn btn-sm btn-primary"/>
