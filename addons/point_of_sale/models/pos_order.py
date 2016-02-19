@@ -674,7 +674,7 @@ class PosOrderLine(models.Model):
                       'Please set one before choosing a product.'))
             price = self.order_id.pricelist_id.price_get(
                 self.product_id.id, self.qty or 1.0, self.order_id.partner_id.id)[self.order_id.pricelist_id.id]
-            self.onchange_qty()
+            self._onchange_qty()
             self.price_unit = price
             self.tax_ids = self.product_id.taxes_id
 
