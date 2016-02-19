@@ -69,5 +69,23 @@
             file="account.report_agedpartnerbalance"
         />
 
+        <report 
+            id="action_report_journal"
+            model="account_extra_reports.report.journal"
+            string="Sale/Purchase Journal"
+            report_type="qweb-pdf"
+            name="account_extra_reports.report_journal"
+            file="account_extra_reports.report_journal"
+            />
+
+        <report 
+            id="action_report_partnerledger"
+            model="account_extra_reports.report_partnerledger"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account_extra_reports.report_partnerledger"
+            file="account_extra_reports.report_partnerledger"
+            />
+
     </data>
 </openerp>
