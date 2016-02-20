@@ -27,25 +27,22 @@
                     <separator/>
                     <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
                     <filter string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Leaves of Your Team Member"/>
                     <separator/>
                     <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
                     <separator/>
-                    <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
-                    <filter name="year" string="Year"
-                        domain="['|',
-'&amp;', '&amp;', ('date_to', '=', False), ('date_from', '=', False), ('holiday_status_id.active', '=', True),
-'|',
-    '&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')), ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
-    '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')), ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
-                        help="Current Year Leaves"/>
+                    <filter name="year" string="Current"
+                        domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves and Allocations"/>
                     <separator/>
                     <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="leaves" string="Leaves" domain="[('type', '=', 'remove')]"/>
+                    <filter name="allocations" string="Allocations" domain="[('type', '=', 'add')]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>

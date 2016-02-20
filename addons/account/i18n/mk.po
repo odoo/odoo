@@ -3,13 +3,13 @@
 # * account
 # 
 # Translators:
-# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-18 08:05+0000\n"
-"PO-Revision-Date: 2015-11-18 08:43+0000\n"
+"POT-Creation-Date: 2015-12-17 14:09+0000\n"
+"PO-Revision-Date: 2016-02-10 10:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    <p>A new invoice is available for you: </p>\n"
 "    \n"
@@ -74,7 +74,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Здраво ${object.partner_id.name},</p>\n\n    <p>Издадена е нова фактура: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>Референци</strong><br />\n       &nbsp;&nbsp;Број на фактура: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Вкупна сума: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Датум на фактура: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Референца на налог: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Можна е уплата преку Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Доколку имате прашања, слободно контактирајте не.</p>\n    <p>Ви благодариме што го избравте ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">     ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n </span>\n % if object.company_id.phone:\n <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n Phone:&nbsp; ${object.company_id.phone}\n </div>\n % endif\n % if object.company_id.website:\n <div>\n Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n </div>\n %endif\n <p></p>\n </div>\n </div>"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -1448,6 +1448,7 @@ msgstr "Овозможува користење на аналитичко сме
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1639,9 +1640,8 @@ msgstr "Побарај поврат"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Менаџирање на средства: Ова ви овозможува да ги управувате средствата кои се поседувани од компанија или лице. \nЈа следи амортизацијата која се прави на овие средства, и креира движење на сметката за овие ставки на амортизацијата.\n\nПрифатен приход: Ова ви овозможува да управувате со прифатениот приход на продажните производи. \nГи следи ратите поврзани со прифатениот приход и креира движење на сметка за тие ставки на рати. \n-Ова го инсталира модулот account_asset. Доколку не го означите ова поле, ќе може да правите фактурирање и плаќања, но не и сметководство (Ставки во Дневник, Контен план, ...)"
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1650,8 +1650,8 @@ msgstr "Средства"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Менаџирање на средства и прифатен приход"
+msgid "Assets management"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -2193,19 +2193,9 @@ msgid "Cashbox Lines"
 msgstr "Ставки на каса"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
-msgid "Cashbox end id"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
-msgid "Cashbox id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
-msgid "Cashbox start id"
-msgstr ""
+msgid "Cashbox"
+msgstr "Каса"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -2915,7 +2905,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_currency_id
@@ -2924,6 +2916,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_currency_id
@@ -2931,6 +2924,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_currency_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_currency_id
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -2949,19 +2943,11 @@ msgid "Currency as per company's country."
 msgstr "Валута според земјата на компанијата."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1168
-#: code:addons/account/models/account_move.py:1176
+#: code:addons/account/models/account_move.py:1180
+#: code:addons/account/models/account_move.py:1188
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Валутна разлика на разменување на девизи"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
-#: model:ir.model.fields,field_description:account.field_account_move_currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
-msgid "Currency id"
-msgstr "ИБ на валута"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -3492,7 +3478,7 @@ msgstr "Месец на доспевање"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Доспеани плаќања"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
@@ -3579,6 +3565,11 @@ msgstr "Крај од следниот месец"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
 msgid "Ending Balance"
 msgstr "Завршно салдо"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
+msgid "Ending Cashbox"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3760,7 +3751,7 @@ msgstr "Финансиска сметка"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr ""
+msgstr "Финансиски извештај"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
@@ -4430,7 +4421,7 @@ msgstr "За да избришете банкарски извод, прво м�
 msgid ""
 "In order to pay multiple invoices at once, they must belong to the same "
 "commercial partner."
-msgstr ""
+msgstr "За да се платат повеќе фактури одеднаш, тие мора да припаѓаат на истиот комерцијален партнер."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -4522,7 +4513,7 @@ msgstr "Инсталирајте повеќе урнеци на графикон
 #: model:ir.model.fields,field_description:account.field_account_config_settings_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_transfer_account_id
 msgid "Inter-Banks Transfer Account"
-msgstr ""
+msgstr "Внатрешно-банковна сметка трансфер"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_transfer_account_id
@@ -5458,12 +5449,6 @@ msgstr "Мемо:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_ids
 msgid "Messages"
 msgstr "Пораки"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_message_ids
-#: model:ir.model.fields,help:account.field_account_invoice_message_ids
-msgid "Messages and communication history"
-msgstr "Историја на пораки и комуникација"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -7473,6 +7458,11 @@ msgid "Starting Balance"
 msgstr "Почетен биланс"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
+msgid "Starting Cashbox"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
 msgstr "Состојба"
@@ -7588,6 +7578,7 @@ msgstr "Целни движења"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
@@ -9635,6 +9626,11 @@ msgstr "Листата на клиенти"
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "матична компанија"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the product list"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

@@ -25,6 +25,7 @@
         <div class="text-center o_web_settings_dashboard_apps">
             <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
             <div class="o_web_settings_dashboard_header">
+                <t t-set="installed_apps" t-value="widget.data.installed_apps"/>
                 <t t-if="installed_apps">
                     <t t-esc="installed_apps"></t>
                     <t t-if="installed_apps == 1">Installed App</t>

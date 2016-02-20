@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-27 11:58+0000\n"
+"PO-Revision-Date: 2016-01-27 12:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr ""
+msgstr "# Toimittajien laskut"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr
@@ -873,6 +873,12 @@ msgid "Cashdrawer"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -1398,6 +1404,12 @@ msgstr "Alennuksen huomautus"
 #, python-format
 msgid "Discount:"
 msgstr "Alennus:"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2140,7 +2152,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Hallitse tuotevariantteja"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -2873,6 +2885,12 @@ msgstr ""
 #, python-format
 msgid "Price"
 msgstr "Hinta"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -3614,7 +3632,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_purchase_currency_id
 msgid "Supplier Currency"
-msgstr ""
+msgstr "Toimittajan valuutta"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4231,6 +4249,12 @@ msgid "Warehouse"
 msgstr "Varasto"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
@@ -4268,13 +4292,6 @@ msgstr "Vuosi"
 #: model:product.product,name:point_of_sale.poivron_jaunes
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid ""
-"You can define another list of available currencies on the\n"
-"                                    <i>Cash Registers</i> tab of the"
 msgstr ""
 
 #. module: point_of_sale
@@ -4514,11 +4531,6 @@ msgstr "ei käytetä"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1035
 #, python-format
 msgid "paid orders"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "payment method."
 msgstr ""
 
 #. module: point_of_sale

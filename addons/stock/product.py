@@ -151,7 +151,9 @@ class product_product(osv.osv):
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
         res = {}
-        for product in self.browse(cr, uid, ids, context=context):
+        ctx = context.copy()
+        ctx.update({'prefetch_fields': False})
+        for product in self.browse(cr, uid, ids, context=ctx):
             id = product.id
             qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
             incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
@@ -387,7 +389,7 @@ class product_template(osv.osv):
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             product_tmpl_id = data['__domain'][1][2][0]
-            res[product_tmpl_id]['nbr_reordering_rules'] = int(data['product_id_count'])
+            res[product_tmpl_id]['nbr_reordering_rules'] = res[product_tmpl_id].get('nbr_reordering_rules', 0) + int(data['product_id_count'])
             res[product_tmpl_id]['reordering_min_qty'] = data['product_min_qty']
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
@@ -395,7 +397,7 @@ class product_template(osv.osv):
     def _get_product_template_type(self, cr, uid, context=None):
         res = super(product_template, self)._get_product_template_type(cr, uid, context=context)
         if 'product' not in [item[0] for item in res]:
-            res.append(('product', 'Stockable Product'))
+            res.append(('product', _('Stockable Product')))
         return res
 
     _columns = {

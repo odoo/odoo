@@ -5,13 +5,13 @@
 # Translators:
 # Kisrobert <kisrobi@gmail.com>, 2015
 # Kovács Tibor <kovika@gmail.com>, 2015
-# Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-15 20:34+0000\n"
+"PO-Revision-Date: 2016-02-12 10:49+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -1138,6 +1138,14 @@ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Szállítmány %s szállítmányozónak elküldve teljesítésre ezzel a nyomkövetési számmal %s"
 
 #. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "Szállítási módját nem továbbított a szállító  szolgáltatói weboldalára a vásárlói megrendelés nyomonkövetéséhez."
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
 msgstr "Szállítási költség"
@@ -1245,7 +1253,7 @@ msgstr "Sablonnév"
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
 msgid "The Poste"
-msgstr ""
+msgstr "A posta"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay

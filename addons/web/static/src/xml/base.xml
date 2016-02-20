@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td colspan="2" align="right">
-                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <button type="button" class='oe_button oe_form_button'>Change Password</button>
                     <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
                 </td>
             </tr>
@@ -79,12 +79,58 @@
                 <span class="oe_topbar_name"/> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+                <li><a href="#" data-menu="documentation">Documentation</a></li>
+                <li><a href="#" data-menu="support">Support</a></li>
+                <li><a href="#" data-menu="about">About</a></li>
+                <li class="divider"/>
                 <li><a href="#" data-menu="settings">Preferences</a></li>
                 <li><a href="#" data-menu="account">My Odoo.com account</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
 </t>
+
+<div t-name="UserMenu.about" class="oe_about">
+    <div class="container-fluid">
+        <div class="row">
+            <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
+                <div class="user-image">
+                    <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
+                </div>
+                <div class="user-info-block">
+                    <div class="user-heading">
+                        <h3>
+                            Version <t t-esc="db_info.server_version"/>
+                            (Community Edition)
+                        </h3>
+                        <t t-if="db_info.expiration_date">
+                            <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
+                        </t>
+                    </div>
+                    <div class="user-body">
+                        <div class="tab-content">
+                            <div id="settings" class="tab-pane active">
+                                <h4>Copyright © 2004-2015 Odoo S.A.</h4>
+                                <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
+                                <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
+                                <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
+                                <p>
+                                  <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
+                                  <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
+                                  <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+                                  <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <t t-name="WebClient.timezone_warning">
     <i class="fa fa-exclamation-triangle oe_tz_warning"></i>
@@ -149,7 +195,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="oe_debug_manager">
-        <a href="#" t-att-title='_t("Open Debug Menu")' class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
+        <a href="#" title="Open Debug Menu" class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
             <span class="fa fa-bug"/>
             <b class="caret"/>
         </a>
@@ -823,13 +869,11 @@
     ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
 </t>
 <t t-name="FieldMany2ManyTag">
-    <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="i" t-att-data-id="el['id']">
-            <t t-esc="el['name']"/>
+        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
+            <t t-esc="el['display_name']"/>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
-        <t t-set="i" t-value="i + 1"/>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -1068,13 +1112,6 @@
 <t t-name="One2Many.listview" t-extend="ListView">
     <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');
-    </t>
-
-    <t t-jquery="td.oe-actions">
-        this.removeAttr('t-if');
-    </t>
-    <t t-jquery="td.oe-actions" t-operation="prepend">
-        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     </t>
 </t>
 
@@ -1402,13 +1439,11 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <t t-foreach="widget.get('records')" t-as="record">
         <div>
-            <t t-if="widget.get('value').indexOf(record[0]) !== -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
-            </t>
-            <t t-if="widget.get('value').indexOf(record[0]) === -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            </t>
-            <t t-esc="record[1]"/>
+            <label style="font-weight: normal">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
+                       t-att-checked="(widget.get('value').indexOf(record[0]) !== -1) or null"/>
+                <t t-esc="record[1]"/>
+            </label>
         </div>
     </t>
 </t>

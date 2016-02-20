@@ -67,10 +67,6 @@ class AccountInvoiceLine(osv.Model):
     sale_layout_cat_id = openerp.fields.Many2one('sale_layout.category', string='Section')
     categ_sequence = openerp.fields.Integer(related='sale_layout_cat_id.sequence',
                                             string='Layout Sequence', store=True)
-    _defaults = {
-        'categ_sequence': 0
-    }
-
 
 class SaleOrder(osv.Model):
     _inherit = 'sale.order'
@@ -98,10 +94,6 @@ class SaleOrderLine(osv.Model):
                                          'sequence', type='integer',
                                          string='Layout Sequence', store=True)
         #  Store is intentionally set in order to keep the "historic" order.
-    }
-
-    _defaults = {
-        'categ_sequence': 0
     }
 
     _order = 'order_id, categ_sequence, sale_layout_cat_id, sequence, id'

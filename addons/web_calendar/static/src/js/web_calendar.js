@@ -630,7 +630,7 @@ var CalendarView = View.extend({
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
         } else { // if form all, get color -1
-            r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+            r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
         return r;
     },
@@ -834,6 +834,15 @@ var CalendarView = View.extend({
     },
 
     /**
+     * Get all_filters ordered by label
+     */
+    get_all_filters_ordered: function() {
+        return _.values(this.all_filters).sort(function(f1,f2) {
+            return _.string.naturalCmp(f1.label, f2.label);
+        });
+    },
+
+    /**
      * Updates record identified by ``id`` with values in object ``data``
      */
     update_record: function(id, data) {
@@ -843,7 +852,7 @@ var CalendarView = View.extend({
         var index = this.dataset.get_id_index(id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).done(function() {
+            this.dataset.write(event_id, data, {}).always(function() {
                 if (is_virtual_id(event_id)) {
                     // this is a virtual ID and so this will create a new event
                     // with an unknown id for us.

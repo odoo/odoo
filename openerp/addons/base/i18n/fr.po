@@ -4,21 +4,23 @@
 # 
 # Translators:
 # Benjamin Delagoutte <ben@ampletus.fr>, 2015
+# Fabien Pinckaers <fp@openerp.com>, 2015
 # Leandre Berger <leandre.berger@gmail.com>, 2015
 # lucasdeliege <deliegelucas@gmail.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
 # Martin Malorni <mmalorni@gmail.com>, 2015
-# Martin Trigaux, 2015
+# Martin Trigaux, 2015-2016
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 # Sébastien Versailles <sve@openerp.com>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
+# timo bellanger <bellanger.timo@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-25 09:38+0000\n"
+"PO-Revision-Date: 2016-02-05 09:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1048,7 +1050,7 @@ msgid ""
 "accounting SPED, fiscal SPED and PAF ECF that are still missing as September \n"
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
-msgstr "\nModule de base pour la localisation Brésilienne\n=====================================\n\nCe module fournit :\n* a charte de compte générique brésilienne ;\n* les taxes brésiliennes telles que :\n    * IPI,\n    * ICMS,\n    *  PIS,\n    * COFINS,\n    * ISS,\n    * IR,\n    * IRPJ,\n    * CSLL.\n\nLe champ tax_discount a aussi été ajouté dans les objets account.tax.template et account.tax\npour permettre le calcul correct de certaines TVA brésiliennes telle que l'ICMS. L'assistant de création\ndu plan comptable a été étendu afin de prendre en compte correctement ces nouvelles données.\n\nIl est important de noter cependant que plusieurs fonctionnalités sont manquant dans ce module\npour permettre d'utiliser Odoo correctement au Brésil. Ces fonctionnalités (tel que la facturation \nfiscale électronique, qui est  déjà opérationnelle) sont apportées par plus de 15 modules du projet\nLaunchpad de localisation brésilienne https://launchpad.net/openerp.pt-br-localiz et leurs dépendances \ndans la branche extra-addons. Ces modules visent à ne pas briser la remarquable modularité d'Odoo ; \nc'est pour cela qu'ils sont petits mais nombreux. Une des raisons de maintenir ces modules à part est que\nles responsables de la localisation ont besoin des droits de commit afin de rester agile et pouvoir terminer\ncette localisation; en effet, des compagnies financent les requis légaux restants (comme les livres fiscaux, \nla comptabilité SPED, la fiscalité SPED et le PAF ECF encore manquants en date de Septembre 2011).\nCes modules sont strictement distribués sous licence AGPL v3 et aujourd'hui ne permettent pas des droits\npayants pour une utilisation en ligne de \"modules privés\".\n"
+msgstr "\nModule de base pour la localisation brésilienne\n=========================================\n\nCe module fournit :\n* la charte de compte générique brésilienne ;\n* les taxes brésiliennes telles que :\n    * IPI,\n    * ICMS,\n    * PIS,\n    * COFINS,\n    * ISS,\n    * IR,\n    * IRPJ,\n    * CSLL.\n\nLe champ tax_discount a aussi été ajouté dans les objets account.tax.template et account.tax pour permettre le calcul correct de certaines TVA brésiliennes telle que l'ICMS. L'assistant de création du plan comptable a été étendu afin de prendre en compte correctement ces nouvelles données.\n\nIl est important de noter cependant que plusieurs fonctionnalités sont manquant dans ce module pour permettre d'utiliser Odoo correctement au Brésil. Ces fonctionnalités (tel que la facturation fiscale électronique, qui est  déjà opérationnelle) sont apportées par plus de 15 modules du projet Launchpad de localisation brésilienne https://launchpad.net/openerp.pt-br-localiz et leurs dépendances dans la branche extra-addons. Ces modules visent à ne pas briser la remarquable modularité d'Odoo ; \nc'est pour cela qu'ils sont petits mais nombreux. Une des raisons de maintenir ces modules à part est que les responsables de la localisation ont besoin des droits de commit afin de rester agile et pouvoir terminer cette localisation; en effet, des compagnies financent les requis légaux restants (comme les livres fiscaux, la comptabilité SPED, la fiscalité SPED et le PAF ECF encore manquants en date de Septembre 2011).\nCes modules sont strictement distribués sous licence AGPL v3 et aujourd'hui ne permettent pas des droits payants pour une utilisation en ligne de \"modules privés\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_deposit
@@ -1060,7 +1062,7 @@ msgid ""
 "The amount deposited to your bank will then appear as a single transaction on your bank statement.\n"
 "When you proceed with the reconciliation, simply select the corresponding batch deposit to reconcile the payments.\n"
 "    "
-msgstr "\nBordereaux de dépôt\n===============\nUn bordereau de dépôt regroupe des chèques reçus avant le dépôt en banque.\nLe montant déposé à la banque apparaît alors comme une seule transaction sur le relevé bancaire.\nLors de la réconciliation, il suffit de sélectionner le bordereau de dépôt correspondant."
+msgstr "\nBordereaux de dépôt:\n\nUn bordereau de dépôt regroupe des chèques reçus avant le dépôt en banque.\nLe montant déposé à la banque apparaît alors comme une seule transaction sur le relevé bancaire.\nLors de la réconciliation, il suffit de sélectionner le bordereau de dépôt correspondant."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1660,7 +1662,7 @@ msgid ""
 "31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
 "Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
 "  "
-msgstr "\nPlan Comptable Indien.\n====================================\n\nIndian accounting chart and localization.\n\nOdoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n\nNote: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n31st March, 2011. The Format has done away with earlier two options of format of Balance\nSheet, now only Vertical format has been permitted Which is Supported By Odoo."
+msgstr "\nPlan comptable indien.\n====================\n\nLocalisation et plan comptable pour l'Inde.\n\nOdoo permet de gérer la comptabilité indienne en fournissant 2 formats de plan comptable, c'est-à-dire ;e plan comptable indien - Standard et le plan comptable indien - Schedule VI.\n\nNote: Le plan Schedule VI a été révisé par MCA et il est applicable pour tous les bilans faits après le 31 mars 2011. Seul le format vertical est maintenant permis et il est supporté par Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -1704,7 +1706,7 @@ msgid ""
 "\n"
 "You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.\n"
 "    "
-msgstr "\nFacturation & Paiements\n====================\nLe système de facturation ergonomique d'Odoo, permet de garder une trace comptable, même sans être pas un expert-comptable. Il fournit un suivi aisé des fournisseurs et clients.\n\nOn peut utiliser cette comptabilité simplifiée pour travailler avec un compte externe et de mettre à jour les livres. On peut toujours garder la trace des paiements. Ce module offre également une méthode facile d'enregistrer les paiements, sans avoir à saisir des résumés complets de compte."
+msgstr "\nFacturation & Paiements\n=====================\nLe système de facturation ergonomique d'Odoo permet de garder une trace comptable, même sans être un expert-comptable. Il fournit un suivi aisé des fournisseurs et clients.\n\nOn peut utiliser cette comptabilité simplifiée pour travailler avec un comptable externe et de mettre à jour les livres. On peut toujours garder la trace des paiements. Ce module offre également une méthode facile d'enregistrer les paiements, sans avoir à saisir des résumés complets de compte."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -1725,7 +1727,7 @@ msgid ""
 "\n"
 "Link module to map leads to issues\n"
 "        "
-msgstr "\nDes Pistes aux Questions\n===================\n\nModule de liaison pour faire correspondre les pistes et les questions"
+msgstr "\nDes pistes aux incidents\n=====================\n\nModule de liaison pour faire correspondre les pistes et les incidents"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -1754,7 +1756,7 @@ msgid ""
 "going through the retailer's warehouse. In this case no\n"
 "internal transfer document is needed.\n"
 "\n"
-msgstr "\nGérer les commandes à livraison directe \n==============================\n\nCe module ajoute un type de livraison pré-configuré ou\nle chemin d'approvisionnement permet de configurer la livraison directe.\n\nLors d'une livraison directe, les marchandises sont directement transférées\ndu fournisseur au client sans passer par l'entrepôt du détaillant. \nDans ce cas, aucun document de transfert interne est nécessaire.\n"
+msgstr "\nGérer les commandes à livraison directe\n===================================\n\nCe module ajoute un type de livraison pré-configuré où\nle chemin d'approvisionnement permet de configurer la livraison directe.\n\nLors d'une livraison directe, les marchandises sont directement transférées\ndu fournisseur au client sans passer par l'entrepôt du détaillant. \nDans ce cas, aucun document de transfert interne est nécessaire.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -1776,7 +1778,7 @@ msgid ""
 "\n"
 "This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.\n"
 "    "
-msgstr "\nGérer les dépenses des employés\n============================\n\nCette application permet de gérer les dépenses quotidiennes des employés. Elle donne accès aux notes de frais des employés. Elle donne le droit de compléter, de valider ou refuser les notes de frais . Après validation, elle crée une facture pour l'employé.\nL'employé peut saisir ses propres dépenses, que le flux de validation place automatiquement dans la comptabilité après la validation des responsables.\n\nL'ensemble du flux est mis en œuvre de la manière suivante:\n---------------------------------\n* Brouillon des dépenses\n* Confirmation de la feuille par le salarié\n* Validation par son responsable\n* Validation par le comptable et création des écritures comptables\n\nCe module utilise également la comptabilité analytique. Il est compatible avec la facturation du module 'Feuille de temps' de sorte qu'on est en mesure de refacturer automatiquement les charges aux clients si on travaille par projet."
+msgstr "\nGérer les dépenses des employés\n==============================\n\nCette application permet de gérer les dépenses quotidiennes des employés. Elle donne accès aux notes de frais des employés. Elle donne le droit de compléter, de valider ou refuser les notes de frais. Après validation, elle crée une facture pour l'employé.\nL'employé peut saisir ses propres dépenses, que le flux de validation place automatiquement dans la comptabilité après la validation des responsables.\n\nL'ensemble du flux est mis en œuvre de la manière suivante :\n-----------------------------------------------------------------------------------------\n* Brouillon des dépenses\n* Confirmation de la feuille par le salarié\n* Validation par son responsable\n* Validation par le comptable et création des écritures comptables\n\nCe module utilise également la comptabilité analytique. Il est compatible avec la facturation du module \"Feuille de temps\" de sorte qu'on est en mesure de refacturer automatiquement les charges aux clients si on travaille par projet."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase
@@ -1798,7 +1800,7 @@ msgid ""
 "* Receipt Analysis\n"
 "* Purchase Analysis\n"
 "    "
-msgstr "\nGérer  facilement les besoins en marchandises par bons de commande\n==================================================\n\nLa gestion des achats permet de suivre les demandes de prix aux fournisseurs et de les convertir en bons de commande si nécessaire.\nOdoo a plusieurs méthodes de suivi des factures et de suivi de la réception des produits commandés. On peut gérer des livraisons partielles, on peut donc garder la trace des éléments encore à livrer dans les commandes et on peut émettre automatiquement des rappels.\n\nLes règles de gestion de la reconstitution des ressources d'Odoo permettent de générer des brouillons d'ordres d'achat automatiquement, on peut aussi configurer un simple processus activé par des besoins de production courants.\n\nLes Tableaux de bord / Rapports de Gestion des Achats comprendront:\n-------------------------------------------------- -------\n* Les demande de devis\n* Les commandes en attente d'approbation\n* Les achats mensuels par catégorie\n* L'analyse des réceptions\n* L'analyse des achats"
+msgstr "\nGérer facilement les besoins en marchandises par bons de commande\n==============================================================\n\nLa gestion des achats permet de suivre les demandes de prix aux fournisseurs et de les convertir en bons de commande si nécessaire.\nOdoo a plusieurs méthodes de suivi des factures et de suivi de la réception des produits commandés. On peut gérer des livraisons partielles, on peut donc garder la trace des éléments encore à livrer dans les commandes et on peut émettre automatiquement des rappels.\n\nLes règles de gestion de la reconstitution des ressources d'Odoo permettent de générer des ordres d'achat en brouillon automatiquement, on peut aussi configurer un simple processus activé par des besoins de production courants.\n\nLes tableaux de bord / rapports de gestion des achats comprennent :\n-----------------------------------------------------------------------------------------------------\n* Les demande de devis\n* Les commandes en attente d'approbation\n* Les achats mensuels par catégorie\n* L'analyse des réceptions\n* L'analyse des achats"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -2056,7 +2058,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr "\nModule pour automatiser les lettres de relance pour les factures impayées, avec rappels à plusieurs niveaux.\n===========================================================================================================\n\nVous pouvez définir vos différents niveaux de rappel par le menu :\n---------------------------------------------------------------------------------------------\n    Configuration / Suivi / Niveaux de suivi\n    \nUne fois que c'est défini, vous pouvez automatiquement imprimer les rappels chaque jour par un simple clic sur le menu:\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n    Paiement suivi / Envoyer un message et des lettres\n\nIl va générer un PDF / envoyer des courriels / fixer des actions manuelles selon les différents niveaux de rappel définis. Vous pouvez définir des politiques différentes pour différentes sociétés.\n\nNotez que si vous souhaitez vérifier le niveau de suivi pour un partenaire donné ou un compte, vous pouvez le faire à partir du menu:\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n    Rapports / Comptabilité / ** Analyse des suivis\n"
+msgstr "\nModule automatisant les lettres de relance pour les factures impayées, avec rappels à plusieurs niveaux.\n===========================================================================================================\n\nVous pouvez définir vos différents niveaux de rappel par le menu :\n---------------------------------------------------------------------------------------------\n    Configuration / Suivi / Niveaux de suivi\n    \nUne fois que c'est défini, vous pouvez automatiquement imprimer les rappels chaque jour par un simple clic sur le menu:\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n    Paiement suivi / Envoyer un message et des lettres\n\nIl va générer un PDF / envoyer des courriels / fixer des actions manuelles selon les différents niveaux de rappel définis. Vous pouvez définir des politiques différentes pour différentes sociétés.\n\nNotez que si vous souhaitez vérifier le niveau de suivi pour un partenaire donné ou un compte, vous pouvez le faire à partir du menu:\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n    Rapports / Comptabilité / ** Analyse des suivis\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -3556,7 +3558,7 @@ msgid ""
 "- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-msgstr "\nModule de prise en compte de la numérisation de codes à barres et de leur analyse.\n\nNumérisation\n --------\n Utiliser un scanner USB (qui imite les entrées clavier) afin de travailler avec les codes à barres dans Odoo.\n Le scanner doit être configuré pour n'utiliser ni préfixe ni un retour chariot ou un onglet comme suffixe.\n Le retard entre chaque entrée de caractère doit être inférieur ou égal à 50 millisecondes.\n La plupart des lecteurs de codes barres fonctionneront immédiatement.\n S'assurer que le scanner utilise la même disposition de clavier que le celui sur lequel il est branché.\n Soit par la mise à US QWERTY (valeur par défaut pour la plupart des lecteurs), soit en changeant la disposition de clavier du scanner (consulter le manuel).\n\n Parsing\n -------\n Les codes-barres sont interprétées en utilisant les règles définies par une nomenclature.\n Il présente les caractéristiques suivantes:\n - Modèles pour identifier les codes à barres contenant une valeur numérique (ex : poids, prix)\n - Définition des alias de codes à barres qui permettent d'identifier le même produit avec différents codes à barres\n - Support pour les codages EAN-13, EAN-8 et UPC-A\n"
+msgstr "\nModule de prise en compte de la numérisation de codes à barres et de leur analyse.\n\nNumérisation\n------------\nUtiliser un scanner USB (qui imite les entrées clavier) afin de travailler avec les codes à barres dans Odoo.\nLe scanner doit être configuré pour n'utiliser ni préfixe ni un retour chariot ou un onglet comme suffixe.\nLe retard entre chaque entrée de caractère doit être inférieur ou égal à 50 millisecondes.\nLa plupart des lecteurs de codes barres fonctionneront immédiatement.\nS'assurer que le scanner utilise la même disposition de clavier que le celui sur lequel il est branché.\nSoit par la mise à US QWERTY (valeur par défaut pour la plupart des lecteurs), soit en changeant la disposition de clavier du scanner (consulter le manuel).\n\nParsing\n-------\nLes codes-barres sont interprétés en utilisant les règles définies par une nomenclature.\nIl présente les caractéristiques suivantes:\n- Modèles pour identifier les codes à barres contenant une valeur numérique (ex : poids, prix)\n- Définition des alias de codes à barres qui permettent d'identifier le même produit avec différents codes à barres\n- Support pour les codages EAN-13, EAN-8 et UPC-A\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -8306,14 +8308,6 @@ msgid "Enable Light Multi Company"
 msgstr "Valider le Multi-sociétés Léger"
 
 #. module: base
-#: code:addons/base/res/res_config.py:479
-#, python-format
-msgid ""
-"Enabling this feature will install the following paying application(s) : \n"
-"%s"
-msgstr "Activer cette fonctionnalité implique l'installation de(s) application(s) payante(s) :\n%s"
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
 msgstr "Anglais (AU)"
@@ -8994,7 +8988,7 @@ msgstr "Comptabilité - France"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
-msgstr "Rapports Comptables - France"
+msgstr "France - Rapports Comptables"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9366,7 +9360,7 @@ msgstr "Groupes (pas de groupe = global)"
 #. module: base
 #: model:res.country,name:base.gp
 msgid "Guadeloupe (French)"
-msgstr "Gouadeloupe (Française)"
+msgstr "Guadeloupe (Française)"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -17347,8 +17341,8 @@ msgstr "Éléments de travail "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
-msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr "Intermédiaire de paiement Worldline SIPS pour les paiements en ligne"
+msgid "Worldline SIPS"
+msgstr "Worldline SIPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write

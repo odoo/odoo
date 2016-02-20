@@ -115,6 +115,28 @@
                     </table>
                 </div>
             </div>
+            
+            <div class="row" t-if="o.tax_line_ids">
+                <div class="col-xs-6">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Tax</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.tax_line_ids" t-as="t">
+                                <td><span t-field="t.name"/></td>
+                                <td class="text-right">
+                                    <span t-field="t.amount"
+                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <p t-if="o.comment">
                 <strong>Comment:</strong>

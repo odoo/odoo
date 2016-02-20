@@ -3,8 +3,10 @@ odoo.define('web.planner.common', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var dom_utils = require('web.dom_utils');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
+var session = require('web.session');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
@@ -55,7 +57,6 @@ var PlannerDialog = Widget.extend({
         this._super(parent);
         this.planner = planner;
         this.cookie_name = this.planner.planner_application + '_last_page';
-        this.set('progress', 0);
         this.pages = [];
         this.menu_items = [];
     },
@@ -65,7 +66,9 @@ var PlannerDialog = Widget.extend({
     willStart: function() {
         var self = this;
         var res = this._super.apply(this, arguments).then(function() {
-            return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]);
+            return (new Model('web.planner')).call('render',
+                [self.planner.view_id[0], self.planner.planner_application],
+                {context: session.user_context});
         }).then(function(template) {
             self.$res = $(template);
         });
@@ -74,11 +77,6 @@ var PlannerDialog = Widget.extend({
     start: function() {
         var self = this;
         return this._super.apply(this, arguments).then(function() {
-            self.$el.on('keyup', "textarea", function() {
-                if (this.scrollHeight != this.clientHeight) {
-                    this.style.height = this.scrollHeight + "px";
-                }
-            }); 
             self.$res.find('.o_planner_page').andSelf().filter('.o_planner_page').each(function(index, dom_page) {
                 var page = new Page(dom_page, index);
                 self.pages.push(page);
@@ -113,7 +111,18 @@ var PlannerDialog = Widget.extend({
             self.trigger('planner_progress_changed', self.get('progress'));
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
-        this.set('progress', this.planner.progress); // set progress to trigger initial UI update
+        // set progress to trigger initial UI update
+        var initial_progress = false;
+        if (!this.planner.progress) {
+            var total_pages = 0;
+            this.pages.forEach(function(page) {
+                if (! page.hide_mark_as_done) {
+                    total_pages++;
+                }
+            });
+            initial_progress = parseInt(( 1 / (total_pages + 1)) * 100, 10);
+        }
+        this.set('progress', initial_progress || this.planner.progress);
     },
     _render_done_page: function (page) {
         var mark_as_done_button = this.$('.mark_as_done')
@@ -264,6 +273,7 @@ var PlannerDialog = Widget.extend({
         return result;
     },
     _display_page: function(page_id) {
+        var self = this;
         var mark_as_done_button = this.$('button.mark_as_done');
         var next_button = this.$('a.btn-next');
         var page = this._find_page_by_id(page_id);
@@ -299,7 +309,10 @@ var PlannerDialog = Widget.extend({
         this.planner.data.last_open_page = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
         this.$(".modal-body").scrollTop("0");
-        autosize(this.$("textarea"));
+
+        this.$('textarea').each(function () {
+            dom_utils.autoresize($(this), {parent: self});
+        });
 
         this.$('.o_currently_shown_page').text(this.currently_shown_page.title);
     },
@@ -383,9 +396,9 @@ var PlannerDialog = Widget.extend({
                 done_pages++;
             }
         });
-
-        var percent = parseInt((done_pages / total_pages) * 100, 10);
+        var percent = parseInt(( (done_pages + 1) / (total_pages + 1)) * 100, 10);
         this.set('progress', percent);
+
         this.planner.progress = percent;
         // save data and progress in database
         this._save_planner_data();
@@ -410,52 +423,8 @@ var PlannerDialog = Widget.extend({
     }
 });
 
-var PlannerHelpMixin = {
-
-    on_menu_help: function(ev) {
-        ev.preventDefault();
-
-        var menu = $(ev.currentTarget).data('menu');
-        if (menu === 'about') {
-            if (!odoo.db_info) {
-                var self = this;
-                this.rpc("/web/webclient/version_info", {}).done(function(db_info) {
-                    self.on_menu_help_about(db_info);
-                });
-            } else {
-                this.on_menu_help_about(odoo.db_info);
-            }
-        } else if (menu === 'documentation') {
-            window.open('https://www.odoo.com/documentation/user', '_blank');
-        } else if (menu === 'planner') {
-            if (this.dialog) this.show_dialog();
-        } else if (menu === 'support') {
-            if (odoo.db_info && odoo.db_info.server_version_info[5] === 'c') {
-                window.open('https://www.odoo.com/buy', '_blank');
-            } else {
-                window.location.href = 'mailto:help@odoo.com';
-            }
-        }
-    },
-
-    on_menu_help_about: function(db_info) {
-        var $help = $(QWeb.render("PlannerLauncher.about", {db_info: db_info}));
-        $help.find('a.oe_activate_debug_mode').click(function (e) {
-            e.preventDefault();
-            window.location = $.param.querystring( window.location.href, 'debug');
-        });
-        new Dialog(this, {
-            size: 'medium',
-            dialogClass: 'o_act_window',
-            title: _t("About"),
-            $content: $help
-        }).open();
-    },
-};
-
 return {
     PlannerDialog: PlannerDialog,
-    PlannerHelpMixin: PlannerHelpMixin,
 };
 
 });

@@ -8,7 +8,7 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     @api.multi
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id', 'product_uom')
     def product_id_change_margin(self):
         for line in self:
             if line.order_id.pricelist_id:
@@ -61,7 +61,7 @@ class sale_order(osv.osv):
 
     _columns = {
         'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and the cost.", store={
-                'sale.order.line': (_get_order, ['margin', 'purchase_price'], 20),
+                'sale.order.line': (_get_order, ['margin', 'purchase_price', 'order_id'], 20),
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
                 }, digits_compute= dp.get_precision('Product Price')),
     }

@@ -3,13 +3,14 @@
 # * crm_partner_assign
 # 
 # Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-20 19:48+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-27 18:26+0000\n"
+"Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n\n\n<p>Hola,</p>\n\n\n<p>Hemos sido contactados por los clientes potenciales que se encuentran en su región. Por lo tanto, los siguientes cables han sido asignados a ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n<li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Por favor contacta a tu <a href=\"${object.get_portal_url()}\">Portal Asociado</a> para obtener más detalles. En cada plomo son dos botones en la esquina superior izquierda que debe pulsar después de haber contactado con el plomo: \"Estoy interesado\" y \"no me interesa\".</p>\n% más:\n<p>\nUsted no tiene todavía un acceso al portal a nuestra base de datos. Por favor contactar\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email y 'tu cuenta de administrador %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) o 'nosotros'}.\n</p>\n% terminara si\n<p>El plomo se enviará a otra pareja si no se comunica con la ventaja antes de los 20 días.</p>\n\n<p>Gracias,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | seguro o ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: Parece que usted no tiene un administrador de cuentas asignado a usted, por favor póngase en contacto con nosotros.\n% terminara si"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -117,12 +118,12 @@ msgstr "Activo"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_date_assign
 msgid "Assign Date"
-msgstr ""
+msgstr "Asignar Fecha"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Asignar Mes"
 
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
@@ -137,7 +138,7 @@ msgstr "Fecha de asignación"
 #. module: crm_partner_assign
 #: model:crm.stage,name:crm_partner_assign.stage_portal_lead_assigned
 msgid "Assigned"
-msgstr ""
+msgstr "Asignado"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
@@ -158,12 +159,12 @@ msgstr "Empresa asignada"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Asignación Automática"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_forward_to_partner_body
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Desinfectar automáticamente el contenido HTML"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probability
@@ -173,7 +174,7 @@ msgstr "Probabilidad media"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Avg. of Probability"
-msgstr ""
+msgstr "Promedio de Probabilidad"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
@@ -183,7 +184,7 @@ msgstr "Informe de iniciativas CRM"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partner Report"
-msgstr ""
+msgstr "Reporte de socios CRM"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
@@ -277,12 +278,12 @@ msgstr "Nombre del cliente"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr ""
+msgstr "Fecha de Asociación"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr ""
+msgstr "Fecha de Revisión"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_open
@@ -318,7 +319,7 @@ msgstr "Nombre desplegado"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "¿Usted se ha comunicado con el cliente?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
@@ -370,7 +371,7 @@ msgstr "Longitud Geo"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolocalización"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
@@ -401,13 +402,13 @@ msgstr "Alta"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "No estoy interesado"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "No estoy interesado"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
@@ -428,7 +429,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Implementado por"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
@@ -536,7 +537,7 @@ msgstr "Análisis de iniciativas"
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_9621
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "Level"
-msgstr ""
+msgstr "Nivel"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
@@ -736,7 +737,7 @@ msgstr "Vendedor"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form

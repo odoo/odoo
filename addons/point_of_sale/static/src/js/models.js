@@ -6,6 +6,7 @@ var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var core = require('web.core');
 var Model = require('web.DataModel');
+var formats = require('web.formats');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -336,7 +337,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.journal',
-        fields: [],
+        fields: ['type', 'sequence'],
         domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
         loaded: function(self, journals){
             var i;
@@ -1070,8 +1071,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         this.product = options.product;
         this.price   = options.product.price;
-        this.quantity = 1;
-        this.quantityStr = '1';
+        this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
         this.type = 'unit';
@@ -1092,10 +1092,11 @@ exports.Orderline = Backbone.Model.extend({
     clone: function(){
         var orderline = new exports.Orderline({},{
             pos: this.pos,
-            order: null,
+            order: this.order,
             product: this.product,
             price: this.price,
         });
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
@@ -1134,7 +1135,8 @@ exports.Orderline = Backbone.Model.extend({
             if(unit){
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    var decimals = this.pos.dp['Product Unit of Measure'];
+                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1258,9 +1260,8 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_display_price: function(){
-        return this.get_base_price();
         if (this.pos.config.iface_tax_included) {
-            return this.get_all_prices().priceWithTax;
+            return this.get_price_with_tax();
         } else {
             return this.get_base_price();
         }
@@ -1525,7 +1526,7 @@ exports.Order = Backbone.Model.extend({
         return this;
     },
     save_to_db: function(){
-        if (!this.init_locked) {
+        if (!this.temporary && !this.init_locked) {
             this.pos.db.save_unpaid_order(this);
         } 
     },
@@ -1536,6 +1537,19 @@ exports.Order = Backbone.Model.extend({
         this.session_id    = json.pos_session_id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
+
+        if (json.fiscal_position_id) {
+            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+                return fp.id === json.fiscal_position_id;
+            });
+
+            if (fiscal_position) {
+                this.fiscal_position = fiscal_position;
+            } else {
+                console.error('ERROR: trying to load a fiscal position not available in the pos');
+            }
+        }
+
         if (json.partner_id) {
             client = this.pos.db.get_partner_by_id(json.partner_id);
             if (!client) {

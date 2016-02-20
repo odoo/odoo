@@ -6,15 +6,18 @@
 # fausthuang, 2015
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
+# wxb <bd5dml@gmail.com>, 2015
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-21 10:08+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,13 +104,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr "2.7GHz的四核Intel Corei5\n睿频加速可达3.2GHz\n8GB(二4GB) 内存\n1TB硬盘\n英特尔Iris 显卡"
+msgstr "2.7GHz的四核Intel Corei5\n可睿频加速到3.2GHz\n8GB(2*4GB) 内存\n1TB硬盘\n英特尔Iris 显卡"
 
 #. module: product
 #: model:product.product,name:product.product_product_52
 #: model:product.template,name:product.product_product_52_product_template
 msgid "30m RJ45 wire"
-msgstr "30米 RJ45 缆线"
+msgstr "30米 RJ45 网线"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -275,7 +278,7 @@ msgstr "有效"
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
-msgstr "全选"
+msgstr "All"
 
 #. module: product
 #: code:addons/product/pricelist.py:283
@@ -340,7 +343,7 @@ msgstr "应用于"
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "存档"
+msgstr "归档"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -575,7 +578,7 @@ msgstr "特点"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr "收费的iPod/iPhone"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -684,6 +687,12 @@ msgstr "一体机"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "电脑"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1411,14 +1420,14 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品图片规格(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -1436,7 +1445,7 @@ msgstr "开发中"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
-msgstr "单独校准真正的贴近生活的色彩。"
+msgstr "单独校准逼真的色彩。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1475,7 +1484,7 @@ msgstr "内部分类"
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr "位置"
+msgstr "内部参考"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1497,7 +1506,7 @@ msgstr "是否关注者"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr "是一个多规格产品"
+msgstr "是一个产品变型"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1662,13 +1671,13 @@ msgstr "管理价格表项"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "管理产品包装"
+msgstr "管理产品包装形式"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品规格"
+msgstr "管理产品变型"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1898,7 +1907,7 @@ msgstr "包装类型"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr "包装"
+msgstr "包装形式"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -2208,7 +2217,7 @@ msgstr "计量单位"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
@@ -2216,7 +2225,7 @@ msgstr "产品系列"
 #: model:ir.ui.menu,name:product.menu_products
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "系列产品"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2297,7 +2306,7 @@ msgstr "数量"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity by Package"
-msgstr "包装数量"
+msgstr "每包裹的数量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2497,6 +2506,12 @@ msgstr "序号"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "服务器"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2833,7 +2848,7 @@ msgstr "演讲者有30英尺的距离，这样你就可以享受了没有电线�
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can put by pallet or box."
-msgstr "您可以放入货板或箱子的产品数量。"
+msgstr "您可以放入托盘或箱子的产品数量。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2845,7 +2860,7 @@ msgstr "这体积是m3"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr "以 Kg（公斤）表示内容物重量，不包含任何的包装等。"
+msgstr "以 Kg（公斤）表示内容物重量，不包含任何的包装形式等。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2963,7 +2978,7 @@ msgstr "类型"
 #: model:product.product,name:product.product_product_53
 #: model:product.template,name:product.product_product_53_product_template
 msgid "TypeMatrix Dvorak Keyboard"
-msgstr "TypeMatrix德沃夏克键盘"
+msgstr "TypeMatrix Dvorak 键盘"
 
 #. module: product
 #: model:product.product,name:product.product_product_48
@@ -3075,7 +3090,7 @@ msgstr "未读消息计数器"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "有效"
+msgstr "确认"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3090,36 +3105,36 @@ msgstr "值"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Extra Price"
-msgstr "规格附加价格"
+msgstr "变型附加价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr "系列图片"
+msgstr "变型图片"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr "系列信息"
+msgstr "变型信息"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr "系列价格"
+msgstr "变型价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr "系列值"
+msgstr "变型值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "变动"
+msgstr "变型"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3201,7 +3216,7 @@ msgstr "网络摄像头"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr "重要性"
+msgstr "重量"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3221,7 +3236,7 @@ msgstr "一个播放列表是不够的。"
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "当此字段填写，供应商的数据只适用于变体。"
+msgstr "当此字段填写，供应商的数据只适用于变型。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

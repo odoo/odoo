@@ -1,10 +1,11 @@
 odoo.define('website_sale.cart', function (require) {
 "use strict";
 
+var base = require('web_editor.base');
 var core = require('web.core');
 var _t = core._t;
 
-var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
+var shopping_cart_link = $('ul#top_menu li a[href$="/shop/cart"]');
 var shopping_cart_link_counter;
 shopping_cart_link.popover({
     trigger: 'manual',
@@ -100,9 +101,12 @@ $('.oe_website_sale').each(function () {
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
         var product_ids = [];
-        var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").first();
-        product_dom.data("attribute_value_ids").forEach(function(entry) {
-            product_ids.push(entry);});
+        var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]").last();
+        if (!product_dom.length) {
+            return;
+        }
+        _.each(product_dom.data("attribute_value_ids"), function(entry) {
+            product_ids.push(entry[0]);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
         if ($("#product_detail").length) {
@@ -131,7 +135,7 @@ $('.oe_website_sale').each(function () {
           };
     })();
 
-    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function () {
+    $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
       var $input = $(this);
         if ($input.data('update_change')) {
             return;
@@ -146,9 +150,9 @@ $('.oe_website_sale').each(function () {
       clickwatch(function(){
 
         $dom_optional.each(function(){
+            $(this).find('.js_quantity').text(value);
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
-        if (isNaN(value)) value = 0;
         $input.data('update_change', true);
 
         ajax.jsonRpc("/shop/cart/update_json", 'call', {
@@ -201,17 +205,21 @@ $('.oe_website_sale').each(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().find("input");
+        var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
-        $input.val(quantity > min ? (quantity < max ? quantity : max) : min);
-        $('input[name="'+$input.attr("name")+'"]').val(quantity > min ? (quantity < max ? quantity : max) : min);
+        // if they are more of one input for this product (eg: option modal)
+        $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
+            var $prod = $(this).closest('*:has(input[name="product_id"])');
+            return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
+        }).val(quantity > min ? (quantity < max ? quantity : max) : min);
         $input.change();
         return false;
     });
 
     $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
-        if (!event.isDefaultPrevented()) {
+        if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
             $(this).closest('form').submit();
         }
     });
@@ -308,11 +316,11 @@ $('.oe_website_sale').each(function () {
         if (product_id) {
             $parent.removeClass("css_not_available");
             $product_id.val(product_id);
-            $parent.find(".js_check_product").removeAttr("disabled");
+            $parent.find("#add_to_cart").removeClass("disabled");
         } else {
             $parent.addClass("css_not_available");
             $product_id.val(0);
-            $parent.find(".js_check_product").attr("disabled", "disabled");
+            $parent.find("#add_to_cart").addClass("disabled");
         }
     });
 
@@ -324,19 +332,23 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
+    var state_options = $("select[name='state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var $select = $("select[name='state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='state_id']");
+        state_options.detach();
+        var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='country_id']").change();
 
+    var shipping_state_options = $("select[name='shipping_state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='shipping_country_id']", function () {
-        var $select = $("select[name='shipping_state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='shipping_state_id']");
+        shipping_state_options.detach();
+        var displayed_state = shipping_state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });

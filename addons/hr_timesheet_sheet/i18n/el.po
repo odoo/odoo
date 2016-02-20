@@ -3,14 +3,14 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-21 23:30+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"PO-Revision-Date: 2016-01-14 10:09+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,7 +163,7 @@ msgstr "Παρούσα Κατάσταση"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_name
 msgid "Date"
-msgstr "Ημερ/νία"
+msgstr "Ημερομηνία"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
@@ -180,7 +180,7 @@ msgstr "Ημερομηνία του τελευταίου μηνύματος "
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
-msgstr "Έως ημερ/νία"
+msgstr "Έως Ημερομηνία"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -209,7 +209,7 @@ msgstr "Διαφορά"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "Διαφορές"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_display_name
@@ -365,23 +365,18 @@ msgstr "Τελευταία αλλαγή στις"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_uid
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_date
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
 msgid "Messages"
 msgstr "Μηνύματα"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -404,6 +399,12 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
+msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -629,6 +630,7 @@ msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
@@ -687,7 +689,7 @@ msgstr "Συνολικός Xρόνος Eργασίας"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
@@ -784,7 +786,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -792,19 +794,20 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
@@ -821,6 +824,11 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid "new timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet

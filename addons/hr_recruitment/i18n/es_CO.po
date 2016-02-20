@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-12 04:23+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-12 14:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +137,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rastreadores</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -189,7 +189,7 @@ msgstr "Nombre corto"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias del Contacto de Seguridad"
+msgstr "Seguridad al Contactar el Alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
@@ -199,17 +199,17 @@ msgstr "ID Alias"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
 msgid "Alias Name"
-msgstr "Seudónimo"
+msgstr "Alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
 msgid "Alias domain"
-msgstr "Seudónimo del dominio"
+msgstr "Alias del dominio"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con Alias"
+msgstr "Modelo del Alias"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
@@ -224,7 +224,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 msgid "Applicant"
-msgstr ""
+msgstr "Candidato"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -431,7 +431,7 @@ msgstr "Clic aquí para crear un nuevo trabajo. Usted puede remover el filtro \"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "Haga clic para añadir un nuevo empleado."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -547,7 +547,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_date
 msgid "Created on"
-msgstr "Creado"
+msgstr "Creado el"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_date
@@ -745,7 +745,7 @@ msgstr "Empleado"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_employee_name
 msgid "Employee Name"
-msgstr ""
+msgstr "Nombre del Empleado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_emp_id
@@ -897,6 +897,11 @@ msgid "HR Department"
 msgstr "Departamento RR.HH."
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -934,7 +939,7 @@ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
 msgid "If other, precise:"
-msgstr ""
+msgstr "Si otros, precisar:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -959,13 +964,6 @@ msgstr ""
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Importante"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1129,7 +1127,7 @@ msgstr "Mensajes"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
 msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
+msgstr "Historial de mensajes y de comunicación"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1265,7 +1263,7 @@ msgstr "Número de Acciones"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Número de Adjuntos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_delay_close
@@ -1584,7 +1582,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Origen de los Solicitantes"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
@@ -1691,7 +1689,7 @@ msgstr "Etiquetas"
 #: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_4
 #: model:survey.question,validation_error_msg:hr_recruitment.recruitment_3_1
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "La respuesta introducida tiene un formato no válido."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
@@ -1782,7 +1780,7 @@ msgstr "Ésta es la fuente del enlace. Ej: motor de búsqueda, otro dominio, o n
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Esta pregunta requiere una respuesta."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1799,6 +1797,9 @@ msgstr "No Asignado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Mensajes sin Leer"
 
@@ -1815,7 +1816,7 @@ msgstr "Fecha de Actualización"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Use template"
-msgstr ""
+msgstr "Usar plantilla"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1874,7 +1875,7 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr ""
+msgstr "Con sólo un vistazo rápido en la pantalla empleado Odoo, usted puede encontrar fácilmente toda la información que necesita para cada persona;\ndatos de contacto, puesto de trabajo, disponibilidad, etc."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:432

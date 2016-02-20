@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-10 18:59+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"PO-Revision-Date: 2016-02-11 16:34+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,7 @@ msgstr "Confirmado"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "Partes de Horas Confirmados"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_uid
@@ -204,7 +204,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_total_difference
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_total_difference
 msgid "Difference"
-msgstr ""
+msgstr "Diferencia"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -251,7 +251,7 @@ msgstr "Empleados"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:77
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "¡Error! Conectar (rrsp. Salir) debe seguir en Salir (rrsp. Ingresar)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
@@ -305,11 +305,6 @@ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -379,11 +374,6 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "Mes"
@@ -404,6 +394,12 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
+msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -476,7 +472,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Present"
-msgstr ""
+msgstr "Presente"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
@@ -519,7 +515,7 @@ msgstr "Iniciar Sesión"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign Out"
-msgstr ""
+msgstr "Desconectar"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
@@ -629,6 +625,7 @@ msgstr "Parte de Horas por Periodo"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
@@ -686,6 +683,7 @@ msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin Leer"
 
@@ -708,7 +706,7 @@ msgstr "Usuario"
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Esperando Aprobación"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
@@ -729,7 +727,7 @@ msgstr "Semana"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:221
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "Semana"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
@@ -784,7 +782,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -792,19 +790,20 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
@@ -816,12 +815,17 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
+msgstr "Usted podrá registrar sus horas de trabajo y actividades."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid "new timesheet."
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form

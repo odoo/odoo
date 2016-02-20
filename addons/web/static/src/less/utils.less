@@ -189,7 +189,7 @@
 // ------------------------------------------------------------------
 // Transition
 // ------------------------------------------------------------------
-.o-transition(@property: all, @duration: 0s, @timing-function: easy, @transition-delay: 0s) {
+.o-transition(@property: all, @duration: 0s, @timing-function: ease, @transition-delay: 0s) {
     -webkit-transition: @property @duration @timing-function @transition-delay;
     -moz-transition: @property @duration @timing-function @transition-delay;
     -o-transition: @property @duration @timing-function @transition-delay;
@@ -214,6 +214,15 @@
     -moz-transition: @property @duration @timing-function @transition-delay;
     -o-transition: @property @duration @timing-function @transition-delay;
     transition: @property @duration @timing-function @transition-delay;
+}
+
+// ------------------------------------------------------------------
+// Columns
+// ------------------------------------------------------------------
+.o-columns(@width: auto, @col: auto) {
+    -webkit-columns: @width @col;
+    -moz-columns: @width @col;
+    columns: @width @col;
 }
 
 // ------------------------------------------------------------------

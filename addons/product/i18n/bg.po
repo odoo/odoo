@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:23+0000\n"
+"PO-Revision-Date: 2016-01-28 20:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -156,7 +156,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Описание</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -257,7 +257,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Нужно е действие"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -335,7 +335,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Архивирани"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -617,7 +617,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
 msgid "Color"
-msgstr ""
+msgstr "Цвят"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_color
@@ -678,6 +678,12 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
 msgstr ""
 
 #. module: product
@@ -909,7 +915,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1486,7 +1492,7 @@ msgstr "Наличност"
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "е последовател"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1558,7 +1564,7 @@ msgstr "Дата на последното съобщение"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Последно променено на"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
@@ -1821,7 +1827,7 @@ msgstr "Бележки"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Брой действия"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
@@ -1833,7 +1839,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Брой непрочетени съобщения"
 
 #. module: product
 #: selection:product.template,state:0
@@ -2491,6 +2497,12 @@ msgstr "Последователност"
 #: model:product.public.category,name:product.server
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
+msgstr "Сървър"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
 msgstr ""
 
 #. module: product
@@ -2671,7 +2683,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
-msgstr ""
+msgstr "Име на шаблон"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -3122,7 +3134,7 @@ msgstr "Варианти"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "Доставчик"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3153,7 +3165,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr ""
+msgstr "Доставчици"
 
 #. module: product
 #: selection:product.category,type:0

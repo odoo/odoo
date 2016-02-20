@@ -3,13 +3,16 @@
 # * project_issue
 # 
 # Translators:
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Renko Spiekermann <renkosp@gmail.com>, 2015
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-11-17 21:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-23 17:31+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +49,12 @@ msgstr "<b>Kategorie:</b>"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>Projekt:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">als </span>"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
@@ -140,12 +143,12 @@ msgstr "Kanal"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "Aktivieren Sie diese Auswahl, um Kundenaktivitäten durch dieses Projekt zu verwalten."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid "Click to create an issue."
-msgstr ""
+msgstr "Klicken Sie, um einen neuen Fall zu erstellen."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -214,12 +217,12 @@ msgstr "Kunde"
 #: code:addons/project_issue/project_issue.py:369
 #, python-format
 msgid "Customer Email"
-msgstr "Kunden-Email"
+msgstr "E-Mail Kunde"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
-msgstr ""
+msgstr "Passen Sie die Fallbezeichnung an, nennen Sie es zum Beispiel Probleme."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -295,7 +298,7 @@ msgstr "Differenz in Tagen zwischen letzter Aktion und heute"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Angezeigter Name"
+msgstr "Anzeigename"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -305,7 +308,7 @@ msgstr "Dauer"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "Fall ändern"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -340,7 +343,7 @@ msgstr "Beobachter (Kanäle)"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -358,7 +361,7 @@ msgstr "Hoch"
 #: code:addons/project_issue/project_issue.py:345
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Ich nehme es"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -369,18 +372,12 @@ msgstr "ID"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, brauchen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-msgid "Important Messages"
-msgstr "Wichtige Nachrichten"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
@@ -404,13 +401,13 @@ msgstr "Fall wurde blockiert"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Fall geöffnet"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Fall bereit"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -420,7 +417,7 @@ msgstr "Status des Falls wurde geändert"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Fallbeschreibung..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -440,12 +437,12 @@ msgstr "Fall wurde blockiert"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Fall geöffnet"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next sStage"
-msgstr ""
+msgstr "Fall bereit für die nächste Stufe"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -555,7 +552,7 @@ msgstr "Neu"
 #: code:addons/project_issue/project_issue.py:347
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Neuer Fall"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -577,7 +574,7 @@ msgstr "Normal"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl Aktionen"
+msgstr "Anzahl der Aktionen"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -592,7 +589,7 @@ msgstr "Anzahl Tage zur Fall Eröffnung"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Anzahl Nachrichten, die eine Aktion erfordern"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
@@ -610,7 +607,7 @@ msgstr "Partner"
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr ""
+msgstr "Löschen Sie bitte Fälle im Projekt, welches mit den Kostenstellen verbunden sind, die Sie löschen möchten."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -714,7 +711,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Die Odoo Fallverfolgung ermöglicht eine effiziente Verwaltung von\ninternen und externem Support, Software Fehlern, Reklamationen\nvon Kunden und Lieferanten, Projektproblemfällen, Materialfehlern\netc."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -722,7 +719,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Die Odoo Fallverfolgung ermöglicht eine effiziente Verwaltung von\ninternen und externem Support, Software Fehlern, Reklamationen\nvon Kunden und Lieferanten, Projektproblemfällen, Materialfehlern\netc."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -755,6 +752,8 @@ msgstr "Nicht zugewiesen"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 
@@ -771,12 +770,12 @@ msgstr "Datum aktualisieren"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "Use Issues"
-msgstr ""
+msgstr "Nutze Fälle"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "Nutze Fälle als"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
@@ -813,14 +812,14 @@ msgstr "Arbeitszeit zur Beendigung eines Falls"
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr ""
+msgstr "Du kannst diesen Fall an eine existierende Aufgabe verlinken oder hier direkt eine neue erstellen"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid ""
 "You can track your issues from this menu and the action we     \n"
 "                will take."
-msgstr ""
+msgstr "Sie können ihre Fälle von diesem Menü verfolgen und die Maßnahmen, die wir unternehmen werden."
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:260

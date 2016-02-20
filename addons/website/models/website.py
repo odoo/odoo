@@ -47,13 +47,13 @@ def url_for(path_or_uri, lang=None):
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang
+                    ps[1] = lang.encode('utf-8')
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.website.default_lang_code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang)
+                ps.insert(1, lang.encode('utf-8'))
             location = '/'.join(ps)
 
     return location.decode('utf-8')
@@ -179,7 +179,7 @@ class website(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
         'compress_html': False,
         'cdn_activated': False,
-        'cdn_url': '//localhost:8069/',
+        'cdn_url': '',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
@@ -290,12 +290,12 @@ class website(osv.osv):
             for page in View.browse(cr, uid, pages, context=context):
                 if page.page:
                     dep[page_key].append({
-                        'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
+                        'text': _('Page <b>%s</b> seems to have a link to this page !') % page.key,
                         'link': '/page/%s' % page.key
                     })
                 else:
                     dep[page_key].append({
-                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !' % (page.key, page.id)),
+                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !') % (page.key, page.id),
                         'link': '#'
                     })
 
@@ -311,7 +311,7 @@ class website(osv.osv):
                 dep[menu_key] = []
             for menu in Menu.browse(cr, uid, menus, context=context):
                 dep[menu_key].append({
-                    'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
+                    'text': _('Menu <b>%s</b> seems to have a link to this page !') % menu.name,
                     'link': False
                 })
 
@@ -374,11 +374,8 @@ class website(osv.osv):
 
     @openerp.tools.ormcache('domain_name')
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
-        if ids:
-            return ids[0]
-        else:
-            return self.search(cr, uid, [], limit=1)[0]
+        ids = self.search(cr, uid, [('domain', '=', domain_name)], limit=1, context=context)
+        return ids and ids[0] or self.search(cr, uid, [], limit=1)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
@@ -468,7 +465,8 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = rule.methods or ['GET']
+        methods = endpoint.routing.get('methods') or ['GET']
+
         converters = rule._converters.values()
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'

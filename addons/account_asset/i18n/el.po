@@ -3,14 +3,14 @@
 # * account_asset
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-11-22 00:07+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"PO-Revision-Date: 2016-01-16 08:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgstr "Αναλυτική Λογαριασμού"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Asset"
-msgstr "Ενεργό"
+msgstr "Πάγιo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
@@ -133,6 +133,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
 msgstr ""
 
@@ -179,7 +180,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Assets"
-msgstr "Ενεργό"
+msgstr "Πάγια"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
@@ -365,7 +366,7 @@ msgstr "Πελάτης"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_date
 msgid "Date"
-msgstr "Ημερ/νία"
+msgstr "Ημερομηνία"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -394,6 +395,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
 msgstr ""
 
@@ -664,7 +666,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr ""
+msgstr "Είδη"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
@@ -700,7 +702,7 @@ msgstr "Τελευταία αλλαγή στις"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_uid
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_date
@@ -709,7 +711,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -721,11 +723,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
 msgid "Messages"
 msgstr "Μηνύματα"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -836,12 +833,12 @@ msgstr "Καταχώριση Ημερολογιακών Εγγραφών"
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 #, python-format
 msgid "Posted"
-msgstr "Posted"
+msgstr "Καταχωρημένο"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
 msgid "Posted Amount"
-msgstr ""
+msgstr "Καταχωρημένο Ποσό"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -1005,17 +1002,17 @@ msgstr "Τύπος"
 #: code:addons/account_asset/static/src/js/account_asset.js:24
 #, python-format
 msgid "Unposted"
-msgstr "Μη καταχωριμένα"
+msgstr "Μη Καταχωρημένο"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Μη Καταχωρημένο Ποσό"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
@@ -1027,16 +1024,6 @@ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
 msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website Messages"
-msgstr "Μηνύματα Ιστότοπου"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website communication history"
-msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state

@@ -294,9 +294,9 @@ class sale_order(osv.osv):
         # create draft invoice if transaction is ok
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
-                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+                self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
             message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
-            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
 
@@ -414,13 +414,11 @@ class sale_order_option(osv.osv):
         self.name = product.name
         if product.description_sale:
             self.name += '\n' + product.description_sale
-        self.uom_id = product.product_tmpl_id.uom_id
-        if product and self.order_id.pricelist_id:
+        self.uom_id = self.uom_id or product.uom_id
+        pricelist = self.order_id.pricelist_id
+        if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            pricelist = self.order_id.pricelist_id.id
-            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
-        if self.uom_id and self.uom_id != self.product_id.uom_id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id.id)
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 

@@ -290,6 +290,10 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if user_id and context.get('team_id'):
+            team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
+            if user_id in team.member_ids.ids:
+                return {}
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
@@ -924,7 +928,7 @@ class crm_lead(format_address, osv.osv):
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 dynamic_help = '<p>%s</p>' % _("""All email incoming to %(link)s  will automatically create new opportunity.
 Update your business card, phone book, social media,... Send an email right now and see it here.""") % {
-                    'link': "<a href='mailto:%s'>%s</a>" % (alias_record.alias_name, alias_record.alias_domain)
+                    'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
                 }
                 return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
                     _('Click to add a new opportunity'),

@@ -7,6 +7,7 @@ from lxml import etree, objectify
 from openerp.tools.translate import _
 from pprint import pformat
 import time
+from unicodedata import normalize
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -263,7 +264,7 @@ class PaymentTxOgone(osv.Model):
                                                   'acquirer_id': tx.acquirer_id.id,
                                                   'acquirer_ref': alias
                                                   })
-                tx.partner_reference = alias
+                tx.write({'payment_method_id': ref})
 
         return tx
 
@@ -293,7 +294,7 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             }
-            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save':
+            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
                 pm_id = self.pool['payment.method'].create(cr, uid, {
                     'partner_id': tx.partner_id.id,
                     'acquirer_id': tx.acquirer_id.id,
@@ -398,6 +399,14 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
+            if tree.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
+                pm = tx.env['payment.method'].create({
+                    'partner_id': tx.partner_id.id,
+                    'acquirer_id': tx.acquirer_id.id,
+                    'acquirer_ref': tree.get('ALIAS'),
+                    'name': tree.get('CARDNO'),
+                })
+                tx.write({'payment_method_id': pm.id})
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
             return True
@@ -478,7 +487,7 @@ class PaymentMethod(osv.Model):
                 'TRANSACTION_CODE': 'ATR',
                 'OPERATION': 'SAL',
                 'NB_PAYMENTS': 1,   # even if we do not actually have any payment, ogone want it to not be 0
-                'FILE': line,
+                'FILE': normalize('NFKD', line).encode('ascii','ignore'),  # Ogone Batch must be ASCII only
                 'REPLY_TYPE': 'XML',
                 'PSPID': acquirer.ogone_pspid,
                 'USERID': acquirer.ogone_userid,

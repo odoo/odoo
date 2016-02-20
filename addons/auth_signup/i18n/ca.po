@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-11-21 12:43+0000\n"
+"POT-Creation-Date: 2016-01-06 07:13+0000\n"
+"PO-Revision-Date: 2016-02-13 15:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -80,16 +80,22 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Permetre la entrada als usuaris externs"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr ""
@@ -98,7 +104,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
-msgstr ""
+msgstr "Tornar a inici"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:277
@@ -114,7 +120,7 @@ msgstr "Confirma"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Confirmar contrasenya"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -122,7 +128,13 @@ msgid "Connected"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr ""
@@ -130,12 +142,12 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Activa el restabliment de la contrasenya de la pàgina Inici de sessió"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Sense marcar, només els usuaris invitats es poden registrar."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
@@ -146,7 +158,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Mai connectat"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -161,45 +173,40 @@ msgstr "Contrasenya"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
-msgid "Private Profile"
-msgstr ""
+msgstr "Restabliment de contrasenya"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Restablir la contrasenya"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Restablir contrasenya: nom d'usuari o email no son vàlids"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Enviar Instruccions de restabliment de contrasenya"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Envia una invitació per correu electrònic"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Registra't"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "inscripció caducada"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
@@ -223,7 +230,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "URL Inscripció"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -233,17 +240,12 @@ msgstr "Estat"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Plantilla d'usuari per a crear un nou usuari a través del registre"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "Això permet als usuaris desencadenar un restabliment de contrasenya a la pàgina d'inici de sessió."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -251,45 +253,10 @@ msgid "Users"
 msgstr "Usuaris"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "El teu correu electrònic"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -299,14 +266,9 @@ msgstr "El Teu Nom"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "unknown"
-msgstr "desconegut"

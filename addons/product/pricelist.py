@@ -85,9 +85,17 @@ class product_pricelist(osv.osv):
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)
         return comp.currency_id.id
 
+    def _get_item_ids(self, cr, uid, ctx):
+        ProductPricelistItem = self.pool.get('product.pricelist.item')
+        fields_list = ProductPricelistItem._defaults.keys()
+        vals = ProductPricelistItem.default_get(cr, uid, fields_list, context=ctx)
+        vals['compute_price'] = 'formula'
+        return [[0, False, vals]]
+
     _defaults = {
         'active': lambda *a: 1,
-        "currency_id": _get_currency
+        "currency_id": _get_currency,
+        'item_ids': _get_item_ids,
     }
 
     def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
@@ -193,6 +201,15 @@ class product_pricelist(osv.osv):
                     if rule.product_id and product.id != rule.product_id.id:
                         continue
 
+                if rule.categ_id:
+                    cat = product.categ_id
+                    while cat:
+                        if cat.id == rule.categ_id.id:
+                            break
+                        cat = cat.parent_id
+                    if not cat:
+                        continue
+
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
                     price_tmp = self._price_get_multi(cr, uid, rule.base_pricelist_id, [(product, qty, partner)], context=context)[product.id]
                     ptype_src = rule.base_pricelist_id.currency_id.id
@@ -233,8 +250,7 @@ class product_pricelist(osv.osv):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-                price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
+                price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, context=context)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
         return results
@@ -283,7 +299,7 @@ class product_pricelist_item(osv.osv):
         'base': fields.selection([('list_price', 'Public Price'), ('standard_price', 'Cost'), ('pricelist', 'Other Pricelist')], string="Based on", required=True,
             help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Cost Price : The base price will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', ondelete='cascade'),
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
         'price_discount': fields.float('Price Discount', digits=(16,2)),

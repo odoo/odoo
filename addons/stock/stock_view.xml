@@ -1000,7 +1000,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1023,7 +1023,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1047,7 +1047,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1071,7 +1071,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1096,7 +1096,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1120,7 +1120,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1145,7 +1145,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1170,7 +1170,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'search_default_picking_type_id': [active_id],
@@ -1338,6 +1338,7 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
@@ -1957,7 +1958,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Quants" create="false" edit="false">
+                <form string="Quants" create="false" edit="false" delete="false">
                     <group>
                         <group>
                             <field name="product_id"/>

@@ -84,12 +84,12 @@
 
 <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable and website else None"
+          t-att-data-website-id="website.id if (editable or translatable) and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-edit_translations="'1' if edit_translations else None"
           t-att-data-view-xmlid="xmlid if editable or translatable else None"
-          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-main-object="repr(main_object) if editable or translatable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
             <meta charset="utf-8" />
@@ -645,7 +645,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
+                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>

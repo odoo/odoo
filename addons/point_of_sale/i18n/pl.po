@@ -3,14 +3,14 @@
 # * point_of_sale
 # 
 # Translators:
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-09 22:07+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
+"PO-Revision-Date: 2016-01-29 21:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "0.5 l Perrier"
 msgid ""
 "<br/>\n"
 "                        Date:"
-msgstr ""
+msgstr "<br/>\n                        Data:"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -161,12 +161,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>Data</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Opis</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -288,7 +288,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Ilość</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
@@ -354,7 +354,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 #: model:ir.ui.view,arch_db:point_of_sale.report_receipt
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Podatki</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -399,7 +399,7 @@ msgstr "Suma"
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Cena jednostki</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -872,6 +872,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Cashdrawer"
 msgstr "Kasa"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1399,6 +1405,12 @@ msgstr "Notatka upustu"
 #, python-format
 msgid "Discount:"
 msgstr "Upust:"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2876,6 +2888,12 @@ msgid "Price"
 msgstr "Cena"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pricelist_id
@@ -4232,6 +4250,12 @@ msgid "Warehouse"
 msgstr "Magazyn"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
@@ -4270,13 +4294,6 @@ msgstr "Rok"
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
 msgstr "Żółta papryka"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid ""
-"You can define another list of available currencies on the\n"
-"                                    <i>Cash Registers</i> tab of the"
-msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:771
@@ -4516,11 +4533,6 @@ msgstr "nie używane"
 #, python-format
 msgid "paid orders"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "payment method."
-msgstr "metoda płatności."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config

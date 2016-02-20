@@ -20,8 +20,12 @@
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                             <field name="internal_type" invisible="1"/>
-                             <field name="reconcile"/>
+                             <field name="internal_type" invisible="1" readonly="1"/>
+                             <label for="reconcile"/>
+                             <div>
+                                <field name="reconcile"/> 
+                                <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
+                             </div>
                              <field name="deprecated"/>
                            </group>
                            <group>
@@ -449,7 +453,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="balance_end_real!=balance_end and state=='open'" decoration-info="state=='open' and (balance_end_real==balance_end)" string="Statements">
+                <tree decoration-danger="not is_difference_zero and state=='open'" decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -458,6 +462,7 @@
                     <field name="balance_end" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -538,7 +543,7 @@
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids">
-                                    <field name="sequence" readonly="1" invisible="1"/>
+                                    <field name="sequence"  widget="handle"/>
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
@@ -709,7 +714,7 @@
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal'), ('company_id', '=', company_id)]"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -731,7 +736,7 @@
                                 <field name="second_account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="second_amount_type"/>
                                 <field name="second_tax_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
-                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal'), ('company_id', '=', company_id)]"/>
                             </group>
                             <group>
                                 <field name="second_label"/>
@@ -992,21 +997,32 @@
                                         <field name="date_maturity"/>
                                     </group>
                                     <group string="Taxes">
-                                        <field name="tax_line_id"/>
-                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="tax_line_id" readonly="1"/>
+                                        <field name="tax_ids" widget="many2many_tags" readonly="1"/>
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency"/>
                                     </group>
                                     <group string="Reconciliation">
-                                        <field name="reconciled"/>
+                                        <label for="reconciled"/>
+                                        <div>
+                                            <field name="reconciled"/>
+                                            <field name="matched_debit_ids" invisible="1"/>
+                                            <field name="matched_credit_ids" invisible="1"/>
+                                            <button name="open_reconcile_view"
+                                                class="oe_link"
+                                                type="object"
+                                                string="-> View reconciled entries"
+                                                attrs="{'invisible': [('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
+                                            </button>
+                                        </div>
                                     </group>
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
+                                        <field name="analytic_account_id" domain="[('account_type','=','normal)]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1049,8 +1065,8 @@
                                 <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
-                                <field name="tax_ids"/>
-                                <field name="tax_line_id"/>
+                                <field name="tax_ids" readonly="1"/>
+                                <field name="tax_line_id" readonly="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
@@ -1214,6 +1230,14 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box">
+                            <button name="open_reconcile_view"
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                type="object"
+                                string="View reconciled entries">
+                            </button>
+                        </div>
                     <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
                     <h1>
                         <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
@@ -1237,9 +1261,9 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
-                                    <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                     <field name="name"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal')]"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>

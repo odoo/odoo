@@ -42,6 +42,12 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
+        <t groups="base.group_website_designer" t-set="is_designer" t-value="True"/>
+        <t t-if="not is_designer">
+            <t t-set="head">
+                <t t-call-assets="web_editor.summernote"/>
+            </t>
+        </t>
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -762,7 +768,7 @@
                     <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
                     <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
                     <span>By </span>
-                    <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
+                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or '#'"
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
@@ -910,13 +916,17 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
+                <t t-set="user_profile_url" t-attf-value="#"/>
+                <t t-if="answer.create_uid.id == request.session.uid or answer.create_uid.sudo().website_published">
+                    <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), answer.create_uid.id)"/>
+                </t>
                 <div class="o_forum_user_bio_expand" t-if="answer.can_display_biography">
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
+                <a t-att-href="user_profile_url" class="o_forum_user_info">
                     <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                 </a>
-                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
@@ -1000,11 +1010,11 @@
 <!-- Template for user tooltip  -->
 <template id="forum_user_tooltip">
     <div class="o_forum_user_bio text-left panel panel-body">
-        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
+        <a t-att-href="user_profile_url">
             <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
         </a>
         <div class="o_forum_tooltip_header">
-            <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+            <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
                 t-field="answer.create_uid"
                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
@@ -1075,18 +1085,16 @@
             <ul class="pagination mt0 mb0">
                 <li class="disabled"><a><i class="fa fa-filter"></i></a></li>
                 <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{tuple_char[1]}"><t t-esc="tuple_char[0]"/></a></li>
+                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}"><t t-esc="tuple_char[0]"/></a></li>
                 </t>
             </ul>
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
+                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times'/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
                     <span t-field="tag.name"/>
                 </a>
-                <span>
-                    X <t t-esc="tag.posts_count"/>
-                </span>
             </div>
         </div>
     </t>

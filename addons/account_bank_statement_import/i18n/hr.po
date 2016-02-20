@@ -3,14 +3,15 @@
 # * account_bank_statement_import
 # 
 # Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-18 13:10+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>\n"
+"PO-Revision-Date: 2015-12-21 08:53+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +23,18 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr ""
+msgstr "%d transakcije koje su već uvežene i sad su preskočene."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr ""
+msgstr "1 transakcija je već uvežena i sad je preskočena."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr ""
+msgstr "Bankovne transakcije mogu biti uvežene samo jednom!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -59,7 +60,7 @@ msgstr "Dozvoli otkazivanje knjiženja"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "Already imported items"
-msgstr ""
+msgstr "Već uvežene stavke"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
@@ -91,12 +92,12 @@ msgstr "Bankovni izvodi"
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr ""
+msgstr "Naziv bankovnog dnevnika"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
 msgid "Bank Statement File"
-msgstr ""
+msgstr "Datoteka izvadka"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
@@ -115,7 +116,7 @@ msgstr "Odustani"
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
-msgstr ""
+msgstr "Nemogu pronaći dnevnik u koji bi uvezli ovaj izvod. Molimo odabreite dnevnik ručno."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -134,7 +135,7 @@ msgstr "Označite ako želite dopustiti naknadno otkazivanje proknjiženih (potv
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr ""
+msgstr "Odaberite datoteku za uvoz..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
@@ -152,7 +153,7 @@ msgstr "Organizacija za koju se vodi ovaj dnevnik"
 msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
-msgstr ""
+msgstr "Nemogu pročitati ovu datoteku.\nJeste li instalirali modul koji podržava ovaj format?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -174,7 +175,7 @@ msgstr "Valuta"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr ""
+msgstr "Dugovne metode"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -209,7 +210,7 @@ msgstr "Prikaži ovaj bankovni račun u podnožju ispisa dokumenata kao što su 
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr ""
+msgstr "Preuzmite izvod vaše banke i uvezite ga ovdje. Podržani formati:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -221,7 +222,7 @@ msgstr "Brojčana serija"
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr ""
+msgstr "Preuzmite bankovne izvadke u elektronskom formatu i odaberite ih ovdje."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -249,7 +250,7 @@ msgstr "Uvoz"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
-msgstr ""
+msgstr "Uvoz bankovnog izvoda"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
@@ -259,17 +260,17 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
-msgstr ""
+msgstr "Uvoz bankovnih izvoda"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
 msgid "Import ID"
-msgstr ""
+msgstr "ID uvoza"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
-msgstr ""
+msgstr "Uvoz izvoda"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -291,7 +292,7 @@ msgstr "Dnevnik"
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr ""
+msgstr "Stvaranje dnevnika"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_name
@@ -301,7 +302,7 @@ msgstr "Naziv dnevnika"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal id"
-msgstr ""
+msgstr "ID dnevnika"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -363,7 +364,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "Nije pronađena valuta '%s'."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -383,7 +384,7 @@ msgstr "Konto dobiti"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Refund Entry Sequence"
-msgstr ""
+msgstr "Brojevni krug za povrate"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -398,7 +399,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr ""
+msgstr "Odaberite datoteku izvadka za uvoz"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
@@ -408,12 +409,12 @@ msgstr "Sekvenca"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "Short Code"
-msgstr ""
+msgstr "Kratka šifra"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
 msgid "Show in Invoices Footer"
-msgstr ""
+msgstr "Prikaži u podnožju računa"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
@@ -441,7 +442,7 @@ msgstr ""
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
-msgstr ""
+msgstr "Valuta bankovnog izvadka (%s) nije ista kao i valuta na dnevniku (%s) !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -451,7 +452,7 @@ msgstr "Valuta kod upisa izvoda"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "Stavke ovog dnevnika će biti numerirane korištenjem ovog prefiksa."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -471,13 +472,13 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr ""
+msgstr "Ova datoteka ne sadrži nijedanu stavku."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:118
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr ""
+msgstr "Ova datoteka ne sadrži nijednu transakciju."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -487,7 +488,7 @@ msgstr "Tip"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Koristi se za poredak dnevnika na nadzornoj ploči"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
@@ -506,13 +507,13 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Treba li ovaj dnevnik prikazati na nadzornoj ploči ili ne."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:218
 #, python-format
 msgid "You have already imported that file."
-msgstr ""
+msgstr "Ovu datoteku ste već uvezli."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

@@ -3,13 +3,14 @@
 # * mass_mailing
 # 
 # Translators:
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2016-01-16 15:19+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +23,14 @@ msgstr ""
 msgid ""
 "% <br/>\n"
 "                                            <strong>Clicks</strong>"
-msgstr ""
+msgstr "% <br/>\n                                            <strong>Kliknięcia</strong>"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 msgid ""
 "%<br/>\n"
 "                                            <strong>Replied</strong>"
-msgstr ""
+msgstr "%<br/>\n                                            <strong>Odpowiedziane</strong>"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:630
@@ -157,7 +158,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 msgid "<strong>Opened</strong>"
-msgstr ""
+msgstr "<strong>Otwarte</strong>"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_ab_pc
@@ -323,7 +324,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Clicks"
-msgstr ""
+msgstr "Kliknięcia"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
@@ -545,8 +546,10 @@ msgid "Domain"
 msgstr "Domena"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "Projekt"
 
@@ -568,7 +571,7 @@ msgstr "E-mail"
 #. module: mass_mailing
 #: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1_utm_campaign
 msgid "Email Campaign - Products"
-msgstr ""
+msgstr "Kampania email - Produkty"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
@@ -620,7 +623,7 @@ msgstr "Rozszerzone filtry..."
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_failed
@@ -666,13 +669,22 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid ""
 "Great stories have personality. Consider telling a great story that provides"
 " personality. Writing a story with personality for potential clients will "
 "assist with making a relationship connection. This shows up in small quirks "
 "like word choices or phrases. Write from your point of view, not from "
 "someone else's experience.<br/>"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
+msgid ""
+"Great stories have personality. Consider telling a great story that provides"
+" personality. Writing a story with personality for potential clients will "
+"assist with making a relationship connection. This shows up in small quirks "
+"like word choices or phrases. Write from your point of view, not from "
+"someone else's experience.<br>"
 msgstr ""
 
 #. module: mass_mailing
@@ -691,8 +703,10 @@ msgstr "Grupuj wg..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
-msgid "Help"
-msgstr "Pomoc"
+msgid ""
+"Here you can design your own template from scratch by selecting your "
+"favorite theme."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -734,7 +748,9 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
 msgstr ""
 
@@ -1067,11 +1083,6 @@ msgid "Messages"
 msgstr "Wiadomosći"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_ids
-msgid "Messages and communication history"
-msgstr "Wiadomości i historia komunikacji"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
@@ -1182,7 +1193,7 @@ msgstr "Wychodząca"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Wychodzace"
+msgstr "Wychodzące"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
@@ -1404,17 +1415,21 @@ msgid "Send to All"
 msgstr "Wyślij do wszystkich"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "Wysłano"
 
@@ -1602,6 +1617,12 @@ msgid "This mass mailing is scheduled to"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
@@ -1621,7 +1642,7 @@ msgstr "Śledzenie"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_unread
@@ -1670,11 +1691,6 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
 msgid "Website Pop-up"
 msgstr ""
@@ -1688,11 +1704,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
 msgid "Website Popup Redirect URL"
 msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website communication history"
-msgstr "Historia rozmowy"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1

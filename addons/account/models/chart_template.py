@@ -9,10 +9,32 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import AccessError, UserError, ValidationError
 import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
+from openerp import SUPERUSER_ID
 
 import logging
 _logger = logging.getLogger(__name__)
 
+def migrate_set_tags_and_taxes_updatable(cr, registry, module):
+    ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
+    that need migration (for example in case of VAT report improvements)
+    '''
+    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', 'in', ['account.tax.template', 'account.account.tag']), ('module', 'like', module)])
+    if xml_record_ids:
+        cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
+
+def migrate_tags_on_taxes(cr, registry):
+    ''' This is a utiliy function to help migrate the tags of taxes when the localization has been modified on stable version. If
+    called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
+
+    Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
+    and working out of the box when people are creating/using new taxes.
+    '''
+    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', '=', 'account.tax.template'), ('module', 'like', 'l10n_%')])
+    tax_template_ids = [x['res_id'] for x in registry['ir.model.data'].read(cr, SUPERUSER_ID, xml_record_ids, ['res_id'])]
+    for tax_template in registry['account.tax.template'].browse(cr, SUPERUSER_ID, tax_template_ids):
+        tax_id = registry['account.tax'].search(cr, SUPERUSER_ID, [('name', '=', tax_template.name), ('type_tax_use', '=', tax_template.type_tax_use), ('description', '=', tax_template.description)])
+        if len(tax_id) == 1:
+            registry['account.tax'].write(cr, SUPERUSER_ID, tax_id, {'tag_ids': [(6,0,[x.id for x in tax_template.tag_ids])]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -169,7 +191,6 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
-                'refund_sequence': True,
                 'show_on_dashboard': journal['favorite'],
             }
             journal_data.append(vals)
@@ -734,7 +755,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create the current year earning account (outside of the CoA)
         self.env['account.account'].create({
-            'code': '9999',
+            'code': '999999',
             'name': _('Undistributed Profits/Losses'),
             'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})

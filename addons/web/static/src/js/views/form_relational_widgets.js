@@ -969,7 +969,10 @@ var X2ManyListView = ListView.extend({
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
+                var tmp = field.no_rerender;
+                field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
+                field.no_rerender = tmp;
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
@@ -1156,6 +1159,9 @@ var One2ManyListView = X2ManyListView.extend({
         return this._super();
     },
     _on_focus_one2many: function () {
+        if(!this.editor.is_editing()) {
+            return;
+        }
         this.dataset.x2m.internal_dataset_changed = true;
         this._dataset_changed = false;
         this.__focus = true;
@@ -1430,7 +1436,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     get_render_data: function(ids){
         var self = this;
         return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
             return self.dataset.read_ids(ids, fields);
         });
     },

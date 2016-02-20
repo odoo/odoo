@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Connie Xiao <connie.xiao@elico-corp.com>, 2015
+# fausthuang, 2015
 # liyes <bodetools@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-12 07:49+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"PO-Revision-Date: 2015-12-17 03:15+0000\n"
+"Last-Translator: fausthuang\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +30,12 @@ msgstr "%d 已导入的交易将被忽略"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "1 已导入的交易将被忽略."
+msgstr "1个 已导入的交易将被忽略."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr "一个银行账户只能导入一次."
+msgstr "一个银行账户交易只能导入一次."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -65,12 +66,12 @@ msgstr "已导入的项目"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At least one inbound"
-msgstr "至少有一个入站的"
+msgstr "至少有一个进入的"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At least one outbound"
-msgstr "至少有一个出站"
+msgstr "至少有一个出去的"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:75
@@ -92,7 +93,7 @@ msgstr "银行费用"
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr "银行日记账名字"
+msgstr "银行日记账名称"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -123,7 +124,7 @@ msgstr "不能找到所需导入的账簿. 请手动选择账簿."
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " refunds made from this journal"
-msgstr "如果你不想共用发票和红字发票的序列号, 请选择这个方框."
+msgstr "如果你不想在此分类账中共用发票和退款的序列号, 请选择这个方框."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -159,7 +160,7 @@ msgstr "提供的文件不对.\n你有安装支持这文件的模块吗?"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "被...创建"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_date
@@ -309,7 +310,7 @@ msgstr "分类账 id"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr "只是点击 OK　来创建科目／分类账并且完成导入。导入有错误，点击‘取消’放弃导入。"
+msgstr "只是点击 OK　来创建科目／分类账并且完成导入。如果导入有错误，点击‘取消’放弃导入。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -319,7 +320,7 @@ msgstr "看板　仪表盘"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr "看板　仪表盘　图标"
+msgstr "看板　仪表盘　图表"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -394,12 +395,12 @@ msgid ""
 "customer or vendor payments. Select 'General' for miscellaneous operations "
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr "给客户发票分类账选择‘销售’，　给供应商发票选‘采购’，在客户或者供应商付款的分类账中选择‘现金’或者‘银行’。给‘其余操作’的分类账选择‘通用’。给因为新‘财政年’生成的分录的分类账选择‘Opening/Closing Situation’"
+msgstr "给客户发票分类账选择‘销售’，　给供应商发票选‘采购’，在客户或者供应商付款的分类账中选择‘现金’或者‘银行’。给‘其余操作’的分类账选择‘通用’。给因为新‘财政年’生成的分录的分类账选择‘打开/关闭情况’"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr "选择一个报表文件来导入"
+msgstr "选择一个银行对账单文件来导入"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
@@ -427,14 +428,14 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr "要导入的报表中的账户还没有被记录在Odoo中为了能够导入成功，你需要对这个账户创建一个银行分类账"
+msgstr "要导入的报表中的账户还没有被记录在Odoo中。为了能够导入成功，你需要对这个账户创建一个银行分类账"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "报表中的科目(%s)和分类账(%s)中的不一样"
+msgstr "对账单中的科目(%s)和分类账(%s)中的不一样"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
@@ -472,7 +473,7 @@ msgstr "这个字段包含和这个分类账的退款分录的数量相关的信
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr "这个文件不包含任何报表"
+msgstr "这个文件不包含任何对账单"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:118

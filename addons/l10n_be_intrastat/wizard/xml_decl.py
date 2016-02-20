@@ -303,13 +303,8 @@ class xml_decl(osv.TransientModel):
                 amount = inv_line.price_unit * inv_line.quantity
             else:
                 amount = 0
-            if (not inv_line.uom_id.category_id
-                    or not inv_line.product_id.uom_id.category_id
-                    or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
-                weight = inv_line.product_id.weight * inv_line.quantity
-            else:
-                weight = (inv_line.product_id.weight *
-                          inv_line.quantity * inv_line.uos_id.factor)
+            weight = (inv_line.product_id.weight_net or 0.0) * \
+                self.pool.get('product.uom')._compute_qty(cr, uid, inv_line.uom_id.id, inv_line.quantity, inv_line.product_id.uom_id.id)
             if (not inv_line.uos_id.category_id or not inv_line.product_id.uom_id.category_id
                     or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
                 supply_units = inv_line.quantity

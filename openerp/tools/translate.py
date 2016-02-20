@@ -169,9 +169,10 @@ class XMLTranslator(object):
             </div>
 
     """
-    def __init__(self, callback, method):
+    def __init__(self, callback, method, parser=None):
         self.callback = callback        # callback function to translate terms
         self.method = method            # serialization method ('xml' or 'html')
+        self.parser = parser            # parser for validating translations
         self._done = []                 # translated strings
         self._todo = []                 # todo strings that come after _done
         self.needs_trans = False        # whether todo needs translation
@@ -208,7 +209,21 @@ class XMLTranslator(object):
         """ Translate text.strip(), but keep the surrounding spaces from text. """
         term = text.strip()
         trans = term and self.callback(term)
-        return text.replace(term, trans) if trans else text
+        if trans:
+            try:
+                # parse the translation to validate it
+                etree.fromstring("<div>%s</div>" % encode(trans), parser=self.parser)
+            except etree.ParseError:
+                # fallback: escape the translation
+                trans = escape(trans)
+            text = text.replace(term, trans)
+        return text
+
+    def process_attr(self, attr):
+        """ Translate the given node attribute value. """
+        term = attr.strip()
+        trans = term and self.callback(term)
+        return attr.replace(term, trans) if trans else attr
 
     def process(self, node):
         """ Process the given xml `node`: collect `todo` and `done` items. """
@@ -225,7 +240,7 @@ class XMLTranslator(object):
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslator(self.callback, self.method)
+        child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)
@@ -240,7 +255,7 @@ class XMLTranslator(object):
             # complete translations and serialize result as done
             for attr in TRANSLATED_ATTRS:
                 if node.get(attr):
-                    node.set(attr, self.process_text(node.get(attr)))
+                    node.set(attr, self.process_attr(node.get(attr)))
             self.done(self.serialize(node.tag, node.attrib, child_trans.get_done()))
 
         # add node tail as todo
@@ -284,9 +299,10 @@ def html_translate(callback, value):
     if not value:
         return value
 
-    trans = XMLTranslator(callback, 'html')
+    parser = etree.HTMLParser(encoding='utf-8')
+    trans = XMLTranslator(callback, 'html', parser)
     wrapped = "<div>%s</div>" % encode(value)
-    root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
+    root = etree.fromstring(wrapped, parser)
     trans.process(root[0][0])               # html > body > div
     return trans.get_done()[5:-6]           # remove tags <div> and </div>
 
@@ -664,7 +680,7 @@ def trans_export(lang, modules, buffer, format, cr):
 
         else:
             raise Exception(_('Unrecognized extension: must be one of '
-                '.csv, .po, or .tgz (received .%s).' % format))
+                '.csv, .po, or .tgz (received .%s).') % format)
 
     translations = trans_generate(lang, modules, cr)
     modules = set(t[0] for t in translations)
@@ -772,6 +788,10 @@ def trans_generate(lang, modules, cr):
         query += ' WHERE module IN %s'
         query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
+    else:
+        query += ' WHERE module != %s'
+        query_models += ' AND imd.module != %s'
+        query_param = ('__export__',)
     query += ' ORDER BY module, model, name'
     query_models += ' ORDER BY module, model'
 

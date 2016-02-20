@@ -180,6 +180,9 @@ var ViewManagerAction = WidgetAction.extend({
      * @return {jQuery} the view_manager's $el
      */
     detach: function() {
+        // Hack to remove badly inserted nvd3 tooltips ; should be removed when upgrading nvd3 lib
+        $('body > .nvtooltip').remove();
+
         return this.widget.$el.detach();
     },
     /**
@@ -228,9 +231,9 @@ var ActionManager = Widget.extend({
         this.main_control_panel = new ControlPanel(this);
         // Listen to event "on_breadcrumb_click" trigerred on the control panel when
         // clicking on a part of the breadcrumbs. Call select_action for this breadcrumb.
-        this.main_control_panel.on("on_breadcrumb_click", this, function(action, index) {
+        this.main_control_panel.on("on_breadcrumb_click", this, _.debounce(function(action, index) {
             this.select_action(action, index);
-        });
+        }, 200, true));
 
         // Append the main control panel to the DOM (inside the ActionManager jQuery element)
         this.main_control_panel.appendTo(this.$el);
@@ -336,7 +339,8 @@ var ActionManager = Widget.extend({
                 return action.title;
             }
         }
-        return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
+        var last_breadcrumb = _.last(this.get_breadcrumbs());
+        return last_breadcrumb ? last_breadcrumb.title : "";
     },
     get_action_stack: function () {
         return this.action_stack;
@@ -500,7 +504,7 @@ var ActionManager = Widget.extend({
                 res_model: state.model,
                 res_id: state.id,
                 type: 'ir.actions.act_window',
-                views: [[false, 'form']]
+                views: [[_.isNumber(state.view_id) ? state.view_id : false, 'form']]
             };
             action_loaded = this.do_action(action);
         } else if (state.sa) {
@@ -608,7 +612,7 @@ var ActionManager = Widget.extend({
             var form = _.str.startsWith(action.view_mode, 'form');
             action.flags = _.defaults(action.flags || {}, {
                 views_switcher : !popup && !inline,
-                search_view : !popup && !inline,
+                search_view : !(popup && form) && !inline,
                 action_buttons : !popup && !inline,
                 sidebar : !popup && !inline,
                 pager : (!popup || !form) && !inline,
@@ -787,10 +791,15 @@ var ActionManager = Widget.extend({
         });
     },
     ir_actions_act_url: function (action) {
+        var url = action.url;
+        if (session.debug && url && url.length && url[0] === '/') {
+            url = $.param.querystring(url, 'debug');
+        }
+
         if (action.target === 'self') {
-            framework.redirect(action.url);
+            framework.redirect(url);
         } else {
-            window.open(action.url, '_blank');
+            window.open(url, '_blank');
         }
         return $.when();
     },

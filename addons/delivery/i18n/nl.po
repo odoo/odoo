@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-02 09:34+0000\n"
+"PO-Revision-Date: 2016-02-11 13:41+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -280,7 +282,7 @@ msgstr "Voorwaarde"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr "Controleer aankooprekeningen"
+msgstr "Controleer leveranciersfactuur"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -631,7 +633,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr "Indien u aan kost factureert, dan zal de declaratie gefactureerd worden aan de kost van de kostenplaatslijn; indien u factureert aan verkoopprijs, dan zal de productprijs gehanteerd worden."
+msgstr "Indien u aan kost factureert, dan zal de declaratie gefactureerd worden aan de kost van de kostenplaatsregel; indien u factureert aan verkoopprijs, dan zal de productprijs gehanteerd worden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -684,7 +686,7 @@ msgstr "Internationaal artikelnummer voor product identificatie"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Voorraadtellingen locatie"
+msgstr "Voorraadverschillen locatie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
@@ -1137,6 +1139,14 @@ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Levering verzonden naar vervoerder %s voor expeditie met traceernummer %s"
 
 #. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "Uw leveringsmethode heeft geen doorverwijzing naar de website van de koerier om dit order te volgen."
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
 msgstr "Verzendkosten"
@@ -1180,7 +1190,7 @@ msgstr "Kostprijs: De kostprijs wordt handmatig bijgewerkt (meestal aan het eind
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
-msgstr "Statussen"
+msgstr "Provincie/Staat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
@@ -1466,12 +1476,12 @@ msgstr "Variant afbeelding"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr "Fabrikant"
+msgstr "Leverancier"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Leveranciersbelastingen"
+msgstr "Inkoop belastingen"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0

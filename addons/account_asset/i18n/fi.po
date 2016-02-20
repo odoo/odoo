@@ -3,13 +3,14 @@
 # * account_asset
 # 
 # Translators:
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-10-02 14:59+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"PO-Revision-Date: 2016-01-27 12:18+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "Kirjanpitovienti"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vaatii toimia"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -132,6 +133,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
 msgstr ""
 
@@ -393,6 +395,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
 msgstr ""
 
@@ -416,7 +419,7 @@ msgstr "Degressiivinen kerroin"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation"
-msgstr ""
+msgstr "Poistot"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
@@ -616,7 +619,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -722,11 +725,6 @@ msgid "Messages"
 msgstr "Viestit"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_ids
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Modify"
 msgstr "Muokkaa"
@@ -795,7 +793,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Lukemattomien viestien määrä"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:488
@@ -1025,17 +1023,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Toimittaja"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state

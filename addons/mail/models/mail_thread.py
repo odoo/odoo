@@ -4,7 +4,6 @@ import base64
 import datetime
 import dateutil
 import email
-import json
 import lxml
 from lxml import etree
 import logging
@@ -96,8 +95,7 @@ class MailThread(models.AbstractModel):
         compute='_get_followers', search='_search_follower_channels')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
-        domain=lambda self: [('model', '=', self._name)], auto_join=True,
-        help="Messages and communication history")
+        domain=lambda self: [('model', '=', self._name)], auto_join=True)
     message_last_post = fields.Datetime('Last Message Date', help='Date of the last message posted on the record.')
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread',
@@ -171,15 +169,19 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_unread(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        partner_id = self.env.user.partner_id.id
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
                              RIGHT JOIN mail_message_mail_channel_rel rel
                              ON rel.mail_message_id = msg.id
                              RIGHT JOIN mail_channel_partner cp
-                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND (cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s""",
-                         (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                                (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+                             WHERE msg.model = %s AND msg.res_id in %s AND
+                                   (msg.author_id IS NULL OR msg.author_id != %s) AND
+                                   (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
+                         (partner_id, self._name, tuple(self.ids), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
@@ -578,13 +580,14 @@ class MailThread(models.AbstractModel):
         Example: having defined a group_hr_user entry, store HR users and
         officers. """
         # TDE note: recipients is normally sudo-ed
+        group_user = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            else:
+            if recipient.user_ids and group_user in recipient.user_ids[0].groups_id.ids:
                 group_data['user'] |= recipient
+            else:
+                group_data['partner'] |= recipient
         return group_data
 
     @api.multi
@@ -733,6 +736,17 @@ class MailThread(models.AbstractModel):
         res = dict()
         return res
 
+    @api.multi
+    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+        """ Get specific notification recipient values to store on the notification
+        mail_mail. Basic method just set the recipient partners as mail_mail
+        recipients. Inherit this method to add custom behavior like using
+        recipient email_to to bypass the recipint_ids heuristics in the
+        mail sending mechanism. """
+        return {
+            'recipient_ids': [(4, pid) for pid in recipient_ids]
+        }
+
     # ------------------------------------------------------
     # Mail gateway
     # ------------------------------------------------------
@@ -869,7 +883,11 @@ class MailThread(models.AbstractModel):
                 obj = record_set[0]
             else:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            if not author_id or author_id not in [fol.id for fol in obj.message_partner_ids]:
+            accepted_partner_ids = list(
+                set(partner.id for partner in obj.message_partner_ids) |
+                set(partner.id for channel in obj.message_channel_ids for partner in channel.channel_partner_ids)
+            )
+            if not author_id or author_id not in accepted_partner_ids:
                 _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
                 _create_bounce_email()
                 return False
@@ -1472,6 +1490,7 @@ class MailThread(models.AbstractModel):
                 followers = record.message_partner_ids
 
         Partner = self.env['res.partner'].sudo()
+        Users = self.env['res.users'].sudo()
         partner_ids = []
 
         for contact in emails:
@@ -1492,10 +1511,10 @@ class MailThread(models.AbstractModel):
             email_brackets = "<%s>" % email_address
             if not partner_id:
                 # exact, case-insensitive match
-                partners = Partner.search([('email', '=ilike', email_address), ('user_ids', '!=', False)], limit=1)
+                partners = Users.search([('email', '=ilike', email_address)], limit=1).mapped('partner_id')
                 if not partners:
                     # if no match with addr-spec, attempt substring match within name-addr pair
-                    partners = Partner.search([('email', 'ilike', email_brackets), ('user_ids', '!=', False)], limit=1)
+                    partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
                 if partners:
                     partner_id = partners[0].id
             # third try: check in partners
@@ -1624,8 +1643,6 @@ class MailThread(models.AbstractModel):
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
-        else:
-            body = tools.html_keep_url(body)
 
         # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
@@ -1790,7 +1807,7 @@ class MailThread(models.AbstractModel):
         gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_data, channel_data, force=force)
         self.sudo().write({'message_follower_ids': gen})
         for record in self.filtered(lambda self: self.id in part):
-            record.write(part[record.id])
+            record.write({'message_follower_ids': part[record.id]})
 
         self.invalidate_cache()
         return True
@@ -1940,10 +1957,10 @@ class MailThread(models.AbstractModel):
 
         for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes)
+            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
         for cid, subtypes in new_channels.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes)
+            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
         user_pids = [user_pid for user_pid in user_pids if user_pid != self.env.user.partner_id.id]
@@ -1993,3 +2010,13 @@ class MailThread(models.AbstractModel):
         msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
         msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
         return True
+
+    # ------------------------------------------------------
+    # Mass mailing
+    # ------------------------------------------------------
+
+    def message_mass_mailing_enabled(self):
+        if self._mail_mass_mailing:
+            # TODO master properly translate
+            # the _mail_mass_mailing is evaluted at code start so not translated
+            return _(self._mail_mass_mailing)

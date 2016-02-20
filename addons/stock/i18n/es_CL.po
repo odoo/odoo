@@ -3,13 +3,14 @@
 # * stock
 # 
 # Translators:
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-13 00:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-01-13 09:40+0000\n"
+"PO-Revision-Date: 2016-02-02 04:08+0000\n"
+"Last-Translator: Daniel Santibáñez Polanco <dansanti@gmail.com>\n"
 "Language-Team: Spanish (Chile) (http://www.transifex.com/odoo/odoo-9/language/es_CL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,16 @@ msgid " (reserved)"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:3182
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:3482
 #, python-format
 msgid " MTO"
@@ -65,37 +76,37 @@ msgstr ""
 #: code:addons/stock/product.py:209 code:addons/stock/product.py:382
 #, python-format
 msgid " On Hand"
-msgstr ""
+msgstr "En Mano"
 
 #. module: stock
 #: code:addons/stock/stock.py:3619 code:addons/stock/stock.py:3912
 #, python-format
 msgid " Sequence in"
-msgstr ""
+msgstr "Secuencia de Entrada"
 
 #. module: stock
 #: code:addons/stock/stock.py:3623 code:addons/stock/stock.py:3920
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr "Secuencia interna"
 
 #. module: stock
 #: code:addons/stock/stock.py:3620 code:addons/stock/stock.py:3914
 #, python-format
 msgid " Sequence out"
-msgstr ""
+msgstr "Secuencia de salida"
 
 #. module: stock
 #: code:addons/stock/stock.py:3621 code:addons/stock/stock.py:3916
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr "Secuencia de empaquetado"
 
 #. module: stock
 #: code:addons/stock/stock.py:3622 code:addons/stock/stock.py:3918
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr "Secuencia de picking"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -106,19 +117,19 @@ msgstr ""
 #: code:addons/stock/stock.py:2739
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
-msgstr ""
+msgstr "%s %s %s ha sido <b>pasado a </b> descarte."
 
 #. module: stock
 #: code:addons/stock/stock.py:3299
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Suminstra Producto desde %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:25
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Ubicación de tránsito"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -1290,6 +1301,14 @@ msgid "Corridor (X)"
 msgstr "Pasillo (X)"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_immediate_transfer.py:31
+#, python-format
+msgid ""
+"Could not reserve all requested products. Please use the 'Mark as Todo' "
+"button to handle the reservation manually."
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
 msgstr ""
@@ -1313,7 +1332,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create Vendors"
-msgstr "Cree vendedores"
+msgstr "Cree Proveedores"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3097,6 +3116,7 @@ msgid "Localization"
 msgstr "Ubicación"
 
 #. module: stock
+#: code:addons/stock/stock.py:4912
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3110,6 +3130,7 @@ msgstr "Ubicación"
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Location"
 msgstr "Ubicación"
 
@@ -3168,6 +3189,7 @@ msgid "Logistics"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:4913
 #: model:ir.model.fields,field_description:stock.field_stock_move_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_lot_id
@@ -3176,6 +3198,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
+#, python-format
 msgid "Lot"
 msgstr "Lote"
 
@@ -3358,12 +3381,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_ids
 msgid "Messages"
 msgstr "Mensajes"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_message_ids
-#: model:ir.model.fields,help:stock.field_stock_production_lot_message_ids
-msgid "Messages and communication history"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -3954,11 +3971,13 @@ msgid "Pack Type"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:4914
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
+#, python-format
 msgid "Package"
 msgstr ""
 
@@ -5483,6 +5502,12 @@ msgid "Stockable"
 msgstr "Almacenable"
 
 #. module: stock
+#: code:addons/stock/product.py:400
+#, python-format
+msgid "Stockable Product"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
 msgstr ""
@@ -6009,7 +6034,7 @@ msgstr "Para ejecutar"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Para Recibir"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6097,6 +6122,11 @@ msgid "Transfer"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
+msgid "Transfer Destination Address"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
 msgid "Transfer Reference"
 msgstr ""
@@ -6142,6 +6172,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_usps
 msgid "USPS integration"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:730
+#, python-format
+msgid "Under no circumstances should you delete or change quants yourselves!"
 msgstr ""
 
 #. module: stock
@@ -6340,7 +6376,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 msgid "Vendor"
-msgstr "Vendedor"
+msgstr "Proveedor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
@@ -6356,7 +6392,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
 msgid "Vendors"
-msgstr ""
+msgstr "Proveedores"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6823,7 +6859,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Vendors"
-msgstr ""
+msgstr "Sus Proveedores"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

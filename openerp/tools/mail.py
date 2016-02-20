@@ -11,7 +11,7 @@ import re
 import socket
 import threading
 import time
-from email.utils import getaddresses
+from email.utils import getaddresses, formataddr
 
 import openerp
 from openerp.loglevels import ustr
@@ -26,6 +26,7 @@ _logger = logging.getLogger(__name__)
 
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body']
+whitelist_classes = set(['WordSection1', 'MsoNormal', 'SkyDrivePlaceholder', 'oe_mail_expand', 'stopSpelling'])
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
@@ -51,7 +52,9 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
 
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
-    src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
+    # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
+    src = part.sub(lambda m: 'cite=' not in m.group(1) and cgi.escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace('<%', cgi.escape('<%'))
     src = src.replace('%>', cgi.escape('%>'))
@@ -292,6 +295,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     if expand_options is None:
         expand_options = {}
+    whitelist_classes_local = whitelist_classes.copy()
+    if expand_options.get('oe_expand_container_class'):
+        whitelist_classes_local.add(expand_options.get('oe_expand_container_class'))
+    if expand_options.get('oe_expand_a_class'):
+        whitelist_classes_local.add(expand_options.get('oe_expand_a_class'))
 
     if not html or not isinstance(html, basestring):
         return html
@@ -316,7 +324,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         root = lxml.html.fromstring(inner_html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for node in root.iter():
         # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
         if node.tail:
@@ -336,6 +344,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
     quoted = False
     quote_begin = False
     overlength = False
+    replace_class = False
     overlength_section_id = None
     overlength_section_count = 0
     cur_char_nbr = 0
@@ -346,6 +355,17 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             continue
         # do not take into account multiple spaces that are displayed as max 1 space in html
         node_text = ' '.join((node.text and node.text.strip(' \t\r\n') or '').split())
+
+        # remove unwanted classes from node
+        if node.get('class'):
+            sanitize_classes = []
+            for _class in node.get('class').split(' '):
+                if _class in whitelist_classes_local:
+                    sanitize_classes.append(_class)
+                else:
+                    sanitize_classes.append('cleaned_'+_class)
+                    replace_class = True
+            node.set('class', ' '.join(sanitize_classes))
 
         # root: try to tag the client used to write the html
         if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
@@ -448,7 +468,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                 node_class = node.get('class', '') + ' oe_mail_cleaned'
                 node.set('class', node_class)
 
-    if not overlength and not quote_begin and not quoted:
+    if not overlength and not quote_begin and not quoted and not replace_class:
         return html
 
     # html: \n that were tail of elements have been encapsulated into <span> -> back to \n
@@ -466,7 +486,7 @@ def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0
     final = ''
-    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"':]+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
+    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
     for item in re.finditer(link_tags, text):
         final += text[idx:item.start()]
         final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))
@@ -614,10 +634,10 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE)
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""", re.VERBOSE)
 
 # matches a string containing only one email
-single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
+single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
@@ -686,6 +706,18 @@ def email_split(text):
     if not text:
         return []
     return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]
+
+def email_split_and_format(text):
+    """ Return a list of email addresses found in ``text``, formatted using
+    formataddr. """
+    if not text:
+        return []
+    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.

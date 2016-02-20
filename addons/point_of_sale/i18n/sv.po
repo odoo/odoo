@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-16 09:09+0000\n"
+"PO-Revision-Date: 2016-01-27 10:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -125,12 +125,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Rapporter</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Visa</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -392,7 +392,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Totalt</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -684,7 +684,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Auktoriseringskod"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_rescue
@@ -870,6 +870,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Cashdrawer"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
 msgstr ""
 
 #. module: point_of_sale
@@ -1229,7 +1235,7 @@ msgstr "Kundfaktura"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Instrumentpanel"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_7
@@ -1323,7 +1329,7 @@ msgstr "Leveransmetod"
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr ""
+msgstr "Föråldrad"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_receipt
@@ -1397,6 +1403,12 @@ msgstr "Rabatt Meddelande"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1313
 #, python-format
 msgid "Discount:"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
 msgstr ""
 
 #. module: point_of_sale
@@ -2697,7 +2709,7 @@ msgstr "Plockning"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_picking_type_id
 msgid "Picking Type"
-msgstr ""
+msgstr "Plocktyp"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2873,6 +2885,12 @@ msgstr ""
 #, python-format
 msgid "Price"
 msgstr "Pris"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -3399,7 +3417,7 @@ msgstr "Inställningar"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_share
 msgid "Share or embbed any screen of Odoo."
-msgstr ""
+msgstr "Dela eller bädda in godtyckliga Odoo-vyer."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_company_share_partner
@@ -3642,7 +3660,7 @@ msgstr "Skatt"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:400
 #, python-format
 msgid "Tax ID"
-msgstr ""
+msgstr "Skatteregistringsnummer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
@@ -4231,6 +4249,12 @@ msgid "Warehouse"
 msgstr "Lager"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
@@ -4268,13 +4292,6 @@ msgstr "År"
 #: model:product.product,name:point_of_sale.poivron_jaunes
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid ""
-"You can define another list of available currencies on the\n"
-"                                    <i>Cash Registers</i> tab of the"
 msgstr ""
 
 #. module: point_of_sale
@@ -4514,11 +4531,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1035
 #, python-format
 msgid "paid orders"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "payment method."
 msgstr ""
 
 #. module: point_of_sale

@@ -111,6 +111,14 @@ class project(osv.osv):
         for project in self.browse(cr, uid, ids, context=context):
             res[project.id] = len(project.task_ids)
         return res
+
+    def _task_needaction_count(self, cr, uid, ids, field_name, arg, context=None):
+        Task = self.pool['project.task']
+        res = dict.fromkeys(ids, 0)
+        projects = Task.read_group(cr, uid, [('project_id', 'in', ids), ('message_needaction', '=', True)], ['project_id'], ['project_id'], context=context)
+        res.update({project['project_id'][0]: int(project['project_id_count']) for project in projects})
+        return res
+
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
@@ -162,6 +170,7 @@ class project(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
+        'task_needaction_count': fields.function(_task_needaction_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]),
         'color': fields.integer('Color Index'),
@@ -388,7 +397,7 @@ class task(osv.osv):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}
@@ -797,7 +806,7 @@ class task(osv.osv):
 
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         email_list = self.email_split(cr, uid, [res], msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, [res], email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, [res], email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 
@@ -821,7 +830,7 @@ class task(osv.osv):
                         pass
 
         email_list = self.email_split(cr, uid, ids, msg, context=context)
-        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        partner_ids = filter(None, self._find_partner_from_emails(cr, uid, ids, email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
@@ -837,9 +846,18 @@ class task(osv.osv):
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
+
+    def _compute_project_count(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0)
+        for account in self.browse(cr, uid, ids, context=context):
+            result[account.id] = len(account.project_ids)
+        return result
+
     _columns = {
         'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
+        'project_ids': fields.one2many('project.project', 'analytic_account_id', 'Projects'),
+        'project_count': fields.function(_compute_project_count, 'Project Count', type='integer')
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
@@ -908,6 +926,25 @@ class account_analytic_account(osv.osv):
             return self.name_get(cr, uid, project_ids, context=context)
 
         return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+
+    def projects_action(self, cr, uid, ids, context=None):
+        accounts = self.browse(cr, uid, ids, context=context)
+        project_ids = sum([account.project_ids.ids for account in accounts], [])
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "project.project",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [["id", "in", project_ids]],
+            "context": {"create": False},
+            "name": "Projects",
+        }
+        if len(project_ids) == 1:
+            result['views'] = [(False, "form")]
+            result['res_id'] = project_ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
 
 
 class project_project(osv.osv):

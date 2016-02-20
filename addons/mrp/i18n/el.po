@@ -3,13 +3,13 @@
 # * mrp
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-22 00:14+0000\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Εντολές Παραγωγής"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -46,7 +46,7 @@ msgstr "%s (αντίγραφο)"
 #: code:addons/mrp/mrp.py:1009
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s παράγεται"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
@@ -133,12 +133,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Document:</strong><br/>"
-msgstr ""
+msgstr "<strong>Προέλευση Εγγράφου:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Location</strong>"
-msgstr ""
+msgstr "<strong>Προέλευση Τοποθεσίας</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -641,7 +641,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Ορίστε το χρονοδιάγραμμα των πόρων"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_description
@@ -878,7 +878,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
+msgstr "Αν το ενεργό πεδίο έχει οριστεί σε Ψευδές, θα σας επιτρέψει να αποκρύψετε την εγγραφή πόρου χωρίς να την καταργήσετε."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
@@ -964,7 +964,7 @@ msgstr "Τελευταία αλλαγή στις"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
@@ -983,7 +983,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1090,7 +1090,7 @@ msgstr "Προηγμένος χρόνος παραγωγής"
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Εντολή Παραγωγής"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:112
@@ -1647,7 +1647,7 @@ msgstr "Παραπομπή σε σημείο εξωτερικού σχεδίου
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Σχετιζόμενο όνομα χρήστη του πόρου για τη διαχείριση της πρόσβασης."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1662,12 +1662,12 @@ msgstr "Πηγή"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Πόροι Αποχώρησης"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_type
 msgid "Resource Type"
-msgstr ""
+msgstr "Τύπος Πόρου"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
@@ -1737,7 +1737,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
 msgid "Scheduled Date"
-msgstr "Προγραμματισμένη Ημερ/νία"
+msgstr "Προγραμματισμένη Ημερομηνία"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1928,7 +1928,7 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr ""
+msgstr "Αυτό το πεδίο απεικονίζει την αποδοτικότητα των πόρων για την ολοκλήρωση των εργασιών. π.χ. ένας μόνο πόρος που ορισθεί σε μια φάση 5 ημερών με 5 εργασίες, θα παρουσιάσει ένα φορτίο 100% για τη φάση αυτή από προεπιλογή, αλλά αν βάλουμε μια απόδοση 200%, τότε το φορτίο του θα είναι μόνο 50%."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
@@ -2012,7 +2012,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread_counter
@@ -2024,7 +2024,7 @@ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update"
-msgstr "Ανανέωση"
+msgstr "Ενημέρωση"
 
 #. module: mrp
 #: selection:mrp.production,priority:0

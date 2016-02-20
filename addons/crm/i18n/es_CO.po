@@ -3,14 +3,15 @@
 # * crm
 # 
 # Translators:
+# Esteban Echeverry <tebanep@nubark.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-11-12 04:23+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-05 21:40+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -379,7 +380,7 @@ msgstr "<strong>Proyecte ingresos futuros</strong><br/>\nUsted puede evaluar la 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Mass mailing</strong>"
-msgstr "<strong>Envíos masivos</strong>"
+msgstr "<strong>Correo masivo</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -609,7 +610,7 @@ msgstr "Análisis de Actividades"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr "Objetivo de las Actividades Terminadas"
+msgstr "Objetivo de Actividades Terminadas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subtype_id
@@ -635,7 +636,7 @@ msgstr "Alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias del Contacto de Seguridad"
+msgstr "Seguridad al Contactar el Alias"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_domain
@@ -645,7 +646,7 @@ msgstr "Alias del Dominio"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_name
 msgid "Alias Name"
-msgstr "Nombre del Alias"
+msgstr "Alias"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_domain
@@ -655,7 +656,7 @@ msgstr "Alias del dominio"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con Alias"
+msgstr "Modelo del Alias"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -697,7 +698,7 @@ msgstr "Analizando el canal de trabajo por fecha de cierre esperada ayudará a s
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Apply deduplication"
-msgstr "Aplicar desduplicación"
+msgstr "Aplicar deduplicación"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1020,6 +1021,11 @@ msgstr "Felicitaciones, ha terminado!"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
 msgstr "Consumidores"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
+msgstr "Información de Contacto"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1752,7 +1758,7 @@ msgstr "Aquí hay algunas de las <strong>personalizaciones disponibles</strong>:
 msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "               To set a next activity, go on an opportunity and add one. It will then appear in this list."
-msgstr "Aquí está la lista de sus siguientes actividades. Aquellas están enlazadas a sus oportunidades. Para fijar una siguiente actividad, vaya a una oportunidad y añada una. Así aparecerá en esta lista."
+msgstr "Aquí está la lista de sus próximas actividades. Estas están enlazadas a sus oportunidades. Para fijar una siguiente actividad, vaya a una oportunidad y añada una. Así aparecerá en esta lista."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -1853,13 +1859,6 @@ msgstr "Si desea hacerlo usted mismo:"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Import using the top left button in"
 msgstr "Importe usando el botón superior izquierdo"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2388,7 +2387,7 @@ msgstr "Mensajes"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_ids
 msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
+msgstr "Historial de mensajes y de comunicación"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
@@ -2479,7 +2478,7 @@ msgstr "Fecha de la Próxima Acción"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
 #: model:ir.ui.menu,name:crm.crm_lead_menu_activities
 msgid "Next Activities"
-msgstr "Siguientes Actividades"
+msgstr "Próximas Actividades"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_next_activity_id
@@ -3680,6 +3679,9 @@ msgstr "A no ser que esté iniciando un nuevo negocio, probablemente usted tenga
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin Leer"
 
@@ -4040,7 +4042,7 @@ msgstr "Su LinkedIn o páginas de redes sociales"
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your Pipeline"
-msgstr "Su Canal de Trabajo"
+msgstr "Canal de Ventas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

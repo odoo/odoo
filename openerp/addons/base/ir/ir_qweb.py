@@ -478,7 +478,7 @@ class QWeb(orm.AbstractModel):
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         async = self.get_attr_bool(template_attributes.get('async'), default=False)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async, qwebcontext=qwebcontext)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -634,8 +634,9 @@ class FieldConverter(osv.AbstractModel):
         inherit_branding = context and context.get('inherit_branding')
         if not inherit_branding and context and context.get('inherit_branding_auto'):
             inherit_branding = self.pool['ir.model.access'].check(cr, uid, record._name, 'write', False, context=context)
+        translate = context and context.get('edit_translations') and context.get('translatable') and getattr(record._fields[field_name], 'translate', False)
 
-        if inherit_branding:
+        if inherit_branding or translate:
             # add branding attributes
             g_att += ''.join(
                 _build_attribute(name, value)
@@ -1165,35 +1166,39 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith('/web/content')
 
-    def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, qwebcontext=None):
         if sep is None:
             sep = '\n            '
         response = []
         if debug:
             if css and self.stylesheets:
-                self.preprocess_css()
-                if self.css_errors:
-                    msg = '\n'.join(self.css_errors)
-                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
+                if not self.is_css_preprocessed():
+                    self.preprocess_css(debug=debug)
+                    if self.css_errors:
+                        msg = '\n'.join(self.css_errors)
+                        self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
         else:
-            url_for = self.context.get('url_for', lambda url: url)
+            if qwebcontext is None:
+                qwebcontext = QWebContext(self.cr, self.uid, {})
             if css and self.stylesheets:
                 css_attachments = self.css()
                 if not self.css_errors:
                     for attachment in css_attachments:
-                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                        el = etree.fromstring('<link href="%s" rel="stylesheet"/>' % attachment.url)
+                        response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
                 else:
                     msg = '\n'.join(self.css_errors)
                     self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                     for style in self.stylesheets:
                         response.append(style.to_html())
             if js and self.javascripts:
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+                el = etree.fromstring('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.js().url))
+                response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1249,18 +1254,23 @@ class AssetsBundle(object):
     def save_attachment(self, type, content, inc=None):
         ira = self.registry['ir.attachment']
 
-        values = {}
-        values["name"] = "/web/content/%s" % type
-        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
-        values["res_model"] = 'ir.ui.view'
-        values["public"] = True
-        values["type"] = 'binary'
+        fname = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+        values = {
+            'name': "/web/content/%s" % type,
+            'datas_fname': fname,
+            'res_model': 'ir.ui.view',
+            'res_id': False,
+            'type': 'binary',
+            'public': True,
+            'datas': content.encode('utf8').encode('base64'),
+        }
         attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
-        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
-        values["name"] = url
-        values["url"] = url
-        values["datas"] = content.encode('utf8').encode('base64')
 
+        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, fname)
+        values = {
+            'name': url,
+            'url': url,
+        }
         ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
 
         if self.context.get('commit_assetsbundle') is True:
@@ -1278,7 +1288,6 @@ class AssetsBundle(object):
         return attachments[0]
 
     def css(self):
-        ira = self.registry['ir.attachment']
         attachments = self.get_attachments('css')
         if not attachments:
             # get css content
@@ -1326,7 +1335,35 @@ class AssetsBundle(object):
             }
         """ % message
 
-    def preprocess_css(self):
+    def is_css_preprocessed(self):
+        uid = openerp.SUPERUSER_ID
+        preprocessed = True
+        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+            outdated = False
+            assets = dict((asset.html_url % asset.url, asset) for asset in self.stylesheets if isinstance(asset, atype))
+            if assets:
+                assets_domain = [('url', 'in', assets.keys())]
+                ira_ids = self.registry['ir.attachment'].search(self.cr, uid, assets_domain)
+                ira_records = self.registry['ir.attachment'].browse(self.cr, uid, ira_ids)
+                for ira_record in ira_records:
+                    asset = assets[ira_record.url]
+                    if asset.last_modified > Datetime.from_string(ira_record['__last_update']):
+                        outdated = True
+                        break
+                    if asset._content is None:
+                        asset._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8')
+
+                if any(asset._content is None for asset in assets.itervalues()):
+                    outdated = True
+
+                if outdated:
+                    if ira_ids:
+                        self.registry['ir.attachment'].unlink(self.cr, uid, ira_ids)
+                    preprocessed = False
+
+        return preprocessed
+
+    def preprocess_css(self, debug=False):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
             Returns the bundle's flat css.
@@ -1347,6 +1384,28 @@ class AssetsBundle(object):
                     asset_id = fragments.pop(0)
                     asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
                     asset._content = fragments.pop(0)
+
+                    if debug:
+                        try:
+                            ira = self.registry['ir.attachment']
+                            fname = os.path.basename(asset.url)
+                            url = asset.html_url % asset.url
+                            with self.cr.savepoint():
+                                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                                    datas=asset.content.encode('utf8').encode('base64'),
+                                    mimetype='text/css',
+                                    type='binary',
+                                    name=url,
+                                    url=url,
+                                    datas_fname=fname,
+                                    res_model=False,
+                                    res_id=False,
+                                ), context=self.context)
+
+                            if self.context.get('commit_assetsbundle') is True:
+                                self.cr.commit()
+                        except psycopg2.Error:
+                            pass
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
@@ -1562,34 +1621,6 @@ class PreprocessedCSS(StylesheetAsset):
 
     def minify(self):
         return self.with_header()
-
-    def to_html(self):
-        if self.url:
-            try:
-                ira = self.registry['ir.attachment']
-                url = self.html_url % self.url
-                domain = [('type', '=', 'binary'), ('url', '=', url)]
-                with self.cr.savepoint():
-                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-                    datas = self.content.encode('utf8').encode('base64')
-                    if ira_id:
-                        # TODO: update only if needed
-                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
-                                  context=self.context)
-                    else:
-                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                            datas=datas,
-                            mimetype='text/css',
-                            type='binary',
-                            name=url,
-                            url=url,
-                        ), context=self.context)
-
-                if self.context.get('commit_assetsbundle') is True:
-                    self.cr.commit()
-            except psycopg2.Error:
-                pass
-        return super(PreprocessedCSS, self).to_html()
 
     def get_source(self):
         content = self.inline or self._fetch_content()

@@ -232,12 +232,12 @@ class google_calendar(osv.AbstractModel):
             "start": {
                 type: start_date,
                 vstype: None,
-                'timeZone': context.get('tz', 'UTC'),
+                'timeZone': context.get('tz') or 'UTC',
             },
             "end": {
                 type: final_date,
                 vstype: None,
-                'timeZone': context.get('tz', 'UTC'),
+                'timeZone': context.get('tz') or 'UTC',
             },
             "attendees": attendee_list,
             "reminders": {
@@ -295,13 +295,13 @@ class google_calendar(osv.AbstractModel):
             st, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
         except urllib2.HTTPError, e:
             if e.code == 401:  # Token invalid / Acces unauthorized
-                error_msg = "Your token is invalid or has been revoked !"
+                error_msg = _("Your token is invalid or has been revoked !")
 
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                 with registry.cursor() as cur:
                     self.pool['res.users'].write(cur, SUPERUSER_ID, [uid], {'google_calendar_token': False, 'google_calendar_token_validity': False}, context=context)
 
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
+                raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
             raise
 
         return (status_response(st), content['id'] or False, ask_time)
@@ -699,8 +699,8 @@ class google_calendar(osv.AbstractModel):
                         self.pool['res.users'].write(cur, SUPERUSER_ID, [uid], {'google_calendar_last_sync_date': False}, context=context)
                 error_key = json.loads(str(e))
                 error_key = error_key.get('error', {}).get('message', 'nc')
-                error_msg = "Google is lost... the next synchro will be a full synchro. \n\n %s" % error_key
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
+                error_msg = _("Google is lost... the next synchro will be a full synchro. \n\n %s") % error_key
+                raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
 
             my_google_att_ids = att_obj.search(cr, uid, [
                 ('partner_id', '=', myPartnerID),
@@ -971,9 +971,10 @@ class calendar_event(osv.Model):
     _inherit = "calendar.event"
 
     def get_fields_need_update_google(self, cr, uid, context=None):
-        return ['name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
-                'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
+        recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
+        return recurrent_fields + ['name', 'description', 'allday', 'start', 'date_end', 'stop',
+                                   'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
+                                   'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:

@@ -867,7 +867,7 @@ var FormViewDialog = ViewDialog.extend({
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
                         self.view_form.onchanges_mutex.def.then(function() {
                             if (!self.view_form.warning_displayed) {
                                 $.when(self.view_form.save()).done(function() {
@@ -992,8 +992,8 @@ var SelectCreateDialog = ViewDialog.extend({
             this.searchview.destroy();
         }
         var $header = $('<div/>').addClass('o_modal_header').appendTo(this.$el);
-        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
         var $pager = $('<div/>').addClass('o_pager').appendTo($header);
+        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
         this.searchview = new SearchView(this, this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {

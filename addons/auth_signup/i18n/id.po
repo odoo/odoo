@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-20 05:24+0000\n"
+"POT-Creation-Date: 2016-01-06 07:13+0000\n"
+"PO-Revision-Date: 2016-01-06 08:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${di object.company_id.name} undangan untuk terhubung di Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -80,16 +80,22 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Membolehkan pengguna eksternal untuk sign up"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
+msgstr "Email telah dikirim dengan mandat untuk menyetel ulang sandi"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr ""
@@ -114,7 +120,7 @@ msgstr "Konfirmasi"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Konfirmasi Password"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -122,31 +128,37 @@ msgid "Connected"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Tidak dapat membuat ulang sandi"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Mengaktifkan password reset dari halaman Login"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Jika dicentang, hanya mengundang pengguna dapat mendaftar."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Pendaftaran tidak valid token"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Pernah terhubung"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -161,69 +173,64 @@ msgstr "Sandi"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
-msgid "Private Profile"
-msgstr ""
+msgstr "Reset Kata sandi"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Atur Ulang Kata Sandi"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Reset password: tidak valid username atau email"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Mengirim Petunjuk Password Reset"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Mengirim Email undangan"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Daftar"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Kedaluwarsa pendaftaran"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Signup Token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Jenis signup Token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Signup Token adalah Valid"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "Pendaftaran URL"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -233,17 +240,12 @@ msgstr "Status"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Pengguna template untuk pengguna baru yang dibuat melalui pendaftaran"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "Hal ini memungkinkan pengguna untuk memicu password reset dari halaman Login."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -251,50 +253,15 @@ msgid "Users"
 msgstr "Pengguna"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Email Anda"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Nama Anda"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -304,9 +271,4 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "unknown"
-msgstr "tidak diketahui"
+msgstr "misalnya John Doe"

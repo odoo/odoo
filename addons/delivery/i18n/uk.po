@@ -3,14 +3,14 @@
 # * delivery
 # 
 # Translators:
-# Bogdan, 2015
+# Bogdan, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-30 19:06+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-02-13 15:19+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# of Product Variants"
-msgstr ""
+msgstr "# Варіантів товару"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -344,7 +344,7 @@ msgstr "Час виконання клієнтом"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
 msgid "Customer Taxes"
-msgstr "Податки продукту"
+msgstr "Податки товару"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
@@ -354,7 +354,7 @@ msgstr "Клієнт"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Дата, з якої членство стає активним."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -364,7 +364,7 @@ msgstr "Дата останнього повідомлення по запису
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Дата, до якої членство залишається активним."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
@@ -469,12 +469,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
 msgid "Event Subscription"
-msgstr ""
+msgstr "Підписка на подію"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Квитки на подію"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
@@ -673,7 +673,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
 msgid "Internal Reference"
-msgstr "Внутрішні зв’язки"
+msgstr "Внутрішні посилання"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
@@ -787,7 +787,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Членство"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
@@ -797,7 +797,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Дата початку членства"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -812,7 +812,7 @@ msgstr "Повідомлення та історія бесіди"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Правила мінімальних залишків"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -882,17 +882,17 @@ msgstr "На відправку"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Упаковки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "Партнер"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr "Реальні упакування"
+msgstr "Матеріальні упаковки"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -998,7 +998,7 @@ msgstr "Розташування товару"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
 msgid "Products"
-msgstr "Продукти"
+msgstr "Товари"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
@@ -1136,6 +1136,14 @@ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
 msgstr ""
@@ -1237,7 +1245,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
-msgstr ""
+msgstr "Назва шаблону"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1395,7 +1403,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_type_id
 msgid "Type of Event"
-msgstr ""
+msgstr "Тип події"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled

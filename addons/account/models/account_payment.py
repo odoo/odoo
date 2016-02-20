@@ -33,7 +33,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, oldname="payment_method")
     payment_method_code = fields.Char(related='payment_method_id.code',
-        help="Technical field used to adapt the interface to the payment type selected.")
+        help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -81,12 +81,18 @@ class account_abstract_payment(models.AbstractModel):
 
     def _compute_total_invoices_amount(self):
         """ Compute the sum of the residual of invoices, expressed in the payment currency """
-        total = 0
         payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
-        for inv in self._get_invoices():
-            total += inv.residual_company_signed
-        if self.company_id and self.company_id.currency_id != payment_currency:
-            total = self.company_id.currency_id.with_context(date=self.payment_date).compute(total, payment_currency)
+        invoices = self._get_invoices()
+
+        if all(inv.currency_id == payment_currency for inv in invoices):
+            total = sum(invoices.mapped('residual_signed'))
+        else:
+            total = 0
+            for inv in invoices:
+                if inv.company_currency_id != payment_currency:
+                    total += inv.company_currency_id.with_context(date=self.payment_date).compute(inv.residual_company_signed, payment_currency)
+                else:
+                    total += inv.residual_company_signed
         return abs(total)
 
 
@@ -114,7 +120,7 @@ class account_register_payments(models.TransientModel):
         if not active_model or not active_ids:
             raise UserError(_("Programmation error: wizard action executed without active_model or active_ids in context."))
         if active_model != 'account.invoice':
-            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
+            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'.") % active_model)
 
         # Checks on received invoice records
         invoices = self.env[active_model].browse(active_ids)
