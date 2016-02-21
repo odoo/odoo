@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-02-07 18:58+0000\n"
+"PO-Revision-Date: 2016-02-20 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +75,7 @@ msgstr "Aktívny"
 #: code:addons/google_drive/google_drive.py:49
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Aspoň jeden kľúč nemožno nájsť vo vašom názve vzoru Disku Google"
 
 #. module: google_drive
 #: field:base.config.settings,google_drive_authorization_code:0
@@ -87,12 +87,12 @@ msgstr "Autorizačný kód"
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Zvoľte ako bude nazvaný nový Google disk, na Google strane. Napr. gdoc_%(field_name)s"
 
 #. module: google_drive
 #: view:base.config.settings:google_drive.inherited_google_view_general_configuration
 msgid "Configure your templates"
-msgstr ""
+msgstr "Konfigurovať vaše šablóny"
 
 #. module: google_drive
 #: field:google.drive.config,create_uid:0
@@ -108,7 +108,7 @@ msgstr "Vytvorené"
 #: code:addons/google_drive/google_drive.py:157
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Vytváranie Google disku môže byť iba jeden po druhom. "
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -137,7 +137,7 @@ msgstr "Ísť na panel konfigurácie"
 #. module: google_drive
 #: field:google.drive.config,google_drive_client_id:0
 msgid "Google Client "
-msgstr ""
+msgstr "Google klient"
 
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
@@ -148,7 +148,7 @@ msgstr "Google Disk"
 #: view:google.drive.config:google_drive.view_google_drive_config_form
 #: view:google.drive.config:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Konfigurácia Google disku"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:157
@@ -159,19 +159,19 @@ msgstr ""
 #. module: google_drive
 #: field:google.drive.config,name_template:0
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Vzor názvu Google disku"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:71
 #: code:addons/google_drive/google_drive.py:91
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google Disk ešte nie je nakonfigurovaný. Prosím kontaktujte vášho administrátora."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Konfigurácia konceptov Google Disku"
 
 #. module: google_drive
 #: field:google.drive.config,id:0
@@ -209,18 +209,18 @@ msgstr "Model"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr ""
+msgstr "Model zvoleného filtra sa nezhoduje s modelom aktuálnej šablóny."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:189
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Prosím zadajte platnú URL Google Dokumentu."
 
 #. module: google_drive
 #: field:google.drive.config,google_drive_resource_id:0
 msgid "Resource Id"
-msgstr ""
+msgstr "ID zdroja"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:88
@@ -228,7 +228,7 @@ msgstr ""
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "Niečo sa pokazilo počas generovania tokenu. Prosím požiadajte opäť o autorizačný kód."
 
 #. module: google_drive
 #: field:google.drive.config,name:0
@@ -238,7 +238,7 @@ msgstr "Názov šablóny"
 #. module: google_drive
 #: field:google.drive.config,google_drive_template_url:0
 msgid "Template URL"
-msgstr ""
+msgstr "URL šablóny"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
@@ -250,7 +250,7 @@ msgstr "Šablóny"
 #: code:addons/google_drive/google_drive.py:106
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Google Šablóna nebola nájdená. Možno bola zmazaná."
 
 #. module: google_drive
 #: help:base.config.settings,google_drive_uri:0
@@ -264,7 +264,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Názov priloženého dokumentu môže používať fixné alebo variabilné dáta. Pre rozlíšenie medzi dokumentmi v\nGoogle Disku, použite fixné slová a polia. Napríklad vo vyššie uvedenom príklade, ak ste napísali Agrolait_%(name)s_Sales\ndo poľa názvu Google Disku, dokument na vašom Google Disku a v Odoo prílohe bude pomenovaný\n'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:133
@@ -272,7 +272,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Oprávnenie 'čitateľ' pre 'každý s týmto odkazom' nebolo napísané v dokumente"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form
@@ -296,15 +296,15 @@ msgstr "Varovanie !"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Nenakonfigurovali ste 'Autorizačný kód' vygenerovaný z Google. Prosím vygenerujte a nakonfigurujte ho."
 
 #. module: google_drive
 #: view:base.config.settings:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "a vložte sem"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr ""
+msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
