@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2015-11-28 07:10+0000\n"
+"PO-Revision-Date: 2016-02-18 01:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Hola,</p>\n\n\n<p>Hemos sido contactados por los clientes potenciales que se encuentran en su región. Por lo tanto, las siguientes iniciativas han sido asignadas a ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Asunto no definido'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nombre de contacto no definido'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'País no definido' }, ${lead.lead_id.email_from or 'Correo no definido'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Por favor conectese al <a href=\"${object.get_portal_url()}\">Portal de asociado</a> para obtener más detalles. En cada iniciativa hay dos botones en la esquina superior izquierda que debe pulsar después de haber contactado con la iniciativa: \"Me interesa\" y \"No me interesa\".</p>\n% else:\n<p>\n    Usted aún no tiene acceso al portal de nuestra base de datos. Por favor contacte con \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'su administrador de cuentas %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'nosotros'}.\n</p>\n% endif\n<p>La iniciativa se enviará a otro asociado si no se comunica con el contacto de la iniciativa antes de 20 días.</p>\n\n<p>Gracias,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPD: Parece que usted no tiene un administrador de cuentas asignado a usted, por favor póngase en contacto con nosotros.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -105,7 +105,7 @@ msgstr "Fecha de Asignación"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Asignar Mes"
 
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
@@ -157,7 +157,7 @@ msgstr "Probabilidad Prom."
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr ""
+msgstr "Informe de Iniciativas CRM"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
@@ -287,7 +287,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "¿Se ha contactado con el contacto de la iniciativa?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -386,13 +386,13 @@ msgstr "Geolocalización"
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
-msgstr ""
+msgstr "Indica la probabilidad de asignar una iniciativa a esta empresa. (0 significa ninguna asignación)"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,grade_id:0
 #: field:crm.partner.report.assign,grade_id:0 field:res.partner,grade_id:0
 msgid "Grade"
-msgstr ""
+msgstr "Nivel"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,name:0
@@ -476,7 +476,7 @@ msgstr "Actualizado el"
 #. module: crm_partner_assign
 #: help:crm.lead,date_assign:0
 msgid "Last date this case was forwarded/assigned to a partner"
-msgstr ""
+msgstr "Última fecha en la que este caso fue reenviado/asignado a una empresa"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_review:0
@@ -493,7 +493,7 @@ msgstr "Iniciativa"
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_link:0
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Enlaces de la Iniciativa"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -528,7 +528,7 @@ msgstr "Iniciativas"
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.portal_leads
 msgid "Leads & Opportunities"
-msgstr ""
+msgstr "Iniciativas y Oportunidades"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -579,18 +579,18 @@ msgstr "Número de Días para abrir el caso"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Una vez que se procese la iniciativa, aparecerá en su menú de \"Oportunidades\"."
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,opening_date:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Fecha de apertura"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr ""
+msgstr "Análisis de asignación de op."
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
@@ -601,7 +601,7 @@ msgstr "Oportunidades"
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Análisis de Asignación de Oportunidades"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
@@ -762,13 +762,13 @@ msgstr "Asunto"
 #: code:addons/crm_partner_assign/crm_lead.py:34
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "Falta la acción de interesado del canal de CRM "
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "La plantilla de redirección de email no existe en la base de datos"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
@@ -789,7 +789,7 @@ msgstr "Para Reciclar"
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,turnover:0
 msgid "Turnover"
-msgstr ""
+msgstr "Volumen de negocio"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,type:0
@@ -820,12 +820,12 @@ msgstr "Muy Baja"
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,comment:0
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "¿Cuáles son los elementos que le han llevado a esta decisión?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "¿Cuál es la siguiente acción? ¿Cuándo? ¿Cuáles son los ingresos esperados?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -836,7 +836,7 @@ msgstr "Por qué no está interesado en esta iniciativa?"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr ""
+msgstr "Debe contactar con la iniciativa antes de expresar su interés."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
@@ -854,4 +854,4 @@ msgstr "o"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "varias empresas: asignación automática, usando coordenadas GPS y grados de empresas"
