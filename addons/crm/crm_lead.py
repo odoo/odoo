@@ -518,16 +518,6 @@ class CrmLead(FormatAddress, models.Model):
                 attachment.write(values)
         return True
 
-    # TODO: This method doesn't seem to be called from any of the official modules, hence it can be removed.
-    @api.multi
-    def get_duplicated_leads(self, partner_id, include_lost=False):
-        """
-        Search for opportunities that have the same partner and that arent done or cancelled
-        """
-        self.ensure_one()
-        email = self.partner_id.email or self.email_from
-        return self._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
-
     def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
