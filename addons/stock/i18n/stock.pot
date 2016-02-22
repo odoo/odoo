@@ -4942,6 +4942,12 @@ msgid "Types of Operation"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:663
+#, python-format
+msgid "Under no circumstances should you delete or change quants yourselves!"
+msgstr ""
+
+#. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
 msgstr ""
@@ -5315,7 +5321,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:638
+#: code:addons/stock/stock.py:2958
+#, python-format
+msgid "You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:657
 #, python-format
 msgid "You cannot move to a location of type view %s."
 msgstr ""
@@ -5340,7 +5352,13 @@ msgid "You cannot split a move done"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:132
+#: code:addons/stock/wizard/stock_transfer_details.py:79
+#, python-format
+msgid "You cannot transfer a picking in state '%s'."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:135
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""

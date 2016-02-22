@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import models, fields, api
+from openerp.exceptions import Warning
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from datetime import datetime
@@ -74,6 +75,9 @@ class stock_transfer_details(models.TransientModel):
 
     @api.one
     def do_detailed_transfer(self):
+        if self.picking_id.state not in ['assigned', 'partially_available']:
+            raise Warning(_('You cannot transfer a picking in state \'%s\'.') % self.picking_id.state)
+
         processed_ids = []
         # Create new and update existing pack operations
         for lstits in [self.item_ids, self.packop_ids]:
