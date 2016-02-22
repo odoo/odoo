@@ -5,12 +5,13 @@
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2015
 # Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-23 17:03+0000\n"
+"PO-Revision-Date: 2016-02-21 21:15+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -463,6 +464,11 @@ msgid "Click to define a new product."
 msgstr "Kattintson egy új termék meghatározásához."
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+msgid "Click to mark products as received."
+msgstr "Kattintson a termék megérkezettként jelöléséhez."
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr "Kattintson ehhez a beszerzéshez tartozó beszállítói számla rögzítéséhez."
@@ -597,6 +603,11 @@ msgid "Description"
 msgstr "Leírás"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Célállomás hely típus"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
@@ -684,6 +695,11 @@ msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "Kétszintű 2 ellenőrzés egy beszerzési megrendelés jóváhagyásához"
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_3
+msgid "Get all the shipments related to this order."
+msgstr "Ehhez a vásárlói megrendeléshez tartozó szállítások lekérdezése."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -702,6 +718,13 @@ msgstr "Visszavont sorok eltüntetése"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_2
+msgid ""
+"If a product has been broken or damaged during the transport, you can scrap "
+"it with this button."
+msgstr "Ha egy termék a szállítás közben tönkrement vagy megsérült, akkor selejtezheti ezzel a gombbal."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1141,6 +1164,11 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Kétszeres jóváhagyás szerkezetet ad a beszerzésekre"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
+msgid "Published"
+msgstr "Közzétett"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase"
 msgstr "Beszerzés"
@@ -1503,6 +1531,11 @@ msgid "Taxes"
 msgstr "Adók"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Technikai mező a Közvetlen szállítás Címének megjelenítésére szokták használni"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Kikötések és feltételek"
@@ -1729,6 +1762,11 @@ msgid ""
 msgstr "Beszállítói számlákat előre létrehozhat a beszerzési megrendelés\n                    vagy nyugták alapján. Ez lehetővé teszi a beszállítóktól kapott \n                     számlák ellenőrzését az Odoo rendszerben lévő\n                    vázlat dokumentumok alalpján."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr "Hozzászólásként látható a weboldalon"
+
+#. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
 msgstr "Várakozó számlák"
@@ -1785,3 +1823,8 @@ msgstr "account.config.settings"
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
+msgid "unknown"
+msgstr "ismeretlen"
