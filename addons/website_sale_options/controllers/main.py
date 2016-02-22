@@ -56,7 +56,7 @@ class website_sale_options(website_sale):
     @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
     def modal(self, product_id, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        pricelist = self.get_pricelist()
+        pricelist = request.website.get_current_pricelist()
         if not context.get('pricelist'):
             context['pricelist'] = int(pricelist)
 

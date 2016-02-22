@@ -41,13 +41,8 @@ class product_public_category(osv.osv):
             res.append((cat.id, ' / '.join(reversed(names))))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
@@ -163,18 +158,10 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _inherit = "product.product"
 
-    # Wrappers for call_kw with inherits
-    def open_website_url(self, cr, uid, ids, context=None):
-        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
-        return self.pool['product.template'].open_website_url(cr, uid, [template_id], context=context)
-
     def website_publish_button(self, cr, uid, ids, context=None):
         template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
         return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
-    def website_publish_button(self, cr, uid, ids, context=None):
-        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
-        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
@@ -193,10 +180,3 @@ class product_attribute_value(osv.Model):
             "specific HTML color index (e.g. #ff0000) to display the color on the website if the "
             "attibute type is 'Color'."),
     }
-
-    # TODO in master: remove this function and change 'color' field name
-    def write(self, cr, uid, ids, vals, context=None):
-        # ignore write coming from many2many_tags color system
-        if vals.keys() == ['color'] and isinstance(vals['color'], (int, long)):
-            vals = {}
-        return super(product_attribute_value, self).write(cr, uid, ids, vals, context=context)
