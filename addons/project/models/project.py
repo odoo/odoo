@@ -151,17 +151,14 @@ class Project(models.Model):
         ir_values = self.env['ir.values'].get_default('project.config.settings', 'generate_project_alias')
         if ir_values:
             vals['alias_name'] = vals.get('alias_name') or vals.get('name')
-        create_context = dict(self.env.context,
-                              project_creation_in_progress=True,
-                              mail_create_nosubscribe=True)
-        return super(Project, self.with_context(create_context)).create(vals)
+        return super(Project, self.with_context(project_creation_in_progress=True, mail_create_nosubscribe=True)).create(vals)
 
     @api.multi
     def write(self, vals):
         # if alias_model has been changed, update alias_model_id accordingly
         if vals.get('alias_model'):
-            models = self.env['ir.model'].search([('model', '=', vals.get('alias_model', 'project.task'))], limit=1)
-            vals.update(alias_model_id=models.id)
+            model = self.env['ir.model'].search([('model', '=', vals.get('alias_model', 'project.task'))], limit=1)
+            vals['alias_model_id'] = model.id
         res = super(Project, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
@@ -173,10 +170,8 @@ class Project(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        context = dict(self.env.context)
-        context['active_test'] = False
         if not default.get('name'):
-            default.update(name=_("%s (copy)") % (self.name))
+            default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
         self.with_context(active_test=False).map_tasks(project)
         return project
@@ -239,9 +234,8 @@ class Task(models.Model):
     _mail_post_access = 'read'
 
     def _get_default_partner(self):
-        context = dict(self.env.context)
-        if 'default_project_id' in context:
-            return self.env['project.project'].browse(context['default_project_id']).partner_id
+        if 'default_project_id' in self.env.context:
+            return self.env['project.project'].browse(self.env.context['default_project_id']).partner_id
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
@@ -262,11 +256,10 @@ class Task(models.Model):
         stages = ProjectTaskType.sudo(access_rights_uid).browse(stage_ids)
         result = stages.sudo(access_rights_uid).name_get()
         # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        stage_dict = {stage: stage_ids.index(stage) for stage in stage_ids}
+        result.sort(key=lambda x: stage_dict[x[0]])
 
-        fold = {}
-        for stage in stages:
-            fold[stage.id] = stage.fold
+        fold = {stage.id: stage.fold for stage in stages}
         return result, fold
 
     _group_by_full = {
@@ -431,11 +424,9 @@ class Task(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        context = dict(self.env.context)
-        context['empty_list_help_id'] = context.get('default_project_id')
-        context['empty_list_help_model'] = 'project.project'
-        context['empty_list_help_document_name'] = _("tasks")
-        return super(Task, self.with_context(context)).get_empty_list_help(help)
+        return super(Task, self.with_context(empty_list_help_id=self.env.context.get('default_project_id'),
+                                             empty_list_help_model='project.project',
+                                             empty_list_help_document_name=_("tasks"))).get_empty_list_help(help)
 
     # ----------------------------------------
     # Case management
