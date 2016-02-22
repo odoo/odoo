@@ -621,7 +621,7 @@ class survey_question(osv.Model):
         'constr_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'validation_required': False,
-        'comments_message': lambda s, cr, uid, c: _('If other, precise:'),
+        'comments_message': lambda s, cr, uid, c: _('If other, please specify:'),
     }
 
     _sql_constraints = [
