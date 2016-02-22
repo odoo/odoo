@@ -26,7 +26,7 @@ class StockWarehouse(models.Model):
             'location_id': self.lot_stock_id.id,
             'route_id': manufacture_route.id,
             'action': 'manufacture',
-            'picking_type_id': self.int_type_id.id,
+            'picking_type_id': self.manu_type_id.id,
             'propagate': False,
             'warehouse_id': self.id,
         }
@@ -58,7 +58,7 @@ class StockWarehouse(models.Model):
                 'sequence_id': seq.id,
                 'default_location_src_id': wh_stock_loc.id,
                 'default_location_dest_id': wh_stock_loc.id,
-                'sequence': max_sequence + 1,
+                'sequence': max_sequence,
                 'color': color})
             warehouse.write({'manu_type_id': manu_type.id})
 

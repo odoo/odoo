@@ -830,6 +830,7 @@
                             <field name="availability" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
                             <field name="product_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                            <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
@@ -844,8 +845,8 @@
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False)]"
-                                context="{'default_product_id': product_id}" required="1" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="routing_id" groups="mrp.group_mrp_routings" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
                             <field name="date_planned" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
@@ -868,10 +869,8 @@
                                     <field name="quantity_available"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
                                     <field name="quantity_done" attrs="{'readonly': [('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
-
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
                                         attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
-
                                 </tree>
                             </field>
                         </page>
@@ -1260,7 +1259,7 @@
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0">
             <header>
-                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|',('state', '!=', 'progress')]}" class="btn-info"/>
+                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|',('state', '!=', 'progress'), ('qty_produced', '=', 0)]}" class="btn-info"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'ready')]}" class="btn-success"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', '|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
@@ -1295,8 +1294,8 @@
                     <group>
                         <group>
                             <field name="qty_producing" string="Current Qty"/>
-                            <field name="tracking" invisible="True"/>
-                            <field name="final_lot_id" context="{'default_product_id': product}" attrs="{'invisible': [('tracking', '!=', 'lot')]}"/>
+                            <field name="final_lot_id" context="{'default_product_id': product}" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                            <field name="has_tracking" invisible="1"/>
                         </group>
                     </group>
                     <field name="active_move_traceability_ids" attrs="{'invisible': [('active_move_traceability_ids', '=', [])]}">

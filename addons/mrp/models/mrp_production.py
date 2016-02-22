@@ -77,6 +77,7 @@ class MrpProduction(models.Model):
     origin = fields.Char(string='Source', help="Reference of the document that generated this manufacturing order.", copy=False)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template')
     product_id = fields.Many2one('product.product', string='Product', required=True, readonly=True, states={'confirmed': [('readonly', False)]}, domain=[('type', 'in', ['product', 'consu'])])
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(string='Quantity to Produce', digits=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, states={'confirmed': [('readonly', False)]}, default=1.0)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', required=True, readonly=True, states={'confirmed': [('readonly', False)]}, oldname='product_uom')
 
@@ -91,7 +92,7 @@ class MrpProduction(models.Model):
     date_finished = fields.Datetime(string='End Date', readonly=True, copy=False)
 
     bom_id = fields.Many2one('mrp.bom', string='Bill of Material', readonly=True, states={'confirmed': [('readonly', False)]})
-    routing_id = fields.Many2one('mrp.routing', string='Routing', related='bom_id.routing_id', store=True, on_delete='set null', readonly=True)
+    routing_id = fields.Many2one('mrp.routing', string='Routing', related='bom_id.routing_id', store=True, readonly=True)
 
     # FP Note: what's the goal of this field? -> It is like the destination move of the production move
     move_prod_id = fields.Many2one('stock.move', string='Product Move', readonly=True, copy=False)
@@ -234,12 +235,10 @@ class MrpProduction(models.Model):
     @api.multi
     def post_inventory(self):
         for order in self:
-            moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done','cancel'))
-            moves_to_do.move_validate()
-            
+            moves_to_do = order.move_raw_ids.move_validate()
             #order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel')).move_validate()
-            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves_to_finish.move_validate()
+            order._cal_price(moves_to_do)
+            moves_to_finish = order.move_finished_ids.move_validate()
             for move in moves_to_finish:
                 quants = self.env['stock.quant']
                 #Group quants by lots
@@ -252,7 +251,7 @@ class MrpProduction(models.Model):
                         lot_quants[quant.lot_id.id] |= quant
                 
                 for move_raw in moves_to_do:
-                    if (move.has_tracking != 'none') and (move_raw.product_id.tracking != 'none'):
+                    if (move.has_tracking != 'none') and (move_raw.has_tracking != 'none'):
                         for lot in lot_quants:
                             lots = move_raw.quantity_lots.filtered(lambda x: x.lot_produced_id.id == lot).mapped('lot_id')
                             raw_lot_quants[lot] |= move_raw.quant_ids.filtered(lambda x: (x.lot_id in lots) and (x.qty > 0.0))
@@ -434,13 +433,14 @@ class MrpProductionWorkcenterLine(models.Model):
     move_traceability_ids = fields.One2many('stock.move.lots', 'workorder_id', string='Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
     active_move_traceability_ids = fields.One2many('stock.move.lots', 'workorder_id', string='Active Moves to Track',
-        help="Active Inventory moves for which you must scan a lot number at this work order")
+        help="Active Inventory moves for which you must scan a lot number at this work order", domain=[('done', '=', False)])
 
     # FP TODO: replace by a related through MO, otherwise too much computation without need
     availability = fields.Selection([('waiting', 'Waiting'), ('assigned', 'Available')], 'Stock Availability', store=True, compute='_compute_availability')
 
     production_state = fields.Selection(related='production_id.state', readonly=True)
     product = fields.Many2one('product.product', related='production_id.product_id', string="Product", readonly=True) #should be product_id
+    has_tracking = fields.Selection(related='production_id.product_id.tracking')
     qty = fields.Float(related='production_id.product_qty', string='Qty', readonly=True)
     uom = fields.Many2one('product.uom', related='production_id.product_uom_id', string='Unit of Measure')
 
@@ -501,6 +501,8 @@ class MrpProductionWorkcenterLine(models.Model):
         # One a piece is produced, you can launch the next work order
         if self.next_work_order_id.state=='pending':
             self.next_work_order_id.state='ready'
+        if self.next_work_order_id and self.final_lot_id and not self.next_work_order_id.final_lot_id:
+            self.next_work_order_id.final_lot_id = self.final_lot_id.id
 
         #TODO: add filter for those that have not been done yet
         self.move_traceability_ids.write({'lot_produced_id': self.final_lot_id.id,
@@ -525,6 +527,7 @@ class MrpProductionWorkcenterLine(models.Model):
         self.qty_produced += self.qty_producing
         self.qty_producing = 1.0
         self._generate_lot_ids()
+        self.final_lot_id = False
 
         if self.qty_produced >= self.qty:
             self.button_finish()

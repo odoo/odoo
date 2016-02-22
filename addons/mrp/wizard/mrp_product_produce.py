@@ -20,6 +20,7 @@ class MrpProductProduce(models.TransientModel):
                 quantity = 1.0
             else:
                 quantity = production.product_qty - sum(production.move_finished_ids.mapped('quantity_done'))
+                quantity = quantity if (quantity > 0) else 0
             lines = []
             for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking <> 'none') and x.state not in ('done', 'cancel')):
                 qty = quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty

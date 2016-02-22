@@ -74,7 +74,18 @@ class StockMove(models.Model):
             Functions as an action_done (better to put this logic from action_done itself)
         '''
         quant_obj = self.env['stock.quant']
+        moves_todo = self.env['stock.move']
         for move in self:
+            if move.state in ('done', 'cancel'):
+                continue
+            moves_todo |= move
+            if move.quantity_done > move.product_uom_qty:
+                remaining_qty = move.quantity_done - move.product_uom_qty #Convert to UoM of move
+                extra_move = move.copy(default={'quantity_done': remaining_qty, 'product_uom_qty': remaining_qty, 'production_id': move.production_id.id, 'raw_material_production_id': move.raw_material_production_id.id})
+                extra_move.action_confirm()
+                moves_todo |= extra_move
+        
+        for move in moves_todo:
             if move.quantity_done < move.product_qty:
                 new_move = self.env['stock.move'].split(move, move.product_qty - move.quantity_done)
                 self.browse(new_move).quantity_done = 0.0
@@ -91,7 +102,7 @@ class StockMove(models.Model):
             #Next move in production order
             if move.move_dest_id: 
                 move.move_dest_id.action_assign()
-        return True
+        return moves_todo
 
 
     @api.multi
