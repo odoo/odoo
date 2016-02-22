@@ -10,6 +10,9 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="open_timesheets" type="object" icon="fa-calendar" string="Timesheets"/>
                 </div>
+                <field name="user_id" position="after">
+                    <field name="subtask_project_id" groups="base.group_no_one" />
+                </field>
             </field>
         </record>
 
@@ -50,11 +53,34 @@
             </field>
         </record>
 
+        <record id="act_project_task_sub_task" model="ir.actions.act_window">
+            <field name="name">Sub-tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">
+            {
+                'default_parent_id' : active_id,
+                'default_project_id' : project_id,
+                'default_name' : name + ':',
+                'default_partner_id' : partner_id,
+            }
+            </field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+        </record>
+
         <record model="ir.ui.view" id="view_task_form2_inherited">
             <field name="name">project.task.form.inherited</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="arch" type="xml">
+                <button name="toggle_active" position="after">
+                    <button name="%(act_project_task_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                            attrs="{'invisible' : [('subtask_project_id', '=', False)]}"
+                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" >
+                        <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
+                    </button>
+                </button>
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">onchange_project(project_id)</attribute>
                 </field>
@@ -62,6 +88,11 @@
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="progress" widget="progressbar"
                                 groups="project.group_time_work_estimation_tasks"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="parent_id" attrs="{'invisible' : [('parent_id', '=', False)]}" />
+                    <field name="child_ids" invisible="1" />
+                    <field name="subtask_project_id" invisible="1" />
                 </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
@@ -77,8 +108,9 @@
                     </field>
                     <group>
                      <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
-                        <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
-                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" groups="project.group_time_work_estimation_tasks"/>
+                        <field name="effective_hours" widget="float_time" />
+                        <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
+                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" />
                      </group>
                     </group>
                 </page>
@@ -113,7 +145,26 @@
                         <a name="open_timesheets" type="object">Timesheets</a>
                     </div>
                 </xpath>
+            </field>
+        </record>
 
+        <record id="view_task_kanban_inherited_progress" model="ir.ui.view">
+            <field name="name">project.task.timesheet.kanban.inherited.progress</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <templates position="before">
+                    <field name="progress" />
+                    <field name="remaining_hours" />
+                </templates>
+                <div class="oe_kanban_bottom_left" position="inside">
+                   <t t-if="record.progress.raw_value &gt; 80 and record.progress.raw_value &lt; 100">
+                           <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')"
+                                 groups="project.group_time_work_estimation_tasks" title="Remaining hours">
+                                  <field name="remaining_hours" widget="float_time" />
+                           </div>
+                   </t>
+                </div>
             </field>
         </record>
     </data>

@@ -37,7 +37,11 @@
                             string="Sales Order"/>
                 </xpath>
                 <field name="company_id" position="before">
+                    <field name="procurement_id" groups="base.group_no_one"/>
                     <field name="sale_line_id" string="Order Line" groups="base.group_no_one"/>
+                </field>
+                <field name="parent_id" position="attributes">
+                    <attribute name="on_change">onchange_parent_id(parent_id)</attribute>
                 </field>
             </field>
         </record>
