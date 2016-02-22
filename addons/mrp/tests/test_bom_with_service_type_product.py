@@ -25,7 +25,7 @@ class TestBomWithServiceTypeProduct(common.TransactionCase):
 
         self.bill_of_material_product = self.MrpBom.create({
             'company_id': self.main_company.id,
-            'name': 'PC Assemble SC234',
+            'code': 'PC Assemble SC234',
             'product_tmpl_id': self.product_3_product_template.id,
             'product_id': self.product_3.id,
             'product_uom_id': self.product_uom_unit.id,

@@ -60,19 +60,6 @@ class MrpProduction(models.Model):
             order.availability = all(assigned_list) and 'assigned' or 'waiting'
 
     @api.multi
-    @api.depends('work_order_ids.date_planned_start', 'work_order_ids.date_planned_end')
-    def _compute_date_planned(self):
-        for order in self:
-            date_planned_start = date_planned_finished = False
-            for wo in order.work_order_ids:
-                if not date_planned_start or (wo.date_planned_start < date_planned_start):
-                    date_planned_start = wo.date_planned_start
-                if not date_planned_finished or (wo.date_planned_end < date_planned_finished):
-                    date_planned_finished = wo.date_planned_end
-            order.date_planned_start = date_planned_start
-            order.date_planned_finished = date_planned_finished
-
-    @api.multi
     @api.depends('work_order_ids')
     def _compute_nb_orders(self):
         for mo in self:
@@ -100,8 +87,6 @@ class MrpProduction(models.Model):
                                        readonly=True, states={'confirmed': [('readonly', False)]})
     date_planned = fields.Datetime(string='Expected Date', required=True, index=True, readonly=True, states={'confirmed': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
 
-    date_planned_start = fields.Datetime(string='Scheduled Start Date', compute='_compute_date_planned', store=True, copy=False)
-    date_planned_finished = fields.Datetime(string='Scheduled End Date', compute='_compute_date_planned', store=True, copy=False)
     date_start = fields.Datetime(string='Start Date', readonly=True, copy=False)
     date_finished = fields.Datetime(string='End Date', readonly=True, copy=False)
 
@@ -180,37 +165,12 @@ class MrpProduction(models.Model):
 
     @api.multi
     def button_plan(self):
-        WorkOrder = self.env['mrp.production.work.order']
-        orders_new = self.filtered(lambda x: x.routing_id and x.state=='confirmed')
-        orders_plan = self.filtered(lambda x: x.routing_id and x.state=='planned')
+        orders_new = self.filtered(lambda x: x.routing_id and x.state == 'confirmed')
         # Create all work orders if not already created
         for order in orders_new:
             quantity = order.product_uom_id._compute_qty(order.product_qty, order.bom_id.product_uom_id.id)
             order.bom_id.explode(order.product_id, quantity, method_wo=order._workorders_create)
         orders_new.write({'state': 'planned'})
-        for order in orders_plan:
-            order.work_order_ids.write({'date_planned_start': False, 'date_planned_end': False})
-
-        # Schedule all work orders (new ones and those already created)
-        nbr = 0
-        for order in orders_new+orders_plan:
-            start_date = datetime.now()
-            for workorder in order.work_order_ids:
-                workcenter = workorder.workcenter_id
-                wos = WorkOrder.search([('workcenter_id', '=', workcenter.id), ('date_planned_end', '<>', False),
-                                        ('state','in',('ready','pending','progress')),
-                                        ('date_planned_end', '>', start_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))], order='date_planned_start')
-                from_date = start_date
-                intervals = workcenter.calendar_id.interval_get(from_date, workorder.duration / 60.0 / workcenter.capacity)
-                to_date = intervals[0][-1][1]
-                #Check interval
-                for wo in wos:
-                    if from_date < fields.Datetime.from_string(wo.date_planned_end) and (to_date > fields.Datetime.from_string(wo.date_planned_start)):
-                        from_date = fields.Datetime.from_string(wo.date_planned_end)
-                        intervals = workcenter.calendar_id.interval_get(from_date, workorder.duration / 60.0 / workcenter.capacity)
-                        to_date = intervals[0][-1][1]
-                workorder.write({'date_planned_start': from_date, 'date_planned_end': to_date})
-                start_date = to_date
 
     def _check_serial(self):
         '''
@@ -409,7 +369,7 @@ class MrpProduction(models.Model):
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'product_ids': self.move_raw_ids.mapped('product_id').ids + self.produce_operation_ids.mapped('product_id').ids},
+            'context': {'product_ids': self.move_raw_ids.mapped('product_id').ids},
             'target': 'new',
         }
 
@@ -491,6 +451,7 @@ class MrpProductionWorkcenterLine(models.Model):
     final_lot_id = fields.Many2one('stock.production.lot', 'Current Lot', domain="[('product_id', '=', product)]")
     qty_producing = fields.Float('Qty Producing', default=1.0)
     next_work_order_id = fields.Many2one('mrp.production.work.order', "Next Work Order")
+    tracking = fields.Selection(related='product.tracking', readonly=True)
 
     def _generate_lot_ids(self):
         """

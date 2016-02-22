@@ -14,11 +14,6 @@
             parent="base.menu_mrp_root"
             sequence="10"/>
 
-        <menuitem id="menu_mrp_planning"
-            name="Planning"
-            parent="base.menu_mrp_root"
-            sequence="15"/>
-
         <menuitem id="menu_mrp_bom"
             name="Master Data"
             parent="base.menu_mrp_root"
@@ -782,7 +777,7 @@
                     </group>
                     <field name="quantity_lots">
                         <tree editable="bottom">
-                            <field name="lot_id"/>
+                            <field name="lot_id" domain="[('product_id', '=', parent.product_id)]"/>
                             <field name="quantity"/>
                         </tree>
                     </field>
@@ -804,7 +799,7 @@
                     <button name="button_mark_done" attrs="{'invisible': [('check_to_done', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight"/>
 
                     <button name="action_assign" attrs="{'invisible': [('availability', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
-                    <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Plan" class="oe_highlight"/>
+                    <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="action" class="oe_highlight"/>
 
                     <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': ['|', ('nb_orders', '=', 0), ('state', '=', 'done')]}" string="Work Orders" class="oe_highlight"/>
@@ -849,26 +844,15 @@
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False)]"
-                                context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                context="{'default_product_id': product_id}" required="1" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                         </group>
                         <group>
                             <field name="date_planned" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <label for="date_planned_start" string="Planned Date" attrs="{'invisible': [('date_planned_start', '=', False)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('date_planned_start', '=', False)]}">
-                                <field name="date_planned_start" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                                <label string="to" attrs="{'invisible': [('date_planned_finished', '=', False)]}"/>
-                                <field name="date_planned_finished" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            </div>
                             <field name="user_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                             <field name="origin" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                             <field name="move_prod_id" groups="base.group_no_one" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                        </group>
-                        <group groups="stock.group_locations">
-                            <field name="picking_type_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -908,6 +892,15 @@
                                         attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Miscellaneous">
+                            <group>
+                                <group groups="stock.group_locations">
+                                    <field name="picking_type_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -1276,6 +1269,7 @@
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', '|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
+                <field name="availability" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
                 <field name="show_state" invisible="1"/>
             </header>
@@ -1288,7 +1282,6 @@
                             <field name="qty_produced"/> /
                             <field name="qty"/>
                             <field name="uom" widget="selection"/>
-                            <field name="availability" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}"/>
                         </div>
                         <field name="sequence" invisible="1"/>
                     </group>
@@ -1302,7 +1295,8 @@
                     <group>
                         <group>
                             <field name="qty_producing" string="Current Qty"/>
-                            <field name="final_lot_id" context="{'default_product_id': product}"/>
+                            <field name="tracking" invisible="True"/>
+                            <field name="final_lot_id" context="{'default_product_id': product}" attrs="{'invisible': [('tracking', '!=', 'lot')]}"/>
                         </group>
                     </group>
                     <field name="active_move_traceability_ids" attrs="{'invisible': [('active_move_traceability_ids', '=', [])]}">
@@ -1594,41 +1588,6 @@
             name="Work Orders"
             action="mrp_workorder_todo"
             parent="menu_mrp_manufacturing"/>
-
-    <menuitem id="menu_mrp_production_planning"
-              name="Manufacturing Orders"
-              sequence="1"
-              parent="menu_mrp_planning"/>
-
-    <menuitem id="menu_mrp_production_plan"
-              name="Orders to Plan"
-              sequence="1"
-              action="mrp_production_action_planning"
-              parent="menu_mrp_production_planning"/>
-
-    <menuitem id="menu_mrp_production_pending"
-              name="Waiting for Material Availability"
-              sequence="2"
-              action="mrp_production_action_planning"
-              parent="menu_mrp_production_planning"/>
-
-    <menuitem id="menu_mrp_workorder_planning"
-              name="Work Orders"
-              sequence="2"
-              parent="menu_mrp_planning"/>
-
-    <menuitem id="menu_mrp_workorder_production"
-              name="Planning by Production"
-              sequence="1"
-              action="action_mrp_workorder_production"
-              parent="menu_mrp_workorder_planning"/>
-
-    <menuitem id="menu_mrp_workorder_workcenter"
-              name="Planning by Workcenter"
-              sequence="2"
-              action="action_mrp_workorder_workcenter"
-              parent="menu_mrp_workorder_planning"/>
-
 
     <menuitem id="menu_mrp_traceability"
           name="Traceability: Lots"

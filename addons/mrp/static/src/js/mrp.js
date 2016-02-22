@@ -14,11 +14,11 @@ var SetBulletStatus = common.AbstractField.extend(common.ReinitializeFieldMixin,
         this._super.apply(this, arguments);
         if (this.get("effective_readonly")) {
             var bullet_class = this.classes[this.get('value')] || 'default';
-            title = this.get('value') == 'waiting'? _t('Waiting for material availability.') : _t('Ready to produce.'),
+            title = this.get('value') == 'waiting'? _t('Waiting Raw Materials.') : _t('Ready to produce.'),
             this.$el.attr('title', title);
             this.$el
                 .removeClass('text-success text-danger text-default')
-                .addClass('fa fa-circle text-' + bullet_class);
+            this.$el.wrapInner($('<span>'+title+'</span>').addClass('label label-' + bullet_class));
         }
     },
 });

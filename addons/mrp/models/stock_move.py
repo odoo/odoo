@@ -15,7 +15,7 @@ class StockMoveLots(models.Model):
 
     move_id = fields.Many2one('stock.move', string='Inventory Move', required=True)
     workorder_id = fields.Many2one('mrp.production.work.order', string='Work Order')
-    lot_id = fields.Many2one('stock.production.lot', string='Lot', domain="[('product_id', '=', product_id)]")
+    lot_id = fields.Many2one('stock.production.lot', string='Lot')
     lot_produced_id = fields.Many2one('stock.production.lot', string='Finished Lot')
     lot_produced_qty = fields.Float('Quantity Finished Product')
     quantity = fields.Float('Quantity', default=1.0)
