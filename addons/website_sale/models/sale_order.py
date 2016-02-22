@@ -373,10 +373,6 @@ class website(orm.Model):
                     if line.exists():
                         sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
-            # update browse record
-            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id != partner.id or force_pricelist:
-                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
-
         else:
             request.session['sale_order_id'] = None
             return None

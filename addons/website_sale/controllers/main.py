@@ -103,13 +103,7 @@ class QueryURL(object):
         return path
 
 
-def get_pricelist():
-    return request.website.get_current_pricelist()
-
 class website_sale(http.Controller):
-
-    def get_pricelist(self):
-        return get_pricelist()
 
     def get_attribute_value_ids(self, product):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -120,7 +114,7 @@ class website_sale(http.Controller):
                                     if len(l.value_ids) > 1)
         if request.website.pricelist_id.id != context['pricelist']:
             website_currency_id = request.website.currency_id.id
-            currency_id = self.get_pricelist().currency_id.id
+            currency_id = request.website.get_current_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
                 attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, price])
@@ -196,7 +190,7 @@ class website_sale(http.Controller):
 
         pricelist_context = dict(context)
         if not pricelist_context.get('pricelist'):
-            pricelist = self.get_pricelist()
+            pricelist = request.website.get_current_pricelist()
             pricelist_context['pricelist'] = int(pricelist)
         else:
             pricelist = pool.get('product.pricelist').browse(cr, uid, pricelist_context['pricelist'], context)
@@ -208,10 +202,6 @@ class website_sale(http.Controller):
             url = "/shop/category/%s" % slug(category)
         if attrib_list:
             post['attrib'] = attrib_list
-
-        style_obj = pool['product.style']
-        style_ids = style_obj.search(cr, uid, [], context=context)
-        styles = style_obj.browse(cr, uid, style_ids, context=context)
 
         category_obj = pool['product.public.category']
         category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
@@ -251,14 +241,11 @@ class website_sale(http.Controller):
             'products': products,
             'bins': table_compute().process(products, ppg),
             'rows': PPR,
-            'styles': styles,
             'categories': categs,
             'attributes': attributes,
             'compute_currency': compute_currency,
             'keep': keep,
             'parent_category_ids': parent_category_ids,
-            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
-            'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
         }
         if category:
             values['main_object'] = category
@@ -285,7 +272,7 @@ class website_sale(http.Controller):
         category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         categs = category_obj.browse(cr, uid, category_ids, context=context)
 
-        pricelist = self.get_pricelist()
+        pricelist = request.website.get_current_pricelist()
 
         from_currency = pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
         to_currency = pricelist.currency_id
