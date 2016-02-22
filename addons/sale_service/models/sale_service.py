@@ -118,6 +118,17 @@ class project_task(osv.osv):
             "context": {"create": False, "show_sale": True},
         }
 
+    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
+        if not parent_id:
+            return {'value' : {'procurement_id': False, 'sale_line_id': False }}
+        parent_task = self.browse(cr, uid, parent_id, context=context)
+        return {
+            'value' : {
+                'procurement_id' : parent_task.procurement_id.id,
+                'sale_line_id' : parent_task.sale_line_id.id,
+            }
+        }
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
