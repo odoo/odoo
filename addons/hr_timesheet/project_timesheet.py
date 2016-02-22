@@ -2,6 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
+from openerp.osv import osv
+
+
+class Project(models.Model):
+    _inherit = "project.project"
+
+    subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)",
+            ondelete="restrict")
 
 
 class Task(models.Model):
@@ -10,18 +18,31 @@ class Task(models.Model):
     def _get_total_hours(self):
         return super(Task, self)._get_total_hours() + self.effective_hours
 
-    @api.depends('timesheet_ids', 'timesheet_ids.unit_amount', 'planned_hours')
+    @api.multi
+    def _get_subtask_count(self):
+        for task in self:
+            task.subtask_count = self.search_count([('id', 'child_of', task.id)]) - 1  # Don't count task itself
+
+    @api.depends('timesheet_ids.unit_amount', 'planned_hours', 'child_ids.stage_id',
+                 'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours')
     def _hours_get(self):
         for task in self:
+
+            for child_task in task.child_ids:
+                if child_task.stage_id and child_task.stage_id.fold:
+                    task.children_hours += child_task.effective_hours + child_task.children_hours
+                else:
+                    task.children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
+
             task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
-            task.remaining_hours = task.planned_hours - task.effective_hours
+            task.remaining_hours = task.planned_hours - task.effective_hours - task.children_hours
             task.total_hours = max(task.planned_hours, task.effective_hours)
             task.delay_hours = max(-task.remaining_hours, 0.0)
 
             if task.stage_id and task.stage_id.fold:
                 task.progress = 100.0
             elif (task.planned_hours > 0.0 and task.effective_hours):
-                task.progress = round(min(100.0 * task.effective_hours / task.planned_hours, 99.99), 2)
+                task.progress = round(min(100.0 * (task.effective_hours + task.children_hours) / task.planned_hours, 99.99), 2)
             else:
                 task.progress = 0.0
 
@@ -30,4 +51,12 @@ class Task(models.Model):
     total_hours = fields.Float(compute='_hours_get', store=True, string='Total', help="Computed as: Time Spent + Remaining Time.")
     progress = fields.Float(compute='_hours_get', store=True, string='Progress (%)', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time", default=0.0)
     delay_hours = fields.Float(compute='_hours_get', store=True, string='Delay Hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.")
+    children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
+
+    parent_id = fields.Many2one('project.task', string='Parent Task')
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
+    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project')
+    subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
+
+    _constraints = [(osv.osv._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
