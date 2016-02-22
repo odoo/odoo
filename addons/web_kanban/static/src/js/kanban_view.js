@@ -131,12 +131,6 @@ var KanbanView = View.extend({
             .add(options.grouped ? this.load_groups(options) : this.load_records())
             .then(function (data) {
                 _.extend(self, options);
-                if (options.grouped) {
-                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
-                        return group.dataset.ids;
-                    }));
-                    self.dataset.alter_ids(new_ids);
-                }
                 self.data = data;
             })
             .then(this.proxy('render'))
@@ -251,31 +245,27 @@ var KanbanView = View.extend({
         })
         .then(function (groups) {
             // load records for each group
-            var is_empty = true;
-            return $.when.apply(null, _.map(groups, function (group) {
-                var def = $.when([]);
-                var dataset = new data.DataSetSearch(self, self.dataset.model,
-                    new data.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
-                if (self.dataset._sort) {
-                    dataset.set_sort(self.dataset._sort);
-                }
-                if (group.attributes.length >= 1) {
-                    def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
-                }
-                return def.then(function (records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, _.difference(dataset.ids, self.dataset.ids));
-                    group.records = records;
-                    group.dataset = dataset;
-                    is_empty = is_empty && !records.length;
-                    return group;
+            return self.dataset.multi_read_slice({
+                    'fields': self.fields_keys.concat(['__last_update']),
+                    'context': _.map(groups, function (group) { return new data.CompoundContext(self.dataset.get_context(), group.model.context());}),
+                    'domain': _.map(groups, function (group) { return group.model.domain(); }),
+                    'limit': self.limit,
+                }).then(function (results) {
+                    _.map(groups, function (group, index) {
+                        var result = results[index];
+                        group.records = result.records;
+                        group.dataset = new data.DataSetSearch(self, self.dataset.model,
+                            new data.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
+                        group.dataset.ids = _.pluck(result.records, 'id');
+                        group.dataset.count = result.length;
+                        group.dataset._length = result.records.length;
+                    });
+                    return {
+                        groups: groups,
+                        is_empty: !self.dataset.size(),
+                        grouped: true,
+                    };
                 });
-            })).then(function () {
-                return {
-                    groups: Array.prototype.slice.call(arguments, 0),
-                    is_empty: is_empty,
-                    grouped: true,
-                };
-            });
         });
     },
 
