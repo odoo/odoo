@@ -59,6 +59,7 @@ You can choose flexible invoicing methods:
     'test': [
         'test/sale_stock_users.yml',
         'test/cancel_order_sale_stock.yml',
+        'test/cancel_order_sale_stock2.yml',
         'test/picking_order_policy.yml',
         'test/prepaid_order_policy.yml',
         'test/sale_order_onchange.yml',
