@@ -353,7 +353,7 @@ class AccountAssetDepreciationLine(models.Model):
             periods = self.env['account.period'].find(depreciation_date)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount = company_currency.compute(line.amount, current_currency)
+            amount = current_currency.compute(line.amount, company_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = "/"
             reference = line.asset_id.name
