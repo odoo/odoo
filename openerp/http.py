@@ -1429,9 +1429,8 @@ class Response(werkzeug.wrappers.Response):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
         self.qcontext['request'] = request
-        return view_obj.render(
-            request.cr, uid, self.template, self.qcontext,
-            context=request.context)
+        return view_obj.render_template(request.cr, uid, self.template,
+                                        self.qcontext, context=request.context)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result

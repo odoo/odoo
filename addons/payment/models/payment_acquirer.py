@@ -279,8 +279,7 @@ class PaymentAcquirer(osv.Model):
         })
         values.setdefault('return_url', False)
 
-        # because render accepts view ids but not qweb -> need to use the xml_id
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, values, engine='ir.qweb', context=context)
+        return acquirer.view_template_id.render(values, engine='ir.qweb')
 
     def _registration_render(self, cr, uid, id, partner_id, qweb_context=None, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -291,7 +290,7 @@ class PaymentAcquirer(osv.Model):
         if hasattr(self, method_name):
             method = getattr(self, method_name)
             qweb_context.update(method(cr, uid, id, qweb_context, context=context))
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.registration_view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
+        return acquirer.registration_view_template_id.render(qweb_context, engine='ir.qweb')
 
     def s2s_process(self, cr, uid, id, data, context=None):
         acquirer = self.browse(cr, uid, id, context=context)

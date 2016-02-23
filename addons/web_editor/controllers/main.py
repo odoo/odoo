@@ -18,7 +18,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     @http.route('/web_editor/snippets', type='json', auth="user")
     def snippets(self, **kwargs):
-        return request.registry["ir.ui.view"].render(request.cr, request.uid, 'web_editor.snippets', None, context=request.context)
+        return request.env.ref('web_editor.snippets').render(None)
 
     #------------------------------------------------------
     # Backend html field

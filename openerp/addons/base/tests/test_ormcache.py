@@ -9,7 +9,7 @@ class TestOrmcache(common.TransactionCase):
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
-        cache, key, counter = get_cache_key_counter(IMD.xmlid_lookup, self.cr, self.uid, XMLID)
+        cache, key, counter = get_cache_key_counter(IMD.xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss
 

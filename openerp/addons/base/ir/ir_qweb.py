@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
-import copy
-import cStringIO
-import datetime
 import hashlib
 import itertools
 import json
@@ -13,6 +9,10 @@ import re
 import sys
 import textwrap
 import uuid
+from collections import defaultdict, Mapping, Sized
+from copy import deepcopy
+from cStringIO import StringIO
+from datetime import datetime
 from subprocess import Popen, PIPE
 from urlparse import urlparse
 
@@ -23,16 +23,11 @@ import werkzeug
 from lxml import etree, html
 from PIL import Image
 
-import odoo.http
-import odoo.tools
-import odoo.tools.lru
-from odoo import api, models, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import QWebException
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.tools import html_escape as escape
-from odoo.tools.func import lazy_property
-from odoo.tools.misc import find_in_path
+from odoo.tools import html_escape as escape, find_in_path, lazy_property, posix_to_ldml
 from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
@@ -54,17 +49,17 @@ def raise_qweb_exception(etype=None, **kw):
     try:
         raise etype, original, tb
     except etype, e:
-        for k, v in kw.items():
-            e.qweb[k] = v
         # Will use `raise foo from bar` in python 3 and rename cause to __cause__
-        e.qweb['cause'] = original
+        e.qweb.update(kw, cause=original)
         raise
 
 
 def _build_attribute(name, value):
     value = escape(value)
-    if isinstance(name, unicode): name = name.encode('utf-8')
-    if isinstance(value, unicode): value = value.encode('utf-8')
+    if isinstance(name, unicode):
+        name = name.encode('utf-8')
+    if isinstance(value, unicode):
+        value = value.encode('utf-8')
     return ' %s="%s"' % (name, value)
 
 
@@ -84,35 +79,35 @@ class FileSystemLoader(object):
         for node in self.doc:
             if node.get('t-name') == name:
                 root = etree.Element('templates')
-                root.append(copy.deepcopy(node))
+                root.append(deepcopy(node))
                 arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
                 return arch
 
 
 class QWebContext(dict):
-    def __init__(self, cr, uid, data, loader=None, context=None):
-        self.cr = cr
-        self.uid = uid
+    def __init__(self, env, data, loader=None):
+        self.env = env
         self.loader = loader
-        self.context = context
-        dic = dict(data)
-        super(QWebContext, self).__init__(dic)
+        super(QWebContext, self).__init__(data)
         self['defined'] = lambda key: key in self
 
+    # deprecated, use 'env' instead
+    cr = property(lambda self: self.env.cr)
+    uid = property(lambda self: self.env.uid)
+    context = property(lambda self: self.env.context)
+
     def safe_eval(self, expr):
-        locals_dict = collections.defaultdict(lambda: None)
+        locals_dict = defaultdict(lambda: None)
         locals_dict.update(self)
         locals_dict.pop('cr', None)
         locals_dict.pop('loader', None)
         return eval(expr, None, locals_dict, nocopy=True, locals_builtins=True)
 
     def copy(self):
-        """ Clones the current context, conserving all data and metadata
+        """ Clone the current context, conserving all data and metadata
         (loader, template cache, ...)
         """
-        return QWebContext(self.cr, self.uid, dict.copy(self),
-                           loader=self.loader,
-                           context=self.context)
+        return QWebContext(self.env, dict(self), loader=self.loader)
 
     def __copy__(self):
         return self.copy()
@@ -137,20 +132,13 @@ class QWeb(models.AbstractModel):
         u'area', u'base', u'br', u'col', u'embed', u'hr', u'img', u'input',
         u'keygen', u'link', u'menuitem', u'meta', u'param', u'source',
         u'track', u'wbr'])
-    _format_regex = re.compile(
-        '(?:'
-            # ruby-style pattern
-            '#\{(.+?)\}'
-        ')|(?:'
-            # jinja-style pattern
-            '\{\{(.+?)\}\}'
-        ')')
+    # regex for ruby-style pattern or jinja-style pattern
+    _format_regex = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 
     def __init__(self, pool, cr):
         super(QWeb, self).__init__(pool, cr)
-
-        self._render_tag = self.prefixed_methods('render_tag_')
-        self._render_att = self.prefixed_methods('render_att_')
+        type(self)._render_tag = self.prefixed_methods('render_tag_')
+        type(self)._render_att = self.prefixed_methods('render_att_')
 
     def prefixed_methods(self, prefix):
         """ Extracts all methods prefixed by ``prefix``, and returns a mapping
@@ -229,9 +217,9 @@ class QWeb(models.AbstractModel):
     def eval_bool(self, expr, qwebcontext):
         return int(bool(self.eval(expr, qwebcontext)))
 
-    @api.cr_uid_ids_context
-    def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
-        """ render(cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None)
+    @api.model
+    def render(self, template, qwebcontext=None, loader=None):
+        """ render(template, qwebcontext=None, loader=None)
 
         Renders the template specified by the provided template name
 
@@ -244,17 +232,16 @@ class QWeb(models.AbstractModel):
             qwebcontext = {}
 
         if not isinstance(qwebcontext, QWebContext):
-            qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
+            qwebcontext = QWebContext(self.env, qwebcontext, loader=loader)
 
-        qwebcontext['__template__'] = id_or_xml_id
-        stack = qwebcontext.get('__stack__', [])
+        qwebcontext['__template__'] = template
+        stack = qwebcontext.setdefault('__stack__', [])
         if stack:
             qwebcontext['__caller__'] = stack[-1]
-        stack.append(id_or_xml_id)
-        qwebcontext['__stack__'] = stack
-        qwebcontext['xmlid'] = str(stack[0])  # Temporary fix
+        stack.append(template)
+        qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
 
-        element = self.get_template(id_or_xml_id, qwebcontext)
+        element = self.get_template(template, qwebcontext)
         element.attrib.pop("name", False)
         return self.render_node(element, qwebcontext, generated_attributes=qwebcontext.pop('generated_attributes', ''))
 
@@ -264,7 +251,7 @@ class QWeb(models.AbstractModel):
 
         debugger = element.get('t-debug')
         if debugger is not None:
-            if odoo.tools.config['dev_mode']:
+            if tools.config['dev_mode']:
                 __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
             else:
                 _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
@@ -272,9 +259,8 @@ class QWeb(models.AbstractModel):
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = unicode(attribute_name)
             if attribute_name == "groups":
-                cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
-                uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
+                can_see = (qwebcontext.cr and qwebcontext.uid and
+                           qwebcontext.env['ir.qweb'].user_has_groups(attribute_value))
                 if not can_see:
                     return element.tail and self.render_tail(element.tail, element, qwebcontext) or ''
 
@@ -286,7 +272,8 @@ class QWeb(models.AbstractModel):
                         attrs = self._render_att[attribute](
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
-                            if not val: continue
+                            if not val:
+                                continue
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
@@ -322,7 +309,7 @@ class QWeb(models.AbstractModel):
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext,
-                        generated_attributes= name == "t" and generated_attributes or ''))
+                        generated_attributes=(name == "t" and generated_attributes or '')))
                 except QWebException:
                     raise
                 except Exception:
@@ -366,7 +353,7 @@ class QWeb(models.AbstractModel):
             return [(attribute_name[6:], self.eval(attribute_value, qwebcontext))]
 
         result = self.eval_object(attribute_value, qwebcontext)
-        if isinstance(result, collections.Mapping):
+        if isinstance(result, Mapping):
             return result.iteritems()
         # assume tuple
         return [result]
@@ -383,7 +370,7 @@ class QWeb(models.AbstractModel):
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def _iterate(self, iterable):
-        if isinstance(iterable, collections.Mapping):
+        if isinstance(iterable, Mapping):
             return iterable.iteritems()
 
         return itertools.izip(*itertools.tee(iterable))
@@ -401,7 +388,7 @@ class QWeb(models.AbstractModel):
         copy_qwebcontext = qwebcontext.copy()
 
         size = None
-        if isinstance(enum, collections.Sized):
+        if isinstance(enum, Sized):
             size = len(enum)
             copy_qwebcontext["%s_size" % varname] = size
 
@@ -444,15 +431,13 @@ class QWeb(models.AbstractModel):
         d = qwebcontext.copy()
 
         if 'lang' in template_attributes:
-            init_lang = d.context.get('lang', 'en_US')
+            # add 'lang' in the context of d
             lang = template_attributes['lang']
-            d.context['lang'] = self.eval(lang, d) or lang
-            if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', lang)], count=True, context=d.context):
+            d.env = d.env(context=dict(d.context, lang=self.eval(lang, d) or lang))
+            if not d.env['res.lang'].search_count([('code', '=', lang)]):
                 _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
 
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
-        cr = d.get('request') and d['request'].cr or None
-        uid = d.get('request') and d['request'].uid or None
 
         template = self.eval_format(template_attributes["call"], d)
         try:
@@ -461,11 +446,7 @@ class QWeb(models.AbstractModel):
             pass
 
         d['generated_attributes'] = generated_attributes
-        res = self.render(cr, uid, template, d)
-
-        # we need to reset the lang after the rendering
-        if 'lang' in template_attributes:
-            d.context['lang'] = init_lang
+        res = d.env['ir.qweb'].render(template, d)
 
         return res
 
@@ -478,8 +459,7 @@ class QWeb(models.AbstractModel):
             template = qwebcontext.get('__template__')
             raise QWebException("t-call-assets cannot contain children nodes", template=template)
         xmlid = template_attributes['call-assets']
-        cr, uid, context = [getattr(qwebcontext, attr) for attr in ('cr', 'uid', 'context')]
-        bundle = AssetsBundle(xmlid, cr=cr, uid=uid, context=context, registry=self.pool)
+        bundle = AssetsBundle(xmlid, env=qwebcontext.env)
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         async = self.get_attr_bool(template_attributes.get('async'), default=False)
@@ -505,36 +485,41 @@ class QWeb(models.AbstractModel):
 
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
-        field = record._fields[field_name]
+
         foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
         options = json.loads(foptions)
-
-        field_type = get_field_type(field, options)
+        field_type = get_field_type(record._fields[field_name], options)
 
         converter = self.get_converter_for(field_type)
-
-        return converter.to_html(qwebcontext.cr, qwebcontext.uid, field_name, record, options,
-                                 element, template_attributes, generated_attributes, qwebcontext, context=qwebcontext.context)
+        return converter.to_html(field_name, record, options, element,
+                                 template_attributes, generated_attributes, qwebcontext)
 
     def get_converter_for(self, field_type):
-        """ returns a :class:`~openerp.models.Model` used to render a
-        ``t-field``.
+        """ Return a model instance to render a ``t-field``. The result is of
+        the same kind (old/new api) as ``self``
 
         By default, tries to get the model named
         :samp:`ir.qweb.field.{field_type}`, falling back on ``ir.qweb.field``.
 
         :param str field_type: type or widget of field to render
         """
-        return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
+        registry = getattr(self, 'env', self.pool)
+        try:
+            return registry['ir.qweb.field.' + field_type]
+        except KeyError:
+            return registry['ir.qweb.field']
 
     def get_widget_for(self, widget):
-        """ returns a :class:`~openerp.models.Model` used to render a
-        ``t-esc``
+        """ Return a model instance to render a ``t-esc``. The result is of the
+        same kind (old/new api) as ``self``
 
         :param str widget: name of the widget to use, or ``None``
         """
-        widget_model = ('ir.qweb.widget.' + widget) if widget else 'ir.qweb.widget'
-        return self.pool.get(widget_model) or self.pool['ir.qweb.widget']
+        registry = getattr(self, 'env', self.pool)
+        try:
+            return registry['ir.qweb.widget.' + (widget or '')]
+        except KeyError:
+            return registry['ir.qweb.widget']
 
     def get_attr_bool(self, attr, default=False):
         if attr:
@@ -563,9 +548,8 @@ class FieldConverter(models.AbstractModel):
     _name = 'ir.qweb.field'
 
     @api.model
-    def attributes(self, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
-        """ attributes(cr, uid, field_name, record, options, source_element, g_att, t_att, qweb_context, context=None)
+    def attributes(self, field_name, record, options, source_element, g_att, t_att, qweb_context):
+        """ attributes(field_name, record, options, source_element, g_att, t_att, qweb_context)
 
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
@@ -600,16 +584,15 @@ class FieldConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-        """ value_to_html(cr, uid, value, field, options=None, context=None)
+        """ value_to_html(value, field, options=None)
 
         Converts a single value to its HTML version/output
         """
-        if not value: return ''
-        return value
+        return value or ''
 
     @api.model
     def record_to_html(self, field_name, record, options=None):
-        """ record_to_html(cr, uid, field_name, record, options=None, context=None)
+        """ record_to_html(field_name, record, options=None)
 
         Converts the specified field of the browse_record ``record`` to HTML
         """
@@ -617,9 +600,8 @@ class FieldConverter(models.AbstractModel):
         return self.value_to_html(record[field_name], field, options=options)
 
     @api.model
-    def to_html(self, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
-        """ to_html(cr, uid, field_name, record, options, source_element, t_att, g_att, qweb_context, context=None)
+    def to_html(self, field_name, record, options, source_element, t_att, g_att, qweb_context):
+        """ to_html(field_name, record, options, source_element, t_att, g_att, qweb_context)
 
         Converts a ``t-field`` to its HTML output. A ``t-field`` may be
         extended by a ``t-field-options``, which is a JSON-serialized mapping
@@ -639,10 +621,10 @@ class FieldConverter(models.AbstractModel):
                             field_name, record._name, exc_info=True)
             content = None
 
-        inherit_branding = self.env.context and self.env.context.get('inherit_branding')
-        if not inherit_branding and self.env.context and self.env.context.get('inherit_branding_auto'):
-            inherit_branding = self.env['ir.model.access'].check(record._name, 'write', False)
-        translate = self.env.context and self.env.context.get('edit_translations') and self.env.context.get('translatable') and getattr(record._fields[field_name], 'translate', False)
+        inherit_branding = self._context.get('inherit_branding')
+        if not inherit_branding and self._context.get('inherit_branding_auto'):
+            inherit_branding = record.check_access_rights('write', False)
+        translate = self._context.get('edit_translations') and self._context.get('translatable') and getattr(record._fields[field_name], 'translate', False)
 
         if inherit_branding or translate:
             # add branding attributes
@@ -653,36 +635,29 @@ class FieldConverter(models.AbstractModel):
                     source_element, g_att, t_att, qweb_context)
             )
 
-        return self.render_element(source_element, t_att, g_att,
-                                   qweb_context, content)
+        return self.render_element(source_element, t_att, g_att, qweb_context, content)
 
-    def qweb_object(self):
-        return self.pool['ir.qweb']
-
-    def render_element(self, cr, uid, source_element, t_att, g_att,
-                       qweb_context, content):
-        """ render_element(cr, uid, source_element, t_att, g_att, qweb_context, content)
+    @api.model
+    def render_element(self, source_element, t_att, g_att, qweb_context, content):
+        """ render_element(source_element, t_att, g_att, qweb_context, content)
 
         Final rendering hook, by default just calls ir.qweb's ``render_element``
         """
-        return self.qweb_object().render_element(
+        return self.env['ir.qweb'].render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
     @api.model
     def user_lang(self):
-        """ user_lang(cr, uid, context)
+        """ user_lang()
 
-        Fetches the res.lang object corresponding to the language code stored
+        Fetches the res.lang record corresponding to the language code stored
         in the user's context. Fallbacks to en_US if no lang is present in the
         context *or the language code is not valid*.
 
         :returns: res.lang browse_record
         """
-
-        lang_code = self.env.context.get('lang') or 'en_US'
-        Lang = self.env['res.lang']
-
-        return Lang.browse(Lang._lang_get(lang_code))
+        lang_code = self._context.get('lang') or 'en_US'
+        return self.env['res.lang']._lang_get(lang_code)
 
 
 class IntegerConverter(models.AbstractModel):
@@ -691,9 +666,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-
-        lang_code = self.env.context.get('lang') or 'en_US'
-        return self.pool['res.lang'].format(self.env.cr, self.env.uid, [lang_code], '%d', value, grouping=True)
+        return self.user_lang().format('%d', value, grouping=True)
 
 
 class FloatConverter(models.AbstractModel):
@@ -709,10 +682,8 @@ class FloatConverter(models.AbstractModel):
     def value_to_html(self, value, field, options=None):
         precision = self.precision(field, options=options)
         fmt = '%f' if precision is None else '%.{precision}f'
-
-        lang_code = self.env.context.get('lang') or 'en_US'
-        lang = self.pool['res.lang']
-        formatted = lang.format(self.env.cr, self.env.uid, [lang_code], fmt.format(precision=precision), value, grouping=True)
+        lang = self.user_lang()
+        formatted = lang.format(fmt.format(precision=precision), value, grouping=True)
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -729,23 +700,21 @@ class DateConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-        if not value or len(value) < 10: return ''
+        if not value or len(value) < 10:
+            return ''
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
-            value = datetime.datetime.strptime(
-                value[:10], odoo.tools.DEFAULT_SERVER_DATE_FORMAT)
+            value = fields.Datetime.from_string(value[:10])
 
         if options and 'format' in options:
             pattern = options['format']
         else:
             strftime_pattern = lang.date_format
-            pattern = odoo.tools.posix_to_ldml(strftime_pattern, locale=locale)
+            pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
-        return babel.dates.format_date(
-            value, format=pattern,
-            locale=locale)
+        return babel.dates.format_date(value, format=pattern, locale=locale)
 
 
 class DateTimeConverter(models.AbstractModel):
@@ -754,21 +723,21 @@ class DateTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-        if not value: return ''
+        if not value:
+            return ''
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
-            value = datetime.datetime.strptime(
-                value, odoo.tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = fields.Datetime.from_string(value)
 
-        value = odoo.osv.fields.datetime.context_timestamp(self.env.cr, self.env.uid, timestamp=value, context=self.env.context)
+        value = fields.Datetime.context_timestamp(self, value)
 
         if options and 'format' in options:
             pattern = options['format']
         else:
             strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
-            pattern = odoo.tools.posix_to_ldml(strftime_pattern, locale=locale)
+            pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
@@ -785,9 +754,7 @@ class TextConverter(models.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
-        if not value: return ''
-
-        return nl2br(value, options=options)
+        return nl2br(value, options=options) if value else ''
 
 
 class SelectionConverter(models.AbstractModel):
@@ -797,7 +764,8 @@ class SelectionConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, field_name, record, options=None):
         value = record[field_name]
-        if not value: return ''
+        if not value:
+            return ''
         field = record._fields[field_name]
         selection = dict(field.get_description(record.env)['selection'])
         return self.value_to_html(selection[value], field, options=options)
@@ -809,10 +777,8 @@ class ManyToOneConverter(models.AbstractModel):
 
     @api.model
     def record_to_html(self, field_name, record, options=None):
-        [read] = record.read([field_name])
-        if not read[field_name]: return ''
-        _, value = read[field_name]
-        return nl2br(value, options=options)
+        value = record[field_name].sudo().display_name
+        return nl2br(value, options=options) if value else ''
 
 
 class HTMLConverter(models.AbstractModel):
@@ -839,11 +805,11 @@ class ImageConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, field, options=None):
         try:
-            image = Image.open(cStringIO.StringIO(value.decode('base64')))
+            image = Image.open(StringIO(value.decode('base64')))
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
-        except:  # image.verify() throws "suitable exceptions", I have no idea what they are
+        except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
         return HTMLSafe('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
@@ -867,8 +833,7 @@ class MonetaryConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def to_html(self, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+    def to_html(self, field_name, record, options, source_element, t_att, g_att, qweb_context):
         options['_qweb_context'] = qweb_context
         return super(MonetaryConverter, self).to_html(
             field_name, record, options,
@@ -876,7 +841,6 @@ class MonetaryConverter(models.AbstractModel):
 
     @api.model
     def record_to_html(self, field_name, record, options):
-        Currency = self.pool['res.currency']
         cur_field = record._fields[field_name]
         display_currency = False
         #currency should be specified by monetary field
@@ -897,12 +861,11 @@ class MonetaryConverter(models.AbstractModel):
 
         if options.get('from_currency'):
             from_currency = self.display_currency(options['from_currency'], options)
-            from_amount = Currency.compute(self.env.cr, self.env.uid, from_currency.id, display_currency.id, from_amount)
+            from_amount = from_currency.compute(from_amount, display_currency)
 
-        lang_code = self.env.context.get('lang') or 'en_US'
-        lang = self.pool['res.lang']
-        formatted_amount = lang.format(self.env.cr, self.env.uid, [lang_code],
-                                       fmt, Currency.round(self.env.cr, self.env.uid, display_currency, from_amount), grouping=True, monetary=True)
+        lang = self.user_lang()
+        formatted_amount = lang.format(fmt, display_currency.round(from_amount),
+                                       grouping=True, monetary=True)
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -911,14 +874,15 @@ class MonetaryConverter(models.AbstractModel):
             post = u'\N{NO-BREAK SPACE}{symbol}'
 
         return HTMLSafe(u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
-            formatted_amount,
-            pre=pre, post=post,
+            formatted_amount, pre=pre, post=post,
         ).format(
             symbol=display_currency.symbol,
         ))
 
+    @api.model
     def display_currency(self, currency, options):
-        return self.qweb_object().eval_object(currency, options['_qweb_context'])
+        return self.env['ir.qweb'].eval_object(currency, options['_qweb_context'])
+
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
@@ -961,7 +925,8 @@ class DurationConverter(models.AbstractModel):
         r = value * factor
         for unit, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
-            if not v: continue
+            if not v:
+                continue
             section = babel.dates.format_timedelta(
                 v*secs_per_unit, threshold=1, locale=locale)
             if section:
@@ -975,14 +940,13 @@ class RelativeDatetimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-        parse_format = odoo.tools.DEFAULT_SERVER_DATETIME_FORMAT
         locale = babel.Locale.parse(self.user_lang().code)
 
         if isinstance(value, basestring):
-            value = datetime.datetime.strptime(value, parse_format)
+            value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
-        reference = datetime.datetime.strptime(field.now(), parse_format)
+        reference = fields.Datetime.from_string(field.now())
 
         return babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale)
 
@@ -1018,7 +982,8 @@ class Contact(models.AbstractModel):
             'options': options
         }
 
-        html = self.env['ir.ui.view']._model.render(self.env.cr, self.env.uid, "base.contact", val, engine='ir.qweb', context=self.env.context).decode('utf8')
+        view = self.env.ref('base.contact')
+        html = view.render(val, engine='ir.qweb').decode('utf8')
 
         return HTMLSafe(html)
 
@@ -1034,13 +999,12 @@ class QwebView(models.AbstractModel):
 
         view = getattr(record, field_name)
 
-        if view._model._name != "ir.ui.view":
+        if view._name != "ir.ui.view":
             _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))
             return None
 
-        ctx = (self.env.context or {}).copy()
-        ctx['object'] = record
-        html = view._model.render(self.env.cr, self.env.uid, ctx, engine='ir.qweb', context=self.env.ctx).decode('utf8')
+        view = view.with_context(object=record)
+        html = view.render(view._context, engine='ir.qweb').decode('utf8')
 
         return HTMLSafe(html)
 
@@ -1060,14 +1024,13 @@ class QwebWidgetMonetary(models.AbstractModel):
     _inherit = 'ir.qweb.widget'
 
     def _format(self, inner, options, qwebcontext):
-        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
-        display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
+        inner = qwebcontext.env['ir.qweb'].eval(inner, qwebcontext)
+        display = qwebcontext.env['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
         precision = int(round(math.log10(display.rounding)))
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
-        formatted_amount = self.pool['res.lang'].format(
-            qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        )
+        lang = qwebcontext.env['res.lang']._lang_get(lang_code)
+        formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True)
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
@@ -1116,7 +1079,8 @@ def nl2br(string, options=None):
     :param dict options:
     :rtype: HTMLSafe
     """
-    if options is None: options = {}
+    if options is None:
+        options = {}
 
     if options.get('html-escape', True):
         string = escape(string)
@@ -1141,12 +1105,9 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    def __init__(self, xmlid, cr=None, uid=None, context=None, registry=None, max_css_rules=MAX_CSS_RULES):
+    def __init__(self, xmlid, env=None, max_css_rules=MAX_CSS_RULES):
         self.xmlid = xmlid
-        self.cr = request.cr if cr is None else cr
-        self.uid = request.uid if uid is None else uid
-        self.context = request.context if context is None else context
-        self.registry = request.registry if registry is None else registry
+        self.env = request.env if env is None else env
         self.max_css_rules = max_css_rules
         self.javascripts = []
         self.stylesheets = []
@@ -1154,11 +1115,11 @@ class AssetsBundle(object):
         self.remains = []
         self._checksum = None
 
-        context = self.context.copy()
-        context['inherit_branding'] = False
-        context['inherit_branding_auto'] = False
-        context['rendering_bundle'] = True
-        self.html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
+        env = self.env(context=dict(self.env.context,
+                                    inherit_branding=False,
+                                    inherit_branding_auto=False,
+                                    rendering_bundle=True))
+        self.html = env.ref(xmlid).render()
         self.parse()
 
     def parse(self):
@@ -1219,13 +1180,13 @@ class AssetsBundle(object):
                     response.append(jscript.to_html())
         else:
             if qwebcontext is None:
-                qwebcontext = QWebContext(self.cr, self.uid, {})
+                qwebcontext = QWebContext(self.env(context={}), {})
             if css and self.stylesheets:
                 css_attachments = self.css()
                 if not self.css_errors:
                     for attachment in css_attachments:
                         el = etree.fromstring('<link href="%s" rel="stylesheet"/>' % attachment.url)
-                        response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
+                        response.append(self.env['ir.qweb'].render_node(el, qwebcontext))
                 else:
                     msg = '\n'.join(self.css_errors)
                     self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
@@ -1233,7 +1194,7 @@ class AssetsBundle(object):
                         response.append(style.to_html())
             if js and self.javascripts:
                 el = etree.fromstring('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', self.js().url))
-                response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
+                response.append(self.env['ir.qweb'].render_node(el, qwebcontext))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1272,22 +1233,20 @@ class AssetsBundle(object):
         of an ir.attachment unlink (because we cannot rollback a removal on the filestore), thus we
         must exclude the current bundle.
         """
-        ira = self.registry['ir.attachment']
+        ira = self.env['ir.attachment']
         domain = [
             ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.xmlid, type)),  # The wilcards are id, version and pagination number (if any)
             '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
         ]
-        attachment_ids = ira.search(self.cr, odoo.SUPERUSER_ID, domain, context=self.context)
-        return ira.unlink(self.cr, odoo.SUPERUSER_ID, attachment_ids, context=self.context)
+        return ira.sudo().search(domain).unlink()
 
     def get_attachments(self, type, inc=None):
-        ira = self.registry['ir.attachment']
+        ira = self.env['ir.attachment']
         domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
-        attachment_ids = ira.search(self.cr, odoo.SUPERUSER_ID, domain, order='name asc', context=self.context)
-        return ira.browse(self.cr, odoo.SUPERUSER_ID, attachment_ids, context=self.context)
+        return ira.sudo().search(domain, order='name asc')
 
     def save_attachment(self, type, content, inc=None):
-        ira = self.registry['ir.attachment']
+        ira = self.env['ir.attachment']
 
         fname = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
         values = {
@@ -1299,21 +1258,21 @@ class AssetsBundle(object):
             'public': True,
             'datas': content.encode('utf8').encode('base64'),
         }
-        attachment_id = ira.create(self.cr, odoo.SUPERUSER_ID, values, context=self.context)
+        attachment = ira.sudo().create(values)
 
-        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, fname)
+        url = '/web/content/%s-%s/%s' % (attachment.id, self.version, fname)
         values = {
             'name': url,
             'url': url,
         }
-        ira.write(self.cr, odoo.SUPERUSER_ID, attachment_id, values, context=self.context)
+        attachment.write(values)
 
-        if self.context.get('commit_assetsbundle') is True:
-            self.cr.commit()
+        if self.env.context.get('commit_assetsbundle') is True:
+            self.env.cr.commit()
 
         self.clean_attachments(type)
 
-        return ira.browse(self.cr, odoo.SUPERUSER_ID, attachment_id, context=self.context)
+        return attachment
 
     def js(self):
         attachments = self.get_attachments('js')
@@ -1371,29 +1330,27 @@ class AssetsBundle(object):
         """ % message
 
     def is_css_preprocessed(self):
-        uid = openerp.SUPERUSER_ID
         preprocessed = True
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
             outdated = False
             assets = dict((asset.html_url % asset.url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
                 assets_domain = [('url', 'in', assets.keys())]
-                ira_ids = self.registry['ir.attachment'].search(self.cr, uid, assets_domain)
-                ira_records = self.registry['ir.attachment'].browse(self.cr, uid, ira_ids)
-                for ira_record in ira_records:
-                    asset = assets[ira_record.url]
-                    if asset.last_modified > Datetime.from_string(ira_record['__last_update']):
+                attachments = self.env['ir.attachment'].sudo().search(assets_domain)
+                for attachment in attachments:
+                    asset = assets[attachment.url]
+                    if asset.last_modified > fields.Datetime.from_string(attachment['__last_update']):
                         outdated = True
                         break
                     if asset._content is None:
-                        asset._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8')
+                        asset._content = attachment.datas and attachment.datas.decode('base64').decode('utf8')
 
                 if any(asset._content is None for asset in assets.itervalues()):
                     outdated = True
 
                 if outdated:
-                    if ira_ids:
-                        self.registry['ir.attachment'].unlink(self.cr, uid, ira_ids)
+                    if attachments:
+                        attachments.unlink()
                     preprocessed = False
 
         return preprocessed
@@ -1422,11 +1379,10 @@ class AssetsBundle(object):
 
                     if debug:
                         try:
-                            ira = self.registry['ir.attachment']
                             fname = os.path.basename(asset.url)
                             url = asset.html_url % asset.url
-                            with self.cr.savepoint():
-                                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                            with self.env.cr.savepoint():
+                                self.env['ir.attachment'].sudo().create(dict(
                                     datas=asset.content.encode('utf8').encode('base64'),
                                     mimetype='text/css',
                                     type='binary',
@@ -1435,10 +1391,10 @@ class AssetsBundle(object):
                                     datas_fname=fname,
                                     res_model=False,
                                     res_id=False,
-                                ), context=self.context)
+                                ))
 
-                            if self.context.get('commit_assetsbundle') is True:
-                                self.cr.commit()
+                            if self.env.context.get('commit_assetsbundle') is True:
+                                self.env.cr.commit()
                         except psycopg2.Error:
                             pass
 
@@ -1497,10 +1453,7 @@ class WebAsset(object):
         self.bundle = bundle
         self.inline = inline
         self.url = url
-        self.cr = bundle.cr
-        self.uid = bundle.uid
-        self.registry = bundle.registry
-        self.context = bundle.context
+        self.env = bundle.env
         self._content = None
         self._filename = None
         self._ir_attach = None
@@ -1519,8 +1472,7 @@ class WebAsset(object):
                 # Test url against ir.attachments
                 fields = ['__last_update', 'datas', 'mimetype']
                 domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                ira = self.registry['ir.attachment']
-                attach = ira.search_read(self.cr, odoo.SUPERUSER_ID, domain, fields, context=self.context)
+                attach = self.env['ir.attachment'].sudo().search_read(domain, fields)
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
@@ -1533,17 +1485,17 @@ class WebAsset(object):
         try:
             self.stat()
             if self._filename:
-                return datetime.datetime.fromtimestamp(os.path.getmtime(self._filename))
+                return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+                server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
                 last_update = self._ir_attach['__last_update']
                 try:
-                    return datetime.datetime.strptime(last_update, server_format + '.%f')
+                    return datetime.strptime(last_update, server_format + '.%f')
                 except ValueError:
-                    return datetime.datetime.strptime(last_update, server_format)
+                    return datetime.strptime(last_update, server_format)
         except Exception:
             pass
-        return datetime.datetime(1970, 1, 1)
+        return datetime(1970, 1, 1)
 
     @property
     def content(self):

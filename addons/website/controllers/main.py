@@ -135,9 +135,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
-                urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
+                urls = iuv.render_template(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
-                    content = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
+                    content = iuv.render_template(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     pages += 1
                     last = create_sitemap('/sitemap-%d.xml' % pages, content)
                 else:
@@ -148,7 +148,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 ira.write(cr, uid, last, dict(url="/sitemap.xml", name="/sitemap.xml"), context=context)
             else:
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
+                content = iuv.render_template(cr, uid, 'website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
                     url_root=request.httprequest.url_root,
                 ), context=context)
@@ -317,7 +317,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_active(enable, True)
 
         if get_bundle:
-            bundle = AssetsBundle('web.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
+            bundle = AssetsBundle('web.assets_frontend', env=request.env(context={}))
             return bundle.to_html()
 
         return True
@@ -329,9 +329,10 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(['/website/multi_render'], type='json', auth="public", website=True)
     def multi_render(self, ids_or_xml_ids, values=None):
+        View = request.env['ir.ui.view']
         res = {}
         for id_or_xml_id in ids_or_xml_ids:
-            res[id_or_xml_id] = request.registry["ir.ui.view"].render(request.cr, request.uid, id_or_xml_id, values=values, engine='ir.qweb', context=request.context)
+            res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
 
     #------------------------------------------------------

@@ -22,4 +22,4 @@ class Web_Editor(Web_Editor):
     @http.route(['/mass_mailing/snippets'], type='json', auth="user", website=True)
     def mass_mailing_snippets(self):
         values = {'company_id': request.env['res.users'].browse(request.uid).company_id}
-        return request.registry["ir.ui.view"].render(request.cr, request.uid, 'mass_mailing.email_designer_snippets', values, context=request.context)
+        return request.env.ref('mass_mailing.email_designer_snippets').render(values)

@@ -4,22 +4,20 @@
 import datetime
 import dateutil
 import logging
-import operator
 import os
 import time
-from functools import partial
 from pytz import timezone
 
 import odoo
 from odoo import api, fields, models, tools, workflow, _
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.report.report_sxw import report_sxw, report_rml
 from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
 
-class Actions(models.Model):
+class IrActions(models.Model):
     _name = 'ir.actions.actions'
     _table = 'ir_actions'
     _order = 'name'
@@ -27,21 +25,26 @@ class Actions(models.Model):
     name = fields.Char(required=True)
     type = fields.Char(string='Action Type', required=True)
     usage = fields.Char(string='Action Usage')
-    xml_id = fields.Char(compute=models.Model.get_external_id, string="External ID")
+    xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
     help = fields.Html(string='Action Description',
-                              help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-                              translate=True)
+                       help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
+                       translate=True)
+
+    def _compute_xml_id(self):
+        res = self.get_external_id()
+        for record in self:
+            record.xml_id = res.get(record.id)
 
     @api.model
     def create(self, vals):
-        res = super(Actions, self).create(vals)
+        res = super(IrActions, self).create(vals)
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
 
     @api.multi
     def write(self, vals):
-        res = super(Actions, self).write(vals)
+        res = super(IrActions, self).write(vals)
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -50,9 +53,9 @@ class Actions(models.Model):
     def unlink(self):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
-        todo_ids = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
-        todo_ids.unlink()
-        res = super(Actions, self).unlink()
+        todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
+        todos.unlink()
+        res = super(IrActions, self).unlink()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -61,7 +64,7 @@ class Actions(models.Model):
     def _get_eval_context(self, action=None):
         """ evaluation context to pass to safe_eval """
         return {
-            'uid': self.env.uid,
+            'uid': self._uid,
             'user': self.env.user,
             'time': time,
             'datetime': datetime,
@@ -77,8 +80,8 @@ class IrActionsReportXml(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    type = fields.Char(string='Action Type', default='ir.actions.report.xml', required=True)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(translate=True)
+    type = fields.Char(default='ir.actions.report.xml')
 
     model = fields.Char(required=True)
     report_type = fields.Selection([('qweb-pdf', 'PDF'),
@@ -86,7 +89,8 @@ class IrActionsReportXml(models.Model):
                                     ('controller', 'Controller'),
                                     ('pdf', 'RML pdf (deprecated)'),
                                     ('sxw', 'RML sxw (deprecated)'),
-                                    ('webkit', 'Webkit (deprecated)')], default="pdf", required=True,
+                                    ('webkit', 'Webkit (deprecated)')],
+                                   required=True, default="pdf",
                                    help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report.")
     report_name = fields.Char(string='Template Name', required=True,
                               help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
@@ -101,7 +105,6 @@ class IrActionsReportXml(models.Model):
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
 
     # Deprecated rml stuff
-    usage = fields.Char(string='Action Usage')
     header = fields.Boolean(string='Add RML Header', default=True, help="Add or not the corporate RML header")
     parser = fields.Char(string='Parser Class')
     auto = fields.Boolean(string='Custom Python Parser', default=True)
@@ -116,123 +119,119 @@ class IrActionsReportXml(models.Model):
     report_sxw = fields.Char(compute='_compute_report_sxw', string='SXW Path')
     report_sxw_content_data = fields.Binary(string='SXW Content')
     report_rml_content_data = fields.Binary(string='RML Content')
-    report_sxw_content = fields.Binary(compute='_compute_report_sxw_content', inverse='_inverse_report_content', string='SXW Content')
-    report_rml_content = fields.Binary(compute='_compute_report_rml_content', inverse='_inverse_report_content', string='RML Content')
+    report_sxw_content = fields.Binary(compute='_compute_report_sxw_content', inverse='_inverse_report_sxw_content', string='SXW Content')
+    report_rml_content = fields.Binary(compute='_compute_report_rml_content', inverse='_inverse_report_rml_content', string='RML Content')
 
-    def _report_content(self, name):
-        res = {}
-        for report in self:
-            data = report[name + '_data']
-            if not data and report[name[:-8]]:
-                fp = None
-                try:
-                    fp = tools.file_open(report[name[:-8]], mode='rb')
-                    data = fp.read()
-                except:
-                    data = False
-                finally:
-                    if fp:
-                        fp.close()
-            res[report.id] = data
-        return res
-
-    @api.depends('report_sxw_content')
-    def _compute_report_sxw_content(self):
-        self.report_sxw_content = self._report_content(self.name)
-
-    @api.depends('report_rml_content')
-    def _compute_report_rml_content(self):
-        self.report_rml_content = self._report_content(self.name)
-
-    def _inverse_report_content(self, name, value):
-        self.write({name+'_data': value})
-
-    @api.depends('report_sxw')
+    @api.depends('report_rml')
     def _compute_report_sxw(self):
         for report in self:
             if report.report_rml:
                 self.report_sxw = report.report_rml.replace('.rml', '.sxw')
 
-    @api.multi
+    def _report_content(self, name):
+        data = self[name + '_content_data']
+        if not data and self[name]:
+            try:
+                with tools.file_open(self[name], mode='rb') as fp:
+                    data = fp.read()
+            except Exception:
+                data = False
+        return data
+
+    @api.depends('report_sxw', 'report_sxw_content_data')
+    def _compute_report_sxw_content(self):
+        for report in self:
+            report.report_sxw_content = report._report_content('report_sxw')
+
+    @api.depends('report_rml', 'report_rml_content_data')
+    def _compute_report_rml_content(self):
+        for report in self:
+            report.report_rml_content = report._report_content('report_rml')
+
+    def _inverse_report_sxw_content(self):
+        for report in self:
+            report.report_sxw_content_data = report.report_sxw_content
+
+    def _inverse_report_rml_content(self):
+        for report in self:
+            report.report_rml_content_data = report.report_rml_content
+
+    @api.model_cr
     def _lookup_report(self, name):
         """
         Look up a report definition.
         """
-        opj = os.path.join
+        join = os.path.join
 
         # First lookup in the deprecated place, because if the report definition
         # has not been updated, it is more likely the correct definition is there.
         # Only reports with custom parser sepcified in Python are still there.
         if 'report.' + name in odoo.report.interface.report_int._reports:
-            new_report = odoo.report.interface.report_int._reports['report.' + name]
-        else:
-            self.env.cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
-            report = self.env.cr.dictfetchone()
-            if report:
-                if report['report_type'] in ['qweb-pdf', 'qweb-html']:
-                    return report['report_name']
-                elif report['report_rml'] or report['report_rml_content_data']:
-                    if report['parser']:
-                        kwargs = {'parser': operator.attrgetter(report['parser'])(odoo.addons)}
-                    else:
-                        kwargs = {}
-                    new_report = report_sxw('report.'+report['report_name'], report['model'],
-                                            opj('addons', report['report_rml'] or '/'), header=report['header'], register=False, **kwargs)
-                elif report['report_xsl'] and report['report_xml']:
-                    new_report = report_rml('report.'+report['report_name'], report['model'],
-                                            opj('addons', report['report_xml']),
-                                            report['report_xsl'] and opj('addons', report['report_xsl']), register=False)
-                else:
-                    raise Exception, "Unhandled report type: %s" % report
-            else:
-                raise Exception, "Required report does not exist: %s" % name
+            return odoo.report.interface.report_int._reports['report.' + name]
 
-        return new_report
+        self._cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
+        row = self._cr.dictfetchone()
+        if not row:
+            raise Exception("Required report does not exist: %s" % name)
+
+        if row['report_type'] in ('qweb-pdf', 'qweb-html'):
+            return row['report_name']
+        elif row['report_rml'] or row['report_rml_content_data']:
+            kwargs = {}
+            if row['parser']:
+                kwargs['parser'] = getattr(odoo.addons, row['parser'])
+            return report_sxw('report.'+row['report_name'], row['model'],
+                              join('addons', row['report_rml'] or '/'),
+                              header=row['header'], register=False, **kwargs)
+        elif row['report_xsl'] and row['report_xml']:
+            return report_rml('report.'+row['report_name'], row['model'],
+                              join('addons', row['report_xml']),
+                              row['report_xsl'] and join('addons', row['report_xsl']),
+                              register=False)
+        else:
+            raise Exception("Unhandled report type: %s" % row)
 
     @api.multi
     def create_action(self):
-        """ Create a contextual action for each of the report."""
-        for ir_actions_report_xml in self:
-            ir_values_id = self.env['ir.values'].sudo().create({
-                'name': ir_actions_report_xml.name,
-                'model': ir_actions_report_xml.model,
+        """ Create a contextual action for each report. """
+        for report in self:
+            ir_values = self.env['ir.values'].sudo().create({
+                'name': report.name,
+                'model': report.model,
                 'key2': 'client_print_multi',
-                'value': "ir.actions.report.xml,%s" % ir_actions_report_xml.id,
+                'value': "ir.actions.report.xml,%s" % report.id,
             })
-            ir_actions_report_xml.write({
-                'ir_values_id': ir_values_id.id,
-            })
+            report.write({'ir_values_id': ir_values.id})
         return True
 
     @api.multi
     def unlink_action(self):
-        """ Remove the contextual actions created for the reports."""
+        """ Remove the contextual actions created for the reports. """
         self.check_access_rights('write', raise_exception=True)
-        for ir_actions_report_xml in self:
-            if ir_actions_report_xml.ir_values_id:
+        for report in self:
+            if report.ir_values_id:
                 try:
-                    self.ir_actions_report_xml.ir_values_id.sudo().unlink()
+                    self.report.ir_values_id.sudo().unlink()
                 except Exception:
                     raise UserError(_('Deletion of the action record failed.'))
         return True
 
-    @api.multi
-    def render_report(self, name, data):
+    @api.model
+    def render_report(self, res_ids, name, data):
         """
         Look up a report definition and render the report for the provided IDs.
         """
-        new_report = self._lookup_report(name)
-
-        if isinstance(new_report, (str, unicode)):  # Qweb report
+        report = self._lookup_report(name)
+        if isinstance(report, basestring):  # Qweb report
             # The only case where a QWeb report is rendered with this method occurs when running
             # yml tests originally written for RML reports.
             if tools.config['test_enable'] and not tools.config['test_report_directory']:
                 # Only generate the pdf when a destination folder has been provided.
-                return self.env['report']._model.get_html(self._cr, self._uid, self.ids, new_report, data=data), 'html'
+                return self.pool['report'].get_html(self._cr, self._uid, res_ids, report, data=data, context=self._context), 'html'
             else:
-                return self.env['report']._model.get_pdf(self._cr, self._uid, self.ids, new_report, data=data), 'pdf'
+                return self.pool['report'].get_pdf(self._cr, self._uid, res_ids, report, data=data, context=self._context), 'pdf'
         else:
-            return new_report.create(self._cr, self._uid, self.ids, data)
+            return report.create(self._cr, self._uid, res_ids, data, context=self._context)
 
 
 class IrActionsActWindow(models.Model):
@@ -246,46 +245,40 @@ class IrActionsActWindow(models.Model):
     def _check_model(self):
         for action in self:
             if action.res_model not in self.env:
-                raise UserError(_('Invalid model name in the action definition.'))
+                raise ValidationError(_('Invalid model name %r in action definition.') % action.res_model)
             if action.src_model and action.src_model not in self.env:
-                raise UserError(_('Invalid model name in the action definition.'))
-        return True
+                raise ValidationError(_('Invalid model name %r in action definition.') % action.src_model)
 
-    @api.depends('views')
-    def _views_get_fnc(self):
-        """Returns an ordered list of the specific view modes that should be
-           enabled when displaying the result of this action, along with the
-           ID of the specific view to use for each mode, if any were required.
+    @api.depends('view_ids.view_mode', 'view_mode', 'view_id.type')
+    def _compute_views(self):
+        """ Compute an ordered list of the specific view modes that should be
+            enabled when displaying the result of this action, along with the
+            ID of the specific view to use for each mode, if any were required.
 
-           This function hides the logic of determining the precedence between
-           the view_modes string, the view_ids o2m, and the view_id m2o that can
-           be set on the action.
-
-           :rtype: dict in the form { action_id: list of pairs (tuples) }
-           :return: { action_id: [(view_id, view_mode), ...], ... }, where view_mode
-                    is one of the possible values for ir.ui.view.type and view_id
-                    is the ID of a specific view to use for this mode, or False for
-                    the default one.
+            This function hides the logic of determining the precedence between
+            the view_modes string, the view_ids o2m, and the view_id m2o that
+            can be set on the action.
         """
         for act in self:
             act.views = [(view.view_id.id, view.view_mode) for view in act.view_ids]
-            view_ids_modes = [view.view_mode for view in act.view_ids]
-            modes = act.view_mode.split(',')
-            missing_modes = [mode for mode in modes if mode not in view_ids_modes]
+            got_modes = [view.view_mode for view in act.view_ids]
+            all_modes = act.view_mode.split(',')
+            missing_modes = [mode for mode in all_modes if mode not in got_modes]
             if missing_modes:
-                if act.view_id and act.view_id.type in missing_modes:
+                if act.view_id.type in missing_modes:
                     # reorder missing modes to put view_id first if present
                     missing_modes.remove(act.view_id.type)
                     act.views.append((act.view_id.id, act.view_id.type))
                 act.views.extend([(False, mode) for mode in missing_modes])
 
-    @api.depends('search_view')
-    def _search_view(self):
+    @api.depends('res_model', 'search_view_id')
+    def _compute_search_view(self):
         for act in self:
-            act.search_view = str(self.env[act.res_model].fields_view_get(act.search_view_id and act.search_view_id.id, 'search'))
+            fvg = self.env[act.res_model].fields_view_get(act.search_view_id.id, 'search')
+            act.search_view = str(fvg)
 
-    name = fields.Char(string='Action Name', required=True, translate=True)
-    type = fields.Char(string='Action Type', default="ir.actions.act_window", required=True)
+    name = fields.Char(string='Action Name', translate=True)
+    type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
     domain = fields.Char(string='Domain Value',
                          help="Optional domain filtering of the destination data, as a Python expression")
@@ -304,7 +297,7 @@ class IrActionsActWindow(models.Model):
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
     view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='Views')
-    views = fields.Binary(compute='_views_get_fnc',
+    views = fields.Binary(compute='_compute_views',
                           help="This function field computes the ordered list of views that should be enabled " \
                                "when displaying the result of an action, federating view mode, views and " \
                                "reference view. The result is returned as an ordered list of pairs (view_id,view_mode).")
@@ -315,26 +308,25 @@ class IrActionsActWindow(models.Model):
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
     filter = fields.Boolean()
     auto_search = fields.Boolean(default=True)
-    search_view = fields.Text(compute='_search_view')
+    search_view = fields.Text(compute='_compute_search_view')
     multi = fields.Boolean(string='Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views")
 
+    @api.v7
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        result = IrActionsActWindow.read(self.browse(cr, uid, ids, context), fields, load=load)
+        return result if isinstance(ids, list) else (bool(result) and result[0])
+
+    @api.v8
+    def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """
-        ids_int = isinstance(ids, (int, long))
-        if ids_int:
-            ids = [ids]
-        results = super(IrActionsActWindow, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-
+        result = super(IrActionsActWindow, self).read(fields, load=load)
         if not fields or 'help' in fields:
-            for res in results:
-                model = res.get('res_model')
-                if model and self.pool.get(model):
-                    ctx = dict(context or {})
-                    res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=ctx)
-        if ids_int:
-            return results[0]
-        return results
+            for values in result:
+                model = values.get('res_model')
+                if model in self.env:
+                    values['help'] = self.env[model].get_empty_list_help(values.get('help', ""))
+        return result
 
     @api.model
     def for_xml_id(self, module, xml_id):
@@ -345,11 +337,8 @@ class IrActionsActWindow(models.Model):
                        attribute from the XML file)
         :return: A read() view of the ir.actions.act_window
         """
-        DataObj = self.env['ir.model.data']
-        data_id = DataObj.sudo()._get_id(module, xml_id)
-        res = DataObj.browse(data_id)
-        result = self.env['ir.actions.act_window'].sudo().browse(res.res_id)
-        return result
+        record = self.env.ref("%s.%s" % (module, xml_id))
+        return record.read()[0]
 
     @api.model
     def create(self, vals):
@@ -378,6 +367,16 @@ class IrActionsActWindow(models.Model):
         return set(row[0] for row in self._cr.fetchall())
 
 
+VIEW_TYPES = [
+    ('tree', 'Tree'),
+    ('form', 'Form'),
+    ('graph', 'Graph'),
+    ('pivot', 'Pivot'),
+    ('calendar', 'Calendar'),
+    ('gantt', 'Gantt'),
+    ('kanban', 'Kanban'),
+]
+
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
@@ -386,21 +385,16 @@ class IrActionsActWindowView(models.Model):
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
-    view_mode = fields.Selection([('tree', 'Tree'),
-                                  ('form', 'Form'),
-                                  ('graph', 'Graph'),
-                                  ('pivot', 'Pivot'),
-                                  ('calendar', 'Calendar'),
-                                  ('gantt', 'Gantt'),
-                                  ('kanban', 'Kanban')], string='View Type', required=True)
+    view_mode = fields.Selection(VIEW_TYPES, string='View Type', required=True)
     act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
+    @api.model_cr_context
     def _auto_init(self):
         super(IrActionsActWindowView, self)._auto_init()
-        self.env.cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
-        if not self.env.cr.fetchone():
-            self.env.cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
+        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
+        if not self._cr.fetchone():
+            self._cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
 
 
 class IrActionsActWindowclose(models.Model):
@@ -408,7 +402,7 @@ class IrActionsActWindowclose(models.Model):
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
 
-    type = fields.Char(string='Action Type', default='ir.actions.act_window_close')
+    type = fields.Char(default='ir.actions.act_window_close')
 
 
 class IrActionsActUrl(models.Model):
@@ -418,8 +412,8 @@ class IrActionsActUrl(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', required=True, translate=True)
-    type = fields.Char(string='Action Type', default='ir.actions.act_url')
+    name = fields.Char(string='Action Name', translate=True)
+    type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
                               string='Action Target', default='new', required=True)
@@ -453,10 +447,12 @@ class IrActionsServer(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
 
+    @api.model
     def _select_objects(self):
         records = self.env['ir.model'].search([])
         return [(record.model, record.name) for record in records] + [('', '')]
 
+    @api.model
     def _get_states(self):
         """ Override me in order to add new states in the server action. Please
         note that the added key length should not be higher than already-existing
@@ -468,18 +464,17 @@ class IrActionsServer(models.Model):
                 ('object_write', 'Write on a Record'),
                 ('multi', 'Execute several actions')]
 
-    @api.model
-    def _get_states_wrapper(self):
-        return self._get_states()
+    name = fields.Char(string='Action Name', translate=True)
+    type = fields.Char(default='ir.actions.server')
 
-    name = fields.Char(string='Action Name', required=True, translate=True)
     condition = fields.Char(default="True",
                             help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
                                  "a Python expression, like 'object.list_price > 5000'. A void "
                                  "condition is considered as always True. Help about python expression "
                                  "is given in the help tab.")
-    state = fields.Selection(selection='_get_states_wrapper', string='Action To Do', default='code', required=True,
+    state = fields.Selection(selection=lambda self: self._get_states(),
+                             string='Action To Do', default='code', required=True,
                              help="Type of server action. The following values are available:\n"
                                   "- 'Execute Python Code': a block of python code that will be executed\n"
                                   "- 'Trigger a Workflow Signal': send a signal to a workflow\n"
@@ -488,8 +483,6 @@ class IrActionsServer(models.Model):
                                   "- 'Write on a Record': update the values of a record\n"
                                   "- 'Execute several actions': define an action that triggers several other server actions\n"
                                   "- 'Send Email': automatically send an email (available in email_template)")
-    usage = fields.Char(string='Action Usage')
-    type = fields.Char(string='Action Type', default='ir.actions.server', required=True)
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -569,19 +562,19 @@ class IrActionsServer(models.Model):
     id_object = fields.Reference(string='Record', selection='_select_objects')
     id_value = fields.Char(string='Record ID')
 
-    def _check_expression(self, expression, model_id):
+    def _check_expression(self, expression, model):
         """ Check python expression (condition, write_expression). Each step of
         the path must be a valid many2one field, or an integer field for the last
         step.
 
         :param str expression: a python expression, beginning by 'obj' or 'object'
-        :param int model_id: the base model of the server action
+        :param model: a record of the model 'ir.model'
         :returns tuple: (is_valid, target_model_name, error_msg)
         """
-        if not model_id:
+        if not model:
             return (False, None, 'Your expression cannot be validated because the Base Model is not set.')
         # fetch current model
-        current_model_name = self.env['ir.model'].browse(model_id).model
+        model_name = model.model
         # transform expression into a path that should look like 'object.many2onefield.many2onefield'
         path = expression.split('.')
         initial = path.pop(0)
@@ -590,89 +583,71 @@ class IrActionsServer(models.Model):
         # analyze path
         while path:
             step = path.pop(0)
-            field = self.env[current_model_name]._fields.get(step)
+            field = self.env[model_name]._fields.get(step)
             if not field:
-                return (False, None, 'Part of the expression (%s) is not recognized as a column in the model %s.' % (step, current_model_name))
+                return (False, None, 'Part of the expression (%s) is not recognized as a column in the model %s.' % (step, model_name))
             ftype = field.type
             if ftype not in ['many2one', 'int']:
                 return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one or an int)' % (step, ftype))
             if ftype == 'int' and path:
                 return (False, None, 'Part of the expression (%s) is an integer field that is only allowed at the end of an expression' % (step))
             if ftype == 'many2one':
-                current_model_name = field.comodel_name
-        return (True, current_model_name, None)
+                model_name = field.comodel_name
+        return (True, model_name, None)
 
     @api.constrains('write_expression', 'model_id')
     def _check_write_expression(self):
         for record in self:
             if record.write_expression and record.model_id:
-                correct, model_name, message = self._check_expression(record.write_expression, record.model_id.id)
+                correct, model_name, message = self._check_expression(record.write_expression, record.model_id)
                 if not correct:
                     _logger.warning('Invalid expression: %s' % message)
-                    raise ValueError(_('Incorrect Write Record Expression'))
-        return True
+                    raise ValidationError(_('Incorrect Write Record Expression'))
 
-    _constraints = [
-        (partial(models.Model._check_m2m_recursion, field_name='child_ids'),
-            'Recursion found in child server actions',
-            ['child_ids']),
-    ]
+    @api.constrains('child_ids')
+    def _check_recursion(self):
+        if not self._check_m2m_recursion('child_ids'):
+            raise ValidationError(_('Recursion found in child server actions'))
 
-    @api.onchange('model_id', 'wkf_model_id', 'crud_model_id')
-    def on_change_model_id(self):
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
         """ When changing the action base model, reset workflow and crud config
         to ease value coherence. """
-        values = {
-            'use_create': 'new',
-            'use_write': 'current',
-            'use_relational_model': 'base',
-            'wkf_model_id': self.model_id.id,
-            'wkf_field_id': False,
-            'crud_model_id': self.model_id.id,
-        }
+        self.use_create = 'new'
+        self.use_write = 'current'
+        self.use_relational_model = 'base'
+        self.wkf_model_id = self.model_id
+        self.wkf_field_id = False
+        self.crud_model_id = self.model_id
 
-        if self.model_id:
-            values['model_name'] = self.env['ir.model'].browse(self.model_id.id).model
-
-        return {'value': values}
-
-    @api.onchange('use_relational_model', 'wkf_field_id', 'wkf_model_id', 'model_id')
-    def on_change_wkf_wonfig(self):
+    @api.onchange('use_relational_model', 'wkf_field_id')
+    def _onchange_wkf_config(self):
         """ Update workflow type configuration
 
          - update the workflow model (for base (model_id) /relational (field.relation))
          - update wkf_transition_id to False if workflow model changes, to force
            the user to choose a new one
         """
-        values = {}
         if self.use_relational_model == 'relational' and self.wkf_field_id:
-            field = self.env['ir.model.fields'].browse(self.wkf_field_id.id)
-            new_wkf_model = self.env['ir.model'].search([('model', '=', field.relation)])
-            values['wkf_model_id'] = new_wkf_model.id
+            field = self.wkf_field_id
+            self.wkf_model_id = self.env['ir.model'].search([('model', '=', field.relation)])
         else:
-            values['wkf_model_id'] = self.model_id.id
-        return {'value': values}
+            self.wkf_model_id = self.model_id
 
     @api.onchange('wkf_model_id')
-    def on_change_wkf_model_id(self):
+    def _onchange_wkf_model_id(self):
         """ When changing the workflow model, update its stored name also """
-        values = {'wkf_transition_id': False}
-        if self.wkf_model_id:
-            values['wkf_model_name'] = self.env['ir.model'].browse(self.wkf_model_id.id).model
-        return {'value': values}
+        self.wkf_transition_id = False
 
-    @api.onchange('state', 'use_create', 'use_write', 'ref_object', 'crud_model_id', 'model_id')
-    def on_change_crud_config(self):
+    @api.onchange('use_create', 'use_write', 'ref_object')
+    def _onchange_crud_config(self):
         """ Wrapper on CRUD-type (create or write) on_change """
         if self.state == 'object_create':
-            return self.on_change_create_config(self.use_create, self.ref_object, self.crud_model_id.id, self.model_id.id)
+            self._onchange_create_config()
         elif self.state == 'object_write':
-            return self.on_change_write_config(self.use_write, self.ref_object, self.crud_model_id.id, self.model_id.id)
-        else:
-            return {}
+            self._onchange_write_config()
 
-    @api.multi
-    def on_change_create_config(self, use_create, ref_object, crud_model_id, model_id):
+    def _onchange_create_config(self):
         """ When changing the object_create type configuration:
 
          - `new` and `copy_current`: crud_model_id is the same as base model
@@ -681,74 +656,65 @@ class IrActionsServer(models.Model):
          - if the target model has changed, then reset the link field that is
            probably not correct anymore
         """
-        values = {}
-        if use_create == 'new':
-            values['crud_model_id'] = model_id
-        elif use_create == 'new_other':
+        crud_model_id = self.crud_model_id
+
+        if self.use_create == 'new':
+            self.crud_model_id = self.model_id
+        elif self.use_create == 'new_other':
             pass
-        elif use_create == 'copy_current':
-            values['crud_model_id'] = model_id
-        elif use_create == 'copy_other' and ref_object:
-            ref_model = str(ref_object).split('(')
-            ref_model = self.env['ir.model'].search([('model', '=', ref_model)])
-            values['crud_model_id'] = ref_model.id
+        elif self.use_create == 'copy_current':
+            self.crud_model_id = self.model_id
+        elif self.use_create == 'copy_other' and self.ref_object:
+            ref_model = self.ref_object._name
+            self.crud_model_id = self.env['ir.model'].search([('model', '=', ref_model)])
 
-        if values.get('crud_model_id') != crud_model_id:
-            values['link_field_id'] = False
-        return {'value': values}
+        if self.crud_model_id != crud_model_id:
+            self.link_field_id = False
 
-    @api.multi
-    def on_change_write_config(self, use_write, ref_object, crud_model_id, model_id):
+    def _onchange_write_config(self):
         """ When changing the object_write type configuration:
 
          - `current`: crud_model_id is the same as base model
          - `other`: disassemble the reference object to have its model
          - `expression`: has its own on_change, nothing special here
         """
-        values = {}
-        if use_write == 'current':
-            values['crud_model_id'] = model_id
-        elif use_write == 'other' and ref_object:
-            ref_model = str(ref_object).split('(')
-            ref_model = self.env['ir.model'].search([('model', '=', ref_model)])
-            values['crud_model_id'] = ref_model.id
-        elif use_write == 'expression':
+        crud_model_id = self.crud_model_id
+
+        if self.use_write == 'current':
+            self.crud_model_id = self.model_id
+        elif self.use_write == 'other' and self.ref_object:
+            ref_model = self.ref_object._name
+            self.crud_model_id = self.env['ir.model'].search([('model', '=', ref_model)])
+        elif self.use_write == 'expression':
             pass
 
-        if values.get('crud_model_id') != crud_model_id:
-            values['link_field_id'] = False
-        return {'value': values}
+        if self.crud_model_id != crud_model_id:
+            self.link_field_id = False
 
-    @api.onchange('write_expression', 'model_id')
-    def on_change_write_expression(self):
+    @api.onchange('crud_model_id')
+    def _onchange_crud_model_id(self):
+        """ When changing the CRUD model, update its stored name also """
+        self.link_field_id = False
+
+    @api.onchange('write_expression')
+    def _onchange_write_expression(self):
         """ Check the write_expression and update crud_model_id accordingly """
         values = {}
         if self.write_expression:
-            valid, model_name, message = self._check_expression(self.write_expression, self.model_id.id)
+            valid, model_name, message = self._check_expression(self.write_expression, self.model_id)
         else:
             valid, model_name, message = True, None, False
             if self.model_id:
-                model_name = self.env['ir.model'].browse(self.model_id.id).model
+                model_name = self.model_id.model
         if not valid:
             return {
                 'warning': {
-                    'title': 'Incorrect expression',
-                    'message': message or 'Invalid expression',
+                    'title': _('Incorrect expression'),
+                    'message': message or _('Invalid expression'),
                 }
             }
         if model_name:
-            ref_model = self.env['ir.model'].search([('model', '=', model_name)])
-            values['crud_model_id'] = ref_model.id
-            return {'value': values}
-        return {'value': {}}
-
-    @api.onchange('crud_model_id')
-    def on_change_crud_model_id(self):
-        """ When changing the CRUD model, update its stored name also """
-        values = {'link_field_id': False}
-        if self.crud_model_id:
-            values['crud_model_name'] = self.env['ir.model'].browse(self.crud_model_id.id).model
-        return {'value': values}
+            self.crud_model_id = self.env['ir.model'].search([('model', '=', model_name)])
 
     def _build_expression(self, field_name, sub_field_name):
         """ Returns a placeholder expression for use in a template field,
@@ -766,50 +732,39 @@ class IrActionsServer(models.Model):
         return expression
 
     @api.onchange('model_object_field', 'sub_model_object_field')
-    def onchange_sub_model_object_value_field(self):
-        result = {
-            'sub_object': False,
-            'copyvalue': False,
-            'sub_model_object_field': False,
-        }
-        if self.model_object_field:
-            FieldsObj = self.env['ir.model.fields']
-            field_value = FieldsObj.browse(self.model_object_field.id)
-            if field_value.ttype in ['many2one', 'one2many', 'many2many']:
-                res_ids = self.env['ir.model'].search([('model', '=', field_value.relation)])
-                if self.sub_model_object_field:
-                    sub_field_value = FieldsObj.browse(self.sub_model_object_field.id)
-                if res_ids:
-                    result.update({
-                        'sub_object': res_ids.id,
-                        'copyvalue': self._build_expression(field_value.name, sub_field_value and sub_field_value.name or False),
-                        'sub_model_object_field': self.sub_model_object_field,
-                    })
+    def _onchange_model_object_field(self):
+        field = self.model_object_field
+        sub_field = self.sub_model_object_field
+
+        self.sub_object = False
+        self.sub_model_object_field = False
+        self.copyvalue = False
+
+        if field:
+            if field.ttype in ['many2one', 'one2many', 'many2many']:
+                comodel = self.env['ir.model'].search([('model', '=', field.relation)])
+                if comodel:
+                    self.sub_object = comodel
+                    self.copyvalue = self._build_expression(field.name, sub_field.name)
+                    self.sub_model_object_field = sub_field
             else:
-                result.update({
-                    'copyvalue': self._build_expression(field_value.name, False),
-                })
-        return {'value': result}
+                self.copyvalue = self._build_expression(field.name, False)
 
     @api.onchange('id_object')
-    def onchange_id_object(self):
-        if self.id_object:
-            return {'value': {'id_value': self.id_object.id}}
-        return {'value': {'id_value': False}}
+    def _onchange_id_object(self):
+        self.id_value = self.id_object.id if self.id_object else False
 
     @api.multi
     def create_action(self):
-        """ Create a contextual action for each of the server actions. """
+        """ Create a contextual action for each server action. """
         for action in self:
-            ir_values_id = self.env['ir.values'].sudo().create({
+            ir_values = self.env['ir.values'].sudo().create({
                 'name': _('Run %s') % action.name,
                 'model': action.model_id.model,
                 'key2': 'client_action_multi',
                 'value': "ir.actions.server,%s" % action.id,
             })
-            action.write({
-                'menu_ir_values_id': ir_values_id.id,
-            })
+            action.write({'menu_ir_values_id': ir_values.id})
         return True
 
     @api.multi
@@ -828,7 +783,8 @@ class IrActionsServer(models.Model):
     def run_action_client_action(self, action, eval_context=None):
         if not action.action_id:
             raise UserError(_("Please specify an action to launch!"))
-        return self.env[action.action_id.type].browse(action.action_id.id)[0]
+        record = self.env[action.action_id.type].browse(action.action_id.id)
+        return record.read()[0]
 
     @api.model
     def run_action_code_multi(self, action, eval_context=None):
@@ -845,7 +801,7 @@ class IrActionsServer(models.Model):
            field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
         """
         # weird signature and calling -> no self.env, use action param's
-        record = action.env[action.model_id.model].browse(self.env.context['active_id'])
+        record = action.env[action.model_id.model].browse(self._context['active_id'])
         if action.use_relational_model == 'relational':
             record = getattr(record, action.wkf_field_id.name)
             if not isinstance(record, models.BaseModel):
@@ -879,15 +835,15 @@ class IrActionsServer(models.Model):
 
         if action.use_write == 'current':
             model = action.model_id.model
-            ref_id = self.env.context.get('active_id')
+            ref_id = self._context.get('active_id')
         elif action.use_write == 'other':
             model = action.crud_model_id.model
             ref_id = action.ref_object.id
         elif action.use_write == 'expression':
             model = action.crud_model_id.model
             ref = eval(action.write_expression, eval_context)
-            if isinstance(ref, odoo.osv.orm.browse_record):
-                ref_id = getattr(ref, 'id')
+            if isinstance(ref, models.BaseModel):
+                ref_id = ref.id
             else:
                 ref_id = int(ref)
 
@@ -915,17 +871,17 @@ class IrActionsServer(models.Model):
         elif action.use_create in ['new_other', 'copy_other']:
             model = action.crud_model_id.model
 
-        ObjPool = self.env[model]
         if action.use_create == 'copy_current':
-            ref_id = self.env.context.get('active_id')
-            res = ObjPool.browse(ref_id).copy(res)
+            ref_id = self._context.get('active_id')
+            res = self.env[model].browse(ref_id).copy(res)
         elif action.use_create == 'copy_other':
             res = action.ref_object.copy(res)
         else:
-            res = ObjPool.create(res)
+            res = self.env[model].create(res)
 
         if action.link_new_record and action.link_field_id:
-            self.env[action.model_id.model].browse(self.env.context.get('active_id')).write({action.link_field_id.name: res.id})
+            record = self.env[action.model_id.model].browse(self._context.get('active_id'))
+            record.write({action.link_field_id.name: res.id})
 
     @api.model
     def _get_eval_context(self, action=None):
@@ -936,22 +892,21 @@ class IrActionsServer(models.Model):
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)eval """
         def log(message, level="info"):
-            val = ('server', self.env.cr.dbname, __name__, level, message, "action", action.id, action.name)
-            self.env.cr.execute("""
+            self._cr.execute("""
                 INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, val)
+            """, ('server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
-        Model = self.env[action.model_id.model]
-        if self.env.context.get('active_model') == action.model_id.model and self.env.context.get('active_id'):
-            obj = Model.browse(self.env.context['active_id'])
-        if self.env.context.get('onchange_self'):
-            obj = self.env.context['onchange_self']
+        model = self.env[action.model_id.model]
+        if self._context.get('active_model') == action.model_id.model and self._context.get('active_id'):
+            obj = model.browse(self._context['active_id'])
+        if self._context.get('onchange_self'):
+            obj = self._context['onchange_self']
         eval_context.update({
             # orm
             'env': self.env,
-            'model': Model,
+            'model': model,
             'workflow': workflow,
             # Exceptions
             'Warning': odoo.exceptions.Warning,
@@ -961,10 +916,10 @@ class IrActionsServer(models.Model):
             'object': obj,
             'obj': obj,
             # Deprecated use env or model instead
-            'self': self.env[action.model_id.model],
-            'pool': self.env,
-            'cr': self.env.cr,
-            'context': self.env.context,
+            'self': model._model,
+            'pool': self.pool,
+            'cr': self._cr,
+            'context': self._context,
             'user': self.env.user,
             # helpers
             'log': log,
@@ -1002,20 +957,22 @@ class IrActionsServer(models.Model):
                 if not expr:
                     continue
                 # call the multi method
-                func = getattr(self, 'run_action_%s_multi' % action.state)
+                run_self = self.with_context(eval_context['context'])
+                func = getattr(run_self, 'run_action_%s_multi' % action.state)
                 res = func(action, eval_context=eval_context)
 
             elif hasattr(self, 'run_action_%s' % action.state):
-                func = getattr(self, 'run_action_%s' % action.state)
-                active_id = self.env.context.get('active_id')
-                active_ids = self.env.context.get('active_ids', [active_id] if active_id else [])
+                active_id = self._context.get('active_id')
+                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
-                    eval_context["context"] = dict(self.env.context, active_ids=[active_id], active_id=active_id)
+                    run_self = self.with_context(active_ids=[active_id], active_id=active_id)
+                    eval_context["context"] = run_self._context
                     expr = eval(str(condition), eval_context)
                     if not expr:
                         continue
                     # call the single method related to the action: run_action_<STATE>
+                    func = getattr(run_self, 'run_action_%s' % action.state)
                     res = func(action, eval_context=eval_context)
         return res
 
@@ -1057,7 +1014,7 @@ class IrActionsTodo(models.Model):
     _description = "Configuration Wizards"
     _order = "sequence, id"
 
-    action_id = fields.Many2one('ir.actions.actions', string='Action', select=True, required=True)
+    action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
     sequence = fields.Integer(default=10)
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
@@ -1071,7 +1028,6 @@ class IrActionsTodo(models.Model):
     note = fields.Text(string='Text', translate=True)
 
     @api.multi
-    @api.depends('action_id', 'name')
     def name_get(self):
         return [(record.id, record.action_id.name) for record in self]
 
@@ -1080,35 +1036,34 @@ class IrActionsTodo(models.Model):
         if args is None:
             args = []
         if name:
-            action = self.search([('action_id', operator, name)] + args, limit=limit)
-            return action.name_get()
+            actions = self.search([('action_id', operator, name)] + args, limit=limit)
+            return actions.name_get()
         return super(IrActionsTodo, self).name_search(name, args=args, operator=operator, limit=limit)
 
     @api.multi
     def action_launch(self, context=None):
         """ Launch Action of Wizard"""
-        wizard_id = self.ids and self.ids[0]
-        wizard = self.browse(wizard_id)
-        if wizard.type in ('automatic', 'once'):
-            wizard.write({'state': 'done'})
+        self.ensure_one()
+        if self.type in ('automatic', 'once'):
+            self.write({'state': 'done'})
 
         # Load action
-        act_type = wizard.action_id.type
+        action = self.env[self.action_id.type].browse(self.action_id.id)
 
-        result = self.env[act_type].browse(wizard.action_id.id).read()[0]
-        if act_type != 'ir.actions.act_window':
+        result = action.read()[0]
+        if action._name != 'ir.actions.act_window':
             return result
         result.setdefault('context', '{}')
 
         # Open a specific record when res_id is provided in the context
         ctx = eval(result['context'], {'user': self.env.user})
         if ctx.get('res_id'):
-            result.update({'res_id': ctx.pop('res_id')})
+            result['res_id'] = ctx.pop('res_id')
 
         # disable log for automatic wizards
-        if wizard.type == 'automatic':
-            ctx.update({'disable_log': True})
-        result.update({'context': ctx})
+        if self.type == 'automatic':
+            ctx['disable_log'] = True
+        result['context'] = ctx
 
         return result
 
@@ -1117,6 +1072,7 @@ class IrActionsTodo(models.Model):
         """ Sets configuration wizard in TODO state"""
         return self.write({'state': 'open'})
 
+    @api.multi
     def progress(self):
         """ Returns a dict with 3 keys {todo, done, total}.
 
@@ -1126,14 +1082,11 @@ class IrActionsTodo(models.Model):
 
         :rtype: dict
         """
-        user_groups = set(map(lambda x: x.id, self.env.user.groups_id))
+        user_groups = self.env.user.groups_id
 
         def groups_match(todo):
-            """ Checks if the todo's groups match those of the current user
-            """
-            return not todo.groups_id \
-                   or bool(user_groups.intersection((
-                        group.id for group in todo.groups_id)))
+            """ Checks if the todo's groups match those of the current user """
+            return not todo.groups_id or bool(todo.groups_id & user_groups)
 
         done = filter(groups_match, self.browse(self.search([('state', '!=', 'open')])))
         total = filter(groups_match, self.browse(self.search([])))
@@ -1141,7 +1094,7 @@ class IrActionsTodo(models.Model):
         return {
             'done': len(done),
             'total': len(total),
-            'todo': len(total) - len(done)
+            'todo': len(total) - len(done),
         }
 
 
@@ -1152,28 +1105,27 @@ class IrActionsActClient(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', required=True, translate=True)
+    name = fields.Char(string='Action Name', translate=True)
+    type = fields.Char(default='ir.actions.client')
+
     tag = fields.Char(string='Client action tag', required=True,
                       help="An arbitrary string, interpreted by the client"
                            " according to its own needs and wishes. There "
                            "is no central tag repository across clients.")
     res_model = fields.Char(string='Destination Model', help="Optional model, mostly used for needactions.")
-    context = fields.Char(string='Context Value', default={}, required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
-    params = fields.Binary(compute='_get_params', inverse='_set_params', string='Supplementary arguments',
+    context = fields.Char(string='Context Value', default="{}", required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
+    params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
                            help="Arguments sent to the client along with"
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
-    type = fields.Char(string='Action Type', default='ir.actions.client')
 
     @api.depends('params')
-    def _get_params(self):
-        # Need to remove bin_size from context, to obtains the binary and not the length.
-        self = self.with_context(bin_size_params_store=False)
-        for record in self:
-            record.params = record.params_store and eval(record.params_store, {'uid': self.env.uid})
+    def _compute_params(self):
+        self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
+        for record, record_bin in zip(self, self_bin):
+            record.params = record_bin.params_store and eval(record_bin.params_store, {'uid': self._uid})
 
-    def _set_params(self):
-        if isinstance(self.params, dict):
-            self.write({'params_store': repr(self.params)})
-        else:
-            self.write({'params_store': self.params})
+    def _inverse_params(self):
+        for record in self:
+            params = record.params
+            record.params_store = repr(params) if isinstance(params, dict) else params

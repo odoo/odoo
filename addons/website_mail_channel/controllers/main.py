@@ -195,7 +195,7 @@ class MailGroup(http.Controller):
             'msg_more_count': msg_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
-        return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_channel.messages_short', values, engine='ir.qweb', context=request.context)
+        return request.env.ref('website_mail_channel.messages_short').render(values, engine='ir.qweb')
 
     @http.route("/groups/<model('mail.channel'):group>/get_alias_info", type='json', auth='public', website=True)
     def get_alias_info(self, group, **post):

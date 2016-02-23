@@ -179,6 +179,7 @@ class Currency(models.Model):
     @api.v8
     def compute(self, from_amount, to_currency, round=True):
         """ Convert `from_amount` from currency `self` to `to_currency`. """
+        self, to_currency = self or to_currency, to_currency or self
         assert self, "compute from unknown currency"
         assert to_currency, "compute to unknown currency"
         # apply conversion rate

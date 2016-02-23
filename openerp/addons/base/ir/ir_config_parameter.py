@@ -16,14 +16,13 @@ A dictionary holding some configuration parameters to be initialized when the da
 _default_parameters = {
     "database.secret": lambda: (str(uuid.uuid4()), ['base.group_erp_manager']),
     "database.uuid": lambda: (str(uuid.uuid1()), []),
-    "database.create_date": lambda: (datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
+    "database.create_date": lambda: (fields.Datetime.now(), ['base.group_user']),
     "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
 }
 
 
 class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
-
     _name = 'ir.config_parameter'
     _rec_name = 'key'
 
@@ -35,6 +34,7 @@ class IrConfigParameter(models.Model):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
+    @api.model_cr
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
@@ -56,17 +56,13 @@ class IrConfigParameter(models.Model):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        result = self._get_param(key)
-        if result:
-            return result
-        return default
+        return self._get_param(key) or default
 
-    @ormcache('uid', 'key')
-    def _get_param(self, cr, uid, key):
-        params = self.search_read(cr, uid, [('key', '=', key)], fields=['value'], limit=1)
-        if not params:
-            return None
-        return params[0]['value']
+    @api.model
+    @ormcache('self._uid', 'key')
+    def _get_param(self, key):
+        params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
+        return params[0]['value'] if params else None
 
     @api.model
     def set_param(self, key, value, groups=()):
@@ -80,23 +76,24 @@ class IrConfigParameter(models.Model):
         :rtype: string
         """
         self._get_param.clear_cache(self)
-        self = self.search([('key', '=', key)])
+        param = self.search([('key', '=', key)])
 
         gids = []
         for group_xml in groups:
-            res_id = self.env['ir.model.data'].xmlid_to_res_id(group_xml)
-            if res_id:
-                gids.append((4, res_id))
+            group = self.env.ref(group_xml, raise_if_not_found=False)
+            if group:
+                gids.append((4, group.id))
 
         vals = {'value': value}
         if gids:
             vals.update(group_ids=gids)
-        if self.ids:
+        if param:
+            old = param.value
             if value is not False and value is not None:
-                self.write(vals)
+                param.write(vals)
             else:
-                self.unlink()
-            return self.value
+                param.unlink()
+            return old
         else:
             vals.update(key=key)
             if value is not False and value is not None:
@@ -105,10 +102,10 @@ class IrConfigParameter(models.Model):
 
     @api.multi
     def write(self, vals):
-        self._get_param.clear_cache(self)
+        self.clear_caches()
         return super(IrConfigParameter, self).write(vals)
 
     @api.multi
     def unlink(self):
-        self._get_param.clear_cache(self)
+        self.clear_caches()
         return super(IrConfigParameter, self).unlink()

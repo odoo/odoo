@@ -57,9 +57,6 @@ class QWeb(orm.AbstractModel):
         template_attributes['call'] = template_attributes['snippet']
         return self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
 
-    def get_converter_for(self, field_type):
-        return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
-
 
 #------------------------------------------------------
 # QWeb fields
@@ -101,9 +98,6 @@ class Field(orm.AbstractModel):
 
     def from_html(self, cr, uid, model, field, element, context=None):
         return self.value_from_string(element.text_content().strip())
-
-    def qweb_object(self):
-        return self.pool['ir.qweb']
 
 
 class Integer(orm.AbstractModel):
