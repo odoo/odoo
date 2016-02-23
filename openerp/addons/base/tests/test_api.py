@@ -462,3 +462,21 @@ class TestAPI(common.TransactionCase):
             ps.mapped('parent_id.name'),
             [p.name for p in parents]
         )
+
+    @mute_logger('openerp.models')
+    def test_80_sorted(self):
+        """ Check sorted on recordsets. """
+        ps = self.env['res.partner'].search([])
+
+        # sort by model order
+        qs = ps[:len(ps) / 2] + ps[len(ps) / 2:]
+        self.assertEqual(qs.sorted().ids, ps.ids)
+
+        # sort by name, with a function or a field name
+        by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name)]
+        self.assertEqual(ps.sorted(lambda p: p.name).ids, by_name_ids)
+        self.assertEqual(ps.sorted('name').ids, by_name_ids)
+
+        # sort by inverse name, with a field name
+        by_name_ids.reverse()
+        self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)

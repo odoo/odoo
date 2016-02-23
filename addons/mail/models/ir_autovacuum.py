@@ -3,7 +3,7 @@
 
 from openerp import models
 
-class AutoVacuum(models.TransientModel):
+class AutoVacuum(models.AbstractModel):
     _inherit = 'ir.autovacuum'
 
     def power_on(self, cr, uid, *args, **kwargs):

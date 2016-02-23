@@ -2,8 +2,8 @@
 
 import urlparse
 
-from odoo.http import request
 from odoo import api, fields, models
+from odoo.http import request
 
 
 class actions_server(models.Model):
@@ -11,7 +11,7 @@ class actions_server(models.Model):
     _name = 'ir.actions.server'
     _inherit = 'ir.actions.server'
 
-    xml_id = fields.Char(compute=models.Model.get_xml_id, string="External ID",
+    xml_id = fields.Char(compute='_compute_xml_id', string="External ID",
                          help="ID of the action if defined in a XML file")
     website_path = fields.Char()
     website_url = fields.Char(compute='_get_website_url', help='The full URL to access the server action through the website.')
@@ -21,6 +21,11 @@ class actions_server(models.Model):
                                             'Set this field as True to allow users to run this action. If it '
                                             'is set to False the action cannot be run through the website.')
 
+    def _compute_xml_id(self):
+        res = self.get_external_id()
+        for action in self:
+            action.xml_id = res.get(action.id)
+
     def _compute_website_url(self, website_path, xml_id):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         link = website_path or xml_id or (self.id and '%d' % self.id) or ''
@@ -29,18 +34,11 @@ class actions_server(models.Model):
             return '%s' % urlparse.urljoin(base_url, path)
         return ''
 
-    @api.depends('website_url')
+    @api.depends('state', 'website_published', 'website_path', 'xml_id')
     def _get_website_url(self):
         for action in self:
             if action.state == 'code' and action.website_published:
                 action.website_url = self._compute_website_url(action.website_path, action.xml_id)
-
-    @api.onchange('website_path', 'xml_id')
-    def on_change_website_path(self):
-        values = {
-            'website_url': self._compute_website_url(self.website_path, self.xml_id)
-        }
-        return {'value': values}
 
     @api.model
     def _get_eval_context(self, action):
@@ -50,11 +48,10 @@ class actions_server(models.Model):
             eval_context['request'] = request
         return eval_context
 
+    @api.model
     def run_action_code_multi(self, action, eval_context=None):
         """ Override to allow returning response the same way action is already
         returned by the basic server action behavior. Note that response has
         priority over action, avoid using both. """
         res = super(actions_server, self).run_action_code_multi(action, eval_context)
-        if 'response' in eval_context:
-            return eval_context['response']
-        return res
+        return eval_context.get('response', res)

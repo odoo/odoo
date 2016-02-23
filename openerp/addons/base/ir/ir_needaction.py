@@ -20,7 +20,6 @@ class IrNeedactionMixin(models.AbstractModel):
     This class also offers several global services:
     - ``_needaction_count``: returns the number of actions uid has to perform
     """
-
     _name = 'ir.needaction_mixin'
     _needaction = True
 

@@ -19,8 +19,8 @@ import werkzeug.urls
 import werkzeug.utils
 
 import odoo
-from odoo import models, tools
-from odoo import http
+from odoo import api, http, models, tools, SUPERUSER_ID
+from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -34,12 +34,11 @@ class ModelConverter(werkzeug.routing.BaseConverter):
     def __init__(self, url_map, model=False):
         super(ModelConverter, self).__init__(url_map)
         self.model = model
-        self.regex = '([0-9]+)'
+        self.regex = r'([0-9]+)'
 
     def to_python(self, value):
-        m = re.match(self.regex, value)
-        return request.registry[self.model].browse(
-            request.cr, UID_PLACEHOLDER, int(m.group(1)), context=request.context)
+        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        return env[self.model].browse(int(value))
 
     def to_url(self, value):
         return value.id
@@ -51,13 +50,14 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         super(ModelsConverter, self).__init__(url_map)
         self.model = model
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = '([0-9,]+)'
+        self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
-        return request.registry[self.model].browse(request.cr, UID_PLACEHOLDER, [int(i) for i in value.split(',')], context=request.context)
+        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        return env[self.model].browse(map(int, value.split(',')))
 
     def to_url(self, value):
-        return ",".join(i.id for i in value)
+        return ",".join(value.ids)
 
 
 class SignedIntConverter(werkzeug.routing.NumberConverter):
@@ -85,7 +85,7 @@ class IrHttp(models.AbstractModel):
 
     def _auth_method_public(self):
         if not request.session.uid:
-            dummy, request.uid = self.env['ir.model.data'].sudo().get_object_reference(request.cr, 'base', 'public_user')
+            request.uid = request.env.ref('base.public_user').id
         else:
             request.uid = request.session.uid
 
@@ -97,22 +97,24 @@ class IrHttp(models.AbstractModel):
                     # what if error in security.check()
                     #   -> res_users.check()
                     #   -> res_users.check_credentials()
-                except (odoo.exceptions.AccessDenied, http.SessionExpiredException):
+                except (AccessDenied, http.SessionExpiredException):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
                     request.session.logout(keep_db=True)
             if request.uid is None:
                 getattr(self, "_auth_method_%s" % auth_method)()
-        except (odoo.exceptions.AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
+        except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
-            raise odoo.exceptions.AccessDenied()
+            raise AccessDenied()
         return auth_method
 
     def _serve_attachment(self):
+        env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, odoo.SUPERUSER_ID, domain, ['__last_update', 'datas', 'name', 'mimetype', 'checksum'], context=request.context)
+        fields = ['__last_update', 'datas', 'name', 'mimetype', 'checksum']
+        attach = env['ir.attachment'].search_read(domain, fields)
         if attach:
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or ''
@@ -124,7 +126,7 @@ class IrHttp(models.AbstractModel):
                 return werkzeug.utils.redirect(name, 301)
 
             response = werkzeug.wrappers.Response()
-            server_format = tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
             try:
                 response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
             except ValueError:
@@ -156,7 +158,7 @@ class IrHttp(models.AbstractModel):
             raise
         try:
             return request._handle_exception(exception)
-        except odoo.exceptions.AccessDenied:
+        except AccessDenied:
             return werkzeug.exceptions.Forbidden()
 
     def _dispatch(self):
@@ -191,11 +193,9 @@ class IrHttp(models.AbstractModel):
     def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
         for name, arg in arguments.items():
-            if isinstance(arg, odoo.osv.orm.browse_record) and arg._uid is UID_PLACEHOLDER:
+            if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
                 arguments[name] = arg.sudo(request.uid)
-                try:
-                    arg.exists()
-                except models.MissingError:
+                if not arg.exists():
                     return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):
@@ -256,7 +256,7 @@ class IrHttp(models.AbstractModel):
         # check read access
         try:
             last_update = obj['__last_update']
-        except odoo.exceptions.AccessError:
+        except AccessError:
             return (403, [], None)
 
         status, headers, content = None, [], None
@@ -341,5 +341,5 @@ def convert_exception_to(to_type, with_message=False):
             message = str(with_message)
 
         raise to_type, message, tb
-    except to_type, e:
+    except to_type as e:
         return e

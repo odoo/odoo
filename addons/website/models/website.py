@@ -417,7 +417,7 @@ class website(osv.osv):
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
-        return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
+        return self.pool['ir.ui.view'].render_template(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)

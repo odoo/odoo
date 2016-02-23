@@ -10,8 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
@@ -56,7 +55,7 @@ class ir_cron(models.Model):
                                       ('months', 'Months')], string='Interval Unit', default='months')
     numbercall = fields.Integer(string='Number of Calls', default=1, help='How many times the method is called,\na negative number indicates no limit.')
     doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
-    nextcall = fields.Datetime(string='Next Execution Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), help="Next planned execution date for this job.")
+    nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     model = fields.Char(string='Object', help="Model name on which the method to be called is located, e.g. 'res.partner'.")
     function = fields.Char(string='Method', help="Name of the method to be called when this job is processed.")
     args = fields.Text(string='Arguments', help="Arguments to be passed to the method, e.g. (uid,).")
@@ -68,18 +67,16 @@ class ir_cron(models.Model):
             for this in self:
                 str2tuple(this.args)
         except Exception:
-            raise Exception('Invalid arguments')
+            raise ValidationError(_('Invalid arguments'))
+
+    @api.multi
+    def method_direct_trigger(self):
+        for cron in self:
+            self._callback(cron.model, cron.function, cron.args, cron.id)
         return True
 
-    def method_direct_trigger(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        cron_obj = self.browse(cr, uid, ids, context=context)
-        for cron in cron_obj:
-            self._callback(cr, uid, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
-        return True
-
-    def _handle_callback_exception(self, cr, uid, model_name, method_name, args, job_id, job_exception):
+    @api.model
+    def _handle_callback_exception(self, model_name, method_name, args, job_id, job_exception):
         """ Method called when an exception is raised by a job.
 
         Simply logs the exception and rollback the transaction.
@@ -91,10 +88,12 @@ class ir_cron(models.Model):
         :param job_exception: exception raised by the job.
 
         """
-        cr.rollback()
-        _logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
+        self._cr.rollback()
+        _logger.exception("Call of self.env[%r].%s(*%r) failed in Job %s",
+                          model_name, method_name, args, job_id)
 
-    def _callback(self, cr, uid, model_name, method_name, args, job_id):
+    @api.model
+    def _callback(self, model_name, method_name, args, job_id):
         """ Run the method associated to a given job
 
         It takes care of logging and exception handling.
@@ -106,28 +105,25 @@ class ir_cron(models.Model):
         """
         try:
             args = str2tuple(args)
-            odoo.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
-            registry = odoo.registry(cr.dbname)
-            if model_name in registry:
-                model = registry[model_name]
+            odoo.modules.registry.RegistryManager.check_registry_signaling(self._cr.dbname)
+            if model_name in self.env:
+                model = self.env[model_name]
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                    odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname, uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
+                    odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
-                    getattr(model, method_name)(cr, uid, *args)
+                    getattr(model, method_name)(*args)
                     if _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
-                        _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
-                    odoo.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+                        _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
+                    odoo.modules.registry.RegistryManager.signal_caches_change(self._cr.dbname)
                 else:
-                    msg = "Method `%s.%s` does not exist." % (model_name, method_name)
-                    _logger.warning(msg)
+                    _logger.warning("Method '%s.%s' does not exist.", model_name, method_name)
             else:
-                msg = "Model `%s` does not exist." % model_name
-                _logger.warning(msg)
+                _logger.warning("Model %r does not exist.", model_name)
         except Exception, e:
-            self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
+            self._handle_callback_exception(model_name, method_name, args, job_id, e)
 
     def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
@@ -139,8 +135,13 @@ class ir_cron(models.Model):
         """
         try:
             with api.Environment.manage():
-                now = odoo.osv.fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
-                nextcall = odoo.osv.fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+                cron = api.Environment(job_cr, job['user_id'], {})[self._name]
+                # Use the user's timezone to compare and compute datetimes,
+                # otherwise unexpected results may appear. For instance, adding
+                # 1 month in UTC to July 1st at midnight in GMT+2 gives July 30
+                # instead of August 1st!
+                now = fields.Datetime.context_timestamp(cron, datetime.now())
+                nextcall = fields.Datetime.context_timestamp(cron, fields.Datetime.from_string(job['nextcall']))
                 numbercall = job['numbercall']
 
                 ok = False
@@ -148,7 +149,7 @@ class ir_cron(models.Model):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                        cron._callback(job['model'], job['function'], job['args'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -156,8 +157,8 @@ class ir_cron(models.Model):
                 if not numbercall:
                     addsql = ', active=False'
                 cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                               (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
-                self.invalidate_cache(job_cr, odoo.SUPERUSER_ID)
+                                (fields.Datetime.to_string(nextcall.astimezone(pytz.UTC)), numbercall, job['id']))
+                cron.invalidate_cache()
 
         finally:
             job_cr.commit()
@@ -248,22 +249,19 @@ class ir_cron(models.Model):
         if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
 
+    @api.multi
     def _try_lock(self):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
            to make sure a following write() or unlink() will not block due
            to a process currently executing those cron tasks"""
         try:
-            self.env.cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                               (tuple(self.ids),), log_exceptions=False)
+            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                             [tuple(self.ids)], log_exceptions=False)
         except psycopg2.OperationalError:
-            self.env.cr.rollback()  # early rollback to allow translations to work for the user feedback
+            self._cr.rollback()  # early rollback to allow translations to work for the user feedback
             raise UserError(_("Record cannot be modified right now: "
                               "This cron task is currently being executed and may not be modified "
                               "Please try again in a few minutes"))
-
-    @api.model
-    def create(self, vals):
-        return super(ir_cron, self).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -278,9 +276,9 @@ class ir_cron(models.Model):
     @api.multi
     def try_write(self, values):
         try:
-            with self.env.cr.savepoint():
-                self.env.cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                                   (tuple(self.ids),), log_exceptions=False)
+            with self._cr.savepoint():
+                self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                                 [tuple(self.ids)], log_exceptions=False)
         except psycopg2.OperationalError:
             pass
         else:

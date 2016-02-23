@@ -7,7 +7,7 @@ from lxml import etree
 
 from openerp.tests import common
 from openerp.tools import html_escape as e
-from openerp.addons.base.ir import ir_qweb
+from openerp.addons.base.ir.ir_qweb import QWebContext
 
 directory = os.path.dirname(__file__)
 
@@ -113,7 +113,7 @@ class TestCurrencyExport(TestExport):
             self.cr, self.uid, 'value', obj, options,
             etree.Element('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }),
+            '', QWebContext(self.env, {'obj': obj, 'c2': dest, }),
             context=context,
         )
         return converted

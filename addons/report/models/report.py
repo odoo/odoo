@@ -103,7 +103,7 @@ class Report(osv.Model):
             res_company=user.company_id,
             website=website,
         )
-        return view_obj.render(cr, uid, template, values, context=context)
+        return view_obj.render_template(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------
     # Main report methods
@@ -184,7 +184,7 @@ class Report(osv.Model):
 
         # Minimal page renderer
         view_obj = self.pool['ir.ui.view']
-        render_minimal = partial(view_obj.render, cr, uid, 'report.minimal_layout', context=context)
+        render_minimal = partial(view_obj.render_template, cr, uid, 'report.minimal_layout', context=context)
 
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.

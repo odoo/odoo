@@ -32,7 +32,7 @@ import re
 import time
 from collections import defaultdict, MutableMapping
 from inspect import getmembers, currentframe
-from operator import itemgetter
+from operator import attrgetter, itemgetter
 
 import babel.dates
 import dateutil.relativedelta
@@ -5642,16 +5642,17 @@ class BaseModel(object):
         """ Return the recordset ``self`` ordered by ``key``.
 
             :param key: either a function of one argument that returns a
-                comparison key for each record, or ``None``, in which case
-                records are ordered according the default model's order
+                comparison key for each record, or a field name, or ``None``, in
+                which case records are ordered according the default model's order
 
             :param reverse: if ``True``, return the result in reverse order
         """
         if key is None:
             recs = self.search([('id', 'in', self.ids)])
             return self.browse(reversed(recs._ids)) if reverse else recs
-        else:
-            return self.browse(map(itemgetter('id'), sorted(self, key=key, reverse=reverse)))
+        if isinstance(key, basestring):
+            key = itemgetter(key)
+        return self.browse(map(attrgetter('id'), sorted(self, key=key, reverse=reverse)))
 
     @api.multi
     def update(self, values):
