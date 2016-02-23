@@ -26,6 +26,9 @@
 
         Vicent Cubells <vicent@vcubells.net> (2015-09-01)
           Nuevos códigos de impuesto para 19,5% arrendamientos
+
+        Albert Cabedo (GAFIC consultores) <albert@gafic.com> (2015-11-13)
+          Códigos de impuesto para IVA Soportado no sujeto
         -->
 
     <record id="account_tax_code_template_root" model="account.tax.code.template">
@@ -725,6 +728,12 @@
       <field name="parent_id" ref="account_tax_code_template_390"/>
       <field name="code">SNDBI</field>
       <field name="name">[232] Bases imponibles del I.V.A. soportado no deducible</field>
+      <field name="sign">1.0</field>
+    </record>
+     <record id="account_tax_code_template_SNJBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">SNJBI</field>
+      <field name="name">Bases imponibles del I.V.A. soportado no sujetas</field>
       <field name="sign">1.0</field>
     </record>
     <record id="account_tax_code_template_SNDC" model="account.tax.code.template">

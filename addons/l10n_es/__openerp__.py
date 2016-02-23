@@ -31,7 +31,7 @@
 
 {
     "name": "Spanish Charts of Accounts (PGCE 2008)",
-    "version": "5.2.0",
+    "version": "5.3.0",
     "author": "Spanish Localization Team",
     "website": 'https://github.com/OCA/l10n-spain',
     "category": "Localization/Account Charts",
