@@ -269,6 +269,11 @@ class product_pricelist_item(osv.osv):
     _description = "Pricelist item"
     _order = "applied_on, min_quantity desc"
 
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('product_pricelist_item_pricelist_id_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX product_pricelist_item_pricelist_id_index ON product_pricelist_item (pricelist_id)')
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):
             if obj_list.base == 'pricelist':
