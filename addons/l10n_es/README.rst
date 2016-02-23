@@ -22,6 +22,7 @@ encuentra en la versión estándar de Odoo, por lo que es conveniente instalar
 Historial
 ---------
 
+* v5.3: Añadido "IVA soportado no sujeto".
 * v5.2: Añadida retención 19,5% arrendamientos.
 * v5.1: Renombrado todo lo relacionado con arrendamientos para no incluir la
   palabra "IRPF", ya que no es como tal IRPF.
