@@ -794,7 +794,7 @@ class WorkerCron(Worker):
                 openerp.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))[0:2]
                 vms_diff = (end_vms - start_vms) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
                     (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
