@@ -109,6 +109,7 @@ class account_fiscal_position(osv.osv):
     def get_fiscal_position(self, cr, uid, company_id, partner_id, delivery_id=None, context=None):
         if not partner_id:
             return False
+        context = dict(context or {}, company_id=company_id, force_company=company_id)
         # This can be easily overriden to apply more complex fiscal rules
         part_obj = self.pool['res.partner']
         partner = part_obj.browse(cr, uid, partner_id, context=context)
@@ -225,7 +226,7 @@ class res_partner(osv.osv):
                     'AND '+query+') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
+                    'GROUP BY pid HAVING ' + where),
                     (type,) + having_values)
         res = cr.fetchall()
         if not res:
