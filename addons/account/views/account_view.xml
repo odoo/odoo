@@ -171,13 +171,6 @@
             res_model="account.move"/>
 
         <act_window
-            id="action_move_line_select_posted"
-            name="Journal Items"
-            context="{'search_default_account_id': [active_id], 'search_default_posted': 1}"
-            res_model="account.move.line"
-            src_model="account.account"/>
-
-        <act_window
             id="action_move_line_select_by_type"
             name="Journal Items"
             context="{'search_default_user_type_id': [active_id]}"
