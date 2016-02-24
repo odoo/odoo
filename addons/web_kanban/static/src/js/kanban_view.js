@@ -303,16 +303,11 @@ var KanbanView = View.extend({
      * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
      */
     render_buttons: function($node) {
-        var display = false;
-        if (this.options.action_buttons !== false) {
-            display = this.is_action_enabled('create');
-        } else if (!this.view_id && !this.options.read_only_mode) {
-            display = this.is_action_enabled('write') || this.is_action_enabled('create');
+        if (this.options.action_buttons !== false && this.is_action_enabled('create')) {
+            this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
+            this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
+            this.$buttons.appendTo($node);
         }
-        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this, display: display}));
-        this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
-
-        this.$buttons.appendTo($node);
     },
 
     render_pager: function($node, options) {

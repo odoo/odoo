@@ -774,6 +774,7 @@ var FieldX2Many = AbstractManyField.extend({
                 }
             } else if (view.view_type === "kanban") {
                 _.extend(view.options, {
+                    action_buttons: true,
                     confirm_on_delete: false,
                 });
                 if (self.get("effective_readonly")) {
