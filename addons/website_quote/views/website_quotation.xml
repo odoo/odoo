@@ -643,7 +643,7 @@
                           <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                         </t>
                       </td>
-                      <td><span t-esc="quotation.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                      <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
               </tr>
           </t>
