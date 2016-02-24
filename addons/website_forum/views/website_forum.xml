@@ -1537,8 +1537,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar" groups="base.group_user">
-    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-        <li><a href="#" data-action="new_forum">New Forum</a></li>
+    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+        <li><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>
 
