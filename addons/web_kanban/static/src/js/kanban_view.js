@@ -803,17 +803,7 @@ function transform_qweb_template (node, fvg, many2manys) {
     }
 }
 
-var One2ManyKanbanView = KanbanView.extend({
-    render_pager: function($node, options) {
-        options = _.extend(options || {}, {
-            single_page_hidden: true,
-        });
-        this._super($node, options);
-    },
-});
-
 core.view_registry.add('kanban', KanbanView);
-core.one2many_view_registry.add('kanban', One2ManyKanbanView);
 
 return KanbanView;
 
