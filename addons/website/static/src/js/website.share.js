@@ -59,7 +59,7 @@ var SocialShare = Widget.extend({
             }, 200);
         });
     },
-    renderSocial: function(social) {
+    renderSocial: function (social) {
         var url = document.URL.split(/[?#]/)[0];  // get current url without query string
         var title = document.title.split(" | ")[0];  // get the page title without the company name
         var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ','') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
@@ -76,8 +76,8 @@ var SocialShare = Widget.extend({
 });
 
 // Initialize all social_share links when ready
-base.ready().done(function() {
-    $('.oe_social_share').mouseenter(function() {
+base.ready().done(function () {
+    $('.oe_social_share').mouseenter(function () {
         new SocialShare($(this));
     });
 });

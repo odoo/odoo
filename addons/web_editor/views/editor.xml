@@ -110,34 +110,44 @@
     </xpath>
 </template>
 
-<!-- color-picker -->
-<!-- HTML class to hide option for one mode : only-text, only-bg -->
+<!--
+    The web_editor.colorpicker template regroups section of colorpicker menu for website customization
+    (text foreground/background but also snippet background color option).
+    As it is presentend below, the colorpicker tag regroups a set of .o_colorpicker_section with name,
+    icon-class and icon-content as data. These will be used to build the colorpicker dropdowns.
 
+    Redefinition can edit section content, add sections or even remove them. If no section is found when
+    building a colorpicker dropdown, the template content will be used without changes as the colorpicker
+    dropdown content.
+
+    Sections should contain a set of button with a data-color attribute. When selecting such a button to
+    edit style, the "bg-x" class or the "text-x" will be automatically added.
+-->
 <template id="web_editor.colorpicker" name="Color-Picker">
-    <div class="colorpicker">
-        <div class="theme">
-            <button class="bg-accent">Accent <span></span></button>
-            <button class="bg-compl">Complementary<span></span></button>
-            <button class="bg-alpha">Alpha <span></span></button>
-            <button class="bg-beta">Beta <span></span></button>
-            <button class="bg-gamma">Gamma <span></span></button>
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme" data-icon-class="fa fa-flask">
+            <button data-color="alpha">Alpha</button>
+            <button data-color="beta">Beta</button>
+            <button data-color="gamma">Gamma</button>
+            <button data-color="delta">Delta</button>
+            <button data-color="epsilon">Epsilon</button>
         </div>
-        <div class="grayscale">
-            <button class="bg-white">White <span></span></button>
-            <button class="bg-gray_lighter">Gray Lighter <span></span></button>
-            <button class="bg-gray_light">Gray Light <span></span></button>
-            <button class="bg-gray">Gray <span></span></button>
-            <button class="bg-gray_dark">Gray Dark <span></span></button>
-            <button class="bg-gray_darker">Gray Darker <span></span></button>
-            <button class="bg-black">Black <span></span></button>
+        <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
+            <button data-color="white">White</button>
+            <button data-color="gray-lighter">Gray Lighter</button>
+            <button data-color="gray-light">Gray Light</button>
+            <button data-color="gray">Gray</button>
+            <button data-color="gray-dark">Gray Dark</button>
+            <button data-color="gray-darker">Gray Darker</button>
+            <button data-color="black">Black</button>
         </div>
-        <div class="ui">
-            <button class="bg-primary">Primary Color <span></span></button>
-            <button class="bg-success">Success Color <span></span></button>
-            <button class="bg-info">Info Color <span></span></button>
-            <button class="bg-warning">Warning Color <span></span></button>
-            <button class="bg-danger">Danger Color <span></span></button>
+        <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">
+            <button data-color="primary">Primary</button>
+            <button data-color="success">Success</button>
+            <button data-color="info">Info</button>
+            <button data-color="warning">Warning</button>
+            <button data-color="danger">Danger</button>
         </div>
-    </div>
+    </colorpicker>
 </template>
 </odoo>

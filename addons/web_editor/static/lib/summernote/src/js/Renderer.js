@@ -31,11 +31,10 @@ define([
       var title = options.title;
       var className = options.className;
       var dropdown = options.dropdown;
-      var dropdown2 = options.dropdown2;
-      var wrapper = options.wrapper;
+      var no_caret = options.no_caret;
       var hide = options.hide;
 
-      var btn = (dropdown ? '<div class="btn-group' +
+      return (dropdown ? '<div class="btn-group' +
                (className ? ' ' + className : '') + '">' : '') +
                '<button type="button"' +
                  ' class="btn btn-default btn-sm' +
@@ -49,14 +48,10 @@ define([
                  (hide ? ' data-hide=\'' + hide + '\'' : '') +
                  ' tabindex="-1">' +
                  label +
-                 (dropdown ? ' <span class="caret"></span>' : '') +
+                 ((dropdown && !no_caret)? ' <span class="caret"></span>' : '') +
                '</button>' +
                (dropdown || '') +
              (dropdown ? '</div>' : '');
-
-        if (wrapper) btn = $(wrapper).html(btn).prop('outerHTML');
-
-        return btn;
     };
 
     /**
@@ -230,77 +225,52 @@ define([
           value: '{"backColor":"#B35E9B"}'
         });
 
-        var foreground =  '<ul class="dropdown-menu">' +
-                             '<li>' +
-                               '<div class="note-palette-title">' + lang.color.foreground + '</div>' +
-                               '<div class="btn-group palette-reset">' +
-                                 '<div class="note-color-reset" data-event="foreColor"' +
-                                   ' data-value="inherit" title="' + lang.color.reset + '"><i class="material-icons">&#xE23B;</i> '+
-                                 '</div>' +
-                               '</div>' +
+        // This is a copy of web_editor.snippet.option.colorpicker qweb template
+        var colorpicker_template = '' +
+          '<div class="dropdown-menu">' +
+            '<div class="colorpicker">' +
+              '<div class="note-palette-title">{0}</div>' +
+              '<div class="btn-group palette-reset">' +
+                '<div class="note-color-reset" data-event="{2}" data-value="inherit" title="{1}">' +
+                  '<i class="fa fa-ban"></i>' +
+                '</div>' +
+              '</div>' +
+              '<div class="o_colorpicker_sections">' +
+                '<ul class="nav nav-pills o_colorpicker_section_menu">' +
+                  '<li><a href="#o_palette_spectrum"><i class="fa fa-eyedropper"></i></a></li>' +
+                '</ul>' +
+                '<div class="tab-content o_colorpicker_section_tabs">' +
+                  '<div class="tab-pane" id="o_palette_spectrum">' +
+                    '<div class="note-color-palette" data-target-event="{2}"></div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
 
-                               '<div class="tabs_container">' +
-                                 '<ul class="tabs_toggles">'+
-                                   '<li class="on"><a href="#" data-tab-target=".palette_theme"><i class="material-icons">&#xE3B7;</i></a></li>' +
-                                   '<li><a href="#" data-tab-target=".palette_grayscale"><i class="material-icons">&#xE3E9;</i></a></li>' +
-                                   '<li><a href="#" data-tab-target=".palette_ui"><i class="material-icons">&#xE41D;</i></a></li>' +
-                                   '<li><a href="#" data-tab-target=".palette_spectrum"><i class="material-icons">&#xE3B8;</i></a></li>' +
-                                 '</ul>' +
-                                 '<div class="tabs">' +
-                                   '<div class="tab palette_theme on"/>'+
-                                   '<div class="tab palette_grayscale"/>'+
-                                   '<div class="tab palette_ui"/>'+
-                                   '<div class="tab palette_spectrum">'+
-                                     '<div class="note-color-palette" data-target-event="foreColor"></div>' +
-                                   '</div>' +
-                                 '</div>' +
-                               '</div>' +
-
-                             '</div>' +
-                           '</li>' +
-                         '</ul>';
-
-        var background = '<ul class="dropdown-menu">' +
-                          '<li>' +
-                            '<div class="note-palette-title">' + lang.color.background + '</div>' +
-                            '<div class="btn-group palette-reset">' +
-                              '<div class="note-color-reset" data-event="backColor"' +
-                                ' data-value="inherit" title="' + lang.color.transparent + '"><i class="material-icons">&#xE23B;</i> '+
-                              '</div>' +
-                            '</div>' +
-
-                            '<div class="tabs_container">' +
-                              '<ul class="tabs_toggles">'+
-                                '<li class="on"><a href="#" data-tab-target=".palette_theme"><i class="material-icons">&#xE3B7;</i></a></li>' +
-                                '<li><a href="#" data-tab-target=".palette_grayscale"><i class="material-icons">&#xE3E9;</i></a></li>' +
-                                '<li><a href="#" data-tab-target=".palette_ui"><i class="material-icons">&#xE41D;</i></a></li>' +
-                                '<li><a href="#" data-tab-target=".palette_spectrum"><i class="material-icons">&#xE3B8;</i></a></li>' +
-                              '</ul>' +
-                              '<div class="tabs">' +
-                                '<div class="tab palette_theme on"/>'+
-                                '<div class="tab palette_grayscale"/>'+
-                                '<div class="tab palette_ui"/>'+
-                                '<div class="tab palette_spectrum">'+
-                                  '<div class="note-color-palette" data-target-event="backColor"></div>' +
-                                '</div>' +
-                              '</div>' +
-                            '</div>' +
-
-                          '</li>' +
-                        '</ul>';
+        var foreground = formatStr(colorpicker_template, [lang.color.foreground, lang.color.reset, 'foreColor']);
+        var background = formatStr(colorpicker_template, [lang.color.background, lang.color.transparent, 'backColor']);
 
         var foregroundButton = tplButton('', {
           title: lang.color.foreground,
-          wrapper: '<span class="btn-group foreground_toggle" />',
-          dropdown: foreground
+          className: 'o_foreground_toggle',
+          dropdown: foreground,
+          no_caret: true,
         });
         var backgroundButton = tplButton('', {
           title: lang.color.background,
-          wrapper: '<span class="btn-group background_toggle" />',
-          dropdown: background
+          className: 'o_background_toggle',
+          dropdown: background,
+          no_caret: true,
         });
 
         return colorButton + foregroundButton + backgroundButton;
+
+        function formatStr(str, values) {
+          return str.replace(/{(\d+)}/g, function (match, number) { 
+            return (values[number] !== undefined)? values[number] : match;
+          });
+        };
       },
       bold: function (lang, options) {
         return tplIconButton(options.iconPrefix + options.icons.font.bold, {
@@ -848,13 +818,13 @@ define([
       });
 
       var body = document.body;
-      var container = $('#web_editor-toolbars')
+      var $container = $('#web_editor-toolbars')
 
       // create Popover
       var $popover = $(this.tplPopovers(langInfo, options)); // ODOO: user (maybe) overrided method
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
-      $popover.appendTo(container);
+      $popover.appendTo($container);
       createTooltip($popover, keyMap);
       this.createPalette($popover, options); // ODOO: use (maybe) overrided method
 
@@ -862,7 +832,7 @@ define([
       var $handle = $(tplHandles(options));
       $handle.addClass('note-air-layout');
       $handle.attr('id', 'note-handle-' + id);
-      $handle.appendTo(container);
+      $handle.appendTo($container);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
@@ -871,7 +841,7 @@ define([
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
-      $dialog.appendTo(container);
+      $dialog.appendTo($container);
     };
 
     /**

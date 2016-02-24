@@ -55,13 +55,13 @@ var nodialog = 'website_translator_nodialog';
 
 var Translate = translate.Class.include({
     onTranslateReady: function () {
-        if(this.gengo_translate){
+        if(this.gengo_translate) {
             this.translation_gengo_display();
         }
         this._super();
     },
     edit: function () {
-        $("#website_main_menu_navbar").hide();
+        $("#oe_main_menu_navbar").hide();
         if (!localStorage[nodialog]) {
             var dialog = new TranslatorDialog();
             dialog.appendTo($(document.body));
@@ -77,7 +77,7 @@ var Translate = translate.Class.include({
         return this._super();
     },
     cancel: function () {
-        $("#website_main_menu_navbar").show();
+        $("#oe_main_menu_navbar").show();
         return this._super();
     }
 });

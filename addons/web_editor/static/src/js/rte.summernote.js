@@ -44,27 +44,68 @@ renderer.createPalette = function ($container, options) {
         return;
     }
 
-    var $color = $container.find('.note-color');
-    var html = $(QWeb.render('web_editor.colorpicker'));
-    var theme = html.find('.theme')
+    var $clpicker = $(QWeb.render('web_editor.colorpicker'));
 
-    $color.find('.palette_theme').prepend(html.find('.theme'));
-    $color.find('.palette_ui').prepend(html.find('.ui'));
-    $color.find('.palette_grayscale').prepend(html.find('.grayscale'));
+    $container.find('.colorpicker').each(function (i, picker) {
+        var $picker = $(picker);
 
-    var $bg = $color.find('.background_toggle .dropdown-menu button');
-    var $fore = $color.find('.foreground_toggle .dropdown-menu button');
+        var $sections = $clpicker.find('.o_colorpicker_section').clone(true);
+
+        var $toggles = $picker.find('.o_colorpicker_section_menu');
+        var $tabs = $picker.find('.o_colorpicker_section_tabs');
+        var $defaultToggle = $toggles.find('li');
+        var $defaultTab = $tabs.find('.tab-pane');
+
+        var newDefaultID = _.uniqueId();
+        $defaultToggle.children('a').attr('href', $defaultToggle.children('a').attr('href') + newDefaultID);
+        $defaultTab.attr('id', $defaultTab.attr('id') + newDefaultID);
+
+        if ($sections.length) {
+            $sections.each(function () {
+                var $section = $(this);
+                var id = 'o_palette_' + $section.data('name') + _.uniqueId();
+
+                var $li = $('<li/>')
+                            .append($('<a/>', {href: '#' + id})
+                                .append($('<i/>', {'class': $section.data('iconClass') || '', html: $section.data('iconContent') || ''})));
+                $defaultToggle.before($li);
+
+                $defaultTab.before($section.addClass('tab-pane').attr('id', id));
+            });
+        } else {
+            var id = 'o_palette_other' + _.uniqueId();
+
+            var $li = $('<li/>')
+                        .append($('<a/>', {href: '#' + id, 'aria-controls': id})
+                            .append($('<i/>', {'class': 'fa fa-magic'})));
+            $toggles.prepend($li);
+
+            $tabs.prepend($('<div/>', {'class': 'tab-pane', id: id}).append($clpicker.clone(true)));
+        }
+
+        $toggles.find('li:first-child').addClass('active');
+        $tabs.find('div:first-child').addClass('active');
+
+        $toggles.on('click mouseover', '> li > a', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).tab('show');
+        });
+    });
+
+    var $bg = $container.find('.o_background_toggle .dropdown-menu button');
+    var $fore = $container.find('.o_foreground_toggle .dropdown-menu button');
 
     $bg.each(function () {
-        $(this).attr('data-event', 'backColor').attr('data-value',
-             $(this).attr($(this).attr('class') == 'note-color-btn' ?'title':'class')
-        );
+        var $el = $(this);
+        var className = $el.hasClass('note-color-btn')? $el.attr('title') : ('bg-' + $el.data('color'));
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
     });
     $fore.each(function () {
-        $(this).attr('data-event', 'foreColor').attr('data-value',
-            $(this).attr($(this).attr('class') == 'note-color-btn' ?'title':'class').replace(/bg-/, 'text-')
-        );
-     });
+        var $el = $(this);
+        var className = $el.hasClass('note-color-btn')? $el.attr('title') : ('text-' + $el.data('color'));
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass(className);
+    });
 };
 
 var fn_tplPopovers = renderer.tplPopovers;
@@ -92,7 +133,7 @@ renderer.tplPopovers = function (lang, options) {
 
     var $alt = $('<div class="btn-group"/>');
     $alt.prependTo($imagePopover.find('.popover-content'));
-    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>Alt: </strong><span class="o_image_alt"></span></button>');
+    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     // padding button
     var $padding = $('<div class="btn-group"/>');
@@ -209,24 +250,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
     fn_boutton_update.call(this, $container, oStyle);
 
-    $container.find('.note-color').removeClass("hidden")
-
-    // ACTIVATE TABS
-    $container.find('[data-tab-target]').each(function(){
-      var $el = $(this);
-      var target = $el.data('tab-target');
-      var $parent = $el.parent().closest('.tabs_container');
-      var $parentLi = $el.parent().closest('li');
-
-      $parentLi.on('click', function(){return false});
-
-      $el.on('click', function(){
-        $parent.find('.tab, .tabs_toggles li').removeClass('on');
-        $parent.find(target).add($parentLi).addClass('on')
-        return false;
-      })
-    })
-
+    $container.find('.note-color').removeClass("hidden");
 
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
@@ -728,9 +752,25 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on('mousedown', summernote_mousedown);
     $(document).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    oLayoutInfo.editor().on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
+    var imageSelector = 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image';
+    var show_tooltip = true;
+    oLayoutInfo.editor().on('dblclick', imageSelector, function (event) {
+        show_tooltip = false;
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
             new widgets.MediaDialog(oLayoutInfo.editor(), event.target).appendTo(document.body);
+        }
+    });
+    oLayoutInfo.editor().on('click', imageSelector, function (event) {
+        if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
+            setTimeout(function () {
+                if (show_tooltip) {
+                    $(event.target).tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
+                    setTimeout(function () {
+                        $(event.target).tooltip('destroy');
+                    }, 800);
+                }
+            }, 400);
+            show_tooltip = true;
         }
     });
     if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
@@ -738,7 +778,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
             $(event.target).trigger("dblclick");
         });
     }
-    oLayoutInfo.editable().on('mousedown', function(e) {
+    oLayoutInfo.editable().on('mousedown', function (e) {
         if(dom.isImg(e.target)) {
             range.createFromNode(e.target).select();
         }
@@ -898,7 +938,7 @@ $.summernote.lang.odoo = {
       recent: _t('Recent Color'),
       more: _t('More Color'),
       background: _t('Background Color'),
-      foreground: _t('Foreground Color'),
+      foreground: _t('Font Color'),
       transparent: _t('Transparent'),
       setTransparent: _t('Set transparent'),
       reset: _t('Reset'),

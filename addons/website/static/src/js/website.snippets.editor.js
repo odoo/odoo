@@ -6,16 +6,14 @@ var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
 
-
 snippet_editor.Class.include({
     _get_snippet_url: function () {
         return '/website/snippets';
     }
 });
 
-
 var preventParentEmpty = {
-    hide_remove_button: function() {
+    hide_remove_button: function () {
         this.$overlay.find('.oe_snippet_remove, .oe_snippet_move').toggleClass("hidden", !this.$target.siblings().length);
     },
     on_focus : function () {
@@ -32,9 +30,8 @@ var preventParentEmpty = {
     },
 };
 
-
 options.registry.slider = options.Class.extend({
-    drop_and_build_snippet: function() {
+    drop_and_build_snippet: function () {
         this.id = "myCarousel" + new Date().getTime();
         this.$target.attr("id", this.id);
         this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
@@ -96,14 +93,14 @@ options.registry.slider = options.Class.extend({
             });
         }
         else {
-            var s_class = selection.attr('class').split(' ').filter(function(o) { return _.str.startsWith(o, "s_") })[0]
+            var s_class = selection.attr('class').split(' ').filter(function (o) { return _.str.startsWith(o, "s_") })[0]
             selection = $snippets.find("." + s_class);
         }
         var $clone = $(selection).find('.item:first').clone();
 
         // insert
         $clone.removeClass('active').insertAfter($active);
-        setTimeout(function() {
+        setTimeout(function () {
             self.$target.carousel().carousel(++index);
             self.rebind_event();
         },0);
@@ -140,7 +137,7 @@ options.registry.slider = options.Class.extend({
             this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
         }
     },
-    interval : function(type, value) {
+    interval : function (type, value) {
         this.$target.attr("data-interval", value);
     },
     set_active: function () {
@@ -168,7 +165,7 @@ options.registry.carousel = options.registry.slider.extend({
         this._super();
 
         // set background and prepare to clean for save
-        var add_class = function (c){
+        var add_class = function (c) {
             if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
             return self._class || "";
         };
@@ -223,7 +220,7 @@ options.registry.marginAndResize = options.Class.extend({
         if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
         if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
-        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
+        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event) {
             event.preventDefault();
 
             var $handle = $(this);
@@ -284,7 +281,7 @@ options.registry.marginAndResize = options.Class.extend({
             var $body = $(document.body);
             $body.addClass(cursor);
 
-            var body_mousemove = function (event){
+            var body_mousemove = function (event) {
                 event.preventDefault();
                 if (compass === 'size') {
                     var dy = event.pageY-offset;
@@ -320,7 +317,7 @@ options.registry.marginAndResize = options.Class.extend({
                 }
             };
 
-            var body_mouseup = function(){
+            var body_mouseup = function () {
                 $body.unbind('mousemove', body_mousemove);
                 $body.unbind('mouseup', body_mouseup);
                 $body.removeClass(cursor);
@@ -335,7 +332,7 @@ options.registry.marginAndResize = options.Class.extend({
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
         });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
+        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event) {
             self.$target.css("height", "");
             self.$target.css("overflow", "");
             self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_Y');
@@ -419,7 +416,7 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend(preventPa
 
         return this.grid;
     },
-    _drag_and_drop_after_insert_dropzone: function(){
+    _drag_and_drop_after_insert_dropzone: function () {
         var self = this;
         $(".row:has(> .oe_drop_zone)").each(function () {
             var $row = $(this);
@@ -729,7 +726,9 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
         this.create_ids(this.$target);
     },
     on_clone: function ($clone) {
-        this._super();
+        this._super.apply(this, arguments);
+        $clone.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
+        $clone.find('.panel-collapse').removeAttr('id');
         this.create_ids($clone);
     },
     on_move: function () {

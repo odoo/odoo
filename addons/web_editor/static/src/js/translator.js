@@ -116,7 +116,6 @@ var Translate = Widget.extend({
     },
     start: function () {
         this._super();
-        this.$('button[data-action=save]').prop('disabled', true);
         return this.edit();
     },
     setTarget: function ($target) {
@@ -158,7 +157,7 @@ var Translate = Widget.extend({
     },
     edit: function () {
         var flag = false;
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             if ($('.o_editable.o_dirty').length && !flag) {
                 flag = true;
                 setTimeout(function () {flag=false;},0);
@@ -179,7 +178,6 @@ var Translate = Widget.extend({
         var $node = $(node);
         var trans = this.getTranlationObject($node[0]);
         $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
-        this.$('button[data-action=save]').prop('disabled', !$('.o_editable.o_dirty').length);
     },
     getTranlationObject: function (node) {
         var $node = $(node);
