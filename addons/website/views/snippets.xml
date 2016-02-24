@@ -697,95 +697,98 @@
     </section>
 </template>
 
+<!-- Snippets menu -->
+<template id="snippets" inherit_id="web_editor.snippets" primary="True">
+    <xpath expr="//ul[@id='snippets_menu']" position="replace">
+        <ul id="snippets_menu">
+            <li class="active structure">
+                <a href="#snippet_structure" class="scroll-link">
+                    <i class="fa fa-th-large"/>
+                </a>
+            </li>
+            <li class="content">
+                <a href="#snippet_content" class="scroll-link">
+                    <i class="fa fa-indent"/>
+                </a>
+            </li>
+            <li class="feature">
+                <a href="#snippet_feature" class="scroll-link">
+                    <i class="fa fa-check-square"/>
+                </a>
+            </li>
+            <li class="effect">
+                <a href="#snippet_effect" class="scroll-link">
+                    <i class="fa fa-magic icon-fix"/>
+                </a>
+            </li>
+        </ul>
+    </xpath>
 
-<template id="snippets">
-<ul id="snippets_menu">
-    <li class="active structure">
-        <a href="#snippet_structure" class="scroll-link">
-            <i class="material-icons">&#xE8F1;</i>
-        </a>
-    </li>
-    <li class="content">
-        <a href="#snippet_content" class="scroll-link">
-            <i class="material-icons">&#xE8AA;</i>
-        </a>
-    </li>
-    <li class="feature">
-        <a href="#snippet_feature" class="scroll-link">
-            <i class="material-icons">&#xE8B8;</i>
-        </a>
-    </li>
-    <li class="effect">
-        <a href="#snippet_effect" class="scroll-link">
-            <i class="fa fa-magic icon-fix"></i>
-        </a>
-    </li>
-</ul>
+    <xpath expr="//div[@id='o_scroll']" position="replace">
+        <div id="o_scroll">
+            <div id="snippet_structure" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-th-large"/> Structure
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
+                    <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
+                    <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
+                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
+                    <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
+                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
+                    <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
+                </div>
+            </div>
 
-<div id="o_scroll">
-<div id="snippet_structure" class="o_panel">
-    <div class="o_panel_header">
-        <i class="material-icons">&#xE8F1;</i> Structure
-    </div>
-    <div class="o_panel_body">
-        <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
-        <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
-        <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-        <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
-        <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
-        <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
-        <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
-        <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
-        <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-    </div>
-</div>
+            <div id="snippet_content" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-indent"/> Content
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
+                    <t t-snippet="website.s_quote" t-thumbnail="/website/static/src/img/blocks/block_quote.png"/>
+                    <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
+                    <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
+                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
+                </div>
+            </div>
 
-<div id="snippet_content" class="o_panel">
-    <div class="o_panel_header">
-        <i class="material-icons">&#xE8AA;</i> Content
-    </div>
-    <div class="o_panel_body">
-        <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
-        <t t-snippet="website.s_quote" t-thumbnail="/website/static/src/img/blocks/block_quote.png"/>
-        <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
-        <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-        <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
-    </div>
-</div>
+            <div id="snippet_feature" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-check-square"/> Feature
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
+                    <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
+                    <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
+                    <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
+                    <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
+                    <t t-snippet="website.s_quotes_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
+                    <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
+                </div>
+            </div>
 
-<div id="snippet_feature" class="o_panel">
-    <div class="o_panel_header">
-        <i class="material-icons">&#xE8B8;</i> Feature
-    </div>
-    <div class="o_panel_body">
-        <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
-        <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
-        <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
-        <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
-        <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
-        <t t-snippet="website.s_quotes_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
-        <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-    </div>
-</div>
+            <div id="snippet_effect" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-magic icon-fix"/> Effect
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
+                    <t t-snippet="website.s_parallax_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
+                </div>
+            </div>
+        </div>
+    </xpath>
 
-<div id="snippet_effect" class="o_panel">
-    <div class="o_panel_header">
-        <i class="fa fa-magic icon-fix"></i> Effect
-    </div>
-    <div class="o_panel_body">
-        <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
-        <t t-snippet="website.s_parallax_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
-    </div>
-</div>
-</div>
-
-<div id="snippet_options" class="hidden">
-    <t t-call="website.snippet_options"/>
-</div>
+    <xpath expr="//div[@id='snippet_options']/t" position="attributes">
+        <attribute name="t-call">website.snippet_options</attribute>
+    </xpath>
 </template>
 
 <template id="snippet_options">
-
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='blog-style'
