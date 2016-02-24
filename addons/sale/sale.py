@@ -905,7 +905,13 @@ class AccountInvoice(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
+    def _default_comment(self):
+        invoice_type = self.env.context.get('type', 'out_invoice')
+        if invoice_type == 'out_invoice':
+            return self.env.user.company_id.sale_note
+
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
+    comment = fields.Text(default=_default_comment)
 
     @api.multi
     def confirm_paid(self):
