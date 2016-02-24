@@ -502,10 +502,10 @@ class test_convert_import_data(TransactionCase):
         writer.writerow(["name", "Some Value"])
         writer.writerow(data_row)
 
-
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': output.getvalue()
+            'file': output.getvalue(),
+            'file_type': 'text/csv',
         })
         record = Import.browse(self.cr, self.uid, id)
         data, _ = Import._convert_import_data(
