@@ -2104,6 +2104,20 @@
   background: -webkit-gradient(linear, left top, right bottom, from(#4c85c2), to(#284d7d));
   background: -ms-linear-gradient(top, #4c85c2, #284d7d);
 }
+
+/* ---- ACE EDITOR ---- {{{ */
+.openerp .oe_form .ace-view-editor { 
+    height: 300px;
+    padding: 0 1em;
+}
+.openerp .oe_form .oe_ace_view_editor .ace_editor .ace_gutter {
+  cursor: ew-resize;
+}
+.openerp .oe_form .oe_ace_view_editor.oe_ace_open {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=97);
+  opacity: 0.97;
+}
+
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
 }

@@ -1,0 +1,201 @@
+# append
+snippet ap
+	append(${1:slice}, ${2:value})
+# bool
+snippet bl
+	bool
+# byte 
+snippet bt
+	byte
+# break
+snippet br
+	break
+# channel
+snippet ch
+	chan ${1:int}
+# case
+snippet cs
+	case ${1:value}:
+		${2:/* code */}
+# const
+snippet c
+	const ${1:NAME} = ${2:0}
+# constants with iota
+snippet co
+	const (
+		${1:NAME1} = iota
+		${2:NAME2}
+	)
+# continue
+snippet cn
+	continue
+# defer 
+snippet df
+	defer ${1:func}()
+# defer recover
+snippet dfr
+	defer func() {
+		if err := recover(); err != nil {
+			${1:/* code */}
+		}
+	}()
+# gpl
+snippet gpl
+	/*
+	 * This program is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with this program; if not, write to the Free Software
+	 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	 *
+	 * Copyright (C) ${1:Author}, `strftime("%Y")`
+	 */
+	
+	${2}
+# int
+snippet i
+	int
+# import 
+snippet im
+	import (
+		"${1:package}" 
+	)
+# interface 
+snippet in
+	interface{}
+# full interface snippet 
+snippet inf
+	interface ${1:name} {
+		${2:/* methods */}
+	}${3}
+# if condition
+snippet if
+	if ${1:/* condition */} {
+		${2:/* code */}
+	}
+# else snippet
+snippet el
+	else {
+		${1}
+	}
+# error snippet
+snippet ir
+	if err != nil {
+		return err
+	}
+	${1}
+# false
+snippet f
+	false
+# fallthrough
+snippet ft
+	fallthrough
+# float
+snippet fl
+	float32
+# float32
+snippet f3
+	float32
+# float64
+snippet f6
+	float64
+# if else
+snippet ie
+	if ${1:/* condition */} {
+		${2:/* code */}
+	} else {
+		${3}
+	}
+# for loop
+snippet fo
+	for ${2:i} = 0; $2 < ${1:count}; $2${3:++} {
+		${4:/* code */}
+	}
+# for range loop
+snippet fr
+	for ${1:k}, ${2:v} := range ${3} {
+		${4:/* code */}
+	}
+# function simple 
+snippet fun
+	func ${1:funcName}(${2}) ${3:os.Error} {
+		${4:/* code */}
+	}
+# function on receiver 
+snippet fum
+	func (self ${1:type}) ${2:funcName}(${3}) ${4:os.Error} {
+		${5:/* code */}
+	}
+# make
+snippet mk
+	make(${1:[]string}, ${2:0})
+# map 
+snippet mp
+	map[${1:string}]${2:int}
+# main()
+snippet main
+	func main() {
+		${1:/* code */}
+	}
+# new
+snippet nw
+	new(${1:type})
+# panic 
+snippet pn
+	panic("${1:msg}")
+# print
+snippet pr
+	fmt.Printf("${1:%s}\n", ${2:var})${3}
+# range 
+snippet rn
+	range ${1}
+# return 
+snippet rt
+	return ${1}
+# result 
+snippet rs
+	result
+# select
+snippet sl
+	select {
+	case ${1:v1} := <-${2:chan1}
+		${3:/* code */}
+	case ${4:v2} := <-${5:chan2}
+		${6:/* code */}
+	default:
+		${7:/* code */}
+	}
+# string
+snippet sr
+	string
+# struct
+snippet st
+	struct ${1:name} {
+		${2:/* data */}
+	}${4}
+# switch 
+snippet sw
+	switch ${1:var} {
+	case ${2:value1}:
+		${3:/* code */}
+	case ${4:value2}:
+		${5:/* code */}
+	default:
+		${6:/* code */}
+	}
+snippet sp
+	fmt.Sprintf("${1:%s}", ${2:var})${3}
+# true 
+snippet t
+	true
+# variable declaration
+snippet v
+	var ${1:t} ${2:string}

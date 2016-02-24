@@ -1,0 +1,131 @@
+[[
+   ["start",{}],
+  ["text","Searching for '"],
+  ["text","var"],
+  ["text","' in"],
+  ["text"," /.c9/metadata/workspace/plugins "],
+  ["text","(regexp, case sensitive, whole word)"],
+  "Searching for \u0001var\u0001 in\u0001/.c9/metadata/workspace/plugins\u0001\u0001regexp, case sensitive, whole word\u0001"
+],[
+   ["start",{}]
+],[
+   ["start",{}],
+  ["string","configs/default.js"],
+  ["text",":"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","    1"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," fs = require(\"fs\");"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t2"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," argv = require('optimist').argv;"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t3"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," path = require(\"path\");"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t5"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," clientExtensions = {};"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t6"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t7"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.text","for ("],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," i = 0; i < clientDirs.length; i++) {"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t8"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.text","    "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," dir = clientDirs[i];"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t12"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.text","    "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," name = dir.split(\".\")[1];"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t16"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t17"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," fsUrl = \"/workspace\";"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t19"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," port = argv.p || process.env.PORT || 3131;"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t20"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," host = argv.l || \"localhost\";"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t22"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," config = {"]
+],[
+   ["start",{}]
+],[
+   ["start",{}],
+  ["string","configs/local.js"],
+  ["text",":"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t2"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," config = require(\"./default\");"]
+],[
+   ["start",{}]
+],[
+   ["start",{}],
+  ["string","configs/packed.js"],
+  ["text",":"]
+],[
+   ["start",{}],
+  ["c9searchresults.constant.numeric","\t1"],
+  ["c9searchresults.text",": "],
+  ["c9searchresults.keyword","var"],
+  ["c9searchresults.text"," config = require(\"./default\");"]
+],[
+   ["start",{}]
+],[
+   ["start",{}]
+],[
+   ["start",{}],
+  ["text","Found "],
+  ["constant.numeric","15"],
+  ["text"," matches in "],
+  ["constant.numeric","3"],
+  ["text"," files"]
+]]

@@ -1,0 +1,142 @@
+[[
+   "start",
+  ["variable.parameter","@these"],
+  ["text"," "],
+  ["variable.parameter","@_are_"],
+  ["text"," "],
+  ["variable.parameter","@tags"]
+],[
+   "start",
+  ["keyword","Feature:"],
+  ["text"," Serve coffee"]
+],[
+   "start",
+  ["text","  Coffee should not be served until paid for"]
+],[
+   "start",
+  ["text","  Coffee should not be served until the button has been pressed"]
+],[
+   "start",
+  ["text","  If there is no coffee left then money should be refunded"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Scenario Outline:"],
+  ["text"," Eating"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Given"],
+  ["text"," there are "],
+  ["comment","<start>"],
+  ["text"," cucumbers"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","When"],
+  ["text"," I eat "],
+  ["comment","<eat>"],
+  ["text"," cucumbers"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Then"],
+  ["text"," I should have "],
+  ["comment","<left>"],
+  ["text"," cucumbers"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Examples:"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","|"],
+  ["string"," start "],
+  ["comment","|"],
+  ["string"," eat "],
+  ["comment","|"],
+  ["string"," left "],
+  ["comment","|"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","|"],
+  ["string","  12   "],
+  ["comment","|"],
+  ["string","  5  "],
+  ["comment","|"],
+  ["string","  7   "],
+  ["comment","|"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","|"],
+  ["string","  @20  "],
+  ["comment","|"],
+  ["string","  5  "],
+  ["comment","|"],
+  ["string","  15  "],
+  ["comment","|"],
+  ["string","    "]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Scenario:"],
+  ["text"," Buy last coffee"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Given"],
+  ["text"," there are "],
+  ["constant.numeric","1"],
+  ["text"," coffees left in the machine"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","And"],
+  ["text"," I have deposited "],
+  ["constant.numeric","1"],
+  ["text","$ "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","When"],
+  ["text"," I press the coffee button"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Then"],
+  ["text"," I should be served a "],
+  ["string","\"coffee\""]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["text","  "],
+  ["comment","# this a comment"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "qqstring3",
+  ["text","  "],
+  ["string","\"\"\""]
+],[
+   "qqstring3",
+  ["string","  this is a "]
+],[
+   "qqstring3",
+  ["string","  pystring"]
+],[
+   "start",
+  ["string","  \"\"\""]
+]]

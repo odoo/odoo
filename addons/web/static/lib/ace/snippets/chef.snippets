@@ -1,0 +1,204 @@
+# Opscode Chef Cookbook Recipe Resources
+# Snippet by: Mike Smullin <mike@smullindesign.com>
+# Based on: http://wiki.opscode.com/display/chef/Resources
+
+# @TODO: Include Meta attributes and actions in all snippets
+# @TODO: Finish writing snippets for remaining Resources
+
+snippet cookbook_file
+	# Cookbook File resource
+	cookbook_file ${1:"/path/to/file"} do # The remote path where the file will reside
+		${2:#}backup ${3} # How many backups of this file to keep. Set to false  if you want no backups
+		${4:#}group ${5} # The group owner of the file (string or id)
+		${6:#}mode ${7} # The octal mode of the file - e.g. 0755
+		${8:#}owner ${9} # The owner for the file
+		${10:#}source ${11} # The basename of the source file
+		${12:#}cookbook ${13} # The cookbook this file is stored in
+
+		${14:#}${15: action :create} # Create this file (Default)
+		${16:#}${17: action :create_if_missing} # Create only if it doesn't exist yet
+		${18:#}${19: action :delete} # Delete this file
+	end
+
+snippet execute
+	# Execute resource
+	execute ${1:"command to execute"} do # The command to execute
+		${2:#}creates ${3:nil} # A file this command creates - if the file exists, the command will not be run.
+		${4:#}cwd ${5:nil} # Current working directory to run the command from.
+		${6:#}environment ${7:nil} # A hash of environment variables to set before running this command.
+		${8:#}group ${9:nil} # A group name or group ID that we should change to before running this command.
+		${10:#}path ${11:nil} # An array of paths to use when searching for the command. Nil uses system path.
+		${12:#}returns ${13:0} # The return value of the command - this resource raises an exception if the return value does not match.
+		${14:#}timeout ${15:nil} # How many seconds to let the command run before timing it out.
+		${16:#}user ${17:nil} # A user name or user ID that we should change to before running this command.
+		${18:#}umask ${19:nil} # Umask for files created by the command
+
+		${20:#}${21:action :run} # Run this command (Default)
+		${22:#}${23:action :nothing} # Do not run this command
+	end
+
+snippet link
+	# Link resource
+	link ${1:"/target/file"} do # The file name of the link
+		${2:#}to ${3} # The real file you want to link to
+		${4:#}link_type ${5:symbolic} # Either :symbolic or :hard
+		${6:#}owner ${7} # The owner of the symlink
+		${8:#}group ${9} # The group of the symlink
+
+		${10:#}${11:action :create} # Create a link (Default)
+		${12:#}${13:action :delete} # Delete a link
+	end
+
+snippet package
+	# Package resource
+	package ${1:"package_name"} do # Name of the package to install
+		${2:#}version ${3:nil} # The version of the package to install/upgrade
+		${4:#}response_file ${5:nil} # An optional response file - used to pre-seed packages (note: the file is fetched by Remote File)
+		${6:#}source ${7} # Used to provide an optional package source for providers that use a local file (rubygems, dpkg and rpm)
+		${8:#}options ${9:nil} # Add additional options to the underlying package command
+		${10:#}gem_binary ${11:gem} # A gem_package attribut to specify a gem binary. Useful for installing ruby 1.9 gems while running chef in ruby 1.8
+
+		${12:#}${13:action :install} # Install a package - if version is provided, install that specific version (Default)
+		${14:#}${15:action :upgrade} # Upgrade a package - if version is provided, upgrade to that specific version
+		${16:#}${17:action :remove} # Remove a package
+		${18:#}${19:action :purge} # Purge a package (this usually entails removing configuration files as well as the package itself)
+	end
+
+snippet service
+	# Service resource
+	service ${1:"service_name"} do # Name of the service
+		${2:#}enabled ${3:nil} # Whether the service is enabled at boot time
+		${4:#}running ${5:nil} # Make sure the service is running. Start if stopped
+		${6:#}pattern ${7} # Pattern to look for in the process table
+		${8:#}start_command ${9:nil} # Command used to start this service
+		${10:#}stop_command ${11:nil} # Command used to stop this service
+		${12:#}status_command ${13:nil} # Command used to check the service run status
+		${14:#}restart_command ${15:nil} # Command used to restart this service
+		${16:#}reload_command ${17:nil} # Command used to tell this service to reload its configuration
+		${18:#}supports ${19:false} # Features this service supports, ie :restart, :reload, :status
+
+		${20:#}${21:action :enable} # Enable this service
+		${22:#}${23:action :disable} # Disable this service
+		${24:#}${25:action :nothing} # Don't do anything with this service (Default)
+		${26:#}${27:action :start} # Start this service
+		${28:#}${29:action :stop} # Stop this service
+		${30:#}${31:action :restart} # Restart this service
+		${32:#}${33:action :reload} # Reload the configuration for this service
+	end
+
+snippet file
+	# File resource
+	file ${1:"/path/to/file"} do # Path to the file
+		${2:#}backup ${3:5} # How many backups of this file to keep. Set to false if you want no backups.
+		${4:#}owner ${5} # The owner for the file
+		${6:#}group ${7} # The group owner of the file (string or id)
+		${8:#}mode ${9} # The octal mode of the file (4-digit format)
+		${10:#}content ${11:nil} # A string to write to the file. This will replace any previous content if set
+
+		${12:#}${13:action :create} # Create this file (Default)
+		${14:#}${15:action :delete} # Delete this file
+		${16:#}${17:action :touch} # Touch this file (update the mtime/atime)
+	end
+
+snippet directory
+	# Directory resource
+	directory ${1:"/path/to/dir"} do # The path to the directory
+		${2:#}group ${3} # The group owner of the directory (string or id)
+		${4:#}mode ${5} # The octal mode of the directory, eg 0755
+		${6:#}owner ${7} # The owner for the directory
+		${10:#}recursive ${11:false} # When deleting the directory, delete it recursively. When creating the directory, create recursively (ie, mkdir -p)
+
+		${12:#}${13:action :create} # Create this directory (Default)
+		${14:#}${15:action :delete} # Delete this directory
+	end
+
+snippet template
+	# Template resource
+	template ${1:"/path/to/file"} do # Path to the file
+		${2:#}cookbook ${3:nil} # Specify the cookbook where the template is located, default is current cookbook
+		${4:#}source ${5:nil} # Template source file. Found in templates/default for the cookbook
+		${6:#}variables ${7} # Variables to use in the template
+		${8:#}local ${9:false} # Is the template already present on the node?
+		${10:#}backup ${11:5} # How many backups of this file to keep. Set to false if you want no backups.
+		${12:#}owner ${13} # The owner for the file
+		${14:#}group ${15} # The group owner of the file (string or id)
+		${16:#}mode ${17} # The octal mode of the file (4-digit format)
+		${18:#}content ${19:nil} # A string to write to the file. This will replace any previous content if set
+
+		${20:#}${21:action :create} # Create the file (Default)
+		${22:#}${23:action :delete} # Delete this file
+		${24:#}${25:action :touch} # Touch this file (update the mtime/atime)
+	end
+
+snippet svn
+	# SCM Resource, Chef::Provider::Subversion
+	svn ${1:"/destination/path"} do # Path to clone/checkout/export the source to
+		${2:#}repository ${3} # URI of the repository
+		${4:#}revision ${5:"HEAD"} # revision to checkout. can be symbolic, like "HEAD" or an SCM specific revision id
+		${6:#}reference ${7} # (Git only) alias for revision
+		${8:#}user ${9:nil} # System user to own the checked out code
+		${10:#}group ${11:nil} # System group to own the checked out code
+		${12:#}svn_username ${13} # (Subversion only) Username for Subversion operations
+		${14:#}svn_password ${15} # (Subversion only) Password for Subversion operations
+		${16:#}svn_arguments ${17} # (Subversion only) Extra arguments passed to the subversion command
+		
+		${18:#}${19:action :sync} # Update the source to the specified revision, or get a new checkout (Default)
+		${20:#}${21:action :checkout} # Checkout the source. Does nothing if a checkout is available
+		${22:#}${23:action :export} # Export the source, excluding or removing any version control artifacts
+	end
+
+snippet git
+	# SCM Resource, Chef::Provider::Git
+	git ${1:"/destination/path"} do # Path to clone/checkout/export the source to
+		${2:#}repository ${3} # URI of the repository
+		${4:#}revision ${5:"HEAD"} # revision to checkout. can be symbolic, like "HEAD" or an SCM specific revision id
+		${6:#}reference ${7} # (Git only) alias for revision
+		${8:#}user ${9:nil} # System user to own the checked out code
+		${10:#}group ${11:nil} # System group to own the checked out code
+		${12:#}depth ${13:nil} # (Git only) Number of past revisions to include in Git shallow clone
+		${14:#}enable_submodules ${15:"false"} # (Git only) performs a submodule init and submodule update
+		${16:#}remote ${17:"origin"} # (Git only) remote repository to use for syncing an existing clone
+		${18:#}ssh_wrapper ${19} # (Git only) path to a wrapper script for running SSH with git. GIT_SSH environment variable is set to this.
+		
+		${20:#}${21:action :sync} # Update the source to the specified revision, or get a new clone (Default)
+		${22:#}${23:action :checkout} # Clone the source. Does nothing if a checkout is available
+		${24:#}${25:action :export} # Export the source, excluding or removing any version control artifacts
+	end
+
+snippet deploy
+	# Deploy resource
+	deploy ${1:"/deploy/dir/"} do # Path to deploy to
+		${2:#}deploy_to ${3} # The "meta root" for your application.
+		${4:#}repository ${5} # URI of the repository
+		${6:#}repo ${7} # alias for repository
+		${8:#}revision ${9:"HEAD"} # revision to checkout. can be symbolic, like "HEAD" or an SCM specific revision id
+		${10:#}branch ${11} # alias for revision
+		${12:#}user ${13:nil} # System user to run the deploy as
+		${14:#}group ${15:nil} # System group to run the deploy as
+		${16:#}svn_username ${17} # (Subversion only) Username for Subversion operations}
+		${18:#}svn_password ${19} # (Subversion only) Password for Subversion operations}
+		${20:#}svn_arguments ${21} # (Subversion only) Extra arguments passed to the subversion command}
+		${22:#}shallow_clone ${23:nil} # (Git only) boolean, true sets clone depth to 5
+		${24:#}enable_submodules ${25:false} # (Git only) performs a submodule init and submodule update
+		${26:#}remote ${27:"origin"} # (Git only) remote repository to use for syncing an existing clone
+		${28:#}ssh_wrapper ${29} # (Git only) path to a wrapper script for running SSH with git. GIT_SSH environment variable is set to this.
+		${30:#}git_ssh_wrapper ${31} # alias for ssh_wrapper
+		${32:#}scm_provider ${33:Chef::Provider::Git} # SCM Provider to use.
+		${34:#}repository_cache ${35: "cached-copy"} # Name of the subdirectory where the pristine copy of your app's source is kept
+		${36:#}environment ${37} # A hash of the form {"ENV_VARIABLE"=>"VALUE"}}
+		${38:#}purge_before_symlink ${39:%w(log tmp/pids public/system)} # An array of paths, relative to app root, to be removed from a checkout before symlinking
+		${40:#}create_dirs_before_symlink ${41:%w(tmp public config)} # Directories to create before symlinking. Runs after purge_before_symlink
+		${42:#}symlinks ${43:"system" => "public/system", "pids" => "tmp/pids", "log" => "log"} # A hash that maps files in the shared directory to their paths in the current release
+		${44:#}symlink_before_migrate ${45:"config/database.yml" => "config/database.yml"} # A hash that maps files in the shared directory into the current release. Runs before migration
+		${46:#}migrate ${47:false} # Should the migration command be executed? (true or false)
+		${48:#}migration_command ${49} # A string containing a shell command to execute to run the migration
+		${50:#}restart_command ${51:nil} # A code block to evaluate or a string containing a shell command
+		${52:#}before_migrate ${53:"deploy/before_migrate.rb"} # A block or path to a file containing chef code to run before migrating
+		${54:#}before_symlink ${55:"deploy/before_symlink.rb"} # A block or path to a file containing chef code to run before symlinking
+		${56:#}before_restart ${57:"deploy/before_restart.rb"} # A block or path to a file containing chef code to run before restarting
+		${58:#}after_restart ${59:"deploy/after_restart.rb"} # A block or path to a file containing chef code to run after restarting
+		
+		${60:#}${61::deploy} # Deploy the application (Default)
+		${62:#}${63::force_deploy} # For the revision deploy strategy, this removes any existing release of the same code version and re-deploys in its place
+		${64:#}${65::rollback} # Rollback the application to the previous release
+	end

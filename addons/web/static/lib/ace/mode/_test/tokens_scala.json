@@ -1,0 +1,542 @@
+[[
+   "start",
+  ["comment","// http://www.scala-lang.org/node/54"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","package"],
+  ["text"," "],
+  ["identifier","examples"],
+  ["text","."],
+  ["identifier","actors"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","scala"],
+  ["text","."],
+  ["identifier","actors"],
+  ["text","."],
+  ["identifier","Actor"]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","scala"],
+  ["text","."],
+  ["identifier","actors"],
+  ["text","."],
+  ["identifier","Actor"],
+  ["text","."],
+  ["identifier","_"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","abstract"],
+  ["text"," "],
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","PingMessage"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","Start"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","PingMessage"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","SendPing"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","PingMessage"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","Pong"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","PingMessage"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","abstract"],
+  ["text"," "],
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","PongMessage"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","Ping"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","PongMessage"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","Stop"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","PongMessage"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","pingpong"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["support.function","Application"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","val"],
+  ["text"," "],
+  ["identifier","pong"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Pong"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","val"],
+  ["text"," "],
+  ["identifier","ping"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Ping"],
+  ["paren.lparen","("],
+  ["constant.numeric","100000"],
+  ["text",", "],
+  ["identifier","pong"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","ping"],
+  ["text","."],
+  ["identifier","start"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","pong"],
+  ["text","."],
+  ["identifier","start"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","ping"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","Start"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Ping"],
+  ["paren.lparen","("],
+  ["identifier","count"],
+  ["text",": "],
+  ["support.function","Int"],
+  ["text",", "],
+  ["identifier","pong"],
+  ["text",": "],
+  ["identifier","Actor"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","Actor"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","act"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Ping: Initializing with count \""],
+  ["keyword.operator","+"],
+  ["identifier","count"],
+  ["keyword.operator","+"],
+  ["string","\": \""],
+  ["keyword.operator","+"],
+  ["identifier","pong"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","count"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","loop"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","react"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","Start"],
+  ["text"," "],
+  ["keyword.operator","=>"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Ping: starting.\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","pong"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","Ping"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","SendPing"],
+  ["text"," "],
+  ["keyword.operator","=>"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","pong"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","Ping"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","Pong"],
+  ["text"," "],
+  ["keyword.operator","=>"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator","%"],
+  ["text"," "],
+  ["constant.numeric","1000"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Ping: pong from: \""],
+  ["keyword.operator","+"],
+  ["identifier","sender"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","pingsLeft"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","self"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","SendPing"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","else"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Ping: Stop.\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","pong"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","Stop"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","exit"],
+  ["paren.lparen","("],
+  ["symbol.constant","'stop"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","          "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Pong"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","Actor"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","act"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","pongCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","loop"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","react"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","Ping"],
+  ["text"," "],
+  ["keyword.operator","=>"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","pongCount"],
+  ["text"," "],
+  ["keyword.operator","%"],
+  ["text"," "],
+  ["constant.numeric","1000"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Pong: ping \""],
+  ["keyword.operator","+"],
+  ["identifier","pongCount"],
+  ["keyword.operator","+"],
+  ["string","\" from \""],
+  ["keyword.operator","+"],
+  ["identifier","sender"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","sender"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," "],
+  ["identifier","Pong"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","pongCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","pongCount"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","Stop"],
+  ["text"," "],
+  ["keyword.operator","=>"]
+],[
+   "start",
+  ["text","          "],
+  ["keyword","println"],
+  ["paren.lparen","("],
+  ["string","\"Pong: Stop.\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","exit"],
+  ["paren.lparen","("],
+  ["symbol.constant","'stop"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

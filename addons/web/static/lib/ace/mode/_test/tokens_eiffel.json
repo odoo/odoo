@@ -1,0 +1,141 @@
+[[
+   "start",
+  ["keyword","note"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","description"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["string.quoted.double","\"Represents a person.\""]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"]
+],[
+   "start",
+  ["text","\t"],
+  ["entity.name.type","PERSON"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","create"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","make"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","make_unknown"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","feature"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["entity.name.type","NONE"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["comment.line.double-dash","-- Creation"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","make"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","a_name"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["keyword","like"],
+  ["text"," "],
+  ["identifier","name"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["comment.line.double-dash","-- Create a person with `a_name' as `name'."]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","do"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","a_name"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","ensure"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","a_name"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","make_unknown"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","do"],
+  ["text"," "],
+  ["keyword","ensure"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","Void"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","feature"],
+  ["text"," "],
+  ["comment.line.double-dash","-- Access"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","name"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["keyword","detachable"],
+  ["text"," "],
+  ["entity.name.type","STRING"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["comment.line.double-dash","-- Full name or Void if unknown."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","end"]
+]]

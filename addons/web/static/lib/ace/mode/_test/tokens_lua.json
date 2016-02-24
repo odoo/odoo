@@ -1,0 +1,348 @@
+[[
+   ["bracketedComment",2,"start"],
+  ["comment","--[[--"]
+],[
+   ["bracketedComment",2,"start"],
+  ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
+],[
+   ["bracketedComment",2,"start"],
+  ["comment","from its function header."]
+],[
+   "start",
+  ["comment","--]]--"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","int"],
+  ["paren.lparen","("],
+  ["identifier","t"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","t"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["keyword.operator","+"],
+  ["identifier","t"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"],
+  ["keyword.operator","*"],
+  ["constant.numeric","0x100"],
+  ["keyword.operator","+"],
+  ["identifier","t"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["keyword.operator","*"],
+  ["constant.numeric","0x10000"],
+  ["keyword.operator","+"],
+  ["identifier","t"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["constant.numeric","4"],
+  ["paren.rparen",")"],
+  ["keyword.operator","*"],
+  ["constant.numeric","0x1000000"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","num_args"],
+  ["paren.lparen","("],
+  ["identifier","func"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","local"],
+  ["text"," "],
+  ["support.function","dump"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.library","string"],
+  ["text","."],
+  ["support.function","dump"],
+  ["paren.lparen","("],
+  ["identifier","func"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","local"],
+  ["text"," "],
+  ["identifier","offset"],
+  ["text",", "],
+  ["identifier","cursor"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","int"],
+  ["paren.lparen","("],
+  ["support.function","dump"],
+  ["keyword.operator",":"],
+  ["support.function","sub"],
+  ["paren.lparen","("],
+  ["constant.numeric","13"],
+  ["paren.rparen","))"],
+  ["text",", "],
+  ["identifier","offset"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","26"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","--Get the params and var flag (whether there's a ... in the param)"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","return"],
+  ["text"," "],
+  ["support.function","dump"],
+  ["keyword.operator",":"],
+  ["support.function","sub"],
+  ["paren.lparen","("],
+  ["identifier","cursor"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["support.function","dump"],
+  ["keyword.operator",":"],
+  ["support.function","sub"],
+  ["paren.lparen","("],
+  ["identifier","cursor"],
+  ["keyword.operator","+"],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["support.function","byte"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Usage:"]
+],[
+   "start",
+  ["identifier","num_args"],
+  ["paren.lparen","("],
+  ["keyword","function"],
+  ["paren.lparen","("],
+  ["identifier","a"],
+  ["text",","],
+  ["identifier","b"],
+  ["text",","],
+  ["identifier","c"],
+  ["text",","],
+  ["identifier","d"],
+  ["text",", "],
+  ["keyword.operator","..."],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","end"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["comment","-- return 4, 7"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Python styled string format operator"]
+],[
+   "start",
+  ["keyword","local"],
+  ["text"," "],
+  ["identifier","gm"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.library","debug"],
+  ["text","."],
+  ["support.function","getmetatable"],
+  ["paren.lparen","("],
+  ["string","\"\""],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","gm"],
+  ["text","."],
+  ["support.function","__mod"],
+  ["keyword.operator","="],
+  ["keyword","function"],
+  ["paren.lparen","("],
+  ["variable.language","self"],
+  ["text",", "],
+  ["identifier","other"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["support.function","type"],
+  ["paren.lparen","("],
+  ["identifier","other"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","~="],
+  ["text"," "],
+  ["string","\"table\""],
+  ["text"," "],
+  ["keyword","then"],
+  ["text"," "],
+  ["identifier","other"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["identifier","other"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword","end"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text",","],
+  ["identifier","v"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["support.function","ipairs"],
+  ["paren.lparen","("],
+  ["identifier","other"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","do"],
+  ["text"," "],
+  ["identifier","other"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","tostring"],
+  ["paren.lparen","("],
+  ["identifier","v"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","end"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["variable.language","self"],
+  ["keyword.operator",":"],
+  ["support.function","format"],
+  ["paren.lparen","("],
+  ["support.function","unpack"],
+  ["paren.lparen","("],
+  ["identifier","other"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   ["bracketedString",5,"start"],
+  ["support.function","print"],
+  ["paren.lparen","("],
+  ["comment","[===["]
+],[
+   ["bracketedString",5,"start"],
+  ["comment","    blah blah %s, (%d %d)"]
+],[
+   "start",
+  ["comment","]===]"],
+  ["keyword.operator","%"],
+  ["paren.lparen","{"],
+  ["string","\"blah\""],
+  ["text",", "],
+  ["identifier","num_args"],
+  ["paren.lparen","("],
+  ["identifier","int"],
+  ["paren.rparen",")})"]
+],[
+   "start"
+],[
+   ["bracketedComment",3,"start"],
+  ["comment","--[=[--"]
+],[
+   ["bracketedComment",3,"start"],
+  ["comment","table.maxn is deprecated, use # instead."]
+],[
+   "start",
+  ["comment","--]=]--"]
+],[
+   "start",
+  ["support.function","print"],
+  ["paren.lparen","("],
+  ["constant.library","table"],
+  ["text","."],
+  ["invalid.deprecated","maxn"],
+  ["paren.lparen","{"],
+  ["constant.numeric","1"],
+  ["text",","],
+  ["constant.numeric","2"],
+  ["text",","],
+  ["paren.lparen","["],
+  ["constant.numeric","4"],
+  ["paren.rparen","]"],
+  ["keyword.operator","="],
+  ["constant.numeric","4"],
+  ["text",","],
+  ["paren.lparen","["],
+  ["constant.numeric","8"],
+  ["paren.rparen","]"],
+  ["keyword.operator","="],
+  ["constant.numeric","8"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["comment","-- outputs 8 instead of 2"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","print"],
+  ["paren.lparen","("],
+  ["constant.numeric","5"],
+  ["text"," "],
+  ["comment","--[[ blah ]]"],
+  ["paren.rparen",")"]
+]]

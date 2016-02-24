@@ -1,0 +1,288 @@
+[[
+   "start",
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","DOCTYPE"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","My Webpage"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"navigation\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","for"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["identifier","navigation"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["punctuation.operator","."],
+  ["identifier","href"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","escape"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["punctuation.operator","."],
+  ["identifier","caption"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","endfor"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","if"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator.twig","not"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["comment.block.twig","{# is equivalent to #}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","if"],
+  ["text"," "],
+  ["keyword.operator.twig","not"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen","])"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","autoescape"],
+  ["text"," "],
+  ["constant.language.boolean","true"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","raw"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["text.xml","     "],
+  ["comment.block.twig","{# var won't be escaped #}"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","escape"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["text.xml","  "],
+  ["comment.block.twig","{# var won't be doubled-escaped #}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","endautoescape"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["keyword.control.twig","include"],
+  ["paren.lparen","("],
+  ["string","'twig.html'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","sandboxed"],
+  ["text"," "],
+  ["keyword.operator.assignment","="],
+  ["text"," "],
+  ["constant.language.boolean","true"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["string","\"string "],
+  ["constant.language.escape","#{with}"],
+  ["string"," "],
+  ["constant.language.escape","\\\""],
+  ["string"," escapes\""],
+  ["text"," "],
+  ["string","'another#one'"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","My Webpage"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","a_variable"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+]]

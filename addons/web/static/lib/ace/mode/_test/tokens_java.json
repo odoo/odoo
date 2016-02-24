@@ -1,0 +1,95 @@
+[[
+   "start",
+  ["keyword","public"],
+  ["text"," "],
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","InfiniteLoop"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start"
+],[
+   "comment",
+  ["text","    "],
+  ["comment","/*"]
+],[
+   "comment",
+  ["comment","     * This will cause the program to hang..."]
+],[
+   "comment",
+  ["comment","     *"]
+],[
+   "comment",
+  ["comment","     * Taken from:"]
+],[
+   "comment",
+  ["comment","     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/"]
+],[
+   "start",
+  ["comment","     */"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","public"],
+  ["text"," "],
+  ["keyword","static"],
+  ["text"," "],
+  ["keyword","void"],
+  ["text"," "],
+  ["identifier","main"],
+  ["lparen","("],
+  ["support.function","String"],
+  ["lparen","["],
+  ["rparen","]"],
+  ["text"," "],
+  ["identifier","args"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","double"],
+  ["text"," "],
+  ["identifier","d"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","Double"],
+  ["text","."],
+  ["identifier","parseDouble"],
+  ["lparen","("],
+  ["string","\"2.2250738585072012e-308\""],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["comment","// unreachable code"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","System"],
+  ["text","."],
+  ["identifier","out"],
+  ["text","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["string","\"Value: \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","d"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+]]

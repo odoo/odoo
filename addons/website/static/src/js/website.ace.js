@@ -6,7 +6,6 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
-var ace_call = require('website.ace_call');
 var website = require('website.website');
 
 var _t = core._t;
@@ -21,17 +20,49 @@ var Ace = Widget.extend({
         'click a[data-action=ace]': 'launchAce',
     },
     launchAce: function (e) {
-        ace_call.load();
-
-        if (e) {
-            e.preventDefault();
-        }
-        if (this.globalEditor) {
-            this.globalEditor.open();
+        var def = $.Deferred();
+        var self = this;
+        if (!window.ace_require) {
+            this.rpc('/web/webclient/ace_lib', {xmlid: 'web.assets_ace_xml'}).then(function(result) {
+                var assets = result.split("\n");
+                _.each(assets, function(asset) {
+                    //$(head).append($(asset)) does not work, it does GET call with unnecessary querystrings
+                    if ($(asset).prop('tagName') == "SCRIPT") {
+                        var script = document.createElement('script');
+                        script.type = 'text/javascript';
+                        script.src = $(asset).prop('src');
+                        script.onload = script.onreadystatechange = function() {
+                            if ((script.readyState && script.readyState != "loaded" && script.readyState != "complete") || script.onload_done) {
+                                return;
+                            }
+                            script.onload_done = true;
+                            def.resolve();
+                        };
+                        script.onerror = function () {
+                            console.error("Error loading file", script.src);
+                            def.reject(url);
+                        };
+                        $("head")[0].appendChild(script);
+                    } else if ($(asset).prop('tagName') == "LINK") {
+                        $("head").append($(asset));
+                    }
+                });
+            });
         } else {
-            this.globalEditor = new ViewEditor(this);
-            this.globalEditor.appendTo($(document.body));
+            def.resolve();
         }
+
+        $.when(def).then(function() {
+            if (e) {
+                e.preventDefault();
+            }
+            if (self.globalEditor) {
+                self.globalEditor.open();
+            } else {
+                self.globalEditor = new ViewEditor(self);
+                self.globalEditor.appendTo($(document.body));
+            }
+        });
     },
 });
 
@@ -94,55 +125,60 @@ var ViewEditor = Widget.extend({
     },
     start: function () {
         var self = this;
-        self.aceEditor = ace.edit(self.$('#ace-view-editor')[0]);
-        self.aceEditor.setTheme("ace/theme/monokai");
-        self.loadTemplates();
+        ace_require(["ace/ace"], function(ace) {
+            self.ace = ace;
+            self.aceEditor = ace.edit(self.$('#ace-view-editor')[0]);
+            self.aceEditor.setTheme("ace/theme/monokai");
+            self.loadTemplates();
 
-        var $editor = self.$('.ace_editor');
-        function resizeEditor (target) {
-            var width = Math.min(document.body.clientWidth, Math.max(parseInt(target, 10), self.minWidth));
-            $editor.width(width);
-            self.aceEditor.resize();
-            self.$el.width(width);
-        }
-        function resizeEditorHeight(height) {
-            self.$el.css('top', height);
-            self.$('.ace_editor').css('bottom', height);
-        }
-        function storeEditorWidth() {
-            window.localStorage.setItem('ace_editor_width', self.$el.width());
-        }
-        function readEditorWidth() {
-            var width = window.localStorage.getItem('ace_editor_width');
-            return parseInt(width || 720, 10);
-        }
-        function startResizing (e) {
-            self.refX = e.pageX;
-            self.resizing = true;
-        }
-        function stopResizing () {
-            self.resizing = false;
-        }
-        function updateWidth (e) {
-            if (self.resizing) {
-                var offset = e.pageX - self.refX;
-                var width = self.$el.width() - offset;
-                self.refX = e.pageX;
-                resizeEditor(width);
-                storeEditorWidth();
+            var $editor = self.$('.ace_editor');
+            function resizeEditor (target) {
+                var width = Math.min(document.body.clientWidth, Math.max(parseInt(target, 10), self.minWidth));
+                $editor.width(width);
+                self.aceEditor.resize();
+                self.$el.width(width);
+                
             }
-        }
-        document.body.addEventListener('mouseup', stopResizing, true);
-        self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
-        $(document).mousemove(updateWidth);
-        $('button[data-action=edit]').click(function () {
-           self.close();
+            function resizeEditorHeight(height) {
+                self.$el.css('top', height);
+                self.$('.ace_editor').css('bottom', height);
+                self.aceEditor.resize();
+            }
+            function storeEditorWidth() {
+                window.localStorage.setItem('ace_editor_width', self.$el.width());
+            }
+            function readEditorWidth() {
+                var width = window.localStorage.getItem('ace_editor_width');
+                return parseInt(width || 720, 10);
+            }
+            function startResizing (e) {
+                self.refX = e.pageX;
+                self.resizing = true;
+            }
+            function stopResizing () {
+                self.resizing = false;
+            }
+            function updateWidth (e) {
+                if (self.resizing) {
+                    var offset = e.pageX - self.refX;
+                    var width = self.$el.width() - offset;
+                    self.refX = e.pageX;
+                    resizeEditor(width);
+                    storeEditorWidth();
+                }
+            }
+            document.body.addEventListener('mouseup', stopResizing, true);
+            self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
+            $(document).mousemove(updateWidth);
+            $('button[data-action=edit]').click(function () {
+               self.close();
+            });
+            self.getParent().on('change:height', this, function () {
+                resizeEditorHeight(self.getParent().$el.outerHeight()+2);
+            });
+            resizeEditor(readEditorWidth());
+            resizeEditorHeight(self.getParent().$el.outerHeight()+2);
         });
-        this.getParent().on('change:height', this, function () {
-            resizeEditorHeight(this.getParent().$el.outerHeight()+2);
-        });
-        resizeEditor(readEditorWidth());
-        resizeEditorHeight(this.getParent().$el.outerHeight()+2);
     },
     loadTemplates: function () {
         var self = this;
@@ -221,9 +257,10 @@ var ViewEditor = Widget.extend({
             method: 'read',
             args: [[viewId], ['arch'], _.extend(base.get_context(), {'lang': null})],
         }).then(function(result) {
-            var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
+            var editingSession = self.buffers[viewId] = new self.ace.EditSession(result[0].arch);
             editingSession.setMode("ace/mode/xml");
-            editingSession.setUndoManager(new ace.UndoManager());
+            editingSession.setUndoManager(new self.ace.UndoManager());
+            editingSession.setUseWorker(false);
             editingSession.on("change", function () {
                 setTimeout(function () {
                     var $option = self.$('#ace-view-list').find('[value='+viewId+']');

@@ -1,0 +1,410 @@
+[[
+   "start",
+  ["comment","//http://groovy.codehaus.org/Martin+Fowler%27s+closure+examples+in+Groovy"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","name"],
+  ["text",", "],
+  ["identifier","salary"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","boolean"],
+  ["text"," "],
+  ["identifier","manager"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","String"],
+  ["text"," "],
+  ["identifier","toString"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","emps"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["lparen","["],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["lparen","("],
+  ["identifier","name"],
+  ["text",":"],
+  ["string","'Guillaume'"],
+  ["text",", "],
+  ["identifier","manager"],
+  ["text",":"],
+  ["constant.language.boolean","true"],
+  ["text",", "],
+  ["identifier","salary"],
+  ["text",":"],
+  ["constant.numeric","200"],
+  ["rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["lparen","("],
+  ["identifier","name"],
+  ["text",":"],
+  ["string","'Graeme'"],
+  ["text",", "],
+  ["identifier","manager"],
+  ["text",":"],
+  ["constant.language.boolean","true"],
+  ["text",", "],
+  ["identifier","salary"],
+  ["text",":"],
+  ["constant.numeric","200"],
+  ["rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["lparen","("],
+  ["identifier","name"],
+  ["text",":"],
+  ["string","'Dierk'"],
+  ["text",", "],
+  ["identifier","manager"],
+  ["text",":"],
+  ["constant.language.boolean","false"],
+  ["text",", "],
+  ["identifier","salary"],
+  ["text",":"],
+  ["constant.numeric","151"],
+  ["rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["lparen","("],
+  ["identifier","name"],
+  ["text",":"],
+  ["string","'Bernd'"],
+  ["text",", "],
+  ["identifier","manager"],
+  ["text",":"],
+  ["constant.language.boolean","false"],
+  ["text",", "],
+  ["identifier","salary"],
+  ["text",":"],
+  ["constant.numeric","50"],
+  ["rparen",")]"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","managers"],
+  ["lparen","("],
+  ["identifier","emps"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","emps"],
+  ["text","."],
+  ["identifier","findAll"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text","."],
+  ["identifier","isManager"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," "],
+  ["identifier","emps"],
+  ["lparen","["],
+  ["constant.numeric","0"],
+  ["text",".."],
+  ["constant.numeric","1"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","managers"],
+  ["lparen","("],
+  ["identifier","emps"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","// [Guillaume, Graeme]"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","highPaid"],
+  ["lparen","("],
+  ["identifier","emps"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","threshold"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","150"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","emps"],
+  ["text","."],
+  ["identifier","findAll"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text","."],
+  ["identifier","salary"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["identifier","threshold"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," "],
+  ["identifier","emps"],
+  ["lparen","["],
+  ["constant.numeric","0"],
+  ["text",".."],
+  ["constant.numeric","2"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","highPaid"],
+  ["lparen","("],
+  ["identifier","emps"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","// [Guillaume, Graeme, Dierk]"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","paidMore"],
+  ["lparen","("],
+  ["identifier","amount"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["identifier","e"],
+  ["text","."],
+  ["identifier","salary"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["identifier","amount"],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","highPaid"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","paidMore"],
+  ["lparen","("],
+  ["constant.numeric","150"],
+  ["rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," "],
+  ["identifier","highPaid"],
+  ["lparen","("],
+  ["identifier","emps"],
+  ["lparen","["],
+  ["constant.numeric","0"],
+  ["rparen","])"],
+  ["text"," "],
+  ["comment","// true"]
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," "],
+  ["identifier","emps"],
+  ["lparen","["],
+  ["constant.numeric","0"],
+  ["text",".."],
+  ["constant.numeric","2"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","emps"],
+  ["text","."],
+  ["identifier","findAll"],
+  ["lparen","("],
+  ["identifier","highPaid"],
+  ["rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","filename"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'test.txt'"]
+],[
+   "start",
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","File"],
+  ["lparen","("],
+  ["identifier","filename"],
+  ["rparen",")"],
+  ["text","."],
+  ["identifier","withReader"],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","reader"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["identifier","doSomethingWith"],
+  ["lparen","("],
+  ["identifier","reader"],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","readersText"]
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","doSomethingWith"],
+  ["lparen","("],
+  ["identifier","reader"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","readersText"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","reader"],
+  ["text","."],
+  ["identifier","text"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","File"],
+  ["lparen","("],
+  ["identifier","filename"],
+  ["rparen",")"],
+  ["text","."],
+  ["identifier","text"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","readersText"]
+]]

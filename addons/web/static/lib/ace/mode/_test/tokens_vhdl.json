@@ -1,0 +1,271 @@
+[[
+   "start",
+  ["keyword","library"],
+  ["text"," "],
+  ["identifier","IEEE"]
+],[
+   "start",
+  ["identifier","user"],
+  ["text"," "],
+  ["identifier","IEEE"],
+  ["punctuation.operator","."],
+  ["identifier","std_logic_1164"],
+  ["punctuation.operator","."],
+  ["keyword","all"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword","use"],
+  ["text"," "],
+  ["identifier","IEEE"],
+  ["punctuation.operator","."],
+  ["identifier","numeric_std"],
+  ["punctuation.operator","."],
+  ["keyword","all"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","entity"],
+  ["text"," "],
+  ["identifier","COUNT16"],
+  ["text"," "],
+  ["keyword","is"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","port"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","cOut"],
+  ["text","    "],
+  ["punctuation.operator",":"],
+  ["keyword","out"],
+  ["text","    "],
+  ["storage.type","std_logic_vector"],
+  ["paren.lparen","("],
+  ["constant.numeric","15"],
+  ["text"," "],
+  ["keyword","downto"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text","  "],
+  ["comment","-- counter output"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","clkEn"],
+  ["text","   "],
+  ["punctuation.operator",":"],
+  ["keyword","in"],
+  ["text","     "],
+  ["storage.type","std_logic"],
+  ["punctuation.operator",";"],
+  ["text","                      "],
+  ["comment","-- count enable"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","clk"],
+  ["text","     "],
+  ["punctuation.operator",":"],
+  ["keyword","in"],
+  ["text","     "],
+  ["storage.type","std_logic"],
+  ["punctuation.operator",";"],
+  ["text","                      "],
+  ["comment","-- clock input"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","rst"],
+  ["text","     "],
+  ["punctuation.operator",":"],
+  ["keyword","in"],
+  ["text","     "],
+  ["storage.type","std_logic"],
+  ["text","                       "],
+  ["comment","-- reset input"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "]
+],[
+   "start",
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","entity"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","architecture"],
+  ["text"," "],
+  ["identifier","count_rtl"],
+  ["text"," "],
+  ["keyword","of"],
+  ["text"," "],
+  ["identifier","COUNT16"],
+  ["text"," "],
+  ["keyword","is"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","signal"],
+  ["text"," "],
+  ["identifier","count"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["storage.type","std_logic_vector"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","15"],
+  ["text"," "],
+  ["keyword","downto"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["keyword","begin"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","process"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","clk"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","rst"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","begin"]
+],[
+   "start",
+  ["text","        "]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","if"],
+  ["paren.lparen","("],
+  ["identifier","rst"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'1'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","count"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","others"],
+  ["keyword.operator","=>"],
+  ["string","'0'"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","elsif"],
+  ["paren.lparen","("],
+  ["identifier","rising_edge"],
+  ["paren.lparen","("],
+  ["identifier","clk"],
+  ["paren.rparen","))"],
+  ["text"," "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","if"],
+  ["paren.lparen","("],
+  ["identifier","clkEn"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'1'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","count"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","count"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","if"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","if"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","process"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","cOut"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","count"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","architecture"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "]
+]]

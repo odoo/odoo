@@ -1,0 +1,152 @@
+[[
+   "start",
+  ["comment","#!/usr/local/bin/python"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","string"],
+  ["text",", "],
+  ["identifier","sys"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# If no arguments were given, print a helpful message"]
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["support.function","len"],
+  ["paren.lparen","("],
+  ["identifier","sys"],
+  ["text","."],
+  ["identifier","argv"],
+  ["paren.rparen",")"],
+  ["keyword.operator","=="],
+  ["constant.numeric","1"],
+  ["text",":"]
+],[
+   "qstring3",
+  ["text","    "],
+  ["keyword","print"],
+  ["text"," "],
+  ["string","'''Usage:"]
+],[
+   "start",
+  ["string","celsius temp1 temp2 ...'''"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","sys"],
+  ["text","."],
+  ["identifier","exit"],
+  ["paren.lparen","("],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Loop over the arguments"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["identifier","sys"],
+  ["text","."],
+  ["identifier","argv"],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["text",":"],
+  ["paren.rparen","]"],
+  ["text",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","try"],
+  ["text",":"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","fahrenheit"],
+  ["keyword.operator","="],
+  ["support.function","float"],
+  ["paren.lparen","("],
+  ["identifier","string"],
+  ["text","."],
+  ["identifier","atoi"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","except"],
+  ["text"," "],
+  ["identifier","string"],
+  ["text","."],
+  ["identifier","atoi_error"],
+  ["text",":"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","print"],
+  ["text"," "],
+  ["support.function","repr"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["string","\"not a numeric value\""]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","else"],
+  ["text",":"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","celsius"],
+  ["keyword.operator","="],
+  ["paren.lparen","("],
+  ["identifier","fahrenheit"],
+  ["keyword.operator","-"],
+  ["constant.numeric","32"],
+  ["paren.rparen",")"],
+  ["keyword.operator","*"],
+  ["constant.numeric","5.0"],
+  ["keyword.operator","/"],
+  ["constant.numeric","9.0"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","print"],
+  ["text"," "],
+  ["string","'%i"],
+  ["constant.language.escape","\\260"],
+  ["string","F = %i"],
+  ["constant.language.escape","\\260"],
+  ["string","C'"],
+  ["text"," "],
+  ["keyword.operator","%"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["support.function","int"],
+  ["paren.lparen","("],
+  ["identifier","fahrenheit"],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["support.function","int"],
+  ["paren.lparen","("],
+  ["identifier","celsius"],
+  ["keyword.operator","+"],
+  ["constant.numeric",".5"],
+  ["paren.rparen","))"]
+]]

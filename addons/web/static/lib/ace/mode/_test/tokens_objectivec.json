@@ -1,0 +1,793 @@
+[[
+   "start",
+  ["storage.type.objc","@"],
+  ["punctuation.definition.storage.type.objc","protocol"],
+  ["entity.name.type.objc"," Printing"],
+  ["text",": "],
+  ["entity.other.inherited-class.objc","someParent"]
+],[
+   "start",
+  ["meta.function.objc","-"],
+  ["paren.lparen","("],
+  ["storage.type","void"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["identifier","print"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type.objc","@end"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.objc","@"],
+  ["punctuation.definition.storage.type.objc","interface"],
+  ["entity.name.type.objc"," Fraction"],
+  ["text",": "],
+  ["entity.other.inherited-class.objc","NSObject"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["identifier","Printing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["support.class.cocoa","NSCopying"],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","numerator"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","denominator"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["storage.type.objc","@end"]
+],[
+   "start"
+],[
+   "start",
+  ["string.begin.objc","@\""],
+  ["string","blah"],
+  ["invalid.illegal.unknown-escape.objc","\\8"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["string.begin.objc","@\""],
+  ["string","a"],
+  ["constant.character.escape.objc","\\222"],
+  ["string","sd"],
+  ["invalid.illegal.unknown-escape.objc","\\d"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["string.begin.objc","@\""],
+  ["constant.character.escape.objc","\\f"],
+  ["string","aw"],
+  ["constant.character.escape.objc","\\\"\\?"],
+  ["string"," "],
+  ["constant.character.escape.objc","\\'"],
+  ["string"," "],
+  ["constant.character.escape.objc","\\4"],
+  ["string"," n"],
+  ["constant.character.escape.objc","\\\\"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["string.begin.objc","@\""],
+  ["constant.character.escape.objc","\\56"],
+  ["punctuation.definition.string.end","\""]
+],[
+   "start",
+  ["string.begin.objc","@\""],
+  ["constant.character.escape.objc","\\xSF42"],
+  ["punctuation.definition.string.end","\""]
+],[
+   "start"
+],[
+   "start",
+  ["meta.function.objc","-"],
+  ["paren.lparen","("],
+  ["support.class.cocoa","NSDecimalNumber"],
+  ["keyword.operator","*"],
+  ["paren.rparen",")"],
+  ["identifier","addCount"],
+  ["punctuation.operator",":"],
+  ["paren.lparen","("],
+  ["storage.type.id.objc","id"],
+  ["paren.rparen",")"],
+  ["identifier","addObject"],
+  ["paren.lparen","{"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control","return"],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["identifier","count"],
+  ["text"," "],
+  ["support.function.any-method.objc","decimalNumberByAdding:"],
+  ["identifier","addObject"],
+  ["punctuation.operator","."],
+  ["identifier","count"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.macro.objc","NS_DURING"],
+  ["text","  "],
+  ["keyword.control.macro.objc","NS_HANDLER"],
+  ["text"," "],
+  ["keyword.control.macro.objc","NS_ENDHANDLER"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.control.exception.objc","try"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","   "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","argc"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text","    "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.control.exception.objc","throw"],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSException"],
+  ["text"," "],
+  ["support.function.any-method.objc","exceptionWithName:"],
+  ["string.begin.objc","@\""],
+  ["string","Throwing a test exception"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["identifier","reason"],
+  ["punctuation.operator",":"],
+  ["string.begin.objc","@\""],
+  ["string","Testing the @throw directive."],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["identifier","userInfo"],
+  ["punctuation.operator",":"],
+  ["constant.language.objc","nil"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","   "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.control.exception.objc","catch"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type.id.objc","id"],
+  ["text"," "],
+  ["identifier","theException"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.cocoa","NSLog"],
+  ["paren.lparen","("],
+  ["string.begin.objc","@\""],
+  ["string","%@"],
+  ["punctuation.definition.string.end","\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","theException"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","result"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text","  "],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.control.exception.objc","finally"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.cocoa","NSLog"],
+  ["paren.lparen","("],
+  ["string.begin.objc","@\""],
+  ["string","This always happens."],
+  ["punctuation.definition.string.end","\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","result"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.definition.storage.modifier.objc","@"],
+  ["storage.modifier.objc","synchronized"],
+  ["paren.lparen","("],
+  ["identifier","lock"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.cocoa","NSLog"],
+  ["paren.lparen","("],
+  ["string.begin.objc","@\""],
+  ["string","Hello World"],
+  ["punctuation.definition.string.end","\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","struct"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.other.objc","defs"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["support.class.cocoa","NSObject"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","char"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","enc1"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.definition.keyword.objc","@"],
+  ["keyword.other.objc","encode"],
+  ["paren.lparen","("],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","         "],
+  ["storage.type.objc","IBOutlet"],
+  ["text","|"],
+  ["storage.type.objc","IBAction"],
+  ["text","|"],
+  ["storage.type.objc","BOOL"],
+  ["text","|"],
+  ["storage.type.objc","SEL"],
+  ["text","|"],
+  ["storage.type.id.objc","id"],
+  ["text","|"],
+  ["storage.type.objc","unichar"],
+  ["text","|"],
+  ["storage.type.objc","IMP"],
+  ["text","|"],
+  ["storage.type.objc","Class"],
+  ["text"," "]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text"," "],
+  ["punctuation.definition.storage.type.objc","@"],
+  ["storage.type.objc","class"],
+  ["text"," "],
+  ["punctuation.definition.storage.type.objc","@"],
+  ["storage.type.objc","protocol"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.storage.modifier.objc","@"],
+  ["storage.modifier.objc","public"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// instance variables"]
+],[
+   "start",
+  ["punctuation.definition.storage.modifier.objc","@"],
+  ["storage.modifier.objc","package"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// instance variables"]
+],[
+   "start",
+  ["punctuation.definition.storage.modifier.objc","@"],
+  ["storage.modifier.objc","protected"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// instance variables"]
+],[
+   "start",
+  ["punctuation.definition.storage.modifier.objc","@"],
+  ["storage.modifier.objc","private"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// instance variables"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["constant.language.objc","YES"],
+  ["text"," "],
+  ["constant.language.objc","NO"],
+  ["text"," "],
+  ["constant.language.objc","Nil"],
+  ["text"," "],
+  ["constant.language.objc","nil"]
+],[
+   "start",
+  ["support.variable.foundation","NSApp"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["support.function.cocoa.leopard","NSRectToCGRect"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Protocol"],
+  ["text"," "],
+  ["identifier","ProtocolFromString"],
+  ["punctuation.operator",":"],
+  ["string","\"NSTableViewDelegate\""],
+  ["paren.rparen","))"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.section.scope.begin.objc","["],
+  ["identifier","SPPoint"],
+  ["text"," "],
+  ["support.function.any-method.objc","pointFromCGPoint:"],
+  ["identifier","self"],
+  ["punctuation.operator","."],
+  ["identifier","position"],
+  ["paren.rparen","]"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function.cocoa","NSRoundDownToMultipleOfPageSize"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#import"],
+  ["constant.other"," <stdio.h>"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","main"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","argc"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["storage.modifier","const"],
+  ["text"," "],
+  ["storage.type","char"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","argv"],
+  ["punctuation.section.scope.begin.objc","["],
+  ["punctuation.section.scope.end.objc","]"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.C99.c","printf"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["string","\"hello world\\n\""],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","return"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["support.class.cocoa","NSChangeSpelling"]
+],[
+   "start"
+],[
+   "start",
+  ["string.begin.objc","@\""],
+  ["string","0 != SUBQUERY(image, $x, 0 != SUBQUERY($x.bookmarkItems, $y, $y.@count == 0).@count).@count"],
+  ["punctuation.definition.string.end","\""]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.storage.type.objc","@selector"],
+  ["punctuation","("],
+  ["support.function.any-method.name-of-parameter.objc","lowercaseString"],
+  ["punctuation",")"],
+  ["text"," "],
+  ["punctuation.definition.storage.type.objc","@selector"],
+  ["punctuation","("],
+  ["support.function.any-method.name-of-parameter.objc","uppercaseString:"],
+  ["punctuation",")"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","NSFetchRequest"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","localRequest"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","[["],
+  ["identifier","NSFetchRequest"],
+  ["text"," "],
+  ["support.function.any-method.objc","alloc"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","init"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"],
+  ["text","  "]
+],[
+   "start",
+  ["identifier","localRequest"],
+  ["punctuation.operator","."],
+  ["identifier","entity"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["identifier","NSEntityDescription"],
+  ["text"," "],
+  ["support.function.any-method.objc","entityForName:"],
+  ["string.begin.objc","@\""],
+  ["string","VNSource"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["identifier","inManagedObjectContext"],
+  ["punctuation.operator",":"],
+  ["identifier","context"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"],
+  ["text","  "]
+],[
+   "start",
+  ["identifier","localRequest"],
+  ["punctuation.operator","."],
+  ["identifier","sortDescriptors"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSArray"],
+  ["text"," "],
+  ["support.function.any-method.objc","arrayWithObject:"],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSSortDescriptor"],
+  ["text"," "],
+  ["support.function.any-method.objc","sortDescriptorWithKey:"],
+  ["string.begin.objc","@\""],
+  ["string","resolution"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["identifier","ascending"],
+  ["punctuation.operator",":"],
+  ["constant.language.objc","YES"],
+  ["paren.rparen","]]"],
+  ["punctuation.operator",";"],
+  ["text","  "]
+],[
+   "start",
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","predicate"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["support.function.any-method.objc","predicateWithFormat:"],
+  ["string.begin.objc","@\""],
+  ["string","0 != SUBQUERY(image, $x, 0 != SUBQUERY($x.bookmarkItems, $y, $y.@count == 0).@count).@count"],
+  ["punctuation.definition.string.end","\""],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["support.function.any-method.objc","predicateWithFormat:"],
+  ["paren.rparen","]"]
+],[
+   "start",
+  ["support.class.cocoa","NSString"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","predicateString"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSString"],
+  ["text"," "],
+  ["support.function.any-method.objc","stringWithFormat:"],
+  ["string.begin.objc","@\""],
+  ["string","SELF beginsWith[cd] %@"],
+  ["punctuation.definition.string.end","\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","searchString"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","pred"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["support.function.any-method.objc","predicateWithFormat:"],
+  ["identifier","predicateString"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["support.class.cocoa","NSArray"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["identifier","filteredKeys"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","[["],
+  ["identifier","myMutableDictionary"],
+  ["text"," "],
+  ["support.function.any-method.objc","allKeys"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","filteredArrayUsingPredicate"],
+  ["punctuation.operator",":"],
+  ["identifier","pred"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"],
+  ["text"," "]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","localRequest"],
+  ["punctuation.operator","."],
+  ["identifier","predicate"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["support.class.cocoa","NSPredicate"],
+  ["text"," "],
+  ["support.function.any-method.objc","predicateWithFormat:"],
+  ["string.begin.objc","@\""],
+  ["string","whichChart = %@"],
+  ["punctuation.definition.string.end","\""],
+  ["text"," "],
+  ["identifier","argumentArray"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","listChartToDownload"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["identifier","localRequest"],
+  ["punctuation.operator","."],
+  ["identifier","fetchBatchSize"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["identifier","arrayRequest"],
+  ["text","    "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.section.scope.begin.objc","["],
+  ["identifier","context"],
+  ["text","  "],
+  ["support.function.any-method.objc","executeFetchRequest:"],
+  ["identifier","localRequest"],
+  ["text"," "],
+  ["identifier","error"],
+  ["punctuation.operator",":"],
+  ["keyword.operator","&"],
+  ["identifier","error1"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.section.scope.begin.objc","["],
+  ["identifier","localRequest"],
+  ["text","   "],
+  ["support.function.any-method.objc","release"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#ifndef"],
+  ["text"," "],
+  ["constant.language.objc","Nil"]
+],[
+   "start",
+  ["keyword","#define"],
+  ["constant.other"," Nil __DARWIN_NULL   "],
+  ["comment","/* id of Nil class */"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.objc","@implementation"],
+  ["entity.name.type.objc"," MyObject"]
+],[
+   "start",
+  ["meta.function.objc","- "],
+  ["paren.lparen","("],
+  ["storage.type","unsigned"],
+  ["text"," "],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["identifier","areaOfWidth"],
+  ["punctuation.operator",":"],
+  ["paren.lparen","("],
+  ["storage.type","unsigned"],
+  ["text"," "],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["identifier","width"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","height"],
+  ["punctuation.operator",":"],
+  ["paren.lparen","("],
+  ["storage.type","unsigned"],
+  ["text"," "],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["identifier","height"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["text"," "],
+  ["identifier","width"],
+  ["keyword.operator","*"],
+  ["identifier","height"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["storage.type.objc","@end"]
+],[
+   "start"
+]]

@@ -1,0 +1,261 @@
+[[
+   "start",
+  ["punctuation.ahk","#"],
+  ["keyword.command.ahk","NoEnv"]
+],[
+   "start",
+  ["keyword.command.ahk","SetBatchLines"],
+  ["text"," "],
+  ["constant.numeric","-1"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.command.ahk","CoordMode"],
+  ["text"," "],
+  ["variable.parameter","Mouse"],
+  ["punctuation.ahk",","],
+  ["text"," "],
+  ["variable.parameter","Screen"]
+],[
+   "start",
+  ["keyword.command.ahk","OnExit"],
+  ["text"," "],
+  ["variable.parameter","GuiClose"]
+],[
+   "start"
+],[
+   "start",
+  ["text","zoom "],
+  ["keyword.operator.ahk",":="],
+  ["text"," 9"]
+],[
+   "start"
+],[
+   "start",
+  ["text","computeSize"],
+  ["punctuation.ahk","(){"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.ahk","global"],
+  ["text"," as_x"]
+],[
+   "start",
+  ["text","\tas_x "],
+  ["keyword.operator.ahk",":="],
+  ["text"," "],
+  ["support.function.ahk","Round"],
+  ["punctuation.ahk","("],
+  ["text","ws_x"],
+  ["keyword.operator.ahk","/"],
+  ["text","zoom"],
+  ["keyword.operator.ahk","/"],
+  ["text","2 "],
+  ["keyword.operator.ahk","-"],
+  ["text"," 0.5"],
+  ["punctuation.ahk",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.ahk","if"],
+  ["text"," "],
+  ["punctuation.ahk","("],
+  ["text","zoom"],
+  ["keyword.operator.ahk",">"],
+  ["text","1"],
+  ["punctuation.ahk",")"],
+  ["text"," "],
+  ["punctuation.ahk","{"]
+],[
+   "start",
+  ["text","\t\tpix "],
+  ["keyword.operator.ahk",":="],
+  ["text"," "],
+  ["support.function.ahk","Round"],
+  ["punctuation.ahk","("],
+  ["text","zoom"],
+  ["punctuation.ahk",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["punctuation.ahk","}"],
+  ["text"," ele "],
+  ["punctuation.ahk","{"]
+],[
+   "start",
+  ["text","\t\tpix "],
+  ["keyword.operator.ahk",":="],
+  ["text"," 1"]
+],[
+   "start",
+  ["text","\t"],
+  ["punctuation.ahk","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.command.ahk","ToolTip"],
+  ["text"," Message "],
+  ["punctuation.ahk","%"],
+  ["text","as_x"],
+  ["punctuation.ahk","%"],
+  ["text"," "],
+  ["punctuation.ahk","%"],
+  ["text","zoom"],
+  ["punctuation.ahk","%"],
+  ["text"," "],
+  ["punctuation.ahk","%"],
+  ["text","ws_x"],
+  ["punctuation.ahk","%"],
+  ["text"," "],
+  ["punctuation.ahk","%"],
+  ["text","hws_x"],
+  ["punctuation.ahk","%"],
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.ahk","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","hdc_frame "],
+  ["keyword.operator.ahk",":="],
+  ["text"," "],
+  ["support.function.ahk","DllCall"],
+  ["punctuation.ahk","("],
+  ["punctuation.quote.double","\""],
+  ["string.quoted.ahk","GetDC"],
+  ["punctuation.quote.double","\""],
+  ["punctuation.ahk",","],
+  ["text"," UInt"],
+  ["punctuation.ahk",","],
+  ["text"," MagnifierID"],
+  ["punctuation.ahk",")"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.ahk","; comment"]
+],[
+   "start",
+  ["text","DrawCross"],
+  ["punctuation.ahk","("],
+  ["keyword.control.ahk","byRef"],
+  ["text"," x"],
+  ["keyword.operator.ahk","="],
+  ["punctuation.quote.double","\""],
+  ["punctuation.quote.double","\""],
+  ["punctuation.ahk",","],
+  ["text"," rX"],
+  ["punctuation.ahk",","],
+  ["text","rY"],
+  ["punctuation.ahk",","],
+  ["text","z"],
+  ["punctuation.ahk",","],
+  ["text"," dc"],
+  ["punctuation.ahk","){"]
+],[
+   "start",
+  ["text","       "],
+  ["comment.line.ahk"," ;specify the style, thickness and color of the cross lines"]
+],[
+   "start",
+  ["text","    h_pen "],
+  ["keyword.operator.ahk",":="],
+  ["text"," "],
+  ["support.function.ahk","DllCall"],
+  ["punctuation.ahk","("],
+  ["text"," "],
+  ["punctuation.quote.double","\""],
+  ["string.quoted.ahk","gdi32.dll\\CreatePen"],
+  ["punctuation.quote.double","\""],
+  ["punctuation.ahk",","],
+  ["text"," "],
+  ["constant.language","Int"],
+  ["punctuation.ahk",","],
+  ["text"," 0"],
+  ["punctuation.ahk",","],
+  ["text"," "],
+  ["constant.language","Int"],
+  ["punctuation.ahk",","],
+  ["text"," 1"],
+  ["punctuation.ahk",","],
+  ["text"," UInt"],
+  ["punctuation.ahk",","],
+  ["text"," 0x0000FF"],
+  ["punctuation.ahk",")"]
+],[
+   "start",
+  ["punctuation.ahk","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.ahk",";Ctrl ^; Shift +; Win #; Alt !"]
+],[
+   "start",
+  ["text","^"],
+  ["support.constant.ahk","NumPadAdd"],
+  ["keyword.operator.ahk","::"]
+],[
+   "start",
+  ["text","^"],
+  ["support.constant.ahk","WheelUp"],
+  ["keyword.operator.ahk","::"],
+  ["text","   "]
+],[
+   "start",
+  ["text","^;"],
+  ["keyword.operator.ahk","::"],
+  ["text","  "],
+  ["comment.line.ahk"," ;comment"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.ahk","If"],
+  ["punctuation.ahk","("],
+  ["text","zoom "],
+  ["keyword.operator.ahk","<"],
+  ["text"," ws_x "],
+  ["variable.parameter","and"],
+  ["text"," "],
+  ["punctuation.ahk","("],
+  ["text"," "],
+  ["variable.predefined.ahk","A_ThisHotKey"],
+  ["text"," "],
+  ["keyword.operator.ahk","="],
+  ["text"," "],
+  ["punctuation.quote.double","\""],
+  ["string.quoted.ahk","^WheelUp"],
+  ["punctuation.quote.double","\""],
+  ["text"," "],
+  ["variable.parameter","or"],
+  ["text"," "],
+  ["variable.predefined.ahk","A_ThisHotKey"],
+  ["text"," "],
+  ["keyword.operator.ahk","="],
+  ["punctuation.quote.double","\""],
+  ["string.quoted.ahk","^NumPadAdd"],
+  ["punctuation.quote.double","\""],
+  ["punctuation.ahk",")"],
+  ["text"," "],
+  ["punctuation.ahk",")"]
+],[
+   "start",
+  ["text","\t\tzoom "],
+  ["keyword.operator.ahk","*="],
+  ["text"," 1.189207115        "],
+  ["comment.line.ahk"," ; sqrt(sqrt(2))"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.command.ahk","Gosub"],
+  ["punctuation.ahk",","],
+  ["text","setZoom"]
+],[
+   "start",
+  ["keyword.control.ahk","return"]
+],[
+   "start"
+]]

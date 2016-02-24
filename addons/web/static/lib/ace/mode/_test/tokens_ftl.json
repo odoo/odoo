@@ -1,0 +1,341 @@
+[[
+   "start",
+  ["keyword.function","<#ftl"],
+  ["text"," "],
+  ["entity.other.attribute-name","encoding"],
+  ["keyword.operator","="],
+  ["string","\"utf-8\""],
+  ["text"," "],
+  ["keyword","/>"]
+],[
+   "start",
+  ["keyword.function","<#setting"],
+  ["text"," "],
+  ["entity.other.attribute-name","locale"],
+  ["keyword.operator","="],
+  ["string","\"en_US\""],
+  ["text"," "],
+  ["keyword","/>"]
+],[
+   "start",
+  ["keyword.function","<#import"],
+  ["text"," "],
+  ["string","\"library\""],
+  ["text"," "],
+  ["keyword.operator","as"],
+  ["text"," "],
+  ["variable","lib"],
+  ["text"," "],
+  ["keyword","/>"]
+],[
+   "ftl-dcomment",
+  ["comment","<#--"]
+],[
+   "ftl-dcomment",
+  ["comment","    FreeMarker comment"]
+],[
+   "ftl-dcomment",
+  ["comment","    ${abc} <#assign a=12 />"]
+],[
+   "start",
+  ["comment","-->"]
+],[
+   "start"
+],[
+   "start",
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","DOCTYPE"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","lang"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"en-us\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","meta"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","charset"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"utf-8\""],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string.interpolated","${"],
+  ["variable","title"],
+  ["keyword.operator","!"],
+  ["string","\"FreeMarker\""],
+  ["string.interpolated","}"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Hello "],
+  ["string.interpolated","${"],
+  ["variable","name"],
+  ["keyword.operator","!"],
+  ["string","\"\""],
+  ["string.interpolated","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Today is: "],
+  ["string.interpolated","${"],
+  ["language.variable",".now"],
+  ["support.function","?date"],
+  ["string.interpolated","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","<#assign"],
+  ["text"," "],
+  ["variable","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","13"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","<#if"],
+  ["text"," "],
+  ["variable","x"],
+  ["text"," "],
+  ["constant.character.entity","&gt;"],
+  ["text"," "],
+  ["constant.numeric","12"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["variable","x"],
+  ["text"," "],
+  ["keyword.operator","lt"],
+  ["text"," "],
+  ["constant.numeric","14"],
+  ["keyword",">"],
+  ["text.xml","x equals 13: "],
+  ["string.interpolated","${"],
+  ["variable","x"],
+  ["string.interpolated","}"],
+  ["keyword.function","</#if"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["keyword.function","<#list"],
+  ["text"," "],
+  ["variable","items"],
+  ["text"," "],
+  ["keyword.operator","as"],
+  ["text"," "],
+  ["variable","item"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string.interpolated","${"],
+  ["variable","item_index"],
+  ["string.interpolated","}"],
+  ["text.xml",": "],
+  ["string.interpolated","${"],
+  ["variable","item.name"],
+  ["keyword.operator","!"],
+  ["support.function","?split"],
+  ["paren.lparen","("],
+  ["string","\""],
+  ["constant.character.escape","\\n"],
+  ["string","\""],
+  ["paren.rparen",")"],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["paren.rparen","]"],
+  ["string.interpolated","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["keyword.function","</#list"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        User directive: "],
+  ["keyword.other","<@lib.function"],
+  ["text"," "],
+  ["variable","attr1"],
+  ["keyword.operator","="],
+  ["constant.language","true"],
+  ["text"," "],
+  ["variable","attr2"],
+  ["keyword.operator","="],
+  ["string","'value'"],
+  ["text"," "],
+  ["variable","attr3"],
+  ["keyword.operator","="],
+  ["constant.numeric","-42.12"],
+  ["keyword",">"],
+  ["text.xml","Test"],
+  ["keyword.other","</@lib.function"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.other","<@anotherOne"],
+  ["text"," "],
+  ["keyword","/>"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","<#if"],
+  ["text"," "],
+  ["variable","variable"],
+  ["support.function.deprecated","?exists"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","            Deprecated"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","<#elseif"],
+  ["text"," "],
+  ["variable","variable"],
+  ["support.function","??"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","            Better"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","<#else"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","            Default"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["keyword.function","</#if"],
+  ["keyword",">"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.image.tag-name.xml","img"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","src"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"images/"],
+  ["string.interpolated","${"],
+  ["variable","user.id"],
+  ["string.interpolated","}"],
+  ["string.attribute-value.xml",".png\""],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
+],[
+   "start",
+  ["text.xml","        "]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+]]

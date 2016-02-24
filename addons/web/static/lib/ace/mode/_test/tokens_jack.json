@@ -1,0 +1,1786 @@
+[[
+   "start",
+  ["keyword","vars"],
+  ["text"," "],
+  ["variable","it"],
+  ["text",", "],
+  ["variable","p"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","p"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["variable","label"],
+  ["text",", "],
+  ["variable","value"],
+  ["text","|"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\""],
+  ["constant.language.escape","\\n"],
+  ["string","\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","label"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["language.builtin","inspect"],
+  ["paren.lparen","("],
+  ["variable","value"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["comment","-- Create an array from 0 to 15"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"range\""],
+  ["text",", "],
+  ["language.builtin","i-collect"],
+  ["paren.lparen","("],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","5"],
+  ["paren.rparen",")))"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Create an array from 0 to 15 and break up in chunks of 4"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"chunked range\""],
+  ["text",", "],
+  ["language.builtin","i-collect"],
+  ["paren.lparen","("],
+  ["language.builtin","i-chunk"],
+  ["paren.lparen","("],
+  ["constant.numeric","4"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","16"],
+  ["paren.rparen","))))"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Check if all or none items in stream pass test."]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"all < 60 in range(60)\""],
+  ["text",", "],
+  ["variable","i-all?"],
+  ["paren.lparen","({"],
+  ["variable","i"],
+  ["text","|"],
+  ["variable","i"],
+  ["keyword.operator","<"],
+  ["constant.numeric","60"],
+  ["paren.rparen","}"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","60"],
+  ["paren.rparen",")))"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"any < 60 in range(60)\""],
+  ["text",", "],
+  ["variable","i-any?"],
+  ["paren.lparen","({"],
+  ["variable","i"],
+  ["text","|"],
+  ["variable","i"],
+  ["keyword.operator",">"],
+  ["constant.numeric","60"],
+  ["paren.rparen","}"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","60"],
+  ["paren.rparen",")))"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"all < 60 in range(70)\""],
+  ["text",", "],
+  ["variable","i-all?"],
+  ["paren.lparen","({"],
+  ["variable","i"],
+  ["text","|"],
+  ["variable","i"],
+  ["keyword.operator","<"],
+  ["constant.numeric","60"],
+  ["paren.rparen","}"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","70"],
+  ["paren.rparen",")))"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"any < 60 in range(70)\""],
+  ["text",", "],
+  ["variable","i-any?"],
+  ["paren.lparen","({"],
+  ["variable","i"],
+  ["text","|"],
+  ["variable","i"],
+  ["keyword.operator",">"],
+  ["constant.numeric","60"],
+  ["paren.rparen","}"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","70"],
+  ["paren.rparen",")))"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Zip three different collections together"]
+],[
+   "start",
+  ["variable","p"],
+  ["paren.lparen","("],
+  ["string","\"zipped\""],
+  ["text",", "],
+  ["language.builtin","i-collect"],
+  ["paren.lparen","("],
+  ["language.builtin","i-zip"],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","  "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["text",","],
+  ["constant.numeric","2"],
+  ["text",","],
+  ["constant.numeric","3"],
+  ["text",","],
+  ["constant.numeric","4"],
+  ["text",","],
+  ["constant.numeric","5"],
+  ["paren.rparen","]"],
+  ["text",","]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","i-map"],
+  ["paren.lparen","({"],
+  ["variable","i"],
+  ["text","|"],
+  ["variable","i"],
+  ["keyword.operator","*"],
+  ["variable","i"],
+  ["paren.rparen","}"],
+  ["text",", "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["paren.rparen",")))"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","vars"],
+  ["text"," "],
+  ["variable","names"],
+  ["text",", "],
+  ["variable","person"],
+  ["text",", "],
+  ["variable","i"],
+  ["text",", "],
+  ["variable","doubles"],
+  ["text",", "],
+  ["variable","lengths"],
+  ["text",", "],
+  ["variable","cubeRange"]
+],[
+   "start",
+  ["variable","names"],
+  ["text"," = "],
+  ["paren.lparen","["],
+  ["string","\"Thorin\""],
+  ["text",", "],
+  ["string","\"Dwalin\""],
+  ["text",", "],
+  ["string","\"Balin\""],
+  ["text",", "],
+  ["string","\"Bifur\""],
+  ["text",", "],
+  ["string","\"Bofur\""],
+  ["text",", "],
+  ["string","\"Bombur\""],
+  ["text",", "],
+  ["string","\"Oin\""],
+  ["text",","]
+],[
+   "start",
+  ["text","         "],
+  ["string","\"Gloin\""],
+  ["text",", "],
+  ["string","\"Ori\""],
+  ["text",", "],
+  ["string","\"Nori\""],
+  ["text",", "],
+  ["string","\"Dori\""],
+  ["text",", "],
+  ["string","\"Fili\""],
+  ["text",", "],
+  ["string","\"Kili\""],
+  ["text",", "],
+  ["string","\"Bilbo\""],
+  ["text",", "],
+  ["string","\"Gandalf\""],
+  ["paren.rparen","]"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["variable","names"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["string","\"Bilbo\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["string","\"Gandalf\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","person"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["variable","name"],
+  ["text",": "],
+  ["string","\"Tim\""],
+  ["text",", "],
+  ["variable","age"],
+  ["text",": "],
+  ["constant.numeric","30"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","key"],
+  ["text",", "],
+  ["variable","value"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["variable","person"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","key"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\" = \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","value"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","i"],
+  ["text"," = "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["keyword","while"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable","i"],
+  ["text"," = "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","i"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\"range\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["variable","i"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Dynamic object that gives the first 10 doubles"]
+],[
+   "start",
+  ["variable","doubles"],
+  ["text"," = "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.form","@len"],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["text","| "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.form","@get"],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["variable","key"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","key"],
+  ["text"," "],
+  ["keyword","is"],
+  ["text"," "],
+  ["storage.type","Integer"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["variable","key"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["variable","key"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\"#doubles\""],
+  ["text",", "],
+  ["keyword.operator","#"],
+  ["variable","doubles"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\"Doubles\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["variable","doubles"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Dynamic object that has names list as keys and string lenth as values"]
+],[
+   "start",
+  ["variable","lengths"],
+  ["text"," = "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.form","@keys"],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["text","| "],
+  ["variable","names"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.form","@get"],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["variable","key"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","key"],
+  ["text"," "],
+  ["keyword","is"],
+  ["text"," "],
+  ["storage.type","String"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["keyword.operator","#"],
+  ["variable","key"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["language.builtin","print"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","\"Lengths\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["variable","lengths"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["variable","cubeRange"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["variable","n"],
+  ["text","|"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","vars"],
+  ["text"," "],
+  ["variable","i"],
+  ["text",", "],
+  ["variable","v"]
+],[
+   "start",
+  ["text","  "],
+  ["variable","i"],
+  ["text"," = "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.form","@call"],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","v"],
+  ["text"," = "],
+  ["variable","i"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","i"],
+  ["text"," = "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["variable","n"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["variable","v"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\"Cubes\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["variable","cubeRange"],
+  ["paren.lparen","("],
+  ["constant.numeric","5"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","\"String\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["string","\"Hello World\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","k"],
+  ["text",", "],
+  ["variable","v"],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["paren.rparen",")])"]
+],[
+   "start",
+  ["language.builtin","print"],
+  ["paren.lparen","(["],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","20"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword.operator","%"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen","])"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Example showing how to do parallel work using split..and"]
+],[
+   "start",
+  ["variable","base"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["variable","bootstrap"],
+  ["text",", "],
+  ["variable","target-dir"],
+  ["text","|"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","split"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","copy"],
+  ["paren.lparen","("],
+  ["string","\"res\""],
+  ["text",", "],
+  ["variable","target-dir"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","newer"],
+  ["paren.lparen","("],
+  ["string","\"src/*.less\""],
+  ["text",", "],
+  ["variable","target-dir"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\"/style.css\""],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","lessc"],
+  ["paren.lparen","("],
+  ["string","\"src/\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","bootstrap"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\".less\""],
+  ["text",", "],
+  ["variable","target-dir"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\"/style.css\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","build"],
+  ["paren.lparen","("],
+  ["string","\"src/\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","bootstrap"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\".js\""],
+  ["text",", "],
+  ["variable","target-dir"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\"/app.js\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","vars"],
+  ["text"," "],
+  ["variable","Dragon"],
+  ["text",", "],
+  ["variable","pet"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","Dragon"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["variable","name"],
+  ["text","|"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","vars"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text",", "],
+  ["variable","stuff-in-belly"],
+  ["text",", "],
+  ["variable","stuff-in-intestine"],
+  ["text",","]
+],[
+   "start",
+  ["text","       "],
+  ["variable","feed"],
+  ["text",", "],
+  ["variable","walk"],
+  ["text",", "],
+  ["variable","put-to-bed"],
+  ["text",", "],
+  ["variable","toss"],
+  ["text",", "],
+  ["variable","rock"],
+  ["text",","]
+],[
+   "start",
+  ["text","       "],
+  ["variable","hungry?"],
+  ["text",", "],
+  ["variable","poopy?"],
+  ["text",", "],
+  ["variable","passage-of-time"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","  "],
+  ["variable","stuff-in-belly"],
+  ["text","     = "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["comment","-- He's full."]
+],[
+   "start",
+  ["text","  "],
+  ["variable","stuff-in-intestine"],
+  ["text"," =  "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["comment","-- He doesn't need to go."]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' is born.'"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","feed"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'You feed '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","'.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","stuff-in-belly"],
+  ["text"," = "],
+  ["constant.numeric","10"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","passage-of-time"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","walk"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'You walk '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\".\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","stuff-in-intestine"],
+  ["text"," = "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","passage-of-time"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","put-to-bed"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'You put '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' to bed.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","true"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["variable","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["language.builtin","range"],
+  ["paren.lparen","("],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["variable","passage-of-time"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' snores, filling the room with smoke.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' wakes up slowly.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","toss"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'You toss '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' up into the air.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'He giggles, which singes your eyebrows.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","passage-of-time"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","rock"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'You rock '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' gently.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","true"]
+],[
+   "start",
+  ["text","    "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'He briefly dozes off...'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","passage-of-time"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'...but wakes when you stop.'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","hungry?"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","stuff-in-belly"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","poopy?"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","stuff-in-intestine"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","8"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","passage-of-time"],
+  ["text"," = "],
+  ["paren.lparen","{"],
+  ["text","|"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","stuff-in-belly"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","-- Move food from belly to intestine"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","stuff-in-belly"],
+  ["text","     = "],
+  ["variable","stuff-in-belly"],
+  ["text","     "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","stuff-in-intestine"],
+  ["text"," = "],
+  ["variable","stuff-in-intestine"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","-- Our dragon is starving!"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","        "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'He wakes up suddenly!'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' is starving! In desperation, he ate YOU!'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","abort"],
+  ["text"," "],
+  ["string","\"died\""]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","stuff-in-intestine"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["variable","stuff-in-intestine"],
+  ["text"," = "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'Whoops! '"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' had an accident...'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","hungry?"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","        "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'He wakes up suddenly!'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\"'s stomach grumbles...\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","poopy?"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","asleep"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["variable","asleep"],
+  ["text"," = "],
+  ["constant.language.boolean","false"]
+],[
+   "start",
+  ["text","        "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["string","'He wakes up suddenly!'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","      "],
+  ["language.builtin","print"],
+  ["paren.lparen","("],
+  ["variable","name"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","' does the potty dance...'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["comment","-- Export the public interface to this closure object."]
+],[
+   "start",
+  ["text","  "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","   "],
+  ["variable","feed"],
+  ["text",": "],
+  ["variable","feed"]
+],[
+   "start",
+  ["text","   "],
+  ["variable","walk"],
+  ["text",": "],
+  ["variable","walk"]
+],[
+   "start",
+  ["text","   "],
+  ["variable","put-to-bed"],
+  ["text",": "],
+  ["variable","put-to-bed"]
+],[
+   "start",
+  ["text","   "],
+  ["variable","toss"],
+  ["text",": "],
+  ["variable","toss"]
+],[
+   "start",
+  ["text","   "],
+  ["variable","rock"],
+  ["text",": "],
+  ["variable","rock"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","pet"],
+  ["text"," = "],
+  ["variable","Dragon"],
+  ["paren.lparen","("],
+  ["string","'Norbert'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","feed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","toss"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","walk"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","put-to-bed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","rock"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","put-to-bed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","put-to-bed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","put-to-bed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["variable","pet"],
+  ["text","."],
+  ["variable","put-to-bed"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start"
+]]

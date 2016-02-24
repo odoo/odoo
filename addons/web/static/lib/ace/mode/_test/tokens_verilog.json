@@ -1,0 +1,113 @@
+[[
+   "start",
+  ["keyword","always"],
+  ["text"," @"],
+  ["paren.lparen","("],
+  ["keyword","negedge"],
+  ["text"," "],
+  ["identifier","reset"],
+  ["text"," "],
+  ["keyword","or"],
+  ["text"," "],
+  ["keyword","posedge"],
+  ["text"," "],
+  ["identifier","clk"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","begin"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","reset"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","begin"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","d_out"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["constant.numeric","16"],
+  ["text","'"],
+  ["identifier","h0000"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","d_out_mem"],
+  ["text","["],
+  ["identifier","resetcount"],
+  ["text","] "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","d_out"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","laststoredvalue"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","d_out"],
+  ["text",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["keyword","begin"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","d_out"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","d_out"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text","'"],
+  ["identifier","b1"],
+  ["text","; "]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","end"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","always"],
+  ["text"," @"],
+  ["paren.lparen","("],
+  ["identifier","bufreadaddr"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","bufreadval"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","d_out_mem"],
+  ["text","["],
+  ["identifier","bufreadaddr"],
+  ["text","];"]
+]]

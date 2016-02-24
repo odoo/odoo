@@ -1,0 +1,127 @@
+[[
+   "start",
+  ["keyword","uniform"],
+  ["text"," "],
+  ["keyword","float"],
+  ["text"," "],
+  ["identifier","amplitude"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword","attribute"],
+  ["text"," "],
+  ["keyword","float"],
+  ["text"," "],
+  ["identifier","displacement"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword","varying"],
+  ["text"," "],
+  ["keyword","vec3"],
+  ["text"," "],
+  ["identifier","vNormal"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","void"],
+  ["text"," "],
+  ["identifier","main"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["identifier","vNormal"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","normal"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["text","    "],
+  ["comment","// multiply our displacement by the"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","// amplitude. The amp will get animated"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","// so we'll have animated displacement"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","vec3"],
+  ["text"," "],
+  ["identifier","newPosition"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","position"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "]
+],[
+   "start",
+  ["text","                       "],
+  ["identifier","normal"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "]
+],[
+   "start",
+  ["text","                       "],
+  ["keyword","vec3"],
+  ["paren.lparen","("],
+  ["identifier","displacement"],
+  ["text"," "],
+  ["keyword.operator","*"]
+],[
+   "start",
+  ["text","                            "],
+  ["identifier","amplitude"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["constant.language","gl_Position"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","projectionMatrix"],
+  ["text"," "],
+  ["keyword.operator","*"]
+],[
+   "start",
+  ["text","                  "],
+  ["identifier","modelViewMatrix"],
+  ["text"," "],
+  ["keyword.operator","*"]
+],[
+   "start",
+  ["text","                  "],
+  ["keyword","vec4"],
+  ["paren.lparen","("],
+  ["identifier","newPosition"],
+  ["punctuation.operator",","],
+  ["constant.numeric","1.0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

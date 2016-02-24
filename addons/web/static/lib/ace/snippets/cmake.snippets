@@ -1,0 +1,58 @@
+snippet cmake
+	CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+	PROJECT(${1:ProjectName})
+
+	FIND_PACKAGE(${2:LIBRARY})
+
+	INCLUDE_DIRECTORIES(
+		${$2_INCLUDE_DIR}
+	)
+
+	ADD_SUBDIRECTORY(${3:src})
+
+	ADD_EXECUTABLE($1)
+
+	TARGET_LINK_LIBRARIES($1
+		${$2_LIBRARIES}
+	)
+
+snippet include
+	INCLUDE_DIRECTORIES(
+		${${1:INCLUDE_DIR}}
+	)
+
+snippet find
+	FIND_PACKAGE(${1:LIBRARY})
+
+snippet glob
+	FILE(GLOB ${1:SRCS} *.${2:cpp})
+
+snippet subdir
+	ADD_SUBDIRECTORY(${1:src})
+
+snippet lib
+	ADD_LIBRARY(${1:lib} ${2:STATIC}
+		${${3:SRCS}}
+	)
+
+snippet link
+	TARGET_LINK_LIBRARIES(${1:bin}
+		${2:somelib}
+	)
+	
+snippet bin
+	ADD_EXECUTABLE(${1:bin})
+
+snippet set
+	SET(${1:var} ${2:val})
+
+snippet dep
+	ADD_DEPENDENCIES(${1:target}
+		${2:dep}
+	)
+
+snippet props
+	SET_TARGET_PROPERTIES(${1:target} 
+		${2:PROPERTIES} ${3:COMPILE_FLAGS} 
+		${4:"-O3 -Wall -pedantic"}
+	)

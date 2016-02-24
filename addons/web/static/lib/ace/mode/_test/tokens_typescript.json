@@ -1,0 +1,559 @@
+[[
+   "start",
+  ["keyword.operator.ts","class"],
+  ["text"," "],
+  ["identifier","Greeter"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["variable.parameter.function.ts","greeting"],
+  ["text",": "],
+  ["variable.parameter.function.ts","string"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.operator.ts","constructor"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter.function.ts","message"],
+  ["text",": "],
+  ["variable.parameter.function.ts","string"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["storage.type.variable.ts","this."],
+  ["identifier","greeting"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","message"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","greet"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","return"],
+  ["text"," "],
+  ["string","\"Hello, \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","greeting"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"],
+  ["text","   "]
+],[
+   "no_regex"
+],[
+   "start",
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","greeter"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Greeter"],
+  ["paren.lparen","("],
+  ["string","\"world\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "no_regex",
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","button"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.language","document"],
+  ["punctuation.operator","."],
+  ["support.function.dom","createElement"],
+  ["paren.lparen","("],
+  ["string","'button'"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["identifier","button"],
+  ["punctuation.operator","."],
+  ["identifier","innerText"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Say Hello\""]
+],[
+   "start",
+  ["storage.type","button"],
+  ["punctuation.operator","."],
+  ["entity.name.function","onclick"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["entity.name.function.ts","greeter.greet"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["variable.language","document"],
+  ["punctuation.operator","."],
+  ["identifier","body"],
+  ["punctuation.operator","."],
+  ["support.function.dom","appendChild"],
+  ["paren.lparen","("],
+  ["identifier","button"],
+  ["paren.rparen",")"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Snake"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","Animal"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","   "],
+  ["entity.name.function.ts","move"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","       "],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["string","\"Slithering...\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","       "],
+  ["storage.type.variable.ts","super"],
+  ["text","("],
+  ["keyword.other.ts","5"],
+  ["text",")"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","   "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Horse"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["identifier","Animal"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","   "],
+  ["entity.name.function.ts","move"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","       "],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["string","\"Galloping...\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","super"],
+  ["punctuation.operator","."],
+  ["identifier","move"],
+  ["paren.lparen","("],
+  ["constant.numeric","45"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","   "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["identifier","module"],
+  ["text"," "],
+  ["identifier","Sayings"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.operator.ts","export"],
+  ["text"," "],
+  ["keyword.operator.ts","class"],
+  ["text"," "],
+  ["identifier","Greeter"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["variable.parameter.function.ts","greeting"],
+  ["text",": "],
+  ["variable.parameter.function.ts","string"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator.ts","constructor"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter.function.ts","message"],
+  ["text",": "],
+  ["variable.parameter.function.ts","string"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","greeting"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","message"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","greet"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","return"],
+  ["text"," "],
+  ["string","\"Hello, \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","greeting"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["identifier","module"],
+  ["text"," "],
+  ["identifier","Mankala"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","   "],
+  ["keyword.operator.ts","export"],
+  ["text"," "],
+  ["keyword.operator.ts","class"],
+  ["text"," "],
+  ["identifier","Features"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","public"],
+  ["text"," "],
+  ["identifier","turnContinues"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language.boolean","false"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","public"],
+  ["text"," "],
+  ["identifier","seedStoredCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","public"],
+  ["text"," "],
+  ["identifier","capturedCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","public"],
+  ["text"," "],
+  ["identifier","spaceCaptured"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","NoSpace"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","       "],
+  ["keyword.operator.ts","public"],
+  ["text"," "],
+  ["entity.name.function.ts","clear"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","           "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","turnContinues"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language.boolean","false"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","           "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","seedStoredCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","           "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","capturedCount"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","           "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","spaceCaptured"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","NoSpace"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","       "],
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["text","       "],
+  ["keyword","public"],
+  ["text"," "],
+  ["identifier","toString"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","           "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","stringBuilder"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"\""],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","           "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type.variable.ts","this."],
+  ["identifier","turnContinues"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","               "],
+  ["identifier","stringBuilder"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["string","\" turn continues,\""],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","           "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","stringBuilder"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["string","\" stores \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","seedStoredCount"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","           "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type.variable.ts","this."],
+  ["identifier","capturedCount"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","               "],
+  ["identifier","stringBuilder"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["string","\" captures \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","capturedCount"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\" from space \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["storage.type.variable.ts","this."],
+  ["identifier","spaceCaptured"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","           "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","           "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","stringBuilder"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","       "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["text","   "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+]]

@@ -1,0 +1,189 @@
+[[
+   "start",
+  ["doc.comment","***************************************"]
+],[
+   "start",
+  ["doc.comment","** Program: EXAMPLE                  **"]
+],[
+   "start",
+  ["doc.comment","** Author: Joe Byte, 07-Jul-2007     **"]
+],[
+   "start",
+  ["doc.comment","***************************************"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["keyword","REPORT"],
+  ["text"," BOOKINGS"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["doc.comment","* Read flight bookings from the database"]
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["keyword.operator"," * "],
+  ["keyword","FROM"],
+  ["text"," FLIGHTINFO"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["keyword","CLASS"],
+  ["keyword.operator"," = "],
+  ["string","'Y'"],
+  ["text","       "],
+  ["comment","\"Y = economy"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","OR"],
+  ["text","    "],
+  ["keyword","CLASS"],
+  ["keyword.operator"," = "],
+  ["string","'C'"],
+  ["keyword.operator","."],
+  ["text","      "],
+  ["comment","\"C = business"]
+],[
+   "start",
+  ["paren.lparen","("],
+  ["invalid","..."],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","REPORT"],
+  ["text"," TEST"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["keyword","WRITE"],
+  ["text"," "],
+  ["string","'Hello World'"],
+  ["keyword.operator","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","USERPROMPT"],
+  ["keyword.operator"," = "],
+  ["string","'Please double-click on a line in the output list '"],
+  ["text"," "],
+  ["keyword.operator","&"]
+],[
+   "start",
+  ["text","             "],
+  ["string","'to see the complete details of the transaction.'"],
+  ["keyword.operator","."]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","DATA"],
+  ["text"," LAST_EOM    "],
+  ["keyword","TYPE"],
+  ["text"," "],
+  ["support.type","D"],
+  ["keyword.operator","."],
+  ["text","  "],
+  ["comment","\"last end-of-month date"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["doc.comment","* Start from today's date"]
+],[
+   "start",
+  ["text","  LAST_EOM"],
+  ["keyword.operator"," = "],
+  ["variable.parameter","SY"],
+  ["keyword.operator","-"],
+  ["text","DATUM"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["doc.comment","* Set characters 6 and 7 (0-relative) of the YYYYMMDD string to \"01\","]
+],[
+   "start",
+  ["doc.comment","* giving the first day of the current month"]
+],[
+   "start",
+  ["text","  LAST_EOM"],
+  ["constant.numeric","+6"],
+  ["paren.lparen","("],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"],
+  ["keyword.operator"," = "],
+  ["string","'01'"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["doc.comment","* Subtract one day"]
+],[
+   "start",
+  ["text","  LAST_EOM"],
+  ["keyword.operator"," = "],
+  ["text","LAST_EOM"],
+  ["keyword.operator"," - "],
+  ["constant.numeric","1"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","WRITE"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["string","'Last day of previous month was'"],
+  ["keyword.operator",","],
+  ["text"," LAST_EOM"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["keyword","DATA"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["keyword","BEGIN OF"],
+  ["text"," I_VBRK "],
+  ["keyword","OCCURS"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","         VBELN "],
+  ["keyword","LIKE"],
+  ["text"," "],
+  ["variable.parameter","VBRK-VBELN"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","         ZUONR "],
+  ["keyword","LIKE"],
+  ["text"," "],
+  ["variable.parameter","VBRK-ZUONR"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","       "],
+  ["keyword","END OF"],
+  ["text"," I_VBRK"],
+  ["keyword.operator","."]
+]]

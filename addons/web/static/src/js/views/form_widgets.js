@@ -1,6 +1,7 @@
 odoo.define('web.form_widgets', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -1723,6 +1724,93 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
     },
 });
 
+/*
+    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XML and Python.
+*/
+var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "AceEditor",
+    init: function() {
+        var self = this;
+        this.ace_lib_loaded = $.Deferred();
+        var ace_asset_deferreds = [];
+        this._super.apply(this, arguments);
+        if (!window.ace_require) {
+            this.rpc('/web/webclient/ace_lib', {xmlid: 'web.assets_ace_xml_python'}).then(function(result) {
+                var assets = result.split("\n");
+                _.each(assets, function(asset) {
+                    //$(head).append($(asset)) does not work, it does GET call with unnecessary querystrings
+                    if ($(asset).prop('tagName') == "SCRIPT") {
+                        ace_asset_deferreds.push(ajax.loadJS($(asset).prop('src')));
+                    } else if ($(asset).prop('tagName') == "LINK"){
+                        $("head").append($(asset));
+                    }
+                });
+                $.when.apply($, ace_asset_deferreds).done(function() {
+                    self.ace_lib_loaded.resolve();
+                });
+            });
+        } else {
+            self.ace_lib_loaded.resolve();
+        }
+    },
+    initialize_content: function () {
+        var self = this;
+        this.load_def = $.Deferred();
+        if (! this.get("effective_readonly")) {
+            $.when(this.ace_lib_loaded).done(function() { //Load ace when we are sure that script is pushed in DOM
+                ace_require(["ace/ace"], function(ace) {
+                    self.ace = ace;
+                    self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
+                    self.aceEditor.setTheme("ace/theme/monokai");
+                    self.load_def.resolve();
+                });
+            });
+        }
+    },
+    destroy_content: function() {
+        if (this.aceEditor) {
+            this.aceEditor.destroy();
+        }
+    },
+    render_value: function() {
+        var self = this;
+        if (! this.get("effective_readonly")) {
+            var show_value = formats.format_value(this.get('value'), this);
+            this.load_def.done(function() {
+                self.display_view(show_value);
+            });
+        } else {
+            var txt = this.get("value") || '';
+            this.$(".oe_form_text_content").text(txt);
+        }
+    },
+    get_editing_session: function(show_value) {
+        //We can create cache of EditSession, may be key as viewID
+        var mode = this.options.mode || 'xml';
+        var editingSession = new this.ace.EditSession(show_value);
+        editingSession.setMode("ace/mode/"+mode);
+        editingSession.setUndoManager(new this.ace.UndoManager());
+        editingSession.setUseWorker(false);
+        return editingSession;
+    },
+    display_view: function (show_value) {
+        var self = this;
+        var editingSession = this.get_editing_session(show_value);
+        this.aceEditor.on("blur", function() {
+            self.save_value(editingSession);
+        });
+        this.aceEditor.setSession(editingSession);
+    },
+    save_value: function(editingSession) {
+        if (editingSession.getUndoManager().hasUndo()) {
+            var value_ = editingSession.getValue();
+            this.set_value(value_);
+        }
+    },
+    focus: function() {
+        return this.aceEditor.focus();
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1761,7 +1849,8 @@ core.form_widget_registry
     .add('timezone_mismatch', TimezoneMismatch)
     .add('label_selection', LabelSelection)
     .add('upgrade_boolean', UpgradeBoolean)
-    .add('upgrade_radio', UpgradeRadio);
+    .add('upgrade_radio', UpgradeRadio)
+    .add('ace', AceEditor);
 
 
 /**

@@ -1,0 +1,171 @@
+[[
+   "php-start",
+  ["support.php_tag","<?php"]
+],[
+   "php-start"
+],[
+   "php-start",
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","nfact"],
+  ["paren.lparen","("],
+  ["variable","$n"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "php-start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable","$n"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "php-start",
+  ["text","        "],
+  ["support.function","return"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",";"]
+],[
+   "php-start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "php-start",
+  ["text","    "],
+  ["keyword","else"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "php-start",
+  ["text","        "],
+  ["support.function","return"],
+  ["text"," "],
+  ["variable","$n"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","nfact"],
+  ["paren.lparen","("],
+  ["variable","$n"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "php-start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "php-start",
+  ["paren.rparen","}"]
+],[
+   "php-start"
+],[
+   "php-start",
+  ["support.function","echo"],
+  ["text"," "],
+  ["string","\""],
+  ["constant.language.escape","\\n\\n"],
+  ["string","Please enter a whole number ... \""],
+  ["text",";"]
+],[
+   "php-start",
+  ["variable","$num"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","trim"],
+  ["paren.lparen","("],
+  ["support.function","fgets"],
+  ["paren.lparen","("],
+  ["constant.language","STDIN"],
+  ["paren.rparen","))"],
+  ["text",";"]
+],[
+   "php-start"
+],[
+   "php-start",
+  ["comment","// ===== PROCESS - Determing the factorial of the input number ====="]
+],[
+   "php-start",
+  ["variable","$output"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\""],
+  ["constant.language.escape","\\n\\n"],
+  ["string","Factorial \""],
+  ["text"," . "],
+  ["variable","$num"],
+  ["text"," . "],
+  ["string","\" = \""],
+  ["text"," . "],
+  ["identifier","nfact"],
+  ["paren.lparen","("],
+  ["variable","$num"],
+  ["paren.rparen",")"],
+  ["text"," . "],
+  ["string","\""],
+  ["constant.language.escape","\\n\\n"],
+  ["string","\""],
+  ["text",";"]
+],[
+   "php-start",
+  ["support.function","echo"],
+  ["text"," "],
+  ["variable","$output"],
+  ["text",";"]
+],[
+   "php-start"
+],[
+   ["php-start","js-start"],
+  ["support.php_tag","?>"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text","  "],
+  ["support.php_tag","<?php"]
+],[
+   ["#tmp","php-qstring","php-start","js-start"],
+  ["support.function","echo"],
+  ["text"," "],
+  ["string","'"]
+],[
+   ["php-start","js-start"],
+  ["string","'"],
+  ["text",";"]
+],[
+   "js-start",
+  ["support.php_tag","?>"]
+],[
+   "js-comment_regex_allowed",
+  ["comment","/*this is js "],
+  ["support.php_tag","<?php"],
+  ["text"," "],
+  ["support.function","echo"],
+  ["text"," "],
+  ["string","':)'"],
+  ["text","; "],
+  ["support.php_tag","?>"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," not "],
+  ["constant.language.escape.reference.xml","&js;"]
+],[
+   "start"
+]]

@@ -1,0 +1,198 @@
+[[
+   "start",
+  ["comment","// compound assignment operators"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#include"],
+  ["constant.other"," <iostream>"]
+],[
+   "start"
+],[
+   "directive",
+  ["keyword","#include"],
+  ["constant.other.multiline"," \\"]
+],[
+   "start",
+  ["constant.other","   <iostream>"]
+],[
+   "start"
+],[
+   "directive",
+  ["keyword","#include"],
+  ["constant.other.multiline"," \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \\"]
+],[
+   "start",
+  ["constant.other","   <iostream>"]
+],[
+   "start"
+],[
+   "directive",
+  ["keyword","#include"],
+  ["constant.other.multiline"," \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \\"]
+],[
+   "start",
+  ["constant.other","   \"iostream\""]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#include"],
+  ["constant.other"," <boost/asio/io_service.hpp>"]
+],[
+   "start",
+  ["keyword","#include"],
+  ["constant.other"," \"boost/asio/io_service.hpp\""]
+],[
+   "start"
+],[
+   "directive",
+  ["keyword","#include"],
+  ["constant.other.multiline"," \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \"iostream\" \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \"string\" \\"]
+],[
+   "start",
+  ["constant.other","   <vector>"]
+],[
+   "start",
+  ["text","   "]
+],[
+   "start",
+  ["keyword.control","using"],
+  ["text"," "],
+  ["keyword.operator","namespace"],
+  ["text"," "],
+  ["identifier","std"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","//"]
+],[
+   "start",
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","main"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","a"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","b"],
+  ["keyword.operator","="],
+  ["constant.numeric","3"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","/* foobar */"]
+],[
+   "singleLineComment",
+  ["text","    "],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","b"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","// single line comment\\"]
+],[
+   "start",
+  ["comment","        continued"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","a"],
+  ["keyword.operator","+="],
+  ["constant.numeric","2"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","// equivalent to a=a+2"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","cout"],
+  ["text"," "],
+  ["keyword.operator","<<"],
+  ["text"," "],
+  ["identifier","a"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","#if"],
+  ["text"," "],
+  ["identifier","VERBOSE"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","prints"],
+  ["paren.lparen","("],
+  ["string","\"trace message\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","#endif"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","return"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","/* Print an error message and get out */"]
+],[
+   "directive",
+  ["keyword","#define"],
+  ["constant.other.multiline"," ABORT                             \\"]
+],[
+   "directive",
+  ["constant.other.multiline","    do {                                  \\"]
+],[
+   "directive",
+  ["constant.other.multiline","        print( \"Abort\\n\" );                \\"]
+],[
+   "directive",
+  ["constant.other.multiline","        exit(8);                          \\"]
+],[
+   "start",
+  ["constant.other","} while (0)                      "],
+  ["comment","/* Note: No semicolon */"]
+]]

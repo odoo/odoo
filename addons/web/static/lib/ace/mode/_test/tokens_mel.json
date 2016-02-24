@@ -1,0 +1,257 @@
+[[
+   "start",
+  ["comment.line.double-slash.mel","//"],
+  ["punctuation.definition.comment.mel"," animated duplicates, instances script"]
+],[
+   "start",
+  ["meta.function.mel","proc"],
+  ["keyword.other.mel"," "],
+  ["storage.type.mel","animatedDuplication"],
+  ["entity.name.function.mel"," ("],
+  ["punctuation.section.function.mel","("],
+  ["meta.function.mel","int $rangeStart, int $rangeEnd, int $numOfDuplicates, int $duplicateOrInstance"],
+  ["punctuation.section.function.mel",")"],
+  "proc animatedDuplication (int $rangeStart, int $rangeEnd, int $numOfDuplicates, int $duplicateOrInstance)"
+],[
+   "start",
+  ["text","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_start"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","rangeStart"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_end"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","rangeEnd"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","num_of_duplicates"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","numOfDuplicates"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","step_size"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," ("],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_end"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","-"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_start"],
+  ["text",") "],
+  ["keyword.operator.symbolic.mel","/"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","num_of_duplicates"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","i"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["constant.numeric.mel","0"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","int"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","temp"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["support.function.mel","currentTime"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_start"],
+  ["text",";     "],
+  ["comment.line.double-slash.mel","//"],
+  ["punctuation.definition.comment.mel"," set to range start"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.mel","string"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","selectedObjects"],
+  ["text","[];    "],
+  ["comment.line.double-slash.mel","//"],
+  ["punctuation.definition.comment.mel"," to store selected objects"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","selectedObjects"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," `"],
+  ["support.function.mel","ls"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","-"],
+  ["text","sl`;  "],
+  ["comment.line.double-slash.mel","//"],
+  ["punctuation.definition.comment.mel"," store selected objects"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.mel","select"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","selectedObjects"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.mel","while"],
+  ["text"," ("],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","i"],
+  ["text"," <"],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","num_of_duplicates"],
+  ["text",")"]
+],[
+   "start",
+  ["text","    {"]
+],[
+   "start",
+  ["text","        "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","temp"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","="],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","range_start"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","+"],
+  ["text"," ("],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","step_size"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","*"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","i"],
+  ["text",");"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.mel","currentTime"],
+  ["text"," ("],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","temp"],
+  ["text",");"]
+],[
+   "start",
+  ["text","        "],
+  ["comment.line.double-slash.mel","//"],
+  ["punctuation.definition.comment.mel"," seleced the objects to duplicate or instance"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.mel","select"],
+  ["text"," "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","selectedObjects"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control.mel","if"],
+  ["text","("],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","duplicateOrInstance"],
+  ["text"," "],
+  ["keyword.operator.symbolic.mel","=="],
+  ["text"," "],
+  ["constant.numeric.mel","0"],
+  ["text",")"]
+],[
+   "start",
+  ["text","        {"]
+],[
+   "start",
+  ["text","            "],
+  ["support.function.mel","duplicate"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        }"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control.mel","else"]
+],[
+   "start",
+  ["text","        {"]
+],[
+   "start",
+  ["text","            "],
+  ["support.function.mel","instance"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        }"]
+],[
+   "start",
+  ["text","        "],
+  ["variable.other.mel","$"],
+  ["punctuation.definition.variable.mel","i"],
+  ["keyword.operator.symbolic.mel","++"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    }"]
+],[
+   "start",
+  ["text","}"]
+]]

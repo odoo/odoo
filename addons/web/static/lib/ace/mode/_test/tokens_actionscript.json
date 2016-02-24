@@ -1,0 +1,263 @@
+[[
+   "start",
+  ["text","package code"]
+],[
+   "start",
+  ["text","{"]
+],[
+   "punctuation.definition.comment.actionscript.2",
+  ["text","    "],
+  ["punctuation.definition.comment.actionscript.2","/*"],
+  ["comment.block.actionscript.2","****************************************"]
+],[
+   "punctuation.definition.comment.actionscript.2",
+  ["comment.block.actionscript.2","\t * based on textmate actionscript bundle"]
+],[
+   "start",
+  ["comment.block.actionscript.2","\t ***************************************"],
+  ["punctuation.definition.comment.actionscript.2","*/"]
+],[
+   "start",
+  ["text","\t "]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.actionscript.2","import"],
+  ["text"," fl.events.SliderEvent;"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.actionscript.2","public"],
+  ["text"," "],
+  ["storage.type.class.actionscript.2","class"],
+  ["meta.class.actionscript.2"," "],
+  ["entity.name.type.class.actionscript.2","Foo"],
+  ["meta.class.actionscript.2"," "],
+  ["storage.modifier.extends.actionscript.2","extends"],
+  ["meta.class.actionscript.2"," "],
+  ["entity.other.inherited-class.actionscript.2","MovieClip"]
+],[
+   "start",
+  ["text","\t{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.actionscript.2","//*************************"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Properties:"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword.control.actionscript.2","public"],
+  ["text"," "],
+  ["keyword.control.actionscript.2","var"],
+  ["text"," activeSwatch"],
+  ["keyword.operator.symbolic.actionscript.2",":"],
+  ["support.class.actionscript.2","MovieClip"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Color offsets"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword.control.actionscript.2","public"],
+  ["text"," "],
+  ["keyword.control.actionscript.2","var"],
+  ["text"," c1"],
+  ["keyword.operator.symbolic.actionscript.2",":"],
+  ["storage.type.actionscript.2","Number"],
+  ["text"," "],
+  ["keyword.operator.symbolic.actionscript.2","="],
+  ["text"," "],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",";\t"],
+  ["punctuation.definition.comment.actionscript.2","// R"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.actionscript.2","//*************************"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Constructor:"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword.control.actionscript.2","public"],
+  ["text"," "],
+  ["storage.type.function.actionscript.2","function"],
+  ["meta.function.actionscript.2"," "],
+  ["entity.name.function.actionscript.2","Foo"],
+  ["punctuation.definition.parameters.begin.actionscript.2","("],
+  ["punctuation.definition.parameters.end.actionscript.2",")"]
+],[
+   "start",
+  ["text","\t\t{"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Respond to mouse events"]
+],[
+   "start",
+  ["text","\t\t\tswatch1_btn."],
+  ["support.function.actionscript.2","addEventListener"],
+  ["text","(MouseEvent.CLICK,swatchHandler,"],
+  ["constant.language.actionscript.2","false"],
+  ["text",","],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",","],
+  ["constant.language.actionscript.2","false"],
+  ["text",");"]
+],[
+   "start",
+  ["text","\t\t\tpreviewBox_btn."],
+  ["support.function.actionscript.2","addEventListener"],
+  ["text","(MouseEvent.MOUSE_DOWN,dragPressHandler);"]
+],[
+   "start",
+  ["text","\t\t\t"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Respond to drag events"]
+],[
+   "start",
+  ["text","\t\t\tred_slider."],
+  ["support.function.actionscript.2","addEventListener"],
+  ["text","(SliderEvent.THUMB_DRAG,sliderHandler);"]
+],[
+   "start",
+  ["text","\t\t\t"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["punctuation.definition.comment.actionscript.2","// Draw a frame later"]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["support.function.actionscript.2","addEventListener"],
+  ["text","(Event.ENTER_FRAME,"],
+  ["support.function.actionscript.2","draw"],
+  ["text",");"]
+],[
+   "start",
+  ["text","\t\t}"]
+],[
+   "start",
+  ["text","        "]
+],[
+   "start",
+  ["text","\t\tprotected "],
+  ["storage.type.function.actionscript.2","function"],
+  ["meta.function.actionscript.2"," "],
+  ["entity.name.function.actionscript.2","clickHandler"],
+  ["punctuation.definition.parameters.begin.actionscript.2","("],
+  ["variable.parameter.function.actionscript.2","event:MouseEvent"],
+  ["punctuation.definition.parameters.end.actionscript.2",")"],
+  ["keyword.operator.symbolic.actionscript.2",":"],
+  ["support.function.actionscript.2","void"]
+],[
+   "start",
+  ["text","\t\t{"]
+],[
+   "start",
+  ["text","\t\t\tcar.transform.colorTransform "],
+  ["keyword.operator.symbolic.actionscript.2","="],
+  ["text"," "],
+  ["keyword.control.actionscript.2","new"],
+  ["text"," ColorTransform("],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",","],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",","],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",","],
+  ["constant.numeric.actionscript.2","1"],
+  ["text",",c1,c2,c3);"]
+],[
+   "start",
+  ["text","\t\t}"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t\tprotected "],
+  ["storage.type.function.actionscript.2","function"],
+  ["meta.function.actionscript.2"," "],
+  ["entity.name.function.actionscript.2","changeRGBHandler"],
+  ["punctuation.definition.parameters.begin.actionscript.2","("],
+  ["variable.parameter.function.actionscript.2","event:Event"],
+  ["punctuation.definition.parameters.end.actionscript.2",")"],
+  ["keyword.operator.symbolic.actionscript.2",":"],
+  ["support.function.actionscript.2","void"]
+],[
+   "start",
+  ["text","\t\t{"]
+],[
+   "start",
+  ["text","\t\t\tc1 "],
+  ["keyword.operator.symbolic.actionscript.2","="],
+  ["text"," "],
+  ["storage.type.actionscript.2","Number"],
+  ["text","(c1_txt."],
+  ["support.function.actionscript.2","text"],
+  ["text",");"]
+],[
+   "start",
+  ["text","            "]
+],[
+   "start",
+  ["text","\t\t\t"],
+  ["keyword.control.actionscript.2","if"],
+  ["text","("],
+  ["keyword.operator.symbolic.actionscript.2","!"],
+  ["text","(c1>"],
+  ["keyword.operator.symbolic.actionscript.2","="],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",")){"]
+],[
+   "start",
+  ["text","\t\t\t\tc1 "],
+  ["keyword.operator.symbolic.actionscript.2","="],
+  ["text"," "],
+  ["constant.numeric.actionscript.2","0"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t\t\t}\t\t\t"]
+],[
+   "start",
+  ["text","\t\t\t"]
+],[
+   "start",
+  ["text","\t\t\tupdateSliders();"]
+],[
+   "start",
+  ["text","\t\t}"]
+],[
+   "start",
+  ["text","\t}"]
+],[
+   "start",
+  ["text","}"]
+]]

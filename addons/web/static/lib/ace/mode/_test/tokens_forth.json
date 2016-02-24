@@ -1,0 +1,219 @@
+[[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","HELLO"],
+  ["meta.block.forth"," "],
+  ["comment.line.parentheses.forth"," ( -- )"],
+  ["meta.block.forth","  CR "],
+  ["string.quoted.double.forth",".\" Hello, world!\""],
+  ["meta.block.forth"," "],
+  ["keyword.other.compile-only.forth",";"],
+  ["text"," "]
+],[
+   "start"
+],[
+   "start",
+  ["text","HELLO <cr>"]
+],[
+   "start",
+  ["text","Hello, world!"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","[CHAR]"],
+  ["meta.block.forth","  "],
+  ["keyword.other.non-immediate.forth"," CHAR"],
+  ["meta.block.forth"," "],
+  ["keyword.other.compile-only.forth"," POSTPONE"],
+  ["meta.block.forth"," LITERAL "],
+  ["keyword.other.compile-only.forth",";"],
+  ["keyword.other.immediate.forth"," IMMEDIATE"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric.forth","0"],
+  ["storage.type.forth"," value"],
+  ["text"," ii       "],
+  ["constant.numeric.forth"," 0"],
+  ["storage.type.forth"," value"],
+  ["text"," jj"]
+],[
+   "start",
+  ["constant.numeric.forth","0"],
+  ["storage.type.forth"," value"],
+  ["text"," KeyAddr  "],
+  ["constant.numeric.forth"," 0"],
+  ["storage.type.forth"," value"],
+  ["text"," KeyLen"]
+],[
+   "start",
+  ["storage.type.forth","create"],
+  ["text"," SArray  "],
+  ["constant.numeric.forth"," 256"],
+  ["text"," allot  "],
+  ["comment.line.backslash.forth"," \\ state array of 256 bytes"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","KeyArray"],
+  ["meta.block.forth","      KeyLen mod   KeyAddr "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","get_byte"],
+  ["meta.block.forth","      + c@ "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","set_byte"],
+  ["meta.block.forth","      + c! "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","as_byte"],
+  ["meta.block.forth","      "],
+  ["constant.numeric.forth"," 255"],
+  ["meta.block.forth"," and "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","reset_ij"],
+  ["meta.block.forth","     "],
+  ["constant.numeric.forth"," 0"],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," ii  "],
+  ["constant.numeric.forth"," 0"],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," jj "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","i_update"],
+  ["meta.block.forth","     "],
+  ["constant.numeric.forth"," 1"],
+  ["meta.block.forth"," +   as_byte"],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," ii "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","j_update"],
+  ["meta.block.forth","      ii SArray get_byte +   as_byte"],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," jj "],
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "keyword.other.compile-only.forth",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","swap_s_ij"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    jj SArray get_byte"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","       ii SArray get_byte  jj SArray set_byte"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    ii SArray set_byte"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "start"
+],[
+   "keyword.other.compile-only.forth",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","rc4_init"],
+  ["comment.line.parentheses.forth"," ( KeyAddr KeyLen -- )"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","   "],
+  ["constant.numeric.forth"," 256"],
+  ["meta.block.forth"," min"],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," KeyLen  "],
+  ["keyword.other.immediate.forth"," TO"],
+  ["meta.block.forth"," KeyAddr"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","   "],
+  ["constant.numeric.forth"," 256 0"],
+  ["keyword.control.compile-only.forth"," DO"],
+  ["meta.block.forth","   "],
+  ["variable.language.forth","i"],
+  ["meta.block.forth"," "],
+  ["variable.language.forth","i"],
+  ["meta.block.forth"," SArray set_byte  "],
+  ["keyword.control.compile-only.forth"," LOOP"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    reset_ij"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","   "],
+  ["keyword.control.compile-only.forth"," BEGIN"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","        ii KeyArray get_byte   jj +  j_update"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","        swap_s_ij"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","        ii"],
+  ["constant.numeric.forth"," 255"],
+  ["meta.block.forth"," <"],
+  ["keyword.control.compile-only.forth"," WHILE"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","        ii i_update"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","   "],
+  ["keyword.control.compile-only.forth"," REPEAT"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    reset_ij"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",";"]
+],[
+   "keyword.other.compile-only.forth",
+  ["keyword.other.compile-only.forth",":"],
+  ["meta.block.forth"," "],
+  ["entity.name.function.forth","rc4_byte"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    ii i_update   jj j_update"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    swap_s_ij"]
+],[
+   "keyword.other.compile-only.forth",
+  ["meta.block.forth","    ii SArray get_byte   jj SArray get_byte +   as_byte SArray get_byte  xor"]
+],[
+   "start",
+  ["keyword.other.compile-only.forth",";"]
+]]

@@ -1,0 +1,114 @@
+[[
+   "start",
+  ["support.function.directive.assembly","section"],
+  ["text","\t.text"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.directive.assembly","global"],
+  ["text"," "],
+  ["entity.name.function.assembly","main"],
+  ["text","         "],
+  ["comment.assembly",";must be declared for using gcc"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function.assembly","main:"],
+  ["text","\t                "],
+  ["comment.assembly",";tell linker entry point"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","mov"],
+  ["text","\t"],
+  ["variable.parameter.register.assembly","edx"],
+  ["text",", len\t    "],
+  ["comment.assembly",";message length"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","mov"],
+  ["text","\t"],
+  ["variable.parameter.register.assembly","ecx"],
+  ["text",", msg\t    "],
+  ["comment.assembly",";message to write"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","mov"],
+  ["text","\t"],
+  ["variable.parameter.register.assembly","ebx"],
+  ["text",", "],
+  ["constant.character.decimal.assembly","1"],
+  ["text","\t        "],
+  ["comment.assembly",";file descriptor (stdout)"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","mov"],
+  ["text","\t"],
+  ["variable.parameter.register.assembly","eax"],
+  ["text",", "],
+  ["constant.character.decimal.assembly","4"],
+  ["text","\t        "],
+  ["comment.assembly",";system call number (sys_write)"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","int"],
+  ["text","\t"],
+  ["constant.character.hexadecimal.assembly","0x80"],
+  ["text","\t        "],
+  ["comment.assembly",";call kernel"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","mov"],
+  ["text","\t"],
+  ["variable.parameter.register.assembly","eax"],
+  ["text",", "],
+  ["constant.character.decimal.assembly","1"],
+  ["text","\t        "],
+  ["comment.assembly",";system call number (sys_exit)"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.assembly","int"],
+  ["text","\t"],
+  ["constant.character.hexadecimal.assembly","0x80"],
+  ["text","\t        "],
+  ["comment.assembly",";call kernel"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function.directive.assembly","section"],
+  ["text","\t.data"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function.assembly","msg"],
+  ["text","\t"],
+  ["support.function.directive.assembly","db"],
+  ["text","\t"],
+  ["string.assembly","'Hello, world!'"],
+  ["text",","],
+  ["constant.character.hexadecimal.assembly","0xa"],
+  ["text","\t"],
+  ["comment.assembly",";our dear string"]
+],[
+   "start",
+  ["entity.name.function.assembly","len"],
+  ["text","\t"],
+  ["support.function.directive.assembly","equ"],
+  ["text","\t$ - msg\t\t\t"],
+  ["comment.assembly",";length of our dear string"]
+],[
+   "start"
+]]

@@ -1,0 +1,503 @@
+[[
+   "comment",
+  ["comment.block.begin.lsl","/*"]
+],[
+   "comment",
+  ["comment.block.lsl","    Testing syntax highlighting"]
+],[
+   "comment",
+  ["comment.block.lsl","    of Ace Editor"]
+],[
+   "comment",
+  ["comment.block.lsl","    for the Linden Scripting Language"]
+],[
+   "start",
+  ["comment.block.end.lsl","*/"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","someIntNormal"],
+  ["text.lsl","       "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","3672"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","someIntHex"],
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","0x00000000"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","someIntMath"],
+  ["text.lsl","         "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.float.lsl","PI_BY_TWO"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["invalid.illegal.lsl","event"],
+  ["text.lsl","               "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","5673"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                             "],
+  ["comment.line.double-slash.lsl","// invalid.illegal"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
+  ["identifier","someKeyTexture"],
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","TEXTURE_DEFAULT"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
+  ["identifier","someStringSpecial"],
+  ["text.lsl","    "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","EOF"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","some_user_defined_function_without_return_type"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
+  ["identifier","inputAsString"],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["support.function.lsl","llSay"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["identifier","inputAsString"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
+  ["identifier","user_defined_function_returning_a_string"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
+  ["identifier","inputAsKey"],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["keyword.control.lsl","return"],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","string"],
+  ["paren.rparen.lsl",")"],
+  ["identifier","inputAsKey"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.state.lsl","default"]
+],[
+   "start",
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["support.function.event.lsl","state_entry"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
+  ["identifier","someKey"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","NULL_KEY"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someKey"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetOwner"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
+  ["identifier","someString"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["identifier","user_defined_function_returning_a_string"],
+  ["paren.lparen.lsl","("],
+  ["identifier","someKey"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","some_user_defined_function_without_return_type"],
+  ["paren.lparen.lsl","("],
+  ["identifier","someString"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","    "],
+  ["support.function.event.lsl","touch_start"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","num_detected"],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["storage.type.lsl","list"],
+  ["text.lsl"," "],
+  ["identifier","agentsInRegion"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetAgentList"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","AGENT_LIST_REGION"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","["],
+  ["paren.rparen.lsl","])"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","numOfAgents"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetListLength"],
+  ["paren.lparen.lsl","("],
+  ["identifier","agentsInRegion"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","index"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                                          "],
+  ["comment.line.double-slash.lsl","// defaults to 0"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["keyword.control.lsl","for"],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","("],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl"," "],
+  ["identifier","index"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","<="],
+  ["text.lsl"," "],
+  ["identifier","numOfAgents"],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","-"],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","1"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl"," "],
+  ["identifier","index"],
+  ["keyword.operator.lsl","++"],
+  ["paren.rparen.lsl",")"],
+  ["text.lsl","                               "],
+  ["comment.line.double-slash.lsl","// for each agent in region"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","            "],
+  ["support.function.lsl","llRegionSayTo"],
+  ["paren.lparen.lsl","("],
+  ["support.function.lsl","llList2Key"],
+  ["paren.lparen.lsl","("],
+  ["identifier","agentsInRegion"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["identifier","index"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Hello, Avatar!"],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["paren.rparen.lsl","}"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","    "],
+  ["support.function.event.lsl","touch_end"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["identifier","num_detected"],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someIntNormal"],
+  ["text.lsl","       "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","3672"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someIntHex"],
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","0x00000000"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someIntMath"],
+  ["text.lsl","         "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.float.lsl","PI_BY_TWO"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["invalid.illegal.lsl","event"],
+  ["text.lsl","               "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","5673"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                             "],
+  ["comment.line.double-slash.lsl","// invalid.illegal"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someKeyTexture"],
+  ["text.lsl","      "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","TEXTURE_DEFAULT"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["identifier","someStringSpecial"],
+  ["text.lsl","   "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","EOF"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["reserved.godmode.lsl","llSetInventoryPermMask"],
+  ["paren.lparen.lsl","("],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","some item"],
+  ["string.quoted.double.lsl.end","\""],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","MASK_NEXT"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","PERM_ALL"],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","               "],
+  ["comment.line.double-slash.lsl","// reserved.godmode"]
+],[
+   "start"
+],[
+   "start",
+  ["text.lsl","        "],
+  ["support.function.lsl","llWhisper"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Leaving "],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","default"],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl"," now..."],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["entity.name.state.lsl","state other"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
+],[
+   "start",
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.state.lsl","state other"]
+],[
+   "start",
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["support.function.event.lsl","state_entry"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["support.function.lsl","llWhisper"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Entered "],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","state other"],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl",", returning to "],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","default"],
+  ["constant.character.escape.lsl","\\\""],
+  ["string.quoted.double.lsl"," again..."],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","        "],
+  ["entity.name.state.lsl","state default"],
+  ["punctuation.operator.lsl",";"]
+],[
+   "start",
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
+],[
+   "start",
+  ["paren.rparen.lsl","}"]
+],[
+   "start"
+]]

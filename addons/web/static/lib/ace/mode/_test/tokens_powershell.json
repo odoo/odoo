@@ -1,0 +1,184 @@
+[[
+   "start",
+  ["comment","# This is a simple comment"]
+],[
+   "start",
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","Hello"],
+  ["lparen","("],
+  ["variable.instance","$name"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","Write-host"],
+  ["text"," "],
+  ["string","\"Hello $name\""]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","add"],
+  ["lparen","("],
+  ["variable.instance","$left"],
+  ["text",", "],
+  ["variable.instance","$right"],
+  ["keyword.operator","="],
+  ["constant.numeric","4"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["variable.instance","$right"],
+  ["text"," "],
+  ["keyword.operator","-ne"],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["variable.instance","$left"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"],
+  ["text"," "],
+  ["keyword","elseif"],
+  ["text"," "],
+  ["lparen","("],
+  ["variable.instance","$left"],
+  ["text"," "],
+  ["keyword.operator","-eq"],
+  ["text"," "],
+  ["constant.language","$null"],
+  ["text"," "],
+  ["keyword.operator","-and"],
+  ["text"," "],
+  ["variable.instance","$right"],
+  ["text"," "],
+  ["keyword.operator","-eq"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["constant.numeric","3"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.instance","$number"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text",";"]
+],[
+   "start",
+  ["variable.instance","$number"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["constant.numeric","3"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","Write-Host"],
+  ["text"," "],
+  ["identifier","Hello"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","name"],
+  ["text"," "],
+  ["string","\"World\""]
+],[
+   "start"
+],[
+   "start",
+  ["variable.instance","$an_array"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," @"],
+  ["lparen","("],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["constant.numeric","2"],
+  ["text",", "],
+  ["constant.numeric","3"],
+  ["rparen",")"]
+],[
+   "start",
+  ["variable.instance","$a_hash"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," @"],
+  ["lparen","{"],
+  ["string","\"something\""],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"something else\""],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["identifier","notepad"],
+  ["text"," .\\"],
+  ["identifier","readme"],
+  ["text","."],
+  ["identifier","md"]
+],[
+   "start"
+]]

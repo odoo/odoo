@@ -1,0 +1,9 @@
+tokenize Curly template{{test}}
+tokenize embedded script
+<script a='a'>var</script>'123'
+tokenize multiline attribute value with double quotes
+<a href="abc{{xyz}}
+def">
+tokenize multiline attribute value with single quotes
+<a href='abc
+def\"'>

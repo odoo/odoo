@@ -1,0 +1,159 @@
+[[
+   "start",
+  ["comment","# Function"]
+],[
+   "start",
+  ["constant.language.escape","snippet"],
+  ["text"," fun"]
+],[
+   "sn-start",
+  ["text","\tfunction "],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["text","?:function_name"],
+  ["markup.list","}"],
+  ["text","("],
+  ["markup.list","${"],
+  ["constant.numeric","2"],
+  ["punctuation.operator",":"],
+  ["text","argument"],
+  ["markup.list","}"],
+  ["text",") {"]
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","3"],
+  ["punctuation.operator",":"],
+  ["text","// body..."],
+  ["markup.list","}"]
+],[
+   "sn-start",
+  ["text","\t}"]
+],[
+   "start",
+  ["comment","# Anonymous Function"]
+],[
+   "start",
+  ["constant.language.escape","regex "],
+  ["keyword","/"],
+  ["text","((=)\\s*|(:)\\s*|(\\()|\\b)"],
+  ["keyword","/"],
+  ["text","f"],
+  ["keyword","/"],
+  ["text","(\\))?"],
+  ["keyword","/"]
+],[
+   "start",
+  ["constant.language.escape","name"],
+  ["text"," f"]
+],[
+   "sn-start",
+  ["text","\tfunction"],
+  ["markup.list","${"],
+  ["variable","M1"],
+  ["text","?: "],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",":"],
+  ["text","functionName"],
+  ["markup.list","}}"],
+  ["text","("],
+  ["variable","$2"],
+  ["text",") {"]
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
+  ["punctuation.operator",":"],
+  ["keyword","$TM_SELECTED_TEXT"],
+  ["markup.list","}"]
+],[
+   "sn-start",
+  ["text","\t}"],
+  ["markup.list","${"],
+  ["variable","M2"],
+  ["text","?;"],
+  ["markup.list","}${"],
+  ["variable","M3"],
+  ["text","?,"],
+  ["markup.list","}${"],
+  ["variable","M4"],
+  ["text","?)"],
+  ["markup.list","}"]
+],[
+   "start",
+  ["comment","# Immediate function"]
+],[
+   "start",
+  ["constant.language.escape","trigger"],
+  ["text"," \\(?f\\("]
+],[
+   "start",
+  ["constant.language.escape","endTrigger"],
+  ["text"," \\)?"]
+],[
+   "start",
+  ["constant.language.escape","snippet"],
+  ["text"," f("]
+],[
+   "sn-start",
+  ["text","\t(function("],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["markup.list","}"],
+  ["text",") {"]
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
+  ["punctuation.operator",":"],
+  ["markup.list","${"],
+  ["keyword","TM_SELECTED_TEXT"],
+  ["punctuation.operator",":"],
+  ["text","/* code */"],
+  ["markup.list","}}"]
+],[
+   "sn-start",
+  ["text","\t}("],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["markup.list","}"],
+  ["text","));"]
+],[
+   "start",
+  ["comment","# if"]
+],[
+   "start",
+  ["constant.language.escape","snippet"],
+  ["text"," if"]
+],[
+   "sn-start",
+  ["text","\tif ("],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",":"],
+  ["text","true"],
+  ["markup.list","}"],
+  ["text",") {"]
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
+  ["markup.list","}"]
+],[
+   "sn-start",
+  ["text","\t}"]
+],[
+   "sn-start",
+  ["text","\t"]
+],[
+   "sn-start",
+  ["text","\t"]
+],[
+   "sn-start",
+  ["text","\t"]
+]]

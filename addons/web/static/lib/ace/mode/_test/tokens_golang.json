@@ -1,0 +1,256 @@
+[[
+   "start",
+  ["comment","// Concurrent computation of pi."]
+],[
+   "start",
+  ["comment","// See http://goo.gl/ZuTZM."]
+],[
+   "start",
+  ["comment","//"]
+],[
+   "start",
+  ["comment","// This demonstrates Go's ability to handle"]
+],[
+   "start",
+  ["comment","// large numbers of concurrent processes."]
+],[
+   "start",
+  ["comment","// It is an unreasonable way to calculate pi."]
+],[
+   "start",
+  ["keyword","package"],
+  ["text"," "],
+  ["identifier","main"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["string","\"fmt\""]
+],[
+   "start",
+  ["text","    "],
+  ["string","\"math\""]
+],[
+   "start",
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","func"],
+  ["text"," "],
+  ["identifier","main"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","fmt"],
+  ["punctuation.operator","."],
+  ["identifier","Println"],
+  ["paren.lparen","("],
+  ["identifier","pi"],
+  ["paren.lparen","("],
+  ["constant.numeric","5000"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","// pi launches n goroutines to compute an"]
+],[
+   "start",
+  ["comment","// approximation of pi."]
+],[
+   "start",
+  ["keyword","func"],
+  ["text"," "],
+  ["identifier","pi"],
+  ["paren.lparen","("],
+  ["identifier","n"],
+  ["text"," "],
+  ["support.type","int"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["support.type","float64"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","ch"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","make"],
+  ["paren.lparen","("],
+  ["keyword","chan"],
+  ["text"," "],
+  ["support.type","float64"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","k"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","n"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["keyword.operator","++"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","go"],
+  ["text"," "],
+  ["identifier","term"],
+  ["paren.lparen","("],
+  ["identifier","ch"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["support.type","float64"],
+  ["paren.lparen","("],
+  ["identifier","k"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","f"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0.0"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","k"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","n"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["keyword.operator","++"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","f"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["keyword.operator","<-"],
+  ["identifier","ch"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","f"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","func"],
+  ["text"," "],
+  ["identifier","term"],
+  ["paren.lparen","("],
+  ["identifier","ch"],
+  ["text"," "],
+  ["keyword","chan"],
+  ["text"," "],
+  ["support.type","float64"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","k"],
+  ["text"," "],
+  ["support.type","float64"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","ch"],
+  ["text"," "],
+  ["keyword.operator","<-"],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","math"],
+  ["punctuation.operator","."],
+  ["identifier","Pow"],
+  ["paren.lparen","("],
+  ["constant.numeric","-1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","k"],
+  ["paren.rparen",")"],
+  ["text"," / "],
+  ["paren.lparen","("],
+  ["constant.numeric","2"],
+  ["keyword.operator","*"],
+  ["identifier","k"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

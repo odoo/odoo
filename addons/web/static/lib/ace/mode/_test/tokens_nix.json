@@ -1,0 +1,360 @@
+[[
+   "start",
+  ["text","{"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","# Name of our deployment"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","network"],
+  ["text","."],
+  ["identifier","description"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\"HelloWorld\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment","# Enable rolling back to previous versions of our infrastructure"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","network"],
+  ["text","."],
+  ["identifier","enableRollback"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["constant.language.nix","true"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["comment","# It consists of a single server named 'helloserver'"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","helloserver"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="]
+],[
+   "start",
+  ["text","    "],
+  ["comment","# Every server gets passed a few arguments, including a reference"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","# to nixpkgs (pkgs)"]
+],[
+   "start",
+  ["text","    { "],
+  ["identifier","config"],
+  ["text",", "],
+  ["identifier","pkgs"],
+  ["text",", ... }:"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.declaration.nix","let"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# We import our custom packages from ./default passing pkgs as argument"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","packages"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["keyword.control.nix","import"],
+  ["text"," ./"],
+  ["identifier","default"],
+  ["text","."],
+  ["identifier","nix"],
+  ["text"," { "],
+  ["identifier","pkgs"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["identifier","pkgs"],
+  ["text","; };"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# This is the nodejs version specified in default.nix"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","nodejs"],
+  ["text","   "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["identifier","packages"],
+  ["text","."],
+  ["identifier","nodejs"],
+  ["text",";"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# And this is the application we'd like to deploy"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","app"],
+  ["text","      "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["identifier","packages"],
+  ["text","."],
+  ["identifier","app"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.declaration.nix","in"]
+],[
+   "start",
+  ["text","    {"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# We'll be running our application on port 8080, because a regular"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# user cannot bind to port 80"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# Then, using some iptables magic we'll forward traffic designated to port 80 to 8080"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","networking"],
+  ["text","."],
+  ["identifier","firewall"],
+  ["text","."],
+  ["identifier","enable"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["constant.language.nix","true"],
+  ["text",";"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# We will open up port 22 (SSH) as well otherwise we're locking ourselves out"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","networking"],
+  ["text","."],
+  ["identifier","firewall"],
+  ["text","."],
+  ["identifier","allowedTCPPorts"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," [ "],
+  ["constant.numeric","80"],
+  ["text"," "],
+  ["constant.numeric","8080"],
+  ["text"," "],
+  ["constant.numeric","22"],
+  ["text"," ];"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","networking"],
+  ["text","."],
+  ["identifier","firewall"],
+  ["text","."],
+  ["identifier","allowPing"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["constant.language.nix","true"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","      "],
+  ["comment","# Port forwarding using iptables"]
+],[
+   "qqdoc",
+  ["text","      "],
+  ["identifier","networking"],
+  ["text","."],
+  ["identifier","firewall"],
+  ["text","."],
+  ["identifier","extraCommands"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","''"]
+],[
+   "qqdoc",
+  ["string","        iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080"]
+],[
+   "start",
+  ["string","      ''"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","      "],
+  ["comment","# To run our node.js program we're going to use a systemd service"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# We can configure the service to automatically start on boot and to restart"]
+],[
+   "start",
+  ["text","      "],
+  ["comment","# the process in case it crashes"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","systemd"],
+  ["text","."],
+  ["identifier","services"],
+  ["text","."],
+  ["identifier","helloserver"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," {"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","description"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\"Hello world application\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","# Start the service after the network is available"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","after"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," [ "],
+  ["string","\"network.target\""],
+  ["text"," ];"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","# We're going to run it on port 8080 in production"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","environment"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," { "],
+  ["identifier","PORT"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\"8080\""],
+  ["text","; };"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","serviceConfig"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," {"]
+],[
+   "start",
+  ["text","          "],
+  ["comment","# The actual command to run"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","ExecStart"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\""],
+  ["constant.language.escape","${"],
+  ["identifier","nodejs"],
+  ["constant.language.escape","}"],
+  ["string","/bin/node "],
+  ["constant.language.escape","${"],
+  ["identifier","app"],
+  ["constant.language.escape","}"],
+  ["string","/server.js\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","          "],
+  ["comment","# For security reasons we'll run this process as a special 'nodejs' user"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","User"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\"nodejs\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","          "],
+  ["identifier","Restart"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," "],
+  ["string","\"always\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","        };"]
+],[
+   "start",
+  ["text","      };"]
+],[
+   "start"
+],[
+   "start",
+  ["text","      "],
+  ["comment","# And lastly we ensure the user we run our application as is created"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","users"],
+  ["text","."],
+  ["identifier","extraUsers"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," {"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","nodejs"],
+  ["text"," "],
+  ["keyword.operator.assignment.nix","="],
+  ["text"," { };"]
+],[
+   "start",
+  ["text","      };"]
+],[
+   "start",
+  ["text","    };"]
+],[
+   "start",
+  ["text","}"]
+]]
