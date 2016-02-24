@@ -487,26 +487,24 @@
         <div class="oe_form_container"/>
     </div>
 </t>
-<div t-name="FormView.buttons" class="oe_form_buttons">
-    <t t-if="widget.options.action_buttons !== false">
-        <div class="o_form_buttons_view">
-            <button t-if="widget.is_action_enabled('edit')"
-                    type="button"
-                    class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
-                Edit
-            </button>
-            <button t-if="widget.is_action_enabled('create')"
-                    type="button" class="oe_form_button_create btn btn-default btn-sm"
-                    accesskey="C">
-                Create
-            </button>
-        </div>
-        <span class="o_form_buttons_edit">
-            <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
-            <button type="button" class="oe_form_button_cancel btn btn-sm btn-default" accesskey="D">Discard</button>
-        </span>
-    </t>
-</div>
+<t t-name="FormView.buttons">
+    <div class="o_form_buttons_view">
+        <button t-if="widget.is_action_enabled('edit')"
+                type="button"
+                class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
+            Edit
+        </button>
+        <button t-if="widget.is_action_enabled('create')"
+                type="button" class="oe_form_button_create btn btn-default btn-sm"
+                accesskey="C">
+            Create
+        </button>
+    </div>
+    <span class="o_form_buttons_edit">
+        <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
+        <button type="button" class="oe_form_button_cancel btn btn-sm btn-default" accesskey="D">Discard</button>
+    </span>
+</t>
 <t t-name="FormView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
     <span class="oe_form_pager_state"></span>
 </t>
