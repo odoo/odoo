@@ -169,7 +169,15 @@ var FormView = View.extend(common.FieldManagerMixin, {
      * or into a div of its template
      */
     render_buttons: function($node) {
-        this.$buttons = $(QWeb.render("FormView.buttons", {'widget': this}));
+        this.$buttons = $('<div/>', {'class': 'oe_form_buttons'});
+
+        var $footer = this.$('footer');
+        if (this.options.action_buttons !== false || this.options.footer_to_buttons && $footer.children().length === 0) {
+            this.$buttons.append(QWeb.render("FormView.buttons", {'widget': this}));
+        }
+        if (this.options.footer_to_buttons) {
+            $footer.appendTo(this.$buttons);
+        }
 
         // Show or hide the buttons according to the view mode
         this.toggle_buttons();
@@ -182,11 +190,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.$buttons.on('click', '.oe_form_button_cancel',
                          this.guard_active(this.on_button_cancel));
 
-        if (this.options.footer_to_buttons) {
-            this.$el.find('footer').appendTo(this.$buttons);
-        }
-
-        $node = $node || this.options.$buttons;
+        $node = $node || this.options.$buttons.empty();
         if ($node) {
             this.$buttons.appendTo($node);
         } else {
