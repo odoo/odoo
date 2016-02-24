@@ -3,17 +3,23 @@
     <data noupdate="1">
     
         <record id="hr_expense.car_travel" model="product.product">
-            <field name="invoice_policy">cost</field>
+            <field name="invoice_policy">delivery</field>
             <field name="expense_policy">sales_price</field>
         </record>
 
         <record id="hr_expense.air_ticket" model="product.product">
-            <field name="invoice_policy">cost</field>
+            <field name="invoice_policy">delivery</field>
             <field name="expense_policy">cost</field>
         </record>
 
         <record id="hr_expense.hotel_rent" model="product.product">
-            <field name="invoice_policy">cost</field>
+            <field name="invoice_policy">delivery</field>
+            <field name="expense_policy">cost</field>
+        </record>
+
+        <record id="product.service_cost_01" model="product.product">
+            <field name="can_be_expensed" eval="True"/>
+            <field name="invoice_policy">delivery</field>
             <field name="expense_policy">cost</field>
         </record>
 

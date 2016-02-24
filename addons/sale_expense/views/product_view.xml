@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="invoice_policy" position="after">
                 <field name="expense_policy" widget="radio"
-                       attrs="{'invisible': [('invoice_policy','!=','cost')]}"/>
+                       attrs="{'invisible': ['|', ('can_be_expensed','=',False), ('invoice_policy','!=','delivery')]}"/>
             </field>
         </field>
     </record>
