@@ -1,4 +1,4 @@
-Canada, february 24
+Canada, 2016-02-24
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
