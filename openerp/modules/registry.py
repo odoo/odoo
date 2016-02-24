@@ -135,8 +135,9 @@ class Registry(Mapping):
         return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
-        for o in self._init_parent:
-            self.get(o)._parent_store_compute(cr)
+        for model in self._init_parent:
+            if model in self:
+                self[model]._parent_store_compute(cr)
         self._init = False
 
     def obj_list(self):
@@ -391,7 +392,9 @@ class RegistryManager(object):
                 # load_modules() above can replace the registry by calling
                 # indirectly new() again (when modules have to be uninstalled).
                 # Yeah, crazy.
+                init_parent = registry._init_parent
                 registry = cls.registries[db_name]
+                registry._init_parent.update(init_parent)
 
                 cr = registry.cursor()
                 try:

@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-13 22:15+0000\n"
-"Last-Translator: Irini Sofia Padilla Ortiz <gamma@nubark.com>\n"
+"PO-Revision-Date: 2016-02-20 10:42+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1359,6 +1359,13 @@ msgid "Development Process"
 msgstr "Proceso de Desarrollo"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#, python-format
+msgid "Discard"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
@@ -1537,6 +1544,13 @@ msgid ""
 "Every business is different.<br/>\n"
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr "Cada negocio es diferente.<br/>\n                    Openerp le permite personalizar cada aplicación y por lo general es una buena idea para personalizar las pantallas para adaptarlos a las necesidades del proyecto."
+
+#. module: project
+#: model:web.tip,description:project.project_tip_3
+msgid ""
+"Every event on a task is logged in this section. Send a new message to "
+"notify followers or log an internal note."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2591,6 +2605,12 @@ msgid "Project Tasks"
 msgstr "Tareas del Proyecto"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Project Time Unit"
+msgstr ""
+
+#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "Tarea del proyecto"
@@ -2604,14 +2624,22 @@ msgstr "Tareas del proyecto"
 #: code:addons/project/project.py:282
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.portal_services_projects
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
 #: model:ir.ui.view,arch_db:project.task_company
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
 msgstr "Proyectos"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Projects using this stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_project_issue_sheet
@@ -2718,6 +2746,13 @@ msgid "Remaining Time"
 msgstr "Tiempo Restante"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
 msgstr "Taller de reparación"
@@ -2788,6 +2823,13 @@ msgstr "Buscar"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
 msgstr "Buscar Proyecto"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2933,11 +2975,21 @@ msgid "Starting Date"
 msgstr "Fecha de Inicio"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 msgid "Status"
 msgstr "Estado"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
+msgid "Subscriptions"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3076,6 +3128,7 @@ msgstr "Trabajo en las Tareas"
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
@@ -3266,6 +3319,7 @@ msgstr "Esto añadirá un menú Tareas de factura en el módulo de proyectos, qu
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
@@ -3313,17 +3367,17 @@ msgid ""
 "Timesheets are often essential for running a company.<br/>\n"
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
 "                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
-msgstr ""
+msgstr "Tabla de tiempos a menudo son esenciales para el funcionamiento de una empresa.<br/>\n                    También son propensos a errores humanos, repetitivo, molesto, y a veces estresante para los empleados.<br/>\n                   Afortunadamente, Openerp tiene varias soluciones para que sean lo más eficientes y menos incomodo posible !.<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
+msgstr "Los partes de horas se pueden usar por varios motivos:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet
 msgid "Timesheets on Project"
-msgstr ""
+msgstr "Hojas de registro en Proyectos"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3348,7 +3402,7 @@ msgstr "Por Hacer"
 msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
-msgstr ""
+msgstr "Para configurar estos estados Kanban, vaya a la pestaña ' etapas del proyecto."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3358,7 +3412,7 @@ msgstr "Para usar Incidencias, instale el"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr ""
+msgstr "Para usar Hojas de Registro, vaya a su"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3418,12 +3472,12 @@ msgstr "Usar Partes de Horas"
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
-msgstr ""
+msgstr "Utilice reuniones por separado para resolver grandes problemas o cuestiones que no son importantes para todo el equipo."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the priority for tasks related to gold customers"
-msgstr ""
+msgstr "Utilice la prioridad de las tareas relacionadas con los clientes de oro"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3442,7 +3496,7 @@ msgid ""
 "                        Sometimes, these meetings can last hours and expose participants to an overly detailed review of the project.<br/>\n"
 "                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
 "                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
-msgstr ""
+msgstr "Por lo general, los miembros del equipo de un proyecto se organizan a través de reuniones de estado semanales ( o mensuales ) reuniones de estado.<br/>\n                        Los miembros de su equipo probablemente tratarán de evitar ese tipo de reuniones, o tienen que correr después de cumplir sus plazos ...<br/>\n                                    Entonces, ¿cómo puede usted, como director del proyecto, estructura de una reunión semanal sobre el estado en que los miembros del equipo están comprometidos, informados y dispuestos a contribuir a los próximos pasos del proyecto? Estos son algunos consejos."
 
 #. module: project
 #. openerp-web
@@ -3454,12 +3508,12 @@ msgstr "Validación"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr ""
+msgstr "Ver estadísticas (tiempo usado, eficiencia, etc.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "Ver estadísticas para la semana"
 
 #. module: project
 #. openerp-web
@@ -3467,7 +3521,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "Wait. Customer"
-msgstr ""
+msgstr "Espera. Cliente"
 
 #. module: project
 #. openerp-web
@@ -3475,12 +3529,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Expert"
-msgstr ""
+msgstr "Espera. Experto"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can add fields related to your business on any screen, for example:"
-msgstr ""
+msgstr "Podemos añadir campos relacionados con su negocio en cada pantalla, por ejemplo:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3499,14 +3553,14 @@ msgstr "Nosotros podemos implementar informes personalizados basados en su plant
 msgid ""
 "We hope this process helped you implement our project management "
 "application."
-msgstr ""
+msgstr "Esperamos que este proceso ayude a implementar nuestra aplicación de gestión de proyectos ."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
-msgstr ""
+msgstr "Hemos desarrollado una super sencilla y eficaz extensión de Chrome para entrar en sus hojas de tiempo:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_website_message_ids
@@ -3529,12 +3583,12 @@ msgstr "Bienvenido/a"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the average number of working hours necessary to close an issue?"
-msgstr ""
+msgstr "¿Cuál es el número promedio de horas de trabajo necesarias para cerrar un tema ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before an issue is assigned / closed?"
-msgstr ""
+msgstr "¿Cuál es el promedio de tiempo antes de que se le asigna una emisión / cerrado ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3545,24 +3599,24 @@ msgstr "Cual es la diferencia entre el tiempo inicial estimado y el tiempo final
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the number of missed deadlines?"
-msgstr ""
+msgstr "¿Cuál es el número de incumplimiento en los plazos ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of tasks or issues worked on / closed?"
-msgstr ""
+msgstr "¿Cuál es su número medio de las tareas o problemas resueltos / cerrados ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of working hours over the year?"
-msgstr ""
+msgstr "¿Cuál es su número medio de horas de trabajo durante el año ?"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Work has started"
-msgstr ""
+msgstr "El trabajo ha comenzado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
@@ -3579,7 +3633,7 @@ msgstr "Carga de Trabajo"
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
-msgstr ""
+msgstr "También puede agregar una descripción para ayudar a sus compañeros de trabajo a entender el significado y propósito de la etapa."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3592,7 +3646,7 @@ msgstr "Usted también puede poner un tooltip sobre el uso de las estrellas disp
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
-msgstr ""
+msgstr "¡Incluso puede incluir cualquier informe en el panel de control para el acceso permanente!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3613,7 +3667,7 @@ msgstr "Ahora usted puede gestionar sus tareas para hacer las cosas eficientemen
 msgid ""
 "You can reply directly to a message from you email software; the message and"
 " its attachments will be added to the Chatter."
-msgstr ""
+msgstr "Puede responder directamente a un mensaje desde su software de correo electrónico; el mensaje y sus anexos se añadirán a la Charla."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3667,7 +3721,7 @@ msgstr "para las Incidencias: 'Active partes de horas en incidencias'"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "for Tasks: 'Log work activities on tasks'"
-msgstr ""
+msgstr "para las tareas:\" Registrar las actividades de trabajo en tareas \""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -3696,6 +3750,9 @@ msgid "to describe<br/> your experience or to suggest improvements !"
 msgstr "para describir<br/> su experiencia o sugerir mejoras!"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 msgid "unknown"
 msgstr "desconocido(a)"
@@ -3703,24 +3760,24 @@ msgstr "desconocido(a)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "using the above recommendations"
-msgstr ""
+msgstr "Utilizando las recomendaciones anteriores"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "view of the HR module is the main tool to check, modify and confirm "
 "Timesheets."
-msgstr ""
+msgstr "Vista del módulo de recursos humanos es la principal herramienta para comprobar, modificar y confirmar partes de horas ."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "view of the Human Resources module."
-msgstr ""
+msgstr "Vista del módulo de Recursos Humanos"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "view."
-msgstr ""
+msgstr "Ver"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3730,4 +3787,4 @@ msgstr "con Parte de horas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
-msgstr ""
+msgstr "Usted enumeró en el paso anterior"

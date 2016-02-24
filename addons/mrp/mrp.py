@@ -645,7 +645,8 @@ class mrp_production(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
-                raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
+                state_label = dict(production.fields_get(['state'])['state']['selection']).get(production.state)
+                raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % state_label)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context=None):
