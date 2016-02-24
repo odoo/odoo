@@ -105,10 +105,6 @@ var ViewEditor = Widget.extend({
             self.aceEditor.resize();
             self.$el.width(width);
         }
-        function resizeEditorHeight(height) {
-            self.$el.css('top', height);
-            self.$('.ace_editor').css('bottom', height);
-        }
         function storeEditorWidth() {
             window.localStorage.setItem('ace_editor_width', self.$el.width());
         }
@@ -136,13 +132,9 @@ var ViewEditor = Widget.extend({
         self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
         $(document).mousemove(updateWidth);
         $('button[data-action=edit]').click(function () {
-           self.close();
-        });
-        this.getParent().on('change:height', this, function () {
-            resizeEditorHeight(this.getParent().$el.outerHeight()+2);
+            self.close();
         });
         resizeEditor(readEditorWidth());
-        resizeEditorHeight(this.getParent().$el.outerHeight()+2);
     },
     loadTemplates: function () {
         var self = this;
@@ -220,7 +212,7 @@ var ViewEditor = Widget.extend({
             model: 'ir.ui.view',
             method: 'read',
             args: [[viewId], ['arch'], _.extend(base.get_context(), {'lang': null})],
-        }).then(function(result) {
+        }).then(function (result) {
             var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
             editingSession.setMode("ace/mode/xml");
             editingSession.setUndoManager(new ace.UndoManager());
@@ -359,12 +351,7 @@ var ViewEditor = Widget.extend({
             this.$("#ace-view-list").val(session.id).change();
         }
 
-        var $dialog = $(qweb.render('website.error_dialog', {
-            title: session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1],
-            message:"<b>Malformed XML document</b>:<br/>" + message
-        }));
-        $dialog.appendTo("body");
-        $dialog.modal('show');
+        website.error(session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1], "<b>Malformed XML document</b>:<br/>" + message);
     },
     open: function () {
         this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
@@ -378,9 +365,11 @@ var ViewEditor = Widget.extend({
 website.TopBar.include({
     start: function () {
         this.ace = new Ace();
-        var def = this.ace.attachTo($('#html_editor'));
-        return $.when(this._super(), def);
-    }
+        return $.when(
+            this._super.apply(this, arguments),
+            this.ace.attachTo($('#html_editor'))
+        );
+    },
 });
 
 });

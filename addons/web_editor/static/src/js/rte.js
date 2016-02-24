@@ -203,7 +203,7 @@ var history = new History();
 // add focusIn to jQuery to allow to move caret into a div of a contentEditable area
 
 $.extend($.expr[':'],{
-    o_editable: function(node,i,m){
+    o_editable: function (node,i,m) {
         while (node) {
             if (node.className) {
                 if (node.className.indexOf('o_not_editable')!==-1 ) {
@@ -423,11 +423,11 @@ var RTE = Widget.extend({
     /**
      * Get HTML cloned element with text nodes escaped for XML storage
      */
-    getEscapedElement: function($el) {
+    getEscapedElement: function ($el) {
         var escaped_el = $el.clone();
         var to_escape = escaped_el.find('*').addBack();
         to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
-        to_escape.contents().each(function(){
+        to_escape.contents().each(function () {
             if(this.nodeType == 3) {
                 this.nodeValue = $('<div />').text(this.nodeValue).html();
             }

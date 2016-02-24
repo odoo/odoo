@@ -977,7 +977,7 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
                 $.summernote.pluginEvents.indent(event, editor, layoutInfo);
             }
         } else {
-            if (!outdent){
+            if (!outdent) {
                 if(dom.isText(r.sc)) {
                     var next = r.sc.splitText(r.so);
                 } else {
@@ -1876,11 +1876,11 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
             font.style.color = sValue !== 'inherit' ? sValue : "";
         }
     } else {
-        font.className = font.className.replace(/(^|\s+)bg-\S+/, '');
         if (sValue.indexOf('bg-') !== -1) {
             font.className += ' ' + sValue;
             font.style.backgroundColor = "";
         } else {
+            font.className = font.className.replace(/(^|\s+)bg-\S+/, '');
             font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
         }
     }
@@ -1905,7 +1905,7 @@ eventHandler.modules.editor.redo = function ($popover) {
 
 // use image toolbar if current range is on image
 var fn_editor_currentstyle = eventHandler.modules.editor.currentStyle;
-eventHandler.modules.editor.currentStyle = function(target) {
+eventHandler.modules.editor.currentStyle = function (target) {
     var styleInfo = fn_editor_currentstyle.apply(this, arguments);
     // with our changes for inline editor, the targeted element could be a button of the editor
     if(!styleInfo.image || !dom.isEditable(styleInfo.image)) {

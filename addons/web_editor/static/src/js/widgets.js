@@ -39,8 +39,8 @@ var Dialog = Widget.extend({
     close: function () {
         this.$el.modal('hide');
     },
-    stop_escape: function(event) {
-        if($(".modal.in").length>0 && event.which == 27){
+    stop_escape: function (event) {
+        if($(".modal.in").length>0 && event.which == 27) {
             event.stopPropagation();
         }
     }
@@ -72,7 +72,7 @@ var alt = Dialog.extend({
     },
 });
 
-var click_event = function(el, type) {
+var click_event = function (el, type) {
     var evt = document.createEvent("MouseEvents");
     evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
     el.dispatchEvent(evt);
@@ -239,14 +239,14 @@ var ImageDialog = Widget.extend({
         },
         'click button.filepicker': function () {
             var filepicker = this.$('input[type=file]');
-            if (!_.isEmpty(filepicker)){
+            if (!_.isEmpty(filepicker)) {
                 filepicker[0].click();
             }
         },
         'click .js_disable_optimization': function () {
             this.$('input[name="disable_optimization"]').val('1');
             var filepicker = this.$('button.filepicker');
-            if (!_.isEmpty(filepicker)){
+            if (!_.isEmpty(filepicker)) {
                 filepicker[0].click();
             }
         },
@@ -256,8 +256,8 @@ var ImageDialog = Widget.extend({
         'keyup input.url': "change_input",
         //'change select.image-style': 'preview_image',
         'click .existing-attachments [data-src]': 'select_existing',
-        'click .existing-attachment-remove': 'try_remove',
-        'keydown.dismiss.bs.modal': function(){},
+        'click .o_existing_attachment_remove': 'try_remove',
+        'keydown.dismiss.bs.modal': function () {},
     }),
     init: function (parent, media, options) {
         this._super();
@@ -417,7 +417,7 @@ var ImageDialog = Widget.extend({
         this.$('button.filepicker').removeClass('btn-danger btn-success');
         this.$('form').submit();
     },
-    file_selected: function(attachment, error) {
+    file_selected: function (attachment, error) {
         var $button = this.$('button.filepicker');
         if (!error) {
             $button.addClass('btn-success');
@@ -497,14 +497,14 @@ var ImageDialog = Widget.extend({
     },
     selected_existing: function () {
         var self = this;
-        this.$('.existing-attachment-cell.media_selected').removeClass("media_selected");
-        var $select = this.$('.existing-attachment-cell [data-src]').filter(function () {
+        this.$('.o_existing_attachment_cell.o_selected').removeClass("o_selected");
+        var $select = this.$('.o_existing_attachment_cell [data-src]').filter(function () {
             var $img = $(this);
             return !!_.find(self.images, function (v) {
                 return (v.url === $img.data("src") || ($img.data("url") && v.url === $img.data("url")) || v.id === $img.data("id"));
             });
         });
-        $select.closest('.existing-attachment-cell').addClass("media_selected");
+        $select.closest('.o_existing_attachment_cell').addClass("o_selected");
         return $select;
     },
     try_remove: function (e) {
@@ -535,7 +535,7 @@ var ImageDialog = Widget.extend({
 
 
 var cacheCssSelectors = {};
-var getCssSelectors = function(filter) {
+var getCssSelectors = function (filter) {
     var css = [];
     if (cacheCssSelectors[filter]) {
         return cacheCssSelectors[filter];
@@ -580,7 +580,7 @@ var getCssSelectors = function(filter) {
     }
     return cacheCssSelectors[filter] = css;
 };
-var computeFonts = _.once(function() {
+var computeFonts = _.once(function () {
     _.each(fontIcons, function (data) {
         data.cssData = getCssSelectors(data.parser);
         data.alias = [];
@@ -628,14 +628,14 @@ var fontIconsDialog = Widget.extend({
             e.stopPropagation();
 
             this.$('#fa-icon').val(e.target.getAttribute('data-id'));
-            $(".font-icons-icon").removeClass("font-icons-selected");
-            $(e.target).addClass("font-icons-selected");
+            $(".font-icons-icon").removeClass("o_selected");
+            $(e.target).addClass("o_selected");
         },
-        'keydown.dismiss.bs.modal': function(){},
+        'keydown.dismiss.bs.modal': function () {},
     }),
 
     // extract list of font (like awsome) from the cheatsheet.
-    renderElement: function() {
+    renderElement: function () {
         this.iconsParser = fontIcons;
         this.icons = _.flatten(_.map(fontIcons, function (data) {
                 return data.icons;
@@ -750,7 +750,7 @@ var fontIconsDialog = Widget.extend({
                     continue;
                 case '': continue;
                 default:
-                    $(".font-icons-icon").removeClass("font-icons-selected").filter("[data-alias*=',"+cls+",']").addClass("font-icons-selected");
+                    $(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
                     for (var k=0; k<this.icons.length; k++) {
                         if (this.icons.indexOf(cls) !== -1) {
                             this.$('#fa-icon').val(cls);
@@ -852,7 +852,7 @@ var VideoDialog = Widget.extend({
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
         'keyup input#embedvideo': 'change_input',
-        'keydown.dismiss.bs.modal': function(){},
+        'keydown.dismiss.bs.modal': function () {},
     }),
     init: function (parent, media) {
         this._super();
