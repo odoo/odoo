@@ -1,153 +1,148 @@
-.o_editable{
-  &:not(:empty),&[data-oe-type]{
-    &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover{
-      /* to do change into primary color in less */;
-      -moz-box-shadow: #3071a9 0 0 5px 2px inset;
-      -webkit-box-shadow: #3071a9 0 0 5px 2px inset;
-      box-shadow: #3071a9 0 0 5px 2px inset;
+
+@-webkit-keyframes dragAndDrop {
+    0% {
+        top: -10px;
+        left: -20px;
+        .rotate(0);
+        opacity: 0;
     }
-  }
-  &:focus,&[data-oe-type]{
-    min-height: 0.8em;
-    min-width: 8px;
-  }
-  &.o_is_inline_editable{
-    display: inline-block;
-  }
+    50% {
+        top: -10px;
+        left: -20px;
+        .rotate(0);
+        opacity: 0;
+    }
+    100% {
+        top: 30px;
+        left: 20px;
+        .rotate(45deg);
+        opacity: 1;
+    }
 }
-.editor_enable [data-oe-readonly]:hover{
-  cursor: default;
+@keyframes dragAndDrop {
+    0% {
+        top: -10px;
+        left: -20px;
+        .rotate(0);
+        opacity: 0;
+    }
+    50% {
+        top: -10px;
+        left: -20px;
+        .rotate(0);
+        opacity: 0;
+    }
+    100% {
+        top: 30px;
+        left: 20px;
+        .rotate(45deg);
+        opacity: 1;
+    }
 }
 
-/* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */;
-.o_editable[placeholder]:empty:not(:focus):before{
-  content: attr(placeholder);
-  opacity: 0.3;
+.o_editable {
+    &:not(:empty), &[data-oe-type] {
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+            box-shadow: @odoo-brand-primary 0 0 5px 2px inset;
+        }
+    }
+    &:focus, &[data-oe-type] {
+        min-height: 0.8em;
+        min-width: 8px;
+    }
+    &.o_is_inline_editable {
+        display: inline-block;
+    }
+    .btn, &.btn {
+        .user-select(auto);
+        cursor: text!important;
+    }
+    /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+    &[placeholder]:empty:not(:focus):before {
+        content: attr(placeholder);
+        opacity: 0.3;
+    }
+
+    &.oe_structure.oe_empty, &[data-oe-type=html] {
+        > p:empty:only-child {
+            color: #aaa;
+        }
+    }
+    &.oe_structure.oe_empty, &[data-oe-type=html] {
+        &:empty,
+        > .oe_drop_zone.oe_insert:only-child,
+        > p:empty:only-child {
+            position: relative;
+            &:before {
+                display: block;
+                font-family: FontAwesome;
+                content: "\f061";
+                color: @odoo-brand-primary;
+                font-size: 30px;
+
+                position: absolute;
+                z-index: 1031;
+                .o-animation(dragAndDrop, 1s, linear, 0s, infinite, alternate);
+            }
+            &:focus:before { display: none; }
+        }
+    }
+}
+.editor_enable [data-oe-readonly]:hover {
+    cursor: default;
 }
 
-/* Prevent the text contents of draggable elements from being selectable. */;
-[draggable]{
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Prevent firefox handler. */;
-.o_editable .btn{
-  -webkit-user-select: auto;
-  -moz-user-select: auto;
-  -ms-user-select: auto;
-  user-select: auto;
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+    .user-select(none);
 }
 
 .oe_editable:focus,
 .css_editable_hidden,
-.editor_enable .css_editable_mode_hidden{
-    outline: none !important
+.editor_enable .css_editable_mode_hidden {
+    outline: none!important;
 }
 
 .css_editable_display,
 .editor_enable .css_non_editable_mode_hidden,
-.o_editable .media_iframe_video .css_editable_mode_display{
-    display: block !important
+.o_editable .media_iframe_video .css_editable_mode_display {
+    display: block!important;
 }
 
-.oe_structure.oe_empty:empty,
-[data-oe-type=html]:empty,
-.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child,
-[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child{
-    background-image: url('/website/static/src/img/edit_here.png') !important;
-    &:before{
-      content: 'Press The Top-Left Edit Button' !important
+[data-oe-type=html].oe_no_empty:empty {
+    height: 16px!important;
+    &:before {
+        content: ''!important;
     }
 }
 
-.o_editable{
-  &.oe_structure.oe_empty > p:empty:only-child, &[data-oe-type=html] > p:empty:only-child{
-    color: #aaa
-  }
-  &.oe_structure.oe_empty:empty,
-  &[data-oe-type=html]:empty,
-  &.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child,
-  &[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child,
-  &.oe_structure.oe_empty > p:empty:only-child,
-  &[data-oe-type=html] > p:empty:only-child{
-    background-image: none !important;
-    &:before { content: 'Write your text here' !important}
-    &:focus:before { display: none}
-  }
+// EDITOR BAR
+table.editorbar-panel {
+    cursor: pointer;
+    width: 100%;
+    td { border: 1px solid #aaa}
+    td.selected { background-color: #b1c9d9}
 }
-#oe_snippets ~ #wrapwrap{
-  .oe_structure.oe_empty:empty,
-  [data-oe-type=html]:empty,
-  .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child,
-  [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child{
-    background-image: url('/website/static/src/img/drag_here.png') !important;
-    &:before{
-      content: 'Drag Building Blocks Here' !important
+.link-style {
+    .dropdown > .btn {
+        min-width: 160px;
     }
-  }
-}
-
-.oe_structure.oe_empty:empty,
-[data-oe-type=html]:empty,
-.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child,
-[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child{
-  background-image: none;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 220px !important;
-}
-
-[data-oe-type=html].oe_no_empty:empty{
-  background-image: none !important;
-  height: 16px !important;
-  &:before{
-    content: '' !important
-  }
-}
-
-
-
-/* ---- EDITOR BAR ---- {{{ */
-
-table.editorbar-panel{
-  cursor: pointer;
-  width: 100%;
-  td{ border: 1px solid #aaa}
-  td.selected{ background-color: #b1c9d9}
-}
-.link-style{
-  .dropdown > .btn{
-    min-width: 160px;
-  }
-  .link-style{
-    display: none;
-  }
-  li{
-    text-align: center;
-    label{
-      width: 100px;
-      margin: 0 5px;
+    .link-style {
+        display: none;
     }
-  }
-  .col-sm-2 > *{
-    line-height: 2em;
-  }
-}
-
-/* ---- RTE ---- {{{ */
-
-// bootstrap makes .btn elements unselectable -> RTE double-click can't know
-// about them either
-.oe_editable .btn,
-.btn.oe_editable{
-  .user-select(auto);
-  cursor: text !important;
+    li {
+        text-align: center;
+        label {
+            width: 100px;
+            margin: 0 5px;
+        }
+    }
+    .col-sm-2 > * {
+        line-height: 2em;
+    }
 }
 
 // fontawesome
-.note-editable .fa{
-  cursor: pointer;
+.note-editable .fa {
+    cursor: pointer;
 }
