@@ -172,21 +172,7 @@ var Tour = {
             if (snippet) {
                 step.snippet = snippet[1];
             } else if (step.snippet) {
-                step.element = '#o_left_bar '+step.snippet+' .oe_snippet_thumbnail';
-                tour.steps.splice(index, 0, {
-                    id: index,
-                    waitNot: step.waitNot,
-                    waitFor: step.waitFor,
-                    title: _t("Move your mouse"),
-                    content: _t("Move your mouse here to open the insert block"),
-                    element: '#o_left_bar',
-                    onend: function () {
-                        $("#oe_snippets").addClass("o_open");
-                    }
-                });
-                step.waitNot = null;
-                step.waitFor = null;
-                index++;
+                step.element = '#oe_snippets ' + step.snippet + ' .oe_snippet_thumbnail';
             }
 
             step.id = index;

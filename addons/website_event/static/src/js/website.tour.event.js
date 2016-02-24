@@ -20,10 +20,10 @@ base.ready().done(function () {
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
             {
-                element:   '#content-menu-button',
-                placement: 'left',
+                element:   '#oe_main_menu_navbar a[data-action=new_page]',
+                placement: 'bottom',
                 title:     _t("Add Content"),
-                content:   _t("The <em>Content</em> menu allows you to create new pages, events, menus, etc."),
+                content:   _t("This button allows you to create new pages, events, menus, etc."),
                 popover:   { fixed: true },
             },
             {
@@ -61,21 +61,14 @@ base.ready().done(function () {
                 popover:   { fixed: true },
             },
             {
-                snippet:   '#snippet_structure .oe_snippet:eq(4)',
-                placement: 'bottom',
-                title:     _t("Drag & Drop a block"),
-                content:   _t("Drag the 'Text Block' in your event page."),
-                popover:   { fixed: true },
-            },
-            {
                 element:   'button[data-action=save]',
-                placement: 'right',
+                placement: 'bottom',
                 title:     _t("Save your modifications"),
                 content:   _t("Once you click on save, your event is updated."),
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=edit]:visible',
+                waitNot:   '#web_editor-top-edit',
                 element:   'button.btn-danger.js_publish_btn',
                 placement: 'top',
                 title:     _t("Publish your event"),
