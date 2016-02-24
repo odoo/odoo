@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-16 13:15+0000\n"
-"PO-Revision-Date: 2015-12-17 08:25+0000\n"
+"PO-Revision-Date: 2016-02-18 01:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Le han invitado conectarse a \"${object.company_id.name}\"  para tener acceso a sus documentos en Odoo.\n                    </p>\n                    <p>\n                        Para aceptar la invitación haga clic en el siguiente enlace:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Aceptar la invitación de \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Gracias,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -98,7 +98,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:58
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Otro usuario se ha registrado usando este dirección de correo electrónico."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:130
@@ -126,7 +126,7 @@ msgstr "Confirmar Contraseña"
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "No se ha podido crear una cuenta nueva."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
