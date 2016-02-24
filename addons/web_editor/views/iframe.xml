@@ -15,21 +15,20 @@
                 var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
             </script>
-            <link t-if="enable_editor and inline_mode" rel="stylesheet" href="/web_editor/static/src/css/web_editor.iframe.inline.css" type="text/css"/>
             <t t-if="not dont_load_assets">
-                <t t-call-assets="web_editor.assets_editor"/>
-                <style>
-                    .note-popover .popover { left: 5px !important; }
-                    html[data-translatable] .note-popover .popover { left: 150px !important; }
-                </style>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web_editor.summernote" t-js="false"/>
+                <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web_editor.summernote" t-css="false"/>
+                <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+
                 <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
                 <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                 <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
             </t>
-            <script type="text/javascript">
-                var snippets_url = '<t t-esc="snippets or ''"/>';
-                var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
-            </script>
             <script>
                 if (window.top.odoo &amp;&amp; !window.top.odoo[callback+"_updown"]) {
                     window.top.odoo[callback+"_updown"] = function (value, fields_values) {
