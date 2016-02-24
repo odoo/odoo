@@ -37,10 +37,19 @@
     </form>
 </template>
 
+<!-- website_forum.layout removes the access right check for summernote bundle -->
+<template id="layout" inherit_id="website.layout" name="Forum Layout" primary="True">
+    <xpath expr="//t[@t-call-assets='web_editor.summernote'][@t-js='false']" position="attributes">
+        <attribute name="groups"/>
+    </xpath>
+    <xpath expr="//t[@t-call-assets='web_editor.summernote'][@t-css='false']" position="attributes">
+        <attribute name="groups"/>
+    </xpath>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
-    <t t-set="load_editor" t-value="True"/>
-    <t t-call="website.layout">
+    <t t-call="website_forum.layout">
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>

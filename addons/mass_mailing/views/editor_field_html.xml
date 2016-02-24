@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+<template id="assets_editor" inherit_id="web_editor.assets_editor">
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/mass_mailing/static/src/less/mass_mailing_editor.less"/>
+    </xpath>
+</template>
 
 <!-- Template Choice page -->
 <template id="FieldTextHtmlInline" name="Editor layout">
-    
     <t t-set="head">
         <t t-if="enable_editor">
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor.css" type="text/css"/>
             <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor_thumb.css" type="text/css"/>
             <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_editor.js"></script>
         </t>
@@ -23,10 +25,9 @@
     </t>
 
     <t t-call="web_editor.layout">
-        <div>
-            <div t-if="not edit_translations" id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
-            <div t-if="edit_translations" id="editable_area"><t t-raw="content"/></div>
-        </div>
+        <div t-if="not edit_translations" id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
+        <div t-if="edit_translations" id="editable_area"><t t-raw="content"/></div>
+        
         <div id="templates" class="o_not_editable o_css_editor hidden" t-if="enable_editor">
             <h1 class="page-header mt16 email_head panel-primary">
                 Select a theme 
@@ -51,13 +52,11 @@
                 </div>
             </div>
         </div>
-
     </t>
 </template>
 
 <template id="FieldTextHtmlPopupContent" name="Editor layout">
     <t t-set="head">
-        <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor.css" type="text/css"/>
         <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor_thumb.css" type="text/css"/>
         <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_popup.css" type="text/css"/>
      </t>
@@ -77,7 +76,4 @@
         </div>
     </t>
  </template>
-
-    </data>
-</openerp>
-
+</odoo>
