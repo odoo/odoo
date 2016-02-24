@@ -269,11 +269,6 @@ class product_pricelist_item(osv.osv):
     _description = "Pricelist item"
     _order = "applied_on, min_quantity desc"
 
-    def init(self, cr):
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('product_pricelist_item_pricelist_id_index',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX product_pricelist_item_pricelist_id_index ON product_pricelist_item (pricelist_id)')
-
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):
             if obj_list.base == 'pricelist':
@@ -304,7 +299,7 @@ class product_pricelist_item(osv.osv):
         'base': fields.selection([('list_price', 'Public Price'), ('standard_price', 'Cost'), ('pricelist', 'Other Pricelist')], string="Based on", required=True,
             help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Cost Price : The base price will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', ondelete='cascade'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', ondelete='cascade', select=True),
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
         'price_discount': fields.float('Price Discount', digits=(16,2)),
