@@ -165,7 +165,7 @@ web_editor.Class.include({
         }
         var $editable = $("#editable_area");
         $(".o_table_handler").remove();
-        $editable.parent().add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
+        $editable.add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
         $("#choose_template").children().toggleClass("hidden");
         $("body").trigger("resize");
         $(window.top).trigger('resize');
@@ -177,7 +177,7 @@ web_editor.Class.include({
         var $editable = $("#editable_area");
         this.rte.historyRecordUndo($editable);
         $editable.html( $(event.target).closest(".theme_thumbnail").find(".js_content").html() );
-        $editable.parent().add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
+        $editable.add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
         $("#choose_template").children().toggleClass("hidden");
         setTimeout(function () {
             $("body").trigger("resize");
@@ -191,8 +191,8 @@ web_editor.Class.include({
         event.preventDefault();
     },
     set_snippet_theme: function (theme) {
-        $("#o_left_bar .o_panel_body > div").addClass("hidden");
-        $("#o_left_bar .o_panel_body > div."+theme).removeClass("hidden");
+        $("#oe_snippets .o_panel_body > div").addClass("hidden");
+        $("#oe_snippets .o_panel_body > div."+theme).removeClass("hidden");
         $("#editable_area").trigger("content_changed");
     },
     get_snippet_template: function (mailing_model) {
@@ -225,7 +225,7 @@ snippets_editor.Class.include({
     clean_for_save: function () {
         this._super();
         var $editable = $("#editable_area");
-        var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
+        var theme = ($("#oe_snippets .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
         var $theme = $("#editable_area [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
         $editable.children().first().attr("data-snippet-theme", theme);
         $editable.find(":not(br):hidden").remove();

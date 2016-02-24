@@ -317,7 +317,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_active(enable, True)
 
         if get_bundle:
-            bundle = AssetsBundle('website.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
+            bundle = AssetsBundle('web.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
             return bundle.to_html()
 
         return True

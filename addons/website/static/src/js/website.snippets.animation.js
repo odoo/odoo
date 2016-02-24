@@ -8,8 +8,6 @@ var animation = require('web_editor.snippets.animation');
 
 var qweb = core.qweb;
 
-/*-------------------------------------------------------------------------*/
-
 function load_called_template () {
     var ids_or_xml_ids = _.uniq($("[data-oe-call]").map(function () {return $(this).data('oe-call');}).get());
     if (ids_or_xml_ids.length) {
@@ -26,8 +24,6 @@ function load_called_template () {
     }
 }
 
-/*-------------------------------------------------------------------------*/
-
 base.ready().then(function () {
     load_called_template();
     if ($(".o_gallery:not(.oe_slideshow)").size()) {
@@ -35,8 +31,6 @@ base.ready().then(function () {
         ajax.loadXML('/website/static/src/xml/website.gallery.xml', qweb);
     }
 });
-
-/*-------------------------------------------------------------------------*/
 
 animation.registry.slider = animation.Class.extend({
     selector: ".carousel",
@@ -150,22 +144,22 @@ animation.registry.ul = animation.Class.extend({
 });
 
 /* -------------------------------------------------------------------------
-Gallery Animation  
+Gallery Animation
 
-This ads a Modal window containing a slider when an image is clicked 
-inside a gallery 
+This ads a Modal window containing a slider when an image is clicked
+inside a gallery
 -------------------------------------------------------------------------*/
 animation.registry.gallery = animation.Class.extend({
     selector: ".o_gallery:not(.o_slideshow)",
-    start: function() {
+    start: function () {
         var self = this;
         this.$el.on("click", "img", this.click_handler);
     },
-    click_handler : function(event) {
+    click_handler : function (event) {
         var self = this;
         var $cur = $(event.currentTarget);
         var edition_mode = ($cur.closest("[contenteditable='true']").size() !== 0);
-        
+
         // show it only if not in edition mode
         if (!edition_mode) {
             var urls = [],
@@ -183,7 +177,7 @@ animation.registry.gallery = animation.Class.extend({
                     height : Math.round( window.innerHeight *  size)
             };
 
-            $images.each(function() {
+            $images.each(function () {
                 urls.push($(this).attr("src"));
             });
             var $img = ($cur.is("img") === true) ? $cur : $cur.closest("img");
@@ -202,7 +196,7 @@ animation.registry.gallery = animation.Class.extend({
                 keyboard : true,
                 backdrop : true
             });
-            $modal.on('hidden.bs.modal', function() {
+            $modal.on('hidden.bs.modal', function () {
                 $(this).hide();
                 $(this).siblings().filter(".modal-backdrop").remove(); // bootstrap leaves a modal-backdrop
                 $(this).remove();
@@ -213,11 +207,12 @@ animation.registry.gallery = animation.Class.extend({
 
             this.carousel = new animation.registry.gallery_slider($modal.find(".carousel").carousel());
         }
-    } // click_handler  
+    } // click_handler
 });
+
 animation.registry.gallery_slider = animation.Class.extend({
     selector: ".o_slideshow",
-    start: function() {
+    start: function () {
         var $carousel = this.$target.is(".carousel") ? this.$target : this.$target.find(".carousel");
         var self = this;
         var $indicator = $carousel.find('.carousel-indicators');
@@ -229,7 +224,7 @@ animation.registry.gallery_slider = animation.Class.extend({
         var nb = Math.ceil($lis.length / 10);
 
          // fix bootstrap use index insead of data-slide-to
-        $carousel.on('slide.bs.carousel', function() {
+        $carousel.on('slide.bs.carousel', function () {
             setTimeout(function () {
                 var $item = $carousel.find('.carousel-inner .prev, .carousel-inner .next');
                 var index = $item.index();
@@ -256,7 +251,7 @@ animation.registry.gallery_slider = animation.Class.extend({
         });
         hide();
 
-        $carousel.on('slid.bs.carousel', function() {
+        $carousel.on('slid.bs.carousel', function () {
             var index = ($lis.filter('.active').index() || 1) -1;
             page = Math.floor(index / 10);
             hide();

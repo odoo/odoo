@@ -1,49 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.mobile_preview">
-        <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <h3 class="modal-title">Mobile preview</h3>
-                    </div>
-                    <div class="modal-body">
-                        <iframe id="mobile-viewport" class="oe_mobile_viewport" style="width: 326px"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <t t-extend="Dialog">
+        <t t-jquery=".modal-dialog">
+            $(this).parent().addClass('o_website_modal');
+        </t>
     </t>
 
-    <t t-name="website.error_dialog">
-        <div class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <div class="h2"><t t-esc="title"/></div>
-                    </div>
-                    <div class="modal-body" t-if="message or backend_url">
-                        <section>
-                            <t t-raw="message"/>
-                        </section>
-                        <section class="mt32" t-if="backend_url">
-                            <p>The web site has encountered an error.</p>
-                            <p>
-                                It might be possible to edit the relevant items
-                                or fix the issue in <a t-attf-href="#{backend_url}">
-                                the classic Odoo interface</a>.
-                            </p>
-                        </section>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
+    <div t-name="website.mobile_preview">
+        <iframe id="mobile-viewport" t-att-src="widget.mobile_src"/>
+    </div>
+
+    <div t-name="website.error_dialog">
+        <section t-if="message">
+            <t t-raw="message"/>
+        </section>
+        <section class="mt32" t-if="backend_url">
+            <p>The web site has encountered an error.</p>
+            <p>It might be possible to edit the relevant items or fix the issue in <a t-attf-href="#{backend_url}"> the classic Odoo interface</a>.</p>
+        </section>
+    </div>
 
     <t t-name="website.prompt">
         <t t-call="website.modal_base">
@@ -63,7 +38,7 @@
     </t>
 
     <t t-name="website.modal_base">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal o_website_modal " tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <t t-call="website.modal_header" />
@@ -84,8 +59,8 @@
 
     <t t-name="website.modal_footer">
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-continue">Continue</button>
-            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
+            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
         </div>
     </t>
 

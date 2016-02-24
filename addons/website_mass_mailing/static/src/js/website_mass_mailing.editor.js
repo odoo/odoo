@@ -7,10 +7,8 @@ var core = require('web.core');
 var base = require('web_editor.base');
 var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
-var snippet_editor = require('web_editor.snippet.editor');
 var website = require('website.website');
 var _t = core._t;
-
 
 var mass_mailing_common = options.Class.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_button",

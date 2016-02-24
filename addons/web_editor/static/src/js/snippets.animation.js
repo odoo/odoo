@@ -43,7 +43,7 @@ var start = function (editable_mode, $target) {
             else continue;
         }
 
-        $(selector).each(function() {
+        $(selector).each(function () {
             var $snipped_id = $(this);
             if (    !$snipped_id.parents("#oe_snippets").length &&
                     !$snipped_id.parent("body").length &&
@@ -58,7 +58,7 @@ var start = function (editable_mode, $target) {
 };
 
 var stop = function () {
-    $(ready).each(function() {
+    $(ready).each(function () {
         var $snipped_id = $(this);
         if ($snipped_id.data("snippet-view")) {
             $snipped_id.data("snippet-view").stop();

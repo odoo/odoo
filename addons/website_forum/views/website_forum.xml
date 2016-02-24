@@ -37,10 +37,19 @@
     </form>
 </template>
 
+<!-- website_forum.layout removes the access right check for summernote bundle -->
+<template id="layout" inherit_id="website.layout" name="Forum Layout" primary="True">
+    <xpath expr="//t[@t-call-assets='web_editor.summernote'][@t-js='false']" position="attributes">
+        <attribute name="groups"/>
+    </xpath>
+    <xpath expr="//t[@t-call-assets='web_editor.summernote'][@t-css='false']" position="attributes">
+        <attribute name="groups"/>
+    </xpath>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
-    <t t-set="load_editor" t-value="True"/>
-    <t t-call="website.layout">
+    <t t-call="website_forum.layout">
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -1528,8 +1537,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar" groups="base.group_user">
-    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-        <li><a href="#" data-action="new_forum">New Forum</a></li>
+    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+        <li><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>
 

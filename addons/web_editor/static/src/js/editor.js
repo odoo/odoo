@@ -63,9 +63,9 @@ editor.Class = Widget.extend({
     template: 'web_editor.editorbar',
     events: {
         'click button[data-action=save]': 'save',
-        'click a[data-action=cancel]': 'cancel',
+        'click button[data-action=cancel]': 'cancel',
     },
-    init: function(parent) {
+    init: function (parent) {
         var self = this;
         var res = this._super.apply(this, arguments);
         this.parent = parent;
@@ -75,7 +75,7 @@ editor.Class = Widget.extend({
         });
         return res;
     },
-    start: function() {
+    start: function () {
         var self = this;
 
         $('.dropdown-toggle').dropdown();
@@ -86,14 +86,13 @@ editor.Class = Widget.extend({
         this.rte.start();
 
         var flag = false;
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             if (rte.history.getEditableHasUndo().length && !flag) {
                 flag = true;
                 setTimeout(function () {flag=false;},0);
                 return _t('This document is not saved!');
             }
         };
-        this.$('button[data-action="save"]').prop('disabled', true);
         return this._super();
     },
     display_placeholder: function () {
@@ -119,9 +118,7 @@ editor.Class = Widget.extend({
             }
         });
     },
-    rte_changed: function () {
-        this.$('button[data-action=save]').prop('disabled', !rte.history.getEditableHasUndo().length);
-    },
+    rte_changed: function () {},
     save: function () {
         return this.rte.save().then(function () {
             editor.reload();

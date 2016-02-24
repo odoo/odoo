@@ -1,5 +1,3 @@
-/* @_import "elements.less"; ODOO: removed call directly */
-
 /* Theme Variables
  ------------------------------------------*/
 @border-color: #a9a9a9;
@@ -102,8 +100,8 @@
       resize: none;
 
       /* override BS2 default style */
-      .box-sizing(border-box);
-      .rounded(0);
+      box-sizing: border-box;
+      border-radius: 0;
       margin-bottom: 0;
     }
   }
@@ -224,7 +222,7 @@
           margin: 3px;
           padding: 0 3px;
           cursor: pointer;
-          .rounded(5px);
+          border-radius: 5px;
         }
 
         .note-color-row {
@@ -324,12 +322,12 @@
     font-size: 12px;
     color: #ccc;
     background-color: #222 !important;
-    .opacity(0.9);
+    opacity: 0.9;
     .modal-content {
       background: transparent;
       border: 1px solid white;
-      .box-shadow(none);
-      .rounded(5px);
+      box-shadow: none;
+      border-radius: 5px;
     }
 
     /* BS2's background pacth. */
@@ -403,7 +401,7 @@
       width: 100%;
       height: 100%;
       background-color: black;
-      .opacity(0.30)
+      opacity: 0.3;
     }
 
     .note-control-handle {
@@ -462,8 +460,8 @@
       color: white;
       background-color: black;
       font-size: 12px;
-      .rounded(5px);
-      .opacity(0.7);
+      border-radius: 5px;
+      opacity: 0.7;
     }
   }
 }

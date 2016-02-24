@@ -1,182 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <template id="web.assets_common">
-            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
-            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
-            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+<odoo>
+    <template id="web.less_helpers">
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/variables.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/vendor-prefixes.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/buttons.less"/>
 
-            <!-- jQuery stuff -->
-            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/variables.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
+    </template>
 
-            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+    <template id="web.assets_common">
+        <t t-call="web.less_helpers"/>
 
-            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
-            <script type="text/javascript" src="/web/static/test/menu.js"></script>
-            <script type="text/javascript" src="/web/static/test/x2many.js"></script>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
 
-            <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-            <link rel="stylesheet" href="/web/static/src/fonts/lato/stylesheet.css" />
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/src/fonts/lato/stylesheet.css" />
 
-            <link rel="stylesheet" href="/web/static/src/less/mimetypes.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/animation.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
 
-            <!-- Datetime Picker -->
-            <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
-            <!-- Select 2 -->
-            <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
-            <link rel="stylesheet" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-            <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-        </template>
+        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+        <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
 
-        <template id="web.bootstrap">
-            <script src="/web/static/lib/bootstrap/js/affix.js"></script>
-            <script src="/web/static/lib/bootstrap/js/alert.js"></script>
-            <script src="/web/static/lib/bootstrap/js/button.js"></script>
-            <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
-            <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
-            <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
-            <script src="/web/static/lib/bootstrap/js/modal.js"></script>
-            <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
-            <script src="/web/static/lib/bootstrap/js/popover.js"></script>
-            <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
-            <script src="/web/static/lib/bootstrap/js/tab.js"></script>
-            <script src="/web/static/lib/bootstrap/js/transition.js"></script>
-        </template>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-        <template id="web.assets_backend">
-            <!-- jQuery addons -->
-            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
+        <script src="/web/static/lib/bootstrap/js/affix.js"></script>
+        <script src="/web/static/lib/bootstrap/js/alert.js"></script>
+        <script src="/web/static/lib/bootstrap/js/button.js"></script>
+        <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
+        <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
+        <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+        <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+        <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+        <script src="/web/static/lib/bootstrap/js/popover.js"></script>
+        <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
+        <script src="/web/static/lib/bootstrap/js/tab.js"></script>
+        <script src="/web/static/lib/bootstrap/js/transition.js"></script>
 
-            <t t-call="web.bootstrap"/>
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
+        <script type="text/javascript" src="/web/static/test/menu.js"></script>
+        <script type="text/javascript" src="/web/static/test/x2many.js"></script>
 
-            <!-- nv.d3 -->
-            <link rel="stylesheet" href="/web/static/lib/nvd3/nv.d3.css"/>
-            <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
-            <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+    </template>
 
-            <!-- Backbone -->
-            <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
+    <template id="web.assets_backend">
+        <t t-call="web.less_helpers"/>
 
-            <!-- Internals -->
-            <script type="text/javascript" charset="utf-8">
-                odoo._modules = <t t-raw="get_modules_order()"/>;
-            </script>
-            <link rel="stylesheet" href="/web/static/src/css/base.css"/>
-            <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
-            <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
 
-            <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-            <link rel="stylesheet" href="/web/static/src/less/variables.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/enterprise_compatibility.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/modal.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/notification.less"/>
-            <link rel="stylesheet" href="/web/static/src/less/switch_company_menu.less"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
 
-            <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
+        <link rel="stylesheet" type="text/css" href="/web/static/src/css/base.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/src/css/data_export.css"/>
+        <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
-            <!-- Special case: core.js declares $.browser needed by ba-bbq -->
-            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/enterprise_compatibility.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/modal.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/notification.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/switch_company_menu.less"/>
 
-            <script type="text/javascript" src="/web/static/src/js/framework/data_model.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/control_panel.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/priority.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/progress_bar.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/pager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/pivot_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/graph_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/graph_widget.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/search_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/search_filters.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
+        <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
+        <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
 
-        </template>
+        <script type="text/javascript" charset="utf-8">
+            odoo._modules = <t t-raw="get_modules_order()"/>;
+        </script>
 
-        <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
-            <html style="height: 100%">
-                <head>
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>Odoo</title>
-                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                    <link rel="stylesheet" href="/web/static/src/css/full.css" />
-                    <t t-raw="head or ''"/>
-                </head>
-                <body t-att-class="body_classname">
-                    <t t-raw="0"/>
-                </body>
-            </html>
-        </template>
+        <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
+        <!-- Special case: core.js declares $.browser needed by ba-bbq -->
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-        <template id="web.login_layout" name="Login Layout">
-            <t t-call="web.layout">
-                <t t-set="head">
-                  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
-                  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-                  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
-                </t>
-                <t t-set="body_classname" t-value="'container'"/>
-                <div class="row">
-                  <div class="col-md-6 col-md-offset-3 o_database_list">
+        <script type="text/javascript" src="/web/static/src/js/framework/data_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/priority.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/progress_bar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/pager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph_widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_filters.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
+    </template>
+
+    <template id="web.assets_frontend">
+        <t t-call="web.less_helpers"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/> <!-- Compatibility -->
+        
+        <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+    </template>
+
+    <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
+        <html style="height: 100%">
+            <head>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                <title>Odoo</title>
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                <link rel="stylesheet" href="/web/static/src/css/full.css" />
+                <t t-raw="head or ''"/>
+            </head>
+            <body t-att-class="body_classname">
+                <t t-raw="0"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="web.login_layout" name="Login Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </t>
+            <t t-set="body_classname" t-value="'container'"/>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 o_database_list">
                     <div class="text-center">
-                      <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
                     </div>
                     <t t-raw="0"/>
                     <div class="text-center" t-if="not disable_footer">
@@ -185,179 +193,130 @@
                         </t>
                         <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
                     </div>
-
-                  </div>
                 </div>
-            </t>
-        </template>
+            </div>
+        </t>
+    </template>
 
-        <template id="web.login" name="Login">
-            <t t-call="web.login_layout">
+    <template id="web.login" name="Login">
+        <t t-call="web.login_layout">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+               <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
-                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                    <label for="db" class="control-label">Database</label>
+                    <div class="input-group">
+                        <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
+                        <span class="input-group-btn">
+                          <a href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database"></i></a>
+                        </span>
+                    </div>
+                </div>
 
-                    <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
-                        <label for="db" class="control-label">Database</label>
-                        <div class="input-group">
-                            <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
-                            <span class="input-group-btn">
-                              <a href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database"></i></a>
-                            </span>
+                <div class="form-group field-login">
+                    <label for="login" class="control-label">Email</label>
+                    <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group field-password">
+                    <label for="password" class="control-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+                </div>
+
+                <p class="alert alert-danger" t-if="error">
+                    <t t-esc="error"/>
+                </p>
+                <p class="alert alert-success" t-if="message">
+                    <t t-esc="message"/>
+                </p>
+
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                <div class="clearfix oe_login_buttons">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="web.menu">
+        <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;">
+            <li t-foreach="menu_data['children']" t-as="menu">
+                <t t-call="web.menu_link"/>
+            </li>
+            <li id="menu_more_container" class="dropdown" style="display: none;">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                <ul id="menu_more" class="dropdown-menu"></ul>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
+        <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
+    </template>
+    <template id="web.menu_secondary">
+        <a class="oe_logo" t-att-href="'/web/?debug' if debug else '/web'">
+            <span class="oe_logo_edit">Edit Company data</span>
+            <img src='/web/binary/company_logo'/>
+        </a>
+        <div class="oe_secondary_menus_container">
+            <t t-foreach="menu_data['children']" t-as="menu">
+                <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                    <t t-foreach="menu['children']" t-as="menu">
+                        <div class="oe_secondary_menu_section">                                
+                            <t t-if="menu['children']"><t t-esc="menu['name']"/></t>
+                            <t t-if="not menu['children']"><t t-call="web.menu_link"/></t>
                         </div>
-                    </div>
-
-                    <div class="form-group field-login">
-                        <label for="login" class="control-label">Email</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
-                    </div>
-
-                    <div class="form-group field-password">
-                        <label for="password" class="control-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
-                    </div>
-
-                    <p class="alert alert-danger" t-if="error">
-                        <t t-esc="error"/>
-                    </p>
-                    <p class="alert alert-success" t-if="message">
-                        <t t-esc="message"/>
-                    </p>
-
-                    <input type="hidden" name="redirect" t-att-value="redirect"/>
-                    <div class="clearfix oe_login_buttons">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                    </div>
-
-                </form>
-            </t>
-        </template>
-
-        <template id="web.menu">
-            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;">
-                <li t-foreach="menu_data['children']" t-as="menu">
-                    <t t-call="web.menu_link"/>
-                </li>
-                <li id="menu_more_container" class="dropdown" style="display: none;">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-                    <ul id="menu_more" class="dropdown-menu"></ul>
-                </li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
-            <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
-        </template>
-        <template id="web.menu_secondary">
-            <a class="oe_logo" t-att-href="'/web/?debug' if debug else '/web'">
-                <span class="oe_logo_edit">Edit Company data</span>
-                <img src='/web/binary/company_logo'/>
-            </a>
-            <div class="oe_secondary_menus_container">
-                <t t-foreach="menu_data['children']" t-as="menu">
-                    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                        <t t-foreach="menu['children']" t-as="menu">
-                            <div class="oe_secondary_menu_section">                                
-                                <t t-if="menu['children']"><t t-esc="menu['name']"/></t>
-                                <t t-if="not menu['children']"><t t-call="web.menu_link"/></t>
-                            </div>
-                            <t t-call="web.menu_secondary_submenu"/>
-                        </t>
-                    </div>
-                </t>
-            </div>
-            <div class="oe_footer">
-                Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
-            </div>
-        </template>
-        <template id="web.menu_secondary_submenu">
-            <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills nav-stacked">
-                <li t-foreach="menu['children']" t-as="menu">
-                    <t t-call="web.menu_link"/>
-                    <t t-call="web.menu_secondary_submenu"/>
-                </li>
-            </ul>
-        </template>
-        <template id="web.menu_link">
-            <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
-            <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
-                t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
-                t-att-data-menu="menu['id']"
-                t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or ''"
-                t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or ''">
-                <span class="oe_menu_text">
-                    <t t-esc="menu['name']"/>
-                </span>
-            </a>
-        </template>
-
-        <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <t t-call-assets="web.assets_common"/>
-                    <script type="text/javascript">
-                        odoo.define('web.csrf', function (require) {
-                            var token = "<t t-esc="request.csrf_token(None)"/>";
-                            require('web.core').csrf_token = token;
-                            require('qweb').default_dict.csrf_token = token;
-                        });
-                        odoo.db_info = <t t-raw="db_info"/>;
-                    </script>
-                    <t t-call-assets="web.assets_backend"/>
-                    &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
-                    <script type="text/javascript">
-                        $(function() {
-                            <t t-if="init">
-                                <t t-raw="init"/>
-                            </t>
-                            <t t-if="not init">
-                                odoo.define('web.web_client', function (require) {
-                                    var WebClient = require('web.WebClient');
-                                    var web_client = new WebClient();
-                                    web_client.setElement($(document.body));
-                                    web_client.start();
-                                    return web_client;
-                                });
-                            </t>
-                        });
-                    </script>
-                </t>
-
-                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
-                    <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
-                        <t t-call="web.menu"/>
-                    </div>
-                </nav>
-                <div class="openerp openerp_webclient_container oe_webclient">
-                    <div class="oe_leftbar" groups="base.group_user,base.group_portal">
-                        <t t-call="web.menu_secondary"/>
-                    </div><div class="oe_application"/>
+                        <t t-call="web.menu_secondary_submenu"/>
+                    </t>
                 </div>
             </t>
-        </template>
+        </div>
+        <div class="oe_footer">
+            Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
+        </div>
+    </template>
+    <template id="web.menu_secondary_submenu">
+        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills nav-stacked">
+            <li t-foreach="menu['children']" t-as="menu">
+                <t t-call="web.menu_link"/>
+                <t t-call="web.menu_secondary_submenu"/>
+            </li>
+        </ul>
+    </template>
+    <template id="web.menu_link">
+        <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
+        <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
+            t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
+            t-att-data-menu="menu['id']"
+            t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or ''"
+            t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or ''">
+            <span class="oe_menu_text">
+                <t t-esc="menu['name']"/>
+            </span>
+        </a>
+    </template>
 
-        <template id="web.qunit_suite">
-            &lt;!DOCTYPE html&gt;
-            <html style="height: 100%">
-                <head>
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>Odoo Web Tests</title>
+    <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <script type="text/javascript">
+                    odoo.define('web.csrf', function (require) {
+                        var token = "<t t-esc="request.csrf_token(None)"/>";
+                        require('web.core').csrf_token = token;
+                        require('qweb').default_dict.csrf_token = token;
+                    });
+                    odoo.db_info = <t t-raw="db_info"/>;
+                </script>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
 
-                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                    <link rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
-                    <script src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
-
-                    <t t-call="web.assets_common"/>
-                    <t t-call="web.assets_backend"/>
-                    <script type="text/javascript">
-                        $(function() {
+                <script type="text/javascript">
+                    $(function() {
+                        <t t-if="init">
+                            <t t-raw="init"/>
+                        </t>
+                        <t t-if="not init">
                             odoo.define('web.web_client', function (require) {
                                 var WebClient = require('web.WebClient');
                                 var web_client = new WebClient();
@@ -365,35 +324,81 @@
                                 web_client.start();
                                 return web_client;
                             });
+                        </t>
+                    });
+                </script>
+                &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
+            </t>
+
+            <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
+                    <t t-call="web.menu"/>
+                </div>
+            </nav>
+            <div class="openerp openerp_webclient_container oe_webclient">
+                <div class="oe_leftbar" groups="base.group_user,base.group_portal">
+                    <t t-call="web.menu_secondary"/>
+                </div><div class="oe_application"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="web.qunit_suite">
+        &lt;!DOCTYPE html&gt;
+        <html style="height: 100%">
+            <head>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                <title>Odoo Web Tests</title>
+
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                <link rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
+                <script src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
+
+                <t t-call="web.assets_common"/>
+                <t t-call="web.assets_backend"/>
+                <script type="text/javascript">
+                    $(function() {
+                        odoo.define('web.web_client', function (require) {
+                            var WebClient = require('web.WebClient');
+                            var web_client = new WebClient();
+                            web_client.setElement($(document.body));
+                            web_client.start();
+                            return web_client;
                         });
-                    </script>
+                    });
+                </script>
 
-                    <style>
-                        body { overflow: auto !important; }
-                    </style>
-                    <script type="text/javascript" src="/web/static/test/testing.js"></script>
+                <style>
+                    body { overflow: auto !important; }
+                </style>
+                <script type="text/javascript" src="/web/static/test/testing.js"></script>
 
-                    <script type="text/javascript" src="/web/static/test/registry.js"></script>
-                    <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
-                    <script type="text/javascript" src="/web/static/test/mutex.js"></script>
-                    <script type="text/javascript" src="/web/static/test/data.js"></script>
-                    <script type="text/javascript" src="/web/static/test/evals.js"></script>
-                    <script type="text/javascript" src="/web/static/test/form.js"></script>
-                    <script type="text/javascript" src="/web/static/test/formats.js"></script>
-                    <script type="text/javascript" src="/web/static/test/framework.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
-                    <script type="text/javascript" src="/web/static/test/search.js"></script>
-                </head>
+                <script type="text/javascript" src="/web/static/test/registry.js"></script>
+                <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
+                <script type="text/javascript" src="/web/static/test/mutex.js"></script>
+                <script type="text/javascript" src="/web/static/test/data.js"></script>
+                <script type="text/javascript" src="/web/static/test/evals.js"></script>
+                <script type="text/javascript" src="/web/static/test/form.js"></script>
+                <script type="text/javascript" src="/web/static/test/formats.js"></script>
+                <script type="text/javascript" src="/web/static/test/framework.js"></script>
+                <script type="text/javascript" src="/web/static/test/list.js"></script>
+                <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
+                <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
+                <script type="text/javascript" src="/web/static/test/search.js"></script>
+            </head>
 
-                <body id="oe" class="openerp">
-                    <div id="qunit"></div>
-                    <div id="qunit-fixture"></div>
-                </body>
-            </html>
-
-        </template>
-
-    </data>
-</openerp>
+            <body id="oe" class="openerp">
+                <div id="qunit"></div>
+                <div id="qunit-fixture"></div>
+            </body>
+        </html>
+    </template>
+</odoo>

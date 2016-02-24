@@ -623,8 +623,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">
-    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-         <li><a href="#" data-action="new_event">New Event</a></li>
+    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+        <li><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
     </xpath>
 </template>
 </data>

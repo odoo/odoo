@@ -210,7 +210,7 @@ dom.merge = function (node, begin, so, end, eo, mergeFilter, all) {
         while(end.lastChild) {end = end.lastChild;}
         eo = end.textContent.length-1;
     } else if (end.tagName) {
-        
+
     } else if (end.tagName && end.childNodes[so]) {
         end = end.childNodes[so];
         so = 0;
@@ -234,7 +234,7 @@ dom.merge = function (node, begin, so, end, eo, mergeFilter, all) {
             if (cur === begin) {
                 if (!all) add = true;
             }
-            
+
             __merge(cur);
             dom.orderClass(dom.node(cur));
 
@@ -977,7 +977,7 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
                 $.summernote.pluginEvents.indent(event, editor, layoutInfo);
             }
         } else {
-            if (!outdent){
+            if (!outdent) {
                 if(dom.isText(r.sc)) {
                     var next = r.sc.splitText(r.so);
                 } else {
@@ -1501,7 +1501,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
 
         dom.removeSpace(temp2.parentNode, temp2, 0, temp, 0); // clean before jump for not select invisible space between 2 tag
         temp2 = dom.lastChild(temp2);
-    
+
         r = range.create(temp2, temp2.textContent.length, temp2, temp2.textContent.length);
         r.select();
 
@@ -1880,7 +1880,7 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
             font.className += ' ' + sValue;
             font.style.backgroundColor = "";
         } else {
-            font.className = font.className.replace(/(^|\s+)bg-\S+/);
+            font.className = font.className.replace(/(^|\s+)bg-\S+/, '');
             font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
         }
     }
@@ -1905,7 +1905,7 @@ eventHandler.modules.editor.redo = function ($popover) {
 
 // use image toolbar if current range is on image
 var fn_editor_currentstyle = eventHandler.modules.editor.currentStyle;
-eventHandler.modules.editor.currentStyle = function(target) {
+eventHandler.modules.editor.currentStyle = function (target) {
     var styleInfo = fn_editor_currentstyle.apply(this, arguments);
     // with our changes for inline editor, the targeted element could be a button of the editor
     if(!styleInfo.image || !dom.isEditable(styleInfo.image)) {
