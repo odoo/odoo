@@ -6,11 +6,13 @@ body {
     border-top: 1px solid black !important;
 }
 /* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
-.table-condensed > tbody > tr {
-    page-break-inside: avoid !important;
-}
-.table-condensed > thead > tr > th {
-    border-bottom: 1px solid black !important;
+.table-condensed {
+    > thead > tr > th {
+        border-bottom: 1px solid black !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+    }
 }
 .zero_min_height {
     min-height: 0px !important;
@@ -24,4 +26,3 @@ body {
 .hidden-print{
     display: none;
 }
-
