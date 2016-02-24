@@ -526,7 +526,7 @@ class pos_session(osv.osv):
             # set the journal_id which should be used by
             # account.bank.statement to set the opening balance of the
             # newly created bank statement
-            context['journal_id'] = journal.id if journal.type == 'cash' else False
+            context['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
             st_values = {
                 'journal_id': journal.id,
                 'user_id': uid,
