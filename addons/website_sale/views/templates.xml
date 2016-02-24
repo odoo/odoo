@@ -1471,8 +1471,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">
-    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-        <li><a id="create-new-product" href="#" data-action="new_product">New Product</a></li>
+    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+        <li><a id="create-new-product" href="#" data-action="new_product"><i class="fa fa-shopping-cart"/><p>New Product</p></a></li>
     </xpath>
 </template>
 

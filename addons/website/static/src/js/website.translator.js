@@ -55,7 +55,7 @@ var nodialog = 'website_translator_nodialog';
 
 var Translate = translate.Class.include({
     onTranslateReady: function () {
-        if(this.gengo_translate){
+        if(this.gengo_translate) {
             this.translation_gengo_display();
         }
         this._super();

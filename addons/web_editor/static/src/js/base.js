@@ -30,7 +30,7 @@ data.dom_ready = dom_ready;
 
 // todo: remove and load a bundle of translated templates
 var all_ready;
-data.ready = function() {
+data.ready = function () {
     if (!all_ready) {
         all_ready = $.when(dom_ready, ajax.loadXML()).then(translations);
     } else if(all_ready.state() === "resolved") { // can add async template
@@ -40,9 +40,9 @@ data.ready = function() {
 };
 
 function translations() {
-    function translate_node(node){
+    function translate_node(node) {
         if(node.nodeType === 3) { // TEXT_NODE
-            if(node.nodeValue.match(/\S/)){
+            if(node.nodeValue.match(/\S/)) {
                 var space = node.nodeValue.match(/^([\s]*)([\s\S]*?)([\s]*)$/);
                 node.nodeValue = space[1] + $.trim(_t(space[2])) + space[3];
             }
@@ -55,11 +55,11 @@ function translations() {
             'mods': ['web_editor'],
             'lang': data.get_context().lang
         })
-        .then(function(trans) {
+        .then(function (trans) {
             _t.database.set_bundle(trans);
         }).then(function () {
             var keys = _.keys(qweb.templates);
-            for (var i = 0; i < keys.length; i++){
+            for (var i = 0; i < keys.length; i++) {
                 translate_node(qweb.templates[keys[i]]);
             }
         }).promise();

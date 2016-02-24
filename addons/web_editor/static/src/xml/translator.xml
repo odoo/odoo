@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web_editor.translator">
-    <div id="web_editor-top-edit" class="o_css_editor o_translate navbar navbar-inverse navbar-fixed-top hidden-xs">
-        <form class="navbar-form text-muted">
-            <button type="button" data-action="save" class="btn btn-primary btn-xs">Save</button>
-            <span>or</span>
-            <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
-        </form>
-    </div>
+<t t-name="web_editor.translator" t-extend="web_editor.editorbar">
+    <t t-jquery="#web_editor-top-edit">
+        $(this).addClass('o_translate');
+    </t>
+    <t t-jquery="#web_editor-toolbars" t-operation="replace"/>
 </t>
 
 <t t-name="web_editor.translator.attributes">

@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
 <!-- Assets -->
-
-<template id="assets_common" inherit_id="web.assets_common" name="Website assets">
-    <xpath expr="." position="inside">
+<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
     </xpath>
 </template>
 
-<template id="assets_frontend" name="Website assets">
-    <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-
-    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
-
-    <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
-
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-
-    <t t-call="web.bootstrap"/>
-
-    <link rel="stylesheet" href="/web/static/src/less/variables.less"/>
-    <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
-</template>
-
-<template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Frontend Assets">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.wrapwrap.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
     </xpath>
 </template>
 
-<template id="assets_editor" name="Editor assets">
+<template id="website.assets_editor" name="Website Editor Assets">
+    <t t-call="web.less_helpers"/>
+
+    <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
+
+    <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+
     <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
     <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
@@ -50,15 +45,12 @@
     <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
     <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
-    <link rel='stylesheet' href='/web_editor/static/src/css/web_editor.css'/>
-    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.less'/>
-    <link rel="stylesheet" href="/website/static/src/css/website.editor.css"/>
+
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
 </template>
 
 <!-- Layout -->
-
 <template id="submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
         'active' if submenu.url and submenu.url != '/' and request.httprequest.path == submenu.url.replace('/page/website.', '/page/') else None
@@ -102,9 +94,6 @@
             <t t-if="not title">
                 <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
-            <t groups="base.group_website_designer">
-                <t t-set="load_editor" t-value="True"/>
-            </t>
 
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -133,14 +122,17 @@
             </t>
 
             <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="website.assets_frontend" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+            <t t-call-assets="web_editor.summernote" t-js="false" groups="base.group_website_designer"/>
+            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="base.group_website_designer"/>
+            <t t-call-assets="website.assets_editor" t-js="false" groups="base.group_website_publisher"/>
+
             <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-if="load_editor">
-                <t t-call-assets="web_editor.summernote"/>
-            </t>
-            <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
-            <t t-call-assets="website.assets_frontend" t-css="false"/>
-            <t groups="base.group_website_publisher" t-call-assets="website.assets_editor" async="True"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+            <t t-call-assets="web_editor.summernote" t-css="false" groups="base.group_website_designer"/>
+            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="base.group_website_designer"/>
+            <t t-call-assets="website.assets_editor" t-css="false" groups="base.group_website_publisher"/>
+
             <script type="text/javascript">
                 odoo.define('web.csrf', function (require) {
                     var token = "<t t-esc="request.csrf_token(None)"/>";
@@ -303,7 +295,6 @@
 </template>
 
 <!-- Features template -->
-
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
@@ -428,7 +419,6 @@
 </template>
 
 <!-- Util template -->
-
 <template id="publish_management">
     <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
         <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
@@ -482,7 +472,7 @@
     'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
     'data-reload="/"' (optional) force the reloading of the page if the url match with
         the string ( = regexp).
-        Otherwise, only the '/web/content/website.assets_frontend' is reloaded
+        Otherwise, only the '/web/content/web.assets_frontend' is reloaded
 
     For the sets (data-enable and/or data-disable without data-xmlid), the set is
     automatically checked if:
@@ -497,7 +487,6 @@
     - 'out': on the container 1 second before removed from ths DOM
     - 'loading': on the container/modal when the new css is loading
 -->
-
 <template id="website.theme_customize" name="Theme Modal for Customization">
   <div id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
@@ -562,19 +551,15 @@
 </template>
 
 <!-- Error and special pages -->
-
 <template id="info" name="Odoo Information">
     <t t-call="website.layout">
-      <div id="wrap">
-      </div>
+        <div id="wrap"/>
     </t>
 </template>
 
 <template id="show_website_info" inherit_id="website.info" customize_show="True" name="Show Odoo Information">
     <xpath expr="//div[@id='wrap']" position="inside">
-
         <div class="oe_structure">
-
             <section class="container">
                 <h1><t t-esc="res_company.name"/>
                     <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
@@ -623,18 +608,14 @@
                         </t>
                     </dl>
                 </div>
-
-
             </section>
-
         </div>
-
     </xpath>
 </template>
 
 <template id="default_page">
     <t t-call="website.layout">
-      <div id="wrap" class="oe_structure oe_empty"></div>
+        <div id="wrap" class="oe_structure oe_empty"/>
     </t>
 </template>
 
@@ -657,7 +638,6 @@
             <div class="oe_structure">
                 <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
             </div>
-
             <t t-if="editable or request.debug">
                 <t t-call="website.http_error_debug"/>
             </t>
@@ -778,8 +758,10 @@
         <head>
             <title t-esc="status_message">Internal Server Error</title>
             <t t-set="debug" t-value="True"/>
-            <t t-call-assets="web.assets_common"/>
-            <t t-call-assets="website.assets_frontend"/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
             <script>
                 $(document).ready(function() {
                     var button = $('#reset_templates_button');
@@ -907,7 +889,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <!-- Actual pages -->
-
 <template id="homepage" name="Homepage" page="True" priority="29">
     <t t-call="website.layout">
       <div id="wrap" class="oe_structure oe_empty"></div>
@@ -1008,5 +989,4 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </span>
     </div>
 </template>
-     </data>
-</openerp>
+</odoo>

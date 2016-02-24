@@ -2,11 +2,16 @@
 <openerp>
 <data>
 <template id="report.assets_common">
-    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-    <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-    <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-    <link href="/base/static/src/css/description.css" rel="stylesheet"/>
-    <link href="/report/static/src/css/report.css" rel="stylesheet"/>
+    <t t-call="web.less_helpers"/>
+
+    <link href="/web/static/src/less/import_bootstrap.less" rel="stylesheet" type="text/less"/>
+    <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
+
+    <!-- FIXME remove website dependency ..? -->
+    <link href="/website/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
+    <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
+
+    <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
 </template>
 
 <template id="report.assets_pdf">
@@ -14,7 +19,10 @@
 </template>
 
 <template id="report.assets_editor">
-    <link href="/report/static/src/css/report.editor.css" rel="stylesheet"/>
+    <t t-call="web.less_helpers"/>
+
+    <link href="/report/static/src/less/report.editor.less" rel="stylesheet" type="text/less"/>
+
     <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
     <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
 </template>
@@ -32,13 +40,21 @@
             <meta charset="utf-8" />
             <meta name="viewport" content="initial-scale=1"/>
             <title><t t-esc="title or 'Odoo Report'"/></title>
-            <t t-call-assets="report.assets_common"/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="report.assets_common" t-js="false"/>
             <t t-if="editable">
-                <t t-call-assets="web_editor.assets_editor"/>
-                <t t-call-assets="report.assets_editor"/>
+                <t t-call-assets="web_editor.summernote" t-js="false"/>
+                <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+                <t t-call-assets="report.assets_editor" t-js="false"/>
+            </t>
+            <t t-if="editable">
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web_editor.summernote" t-css="false"/>
+                <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+                <t t-call-assets="report.assets_editor" t-css="false"/>
             </t>
         </head>
-        <body class="container" t-att-style="editable and 'margin-top: 40px;'">
+        <body class="container">
             <div id="wrapwrap">
                 <main>
                     <t t-raw="0"/>
@@ -163,8 +179,10 @@
     &lt;!DOCTYPE html&gt;
     <html style="height: 0;">
         <head>
-            <t t-call-assets="report.assets_pdf"/>
-            <t t-call-assets="report.assets_common"/>
+            <t t-call-assets="report.assets_pdf" t-js="false"/>
+            <t t-call-assets="report.assets_common" t-js="false"/>
+            <t t-call-assets="report.assets_pdf" t-css="false"/>
+            <t t-call-assets="report.assets_common" t-css="false"/>
             <meta charset="utf-8"/>
             <t t-if="subst is True">
                 <script>

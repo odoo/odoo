@@ -57,10 +57,10 @@ snippet_editor.Class.include({
         transcoder.class_to_style($editable);
 
         // fix outlook image rendering bug
-        _.each(['width', 'height'], function(attribute) {
-            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+        _.each(['width', 'height'], function (attribute) {
+            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function () {
                 return $(this)[attribute]();
-            }).css(attribute, function(){
+            }).css(attribute, function () {
                 return $(this).get(0).style[attribute] || 'auto';
             });
         });

@@ -294,8 +294,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_job_offer" inherit_id="website.user_navbar" groups="base.group_hr_manager">
-    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-         <li><a href="/jobs/add" class="js_link2post">New Job Offer</a></li>
+    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+        <li><a href="/jobs/add" class="js_link2post"><i class="fa fa-briefcase"/><p>New Job Offer</p></a></li>
     </xpath>
 </template>
 
