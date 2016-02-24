@@ -231,16 +231,7 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            # The (OpenERP) module name can be in the ``openerp.addons`` namespace
-            # or not.  For instance, module ``sale`` can be imported as
-            # ``openerp.addons.sale`` (the right way) or ``sale`` (for backward
-            # compatibility).
-            module_parts = self.__module__.split('.')
-            if len(module_parts) > 2 and module_parts[:2] == ['openerp', 'addons']:
-                module_name = self.__module__.split('.')[2]
-            else:
-                module_name = self.__module__.split('.')[0]
-            self._module = module_name
+            self._module = self._get_addon_name(self.__module__)
 
         # Remember which models to instanciate for this module.
         if not self._custom:
@@ -259,6 +250,18 @@ class MetaModel(api.Meta):
                 _logger.warning("In class %s, field %r overriding an existing value", self, name)
             column._module = self._module
             setattr(self, name, column.to_field())
+
+    def _get_addon_name(self, full_name):
+        # The (OpenERP) module name can be in the ``openerp.addons`` namespace
+        # or not. For instance, module ``sale`` can be imported as
+        # ``openerp.addons.sale`` (the right way) or ``sale`` (for backward
+        # compatibility).
+        module_parts = full_name.split('.')
+        if len(module_parts) > 2 and module_parts[:2] == ['openerp', 'addons']:
+            addon_name = full_name.split('.')[2]
+        else:
+            addon_name = full_name.split('.')[0]
+        return addon_name
 
 
 class NewId(object):
