@@ -88,7 +88,7 @@ Tour.register({
         },
         {
             title:     "remove 'Product Attribute's Filters'",
-            element:   "#customize-menu a:contains(Product Attribute's Filters):has(.fa-check-square-o)",
+            element:   "#customize-menu a:contains(Product Attribute's Filters):has(input:checked)",
         },
         {
             title:     "finish",

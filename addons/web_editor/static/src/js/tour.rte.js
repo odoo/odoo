@@ -10,7 +10,7 @@ var _t = core._t;
 
 base.ready().done(function () {
 
-var click_event = function(el, type) {
+var click_event = function (el, type) {
     var evt = document.createEvent("MouseEvents");
     evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
     el.dispatchEvent(evt);
@@ -61,7 +61,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
-            element:   '.note-color button.dropdown-toggle:visible',
+            element:   '.note-color button.dropdown-toggle:visible:first',
             title:     "change selection to change text color",
             onload: function () {
                 var $el = $('#editable_area > section .row > div:first:not(:has(p font)) h1 font');
@@ -70,12 +70,17 @@ Tour.register({
             }
         },
         {
-            element:   'div[data-target-event="foreColor"]:visible .note-color-row:eq(1) button[data-event="foreColor"]:first',
+            title:     "Select foreground spectrum colorpanel",
+            waitFor:   ".dropdown-menu:visible",
+            element:   ".dropdown-menu:visible .o_colorpicker_section_menu li:last a",
+        },
+        {
+            element:   ".dropdown-menu:visible .note-color-row:eq(1) button[data-event=foreColor]:first",
             title:     "change text color",
         },
         {
             waitFor:   '#editable_area > section .row > div:first h1 font:eq(2)',
-            element:   '.note-color button.dropdown-toggle:visible',
+            element:   '.note-color button.dropdown-toggle:visible:last',
             title:     "change selection to change text bg-color again",
             onload: function () {
                 var $el = $('#editable_area > section .row > div:first h1 font:eq(2)');
@@ -84,12 +89,17 @@ Tour.register({
             }
         },
         {
-            element:   'div[data-target-event="backColor"] .colorpicker button[data-event="backColor"]:first',
+            title:     "Select background spectrum colorpanel",
+            waitFor:   ".dropdown-menu:visible",
+            element:   ".dropdown-menu:visible .o_colorpicker_section_menu li:last a",
+        },
+        {
+            element:   ".dropdown-menu:visible .note-color-row:eq(0) button[data-event=backColor]:first",
             title:     "change text backColor again",
         },
         {
             waitFor:   '#editable_area > section .row > div:first h1 font:eq(4)',
-            element:   '.note-color button.dropdown-toggle:visible',
+            element:   '.note-color button.dropdown-toggle:visible:first',
             title:     "change selection (h1 and p) to change text color with class",
             onload: function () {
                 var $el = $('#editable_area > section .row > div:first h1 font:eq(4)');
@@ -98,7 +108,8 @@ Tour.register({
             }
         },
         {
-            element:   'div[data-target-event="foreColor"]:visible button[data-event="foreColor"][data-value^="text-"]:first',
+            waitFor:   ".dropdown-menu:visible",
+            element:   ".dropdown-menu:visible .note-color-row:eq(0) button[data-event=foreColor]:first",
             title:     "change text foreColor again",
         },
         {
@@ -170,7 +181,7 @@ Tour.register({
             title:     "select a pictogram",
         },
         {
-            waitFor:   '#editor-media-icon.active span.font-icons-selected',
+            waitFor:   '#editor-media-icon.active span.o_selected',
             element:   '.modal button.save',
             title:     "save pictogram",
         },
@@ -377,7 +388,7 @@ Tour.register({
             title:     "check the image style",
         },
         {
-            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/32"]',
+            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(51,122,183)/28"]',
             title:     "check the font image src",
         },
         {
@@ -385,7 +396,7 @@ Tour.register({
             title:     "check the font class to css",
         },
         {
-            waitFor:   '#wrapwrap img:eq(2)[style*="float:right"]',
+            waitFor:   '#wrapwrap img:eq(2)[style*="float: right"]',
             title:     "check the second font class to css",
         },
     ]
