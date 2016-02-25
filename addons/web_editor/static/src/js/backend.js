@@ -155,7 +155,7 @@ var FieldTextHtmlSimple = widget.extend({
     is_false: function() {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    before_save: function() {
+    commit_value: function() {
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -361,7 +361,7 @@ var FieldTextHtml = widget.extend({
     is_false: function() {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    before_save: function () {
+    commit_value: function () {
         if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
             this.internal_set_value( this.view.datarecord[this.name] );
             this._dirty_flag = false;
