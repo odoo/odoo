@@ -7,20 +7,35 @@ import openerp.addons.decimal_precision as dp
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
-    @api.multi
+    def _compute_margin(self, order_id, product_id, product_uom_id):
+        frm_cur = self.env.user.company_id.currency_id
+        to_cur = order_id.pricelist_id.currency_id
+        purchase_price = product_id.standard_price
+        if product_uom_id != product_id.uom_id:
+            purchase_price = self.env['product.uom']._compute_price(product_id.uom_id.id, purchase_price, to_uom_id=product_uom_id.id)
+        ctx = self.env.context.copy()
+        ctx['date'] = order_id.date_order
+        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        return price
+
     @api.onchange('product_id', 'product_uom')
     def product_id_change_margin(self):
-        for line in self:
-            if line.order_id.pricelist_id:
-                frm_cur = self.env.user.company_id.currency_id
-                to_cur = line.order_id.pricelist_id.currency_id
-                purchase_price = line.product_id.standard_price
-                if line.product_uom != line.product_id.uom_id:
-                    purchase_price = self.env['product.uom']._compute_price(line.product_id.uom_id.id, purchase_price, to_uom_id=line.product_uom.id)
-                ctx = self.env.context.copy()
-                ctx['date'] = line.order_id.date_order
-                price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
-                line.purchase_price = price
+        if not self.order_id.pricelist_id or not self.product_id or not self.product_uom:
+            return
+        self.purchase_price = self._compute_margin(self.order_id, self.product_id, self.product_uom)
+
+    @api.model
+    def create(self, vals):
+        # Calculation of the margin for programmatic creation of a SO line. It is therefore not
+        # necessary to call product_id_change_margin manually
+        if 'purchase_price' not in vals:
+            order_id = self.env['sale.order'].browse(vals['order_id'])
+            product_id = self.env['product.product'].browse(vals['product_id'])
+            product_uom_id = self.env['product.uom'].browse(vals['product_uom'])
+
+            vals['purchase_price'] = self._compute_margin(order_id, product_id, product_uom_id)
+
+        return super(sale_order_line, self).create(vals)
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
