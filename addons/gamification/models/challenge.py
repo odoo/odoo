@@ -154,24 +154,22 @@ class GamificationChallenge(models.Model):
             else:
                 challenge.next_report_date = False
 
+    def _update_vals(self, vals):
+        if vals.get('user_domain'):
+            user_ids = self._get_challenger_users(vals['user_domain'])
+            if not vals.get('user_ids'):
+                vals['user_ids'] = []
+            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
+        return vals
+
     @api.model
     def create(self, vals):
         """Overwrite the create method to add the user of groups"""
-        if vals.get('user_domain'):
-            user_ids = self._get_challenger_users(vals.get('user_domain'))
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
-        return super(GamificationChallenge, self).create(vals)
+        return super(GamificationChallenge, self).create(self._update_vals(vals))
 
     @api.multi
     def write(self, vals):
-        if vals.get('user_domain'):
-            user_ids = self._get_challenger_users(vals.get('user_domain'))
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
-        result = super(GamificationChallenge, self).write(vals)
+        result = super(GamificationChallenge, self).write(self._update_vals(vals))
 
         if vals.get('report_message_frequency', 'never') != 'never':
             # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now
