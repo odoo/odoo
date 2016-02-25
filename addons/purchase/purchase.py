@@ -457,7 +457,7 @@ class PurchaseOrderLine(models.Model):
                 continue
             bom_delivered = self.sudo()._get_bom_delivered(line.sudo())
             if bom_delivered and any(bom_delivered.values()):
-                total = self.product_qty
+                total = line.product_qty
             elif bom_delivered:
                 total = 0.0
             else:
