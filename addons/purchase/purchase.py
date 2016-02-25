@@ -482,7 +482,8 @@ class PurchaseOrderLine(models.Model):
                 if bom.type != 'phantom':
                     continue
                 bom_delivered[bom.id] = False
-                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, line.product_qty)[0]
+                product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_qty, bom.product_uom)
+                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, product_uom_qty_bom)[0]
                 for bom_line in bom_exploded:
                     qty = 0.0
                     for move in line.move_ids:
