@@ -3,6 +3,7 @@
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import float_compare
 
 class product_pricelist(osv.osv):
     _inherit = 'product.pricelist'
@@ -67,7 +68,11 @@ class sale_order_line(osv.osv):
                         # new_list_price is in company's currency while price in pricelist currency
                         ctx = dict(context_partner, date=self.order_id.date_order)
                         new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, line.order_id.pricelist_id.currency_id)
-                    discount = (new_list_price - line.price_unit) / new_list_price * 100
+                    pricelist_item = self.env['product.pricelist.item'].browse([list_price.values()[0][1]])
+                    if float_compare(line.price_unit, list_price.values()[0][0], precision_digits=line.order_id.pricelist_id.currency_id.rounding) == 0 and pricelist_item.compute_price == 'percentage':
+                        discount = pricelist_item.percent_price
+                    else:
+                        discount = (new_list_price - line.price_unit) / new_list_price * 100
                     if discount > 0:
                         line.price_unit = new_list_price
                         line.discount = discount
