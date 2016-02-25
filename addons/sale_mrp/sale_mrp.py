@@ -48,7 +48,7 @@ class SaleOrderLine(models.Model):
                 qty = 0.0
                 for move in self.procurement_ids.mapped('move_ids'):
                     if move.state == 'done' and move.product_id.id == bom_line.get('product_id', False):
-                        qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                        qty += self.env['product.uom']._compute_qty(move.product_uom.id, move.product_uom_qty, bom_line['product_uom'])
                 if float_compare(qty, bom_line['product_qty'], precision_digits=precision) < 0:
                     bom_delivered[bom.id] = False
                     break
