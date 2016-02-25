@@ -489,8 +489,13 @@ var AbstractManyField = common.AbstractField.extend({
         }
         var tmp = this.no_rerender;
         this.no_rerender = true;
-        this.data_replace(ids.slice());
+        var def = this.data_replace(ids.slice());
         this.no_rerender = tmp;
+        return def;
+    },
+
+    commit_value: function() {
+        return this.mutex.def;
     },
 
     /*
@@ -859,13 +864,9 @@ var FieldX2Many = AbstractManyField.extend({
     commit_value: function() {
         var view = this.get_active_view();
         if (view && view.type === "list" && view.controller.__focus) {
-            var def = $.Deferred();
-            view.controller._on_blur_one2many().always(function () {
-                def.resolve();
-            });
-            return def;
+            return $.when(this.mutex.def, view.controller._on_blur_one2many());
         }
-        return $.when(false);
+        return this.mutex.def;
     },
     is_syntax_valid: function() {
         var view = this.get_active_view();
@@ -1052,6 +1053,7 @@ var One2ManyListView = X2ManyListView.extend({
 
         this.dataset.on('dataset_changed', this, function () {
             this._dataset_changed = true;
+            //this.dataset.x2m._dirty_flag = this.dataset.x2m._dirty_flag || this.__focus;
         });
         this.dataset.x2m.on('load_record', this, function () {
             this._dataset_changed = false;
@@ -1269,7 +1271,7 @@ var One2ManyFormView = FormView.extend({
 });
 
 var FieldOne2Many = FieldX2Many.extend({
-   init: function() {
+    init: function() {
         this._super.apply(this, arguments);
         this.x2many_views = {
             form: One2ManyFormView,
@@ -1282,11 +1284,10 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments);
     },
     before_save: function() {
-        if(this.viewmanager.active_view.type === "list"
-            && this.viewmanager.active_view.controller.editable()) {
-            return this.viewmanager.active_view.controller.save_edition();
+        var view = this.viewmanager.active_view;
+        if(view.type === "list" && view.controller.editable()) {
+            return view.controller.save_edition();
         }
-        return $.when();
     },
 });
 
