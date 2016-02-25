@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web_editor.translator" t-extend="web_editor.editorbar">
-    <t t-jquery="#web_editor-top-edit">
-        $(this).addClass('o_translate');
-    </t>
-    <t t-jquery="#web_editor-toolbars" t-operation="replace"/>
-</t>
-
 <t t-name="web_editor.translator.attributes">
     <div class="modal web_editor-dialog" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">

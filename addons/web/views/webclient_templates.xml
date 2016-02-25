@@ -362,8 +362,8 @@
                 <link rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
                 <script src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
 
-                <t t-call="web.assets_common"/>
-                <t t-call="web.assets_backend"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
                 <script type="text/javascript">
                     $(function() {
                         odoo.define('web.web_client', function (require) {
