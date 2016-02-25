@@ -103,7 +103,7 @@ var Translate = Widget.extend({
         'click [data-action="save"]': 'save_and_reload',
         'click [data-action="cancel"]': 'cancel',
     },
-    template: 'web_editor.translator',
+    template: 'web_editor.editorbar',
     init: function (parent, $target, lang) {
         this.parent = parent;
         this.ir_translation = new Model('ir.translation');
@@ -115,7 +115,8 @@ var Translate = Widget.extend({
         this.rte.on('change', this, this.rte_changed);
     },
     start: function () {
-        this._super();
+        this._super.apply(this, arguments);
+        this.$('#web_editor-toolbars').remove();
         return this.edit();
     },
     setTarget: function ($target) {

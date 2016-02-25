@@ -109,6 +109,12 @@
         <t t-call-assets="web_editor.assets_editor" t-css="false"/>
     </xpath>
 </template>
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
 
 <!--
     The web_editor.colorpicker template regroups section of colorpicker menu for website customization
