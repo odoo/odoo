@@ -833,9 +833,10 @@ var BufferedDataSet = DataSetStatic.extend({
             });
         }
         this.delete_all = false;
-        _.each(_.clone(this.running_reads), function(el) {
-            el.reject();
-        });
+        this.cancel_read();
+    },
+    cancel_read: function () {
+        _.invoke(_.clone(this.running_reads), 'reject');
     },
     read_ids: function (ids, fields, options) {
         // read what is necessary from the server to have ids and the given
@@ -897,11 +898,8 @@ var BufferedDataSet = DataSetStatic.extend({
             });
             var _super = this._super;
             this.mutex.exec(function () {
-                _super.call(self, to_get, fields, options).then(function() {
-                    def.resolve.apply(def, arguments);
-                }, function() {
-                    def.reject.apply(def, arguments);
-                });
+                if (def.state() !== "pending") return;
+                _super.call(self, to_get, fields, options).then(_.bind(def.resolve, def), _.bind(def.reject, def));
                 return def;
             });
             return def.then(function(records) {
