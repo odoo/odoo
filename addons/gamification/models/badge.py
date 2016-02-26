@@ -216,16 +216,3 @@ class GamificationBadge(models.Model):
 
         # badge.rule_auth == 'everyone' -> no check
         return self.CAN_GRANT
-
-    # TODO Need to remove based on JS removed in commit : a0cbf891af58f029e2c52779617ad7eeb8d26eb3
-    def check_progress(self):
-        badge_hidden = self.env.ref('gamification.badge_hidden', False)
-        if badge_hidden:
-            BadgeUser = self.env['gamification.badge.user']
-            if not BadgeUser.search([('user_id', '=', self.env.uid), ('badge_id', '=', badge_hidden.id)]):
-                values = {
-                    'user_id': self.env.uid,
-                    'badge_id': badge_hidden.id,
-                }
-                BadgeUser.sudo().create(values)
-        return True

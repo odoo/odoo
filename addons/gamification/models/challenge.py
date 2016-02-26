@@ -296,13 +296,6 @@ class GamificationChallenge(models.Model):
         self.check_challenge_reward()
         return True
 
-    # TODO Need to remove based on JS removed in commit : a0cbf891af58f029e2c52779617ad7eeb8d26eb3
-    @api.multi
-    def quick_update(self):
-        """Update all the goals of a specific challenge, no generation of new goals"""
-        self.ensure_one()
-        return self.env['gamification.goal'].search([('challenge_id', '=', self.id)]).update_goal()
-
     def _get_challenger_users(self, domain):
         return self.env['res.users'].search(eval(ustr(domain))).ids
 
@@ -596,34 +589,6 @@ class GamificationChallenge(models.Model):
         return self.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
-    # TODO Need to remove method(accept_challenge,_accept_challenge, discard_challenge, _discard_challenge ,reply_challenge_wizard)based on JS removed in commit : a0cbf891af58f029e2c52779617ad7eeb8d26eb3
-    def accept_challenge(self):
-        """The user accept the suggested challenge"""
-        return self._accept_challenge()
-
-    def _accept_challenge(self):
-        message = "%s has joined the challenge" % self.env.user.name
-        self.sudo().message_post(body=message)
-        self.sudo().write({'invited_user_ids': [(3, self.env.uid)], 'user_ids': [(4, self.env.uid)]})
-        return self.sudo()._generate_goals_from_challenge()
-
-    def discard_challenge(self):
-        """The user discard the suggested challenge"""
-        return self._discard_challenge()
-
-    def _discard_challenge(self):
-        message = "%s has refused the challenge" % self.env.user.name
-        self.sudo().message_post(body=message)
-        return self.sudo().write({'invited_user_ids': (3, self.env.uid)})
-
-    @api.multi
-    def reply_challenge_wizard(self):
-        self.ensure_one()
-        challenge_wizard = self.env.ref('gamification.challenge_wizard')
-        result = challenge_wizard.read()[0]
-        result['res_id'] = self.id
-        return result
-
     def check_challenge_reward(self, force=False):
         """Actions for the end of a challenge
 

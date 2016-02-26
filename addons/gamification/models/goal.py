@@ -83,14 +83,6 @@ class GamificationGoalDefinition(models.Model):
             else:
                 goal.full_suffix = ""
 
-    #TODO Remove number_following method which based on commit : cc8d4ae4d49cb3102fd6ef069d8d82a02fad9403 , now in data file for compute_code field instead of calling this method will use directly code.
-    def number_following(self, model_name="mail.thread"):
-        """Return the number of 'model_name' objects the user is following
-
-        The model specified in 'model_name' must inherit from mail.thread
-        """
-        return self.env['mail.followers'].search_count([('res_model', '=', model_name), ('partner_id', '=', self.env.user.partner_id.id)])
-
     @api.onchange('model_id')
     def _onchange_model_id(self):
         """Force domain for the `field_id` and `field_date_id` fields"""
@@ -416,38 +408,3 @@ class GamificationGoal(models.Model):
         match the conditions for a change of state, this will be applied at the
         next goal update."""
         return self.write({'state': 'inprogress'})
-
-    # TODO Need to remove based on JS removed in commit : a0cbf891af58f029e2c52779617ad7eeb8d26eb3
-    @api.multi
-    def get_action(self):
-        """Get the ir.action related to update the goal
-
-        In case of a manual goal, should return a wizard to update the value
-        :return: action description in a dictionnary
-        """
-        self.ensure_one()
-        if self.definition_id.action_id:
-            # open a the action linked to the goal
-            action = self.definition_id.action_id.read()[0]
-
-            if self.definition_id.res_id_field:
-                action['res_id'] = safe_eval(self.definition_id.res_id_field, {'user': self.env.user})
-
-                # if one element to display, should see it in form mode if possible
-                action['views'] = [(view_id, mode) for (view_id, mode) in action['views'] if mode == 'form'] or action['views']
-            return action
-
-        if self.computation_mode == 'manually':
-            # open a wizard window to update the value manually
-            action = {
-                'name': _("Update %s") % self.definition_id.name,
-                'id': self.id,
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'target': 'new',
-                'context': {'default_goal_id': self.id, 'default_current': self.current},
-                'res_model': 'gamification.goal.wizard'
-            }
-            return action
-
-        return False
