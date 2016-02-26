@@ -11,6 +11,7 @@ var SearchView = require('web.SearchView');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -780,16 +781,8 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     on_property_open: function(e) {
         var self = this;
         e.stopImmediatePropagation();
-        new data.DataSetSearch(self, 'ir.model.fields').call('search',
-        [[['name', '=', self.name], ['model', '=', self.field_manager.model]]]).then(function(result) {
-            self.do_action({
-                name: _t("Company Properties"),
-                res_model : 'ir.property',
-                domain : [['fields_id', '=', result[0]]],
-                views: [[false, 'list'], [false, 'form']],
-                type : 'ir.actions.act_window',
-                context: {'default_fields_id': result[0]}
-            });
+        new Model('ir.model.fields').call('get_property_action', [self.name, self.field_manager.model, self.field_manager.dataset.context]).then(function(result) {
+            self.do_action(result);
         });
     },
 

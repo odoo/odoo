@@ -497,7 +497,6 @@ var FieldDatetime = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             }, this));
             this.datewidget.appendTo(this.$el);
             this.setupFocus(this.datewidget.$input);
-            //Note: Need to bind property icon here because we adds datewidget here on the fly so untill initialize_content is called our icon will not be added to DOM
             this.$(".oe_field_property").on("click", this.on_property_open);
         }
     },
@@ -624,8 +623,7 @@ var FieldBoolean = common.AbstractField.extend({
         }, this));
         var check_readonly = function() {
             self.$checkbox.prop('disabled', self.get("effective_readonly"));
-            //Note: FieldBoolean does not have ReinitializeFieldMixin, so we need to toggle visibility class based on effective_readonly
-            self.$el.find(".oe_field_property").toggleClass('o_hidden', !!self.get("effective_readonly"));
+            self.$(".oe_field_property").toggleClass('o_hidden', !!self.get("effective_readonly"));
             self.click_disabled_boolean();
         };
         this.on("change:effective_readonly", this, check_readonly);
@@ -893,8 +891,6 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         if (! this.get("effective_readonly")) {
             this.$().html(QWeb.render("FieldSelectionSelect", {widget: this, values: values}));
             this.$("select").val(JSON.stringify(found[0]));
-
-            //Note: Need to bind property icon here because we adds options here on the fly so untill render_value is called our icon will not be added to DOM
             this.$(".oe_field_property").on("click", this.on_property_open);
         } else {
             this.$el.text(found[1]);
