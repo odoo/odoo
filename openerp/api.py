@@ -921,7 +921,7 @@ class Environment(object):
     def get_todo(self):
         """ Return a pair `(field, records)` to recompute. """
         for field, recs_list in self.all.todo.iteritems():
-            return field, recs_list[0]
+            return field, reduce(operator.or_, recs_list)
 
     def check_cache(self):
         """ Check the cache consistency. """
