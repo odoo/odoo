@@ -5,7 +5,7 @@
 
 {
     'name': 'Singapore - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'author': 'Tech Receptives',
     'website': 'http://www.techreceptives.com',
     'category': 'Localization',
