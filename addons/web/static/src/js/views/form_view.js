@@ -190,7 +190,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.$buttons.on('click', '.oe_form_button_cancel',
                          this.guard_active(this.on_button_cancel));
 
-        $node = $node || this.options.$buttons.empty();
         if ($node) {
             this.$buttons.appendTo($node);
         } else {

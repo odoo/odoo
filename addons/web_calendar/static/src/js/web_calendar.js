@@ -259,7 +259,6 @@ var CalendarView = View.extend({
 
         this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         
-        $node = $node || this.options.$buttons;
         if ($node) {
             this.$buttons.appendTo($node);
         } else {
