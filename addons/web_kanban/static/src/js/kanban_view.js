@@ -549,8 +549,8 @@ var KanbanView = View.extend({
             var dataset = new data.DataSetSearch(self, rel_name, self.dataset.get_context(rel.context));
             dataset.read_ids(_.uniq(rel.ids), ['name', 'color']).done(function(result) {
                 result.forEach(function(record) {
-                    // Does not display the tag if color = 0
-                    if (record.color){
+                    // Does not display the tag if color = 10
+                    if (typeof record.color !== 'undefined' && record.color != 10){
                         var $tag = $('<span>')
                             .addClass('o_tag o_tag_color_' + record.color)
                             .attr('title', _.str.escapeHTML(record.name));
