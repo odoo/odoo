@@ -37,7 +37,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.is_in_DOM = false; // used to know if the view manager is attached in the DOM
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
-            var View = core.view_registry.get(view_type, true);
+            var View = self.registry.get(view_type);
             if (!View) {
                 console.error("View type", "'"+view[1]+"'", "is not present in the view registry.");
                 return;
@@ -59,12 +59,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             self.view_order.push(view_descr);
             self.views[view_type] = view_descr;
         });
-
-        if (options && options.state && options.state.view_type) {
-            var view_type = options.state.view_type;
-            var view_descr = this.views[view_type];
-            this.default_view = view_descr && view_descr.multi_record ? view_type : undefined;
-        }
+        this.first_view = this.views[options && options.view_type]; // view to open first
 
         // Listen to event 'switch_view' indicating that the VM must now display view wiew_type
         this.on('switch_view', this, function(view_type) {
@@ -80,9 +75,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      */
     start: function() {
         var self = this;
-        var default_view = this.get_default_view();
-        var default_options = this.flags[default_view] && this.flags[default_view].options;
-
         this._super();
 
         var views_ids = {};
@@ -105,15 +97,30 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             this.render_switch_buttons();
         }
 
-        // Switch to the default_view to load it
-        var main_view_loaded = this.switch_mode(default_view, null, default_options);
+        // If a non multi-record first_view is given, switch to it but first push the default_view
+        // to the view_stack to complete the breadcrumbs
+        var default_view = this.get_default_view();
+        if (this.first_view && !this.first_view.multi_record && default_view.multi_record) {
+            default_view.controller = this.create_view(default_view);
+            this.view_stack.push(default_view);
+        }
+        var view_to_load = this.first_view || default_view;
+        var options = this.flags[view_to_load] && this.flags[view_to_load].options;
+        var main_view_loaded = this.switch_mode(view_to_load.type, options);
 
         return $.when(main_view_loaded, this.search_view_loaded);
     },
+    /**
+     * Returns the default view with the following fallbacks:
+     *  - use the default_view defined in the flags, if any
+     *  - use the first view in the view_order
+     *
+     * @returns {Object} the default view
+     */
     get_default_view: function() {
-        return this.default_view || this.flags.default_view || this.view_order[0].type;
+        return this.views[this.flags.default_view || this.view_order[0].type];
     },
-    switch_mode: function(view_type, no_store, view_options) {
+    switch_mode: function(view_type, view_options) {
         var self = this;
         var view = this.views[view_type];
         var old_view = this.active_view;
@@ -133,8 +140,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.view_stack.push(view);
         this.active_view = view;
 
-        if (!view.created) {
-            view.created = this.create_view.bind(this)(view, view_options);
+        if (!view.loaded) {
+            if (!view.controller) {
+                view.controller = this.create_view(view, view_options);
+            }
+            view.$fragment = $('<div>');
+            view.loaded = view.controller.appendTo(view.$fragment).done(function () {
+                // Remove the unnecessary outer div
+                view.$fragment = view.$fragment.contents();
+                self.trigger("controller_inited", view.type, view.controller);
+            });
         }
 
         // Call do_search on the searchview to compute domains, contexts and groupbys
@@ -142,27 +157,26 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 this.flags.auto_search &&
                 view.controller.searchable !== false) {
             this.active_search = $.Deferred();
-            $.when(this.search_view_loaded, view.created).done(function() {
+            $.when(this.search_view_loaded, view.loaded).done(function() {
                 self.searchview.do_search();
             });
         }
-        var switched = $.when(view.created, this.active_search).then(function () {
-            return self._display_view(view_options, old_view).then(function () {
-                self.trigger('switch_mode', view_type, no_store, view_options);
-            });
+
+        return $.when(view.loaded, this.active_search)
+            .then(function() {
+                return self._display_view(view_options, old_view).then(function() {
+                    self.trigger('switch_mode', view_type, view_options);
+                });
+            }).fail(function(e) {
+                if (!(e && e.code === 200 && e.data.exception_type)) {
+                    self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+                }
+                // Restore internal state
+                self.active_view = old_view;
+                self.view_stack.pop();
+            }).always(function () {
+                self.currently_switching = false;
         });
-        switched.fail(function(e) {
-            if (!(e && e.code === 200 && e.data.exception_type)) {
-                self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
-            }
-            // Restore internal state
-            self.active_view = old_view;
-            self.view_stack.pop();
-        });
-        switched.always(function () {
-            self.currently_switching = false;
-        });
-        return switched;
     },
     _display_view: function (view_options, old_view) {
         var self = this;
@@ -204,19 +218,18 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var View = this.registry.get(view.type);
         var options = _.clone(view.options);
-        var view_loaded = $.Deferred();
 
         if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline')) ||
             (view_options && view_options.mode === 'edit'))) {
             options.initial_mode = options.initial_mode || 'edit';
         }
+
         var controller = new View(this, this.dataset, view.view_id, options);
-        view.controller = controller;
-        view.$fragment = $('<div>');
 
         if (view.embedded_view) {
             controller.set_embedded_view(view.embedded_view);
         }
+
         controller.on('switch_mode', this, this.switch_mode.bind(this));
         controller.on('history_back', this, function () {
             if (self.action_manager) self.action_manager.trigger('history_back');
@@ -227,17 +240,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.update_control_panel({breadcrumbs: breadcrumbs}, {clear: false});
             }
         });
-        controller.on('view_loaded', this, function () {
-            view_loaded.resolve();
-        });
 
-        // render the view in a fragment so that it is appended in the view's
-        // $container only when it's ready
-        return $.when(controller.appendTo(view.$fragment), view_loaded).done(function () {
-            // Remove the unnecessary outer div
-            view.$fragment = view.$fragment.contents();
-            self.trigger("controller_inited", view.type, controller);
-        });
+        return controller;
     },
     select_view: function (index) {
         var view_type = this.view_stack[index].type;
@@ -392,14 +396,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
     },
     do_load_state: function(state, warm) {
-        if (state.view_type && state.view_type !== this.active_view.type) {
-            // warning: this code relies on the fact that switch_mode has an immediate side
-            // effect (setting the 'active_view' to its new value) AND an async effect (the
-            // view is created/loaded).  So, the next statement (do_load_state) is executed 
-            // on the new view, after it was initialized, but before it is fully loaded and 
-            // in particular, before the do_show method is called.
-            this.switch_mode(state.view_type, true);
-        }
         this.active_view.controller.do_load_state(state, warm);
     },
 });
