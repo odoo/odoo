@@ -391,9 +391,7 @@ class product_template(osv.osv):
         'purchase_requisition': fields.selection(
             [('rfq', 'Create a draft purchase order'),
              ('tenders', 'Propose a call for tenders')],
-            string='Procurement',
-            help="Check this box to generate Call for Tenders instead of generating "
-                 "requests for quotation from procurement."),
+            string='Procurement'),
     }
 
     _defaults = {
