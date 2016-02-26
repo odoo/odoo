@@ -118,7 +118,7 @@ class event_event(models.Model):
         'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
     # Date fields
-    date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
+    date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
         string='Start Date', required=True,
         track_visibility='onchange', states={'done': [('readonly', True)]})
