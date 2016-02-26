@@ -242,7 +242,7 @@ a.o_underline {
 @color-delta: #0D6759;
 @color-epsilon: #0B2E59;
 
-.o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%)) {
+.o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
     .bg-@{class_name} {
         background-color: @color;
         color: @complementary;
@@ -251,7 +251,7 @@ a.o_underline {
         }
     }
     body .text-@{class_name} { // html to make the rules more important that bg-* ones
-        color: @color;
+        color: @content-color;
     }
 }
 
@@ -264,10 +264,10 @@ a.o_underline {
 
 // Create classes for UI colors
 .o-create-color-classes(primary, @brand-primary);
-.o-create-color-classes(success, @brand-success);
-.o-create-color-classes(info, @brand-info);
-.o-create-color-classes(warning, @brand-warning);
-.o-create-color-classes(danger, @brand-danger);
+.o-create-color-classes(success, @brand-success, @content-color: @state-success-text);
+.o-create-color-classes(info, @brand-info, @content-color: @state-info-text);
+.o-create-color-classes(warning, @brand-warning, @content-color: @state-warning-text);
+.o-create-color-classes(danger, @brand-danger, @content-color: @state-danger-text);
 
 // Create classes for greyscale colors
 .o-create-color-classes(~'black', @gray-base);
