@@ -293,15 +293,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     render_view_control_elements: function() {
         if (!this.active_view.control_elements) {
             var view_controller = this.active_view.controller;
+            var $buttons = this.flags.$buttons;
             var elements = {};
             if (!this.flags.headless) {
                 elements = {
-                    $buttons: !this.flags.footer_to_buttons ? $("<div>") : undefined,
+                    $buttons: $("<div>"),
                     $sidebar: $("<div>"),
                     $pager: $("<div>"),
                 };
             }
-            view_controller.render_buttons(elements.$buttons);
+            view_controller.render_buttons($buttons ? $buttons.empty() : elements.$buttons);
             view_controller.render_sidebar(elements.$sidebar);
             view_controller.render_pager(elements.$pager);
             // Remove the unnecessary outer div

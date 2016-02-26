@@ -282,7 +282,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
 
             this.$buttons.find('.o_list_button_add').click(this.proxy('do_add_record'));
 
-            $node = $node || this.options.$buttons;
             if ($node) {
                 this.$buttons.appendTo($node);
             } else {

@@ -361,7 +361,6 @@ var DiagramView = View.extend({
             self.add_node();
         });
 
-        $node = $node || this.options.$buttons;
         this.$buttons.appendTo($node);
     },
 
