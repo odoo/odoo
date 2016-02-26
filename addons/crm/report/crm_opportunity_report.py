@@ -68,7 +68,9 @@ class crm_opportunity_report(osv.Model):
                     c.company_id,
                     c.priority,
                     c.team_id,
-                    activity.nbr_activities,
+                    (SELECT COUNT(*)
+                     FROM mail_message m
+                     WHERE m.model = 'crm.lead' and m.res_id = c.id) as nbr_activity,
                     c.active,
                     c.campaign_id,
                     c.source_id,
@@ -85,14 +87,7 @@ class crm_opportunity_report(osv.Model):
                     c.date_conversion as date_conversion
                 FROM
                     "crm_lead" c
-                LEFT JOIN (
-                    SELECT m.res_id, COUNT(*) nbr_activities
-                    FROM "mail_message" m
-                    WHERE m.model = 'crm.lead'
-                    GROUP BY m.res_id ) activity
-                ON
-                    (activity.res_id = c.id)
                 LEFT JOIN "crm_stage" stage
                 ON stage.id = c.stage_id
-                GROUP BY c.id, activity.nbr_activities, stage.name
+                GROUP BY c.id, stage.name
             )""")
