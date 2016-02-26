@@ -703,9 +703,23 @@ var ActionManager = Widget.extend({
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
+
+        var flags = action.flags || {};
+        if (!('auto_search' in flags)) {
+            flags.auto_search = action.auto_search !== false;
+        }
+        options.action = action;
+        options.action_manager = this;
+        var dataset = new data.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
+            dataset.index = 0;
+        }
+        var views = action.views;
+
         return this.ir_actions_common({
             widget: function () {
-                return new ViewManager(self, null, null, null, action, options);
+                return new ViewManager(self, dataset, views, flags, options);
             },
             action: action,
             klass: 'o_act_window',

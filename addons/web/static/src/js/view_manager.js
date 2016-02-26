@@ -16,28 +16,16 @@ var _t = core._t;
 var ViewManager = Widget.extend(ControlPanelMixin, {
     template: "ViewManager",
     /**
-     * @param {Object} [dataset] null object (... historical reasons)
+     * @param {Object} [dataset]
      * @param {Array} [views] List of [view_id, view_type]
      * @param {Object} [flags] various boolean describing UI state
      */
-    init: function(parent, dataset, views, flags, action, options) {
-        if (action) {
-            flags = action.flags || {};
-            if (!('auto_search' in flags)) {
-                flags.auto_search = action.auto_search !== false;
-            }
-            this.action = action;
-            this.action_manager = parent;
-            dataset = new data.DataSetSearch(this, action.res_model, action.context, action.domain);
-            if (action.res_id) {
-                dataset.ids.push(action.res_id);
-                dataset.index = 0;
-            }
-            views = action.views;
-        }
+    init: function(parent, dataset, views, flags, options) {
         var self = this;
         this._super(parent);
 
+        this.action = options && options.action;
+        this.action_manager = options && options.action_manager;
         this.flags = flags || {};
         this.dataset = dataset;
         this.view_order = [];
