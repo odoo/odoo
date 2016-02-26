@@ -478,7 +478,7 @@ class QWeb(orm.AbstractModel):
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         async = self.get_attr_bool(template_attributes.get('async'), default=False)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async, qwebcontext=qwebcontext)
+        return bundle.to_html(css=css, js=js, debug=qwebcontext.get('debug'), async=async, qwebcontext=qwebcontext)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -1170,7 +1170,7 @@ class AssetsBundle(object):
         if sep is None:
             sep = '\n            '
         response = []
-        if debug:
+        if debug == 'assets':
             if css and self.stylesheets:
                 if not self.is_css_preprocessed():
                     self.preprocess_css(debug=debug)

@@ -201,6 +201,9 @@ if (core.debug) {
                 this.do_warn("Warning", "No record selected.");
             }
         },
+        split_assets: function() {
+            window.location = $.param.querystring(window.location.href, 'debug=assets');
+        },
         leave_debug: function() {
             window.location.search="?";
         },
