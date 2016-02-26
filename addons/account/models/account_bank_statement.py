@@ -86,7 +86,7 @@ class AccountBankStatement(models.Model):
     @api.one
     @api.depends('journal_id')
     def _compute_currency(self):
-        self.currency_id = self.journal_id.currency_id or self.env.user.company_id.currency_id
+        self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
 
     @api.one
     @api.depends('line_ids.journal_entry_ids')

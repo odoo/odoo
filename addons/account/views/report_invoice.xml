@@ -78,7 +78,7 @@
                         <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
                             <span t-field="l.discount"/>
                         </td>
-                        <td>
+                        <td class="text-right">
                             <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                         </td>
                         <td class="text-right">

@@ -1351,7 +1351,9 @@ class AssetsBundle(object):
                         outdated = True
                         break
                     if asset._content is None:
-                        asset._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8')
+                        asset._content = ira_record.datas and ira_record.datas.decode('base64').decode('utf8') or ''
+                        if not asset._content and ira_record.file_size > 0:
+                            asset._content = None # file missing, force recompile
 
                 if any(asset._content is None for asset in assets.itervalues()):
                     outdated = True

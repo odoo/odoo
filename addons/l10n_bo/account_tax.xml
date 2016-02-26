@@ -3,18 +3,108 @@
 
      <!-- Account Tags -->
 
-    <record id="tag_ITAX_03_OUT" model="account.account.tag">
-        <field name="name">ITAX_03_OUT</field>
+    <record id="tag_bo_01" model="account.account.tag">
+        <field name="name">Impuesto a las Utilidades de la Empresa IUE (25%)</field>
         <field name="applicability">taxes</field>
     </record>
 
-    <record id="tag_ITAX_21_OUT" model="account.account.tag">
-        <field name="name">ITAX_21_OUT</field>
+    <record id="tag_bo_02" model="account.account.tag">
+        <field name="name">Impuesto a las Transacciones IT (3%)</field>
         <field name="applicability">taxes</field>
     </record>
 
-    <record id="tag_OTAX_21_IN" model="account.account.tag">
-        <field name="name">OTAX_21_IN</field>
+    <record id="tag_bo_03" model="account.account.tag">
+        <field name="name">Impuesto a las Transacciones IT (3%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_04" model="account.account.tag">
+        <field name="name">Impuesto al Valor Agregado (IVA) Total a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_05" model="account.account.tag">
+        <field name="name">Impuesto Cobrado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_06" model="account.account.tag">
+        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_07" model="account.account.tag">
+        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_08" model="account.account.tag">
+        <field name="name">Impuesto Cobrado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_09" model="account.account.tag">
+        <field name="name">Impuesto Pagado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_10" model="account.account.tag">
+        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_11" model="account.account.tag">
+        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_12" model="account.account.tag">
+        <field name="name">Impuesto Pagado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_13" model="account.account.tag">
+        <field name="name">Base Imponible</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_14" model="account.account.tag">
+        <field name="name">Base Imponible - Compras</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_15" model="account.account.tag">
+        <field name="name">Compras Gravadas Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_16" model="account.account.tag">
+        <field name="name">Compras NO Gravadas (Exoneradas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_17" model="account.account.tag">
+        <field name="name">Compras Gravadas con IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_18" model="account.account.tag">
+        <field name="name">Base Imponible - Ventas</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_19" model="account.account.tag">
+        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_20" model="account.account.tag">
+        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_bo_21" model="account.account.tag">
+        <field name="name">Impuesto al Valor Agregado con IVA</field>
         <field name="applicability">taxes</field>
     </record>
 
@@ -27,7 +117,7 @@
       <field name="include_base_amount">1</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_ITAX_21_OUT')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_08'),ref('tag_bo_21') ])]"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
@@ -39,7 +129,7 @@
       <field name="include_base_amount">1</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_OTAX_21_IN')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_12'), ref('tag_bo_17')])]"/>
     </record>
 
     <record id="ITAX_03" model="account.tax.template">
@@ -51,7 +141,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="232"/>
       <field name="account_id" ref="232"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_ITAX_03_OUT')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_03'), ref('tag_bo_21')])]"/>
     </record>
 
 </odoo>
