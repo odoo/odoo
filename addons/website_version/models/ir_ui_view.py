@@ -9,6 +9,22 @@ class view(models.Model):
 
     version_id = fields.Many2one('website_version.version', ondelete='cascade', string="Version")
 
+    def _sort_suitability_key(self):
+        """
+        Key function to sort views by descending suitability
+
+        Suitability of a view is defined as follow:
+
+        * if the view and request version are matched,
+        * then fallback on previously defined suitability
+        """
+        original_suitability = super(view, self)._sort_suitability_key()
+
+        context_version_id = self.env.context.get('version_id', 0)
+        different_version = context_version_id != (self.version_id.id or 0)
+
+        return (different_version, original_suitability)
+
     @api.multi
     def write(self, vals):
         if self.env.context is None:
@@ -83,41 +99,12 @@ class view(models.Model):
         vw = self.browse(view_id)
         if not (self.env.context and self.env.context.get('website_id') and vw.type == 'qweb'):
             return arch
-        #right_ids to collect the right ids according to the key
-        right_ids = {}
-        priority = {}
-        #To create a dico called view_arch where v(key) is the id and a the arch(value)
-        view_arch = dict([(v, a) for a, v in arch])
-        keys = self.browse(view_arch.keys())
-        #The view to take depends of the context
-        context_version_id = self.env.context.get('version_id')
-        context_website_id = self.env.context.get('website_id')
-        for k in keys:
-            #priority:1(with context_version_id) take the view which is in the same version
-            if context_version_id and k.version_id.id and k.version_id.id == context_version_id:
-                right_ids[k.key] = k.id
-                priority[k.key] = 3
-            #priority:2(context_version_id) take the view which is just in the same website
-            elif context_version_id and k.version_id.id is False and k.website_id.id and k.website_id.id == context_website_id:
-                if not priority.get(k.key) or priority.get(k.key) < 3:
-                    right_ids[k.key] = k.id
-                    priority[k.key] = 2
-            #priority:3(context_version_id) take the original view
-            elif context_version_id and k.version_id.id is False and k.website_id.id is False:
-                if not priority.get(k.key) or priority.get(k.key) < 2:
-                    right_ids[k.key] = k.id
-                    priority[k.key] = 1
-            #priority:1(without context_version_id) take the view which is just in the same website
-            elif not context_version_id and k.version_id.id is False and k.website_id.id and k.website_id.id == context_website_id:
-                right_ids[k.key] = k.id
-                priority[k.key] = 2
-            #priority:2(without context_version_id) take the original view
-            elif not context_version_id and k.version_id.id is False and k.website_id.id is False:
-                if not priority.get(k.key) or priority.get(k.key) < 2:
-                    right_ids[k.key] = k.id
-                    priority[k.key] = 1
-        return [x for x in arch if x[1] in right_ids.values()]
-        
+
+        # keep the most suited view when several view with same key are available
+        chosen_view_ids = self.browse(view_id for _, view_id in arch).filter_duplicate().ids
+
+        return [x for x in arch if x[1] in chosen_view_ids]
+
     #To active or desactive the right views according to the key
     def toggle(self, cr, uid, ids, context=None):
         """ Switches between enabled and disabled statuses
