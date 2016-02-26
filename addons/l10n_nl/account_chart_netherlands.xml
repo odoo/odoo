@@ -3329,6 +3329,19 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
         </record>
+        <record id="btw_6_buy_incl" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen laag (inkopen incl. BTW)</field>
+            <field name="description">6% BTW Incl.</field>
+            <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include">True</field>
+            <field name="refund_account_id" ref="vat_refund_low"/>
+            <field name="account_id" ref="vat_refund_low"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
+        </record>
         <record id="btw_21_buy" model="account.tax.template">
             <field name="sequence">5</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3336,6 +3349,19 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="description">21% BTW</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_high"/>
+            <field name="account_id" ref="vat_refund_high"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
+        </record>
+        <record id="btw_21_buy_incl" model="account.tax.template">
+            <field name="sequence">5</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen hoog (inkopen incl. BTW)</field>
+            <field name="description">21% BTW Incl.</field>
+            <field eval="21" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include">True</field>
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">purchase</field>
