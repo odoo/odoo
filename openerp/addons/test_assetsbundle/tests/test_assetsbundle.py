@@ -129,7 +129,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Checks that a bundle rendered in debug mode outputs non-minified assets.
         """
         debug_bundle = AssetsBundle(self.jsbundle_xmlid, cr=self.cr, uid=self.uid, context={}, registry=self.registry)
-        content = debug_bundle.to_html(debug=True)
+        content = debug_bundle.to_html(debug='assets')
         # find back one of the original asset file
         self.assertIn('/test_assetsbundle/static/src/js/test_jsfile1.js', content)
 
@@ -259,7 +259,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
         debug_bundle = AssetsBundle(self.cssbundle_xmlid, cr=self.cr, uid=self.uid, context={}, registry=self.registry, max_css_rules=1)
-        content = debug_bundle.to_html(debug=True)
+        content = debug_bundle.to_html(debug='assets')
         # find back one of the original asset file
         self.assertIn('/test_assetsbundle/static/src/css/test_cssfile1.css', content)
 
@@ -325,7 +325,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
     def _bundle(self, should_create, should_unlink):
         self.mock_ira_create.reset_mock()
         self.mock_ira_unlink.reset_mock()
-        AssetsBundle(self.lessbundle_xmlid, cr=self.cr, uid=self.uid, context={}, registry=self.registry).to_html(debug=True)
+        AssetsBundle(self.lessbundle_xmlid, cr=self.cr, uid=self.uid, context={}, registry=self.registry).to_html(debug='assets')
         self.assertEquals(self.mock_ira_create.call_count, int(should_create))
         self.assertEquals(self.mock_ira_unlink.call_count, int(should_unlink))
 

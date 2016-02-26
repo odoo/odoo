@@ -68,7 +68,7 @@ var UserMenu = Widget.extend({
         }
 
         function menu_help_about(db_info) {
-            var $help = $(QWeb.render("UserMenu.about", {db_info: db_info}));
+            var $help = $(QWeb.render("UserMenu.about", {db_info: db_info, debug: core.debug}));
             $help.find('a.oe_activate_debug_mode').click(function (e) {
                 e.preventDefault();
                 window.location = $.param.querystring(window.location.href, 'debug');

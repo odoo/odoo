@@ -321,6 +321,8 @@ class WebRequest(object):
         """ Indicates whether the current request is in "debug" mode
         """
         debug = 'debug' in self.httprequest.args
+        if debug and self.httprequest.args.get('debug') == 'assets':
+            debug = 'assets'
 
         # check if request from rpc in debug mode
         if not debug:
