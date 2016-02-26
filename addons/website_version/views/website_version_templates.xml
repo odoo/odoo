@@ -34,6 +34,12 @@
             </xpath> 
         </template>
 
+        <template id="disable_html_editor" inherit_id="website.user_navbar">
+            <xpath expr="//li[@id='html_editor']" position="attributes">
+                <attribute name="t-if">not version_id</attribute>
+            </xpath>
+        </template>
+
         <template id="assets_frontend_AB" name="website_AB assets" inherit_id="website.layout">
             <xpath expr="//script[contains(@id, 'tracking_code')]" position="replace">
                 <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
