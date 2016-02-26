@@ -248,7 +248,7 @@ var DashBoard = form_common.FormWidget.extend({
             };
             var list = am.inner_widget.views.list;
             if (list) {
-                list.created.done(function() {
+                list.loaded.done(function() {
                     $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
                         new_form_action(id);
                     });
@@ -256,7 +256,7 @@ var DashBoard = form_common.FormWidget.extend({
             }
             var kanban = am.inner_widget.views.kanban;
             if (kanban) {
-                kanban.created.done(function() {
+                kanban.loaded.done(function() {
                     kanban.controller.open_record = function(event, editable) {
                         new_form_action(event.data.id, editable);
                     };
