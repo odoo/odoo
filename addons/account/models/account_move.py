@@ -1257,6 +1257,8 @@ class AccountPartialReconcile(models.Model):
             cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
             for example).
         """
+        # we must unlink the reconciliation with the exchange rate difference entry as well, to be able to reconcile it with its reversal entry
+        to_unlink = self
         exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
         # revert the currency difference entry
         reversed_moves = exchange_rate_entries.reverse_moves()
@@ -1270,10 +1272,11 @@ class AccountPartialReconcile(models.Model):
                 if acm_line.account_id.reconcile:
                     for origin_line in origin_move.line_ids:
                         if origin_line.account_id == acm_line.account_id and origin_line.debit == acm_line.credit and origin_line.credit == acm_line.debit:
+                            to_unlink |= origin_line.matched_debit_ids | origin_line.matched_credit_ids
                             to_rec = origin_line + acm_line
                             pairs_to_rec.append(to_rec)
         # the call to super() had to be delayed in order to mark the move lines to reconcile together (to use 'rate_diff_partial_rec_id')
-        res = super(AccountPartialReconcile, self).unlink()
+        res = super(AccountPartialReconcile, to_unlink).unlink()
         # now that the origin currency difference line is not reconciled anymore, we can reconcile it with its reversal entry to cancel it completly
         for to_rec in pairs_to_rec:
             to_rec.reconcile()
