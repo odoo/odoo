@@ -13,11 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
-msgid "\n"
+msgid ""
+"\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
@@ -41,7 +43,7 @@ msgid "\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -107,7 +109,7 @@ msgstr "\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -157,17 +159,13 @@ msgid " * The 'Draft' status is used when a user is encoding a new and unconfirm
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * The 'Dự thảo' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
-" * The 'Mở' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
-" * The 'Đã thanh toán' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
-" * The 'Hủy' status is used when user cancel invoice."
+msgstr " * Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo một hóa đơn chưa được xác nhận.             \n* Hóa đơn 'Tạm' (Pro-forma) là một trạng thái tạm thời mà chưa có số hóa đơn.             \n* Trạng thái 'Mở' được sử dụng khi người dùng tạo hóa đơn, một số hóa đơn được sinh ra. Nó đang trong tình trạng mở cho đến lúc người dùng không thanh toán hóa đơn này.             \n* Trạng thái 'Đã thanh toán' được thiết lập tự động khi hóa đơn được thanh toán hết. Nó liên quan đến bút toán đã đối soát hoặc chưa đối soát.             \n* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy hóa đơn."
 
 #. module: account
 #: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
-msgstr " Centralisation"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -179,7 +177,7 @@ msgstr " giây"
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr "Số Bút toán"
+msgstr "SL Bút toán"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -196,12 +194,12 @@ msgstr "SL Bút toán"
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr "# of Invoices"
+msgstr "SL Hoá đơn"
 
 #. module: account
 #: field:account.entries.report,nbr:0
 msgid "# of Items"
-msgstr "SL phát sinh"
+msgstr "SL phát sinh KT"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
@@ -219,43 +217,40 @@ msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 msgstr "${object.company_id.name|safe} Hóa đơn (Ref ${object.number or 'n/a'})"
 
 #. module: account
-#: code:addons/account/account.py:1874
+#: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Bản sao)"
 
 #. module: account
-#: code:addons/account/account.py:645
-#: code:addons/account/account.py:796
-#: code:addons/account/account.py:797
+#: code:addons/account/account.py:635 code:addons/account/account.py:786
+#: code:addons/account/account.py:787
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
 
 #. module: account
-#: view:website:account.report_partnerledger
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: account
 #: view:website:account.report_partnerbalance
 msgid "(Account/Partner) Name"
-msgstr "(Tài khoản/Đối tác) Tên"
+msgstr "Tên (Tài khoản/Đối tác)"
 
 #. module: account
 #: view:account.chart:account.view_account_chart
-msgid "(If you do not select a specific fiscal year, all open fiscal years will be selected.)"
+msgid ""
+"(If you do not select a specific fiscal year, all open fiscal years will be "
+"selected.)"
 msgstr "(Nếu bạn không chọn năm tài chính, tất cả các nằm tài chính đang mở sẽ được chọn.)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
-msgid "(If you do not select a specific period, all open periods will be selected)"
-msgstr "(Nếu bạn không chọn một chu kỳ cụ thể, tất cả các chhu kỳ sẽ được chọn)"
+msgid ""
+"(If you do not select a specific period, all open periods will be selected)"
+msgstr "(Nếu bạn không chọn một chu kỳ cụ thể, tất cả các chu kỳ sẽ được chọn)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Hóa đơn không nên đối soát nếu bạn muốn mở nó)"
+msgstr "(Hóa đơn không nên được đối soát nếu bạn muốn để nó ở tình trạng mở)"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
@@ -293,10 +288,22 @@ msgid "3 Monthly"
 msgstr "Mỗi 3 tháng"
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term
+#: model:account.payment.term,note:account.account_payment_term
+msgid "30 Days End of Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr "30 Net Days"
+msgstr "30 ngày (30 Net Days)"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "30% Advance End 30 Days"
+msgstr ""
 
 #. module: account
 #: view:website:account.report_generalledger
@@ -310,7 +317,8 @@ msgstr ": Bảng Cân đối thử"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a fiscal period.\n"
 "              </p><p>\n"
 "                An accounting period typically is a month or a quarter. It\n"
@@ -327,7 +335,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a journal.\n"
 "              </p><p>\n"
 "                A journal is used to record transactions of all accounting data\n"
@@ -351,7 +360,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add an account.\n"
 "              </p><p>\n"
 "                An account is part of a ledger allowing your company\n"
@@ -366,7 +376,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add an account.\n"
 "              </p><p>\n"
 "                When doing multi-currency transactions, you may loose or gain\n"
@@ -380,7 +391,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a customer invoice.\n"
 "              </p><p>\n"
 "                Odoo's electronic invoicing allows to ease and fasten the\n"
@@ -396,7 +408,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a customer refund.\n"
 "              </p><p>\n"
 "                A refund is a document that credits an invoice completely or\n"
@@ -410,7 +423,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a journal entry.\n"
 "              </p><p>\n"
 "                A journal entry consists of several journal items, each of\n"
@@ -422,11 +436,12 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Bấm để tạo mới một bút toán.\n              </p><p>\n                Một bút toán bao gồm một vào phát sinh nợ hoặc phát có\n              </p><p>\n                Hệ thống tự động tạo một bút toán cho mỗi tài liệu kế toán:\n                hóa đơn, hoàn tiền, thanh toán, sổ phụ ngân hàng,...,\n                Do đó bạn chỉ nên ghi nhận bút toán thủ công cho các hoạt động khác\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new cash log.\n"
 "              </p><p>\n"
 "                A Cash Register allows you to manage cash entries in your cash\n"
@@ -447,7 +462,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a statement operation template.\n"
 "              </p><p>\n"
 "                Those can be used to quickly create a move line when reconciling\n"
@@ -458,7 +474,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new account type.\n"
 "              </p><p>\n"
 "                An account type is used to determine how an account is used in\n"
@@ -472,7 +489,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new recurring entry.\n"
 "              </p><p>\n"
 "                A recurring entry occurs on a recurrent basis from a specific\n"
@@ -490,7 +508,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new tax code.\n"
 "              </p><p>\n"
 "                Depending on the country, a tax code is usually a cell to fill\n"
@@ -503,7 +522,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record a new supplier invoice.\n"
 "              </p><p>\n"
 "                You can control the invoice from your supplier according to\n"
@@ -515,7 +535,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to register a bank statement.\n"
 "              </p><p>\n"
 "                A bank statement is a summary of all financial transactions\n"
@@ -530,7 +551,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to register a refund you received from a supplier.\n"
 "              </p><p>\n"
 "                Instead of creating the supplier refund manually, you can generate\n"
@@ -547,7 +569,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to start a new fiscal year.\n"
 "              </p><p>\n"
 "                Define your company's financial year according to your needs. A\n"
@@ -563,7 +586,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Select the period and the journal you want to fill.\n"
 "              </p><p>\n"
 "                This view can be used by accountants in order to quickly record\n"
@@ -577,7 +601,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "            Click to setup a new bank account. \n"
 "          </p><p>\n"
 "            Configure your company's bank account and select those that must\n"
@@ -587,22 +612,24 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Nhấp chuột để thiết lập một tài khoản ngân hàng mới. \n          </p><p>\n            Cấu hình tài khoản ngân hàng của công ty và lựa chọn tài khoản\n            sẽ xuất hiện trong phần cuối của báo cáo.\n          </p><p>\n            Nếu bạn sử dụng ứng dụng kế toán của hệ thống, các sổ nhật ký và tài khoản\n            sẽ được tạo tự động dựa trên những dữ liệu này.\n          </p>\n        "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
-msgid "<p>\n"
+msgid ""
+"<p>\n"
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
 msgstr "<p>\n"
-"                   Không tìm thấy phát sinh.\n"
+"                   Không tìm thấy phát sinh kế toán.\n"
 "                </p>\n"
 "            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
-msgid "<p>\n"
+msgid ""
+"<p>\n"
 "                Click to add a new analytic account.\n"
 "              </p><p>\n"
 "                The normal chart of accounts has a structure defined by the\n"
@@ -640,14 +667,21 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
-msgid "A period is a fiscal period of time during which accounting entries should be recorded for accounting related activities. Monthly period is the norm but depending on your countries or company needs, you could also have quarterly periods. Closing a period will make it impossible to record new accounting entries, all new entries should then be made on the following open period. Close a period when you do not want to record new entries and want to lock this period for tax related calculation."
-msgstr "Thời gian là một thời kỳ tài chính của thời gian mà ghi sổ kế toán phải được ghi lại để hạch toán các hoạt động liên quan. Kỳ hàng tháng là mức nhưng tùy thuộc vào nhu cầu nước của bạn hoặc công ty, bạn cũng có thể có thời kỳ hàng quý. Kết thúc một thời gian sẽ làm cho nó không thể ghi ghi sổ kế toán mới, tất cả các mục mới sau đó phải được thực hiện vào thời kỳ mở cửa sau. Đóng một thời gian khi bạn không muốn ghi lại các mục mới và muốn khóa thời gian này để tính thuế liên quan."
+msgid ""
+"A period is a fiscal period of time during which accounting entries should "
+"be recorded for accounting related activities. Monthly period is the norm "
+"but depending on your countries or company needs, you could also have "
+"quarterly periods. Closing a period will make it impossible to record new "
+"accounting entries, all new entries should then be made on the following "
+"open period. Close a period when you do not want to record new entries and "
+"want to lock this period for tax related calculation."
+msgstr "Một chu kỳ là một thời kỳ tài chính của thời gian mà ghi sổ kế toán phải được ghi lại để hạch toán các hoạt động liên quan. Kỳ hàng tháng là mức nhưng tùy thuộc vào nhu cầu nước của bạn hoặc công ty, bạn cũng có thể có thời kỳ hàng quý. Kết thúc một thời gian sẽ làm cho nó không thể ghi ghi sổ kế toán mới, tất cả các mục mới sau đó phải được thực hiện vào thời kỳ mở cửa sau. Đóng một thời gian khi bạn không muốn ghi lại các mục mới và muốn khóa thời gian này để tính thuế liên quan."
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:803
+#: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Một phát sinh được chọn đã được đối soát."
+msgstr "Một phát sinh kế toán được chọn đã được đối soát rồi."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -657,7 +691,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_centraljournal
 msgid "A/C No."
-msgstr ""
+msgstr "Số TK"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -671,8 +705,7 @@ msgstr "Kiểu TK"
 #: field:account.automatic.reconcile,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
 #: field:account.entries.report,account_id:0
-#: field:account.invoice,account_id:0
-#: field:account.invoice.line,account_id:0
+#: field:account.invoice,account_id:0 field:account.invoice.line,account_id:0
 #: field:account.invoice.report,account_id:0
 #: field:account.journal,account_control_ids:0
 #: field:account.model.line,account_id:0
@@ -681,15 +714,14 @@ msgstr "Kiểu TK"
 #: field:account.move.line.reconcile.select,account_id:0
 #: field:account.move.line.unreconcile.select,account_id:0
 #: field:account.statement.operation.template,account_id:0
-#: code:addons/account/static/src/js/account_widgets.js:59
-#: code:addons/account/static/src/js/account_widgets.js:65
+#: code:addons/account/static/src/js/account_widgets.js:60
+#: code:addons/account/static/src/js/account_widgets.js:66
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:139
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:162
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:161
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:analytic.entries.report,account_id:0
 #: model:ir.model,name:account.model_account_account
-#: field:report.account.sales,account_id:0
-#: view:website:account.report_journal
+#: field:report.account.sales,account_id:0 view:website:account.report_journal
 #: view:website:account.report_partnerledger
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_salepurchasejournal
@@ -711,12 +743,12 @@ msgstr "Cân đối tài khoản quản trị"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr "Biểu đồ tài khoản quản trị"
+msgstr "Biểu đồ Tài khoản quản trị"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr "Sổ cái chi phí kế toán quản trị"
+msgstr "Sổ cái Chi phí kế toán quản trị"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report

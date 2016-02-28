@@ -1,10 +1,10 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_byproduct
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-13 09:27+0000\n"
 "PO-Revision-Date: 2014-09-13 16:33+0700\n"
@@ -13,19 +13,19 @@ msgstr ""
 "com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr "Công thức sản xuất"
+msgstr "Định mức nguyên liệu"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr "BoM"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
@@ -33,14 +33,24 @@ msgid "Byproduct"
 msgstr "Phụ phẩm"
 
 #. module: mrp_byproduct
-#: view:mrp.bom:0 field:mrp.bom,sub_products:0
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
 msgid "Byproducts"
 msgstr "Phụ phẩm"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "Thay đổi số lượng sản phẩm"
+msgstr "Đổi Số lượng Sản phẩm"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -67,6 +77,21 @@ msgid "Fixed"
 msgstr "Cố định"
 
 #. module: mrp_byproduct
+#: field:mrp.subproduct,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
+
+#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "Lệnh sản xuất"
@@ -89,7 +114,7 @@ msgstr "Đơn vị đo lường"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr "Loại số lượng"
+msgstr "Kiểu số lượng"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63

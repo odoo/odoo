@@ -118,19 +118,9 @@ msgid "Active"
 msgstr "Có hiệu lực"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "April"
-msgstr "Tháng 4"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "August"
-msgstr "Tháng 8"
-
-#. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_report
 msgid "CRM Claim Report"
-msgstr "Báo cáo Khiếu nại"
+msgstr "Báo cáo Khiếu nại CRM"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
@@ -244,7 +234,7 @@ msgstr "Đóng"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr "Chung cho tất cả Đội ngũ"
+msgstr "Chung cho tất cả các đội"
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -266,7 +256,7 @@ msgstr "Hành động khắc phục"
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
 msgid "Create Date"
-msgstr "Tạo ngày tháng"
+msgstr "Ngày tạo"
 
 #. module: crm_claim
 #: field:crm.claim,create_uid:0 field:crm.claim.stage,create_uid:0
@@ -294,13 +284,8 @@ msgid "Date of the last message posted on the record."
 msgstr "Ngày của thông điệp cuối cùng được ghi nhận trên một bản ghi"
 
 #. module: crm_claim
-#: view:crm.claim:0
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Dates"
-msgstr "Ngày"
-
-#. module: crm_claim
-#: view:crm.claim.report:0 field:crm.claim.report,day:0
-msgid "Day"
 msgstr "Ngày"
 
 #. module: crm_claim
@@ -308,11 +293,6 @@ msgstr "Ngày"
 #: field:crm.claim,date_deadline:0 field:crm.claim.report,date_deadline:0
 msgid "Deadline"
 msgstr "Hạn chót"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
-msgstr "Tháng 12"
 
 #. module: crm_claim
 #: field:crm.claim.report,delay_close:0
@@ -332,7 +312,7 @@ msgstr "Email đến"
 #. module: crm_claim
 #: field:crm.claim,email_from:0
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
@@ -342,12 +322,7 @@ msgstr "Bộ lọc mở rộng..."
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim1
 msgid "Factual Claims"
-msgstr "Khiếu nại thực tế"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "February"
-msgstr "Tháng 2"
+msgstr "Khiếu nại theo thực tế"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -375,11 +350,6 @@ msgstr ""
 "bằng cách sắp xếp chúng với các tiêu chí cụ thể."
 
 #. module: crm_claim
-#: field:crm.claim.stage,fold:0
-msgid "Hide in Views when Empty"
-msgstr "Hide in Views when Empty"
-
-#. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "High"
 msgstr "Cao"
@@ -389,12 +359,10 @@ msgstr "Cao"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 
 #. module: crm_claim
-#: field:crm.claim,id:0
+#: field:crm.claim,id:0 field:crm.claim.report,id:0 field:crm.claim.stage,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -408,9 +376,7 @@ msgstr "If checked new messages require your attention."
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr ""
-"Nếu đánh dấu trường này, trạng thái này sẽ được đề xuất mặc định cho mỗi đội "
-"ngũ bán hàng. Nó sẽ không gán cho đội ngũ đã tồn tại."
+msgstr "Nếu đánh dấu trường này, bước này sẽ được đề xuất mặc định cho mỗi đội ngũ bán hàng. Nó sẽ không gán bước này tới đội ngũ đã tồn tại."
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim5
@@ -423,24 +389,19 @@ msgid "Is a Follower"
 msgstr "Là một Người dõi theo"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "January"
-msgstr "Tháng 1"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "July"
-msgstr "Tháng 7"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "June"
-msgstr "Tháng 6"
-
-#. module: crm_claim
 #: field:crm.claim,message_last_post:0
 msgid "Last Message Date"
 msgstr "Ngày thông điệp gần nhất"
+
+#. module: crm_claim
+#: field:crm.claim,write_uid:0 field:crm.claim.stage,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: crm_claim
+#: field:crm.claim.stage,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
@@ -448,23 +409,13 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
-"Link between stages and sales teams. When set, this limitate the current "
-"stage to the selected sales teams."
+"Liên kết các giai đoạn với các đội bán hàng. Khi thiết lập thì sẽ giới hạn giai "
+"đoạn hiện tại cho một số đội bán hàng được chọn."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Low"
 msgstr "Thấp"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "March"
-msgstr "Tháng 3"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "May"
-msgstr "Tháng 5"
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -477,11 +428,6 @@ msgid "Messages and communication history"
 msgstr "Lịch sử thông điệp và liên lạc"
 
 #. module: crm_claim
-#: view:crm.claim.report:0 field:crm.claim.report,month:0
-msgid "Month"
-msgstr "Tháng"
-
-#. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Month of claim"
 msgstr "Tháng khiếu nại"
@@ -489,22 +435,17 @@ msgstr "Tháng khiếu nại"
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Case(s)"
-msgstr "My Case(s)"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Company"
-msgstr "Công ty của bạn"
+msgstr "Công ty tôi"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Sales Team(s)"
-msgstr "Đội ngũ bán hàng của bạn"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "My company"
-msgstr "Công ty của bạn"
+msgstr "Đội bán hàng của tôi"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
@@ -533,19 +474,9 @@ msgid "Normal"
 msgstr "Bình thường"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "November"
-msgstr "Tháng 11"
-
-#. module: crm_claim
 #: help:crm.claim.report,delay_close:0
 msgid "Number of Days to close the case"
 msgstr "Số ngày để đóng trường hợp"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "October"
-msgstr "Tháng 10"
 
 #. module: crm_claim
 #: field:crm.claim.report,delay_expected:0
@@ -583,8 +514,7 @@ msgid "Preventive Action"
 msgstr "Hành động dự phòng"
 
 #. module: crm_claim
-#: field:crm.claim,priority:0 view:crm.claim.report:0
-#: field:crm.claim.report,priority:0
+#: field:crm.claim,priority:0 field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "Mức độ ưu tiên"
 
@@ -601,17 +531,17 @@ msgstr "Bị từ chối"
 #. module: crm_claim
 #: field:crm.claim,resolution:0
 msgid "Resolution"
-msgstr "Resolution"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Resolution Actions"
-msgstr "Resolution Actions"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Responsibilities"
-msgstr "Chịu trách nhiệm"
+msgstr "Nghĩa vụ"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -630,18 +560,16 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
-"Responsible sales team. Define Responsible user and Email account for mail "
-"gateway."
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
 msgid "Root Cause"
-msgstr "Root Cause"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Root Causes"
-msgstr "Root Causes"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,section_id:0
@@ -667,17 +595,12 @@ msgstr "Tìm kiếm Khiếu nại"
 #. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
-msgstr "Section"
+msgstr "Khu vực"
 
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr "Sections"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "September"
-msgstr "Tháng 9"
+msgstr "Khu vực"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
@@ -687,7 +610,7 @@ msgstr "Trình tự"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Đã xử lý"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -724,18 +647,9 @@ msgstr ""
 "phẩy"
 
 #. module: crm_claim
-#: help:crm.claim.stage,fold:0
-msgid ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
-msgstr ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
-
-#. module: crm_claim
 #: field:crm.claim,user_fault:0
 msgid "Trouble Responsible"
-msgstr "Trouble Responsible"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
@@ -779,11 +693,16 @@ msgid "Watchers Emails"
 msgstr "Email người theo dõi"
 
 #. module: crm_claim
-#: view:crm.claim.report:0 field:crm.claim.report,name:0
-msgid "Year"
-msgstr "Năm"
+#: field:crm.claim,website_message_ids:0
+msgid "Website Messages"
+msgstr "Thông điệp Website"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Year of claim"
-msgstr "Năm khiếu nại"
+#: help:crm.claim,website_message_ids:0
+msgid "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
+msgstr "Khối lượng công việc"

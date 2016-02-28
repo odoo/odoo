@@ -1,26 +1,20 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_analytic_plans
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-08 02:14+0000\n"
-"PO-Revision-Date: 2014-09-08 10:07+0700\n"
-"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
-"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
-"com>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-02-23 04:22+0000\n"
+"Last-Translator: David <davidtran.hp@gmail.com>\n"
+"Language-Team: T.V.T Marine Automation (http://ma.tvtmarine.com)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
-"Language: Vietnam\n"
-
-#. module: account_analytic_plans
-#: view:False:0
-msgid "100.00%"
-msgstr "100.00%"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:218
@@ -34,7 +28,7 @@ msgid "Account Id"
 msgstr "Mã tài khoản"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Account Name"
 msgstr "Tên tài khoản"
 
@@ -69,7 +63,7 @@ msgid "Account6 Id"
 msgstr "Mã tài khoản 6"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Amount"
 msgstr "Tổng tiền"
 
@@ -79,14 +73,16 @@ msgid "Analytic Account"
 msgstr "Tài khoản quản trị"
 
 #. module: account_analytic_plans
-#: view:False:0 field:account.crossovered.analytic,ref:0
+#: field:account.crossovered.analytic,ref:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Analytic Account Reference"
 msgstr "Tham chiếu tài khoản quản trị"
 
 #. module: account_analytic_plans
 #. openerp-web
 #: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
+#: view:account.analytic.plan.instance:account_analytic_plans.account_analytic_plan_instance_form
+#: view:account.analytic.plan.instance:account_analytic_plans.account_analytic_plan_instance_tree
 #: field:account.analytic.plan.instance,name:0
 #: field:account.bank.statement.line,analytics_id:0
 #: field:account.invoice.line,analytics_id:0
@@ -99,12 +95,12 @@ msgid "Analytic Distribution"
 msgstr "Phân bổ quản trị"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
+#: view:account.analytic.plan.instance.line:account_analytic_plans.account_analytic_plan_instance_line_form
 msgid "Analytic Distribution Line"
 msgstr "Chi tiết phân bổ quản trị"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
+#: view:account.analytic.plan.instance.line:account_analytic_plans.account_analytic_plan_instance_line_tree
 msgid "Analytic Distribution Lines"
 msgstr "Chi tiết phân bổ quản trị"
 
@@ -116,11 +112,11 @@ msgstr "Đối tượng phân bổ quản trị"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr "Analytic Instance Line"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
-#: view:account.crossovered.analytic:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
 #: field:account.crossovered.analytic,journal_ids:0
 msgid "Analytic Journal"
 msgstr "Sổ nhật ký quản trị"
@@ -128,10 +124,12 @@ msgstr "Sổ nhật ký quản trị"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytic Line"
+msgstr "Dòng/Chi tiết Phân tích"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan:0 field:account.analytic.plan,name:0
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_form
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_search
+#: field:account.analytic.plan,name:0
 #: field:account.analytic.plan.line,plan_id:0
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
@@ -142,24 +140,30 @@ msgstr "Kế hoạch quản trị"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr "Analytic Plan Instance"
+msgstr ""
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
+#: view:account.analytic.plan.line:account_analytic_plans.account_analytic_plan_line_form
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
-msgstr "Analytic Plan Line"
+msgstr ""
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
+#: view:account.analytic.plan.line:account_analytic_plans.account_analytic_plan_line_tree
 msgid "Analytic Plan Lines"
-msgstr "Analytic Plan Lines"
+msgstr ""
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan:0 field:account.analytic.plan,plan_ids:0
-#: field:account.journal,plan_id:0
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_search
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_tree
+#: field:account.analytic.plan,plan_ids:0 field:account.journal,plan_id:0
 msgid "Analytic Plans"
 msgstr "Kế hoạch quản trị"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,name:0
+msgid "Axis Name"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -172,26 +176,48 @@ msgid "Bank Statement Line"
 msgstr "Giao dịch trên sổ phụ ngân hàng"
 
 #. module: account_analytic_plans
-#: view:account.crossovered.analytic:0 view:analytic.plan.create.model:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Code"
 msgstr "Mã"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Company:"
 msgstr "Công ty:"
 
 #. module: account_analytic_plans
-#: view:False:0 view:account.crossovered.analytic:0
+#: field:account.analytic.plan,create_uid:0
+#: field:account.analytic.plan.instance,create_uid:0
+#: field:account.analytic.plan.instance.line,create_uid:0
+#: field:account.analytic.plan.line,create_uid:0
+#: field:account.crossovered.analytic,create_uid:0
+#: field:analytic.plan.create.model,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,create_date:0
+#: field:account.analytic.plan.instance,create_date:0
+#: field:account.analytic.plan.instance.line,create_date:0
+#: field:account.analytic.plan.line,create_date:0
+#: field:account.crossovered.analytic,create_date:0
+#: field:analytic.plan.create.model,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
 #: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
 #: model:ir.actions.report.xml,name:account_analytic_plans.action_account_analytic_account_crossovered_analytic
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Crossovered Analytic"
-msgstr "Crossovered Analytic"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
@@ -205,7 +231,8 @@ msgstr "Mã phân bổ"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
-#: view:analytic.plan.create.model:0
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
 #, python-format
 msgid "Distribution Model Saved"
 msgstr "Đối tượng phân bổ đã lưu"
@@ -235,9 +262,19 @@ msgid "Error!"
 msgstr "Lỗi!"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "From Date:"
 msgstr "Từ ngày:"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,id:0 field:account.analytic.plan.instance,id:0
+#: field:account.analytic.plan.instance.line,id:0
+#: field:account.analytic.plan.line,id:0
+#: field:account.crossovered.analytic,id:0
+#: field:analytic.plan.create.model,id:0
+#: field:report.account_analytic_plans.report_crossoveredanalyticplans,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -258,6 +295,26 @@ msgstr "Sổ nhật ký"
 #: model:ir.model,name:account_analytic_plans.model_account_move_line
 msgid "Journal Items"
 msgstr "Phát sinh KT"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,write_uid:0
+#: field:account.analytic.plan.instance,write_uid:0
+#: field:account.analytic.plan.instance.line,write_uid:0
+#: field:account.analytic.plan.line,write_uid:0
+#: field:account.crossovered.analytic,write_uid:0
+#: field:analytic.plan.create.model,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,write_date:0
+#: field:account.analytic.plan.instance,write_date:0
+#: field:account.analytic.plan.instance.line,write_date:0
+#: field:account.analytic.plan.line,write_date:0
+#: field:account.crossovered.analytic,write_date:0
+#: field:analytic.plan.create.model,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -281,18 +338,13 @@ msgstr "Đa kế hoạch"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:335
-#: code:addons/account_analytic_plans/account_analytic_plans.py:469
+#: code:addons/account_analytic_plans/account_analytic_plans.py:471
 #, python-format
 msgid "No Analytic Journal!"
 msgstr "Không có sổ nhật ký quản trị!"
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid "Ok"
-msgstr "Đồng ý"
-
-#. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Perc(%)"
 msgstr "Phần trăm(%)"
 
@@ -307,33 +359,28 @@ msgid "Plan Id"
 msgstr "Mã kế hoạch"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,name:0
-msgid "Plan Name"
-msgstr "Tên kế hoạch"
-
-#. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model."
 msgstr "Vui lòng điền tên và mã trước khi lưu."
 
 #. module: account_analytic_plans
-#: view:account.crossovered.analytic:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
 msgid "Print"
 msgstr "In"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
 msgid "Print Crossovered Analytic"
-msgstr "Print Crossovered Analytic"
+msgstr ""
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Printing Date:"
 msgstr "Ngày in:"
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Quantity"
 msgstr "Số lượng"
 
@@ -355,10 +402,10 @@ msgstr "Tài khoản gốc của kế hoạch này."
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Chi tiết Đơn hàng"
+msgstr "Chi tiết Đơn hàng Bán"
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
 msgid "Save This Distribution as a Model"
 msgstr "Lưu phân bổ này như là một Đối tượng"
 
@@ -391,13 +438,13 @@ msgid "There is no analytic plan defined."
 msgstr "Không có kế hoạch quản trị được định."
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model
 msgid ""
 "This distribution model has been saved.You will be able to reuse it later."
 msgstr "Đối tượng phân bổ này đã được lưu. Bạn sẽ có thể tài sử dụng nó sau."
 
 #. module: account_analytic_plans
-#: view:False:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "To Date:"
 msgstr "Đến ngày:"
 
@@ -409,15 +456,10 @@ msgstr "Lỗi người dùng!"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:335
-#: code:addons/account_analytic_plans/account_analytic_plans.py:469
+#: code:addons/account_analytic_plans/account_analytic_plans.py:471
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal."
-msgstr "Bạn phải định nghĩa một sổ nhật ký quản trị trên sổ nhật ký '%s'."
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
-msgid "analytic.plan.create.model"
-msgstr "analytic.plan.create.model"
+msgstr "Bạn phải định nghĩa một sổ nhật ký quản trị ở sổ nhật ký '%s'."
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
@@ -425,7 +467,8 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
-#: view:account.crossovered.analytic:0 view:analytic.plan.create.model:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
 msgid "or"
 msgstr "hoặc"
 

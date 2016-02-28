@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-08 08:19+0000\n"
 "PO-Revision-Date: 2014-09-08 15:34+0700\n"
@@ -152,9 +152,25 @@ msgid "Contract: "
 msgstr "Hợp đồng: "
 
 #. module: analytic
+#: field:account.analytic.line,create_date:0
+msgid "Create Date"
+msgstr "Ngày tạo"
+
+#. module: analytic
+#: field:account.analytic.account,create_uid:0
+#: field:account.analytic.line,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: analytic
+#: field:account.analytic.account,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
+
+#. module: analytic
 #: field:account.analytic.account,credit:0
 msgid "Credit"
-msgstr "Bên có"
+msgstr "Bên Có"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
@@ -174,7 +190,7 @@ msgstr "Ngày"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Ngày của thông điệp gần nhất được ghi nhận trên bản ghi."
+msgstr "Ngày gần nhất của thông điệp được vào sổ trên bản ghi này."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -223,14 +239,17 @@ msgstr "Tên đầy đủ"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: analytic
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -282,6 +301,18 @@ msgid "Last Message Date"
 msgstr "Ngày thông điệp gần nhất"
 
 #. module: analytic
+#: field:account.analytic.account,write_uid:0
+#: field:account.analytic.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: analytic
+#: field:account.analytic.account,write_date:0
+#: field:account.analytic.line,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
+
+#. module: analytic
 #: field:account.analytic.account,message_ids:0
 msgid "Messages"
 msgstr "Thông điệp"
@@ -329,7 +360,7 @@ msgstr "Đơn vị dịch vụ trả trước"
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr "Người quản trị dự án"
+msgstr "Chủ nhiệm Dự án"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0

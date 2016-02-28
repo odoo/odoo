@@ -5,7 +5,7 @@
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-30 10:59+0000\n"
 "PO-Revision-Date: 2015-03-30 10:59+0000\n"
@@ -91,7 +91,9 @@ msgstr "Tất cả bản ghi (không trùng lặp)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
-msgid "An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent"
+msgid ""
+"An activity with a signal can be called programmatically. Be careful, the "
+"workitem is always created when a signal is sent"
 msgstr "Một hoạt động với một dấu hiệu có thể được gọi một cách khả trình (lập trình được). Hãy cẩn thận, workitem sẽ luôn được tạo khi một dấu hiệu được gửi"
 
 #. module: marketing_campaign
@@ -117,7 +119,9 @@ msgstr "Tự động chuyển tiếp"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
-msgid "By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted."
+msgid ""
+"By activating this option, workitems that aren't executed because the "
+"condition is not met are marked as cancelled instead of being deleted."
 msgstr "Bằng việc kích hoạt tùy chọn này, các workitem mà không được thực thi do không đáp ứng đủ điều kiện sẽ được đánh dấu là Hủy bỏ thay vì Đang xóa."
 
 #. module: marketing_campaign
@@ -203,8 +207,7 @@ msgid "Cancel Workitem"
 msgstr "Hủy bỏ Workitem"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -283,7 +286,9 @@ msgstr "Ngày tháng"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
-msgid "Date on which this segment was synchronized last time (automatically or manually)"
+msgid ""
+"Date on which this segment was synchronized last time (automatically or "
+"manually)"
 msgstr "Ngày tháng mà phân khúc này được đồng bộ lần cuối (một cách tự động hoặc thủ công)"
 
 #. module: marketing_campaign
@@ -308,7 +313,13 @@ msgstr "Tháng Mười hai"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
-msgid "Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. \"No duplicates\" prevents selecting records which have already entered the campaign previously.If the campaign has a \"unique field\" set, \"no duplicates\" will also prevent selecting records which have the same value for the unique field as other records that already entered the campaign."
+msgid ""
+"Determines an additional criterion to add to the filter when selecting new "
+"records to inject in the campaign. \"No duplicates\" prevents selecting "
+"records which have already entered the campaign previously.If the campaign "
+"has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
 msgstr "Xác định một tiêu chí bổ sung để thêm vào một bộ lọc khi chọn các bản ghi mới để đưa vào chiến dịch. \"Không trùng lặp\" ngăn ngừa việc chọn các bản ghi mà trươc đó đã được đưa vào chiến dịch."
 
 #. module: marketing_campaign
@@ -319,7 +330,7 @@ msgstr "Thư mục"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr "Không xóa các Workitem"
+msgstr "Không Xóa các Workitem"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -411,7 +422,11 @@ msgstr "Bộ lọc"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,ir_filter_id:0
-msgid "Filter to select the matching resource records that belong to this segment. New filters can be created and saved using the advanced search on the list view of the Resource. If no filter is set, all records are selected without filtering. The synchronization mode may also add a criterion to the filter."
+msgid ""
+"Filter to select the matching resource records that belong to this segment. "
+"New filters can be created and saved using the advanced search on the list "
+"view of the Resource. If no filter is set, all records are selected without "
+"filtering. The synchronization mode may also add a criterion to the filter."
 msgstr "Bộ lọc để chọn các bản ghi phù hợp với phân khúc này. Các bộ lọc mới có thể được tạo và lưu lại sử dụng chức năng tìm kiếm nâng cao trên khung nhìn kiểu danh mục (list view) của Nguồn. Nếu không có bộ lọc nào được thiết lập, tất cả các bản ghi sẽ được chọn mà không lọc. Chế độ đồng bộ cũng có thể thêm các tiêu chí vào bộ lọc."
 
 #. module: marketing_campaign
@@ -421,7 +436,10 @@ msgstr "Định phí"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
-msgid "Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting."
+msgid ""
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
 msgstr "Kinh phí cố định để thực thi chiến dịch này. Bạn có thể xác định cụ thể biến phí và thu nhập trên mỗi hoạt động chiến dịch. Thống kê về Chi phí và Thu nhập được baio gồm trong Báo cáo Chiến dịch."
 
 #. module: marketing_campaign
@@ -440,20 +458,20 @@ msgstr "Nhóm theo"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Xin chào, bạn sẽ nhận gói chào mừng thông qua email sớm thôi."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle"
 " of our Gold Partners"
-msgstr ""
+msgstr "Chào bạn, chúng tôi vui mừng báo bạn biết rằng bạn đã gia nhập vào nhóm Đối tác Vàng của chúng tôi."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Xin chào, chúng tôi vui mừng chào đón bạn như là Đối tác Bạc của chúng tôi ngày hôm nay!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -481,8 +499,16 @@ msgstr "Nếu ngày thàng không được cài đặt, workitem này phải đ�
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
-msgid "If set, this field will help segments that work in \"no duplicates\" mode to avoid selecting similar records twice. Similar records are records that have the same value for this unique field. For example by choosing the \"email_from\" field for CRM Leads you would prevent sending the same campaign to the same email address again. If not set, the \"no duplicates\" segments will only avoid selecting the same record again if it entered the campaign previously. Only easily comparable fields like textfields, integers, selections or single relationships may be used."
-msgstr "Nếu được cài đặt, trường này sẽ giúp các phân khúc mà đang hoạt động ở chế độ \"không trùng lắp\" tránh việc lựa chọn các bản ghi tương tự 2 lần. Các bản ghi tương tự là các bản ghi mà có cùng giá trị cho trường dữ liệu duy nhất này. Ví dụ, bằng việc chọn trường \"email_from\" cho các Tiềm năng CRM, bạn chắc sẽ muốn tránh việc gửi cùng một chiến dịch đến cùng một địa chỉ email. Nếu chưa cài đặt, các phân khúc \"không trùng lặp\" sẽ chỉ tránh việc chọn lại cùng một bản ghi nếu trước đó bản ghi đó đã được đưa vào chiến dịch rồi. Chỉ có các trường so sánh được (như textfields, integers, selections hoặc single relationships) mới có thể được sử dụng."
+msgid ""
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
+"\"email_from\" field for CRM Leads you would prevent sending the same "
+"campaign to the same email address again. If not set, the \"no duplicates\" "
+"segments will only avoid selecting the same record again if it entered the "
+"campaign previously. Only easily comparable fields like textfields, "
+"integers, selections or single relationships may be used."
+msgstr "Nếu được cài đặt, trường này sẽ giúp các phân khúc mà đang hoạt động ở chế độ \"không trùng lắp\" tránh việc lựa chọn các bản ghi tương tự 2 lần. Các bản ghi tương tự là các bản ghi mà có cùng giá trị cho trường dữ liệu duy nhất này. Ví dụ, bằng việc chọn trường \"email_from\" cho các Nguồn dẫn CRM, bạn chắc sẽ muốn tránh việc gửi cùng một chiến dịch đến cùng một địa chỉ email. Nếu chưa cài đặt, các phân khúc \"không trùng lặp\" sẽ chỉ tránh việc chọn lại cùng một bản ghi nếu trước đó bản ghi đó đã được đưa vào chiến dịch rồi. Chỉ có các trường so sánh được (như textfields, integers, selections hoặc single relationships) mới có thể được sử dụng."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
@@ -624,8 +650,7 @@ msgid "Month(s)"
 msgstr "Tháng"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -687,7 +712,7 @@ msgstr "Tháng Mười một"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,object_id:0
 msgid "Object"
-msgstr "Object"
+msgstr "Đối tượng"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -732,6 +757,11 @@ msgid "Partner Field"
 msgstr "Trường Đối tác"
 
 #. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Các đối tác"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Preview"
@@ -756,7 +786,8 @@ msgstr "Xử lý"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
-msgid "Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
@@ -850,12 +881,18 @@ msgstr "Tháng Chín"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,variable_cost:0
-msgid "Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section"
+msgid ""
+"Set a variable cost if you consider that every campaign item that has "
+"reached this point has entailed a certain cost. You can get cost statistics "
+"in the Reporting section"
 msgstr "Thiết lập biến phí nếu bạn coi tất cả các hạng mục chiến dịch chạm đến điểm này đã chạm một mức phí nhất định. Bạn có thể có bản phân tích chi phí trong phần Báo cáo"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
-msgid "Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section"
+msgid ""
+"Set an expected revenue if you consider that every campaign item that has "
+"reached this point has generated a certain revenue. You can get revenue "
+"statistics in the Reporting section"
 msgstr "Thiết lập một mức thu nhập trông mong nếu bạn coi tất cả các hạng mục chiến dịch chạm đến điểm này đã tạo được thu nhập nhất định. Bạn có thể có bản phân tích thu nhập trong phần Báo cáo"
 
 #. module: marketing_campaign
@@ -918,7 +955,8 @@ msgstr "Đồng bộ thủ công"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
-msgid "Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+msgid ""
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
 "Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
 "With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
@@ -961,7 +999,9 @@ msgstr "Chiến dịch không thể được đánh dấu là hoàn thành trư�
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
 #, python-format
-msgid "The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
 msgstr "Chiến dịch không thể được khởi động vì nó không có bất kỳ một hoạt động khởi động nào cả. Hãy sửa các hoạt động của chiến dịch và đánh dấu một trong số chúng là điểm khởi động."
 
 #. module: marketing_campaign
@@ -983,7 +1023,11 @@ msgstr "Email để gửi khi hoạt động này được kích hoạt"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
-msgid "The generated workitems will be linked to the partner related to the record. If the record is the partner itself leave this field empty. This is useful for reporting purposes, via the Campaign Analysis or Campaign Follow-up views."
+msgid ""
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
+"for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
+"views."
 msgstr "Các workitem được tạo ra sẽ liên kết đến một đối tác liên quan đến bản ghi này. Nếu bản ghi bản thân nó là một partner, hay để trống trường này. Trường này hữu dụng cho mục đích báo cáo, thông qua khung nhìn Phân tích chiến dịch hoặc Theo dõi Chiến dịch"
 
 #. module: marketing_campaign
@@ -998,7 +1042,8 @@ msgstr "Báo cáo để tạo khi hoạt động này được kích hoạt"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
-msgid "The type of action to execute when an item enters this activity, such as:\n"
+msgid ""
+"The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
 "   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
 "   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
@@ -1053,6 +1098,11 @@ msgid "Variable Cost"
 msgstr "Biến phí"
 
 #. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Chào mừng tới Kênh Đối tác ERPOnline!"
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
 msgstr "Với sự xác nhận thủ công"
@@ -1060,7 +1110,7 @@ msgstr "Với sự xác nhận thủ công"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Workitems"
-msgstr "Workitems"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:campaign.analysis,year:0

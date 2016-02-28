@@ -1,10 +1,10 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-09 08:18+0000\n"
 "PO-Revision-Date: 2014-09-09 15:41+0700\n"
@@ -13,33 +13,25 @@ msgstr ""
 "com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
-
-#. module: delivery
-#: view:delivery.grid.line:0
-msgid " in Function of "
-msgstr " in Function of "
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr "<="
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
@@ -63,16 +55,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods (e."
-"g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allow to automatically compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
@@ -101,17 +89,17 @@ msgstr ">="
 #. module: delivery
 #: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
-msgstr "Kích hoạt"
+msgstr "Có hiệu lực"
 
 #. module: delivery
-#: view:sale.order:0
+#: view:sale.order:delivery.view_order_withcarrier_form
 msgid "Add in Quote"
-msgstr "Add in Quote"
+msgstr "Thêm vào Báo giá"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "Giá chi tiết"
+msgstr "Chính sách giá chi tiết"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
@@ -138,14 +126,16 @@ msgid "Available"
 msgstr "Khả dụng"
 
 #. module: delivery
-#: view:False:0 view:delivery.carrier:0 field:delivery.grid,carrier_id:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.carrier:delivery.view_delivery_carrier_tree
+#: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0
+#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
 msgid "Carrier"
 msgstr "Nhà vận chuyển"
 
 #. module: delivery
-#: view:stock.picking:0
+#: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
 msgstr "Thông tin nhà vận chuyển"
 
@@ -168,10 +158,9 @@ msgstr ""
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Complete this field if you plan to invoice the shipping based on picking."
 
 #. module: delivery
-#: view:delivery.grid.line:0
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "Condition"
 msgstr "Điều kiện"
 
@@ -181,9 +170,22 @@ msgid "Cost Price"
 msgstr "Giá Vốn"
 
 #. module: delivery
-#: view:delivery.grid:0 field:delivery.grid,country_ids:0
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "Quốc gia"
+
+#. module: delivery
+#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
+#: field:delivery.grid.line,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: delivery
+#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
+#: field:delivery.grid.line,create_date:0
+msgid "Created on"
+msgstr "Tạo trên"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -194,53 +196,61 @@ msgstr "Giá mặc định"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Giao nhận"
+msgstr "Bàn giao"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Delivery Grid"
+msgstr "Lưới Bàn giao"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Delivery Grid Line"
+msgstr "Chi tiết Lưới Bàn giao"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Delivery Grids"
+msgstr "Lưới Bàn giao"
 
 #. module: delivery
 #: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr "Phương thức giao nhận"
+msgstr "Phương thức giao"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr "Phương thức giao nhận"
+msgstr "Phương thức giao"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Bảng giá Giao nhận"
+msgstr "Bảng giá Giao hàng"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "Sản phẩm giao nhận"
+msgstr "Phí giao hàng"
 
 #. module: delivery
-#: view:delivery.carrier:0 view:delivery.grid:0
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Delivery by Poste"
+msgstr ""
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: view:delivery.grid:delivery.view_delivery_grid_tree
 msgid "Delivery grids"
-msgstr "Delivery grids"
+msgstr "Lưới Bàn giao"
 
 #. module: delivery
-#: view:delivery.carrier:0 view:delivery.grid:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
 msgid "Destination"
 msgstr "Điểm đến"
 
@@ -261,44 +271,52 @@ msgid "Free if more than %.2f"
 msgstr "Miễn phí nếu lơn hơn %.2f"
 
 #. module: delivery
-#: view:delivery.carrier:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
 msgstr "Thông tin chung"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr "Gives the sequence order when calculating delivery grid."
+msgstr ""
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Gives the sequence order when displaying a list of delivery grid."
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Grid"
+msgstr "Lưới"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Grid Line"
+msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
 msgid "Grid Lines"
-msgstr "Grid Lines"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Grid Name"
+msgstr "Tên lưới"
 
 #. module: delivery
-#: view:delivery.carrier:0 view:delivery.grid:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
 msgid "Grid definition"
-msgstr "Grid definition"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.carrier,id:0 field:delivery.grid,id:0
+#: field:delivery.grid.line,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -307,7 +325,7 @@ msgid ""
 "carrier without removing it."
 msgstr ""
 "Nếu trường kích hoạt không được chọn, nó sẽ cho phép bạn ẩn nhà vận chuyển "
-"mà không cần xóa bỏ nó."
+"mà không cần xóa bỏ."
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -315,8 +333,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
-"If the active field is set to False, it will allow you to hide the delivery "
-"grid without removing it."
+"Nếu trường kích hoạt không được chọn, nó sẽ cho phép bạn ẩn nhà vận chuyển "
+"mà không cần xóa bỏ."
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -324,33 +342,43 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
 
 #. module: delivery
-#: view:sale.order:0
+#: view:sale.order:delivery.view_order_withcarrier_form
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
 msgstr ""
-"Nếu bạn không 'Thêm vào báo giá', giá chính xác sẽ được tính toán khi xuất "
+"Nếu bạn không 'Thêm vào Báo giá', giá chính xác sẽ được tính toán khi xuất "
 "hóa đơn dựa trên lệnh giao hàng."
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr "Is a Delivery"
+msgstr ""
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr "Is the carrier method possible with the current order."
+msgstr ""
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr "Để trống nếu giá phụ thuộc vào giá chi tiết cho từng điểm đến"
+
+#. module: delivery
+#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
+#: field:delivery.grid.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: delivery
+#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
+#: field:delivery.grid.line,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -365,45 +393,45 @@ msgstr "Tên"
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr "Khối lượng thực tế"
+msgstr "Khối lượng tịnh"
 
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr "Khối lượng thực tế"
+msgstr "Khối lượng tịnh"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:75
+#: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No Grid Available!"
-msgstr "No Grid Available!"
+msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:75
+#: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr "Giá thông thường"
+msgstr "Giá Bình thường"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr "Số lượng đóng gói"
+msgstr "Số lượng gói"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr "Toán tử"
+msgstr "Người vận hành"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:78
 #, python-format
 msgid "Order not in Draft State!"
-msgstr "Đơn hàng không ở trong trạng thái Dự thảo!"
+msgstr "Đơn hàng không ở tình trạng Dự thảo!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -432,7 +460,7 @@ msgid "Price Type"
 msgstr "Loại Giá"
 
 #. module: delivery
-#: view:delivery.carrier:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "Pricing Information"
 msgstr "Thông tin giá"
 
@@ -470,7 +498,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
-msgstr "Dãy số"
+msgstr "Trình tự"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -478,9 +506,10 @@ msgid "Start Zip"
 msgstr "Start Zip"
 
 #. module: delivery
-#: view:delivery.grid:0 field:delivery.grid,state_ids:0
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "States"
+msgstr "Trạng thái"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -494,7 +523,7 @@ msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Nhà vận chuyển %s (id: %d) không có phương thức vận chuyển!"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:78
+#: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "Trạng thái của đơn hàng phải là dự thảo để thêm một giao nhận."
@@ -533,24 +562,24 @@ msgstr "Đơn vị tính"
 
 #. module: delivery
 #: help:stock.move,weight_uom_id:0
-msgid "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr "Đơn vị đo lường cho khối lượng"
+msgstr "Đơn vị đo lường cho Khối lượng"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr "Variable"
+msgstr "Thay đổi"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr "Variable Factor"
+msgstr "Nhân tố thay đổi"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -565,9 +594,10 @@ msgid "Warning!"
 msgstr "Cảnh báo!"
 
 #. module: delivery
-#: view:False:0 selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0 view:stock.move:0
-#: field:stock.move,weight:0 view:stock.picking:0 field:stock.picking,weight:0
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
+#: view:stock.picking:delivery.view_picking_withcarrier_out_form
+#: field:stock.picking,weight:0 view:website:stock.report_picking
 msgid "Weight"
 msgstr "Khối lượng"
 
@@ -578,11 +608,16 @@ msgid "Weight * Volume"
 msgstr "Khối lượng * Thể tích"
 
 #. module: delivery
-#: view:False:0
+#: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr "Sẽ được xuất hóa đơn:"
+msgstr "Sẽ được xuất hóa đơn đến:"
 
 #. module: delivery
-#: view:delivery.carrier:0
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "Zip"
-msgstr "Zip"
+msgstr "Mã Zip"
+
+#. module: delivery
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+msgid "in Function of"
+msgstr "theo thức năng của"
