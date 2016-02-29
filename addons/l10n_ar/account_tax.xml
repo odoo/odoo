@@ -3,32 +3,118 @@
 
     <!-- Account Tags -->
 
-    <record id="tag_itax_21_out" model="account.account.tag">
-        <field name="name">ITAX_21-OUT</field>
+    <record id="tag_ar_01" model="account.account.tag">
+        <field name="name">Base Imponible</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_otax_21_in" model="account.account.tag">
-        <field name="name">OTAX_21-IN</field>
+
+    <record id="tag_ar_02" model="account.account.tag">
+        <field name="name">Base Imponible - Ventas</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_itax_27_out" model="account.account.tag">
-        <field name="name">ITAX_27-OUT</field>
+
+    <record id="tag_ar_03" model="account.account.tag">
+        <field name="name">Ventas Gravadas con IVA</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_otax_27_in" model="account.account.tag">
-        <field name="name">OTAX_27-IN</field>
+
+    <record id="tag_ar_04" model="account.account.tag">
+        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_itax_105_out" model="account.account.tag">
-        <field name="name">ITAX_105-OUT</field>
+
+    <record id="tag_ar_05" model="account.account.tag">
+        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_otax_105_in" model="account.account.tag">
-        <field name="name">OTAX_105-IN</field>
+
+    <record id="tag_ar_06" model="account.account.tag">
+        <field name="name">Base Imponible - Compras</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tag_otax_02_in" model="account.account.tag">
-        <field name="name">OTAX_02-IN</field>
+
+    <record id="tag_ar_07" model="account.account.tag">
+        <field name="name">Compras Gravadas con IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_08" model="account.account.tag">
+        <field name="name">Compras NO Gravadas (Exoneradas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_09" model="account.account.tag">
+        <field name="name">Compras Gravadas Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_10" model="account.account.tag">
+        <field name="name">Impuesto General a las Ventas (IVA) Total a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_11" model="account.account.tag">
+        <field name="name">Impuesto Pagado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_12" model="account.account.tag">
+        <field name="name">Impuesto Pagado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_13" model="account.account.tag">
+        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_14" model="account.account.tag">
+        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_15" model="account.account.tag">
+        <field name="name">Impuesto Cobrado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_16" model="account.account.tag">
+        <field name="name">Impuesto Cobrado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_17" model="account.account.tag">
+        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_18" model="account.account.tag">
+        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_19" model="account.account.tag">
+        <field name="name">Impuesto Nacionales a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_20" model="account.account.tag">
+        <field name="name">Impuesto a las Ganancias a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_21" model="account.account.tag">
+        <field name="name">Impuesto a los Bienes Personales a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_22" model="account.account.tag">
+        <field name="name">Impuesto a la Ganancia Mínima Presunta a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ar_23" model="account.account.tag">
+        <field name="name">Monotributo a Pagar</field>
         <field name="applicability">taxes</field>
     </record>
 
@@ -42,7 +128,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_21_out')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_03'), ref('tag_ar_16')])]"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
@@ -54,7 +140,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_21_in')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_07'), ref('tag_ar_12')])]"/>
     </record>
 
     <record id="ITAX_27" model="account.tax.template">
@@ -66,7 +152,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_27_out')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_16'), ref('tag_ar_03')])]"/>
     </record>
 
     <record id="OTAX_27" model="account.tax.template">
@@ -78,7 +164,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_27_in')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_12'), ref('tag_ar_07')])]"/>
     </record>
 
     <record id="ITAX_105" model="account.tax.template">
@@ -90,7 +176,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_105_out')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_16'), ref('tag_ar_03')])]"/>
     </record>
 
     <record id="OTAX_105" model="account.tax.template">
@@ -102,7 +188,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_105_in')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_07'), ref('tag_ar_12')])]"/>
     </record>
 
     <record id="OTAX_02" model="account.tax.template">
@@ -114,7 +200,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_02_in')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ar_12')])]"/>
     </record>
 
 </odoo>

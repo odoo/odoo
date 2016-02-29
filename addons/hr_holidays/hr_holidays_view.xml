@@ -86,7 +86,7 @@
                 <header>
                     <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to Draft" name="reset" type="workflow"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>

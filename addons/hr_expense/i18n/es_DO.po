@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-01-04 23:50+0000\n"
-"Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
+"PO-Revision-Date: 2016-02-20 10:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
 msgstr ""
 
@@ -115,6 +116,11 @@ msgid "Click here to refuse"
 msgstr ""
 
 #. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_2
+msgid "Click on Action to submit multiple expenses to your manager."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Click to create a new expense category."
 msgstr ""
@@ -155,6 +161,7 @@ msgstr "Moneda"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "Fecha"
 
@@ -177,6 +184,7 @@ msgstr "Descripción"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
 
@@ -375,6 +383,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
 msgid "ID"
 msgstr "ID"
 
@@ -411,6 +420,7 @@ msgstr "Fecha del último mensaje"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
@@ -608,6 +618,11 @@ msgid "Reporting"
 msgstr "Informe"
 
 #. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_1
+msgid "Select the lines you want to submit to be reimbursed."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:73
 #, python-format
 msgid ""
@@ -730,6 +745,13 @@ msgstr "Contador de mensajes no leídos"
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "UdM"
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_3
+msgid ""
+"Use the messaging tool to log a note and attach a document to the expense. "
+"(e.g. scan of the bill)"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense,state:0

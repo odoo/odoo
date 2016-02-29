@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:51+0000\n"
+"PO-Revision-Date: 2016-02-20 10:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr "%s (kopiranje)"
 #: code:addons/project/static/src/xml/project.xml:8
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&puta;"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -662,7 +662,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebna akcija"
 
 #. module: project
 #. openerp-web
@@ -803,7 +803,7 @@ msgstr "Primeni"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirani"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1258,7 +1258,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr ""
+msgstr "Kontrolna ploča"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
@@ -1270,7 +1270,7 @@ msgstr "Datum"
 #: model:ir.model.fields,help:project.field_project_project_message_last_post
 #: model:ir.model.fields,help:project.field_project_task_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnje poslate poruke na slog."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -1357,6 +1357,13 @@ msgid "Development Process"
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#, python-format
+msgid "Discard"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
@@ -1366,7 +1373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Ime za prikaz"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -1537,6 +1544,13 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:web.tip,description:project.project_tip_3
+msgid ""
+"Every event on a task is logged in this section. Send a new message to "
+"notify followers or log an internal note."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "Primeri"
@@ -1551,7 +1565,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Datum isteka"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
@@ -1563,7 +1577,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Prošireni filteri"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1615,19 +1629,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_follower_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Pratioci"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratioci (kanali)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratioci (partneri)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1833,13 +1847,13 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project_message_unread
 #: model:ir.model.fields,help:project.field_project_task_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_needaction
 #: model:ir.model.fields,help:project.field_project_task_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -1873,13 +1887,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Implement"
-msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_project_project_filter
-#: model:ir.ui.view,arch_db:project.view_task_kanban
-#: model:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Important Messages"
 msgstr ""
 
 #. module: project
@@ -1944,7 +1951,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je pratioc"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2072,7 +2079,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_last_post
 #: model:ir.model.fields,field_description:project.field_project_task_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnje poruke"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
@@ -2089,7 +2096,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
@@ -2104,7 +2111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
@@ -2112,7 +2119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2195,7 +2202,7 @@ msgstr "Poruke"
 #: model:ir.model.fields,help:project.field_project_project_message_ids
 #: model:ir.model.fields,help:project.field_project_task_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Poruke i istorija komunikacije"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2205,7 +2212,7 @@ msgstr "Mesec"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Više <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2295,7 +2302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Broj akcija"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2316,13 +2323,13 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Broj poruka koje zahtjevaju akciju"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_unread_counter
 #: model:ir.model.fields,help:project.field_project_task_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Broj nepročitanih poruka"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2596,6 +2603,12 @@ msgid "Project Tasks"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Project Time Unit"
+msgstr ""
+
+#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr ""
@@ -2609,13 +2622,21 @@ msgstr ""
 #: code:addons/project/project.py:282
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.portal_services_projects
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
 #: model:ir.ui.view,arch_db:project.task_company
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Projects using this stage"
 msgstr ""
 
 #. module: project
@@ -2723,6 +2744,13 @@ msgid "Remaining Time"
 msgstr "Preostalo vreme"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
 msgstr ""
@@ -2744,7 +2772,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Izvještavanje"
 
 #. module: project
 #. openerp-web
@@ -2792,6 +2820,13 @@ msgstr "Traži"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
 msgstr ""
 
 #. module: project
@@ -2938,6 +2973,11 @@ msgid "Starting Date"
 msgstr "Pocetni Datum"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2945,9 +2985,14 @@ msgid "Status"
 msgstr "Status"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
+msgid "Subscriptions"
+msgstr ""
+
+#. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Naziv oznake već postoji !"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3081,6 +3126,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
@@ -3271,6 +3317,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
@@ -3391,6 +3438,9 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_unread
 #: model:ir.model.fields,field_description:project.field_project_task_message_unread
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+#: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
 msgstr "Nepročitane poruke"
 
@@ -3398,7 +3448,7 @@ msgstr "Nepročitane poruke"
 #: model:ir.model.fields,field_description:project.field_project_project_message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Brojač nepročitanih poruka"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3514,13 +3564,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Poruke sa web stranice"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_website_message_ids
 #: model:ir.model.fields,help:project.field_project_task_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istorija komunikacije sa web sajta"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3698,6 +3748,9 @@ msgid "to describe<br/> your experience or to suggest improvements !"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 msgid "unknown"
 msgstr "nepoznato"

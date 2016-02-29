@@ -54,7 +54,7 @@ var FormatChar = AbstractField.extend({
         this.format_descriptor = _.extend({}, this.field, {'widget': this.$node.attr('widget')});
     },
     renderElement: function() {
-        this.$el.text(instance.web.format_value(this.field.raw_value, this.format_descriptor));
+        this.$el.text(formats.format_value(this.field.raw_value, this.format_descriptor));
     }
 });
 

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-13 18:28+0000\n"
+"PO-Revision-Date: 2016-02-25 18:05+0000\n"
 "Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -251,7 +251,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr "Analytic Account"
+msgstr "Аналітичний рахунок"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -405,9 +405,10 @@ msgid "Customer Reference"
 msgstr "Посилання на клієнта"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
-msgstr "Податки товару"
+msgstr "Податки продажу"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -467,7 +468,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "По доставленій кількості"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -477,7 +478,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_customer_lead
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Термін виконання доставки"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -499,7 +500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
-msgstr "Description"
+msgstr "Опис"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -599,6 +600,11 @@ msgid "Enable customer portal to track orders, delivery and invoices"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr ""
@@ -684,6 +690,7 @@ msgid "If checked, new messages require your attention."
 msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Рахунок доходів"
@@ -763,7 +770,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Invoice based on time and material"
-msgstr ""
+msgstr "Згідно витраченого часу та матеріалів"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
@@ -820,12 +827,12 @@ msgstr "Рахунки"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Аналіз рахунків"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Статистика рахунків"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -845,7 +852,7 @@ msgstr "Рахунки"
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Виписування рахунків"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1084,7 +1091,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "По замовленій кількості"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1095,7 +1102,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Information"
-msgstr "Other Information"
+msgstr "Інша інформація"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1122,12 +1129,6 @@ msgstr "Умови оплати"
 #: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:316
-#, python-format
-msgid "There is no invoicable line."
 msgstr ""
 
 #. module: sale
@@ -1162,7 +1163,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Print"
-msgstr "Print"
+msgstr "Друк"
 
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
@@ -1366,7 +1367,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Sale Price"
-msgstr ""
+msgstr "Ціна продажу"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1619,7 +1620,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Терміни та умови"
 
 #. module: sale
 #: code:addons/sale/sale_analytic.py:54
@@ -1678,8 +1679,35 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
 msgstr ""
 
 #. module: sale
@@ -1785,6 +1813,11 @@ msgid "Untaxed Amount"
 msgstr "Сума без податків"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr ""
@@ -1793,6 +1826,13 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
+msgstr ""
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
 msgstr ""
 
 #. module: sale
