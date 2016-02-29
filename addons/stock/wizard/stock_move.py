@@ -1,29 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
+from odoo import api, fields, models
+import odoo.addons.decimal_precision as dp
 
-
-
-class stock_move_scrap(osv.osv_memory):
+class StockMoveScrap(models.TransientModel):
     _name = "stock.move.scrap"
     _description = "Scrap Products"
 
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot'),
-    }
+    product_id = fields.Many2one('product.product', string='Product', required=True, index=True)
+    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
+    location_id = fields.Many2one('stock.location', string='Location', required=True, default=False)
+    restrict_lot_id = fields.Many2one('stock.production.lot', string='Lot')
 
-    _defaults = {
-        'location_id': lambda *x: False
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
+    @api.model
+    def default_get(self, fields):
         """ Get default values
         @param self: The object pointer.
         @param cr: A database cursor
@@ -32,26 +24,24 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return: default values of fields
         """
-        if context is None:
-            context = {}
-        res = super(stock_move_scrap, self).default_get(cr, uid, fields, context=context)
-        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
+        res = super(StockMoveScrap, self).default_get(fields)
+        move = self.env['stock.move'].browse(self.env.context.get('active_id', []))
 
-        location_obj = self.pool.get('stock.location')
-        scrap_location_id = location_obj.search(cr, uid, [('scrap_location','=',True)])
+        scrap_location = self.env['stock.location'].search([('scrap_location', '=', True)], limit=1)
 
         if 'product_id' in fields:
             res.update({'product_id': move.product_id.id})
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})
         if 'location_id' in fields:
-            if scrap_location_id:
-                res.update({'location_id': scrap_location_id[0]})
+            if scrap_location:
+                res.update({'location_id': scrap_location.id})
             else:
                 res.update({'location_id': False})
         return res
 
-    def move_scrap(self, cr, uid, ids, context=None):
+    @api.multi
+    def move_scrap(self):
         """ To move scrapped products
         @param self: The object pointer.
         @param cr: A database cursor
@@ -60,16 +50,13 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if context is None:
-            context = {}
-        move_obj = self.pool.get('stock.move')
-        move_ids = context['active_ids']
-        for data in self.browse(cr, uid, ids):
-            move_obj.action_scrap(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
-                             context=context)
+        context = dict(self.env.context)
+        Move = self.env['stock.move']
+        moves = Move.browse(context.get('active_ids'), [])
+        for data in self:
+            moves.action_scrap(data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id)
         if context.get('active_id'):
-            move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
+            move = Move.browse(context['active_id'])
             if move.picking_id:
                 return {
                     'view_type': 'form',
