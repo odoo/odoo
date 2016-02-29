@@ -972,7 +972,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.amount;
         },
         get_amount_str: function(){
-            return this.amount.toFixed(this.pos.currency.decimals);
+            return openerp.instances[this.pos.session.name].web.format_value(this.amount, {
+                type: 'float', digits: [69, this.pos.currency.decimals]
+            });
         },
         set_selected: function(selected){
             if(this.selected !== selected){
