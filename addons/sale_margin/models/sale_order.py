@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
 
             vals['purchase_price'] = self._compute_margin(order_id, product_id, product_uom_id)
 
-        return super(sale_order_line, self).create(vals)
+        return super(SaleOrderLine, self).create(vals)
 
     @api.depends('product_id', 'purchase_price', 'product_uom_qty', 'price_unit')
     def _product_margin(self):
