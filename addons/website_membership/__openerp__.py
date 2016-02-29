@@ -18,6 +18,5 @@ Website for browsing Associations, Groups and Memberships
         'security/website_membership.xml',
     ],
     'demo': ['data/membership_demo.xml'],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

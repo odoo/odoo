@@ -27,13 +27,6 @@ This module adds several restaurant features to the Point of Sale:
         'views/pos_restaurant_views.xml',
         'views/pos_restaurant_templates.xml',
     ],
-    'qweb': [
-        'static/src/xml/multiprint.xml',
-        'static/src/xml/splitbill.xml',
-        'static/src/xml/printbill.xml',
-        'static/src/xml/notes.xml',
-        'static/src/xml/floors.xml',
-    ],
     'demo': [
         'data/pos_restaurant_demo.xml',
     ],

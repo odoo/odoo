@@ -32,7 +32,4 @@ actions(Check in/Check out) performed by them.
     ],
     'installable': True,
     'auto_install': False,
-    'qweb': [
-        "static/src/xml/attendance.xml",
-    ],
 }

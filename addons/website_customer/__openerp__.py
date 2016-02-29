@@ -25,6 +25,5 @@ Odoo Customer References
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
     ],
-    'qweb': [],
     'installable': True,
 }

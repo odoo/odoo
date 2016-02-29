@@ -22,6 +22,5 @@ Odoo Sale Quote Roller
     'demo': [
         'data/website_quotation_demo.xml'
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

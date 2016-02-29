@@ -17,6 +17,5 @@ Delivery Costs
     'demo': [
         'data/website_sale_delivery_demo.xml'
     ],
-    'qweb': [],
     'installable': True,
 }

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <!--
             Integrate Livechat Conversation in the Mail Chat Client Action
         -->
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <link rel="alternate" type="application/xml" href="/im_livechat/static/src/xml/im_livechat_backend.xml"/>
             </xpath>
         </template>
-
 
         <!--
             Template rendering the external HTML support page
@@ -125,8 +124,11 @@
             <!-- Bus, Mail, Livechat -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+            <link rel="alternate" type="application/xml" href="/mail/static/src/xml/chat_window.xml"/>
             <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+            <link rel="alternate" type="application/xml" href="/mail/static/src/xml/thread.xml"/>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+            <link rel="alternate" type="application/xml" href="/im_livechat/static/src/xml/im_livechat.xml"/>
             <t t-call="web.less_helpers"/>
             <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat_bootstrap.less"/>
             <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>

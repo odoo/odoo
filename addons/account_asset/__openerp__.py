@@ -32,9 +32,6 @@ Keeps track of depreciations, and creates corresponding journal entries.
         'views/account_asset.xml',
         'account_asset_cron.xml',
     ],
-    'qweb': [
-        "static/src/xml/account_asset_template.xml",
-    ],
     'installable': True,
     'application': False,
 }

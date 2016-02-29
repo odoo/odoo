@@ -14,8 +14,6 @@
         'data/website_partner_data.xml',
     ],
     'demo': ['data/website_partner_demo.xml'],
-    'qweb': [
-    ],
     'installable': True,
     'auto_install': False,
 }
