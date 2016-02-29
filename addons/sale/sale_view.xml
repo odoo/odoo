@@ -203,14 +203,10 @@
                                             </div>
                                             <label for="qty_delivered" string="Delivered Quantity"
                                                 invisible="not context.get('show_sale')"/>
-                                            <div>
-                                                <field name="qty_delivered" invisible="not context.get('show_sale')"
+                                            <field name="qty_delivered" invisible="not context.get('show_sale')"
                                                     attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
-                                            </div>
                                             <label for="qty_invoiced" string="Invoiced Quantity" invisible="not context.get('show_sale')"/>
-                                            <div>
-                                                <field name="qty_invoiced" invisible="not context.get('show_sale')"/>
-                                            </div>
+                                            <field name="qty_invoiced" invisible="not context.get('show_sale')"/>
                                             <field name="price_unit"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
                                             <div name="discount" groups="sale.group_discount_per_so_line">
