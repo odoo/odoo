@@ -4282,9 +4282,9 @@ class stock_package(osv.osv):
         quant_obj = self.pool.get('stock.quant')
         res = {}
         for quant in quant_obj.browse(cr, uid, self.get_content(cr, uid, package_id, context=context)):
-            if quant.product_id.id not in res:
-                res[quant.product_id.id] = 0
-            res[quant.product_id.id] += quant.qty
+            if quant.product_id not in res:
+                res[quant.product_id] = 0
+            res[quant.product_id] += quant.qty
         return res
 
     #Remove me?
