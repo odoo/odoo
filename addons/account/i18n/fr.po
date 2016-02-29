@@ -8,6 +8,7 @@
 # Clo <clo@odoo.com>, 2015
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
+# Florian Hatat, 2015
 # Hamid Darabi, 2015
 # Ilone Math <ilonemail2@gmail.com>, 2015
 # Loic <loic.richard2@gmail.com>, 2015
@@ -18,6 +19,7 @@
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Maxime Solinas <msolinas@t2o.ca>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
+# Mickaël Audigane <maudigane@teclib.com>, 2015
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2015
@@ -36,8 +38,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-13 18:01+0000\n"
-"Last-Translator: Tony Barbou <tonybarbou@live.fr>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -430,7 +432,7 @@ msgstr "<strong>Envoi de documents automatisés :</strong> envoie automatiquemen
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Balance :</strong>"
-msgstr "<strong>Solde:</strong>"
+msgstr "<strong>Solde :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3855,7 +3857,7 @@ msgstr "Exercice fiscal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Fiscal Year Last Day"
-msgstr ""
+msgstr "Dernier jour de l'exercice fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_last_day
@@ -4017,7 +4019,7 @@ msgstr "Grand livre"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_tax_cash_basis
 msgid "Generate tax cash basis entrie when reconciliating entries"
-msgstr ""
+msgstr "Générer les taxes sur les paiements lors du lettrage des écritures."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports
@@ -4124,7 +4126,7 @@ msgstr "Grouper les lignes de facture"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Group of Taxes"
-msgstr ""
+msgstr "Groupe de taxes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_default_company
@@ -4134,12 +4136,12 @@ msgstr "A une société par défaut"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_has_invoices
 msgid "Has invoices"
-msgstr ""
+msgstr "A des factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_has_outstanding
 msgid "Has outstanding"
-msgstr ""
+msgstr "A des encours"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
@@ -4151,7 +4153,7 @@ msgstr "A des écritures non lettrées"
 #: model:ir.model.fields,field_description:account.field_account_payment_hide_payment_method
 #: model:ir.model.fields,field_description:account.field_account_register_payments_hide_payment_method
 msgid "Hide payment method"
-msgstr ""
+msgstr "Cacher la méthode de paiement"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -4385,14 +4387,6 @@ msgstr "Si vous voulez être capable d'envoyer à vos clients leurs relevés\n  
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Pour le faire soi-même :"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si vous souhaitez de l'aide sur ce qui précède, n'esitez pas à contacter nos experts comptables en utilisant \n<span class=\"fa fa-question-circle\"/> l'icône dans la barre du haut."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5217,7 +5211,7 @@ msgstr "Dernier jour du mois en cours"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Last day of following month"
-msgstr ""
+msgstr "Dernier jour du mois suivant"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_last_time_entries_checked
@@ -5244,7 +5238,7 @@ msgstr "Date de dernière correspondance des factures et des paiements"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Legal Name"
-msgstr ""
+msgstr "Dénomination légale"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5319,7 +5313,7 @@ msgstr "Date de verrouillage"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Date de verrouillage pour les non-conseillers"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -7088,12 +7082,12 @@ msgstr "Valeur du rapport"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "Raport"
+msgstr "Rapport"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 msgid "Reports"
-msgstr "Raports"
+msgstr "Rapports"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7883,7 +7877,7 @@ msgstr "Délais"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Termes et conditions"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -8426,7 +8420,7 @@ msgstr "Ce paiement est enregistré mais pas réconcilié. "
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "Ce délai de paiement sera utilisé à la place de celui par défaut pour les bons de commande et les factures fournisseurs"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
@@ -9257,6 +9251,14 @@ msgid ""
 msgstr "Vous ne pouvez pas effectuer cette modification sur une écriture lettrée. Vous pouvez uniquement changer certains champs légalement libres, ou bien vous devez d'abord annuler le lettrage l'entrée.\n%s."
 
 #. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid ""
@@ -9476,7 +9478,7 @@ msgstr "activer cette fonctionnalité"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "all"
-msgstr ""
+msgstr "tous"
 
 #. module: account
 #. openerp-web
