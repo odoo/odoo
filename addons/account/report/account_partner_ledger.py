@@ -115,6 +115,22 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                     " " + PARTNER_REQUEST + " " \
                     "AND account.active " + reconcile + " ", params)
         self.partner_ids = [res['partner_id'] for res in self.cr.dictfetchall()]
+        if self.initial_balance:
+            self.cr.execute(
+                    "SELECT DISTINCT l.partner_id " \
+                    "FROM account_move_line AS l, account_account AS account, " \
+                    " account_move AS am " \
+                    "WHERE l.partner_id IS NOT NULL " \
+                        "AND l.account_id = account.id " \
+                        "AND am.id = l.move_id " \
+                        "AND am.state IN %s"
+                        "AND " + self.init_query +" " \
+                        "AND l.account_id IN %s " \
+                        " " + PARTNER_REQUEST + " " \
+                        "AND account.active " + reconcile + " ", params)
+            for res in self.cr.dictfetchall():
+                if res['partner_id'] not in self.partner_ids:
+                    self.partner_ids += [res['partner_id']]
         objects = obj_partner.browse(self.cr, SUPERUSER_ID, self.partner_ids)
         objects = sorted(objects, key=lambda x: (x.ref, x.name))
         return super(third_party_ledger, self).set_context(objects, data, self.partner_ids, report_type)
