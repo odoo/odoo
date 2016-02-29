@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-11-28 07:04+0000\n"
+"PO-Revision-Date: 2016-02-18 14:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-7/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Obtener todos los valores posibles"
 #: code:addons/base_import/static/src/xml/import.xml:71
 #, python-format
 msgid "Need to import data from an other application?"
-msgstr ""
+msgstr "¿Se necesita importar datos desde otra aplicación?"
 
 #. module: base_import
 #. openerp-web
@@ -42,7 +42,7 @@ msgid ""
 "                        to make a reference to that record with columns like \n"
 "                        \"Field/External ID\". The following two CSV files give \n"
 "                        you an example for Products and their Categories."
-msgstr ""
+msgstr "Cuando se usan identificadores externos, puede importar archivos CSV con la columna \"ID externo\" para definir el ID externo de cada registro a importar. Entonces, podrá hacer referencia a ese registro con columnas del tipo \"ID de campo/externo\". Los siguientes dos archivos  CSV son un ejemplo para los Productos y sus Categorías."
 
 #. module: base_import
 #. openerp-web
@@ -80,7 +80,7 @@ msgid ""
 "                        advantage is to never have conflicts (you may have \n"
 "                        several records with the same name, but they always \n"
 "                        have a unique Database ID)"
-msgstr ""
+msgstr "Usar País/ID de la Base de Datos: Raramente debería usar esta notación. Se usa más a menudo por los desarrolladores puesto que su principal ventaja es la de no tener nunca conflictos (puede que tenga varios registros con el mismo nombre, pero sólo tendrán un único ID de base de datos)"
 
 #. module: base_import
 #. openerp-web
@@ -89,7 +89,7 @@ msgstr ""
 msgid ""
 "For the country \n"
 "                        Belgium, you can use one of these 3 ways to import:"
-msgstr ""
+msgstr "Para el país Bélgica, \npuede usar uno de estos 3 métodos de importación:"
 
 #. module: base_import
 #. openerp-web
@@ -119,7 +119,7 @@ msgstr "copy \n                        (select 'company_'||id as \"ID Externo\",
 #: code:addons/base_import/static/src/xml/import.xml:206
 #, python-format
 msgid "CSV file for Manufacturer, Retailer"
-msgstr ""
+msgstr "Archivo CSV para fabricante, comerciante al por menor"
 
 #. module: base_import
 #. openerp-web
@@ -188,14 +188,14 @@ msgstr "base_import.tests.models.o2m.child"
 #: code:addons/base_import/static/src/xml/import.xml:239
 #, python-format
 msgid "Can I import several times the same record?"
-msgstr ""
+msgstr "¿Se puede importar varias veces el mismo registro?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:488
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "Sin coincidencias encontradas"
 
 #. module: base_import
 #. openerp-web
@@ -212,7 +212,7 @@ msgid ""
 "Use Country: This is \n"
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
-msgstr ""
+msgstr "Usar País: Ésta es lo forma más sencilla cuando los datos provienen de archivos CSV que se han creado manualmente."
 
 #. module: base_import
 #. openerp-web
@@ -332,7 +332,7 @@ msgid ""
 "                        (\"Misc. Products/Sellable\"). We recommend you modify \n"
 "                        one of the duplicates' values or your product category \n"
 "                        hierarchy."
-msgstr ""
+msgstr "Si por ejemplo tiene dos categorías de producto con el nombre hijo de \"Vendibles\" (por ejemplo \"Productos Miscelánea/Vendibles\" & \"Otros productos/Vendibles\"), la validación se para, pero aún podrá importar los datos. Sin embargo, recomendamos no importar los datos porque estarán vinculados todos a la primera categoría \"Vendibles\" encontrada en la lista de Categorías de Producto (\"Misc. Productos/Vendibles\"). Recomendamos modificar uno de los valores duplicados o la jerarquía de categorías de productos."
 
 #. module: base_import
 #. openerp-web
@@ -342,7 +342,7 @@ msgid ""
 "To create the CSV file for persons, linked to \n"
 "                        companies, we will use the following SQL command in \n"
 "                        PSQL:"
-msgstr ""
+msgstr "Para crear un archivo CSV para personas, enlazadas a compañías, usaremos el siguiente comando SQL en PSQL:"
 
 #. module: base_import
 #. openerp-web
@@ -353,7 +353,7 @@ msgid ""
 "                        you to modify only the encoding when saving \n"
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
-msgstr ""
+msgstr "Microsoft Excel permite modificar solamente la codificación cuando guarda un archivo CSV (en el cuadro de diálogo 'Guardar como' > pulsar la lista desplegable 'Herramientas' > pestaña 'Codificación')."
 
 #. module: base_import
 #. openerp-web
@@ -376,7 +376,7 @@ msgid ""
 "                        import if you need to re-import modified data\n"
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
-msgstr ""
+msgstr "será usado para actualizar la importación original \nsi necesita reimportar datos modificados más tarde, \npor lo que es una buena práctica especificarlo cuando sea posible"
 
 #. module: base_import
 #. openerp-web
@@ -404,14 +404,14 @@ msgstr "base_import.tests.models.char"
 #. module: base_import
 #: help:base_import.import,file:0
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Archivo a comprobar y/o importar, binario en bruto (no base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:230
 #, python-format
 msgid "Purchase orders with their respective purchase order lines"
-msgstr ""
+msgstr "Pedidos de compra con sus respectivas líneas de pedido de compra"
 
 #. module: base_import
 #. openerp-web
@@ -462,7 +462,7 @@ msgid ""
 "                        as they will allow you to modify all three options \n"
 "                        (in 'Save As' dialog box > Check the box 'Edit filter \n"
 "                        settings' > Save)."
-msgstr ""
+msgstr "Si edita y guarda archivos en las aplicaciones de hoja de cálculo, se aplicará la configuración regional del ordenador para el separador y el delimitador. Le sugerimos usar OpenOffice o LibreOffice Calc, que permiten modificar las tres opciones (en el cuadro de dialogo 'Guardar como...' > Marcar casilla 'Editar la configuración del filtro' > Guardar)."
 
 #. module: base_import
 #. openerp-web
@@ -545,7 +545,7 @@ msgstr "Recargar datos para verificar cambios."
 #: code:addons/base_import/static/src/xml/import.xml:233
 #, python-format
 msgid "Customers and their respective contacts"
-msgstr ""
+msgstr "Clientes y sus respectivos contactos"
 
 #. module: base_import
 #. openerp-web
@@ -654,14 +654,14 @@ msgstr "Modelo"
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr ""
+msgstr "Sólo se ha encontrado una columna en el archivo, esto suele significar que el separador de archivo es incorrecto."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "volcado de la base de datos de PostgreSQL"
 
 #. module: base_import
 #. openerp-web
@@ -677,7 +677,7 @@ msgstr "Este comando SQL creará el siguiente archivo CSV:"
 msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
-msgstr ""
+msgstr "El siguiente archivo CSV muestra como importar pedidos de compra \ncon sus respectivas líneas de pedido de compra:"
 
 #. module: base_import
 #. openerp-web
@@ -737,7 +737,7 @@ msgid ""
 "                        will have to recreate the link between a person and \n"
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
-msgstr ""
+msgstr "Como ejemplo, supongo que tiene una base de datos SQL con dos tablas que quiere importar: compañías y personas. Cada persona pertenece a una compañía, por lo que tendrá que recrear el enlace entre la persona y la compañía en la que trabaja. (Si quiere comprobar este ejemplo, aquí hay un"
 
 #. module: base_import
 #. openerp-web
@@ -852,7 +852,7 @@ msgstr "XXX/ID"
 msgid ""
 "The following CSV file shows how to import \n"
 "                        customers and their respective contacts"
-msgstr ""
+msgstr "El siguiente archivo CSV muestra cómo importar\n clientes y sus respectivos contactos"
 
 #. module: base_import
 #. openerp-web
@@ -865,7 +865,7 @@ msgid ""
 "                        companies and persons, you will have to recreate the \n"
 "                        link between each person and the company they work \n"
 "                        for)."
-msgstr ""
+msgstr "Si necesita importar datos de diversas tablas, puede recrear relaciones entre los registros pertenecientes a diferentes tablas (por ejemplo, si importa compañías y personas, tendrá que recrear el enlace entre cada persona y la compañía para la que trabaja)."
 
 #. module: base_import
 #. openerp-web
@@ -876,7 +876,7 @@ msgid ""
 "                        one of these 3 ways to reference records in relations. \n"
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
-msgstr ""
+msgstr "De acuerdo a sus necesidades, puede usar una de estas tres formas de referenciar registros en las relaciones.\nAquí es donde debe usar una u otra, conforme a sus necesidades:"
 
 #. module: base_import
 #. openerp-web
@@ -912,7 +912,7 @@ msgstr "Cancelar"
 msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
-msgstr ""
+msgstr "¿Qué pasa si no proporciona un valor para un campo específico?"
 
 #. module: base_import
 #. openerp-web
@@ -1008,7 +1008,7 @@ msgid ""
 "                        different records, you should use the unique\n"
 "                        identifier from the original application and\n"
 "                        map it to the"
-msgstr ""
+msgstr "Para recrear las relaciones entre los diferentes registros, debe usar el identificador único de la aplicación original y mapearlo a"
 
 #. module: base_import
 #. openerp-web
@@ -1029,7 +1029,7 @@ msgid ""
 "                        relative to order. Any additional lines will need an \n"
 "                        addtional row that does not have any information in \n"
 "                        the fields relative to the order."
-msgstr ""
+msgstr "Si quiere importar los pedidos de venta teniendo varias líneas de pedido; para cada línea de pedido, necesita reservar una fila específica en el archivo CSV. La primera línea de pedido será importada en la misma fila que la información relativa al pedido. Cualquier línea adicional necesitará una fila adicional que no tenga información en los campos relativos al pedido."
 
 #. module: base_import
 #. openerp-web
@@ -1096,7 +1096,7 @@ msgid ""
 "                        settings, you can modify the File Format Options \n"
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
-msgstr ""
+msgstr "Por defecto, la vista previa de importación se encuentra en comas como\n separadores de campo y las comillas como delimitadores de texto. \nSi el archivo csv no tiene estos ajustes, \npuede modificar las Opciones de Formato de Archivo (que se visualiza debajo de la barra de Exploración de archivos CSV después de seleccionar el archivo)."
 
 #. module: base_import
 #. openerp-web
@@ -1131,7 +1131,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:430
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "entre las filas %d y %d"
 
 #. module: base_import
 #. openerp-web
@@ -1149,7 +1149,7 @@ msgid ""
 "                        purchase.order_functional_error_line_cant_adpat.CSV \n"
 "                        file of some quotations you can import, based on demo \n"
 "                        data."
-msgstr ""
+msgstr "Como ejemplo, aquí tiene el archivo 'purchase.order_functional_error_line_cant_adapt.csv' de algunas citas que se pueden importar, basado en los datos de demostración."
 
 #. module: base_import
 #: field:base_import.import,file:0

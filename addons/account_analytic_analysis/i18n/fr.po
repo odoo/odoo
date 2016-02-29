@@ -3,14 +3,15 @@
 # * account_analytic_analysis
 # 
 # Translators:
+# Evelyne Rainville <madamerainville@hotmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-17 08:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-23 01:20+0000\n"
+"Last-Translator: Evelyne Rainville <madamerainville@hotmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-7/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr "Taux de marge réel (%)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date passed or prepaid unit consumed"
-msgstr ""
+msgstr "Date de fin passée ou prépayé jusqu'à consomption "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -399,7 +400,7 @@ msgid ""
 "</pre>\n"
 "\n"
 "            "
-msgstr ""
+msgstr "\nBonjour ${objet.nom}, \n\n% macro compte_table(valeurs):\n<table espacement.cellule=\"1\" bordure=\"1\" espacement.cellules=\"4\">\n<tr>\n<th>Client</th>\n<th>Contrat</th>\n<th>Dates</th>\n<th>Unités Prépayées</th>\n<th>Contact</th>\n</tr>\n% pour partenaire, les comptes en valeurs:\n% pour compte dans les comptes:\n<tr>\n<td>${partenaire.nom}</ td>\n<td> <a  href=\"${ctx[\"base_url\"]/#action=${ctx[\"action_id\"]}&id=${compte.id}&vue_type=forme\">${compte.nom}</a></td>\n<td>${compte.date_début} à ${compte.date et compte.date ou '???'} </ td>\n<td>\n% si compte.quantité_max != 0.0$:\n(compte.reste_heures}/$ {compte.quantité_max unités}\n% finsi\n</td>\n</td> ${compte.partenaire_id.téléphone ou ''}, ${compte.partenaire_id.courriel ou ''} </ td>\n</tr>\n% finsi\n% finsi\n</table>\n% finmacro\n\n% si «nouveau» dans ctx[\"data\"]:\n<h2> Les contrats suivants viennent d'expirer: </h2>\n${compte_table (ctx[données] [\"nouveau\"].iteritems ())}\n%finsi\n\n% si \"ancien\" dans ctx[ \"data\"]:\n<h2> Les contrats expirés suivants ne sont pas encore traités: </h2>\n${compte_table (ctx[\"données\"][\"ancien\"].iteritems ())}\n% finsi\n\n% si \"futur\" dans ctx[\"données\"]:\n<h2> Les contrats suivants expireront dans moins d'un mois:  </h2>\n${compte_table(ctx[\"data\"] [ \"futur\"].iteritems ())}\n% finsi\n\n<p>\nVous pouvez vérifier tout les contrats à renouveler en utilisant le menu:\n</p>\n<ul>\n<li> Ventes / Facturation / Contrats à renouveler </li>\n</ul>\n<p>\nMerci,\n</p>\n<pre>\nCourriel automatiquement généré par: OpenERP\n</pre>"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -663,7 +664,7 @@ msgid ""
 "                            pricelist of the contract which uses the price\n"
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
-msgstr ""
+msgstr "Lorsque re-facturation des coûts , OpenERP utilise la\nliste de prix du marché qui utilise le prix\ndéfini sur le produit lié (par exemple les produits \n des feuilles de temps sont définis sur chaque employé ) ."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings

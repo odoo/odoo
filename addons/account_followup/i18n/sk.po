@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2016-01-29 22:47+0000\n"
+"PO-Revision-Date: 2016-02-24 21:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-7/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Zoskupiť podľa..."
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Naviazanie"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -54,7 +54,7 @@ msgstr "Ďalší dátum s akciou"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Manuálna akcia"
 
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
@@ -93,12 +93,12 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "dní po splatnosti, vykonať následovné akcie:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Kroky naviazania"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:261
@@ -154,7 +154,7 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nVážený %(partner_name)s,\n\nSme sklamaní že aj napriek zaslaniu upomienky je Váš účet teraz v serióznom omeškaní splatnosti.\n\nJe nevyhnutné, aby bola vykonaná okamžitá platba, v opačnom prípade budeme musieť uvažovať o zastavení Vášho účtu, čo znamená že už nebudeme schopný zásobovať Vašu firmu s (tovarom / službami).\nProsíme Vás o vykonanie patričných opatrení pre vykonanie tejto platby počas najbližších 8 dní.\n\nAk je problém so zaplatením faktúry ktorého si nie sme vedomí, neváhajte kontaktovať naše účtovné oddelenie pre rýchle vyriešenie tejto záležitosti.\n\nPodrobnosti o omeškaných platbách sú vytlačené nižšie.\n\nS pozdravom,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -203,7 +203,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "Celkový debet"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
@@ -218,7 +218,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Prideliť zodpovedného"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -254,12 +254,12 @@ msgid ""
 "                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
+msgstr "Pre pripomenutie platieb faktúr vašim zákaníkom, môžete\ndefinovať rôzne akcie, závisiace od závážnosti\nomeškanie zákazníka. Tieto akcie sú zabalené\ndo úrovní náväznosti ktoré sú spustené keď dátum\nsplatnosti faktúry prekročil istý počet \ndní. Ak existujú iné faktúry po splatnosti pre\ntoho istého zákazníka, akcia faktúry najdlhšie\npo splatnosti bude vykonaná."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Date :"
-msgstr ""
+msgstr "Dátum :"
 
 #. module: account_followup
 #: field:account_followup.print,partner_ids:0
@@ -269,7 +269,7 @@ msgstr "Partner"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Je povolené iba jedno naviazanie na spoločnosť"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -280,7 +280,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Pri spracovaní bude vytlačený dopis"
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -359,12 +359,12 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Kritéria náväznosti"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Dáva sekvencii poradie pri zobrazovaní zoznamu riadkov naväzovania."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -381,12 +381,12 @@ msgstr ""
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Poslať dopis"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr ""
+msgstr "Naviazanosť platieb"
 
 #. module: account_followup
 #: code:addons/account_followup/report/account_followup_print.py:86
@@ -399,12 +399,12 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Dni splatnosti"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0 view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Úroveň náväznosti"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
@@ -460,7 +460,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr ""
+msgstr "Vytlačená správa"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -476,7 +476,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Pri spracovaní odošle email"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -492,7 +492,7 @@ msgstr ""
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Naviazania"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:218
@@ -503,14 +503,14 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Účtovné naviazanie"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
+msgstr "Voliteľne môžete prideliť používateľa pre toto pole, čím mu pridelíte zodpvednosť za akciu."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -527,7 +527,7 @@ msgstr ""
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "Váš popis je nesprávny, použite popis vpravo alebo %% ak chcete použiť znak percenta."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -548,7 +548,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Vyhľadať naviazanie"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -581,7 +581,7 @@ msgstr "Blokované"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Dni úrovní náväznostíi musia byť rôzne"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -625,7 +625,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0 field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Poverený naviazaním"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -666,7 +666,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Úrovne náväznosti"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -685,7 +685,7 @@ msgid ""
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
+msgstr "\nVážený %(partner_name)s,\n\nNapriek niekoľkým upomienkam, Váš účet je stále nevyrovnaný.\n\nAk nebude plná úhrada vykonaná počas najbližších 8 dní, právna akcia na vymáhanie dlhu bude prijatá bez ďalšieho upozornenia.\n\nVeríme, že táto akcia sa ukáže zbytočná a podrobnosti o omeškaných platbách sú vytlačené nižšie.\n\nV prípade akýchkoľvek otázok ohľadom tejto záležitosti, neváhajte kontaktovať naše účtovné oddelenie.\n\nS pozdravom,"
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
@@ -695,7 +695,7 @@ msgstr "Splatná suma"
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Najnovšie naviazanie"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
@@ -726,7 +726,7 @@ msgstr ""
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "Pri spracovaní bude nastavená manuálna akcia na vykonanie pre toho zákaznika ."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -772,7 +772,7 @@ msgstr "Zhrnutie"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Poslať email"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -840,7 +840,7 @@ msgstr "Bilancia"
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr ""
+msgstr "Platobná poznámka"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -863,7 +863,7 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nVážený %(partner_name)s,\n\nProsím prepáčte ak sa stala chyba na našej strane, ale zdá sa že následovná suma ostáva neuhradená. Prosíme Vás o vykonanie patričných opatrení pre vykonanie tejto platby počas najbližších 8 dní.\n\nAk bola plata vykonaná po odoslaní tohoto emailu, prosím ignorujte túto správu. Neváhajte kontaktovať naše účtovné oddelenie.\n\nS pozdravom,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -947,7 +947,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Náväzné akcie"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -975,7 +975,7 @@ msgstr "Ref"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "After"
-msgstr ""
+msgstr "Po"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -995,12 +995,12 @@ msgstr ""
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
+msgstr "Vstupy partnera"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr ""
+msgstr "napr. Zavolať zákazníkovi, skontrolovať či je to zaplatené"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1022,7 +1022,7 @@ msgid ""
 "In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nVážený %(partner_name)s,\n\nNapriek niekoľkým upomienkam, Váš účet je stále nevyrovnaný.\n\nAk nebude plná úhrada vykonaná počas najbližších 8 dní, právna akcia na vymáhanie dlhu bude prijatá bez ďalšieho upozornenia.\n\nVeríme, že táto akcia sa ukáže zbytočná a podrobnosti o omeškaných platbách sú vytlačené nižšie.\n\nV prípade akýchkoľvek otázok ohľadom tejto záležitosti, neváhajte kontaktovať naše účtovné oddelenie.\n\nS pozdravom,\n"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -1039,7 +1039,7 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
+msgstr "Sem nápište úvod do listu,\nv závislosti od úrovne náväznosti. Môžete\npoužiť následovné kľúčové slová v texte. Nezabudnite\nho preložiť do všetkych nainštalovaných jazykov\npoužitím pravej hornej ikony."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1107,7 +1107,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "The"
-msgstr ""
+msgstr " "
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1117,7 +1117,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
+msgstr "Celkový kredit"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:312
@@ -1153,7 +1153,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
+msgstr "Počet dní po dátume splatnosti faktúry ktoré treba počkať pred poslaním upomienky.\nMôže byť záporný ak chcete vopred poslať zdvorilú pripomienku."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
@@ -1191,4 +1191,4 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Prísľub zákazníckej platby"

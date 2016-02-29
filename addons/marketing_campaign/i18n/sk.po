@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-01-29 22:49+0000\n"
+"PO-Revision-Date: 2016-02-27 16:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-7/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,23 +20,23 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Manual Mode"
-msgstr ""
+msgstr "Manuálny mód"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,activity_from_id:0
 msgid "Previous Activity"
-msgstr ""
+msgstr "Predošlá aktivita"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:817
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
+msgstr "Súčasný krok pre túto položku nemá žiadny email alebo výkaz na náhľad."
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr ""
+msgstr "Komu/Od aktivita prechodu musí byť z rovnakej kampane"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -46,7 +46,7 @@ msgstr "Čas"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Custom Action"
-msgstr ""
+msgstr "Upravená akcia"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 view:marketing.campaign:0
@@ -60,7 +60,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr ""
+msgstr "Nastavte variabilný zisk, ak sa domnievate že každá položka kampane, ktorá dosiahla tohto bodu, vytvorila určitý zisk.  Štatistiku ziskov môžete získať v sekcii Výkazy"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
@@ -70,17 +70,17 @@ msgstr "Spúštač"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Naviazanie"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
-msgstr ""
+msgstr "# Akcií"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr ""
+msgstr "Editor kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0 selection:marketing.campaign,state:0
@@ -94,7 +94,7 @@ msgstr "Spustené"
 msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle"
 " of our Gold Partners"
-msgstr ""
+msgstr "Dobrý deň, s potešením Vám oznamujeme, že ste vstúpili do vybraného kruhu našich Zlatých partnerov"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -109,7 +109,7 @@ msgstr "Objekt"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Mód synchronizácie: iba záznamy vytvorené po poslednej synchronizácii"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -120,7 +120,7 @@ msgid ""
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
+msgstr "Python výraz na rozhodnutie či má byť aktivita spustená, inak bude zmazaná alebo zrušená. Výraz môže používať následovné [browsable] variabilné:\n- aktivita: aktivita kampane\n- pracovná položka: pracovná položka kampane\n- zdroj: zdrojový objekt ktorý táto položka kampane reprezentuje\n- prechody: zoznam prechodov kampaní odchádzajúcich z tejto činnosti\n...- Python modul bežných výrazov"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0 view:marketing.campaign.segment:0
@@ -139,18 +139,18 @@ msgstr "Ďalšie aktivity"
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "Kampaň nmôže začať. Nemá žiadnu začiatočnú aktivitu. Upravte aktivity kampane a označte jednu ako začiatočný bod."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "Email na poslanie keď je táto aktivita aktivovaná"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,date_run:0
 msgid "Launch Date"
-msgstr ""
+msgstr "Dátum spustenia"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,day:0
@@ -170,17 +170,17 @@ msgstr "Reset"
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Zvoľte zdroj na ktorom chcete aby táto kampaň bola spustená"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Otvoriť marketingové menu"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
-msgstr ""
+msgstr "Posledná Synchronizácia"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -190,14 +190,14 @@ msgstr "Rok(y)"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "Počiatočný dátum začiatku tohto segmentu."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
+msgstr "Dátum kedy bol naposledy tento segment synchronizovaný (automaticky alebo manuálne)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
@@ -209,7 +209,7 @@ msgstr "Zrušené"
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr ""
+msgstr "Automatická"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
@@ -218,12 +218,12 @@ msgid ""
 "Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
 "With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
-msgstr ""
+msgstr "Test - vytvára a spracúva všetky aktivity priamo (bez čakania na zdržanie na prechodoch) ale neposiela emaily ani nevytvára výkazy.\nTest v reálnom čase - vytvára a spracúva všetky aktivity priamo ale neposiela emaily ani nevytvára výkazy.\nS manuálnym potvrdením - kampaň prebieha normálne, ale používateľ musí overiť všetky pracovné položky manuálne.\nNormálne - kampaň prebieha normálne a automaticky posiela všetky emaily a výkazy (buďte veľmi opatrný s týmto módom, idete naživo!)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Cancel Segment"
-msgstr ""
+msgstr "Zrušiť segment"
 
 #. module: marketing_campaign
 #: view:res.partner:0
@@ -243,14 +243,14 @@ msgstr "Kampaň"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Dobrý deň, o chvíľu obdržíte uvítací balíček emailom."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,segment_id:0
 #: view:marketing.campaign.segment:0 view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,segment_id:0
 msgid "Segment"
-msgstr ""
+msgstr "Segment"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:214
@@ -266,12 +266,12 @@ msgid ""
 "   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
 "   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
+msgstr "Typ akcie na vykonanie keď sa položka stane aktívnou, ako sú\"\n- Email: poslať email pomocou preddefinovanej šablóny\n- Výkaz: vytlačte existujúci výkaz definovaný na zdrojovej položke a uložte ho do špecifickej zložky\n- Vlastná akcia: vykonať preddefinoanú akciu, napr. upraviť polia záznamu zdroja"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
+msgstr "Nasledujúci termín synchronizácie je naplánovaný na automatické spustenie"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -293,7 +293,7 @@ msgstr "Partner"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Marketing Reports"
-msgstr ""
+msgstr "Marektingové výrazy"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
@@ -304,7 +304,7 @@ msgstr "Nové"
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Interval musí byť kladný, alebo nula"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -326,7 +326,7 @@ msgstr "Meno prostriedku"
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
 msgid "Synchronization mode"
-msgstr ""
+msgstr "Mód synchronizácie"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0 view:marketing.campaign.segment:0
@@ -337,28 +337,28 @@ msgstr "Spustiť"
 #: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
-msgstr ""
+msgstr "Predošlé aktivity"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Gratulujeme! Stali ste sa Strieborným partnernom!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Dátum kedy bol tento segment naposledy zavretý alebo zrušený."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activities"
-msgstr ""
+msgstr "Aktivity marketingovej kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,error_msg:0
 msgid "Error Message"
-msgstr ""
+msgstr "Chybová správa"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -400,24 +400,24 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr ""
+msgstr "Nastavte variabilné náklady, ak sa domnievate že každá položka kampane, ktorá dosiahla tohto bodu, viedla k určitým nákladom.  Štatistiku nákladov môžete získať v sekcii Výkazy"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "Hodina(y)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr ""
+msgstr "Segment kampane"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
+msgstr "Aktivovaním tejto možnosti, pracovné položky ktoré nie sú spustené pretože nie su dosiahnuté podmienky sú označené ako zrušené namiesto zmazania."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -433,17 +433,17 @@ msgstr "Pracovné objekty"
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
-msgstr ""
+msgstr "Pevná cena"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
-msgstr ""
+msgstr "Novo upravené"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Cancel Workitem"
-msgstr ""
+msgstr "Zrušiť pracovnú položku"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -466,13 +466,13 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
 msgid "Interval Value"
-msgstr ""
+msgstr "Hodnota intervalu"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,revenue:0
 #: field:marketing.campaign.activity,revenue:0
 msgid "Revenue"
-msgstr ""
+msgstr "Príjem"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -491,7 +491,7 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
+msgstr "Vygenerované pracovné poloźky budú prepojené na partnera pridruženého k záznamu. Ak je záznam sám o sebe partnerom, nechajte toto pole prázdne. Toto je užítočné pre výkazové účely, cez zobrazenia Analýza kampane alebo Naviazanie kampane."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,month:0
@@ -508,17 +508,17 @@ msgstr "Ďlašia aktivita"
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
-msgstr ""
+msgstr "Naviazanie kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Test Mode"
-msgstr ""
+msgstr "Testovací režim"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
+msgstr "Iba záznamy vytvorené po poslednej synchronizácii (žiadne duplikáty)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
@@ -533,12 +533,12 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "Akcia na vykonanie keď je táto aktivita aktivovaná"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
 msgid "Partner Field"
-msgstr ""
+msgstr "Pole partnera"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -546,7 +546,7 @@ msgstr ""
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
 msgid "Campaign Analysis"
-msgstr ""
+msgstr "Analýza kampane"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
@@ -557,17 +557,17 @@ msgid ""
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
-msgstr ""
+msgstr "Určuje ďalšíe kritérium pre pridanie do filtra pri výbere nových záznamov na aplikovanie v kampani. \"Žiadne duplikáty\" bráni výberu záznamov, ktoré už vstúpili do kampane. Ak má kampaň \"jedinečné pole\" nastavené \"žiadne duplikáty\" budú tiež bránit voľbe záznamov, ktoré majú rovnakú hodnotu pre unikátne pole ako iné záznamy, ktoré už vstúpili do kampane."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
-msgstr ""
+msgstr "Testovať v reálnom čase"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr ""
+msgstr "Testovať priamo"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -582,12 +582,12 @@ msgstr "Návrh"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "Aktivita marketingovej kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Preview"
-msgstr ""
+msgstr "Náhľad"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,state:0
@@ -611,14 +611,14 @@ msgstr "Bežná"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "Táto aktivita je spustená keď začne kampaň"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
+msgstr "AKtivita so signálom môže byť nazývaná programová. Buďte opatrný, pracovná položka je vždy vytvorená ked je poslaný signál"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 selection:campaign.analysis,state:0
@@ -635,22 +635,22 @@ msgstr "Jún"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Emailové šablóny"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Mód synchronizácie: všetky záznamy"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "Všetky záznamy (žiadne duplikáty)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Created"
-msgstr ""
+msgstr "Novovytvorené"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
@@ -670,12 +670,12 @@ msgstr "Podmienka"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "Výkaz na vygenerovanie keď je táto činnosť aktivovaná"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Unikátne pole"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 view:marketing.campaign.workitem:0
@@ -701,17 +701,17 @@ msgstr "Január"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0 field:marketing.campaign.workitem,date:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Dátum spustenia"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Pracovná položka kampane"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr ""
+msgstr "Aktivita kampane"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
@@ -735,12 +735,12 @@ msgstr "Akcia"
 #: code:addons/marketing_campaign/marketing_campaign.py:526
 #, python-format
 msgid "Automatic transition"
-msgstr ""
+msgstr "Automatický prechod"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,start:0
 msgid "Start"
-msgstr ""
+msgstr "Štart"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:817
@@ -751,7 +751,7 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Cancel Campaign"
-msgstr ""
+msgstr "Zrušiť kampaň"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -763,12 +763,12 @@ msgstr "Proces"
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "Kozmetické"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "Ako je cieľová pracovná položka spúštaná"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 selection:campaign.analysis,state:0
@@ -797,12 +797,12 @@ msgstr "Zatvoriť"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
+msgstr "Model filtra musí byť rovnaký ako zdrojovy model kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
-msgstr ""
+msgstr "Synchronizovať manuálne"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -813,12 +813,12 @@ msgstr "ID prostriedku"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Prechod kampane"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Segment marketingovej kampane"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -826,12 +826,12 @@ msgstr ""
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
 #: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Segments"
-msgstr ""
+msgstr "Segmenty"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Nemazať pracovnú položku"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -852,7 +852,7 @@ msgstr "Aktivity"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "S manuálnym potvrdením"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -867,7 +867,7 @@ msgstr "Typ"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Gratulujeme! Stali ste sa jedným z našich Zlatých partnernov."
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -880,19 +880,19 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
+msgstr "Ak nastavená, toto pole pomôže segmentom, ktoré pracujú v režime \"žiadne duplikáty\", aby sa zabránilo voľbe podobných záznamov dvakrát. Podobné záznamy sú záznamy, ktoré majú rovnakú hodnotu jedinečného poľa. Napríklad voľbou \"email od\" poľa pre CRM Iniciatívy by ste zabrániť opätovnému odoslaniu rovnakej kampane na rovnakú emailovú adresu. Ak nie je nastavená, segmenty \"žiadne duplikáty\" sa vyhnú iba opätovnému výberu rovnakého záznamu, ak už skôr vstúpil do kampane. Môžu byť použité iba ľahko porovnateľné polia, ako sú textové polia, celé čísla, výbery alebo jednotlivé vzťahy."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:527
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "Po %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 #: view:marketing.campaign:0
 msgid "Marketing Campaign"
-msgstr ""
+msgstr "Marketingová kampaň"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
@@ -919,28 +919,28 @@ msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and"
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
-msgstr ""
+msgstr "Pevná cena za prevádzku tejto kampane. Môžete tiež špecifikovať variabilné náklady a výnosy na každú činnosť kampane. Štatistiky nákladov a výnosov sú zahrnuté vo Výkazoch kampane."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
+msgstr "Mód synchronizácie: iba záznamy aktualizované po poslednej synchronizácii"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:791
 #, python-format
 msgid "Email Preview"
-msgstr ""
+msgstr "Náhľad emailu"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
-msgstr ""
+msgstr "Signál"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "Ak nie je nastavený dátum, táto pracovná položka musí byť spustená manuálne"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -951,7 +951,7 @@ msgstr "Apríl"
 #: code:addons/marketing_campaign/marketing_campaign.py:158
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "Kampaň nemôže byť označená ako hotová pokiaľ nie sú všetky segmenty zavreté."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0 field:marketing.campaign,mode:0
@@ -972,24 +972,24 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
+msgstr "Filter na výber zodpovedajúcich zdrojových záznamov ktoré patria k tomuto segmentu. Nové filtre môžu byť vytvorené a uložené použitím rozšíreného vyhľadávania na zoznamovom zobrazení Zdroja. Ak nie je nastavený žiadny filter, všetky záznamy su vybraté bez filtrovania. Synchronizačný mód môže tiež pridať kritérium k filtru."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "Kampaň nemôže začať. Nie sú v nej žiadne aktivity."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
 msgid "Next Synchronization"
-msgstr ""
+msgstr "Ďalšia synchronizácia"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Dobrý den, s potešením Vás vítame medzi našimi Striebornými partnermi od dnešného dňa!"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
@@ -1004,12 +1004,12 @@ msgstr "Všetko"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Iba záznamy vytvorené po poslednej synchronizácii"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
-msgstr ""
+msgstr "Variabilná cena"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1

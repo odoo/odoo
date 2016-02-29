@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-11-27 22:57+0000\n"
+"PO-Revision-Date: 2016-02-17 03:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-7/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgstr "días desde vencimiento, ejecute las siguientes acciones:"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Pasos del Seguimiento"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:261
@@ -254,7 +254,7 @@ msgid ""
 "                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
+msgstr "Para recordar a los clientes el pago de sus facturas, puede definir diversas acciones dependiendo de lo atrasada que sea la deuda. Estas acciones se empaquetan en niveles de seguimiento que son lanzados cuando la fecha de vencimiento de una factura sobrepasa cierto número de días. Si hay otras facturas vencidas para el mismo cliente, se ejecutarán las acciones para la factura más atrasada."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -269,7 +269,7 @@ msgstr "Empresa/Cliente"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Solo se permite una actividad de seguimiento por compañía"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -280,7 +280,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Al ser procesado, imprimirá una carta"
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -364,7 +364,7 @@ msgstr "Criterio de seguimiento"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Indica el orden de secuencia cuando se muestra una lista de líneas de seguimiento."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -386,7 +386,7 @@ msgstr "Enviar una Carta"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr ""
+msgstr "Seguimiento de Pagos"
 
 #. module: account_followup
 #: code:addons/account_followup/report/account_followup_print.py:86
@@ -476,7 +476,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Al procesar, se enviará un correo"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -492,7 +492,7 @@ msgstr ""
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Seguimientos"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:218
@@ -503,14 +503,14 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Seguimiento de Cuenta"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
+msgstr "Puede asignar un usuario a este campo de manera opcional, lo que lo hará responsable para la acción."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -527,7 +527,7 @@ msgstr ""
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "Su descripción no es válida, utilice la leyenda apropiada o %% si desea utilizar el carácter porcentaje."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -548,7 +548,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Buscar Seguimiento"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -581,7 +581,7 @@ msgstr "Bloqueado(a)"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Los días de los niveles de seguimiento deben ser distintos"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -625,7 +625,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0 field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Responsable del Seguimiento"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -690,7 +690,7 @@ msgstr "\nEstimado/a %(partner_name)s,\n\nA pesar de varios recordatorios, su cu
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Cantidad Adeudada"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -726,7 +726,7 @@ msgstr ""
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "Al procesar, se establecerá la acción manual que deberá hacerse para ese cliente. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -756,7 +756,7 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
@@ -907,7 +907,7 @@ msgstr "Cerrar"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Litigio"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
@@ -947,7 +947,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Acciones de Seguimiento"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1153,7 +1153,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
+msgstr "El número de días después de la fecha de vencimiento a esperar antes de enviar el recordatorio. Puede ser negativo si desea enviar una alerta educada previamente."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0

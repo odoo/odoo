@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-17 08:57+0000\n"
+"PO-Revision-Date: 2016-02-24 22:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
+msgstr "Voit määrittää jokaiselle tapahtumalle minimirekisteröitymistason. Jos rekisteröitymisiä ei ole tarpeeksi, et voi vahvistaa tapahtumaa. (Tämän säännön voi ohittaa käyttämällä arvoa 0)"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -76,7 +76,7 @@ msgstr "Bon Jovin konsertti"
 #: view:event.registration:0 selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "Osallistu"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -104,7 +104,7 @@ msgstr "Tilaisuuden sähköpostivahvistus"
 #. module: event
 #: field:event.type,default_registration_max:0
 msgid "Default Maximum Registration"
-msgstr ""
+msgstr "Oletusarvo rekisteröitymisen maksimimäärälle"
 
 #. module: event
 #: view:report.event.registration:0
@@ -163,13 +163,13 @@ msgstr "Tapahtumien analyysi"
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
+msgstr "Valitsee oletuksena käytettävän maksimimäärän kun tämä tapahtuma valitaan"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,user_id_registration:0
 msgid "Register"
-msgstr ""
+msgstr "Rekisteröidy"
 
 #. module: event
 #: field:event.event,message_ids:0 field:event.registration,message_ids:0
@@ -211,7 +211,7 @@ msgstr "Peruttu"
 #. module: event
 #: view:event.event:0
 msgid "ticket"
-msgstr ""
+msgstr "lippu"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -227,12 +227,12 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 #: view:report.event.registration:0
 #: field:report.event.registration,registration_state:0
 msgid "Registration State"
-msgstr ""
+msgstr "Rekisteröitymisen tila"
 
 #. module: event
 #: view:event.event:0
 msgid "tickets"
-msgstr ""
+msgstr "liput"
 
 #. module: event
 #: view:event.event:0
@@ -282,7 +282,7 @@ msgstr "Kumppani"
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "Valitsee oletuksena käytettävän minimimäärän kun tämä tapahtuma valitaan"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -308,7 +308,7 @@ msgstr "Vahvistettu"
 #. module: event
 #: view:event.registration:0
 msgid "Participant"
-msgstr ""
+msgstr "Osallistuja"
 
 #. module: event
 #: view:event.registration:0 view:report.event.registration:0
@@ -318,7 +318,7 @@ msgstr "Hyväksy"
 #. module: event
 #: view:event.event:0
 msgid "Organized by"
-msgstr ""
+msgstr "Järjestäjänä"
 
 #. module: event
 #: view:event.event:0
@@ -330,7 +330,7 @@ msgstr "Rekisteröi tähän tapahtumaan"
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
+msgstr "Valitsee oletuksena käytettävän rekisteröitymisvahvistuksen sähköpostin, kun tapahtuma valitaan"
 
 #. module: event
 #: view:event.event:0
@@ -373,12 +373,12 @@ msgstr "Sähköposti"
 #: code:addons/event/event.py:331
 #, python-format
 msgid "New registration confirmed: %s."
-msgstr ""
+msgstr "Uusi rekisteröityminen vahvistettu: %s."
 
 #. module: event
 #: view:event.event:0
 msgid "Upcoming"
-msgstr ""
+msgstr "Tulossa"
 
 #. module: event
 #: field:event.registration,create_date:0
@@ -485,7 +485,7 @@ msgstr "Joulukuu"
 #. module: event
 #: help:event.registration,origin:0
 msgid "Reference of the sales order which created the registration"
-msgstr ""
+msgstr "Viittaus myyntitilaukseen, joka loi rekisteröitymisen"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
@@ -506,7 +506,7 @@ msgstr "Kuukausi"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr ""
+msgstr "Osallistumispäivä"
 
 #. module: event
 #: view:event.event:0
@@ -536,7 +536,7 @@ msgstr "tai"
 #. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
-msgstr ""
+msgstr "Valitse tämä jos kontakti on puhuja."
 
 #. module: event
 #: code:addons/event/event.py:108
@@ -670,7 +670,7 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
+msgstr "Tähän laitetaan yleensä järjestäjän sähköpostiosoite, jolloin se näkyy vastausosoitteena automaattisesti lähetetyissä sähköposteissa, kuten tapahtumien tai rekisteröitymisten vahvistusviesteissä. Jos käytössä on sähköpostiyhdyskäytävä, myös sen osoitetta voidaan käyttää."
 
 #. module: event
 #: help:event.event,message_ids:0 help:event.registration,message_ids:0
@@ -715,7 +715,7 @@ msgstr "Varoitus: Tapahtuma ei ole saavuttanut osallistujien minimimäärää. O
 #. module: event
 #: view:event.event:0
 msgid "(confirmed:"
-msgstr ""
+msgstr "(vahvistettu:"
 
 #. module: event
 #: view:event.registration:0
@@ -763,7 +763,7 @@ msgstr "Vahvista rekisteröinti"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
+msgstr "Olet jo asettanut tämän tapahtuman rekisteröitymiseksi \"Osallistuttu\". Ole hyvä ja nollaa se luonnokseksi, jos haluat perua tapahtuman."
 
 #. module: event
 #: view:res.partner:0
@@ -778,7 +778,7 @@ msgstr "Sähköpostin konfigurointi"
 #. module: event
 #: field:event.type,default_registration_min:0
 msgid "Default Minimum Registration"
-msgstr ""
+msgstr "Oletusarvo rekisteröitymisten minimimäärälle"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -796,7 +796,7 @@ msgstr "Tapahtumien tyypit"
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 " each time a registration for this event is confirmed."
-msgstr ""
+msgstr "Tämä kenttä kertoo sähköpostimallin, jota käytetään automaattisesti aina kun tähän tapahtumaan rekisteröityminen vahvistetaan."
 
 #. module: event
 #: view:event.event:0 view:event.registration:0
@@ -828,7 +828,7 @@ msgstr "Valmis"
 #. module: event
 #: view:report.event.registration:0
 msgid "Show Confirmed Registrations"
-msgstr ""
+msgstr "Näytä vahvistetut rekisteröitymiset"
 
 #. module: event
 #: view:event.confirm:0
@@ -854,7 +854,7 @@ msgstr "Rekisteröitymisesi tilaisuuteen:  ${object.event_id.name}"
 #. module: event
 #: view:event.registration:0
 msgid "Set To Unconfirmed"
-msgstr ""
+msgstr "Aseta vahvistamattomaksi"
 
 #. module: event
 #: view:event.event:0 field:event.event,is_subscribed:0
@@ -864,7 +864,7 @@ msgstr "Tilatut"
 #. module: event
 #: view:event.event:0
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Lopeta tilaus"
 
 #. module: event
 #: view:event.event:0 view:event.registration:0
@@ -874,7 +874,7 @@ msgstr "Vastuuhenkilö"
 #. module: event
 #: view:report.event.registration:0
 msgid "Registration contact"
-msgstr ""
+msgstr "Rekisteröitymisen kontakti"
 
 #. module: event
 #: view:report.event.registration:0
@@ -896,7 +896,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.act_event_view_registration
 #: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
-msgstr ""
+msgstr "Uusi rekisteröityminen"
 
 #. module: event
 #: field:event.event,note:0
@@ -911,7 +911,7 @@ msgstr " Vahvistettujen ilmoittautumisten määrä"
 #. module: event
 #: field:report.event.registration,name_registration:0
 msgid "Participant / Contact Name"
-msgstr ""
+msgstr "Osallistujan / Kontaktin nimi"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -926,7 +926,7 @@ msgstr "Tapahtumien rekisteröinti"
 #. module: event
 #: view:event.event:0
 msgid "No ticket available."
-msgstr ""
+msgstr "Lippua ei saatavilla."
 
 #. module: event
 #: field:event.event,register_max:0
@@ -985,7 +985,7 @@ msgstr "Huhtikuu"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
+msgstr "Valitsee oletuksena käytettävän tapahtumien vahvistussähköpostin, kun valitset tämän tapahtuman"
 
 #. module: event
 #: view:report.event.registration:0
@@ -1018,7 +1018,7 @@ msgstr "Oletusvastaus"
 #. module: event
 #: view:event.event:0
 msgid "available."
-msgstr ""
+msgstr "saatavilla."
 
 #. module: event
 #: field:event.registration,event_begin_date:0
@@ -1034,7 +1034,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Current Registrations"
-msgstr ""
+msgstr "Tämänhetkiset rekisteröitymiset"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -1045,7 +1045,7 @@ msgid ""
 "        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n<p>Hei ${object.name},</p>\n<p>Ilmoittautumisesi tapahtumaan \"${object.event_id.name}\" on vastaanotettu.\nTulet saamaan automaattisesti sähköpostin, jossa kerrotaan tarkemmin käytännön järjestelyistä (kuten aikataulut, aiheet...) heti kun tapahtuma on vahvistettu.</p>\n<p>Kiitos osallistumisestasi!</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
@@ -1054,7 +1054,7 @@ msgid ""
 " to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
+msgstr "Tähän laitetaan yleensä järjestäjän sähköpostiosoite, jolloin se näkyy vastausosoitteena automaattisesti lähetetyissä sähköposteissa, kuten tapahtumien tai rekisteröitymisten vahvistusviesteissä. Jos käytössä on sähköpostiyhdyskäytävä, myös sen osoitetta voidaan käyttää."
 
 #. module: event
 #: view:event.event:0

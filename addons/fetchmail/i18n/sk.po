@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2016-01-27 21:51+0000\n"
+"PO-Revision-Date: 2016-02-12 16:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-7/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -25,29 +25,29 @@ msgstr "Potvrdené"
 #. module: fetchmail
 #: field:fetchmail.server,server:0
 msgid "Server Name"
-msgstr ""
+msgstr "Názov servera"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "POP"
-msgstr ""
+msgstr "POP"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
+msgstr "Definuje poradie spracovania, nižšie hodnoty znamenjú vyššiu prioritu"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr ""
+msgstr "Spojenia sú šifrované pomocou SSL/TLS cez dedikovaný port (predvoľba: IMAPs = 993, POP3S = 995)"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
 msgid "Keep Attachments"
-msgstr ""
+msgstr "Zachovať prílohy"
 
 #. module: fetchmail
 #: field:fetchmail.server,is_ssl:0
@@ -60,38 +60,38 @@ msgid ""
 "Whether a full original copy of each email should be kept for referenceand "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr ""
+msgstr "Či plná originálna kópia každého emailu musí uchovávať po dobu referencie a pripojené ku každej spracovanej správe. To zvyčajne zdvojnásobi veľkosť databázy správ."
 
 #. module: fetchmail
 #: view:base.config.settings:0
 msgid "Configure the incoming email gateway"
-msgstr ""
+msgstr "Nakonfigurovať bránu prichádzajúcich emailov"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Fetch Now"
-msgstr ""
+msgstr "Načítať teraz"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "Servery prichádzajúcej pošty"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type IMAP."
-msgstr ""
+msgstr "Typ serveru IMAP."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "POP/IMAP Servery"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr ""
+msgstr "Lokálny server"
 
 #. module: fetchmail
 #: field:fetchmail.server,state:0
@@ -101,44 +101,44 @@ msgstr "Status"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
 msgid "POP/IMAP Server"
-msgstr ""
+msgstr "POP/IMAP Server"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "Resetovať povrdenie"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_config_settings
 msgid "fetchmail.config.settings"
-msgstr ""
+msgstr "fetchmail.config.settings "
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
 msgid "Last Fetch Date"
-msgstr ""
+msgstr "Dátum posledného načítania"
 
 #. module: fetchmail
 #: help:fetchmail.server,action_id:0
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr ""
+msgstr "Voliteľné upravené akcie servera spúšťané pre každú prichádzajúcu poštu, na zázname, ktorý bol vytvorený alebo aktualizovaný touto poštou"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "# of emails"
-msgstr ""
+msgstr "# emailov"
 
 #. module: fetchmail
 #: field:fetchmail.server,original:0
 msgid "Keep Original"
-msgstr ""
+msgstr "Uchovať originál"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -153,12 +153,12 @@ msgstr "Nastavenie"
 #. module: fetchmail
 #: field:fetchmail.server,script:0
 msgid "Script"
-msgstr ""
+msgstr "Skript"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Server prichádzajúcej pošty"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
@@ -174,7 +174,7 @@ msgstr "Užívateľské meno:"
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Názov hostiteľa alebo IP adresa mail servera"
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
@@ -192,7 +192,7 @@ msgstr ""
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Test & Confirm"
-msgstr ""
+msgstr "Otestovať & Potvrdiť"
 
 #. module: fetchmail
 #: field:fetchmail.server,action_id:0
@@ -202,7 +202,7 @@ msgstr "Serverová akcia"
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "Server prichádzajúcej pošty"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -213,7 +213,7 @@ msgstr "Správy"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Vyhľadať server prichádzajúcej pošty"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -225,7 +225,7 @@ msgstr "Aktívna"
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr ""
+msgstr "Či by mali byť stiahnuté prílohy. Ak to nie je povolené, budú prichádzajúce emaily zbavené všetkých príloh pred spracovaním"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -235,22 +235,22 @@ msgstr "Odchádzajúca pošta"
 #. module: fetchmail
 #: field:fetchmail.server,priority:0
 msgid "Server Priority"
-msgstr ""
+msgstr "Priorita servera"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "IMAP Server"
-msgstr ""
+msgstr "IMAP Server"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "IMAP"
-msgstr ""
+msgstr "IMAP"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "Typ serveru POP."
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -260,27 +260,27 @@ msgstr "Heslo"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "Akcie na vykonanie na prichádzajúce emaily"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
 msgid "Server Type"
-msgstr ""
+msgstr "Typ servera"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Login Information"
-msgstr ""
+msgstr "Prihlasovacie údaje"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server Information"
-msgstr ""
+msgstr "Informácia servera"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "If SSL required."
-msgstr ""
+msgstr "Ak je SSL vyžadované."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -290,7 +290,7 @@ msgstr "Pokročilé"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server & Login"
-msgstr ""
+msgstr "Server & Prihlásenie"
 
 #. module: fetchmail
 #: help:fetchmail.server,object_id:0
@@ -298,24 +298,24 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr ""
+msgstr "Spracovanie každej prichádzajúcej pošty v rámci konverzácie zodpovedajúcej tomuto typu dokumentu. To bude vytvárať nové dokumenty pre nové konverzácie, alebo priloží následné emaily na existujúce konverzácie (dokumenty)."
 
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "Vytvoriť nový záznam"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Nepotvrdené"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "POP Server"
-msgstr ""
+msgstr "POP Server"
 
 #. module: fetchmail
 #: field:fetchmail.server,port:0
 msgid "Port"
-msgstr ""
+msgstr "Port"

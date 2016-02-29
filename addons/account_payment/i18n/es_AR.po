@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-17 08:32+0000\n"
+"PO-Revision-Date: 2016-02-19 19:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-7/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una nueva orden de pago.\n</p>\n<p>\nUna orden de pago es una petición de pago de su compañía para pagar una factura de proveedor o una nota de crédito de cliente.\n</p>\n          "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -100,7 +100,7 @@ msgstr "_Añadir a la orden de pago"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Extracto generar pago"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -108,7 +108,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "No puede cancelar una factura que ya ha sido importada en una orden de pago. Bórrela de la siguiente orden de pago: %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -176,7 +176,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "Al crear una orden su estatus es 'Borrador'.\n Una vez es confirmado el estado se establece a 'Confirmado'\n Cuando la orden se paga su estatus es 'Pagado'."
 
 #. module: account_payment
 #: view:payment.order:0 selection:payment.order,state:0
@@ -242,7 +242,7 @@ msgstr "Fecha de Creación"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Diario de banco o caja para el modo de pago."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -298,7 +298,7 @@ msgstr "Partner"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Línea extracto bancario"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -335,13 +335,13 @@ msgstr "Si no se indica fecha de pago, el banco procesará esta línea de pago d
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Contabilidad extracto generar pago"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "No hay empresa definida en el asiento"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -351,7 +351,7 @@ msgstr "Modo de pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Fecha de validación"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -386,7 +386,7 @@ msgstr "Dirección del cliente que ordena."
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Generar pago"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -433,7 +433,7 @@ msgstr "Total:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Fecha de ejecución"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -443,7 +443,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Generar pago"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -463,12 +463,12 @@ msgstr "El cliente ordenante"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Contabilidad realizar pago"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Ref. factura"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -509,7 +509,7 @@ msgstr "Cancelar"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Cuenta bancaria destino"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -551,7 +551,7 @@ msgstr "Fecha prevista"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "¿Está seguro que quiere realizar el pago?"
 
 #. module: account_payment
 #: view:payment.mode:0 field:payment.mode,journal:0
@@ -582,7 +582,7 @@ msgstr "Pago"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Orden de pago / Pago"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -624,7 +624,7 @@ msgstr "Orden"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Cancelar pagos"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -651,7 +651,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Fecha preferida"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
