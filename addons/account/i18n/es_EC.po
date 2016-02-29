@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-12 07:50+0000\n"
+"PO-Revision-Date: 2016-02-27 22:58+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -1114,7 +1114,7 @@ msgstr "Tipo de cuenta"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr "Contable"
+msgstr "Asistente Contable"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1737,7 +1737,7 @@ msgstr "Saldo pendiente"
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
-msgstr "Balance de situación"
+msgstr "Balance General"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
@@ -2964,7 +2964,7 @@ msgstr "Diferencia en tasa de cambio de divisa"
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr "Activos actuales"
+msgstr "Activos"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4371,14 +4371,6 @@ msgid "If you want to do it yourself:"
 msgstr "Si desea hacerlo usted mismo:"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si necesita ayuda, por favor no dude\nen contactar con nuestros expertos contables a través del\n<span class=\"fa fa-question-circle\"/> icono en la barra superior."
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr "Pago inmediato"
@@ -5779,7 +5771,7 @@ msgstr "Número de mensajes no leidos"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:192
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Aceptar"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6064,7 +6056,7 @@ msgstr "Informes PDF"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PRO-FORMA"
-msgstr "COTIZACIÓN"
+msgstr "Cotización"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -6608,12 +6600,12 @@ msgstr "Factura proforma"
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Pro-forma"
-msgstr "cotización"
+msgstr "Cotización"
 
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "Facturas cotización"
+msgstr "Cotización pre-factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -7538,7 +7530,7 @@ msgstr "Subtotal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "TIN:"
-msgstr "NIF:"
+msgstr "Identificación:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -9241,6 +9233,14 @@ msgid ""
 msgstr "No puede realizar esta modificación en un asiento conciliado. Sólo puede cambiar algunos campos no legales o tiene que anular la conciliación antes.\n%s."
 
 #. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "No puede eliminar el número de cuenta, una vez establecido.\nSi desea borrar el número de cuenta, puede hacerlo desde la lista de cuentas bancarias."
+
+#. module: account
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid ""
@@ -9636,7 +9636,7 @@ msgstr "la lista de clientes"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "la compañia matriz"
+msgstr "La Compañía Matriz"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

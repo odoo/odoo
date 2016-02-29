@@ -5,7 +5,7 @@
 
 {
     'name': 'Chile - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'description': """
 Chilean accounting chart and tax localization.
 ==============================================

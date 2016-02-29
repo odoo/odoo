@@ -30,16 +30,25 @@ class sale_order_line(osv.osv):
             item = item_obj.browse(cr, uid, rule_id, context=context)
             if item.base == 'standard_price':
                 field_name = 'standard_price'
-            currency_id = item.pricelist_id.currency_id.id
+            currency_id = item.pricelist_id.currency_id
 
         product = product_obj.browse(cr, uid, product_id, context=context)
         if not currency_id:
-            currency_id = product.company_id.currency_id.id
-        factor = 1.0
+            currency_id = product.company_id.currency_id
+            cur_factor = 1.0
+        else:
+            if currency_id.id == product.company_id.currency_id.id:
+                cur_factor = 1.0
+            else:
+                cur_factor = self.pool['res.currency']._get_conversion_rate(cr, uid, product.company_id.currency_id, currency_id, context=context)
+
         if uom and uom != product.uom_id.id:
             # the unit price is in a different uom
-            factor = self.pool['product.uom']._compute_price(cr, uid, uom, 1.0, product.uom_id.id)
-        return product[field_name] * factor, currency_id
+            uom_factor = self.pool['product.uom']._compute_price(cr, uid, uom, 1.0, product.uom_id.id)
+        else:
+            uom_factor = 1.0
+
+        return product[field_name] * uom_factor * cur_factor, currency_id.id
 
     @api.multi
     @api.onchange('product_id')

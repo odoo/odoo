@@ -86,7 +86,7 @@ class AccountBankStatement(models.Model):
     @api.one
     @api.depends('journal_id')
     def _compute_currency(self):
-        self.currency_id = self.journal_id.currency_id or self.env.user.company_id.currency_id
+        self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
 
     @api.one
     @api.depends('line_ids.journal_entry_ids')
@@ -818,7 +818,6 @@ class AccountBankStatementLine(models.Model):
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
-            move.post()
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs
@@ -871,5 +870,6 @@ class AccountBankStatementLine(models.Model):
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
                 (new_aml | counterpart_move_line).reconcile()
 
+            move.post()
         counterpart_moves.assert_balanced()
         return counterpart_moves

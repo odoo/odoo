@@ -96,7 +96,7 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        move = super(AccountMove, self.with_context(check_move_validity=False)).create(vals)
+        move = super(AccountMove, self.with_context(check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
         return move
 
@@ -211,7 +211,7 @@ class AccountMove(models.Model):
             reversed_moves._post_validate()
             reversed_moves.post()
             return [x.id for x in reversed_moves]
-        return True
+        return []
 
     @api.multi
     def open_reconcile_view(self):
@@ -894,7 +894,8 @@ class AccountMoveLine(models.Model):
         MoveObj = self.env['account.move']
         context = dict(self._context or {})
         amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-
+        if not vals.get('partner_id') and context.get('partner_id'):
+            vals['partner_id'] = context.get('partner_id')
         if vals.get('move_id', False):
             move = MoveObj.browse(vals['move_id'])
             if move.date and not vals.get('date'):
@@ -1256,6 +1257,8 @@ class AccountPartialReconcile(models.Model):
             cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
             for example).
         """
+        # we must unlink the reconciliation with the exchange rate difference entry as well, to be able to reconcile it with its reversal entry
+        to_unlink = self
         exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
         # revert the currency difference entry
         reversed_moves = exchange_rate_entries.reverse_moves()
@@ -1269,10 +1272,11 @@ class AccountPartialReconcile(models.Model):
                 if acm_line.account_id.reconcile:
                     for origin_line in origin_move.line_ids:
                         if origin_line.account_id == acm_line.account_id and origin_line.debit == acm_line.credit and origin_line.credit == acm_line.debit:
+                            to_unlink |= origin_line.matched_debit_ids | origin_line.matched_credit_ids
                             to_rec = origin_line + acm_line
                             pairs_to_rec.append(to_rec)
         # the call to super() had to be delayed in order to mark the move lines to reconcile together (to use 'rate_diff_partial_rec_id')
-        res = super(AccountPartialReconcile, self).unlink()
+        res = super(AccountPartialReconcile, to_unlink).unlink()
         # now that the origin currency difference line is not reconciled anymore, we can reconcile it with its reversal entry to cancel it completly
         for to_rec in pairs_to_rec:
             to_rec.reconcile()

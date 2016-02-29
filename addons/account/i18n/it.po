@@ -3,6 +3,7 @@
 # * account
 # 
 # Translators:
+# e s <solitario60@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2015
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2015
 # Liliana Stronciu <liliana.stronciu@aeromnia.aero>, 2016
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-12 10:46+0000\n"
-"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
+"PO-Revision-Date: 2016-02-27 20:49+0000\n"
+"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +82,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Ciao ${object.partner_id.name},</p>\n    <p>C'è una nuova fattura disponibile per te: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENZE</strong><br />\n       &nbsp;&nbsp;Numero fattura: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Totale fattura: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data fattura: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Riferimento ordine: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Il tuo contatto: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>È possibile pagare anche con PayPal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Per qualsiasi dubbio, non esiti a contattarci.</p>\n    <p>Grazie per aver scelto ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hello ${object.partner_id.name},</p>\n    <p>A new invoice is available for you: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -91,7 +92,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * Lo stato 'Bozza' è usato per impostare fatture da confermare in seguito.\n * Lo stato 'Proforma' serve per fatture senza una numerazione.\n * Lo stato 'Aperto' identifica fatture con importo da Incassare per intero o in parte.\n * Lo stato 'Pagato' indica fatture con importo completamente incassato.\n * Lo stato 'Annullato' indica fatture cancellate."
+msgstr " * Lo stato 'Bozza' è usato per impostare fatture da confermare in seguito.\n * Lo stato 'Pro-forma' serve per fatture senza una numerazione.\n * Lo stato 'Aperto' identifica fatture con importo da Incassare per intero o in parte.\n * Lo stato 'Pagato' indica fatture con importo completamente incassato.\n * Lo stato 'Annullato' indica fatture cancellate."
 
 #. module: account
 #. openerp-web
@@ -201,7 +202,7 @@ msgstr "<span class=\"fa\"/> Invita i tuoi collaboratori"
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">Fatturata</span>"
+msgstr "<span class=\"o_stat_text\">Fatturato</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -652,7 +653,7 @@ msgstr "<strong>Ordina per:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>Fonte:</strong>"
+msgstr "<strong>Origine:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -662,12 +663,12 @@ msgstr "<strong>Data iniziale:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Sub-Total :</strong>"
-msgstr "<strong>Totale parziale:</strong>"
+msgstr "<strong>Totale imponibile:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Totale parziale</strong>"
+msgstr "<strong>Totale imponibile</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -808,7 +809,7 @@ msgstr "Una posizione fiscale può essere definita solo una volta sulla stessa i
 #: code:addons/account/models/account_bank_statement.py:388
 #, python-format
 msgid "A transaction can't have a 0 amount."
-msgstr "Un'operazione non può avere valore pari a 0."
+msgstr "Un movimento non può avere un importo pari a 0."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1262,7 +1263,7 @@ msgstr "Impostazioni avanzate"
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model:res.groups,name:account.group_account_manager
 msgid "Adviser"
-msgstr "Consulente"
+msgstr "Contabilità"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
@@ -1431,7 +1432,7 @@ msgstr "Permette una gestione multivaluta"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
 msgid "Allows you to put invoices in pro-forma state."
-msgstr "Permette di impostare fatture nello stato proforma."
+msgstr "Permette di emettere fatture pro-forma"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_analytic_accounting
@@ -1937,7 +1938,7 @@ msgstr "Ricevute &amp; Rimborsi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Analisi ricevute"
+msgstr "Analisi delle fatture"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:159
@@ -2132,7 +2133,7 @@ msgstr "Non è possibile generare un codice sezionale inutilizzato. Si prega di 
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot refund draft/proforma/cancelled invoice."
-msgstr "Non è possibile rimborsare una fattura in stato bozza/proforma/annullata."
+msgstr "Non è possibile rimborsare una fattura in stato bozza/pro-forma/annullata."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:56
@@ -2705,7 +2706,7 @@ msgstr "Nazione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 msgid "Country Group"
-msgstr "Gruppo di Paesi"
+msgstr "Raggruppamenti di Paesi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -3508,7 +3509,7 @@ msgstr "Rilevati doppi fornitori di riferimento. Probabilmente la stessa fattura
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
 msgid "Duplicates"
-msgstr "Doppi"
+msgstr "Duplicati"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:135
@@ -4367,14 +4368,6 @@ msgid "If you want to do it yourself:"
 msgstr "Se si vuole eseguire questa operazione da soli:"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Se si vuole ricevere assistenza su qualsiasi argomento di cui sopra, non esitate \na contattare i nostri esperti contabili utilizzando \n<span class=\"fa fa-question-circle\"/> l'icona in alto."
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr "Pagamento immediato"
@@ -4837,7 +4830,7 @@ msgstr "Gennaio"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
-msgstr "Giornale"
+msgstr "Sezionale"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -4865,7 +4858,7 @@ msgstr "Registrazioni per mese"
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr "Voce giornale"
+msgstr "Voce sezionale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -5601,7 +5594,7 @@ msgstr "Nuovo movimento"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transactions"
-msgstr "Nuova operazione"
+msgstr "Nuovo movimento"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1004
@@ -6203,7 +6196,7 @@ msgstr "Limite di debito"
 #: model:ir.model.fields,field_description:account.field_account_payment_amount
 #: model:ir.model.fields,field_description:account.field_account_register_payments_amount
 msgid "Payment Amount"
-msgstr "Valore pagamento"
+msgstr "Importo pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_date
@@ -6598,18 +6591,18 @@ msgstr "Stampa fattura"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Pro Forma Invoice"
-msgstr "Fattura Proforma"
+msgstr "Fattura Pro-forma"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Pro-forma"
-msgstr "Proforma"
+msgstr "Pro-forma"
 
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "Fatture proforma"
+msgstr "Fatture pro-forma"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -6668,7 +6661,7 @@ msgstr "Conto Economico"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Proforma"
-msgstr "Proforma"
+msgstr "Pro-forma"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:554
@@ -7004,7 +6997,7 @@ msgstr "Registra pagamenti su fatture multiple."
 msgid ""
 "Registering outstanding invoices and payments can be a huge undertaking, \n"
 "                        but you can start using Odoo without it by:"
-msgstr "Registrare fatture o pagementi aperti può essere un lavoro lungo, ma si può iniziare in Odoo utilizzando:"
+msgstr "Registrare fatture o pagamenti aperti può essere un lavoro lungo, ma si può iniziare in Odoo utilizzando:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7090,7 +7083,7 @@ msgstr "Residuo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
 msgid "Residual Amount"
-msgstr "Valore residuo"
+msgstr "Importo rimanente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual_currency
@@ -7250,7 +7243,7 @@ msgstr "Ricerca movimento"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Search Operations"
-msgstr "Serca operazioni"
+msgstr "Ricerca movimenti"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -7305,7 +7298,7 @@ msgstr "Le fatture selezionate non possono essere eliminate perché sono già in
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr "Le fatture selezionate non possono essere confermate perché non sono in stato 'Bozza' o 'Proforma'."
+msgstr "Le fatture selezionate non possono essere confermate perché non sono in stato 'Bozza' o 'Pro-forma'."
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9121,7 +9114,7 @@ msgstr "Spuntare la casella se la registrazione e' in contestazione con il partn
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "                what you purchased or received."
-msgstr "E' possibile gestire le fatture a fornitori in base a cosa si è stato comprato o ricevuto."
+msgstr "Puoi gestire le fatture a fornitori in base a quello che è stato comprato o ricevuto."
 
 #. module: account
 #: code:addons/account/models/res_config.py:229
@@ -9235,6 +9228,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Non è possibile fare questa modifica su una registrazione riconciliata. E' possibile cambiare solo alcuni campi non fiscali, altrimenti è necessario prima annullare la riconciliazione.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "Non puoi cancellare il numero di conto una volta impostato.\nSe lo vuoi cancellare, lo puoi fare dalla lista dei conti della Banca."
 
 #. module: account
 #: code:addons/account/models/account.py:96

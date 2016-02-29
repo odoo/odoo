@@ -6,6 +6,7 @@
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 # Jérémy Kersten <jke@openerp.com>, 2016
 # Jorge Villamil <jorge.villamil@serviciosit.com.mx>, 2015
+# Martin Trigaux, 2016
 # Néstor Gómez Muñoz <nestorgm@gmail.com>, 2015
 # Scott Acock <transifex@scottacock.com>, 2015
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-10 10:33+0000\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -208,7 +209,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\"\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importar un archivo</strong><br/>\n<span class=\"small\">Recomendado si &gt;100 productos</span>\n</span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -302,7 +303,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Conciliar Estado de Cuenta Bancario<strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Conciliar Estado de Cuenta Bancario<s/trong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -462,7 +463,7 @@ msgstr "<strong>Crear una Factura de Cliente</strong>"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr "<strong> Crear un Depósito de Entrada </ strong><br/> \nEsto le permite grabar los diferentes pagos que constituyen su depósito bancario. (Es posible que necesite"
+msgstr "<strong> Crear un Depósito de Entrada </strong><br/> \nEsto le permite grabar los diferentes pagos que constituyen su depósito bancario. (Es posible que necesite"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4362,14 +4363,6 @@ msgstr "Si usted quiere ser capaz de enviar a sus clientes sus declaraciones \nd
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Si desea hacerlo usted mismo:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si desea algún tipo de asistencia en cualquiera de los anteriores, por favor no dude \nponerse en contacto con nuestros expertos contables utilizando el \n<span class = \"fa fa-pregunta-círculo\" /> icono en la barra superior."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9232,6 +9225,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "No se puede hacer esta modificación en una entrada de conciliarse. Usted puede simplemente cambiar algunos campos no legales o debe hacer sin conciliar primero.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96
