@@ -29,7 +29,7 @@ Partners geolocalization
 ========================
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm'],
+    'depends': ['base'],
     'demo': [
     ],
     'data': [
