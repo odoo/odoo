@@ -233,7 +233,7 @@ class crm_lead(FormatAddress, osv.osv):
         'phone': fields.char('Phone'),
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
-        'function': fields.char('Function'),
+        'function': fields.char('Job Position'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
