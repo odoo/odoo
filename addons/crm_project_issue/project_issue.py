@@ -21,6 +21,7 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
         wizards = self.browse(cr, uid, ids, context=context)
         Lead = self.pool["crm.lead"]
         Issue = self.pool["project.issue"]
+        Attachment = self.pool['ir.attachment']
 
         for wizard in wizards:
             # get the lead to transform
@@ -44,6 +45,11 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
             issue = Issue.browse(cr, uid, issue_id, context=None)
             # move the mail thread
             Lead.message_change_thread(cr, uid, [lead.id], issue, context=context)
+            # Move attachments
+            attachment_ids = Attachment.search(
+                cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', lead.id)], context=context)
+            Attachment.write(
+                cr, uid, attachment_ids, {'res_model': 'project.issue', 'res_id': issue_id}, context=context)
             # Archive the lead
             Lead.write(cr, uid, [lead.id], {'active': False}, context=context)
         # return the action to go to the form view of the new Issue
