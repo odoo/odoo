@@ -9,7 +9,7 @@
     'description': """
 Manage your sales reports
 =========================
-With this module you can personnalize the sale order and invoice report with
+With this module you can personalize the sale order and invoice report with
 separators, page-breaks or subtotals.
     """,
     'website': 'https://www.odoo.com/page/crm',

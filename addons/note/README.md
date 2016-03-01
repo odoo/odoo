@@ -42,7 +42,7 @@ An employee travelling a lot can organize their tasks based on the context to pe
 
 A manager will organize their high number of tasks based on prioritizations: Todo Today | This Week | This Month | Later
 
-Personnal Notes
+Personal Notes
 ---------------
 
 ### Notes are private but can be shared
