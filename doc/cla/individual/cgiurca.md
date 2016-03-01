@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Catalin Giurca catalin.giurca@gmail.com https://github.com/CatalinGiu
+Catalin Giurca catalin.giurca@polymtl.ca https://github.com/CatalinGiu
