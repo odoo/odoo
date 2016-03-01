@@ -61,7 +61,7 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_probability(self, cr, uid, context=None):
         """ Gives default probability """
-        stage_id = self._get_default_stage_id(cr, uid, context=None)
+        stage_id = self._get_default_stage_id(cr, uid, context=context)
         if stage_id:
             return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         else:
