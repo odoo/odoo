@@ -146,7 +146,7 @@
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
+                    <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
@@ -536,7 +536,7 @@
 
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
             <field name="context">{}</field>
-            <field name="domain">[('product_id','in',active_ids)]</field>
+            <field name="domain">[('product_id.product_tmpl_id','in',active_ids)]</field>
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>

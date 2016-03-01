@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Martin Trigaux, 2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-03 19:08+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -537,7 +538,7 @@ msgstr "<strong>Účtovné knihy:</strong>"
 msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
-msgstr "<strong>Označte účty na zaplatenie</strong><br/>\nZoskupte alebo filtrujte svoje účty aby ste videli tie splatné v budúcom týždni, potom otvorte každý účet samostatne, kliknite na <strong>'Zaplatiť'</ strong> a vyberte spôsob platby, ktorý uprednostňujete."
+msgstr "<strong>Označte účty na zaplatenie</strong><br/>\nZoskupte alebo filtrujte svoje účty aby ste videli tie splatné v budúcom týždni, potom otvorte každý účet samostatne, kliknite na <strong>'Zaplatiť'</strong> a vyberte spôsob platby, ktorý uprednostňujete."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1641,9 +1642,8 @@ msgstr "Vypýtať vratku"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Spravovanie aktív: To vám umožní hospodáriť s majetkom vo vlastníctve spoločností alebo osoboy. Vedie záznamy o odpisoch týchto aktív, a vytvorí účtový pohyb pre riadky tých odpisov.\n\nÚčtovanie výnosov: To vám umožní spravovať účtovanie výnosov z predaja produktu. Vedie záznamy o splátkach ku ktorým došlo na tie účtovania výnosov, a vytvorí účtový pohyb pre riadky tých splátok.\n-Toto nainštaluje modul account_asset. Pokiaľ nezaškrtnete toto políčko, budete môcť robiť fakturáciu a platby, ale nie účtovníctvo (Položky účtovnej knihy, Účtovný rozvrh, ...)"
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1652,8 +1652,8 @@ msgstr "Aktíva"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Spravovanie aktív & Priznávanie výnosov"
+msgid "Assets management"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4360,14 +4360,6 @@ msgstr "Ak chcete mať možnosť posielať vašim zákazníkom ich výpisy \nz O
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Ak to chcete spraviť sami:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Ak by ste chceli pomôcť s čimkoľvek vyšie uvedeným, prosím neváhajte\nkontaktovať našich účtovníkov pomocou ikony\n<span class=\"fa fa-question-circle\"/> na hornej lište."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9230,6 +9222,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Nemôžete spraviť túto úpravu na zladenom vstupe. Môžete iba zmeniť niektoré ne-právne polia alebo musíte najskôr odzosúladiť.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96

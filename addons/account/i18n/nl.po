@@ -4,19 +4,20 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
-# Eric Geens <eric.geens@vitabiz.be>, 2015
+# Eric Geens <eric.geens@vitabiz.be>, 2015-2016
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
+# Martin Trigaux, 2016
 # Volluta <volluta@tutanota.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-15 14:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1646,9 +1647,8 @@ msgstr "Vraag een credit aan"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Beheer activa: stelt u in staat activa te beheren voor een bedrijf of een persoon.\nHet registreert afschrijvingen voor activa, en maakt boekingen voor de afschrijvingen.\n\nInkomstenverantwoording: stelt u in staat om de omzet te erkennen op de verkoop van producten. Het houdt bij welk deel van de te erkennen omzet ontvangen werd, en maakt boekingen voor deze deelontvangsten.\n-Hiermee installeert u de module 'account_asset'. Als u dit niet aanvinkt, kunt u wel facturen en betalingen registreren, maar geen financiële administratie voeren (rekeningschema, boekingen, ....)"
+msgstr "Activabeheer : stelt u in staat activa te beheren voor een bedrijf/persoon.\n                    Het registreert afschrijvingen voor activa, en maakt boekingen voor de afschrijvingen.\n                    Hiermee installeert u de module 'account_asset'. Als u dit niet aanvinkt, kunt u wel facturen en betalingen\n                    registreren, maar geen financiële administratie voeren (rekeningschema, boekingen, ....)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1657,8 +1657,8 @@ msgstr "Activa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Beheer activa & Omzetverantwoording"
+msgid "Assets management"
+msgstr "Beheer van activa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4350,7 +4350,7 @@ msgstr "Bij het gebruik van betalingscondities zal de vervaldatum automatisch be
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr "Indien u klantoverzichten wil verzenden vanuit Odoo, dan moet u:"
+msgstr "Indien u rekeningoverzichten wil verzenden vanuit Odoo, dan moet u:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4365,14 +4365,6 @@ msgstr "Als u uw klanten hun betaaloverzichten wil versturen vanuit Odoo,\ndan m
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Indien u dit zelf wenst te doen:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Indien u hulp nodig hebt bij één van de onderwerpen, aarzel dan niet om onze \n                        boekkhoudexperten te contacteren door bovenaan op het <span class=\"fa fa-question-circle\"/>\n                        icoon te klikken."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -4461,7 +4453,7 @@ msgstr "In kostenplaatsen inbegrijpen"
 #: model:ir.model.fields,field_description:account.field_account_tax_price_include
 #: model:ir.model.fields,field_description:account.field_account_tax_template_price_include
 msgid "Included in Price"
-msgstr "Inbegrepen in prijs"
+msgstr "BTW inclusief in prijs"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_revenue
@@ -4548,7 +4540,7 @@ msgstr "Interne notities"
 #: selection:account.payment,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "Interne verplaatsing"
+msgstr "Interne mutatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -4924,7 +4916,7 @@ msgstr "Naam dagboek"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr "Dagboek & Relatie"
+msgstr "Dagboek en Relatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5229,33 +5221,33 @@ msgstr "Legale naam"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Sales"
-msgstr "Minder verkoopkosten"
+msgstr "Minus verkoopkosten"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Current Liabilities"
-msgstr "Minder huidige passiva"
+msgstr "Minus huidige passiva"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Expenses"
-msgstr "Minder uitgaven"
+msgstr "Minus uitgaven"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Non-Current Liabilities"
-msgstr "Minder niet-huidige passiva"
+msgstr "Minus Langlopende activa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Payable Accounts"
-msgstr "Minder crediteurrekeningen"
+msgstr "Minus crediteurrekeningen"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:138
 #, python-format
 msgid "Less Payment"
-msgstr "Minder betalingen"
+msgstr "Minus betalingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6353,7 +6345,7 @@ msgstr "Overeenkomende betalingen"
 msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
-msgstr "Betalingen worden gebruikt om bewegingen in liquiditeiten te registreren (verzenden, innen en overmaken van geld).\nU kunt de betalingen op uw manier verwerken, of door gebruik te maken van één van de voorgeïnstalleerde mogelijkheden."
+msgstr "Betalingen worden gebruikt om bewegingen in liquiditeiten te registreren (betalen, innen en overmaken van geld).\nU kunt de betalingen op uw manier verwerken, of door gebruik te maken van één van de voorgeïnstalleerde mogelijkheden."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6798,7 +6790,7 @@ msgstr "Debiteuren en crediteuren rekeningen"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "Ontvang geld"
+msgstr "Ontvangen"
 
 #. module: account
 #. openerp-web
@@ -7313,7 +7305,7 @@ msgstr "Geselecteerde facturen kunnen niet bevestigd worden omdat deze zich niet
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Send Money"
-msgstr "Verzend geld"
+msgstr "Betalen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7325,7 +7317,7 @@ msgstr "Verzenden via e-mail"
 msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
-msgstr "Handmatig klantoverzichten (met uitstaande facturen) verzenden tijdens de overgangsperiode"
+msgstr "Handmatig rekeningoverzichten (met uitstaande facturen) verzenden tijdens de overgangsperiode"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -7666,7 +7658,7 @@ msgstr "Toeslagnaam"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_type_tax_use
 #: model:ir.model.fields,field_description:account.field_account_tax_type_tax_use
 msgid "Tax Scope"
-msgstr "Bereik"
+msgstr "BTW over"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_tax_src_id
@@ -9235,6 +9227,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Het is niet mogelijk om deze aanpassing te doen op een reeds afgeletterde boeking. Het is alleen mogelijk om enkele, niet wettelijke velden, te wijzigen. Anders dient u het afletteren eerst ongedaan te maken!\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96

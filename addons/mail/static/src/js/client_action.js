@@ -200,7 +200,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', function () {
-            chat_manager.mark_all_as_read();
+            chat_manager.mark_all_as_read(self.channel, self.domain);
         });
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
         this.$buttons.on('click', '.o_mail_chat_button_new_message', this.on_click_new_message);

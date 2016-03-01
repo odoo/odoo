@@ -96,7 +96,7 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        move = super(AccountMove, self.with_context(check_move_validity=False)).create(vals)
+        move = super(AccountMove, self.with_context(check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
         return move
 
@@ -211,7 +211,7 @@ class AccountMove(models.Model):
             reversed_moves._post_validate()
             reversed_moves.post()
             return [x.id for x in reversed_moves]
-        return True
+        return []
 
     @api.multi
     def open_reconcile_view(self):
@@ -535,7 +535,7 @@ class AccountMoveLine(models.Model):
 
         # Return lines formatted
         if len(pairs) > 0:
-            target_currency = self.currency_id or self.company_id.currency_id
+            target_currency = (self.currency_id and self.amount_currency) and self.currency_id or self.company_id.currency_id
             lines = self.browse(list(pairs[0]))
             return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
         return []
@@ -630,7 +630,7 @@ class AccountMoveLine(models.Model):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'currency_id': line.currency_id.id or False,
+                'currency_id': (line.currency_id and line.amount_currency) and line.currency_id.id or False,
             }
 
             debit = line.debit
@@ -645,7 +645,7 @@ class AccountMoveLine(models.Model):
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency
-            line_currency = line.currency_id or company_currency
+            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
             if line_currency != company_currency:
@@ -894,7 +894,8 @@ class AccountMoveLine(models.Model):
         MoveObj = self.env['account.move']
         context = dict(self._context or {})
         amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-
+        if not vals.get('partner_id') and context.get('partner_id'):
+            vals['partner_id'] = context.get('partner_id')
         if vals.get('move_id', False):
             move = MoveObj.browse(vals['move_id'])
             if move.date and not vals.get('date'):
@@ -939,7 +940,7 @@ class AccountMoveLine(models.Model):
             if journal.type_control_ids:
                 type = account.user_type_id
                 for t in journal.type_control_ids:
-                    if type.code == t.code:
+                    if type == t:
                         ok = True
                         break
             if journal.account_control_ids and not ok:
@@ -976,20 +977,21 @@ class AccountMoveLine(models.Model):
                     vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (amount / res['total_excluded']))
             # Create tax lines
             for tax_vals in res['taxes']:
-                account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
-                if not account_id: account_id = vals['account_id']
-                tax_lines_vals.append({
-                    'account_id': account_id,
-                    'name': vals['name'] + ' ' + tax_vals['name'],
-                    'tax_line_id': tax_vals['id'],
-                    'move_id': vals['move_id'],
-                    'date': vals['date'],
-                    'partner_id': vals.get('partner_id'),
-                    'ref': vals.get('ref'),
-                    'statement_id': vals.get('statement_id'),
-                    'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
-                    'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
-                })
+                if tax_vals['amount']:
+                    account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
+                    if not account_id: account_id = vals['account_id']
+                    tax_lines_vals.append({
+                        'account_id': account_id,
+                        'name': vals['name'] + ' ' + tax_vals['name'],
+                        'tax_line_id': tax_vals['id'],
+                        'move_id': vals['move_id'],
+                        'date': vals['date'],
+                        'partner_id': vals.get('partner_id'),
+                        'ref': vals.get('ref'),
+                        'statement_id': vals.get('statement_id'),
+                        'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
+                        'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                    })
 
         new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:
@@ -1220,6 +1222,7 @@ class AccountPartialReconcile(models.Model):
                         'move_id': move.id,
                         'currency_id': rec.currency_id.id,
                         'amount_currency': 0.0,
+                        'partner_id': rec.debit_move_id.partner_id.id,
                     })
                     rec.env['account.move.line'].create({
                         'name': _('Currency exchange rate difference'),
@@ -1228,6 +1231,7 @@ class AccountPartialReconcile(models.Model):
                         'account_id': amount_diff > 0 and rec.company_id.currency_exchange_journal_id.default_debit_account_id.id or rec.company_id.currency_exchange_journal_id.default_credit_account_id.id,
                         'move_id': move.id,
                         'currency_id': rec.currency_id.id,
+                        'partner_id': rec.debit_move_id.partner_id.id,
                     })
                     rec.env['account.partial.reconcile'].create({
                         'debit_move_id': amount_diff < 0 and line_to_reconcile.id or rec.debit_move_id.id,
@@ -1249,7 +1253,31 @@ class AccountPartialReconcile(models.Model):
     def unlink(self):
         """ When removing a link between entries, we need to revert the eventual journal entries we created to book the
             fluctuation of the foreign currency's exchange rate.
+            We need also to reconcile together the origin currency difference line and its reversal in order to completly
+            cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
+            for example).
         """
+        # we must unlink the reconciliation with the exchange rate difference entry as well, to be able to reconcile it with its reversal entry
+        to_unlink = self
         exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
-        exchange_rate_entries.reverse_moves()
-        return super(AccountPartialReconcile, self).unlink()
+        # revert the currency difference entry
+        reversed_moves = exchange_rate_entries.reverse_moves()
+        # find the origin currency difference line on the partner account and its newly created reversal, and store them in a list
+        pairs_to_rec = []
+        for rev_move in self.env['account.move'].browse(reversed_moves):
+            if not rev_move.rate_diff_partial_rec_id:
+                continue
+            origin_move = exchange_rate_entries.filtered(lambda x: x.rate_diff_partial_rec_id == rev_move.rate_diff_partial_rec_id)
+            for acm_line in rev_move.line_ids:
+                if acm_line.account_id.reconcile:
+                    for origin_line in origin_move.line_ids:
+                        if origin_line.account_id == acm_line.account_id and origin_line.debit == acm_line.credit and origin_line.credit == acm_line.debit:
+                            to_unlink |= origin_line.matched_debit_ids | origin_line.matched_credit_ids
+                            to_rec = origin_line + acm_line
+                            pairs_to_rec.append(to_rec)
+        # the call to super() had to be delayed in order to mark the move lines to reconcile together (to use 'rate_diff_partial_rec_id')
+        res = super(AccountPartialReconcile, to_unlink).unlink()
+        # now that the origin currency difference line is not reconciled anymore, we can reconcile it with its reversal entry to cancel it completly
+        for to_rec in pairs_to_rec:
+            to_rec.reconcile()
+        return res

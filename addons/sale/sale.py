@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Term', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team)
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
@@ -319,6 +319,9 @@ class SaleOrder(models.Model):
                 invoice.type = 'out_refund'
                 for line in invoice.invoice_line_ids:
                     line.quantity = -line.quantity
+            # Use additional field helper function (for account extensions)
+            for line in invoice.invoice_line_ids:
+                line._set_additional_fields(invoice)
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
@@ -558,7 +561,7 @@ class SaleOrderLine(models.Model):
             for proc in line.procurement_ids:
                 qty += proc.product_qty
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                return False
+                continue
 
             if not line.order_id.procurement_group_id:
                 vals = line.order_id._prepare_procurement_group()
@@ -760,15 +763,6 @@ class SaleOrderLine(models.Model):
             raise UserError(_('You can not remove a sale order line.\nDiscard changes and try setting the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
-    def onchange_product_uom(self, cursor, user, ids, pricelist, product, qty=0,
-                             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-                             lang=False, update_tax=True, date_order=False, fiscal_position=False, context=None):
-        ctx = dict(context or {}, fiscal_position=fiscal_position)
-        return self.product_uom_change(cursor, user, ids, pricelist, product,
-                                      qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
-                                      partner_id=partner_id, lang=lang, update_tax=update_tax,
-                                      date_order=date_order, context=ctx)
-
     @api.multi
     def _get_delivered_qty(self):
         '''
@@ -799,7 +793,7 @@ class AccountInvoice(models.Model):
         default_team_id = self.env['crm.team']._get_default_team_id()
         return self.env['crm.team'].browse(default_team_id)
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
+    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
 
     @api.multi
     def confirm_paid(self):

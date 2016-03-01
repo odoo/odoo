@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-04 18:42+0000\n"
+"PO-Revision-Date: 2016-02-26 16:53+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgid ""
 "- Bill Splitting: Allows you to split an order into different orders\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
-msgstr "\n\n=======================\n\nEste módulo añade varias características para restaurantes al terminal punto de venta:\n- Impresión de la cuenta: Permite imprimir un recibo antes de que se pague el pedido\n- División de la cuenta: Permite dividir un pedido en varias partes\n- Impresión del pedido de cocina: Permite imprimir los pedidos de cocina actualizados\n\n"
+msgstr "\n\n=======================\n\nEste módulo añade varias características para restaurantes al Punto de venta POS:\n- Impresión de la cuenta: Permite imprimir un recibo antes de que se pague el pedido\n- División de la cuenta: Permite dividir un pedido en varias partes\n- Impresión del pedido de cocina: Permite imprimir los pedidos de cocina actualizados\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -728,7 +728,7 @@ msgid ""
 "    * Requested Date (will be used as the expected date on pickings)\n"
 "    * Commitment Date\n"
 "    * Effective Date\n"
-msgstr "\nAñade información de fechas para los pedidos de ventas\n======================================================\n\nPuede añadir las siguientes fechas a los pedidos de ventas\n----------------------------------------------------------\n    * Fecha de solicitud (se utilizará como la fecha prevista en albaranes)\n    * Fecha de recogida\n    * Fecha efectiva\n"
+msgstr "\nAñade información de fechas para los pedidos de ventas\n======================================================\n\nPuede añadir las siguientes fechas a los pedidos de ventas\n----------------------------------------------------------\n    * Fecha de solicitud (se utilizará como la fecha prevista en Movimientos de Inventario)\n    * Fecha de recogida\n    * Fecha efectiva\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -1720,7 +1720,7 @@ msgid ""
 "=======================\n"
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
-msgstr "\nGestión de costes en destino\n============================\n\nEste módulo le permite añadir fácilmente costes extra en los albaranes y decidir el reparto de estos costes entre los movimientos de existencia para tenerlo en cuenta en la valoración de existencias.\n    "
+msgstr "\nGestión de costes en destino\n============================\n\nEste módulo le permite añadir fácilmente costes extra en los Movimientos de Inventario y decidir el reparto de estos costes entre los movimientos de existencia para tenerlo en cuenta en la valoración de existencias.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_project_issue
@@ -1760,7 +1760,7 @@ msgid ""
 "going through the retailer's warehouse. In this case no\n"
 "internal transfer document is needed.\n"
 "\n"
-msgstr "\nGestionar pedidos drop shipping\n===============================\n\nEste módulo añade un tipo de albarán preconfigurado llamado Dropshipping,\nasí como una ruta de abastecimiento, que permite configurar productos y \npedidos drop shippings \n\nCuando se utiliza dropshipping, los bienes se transfieren directamente desde\nlos proveedores a los clientes (envío directo) sin pasar por el almacén del\ndistribuidor. En este caso, no se requiere de un documento de transferencia\ninterna.\n\n"
+msgstr "\nGestionar pedidos drop shipping\n===============================\n\nEste módulo añade un tipo de Movimientos de Inventario preconfigurado llamado Dropshipping,\nasí como una ruta de abastecimiento, que permite configurar productos y \npedidos drop shippings \n\nCuando se utiliza dropshipping, los bienes se transfieren directamente desde\nlos proveedores a los clientes (envío directo) sin pasar por el almacén del\ndistribuidor. En este caso, no se requiere de un documento de transferencia\ninterna.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -1868,7 +1868,7 @@ msgid ""
 "* Last Product Inventories\n"
 "* Moves Analysis\n"
 "    "
-msgstr "\nGestión multi-almacén y ubicaciones multi- y estructuradas\n==============================================================\n\nEl almacén y gestión de inventario está basado en una estructura de ubicaciones jerárquica, desde almacén hasta unidades de almacenamiento. \nEl sistema de inventario de doble entrada le permite gestionar el inventario de clientes, proveedores y de fabricación.\n\nOdoo tiene la capacidad de gestionar lotes y números de serie, asegurando compatibilidad con los requerimientos de trazabilidad impuestos por la mayoría de industrias.\n\nFuncionalidad clave\n------------\n* Histórico de movimientos y plan\n* Reglas de stock mínimo\n* Soporte a códigos de barras\n* Detección rápida de problemas mediante el sistema de doble entrada\n* Trazabilidad (Número de serie, paquetes... )\n\nTableros / Informes para la gestión de almacén incluyen:\n----------------------------------------------------------\n* Entrada de productos (Gráfico)\n* Salida de productos (Gráfico)\n* Abastecimientos en excepción\n* Análisis de inventario\n* Inventario de los últimos productos\n* Análisis de movimientos\n    "
+msgstr "\nGestión multi-bodega y ubicaciones múltiples y estructuradas\n==============================================================\n\nEl almacén y gestión de inventario está basado en una estructura de ubicaciones jerárquica, desde almacén hasta unidades de almacenamiento. \nEl sistema de inventario de doble entrada le permite gestionar el inventario de clientes, proveedores y de fabricación.\n\nOdoo tiene la capacidad de gestionar lotes y números de serie, asegurando compatibilidad con los requerimientos de trazabilidad impuestos por la mayoría de industrias.\n\nFuncionalidad clave\n------------\n* Histórico de movimientos y plan\n* Reglas de stock mínimo\n* Soporte a códigos de barras\n* Detección rápida de problemas mediante el sistema de doble entrada\n* Trazabilidad (Número de serie, paquetes... )\n\nTableros / Informes para la gestión de almacén incluyen:\n----------------------------------------------------------\n* Entrada de productos (Gráfico)\n* Salida de productos (Gráfico)\n* Abastecimientos en excepción\n* Análisis de inventario\n* Inventario de los últimos productos\n* Análisis de movimientos\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -1904,7 +1904,7 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 "    "
-msgstr "\nGestiona presupuestos y pedidos de venta\n==================================\n\nEsta aplicación permite gestionar los objetivos de venta de una manera eficiente y eficaz siguiendo todos los pedidos de venta y su historial.\n\nManeja el flujo completo de ventas:\n\n* **Presupuesto** -> **Pedido de venta** -> **Factura**\n\nPreferencias (sólo con la gestión de almacenes instalada)\n-----------------------------------------------------------------------------------------\n\nSi también tiene instalada la gestión de almacenes, puede gestionar las siguientes preferencias:\n\n* Envío: Elección de envío total o parcial\n* Facturación: Escoja cómo serán pagadas las facturas\n* Incoterms: Términos de comercio internacional\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el albarán (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n\nEl tablero para el responsable de compras incluye\n----------------------------------------------------------------------------\n* Mis presupuestos\n* Volumen de negocios mensual (Gráfico)\n    "
+msgstr "\nGestiona presupuestos y pedidos de venta\n==================================\n\nEsta aplicación permite gestionar los objetivos de venta de una manera eficiente y eficaz siguiendo todos los pedidos de venta y su historial.\n\nManeja el flujo completo de ventas:\n\n* **Presupuesto** -> **Pedido de venta** -> **Factura**\n\nPreferencias (sólo con la gestión de almacenes instalada)\n-----------------------------------------------------------------------------------------\n\nSi también tiene instalada la gestión de almacenes, puede gestionar las siguientes preferencias:\n\n* Envío: Elección de envío total o parcial\n* Facturación: Escoja cómo serán pagadas las facturas\n* Incoterms: Términos de comercio internacional\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el Movimiento de Inventario (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n\nEl tablero para el responsable de compras incluye\n----------------------------------------------------------------------------\n* Mis presupuestos\n* Volumen de negocios mensual (Gráfico)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -1926,7 +1926,7 @@ msgid ""
 "* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
 "* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
-msgstr "\nGestione presupuestos y pedidos de venta\n==================================\n\nEste módulo enlaza las aplicaciones de ventas y gestión de almacenes.\n\nPreferencias\n----------------------\n* Envío: Elección de envío total o parcial\n* Facturación: escoja cómo serán pagadas las facturas\n* Incoterms: Formas de pago internacionales\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el albarán (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n"
+msgstr "\nGestione presupuestos y pedidos de venta\n==================================\n\nEste módulo enlaza las aplicaciones de ventas y gestión de almacenes.\n\nPreferencias\n----------------------\n* Envío: Elección de envío total o parcial\n* Facturación: escoja cómo serán pagadas las facturas\n* Incoterms: Formas de pago internacionales\n\nPuede elegir métodos de facturación flexibles:\n\n* 'Bajo demanda': Las facturas se crean manualmente desde los pedidos de venta cuando sean necesarias.\n* 'Con la orden de entrega': Las facturas se generan desde el Movimiento de Inventario (entrega).\n* 'Antes del envío': Se crea una factura borrador y debe ser pagada antes del envío.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_uos
@@ -2386,7 +2386,7 @@ msgid ""
 "\n"
 "This module provides the core of the OpenERP Web Client.\n"
 "        "
-msgstr "\nMódulo principal de OpenERP web.\n=============================\n\nEste módulo provee el núcleo del cliente web de OpenERP.\n        "
+msgstr "\nMódulo principal de Odoo web.\n=============================\n\nEste módulo provee el núcleo del cliente web de Odoo.\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -2917,7 +2917,7 @@ msgid ""
 "\n"
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
-msgstr "\nMódulo de base para gestionar el almuerzo.\n================================\n\nMuchas empresas piden sándwiches, pizzas y otros, de proveedores habituales, para sus empleados para ofrecerles más facilidades.\n\nSin embargo, la gestión de los almuerzos en la empresa requiere una administración adecuada, especialmente cuando el número de empleados o proveedores es importante.\n\nEl módulo de pedidos de comida ha sido desarrollado para hacer más fácil esta gestión y también para ofrecer a los empleados más herramientas y usabilidad.\n\nAdemás de una gestión de comida y de proveedores completa, este módulo ofrece la posibilidad de mostrar advertencias y proporciona una selección rápida de pedido basado en las preferencias de los empleados.\n\nSi quiere ahorrar tiempo de sus empleados, y evitar que tengan siempre las monedas en sus bolsillos, este módulo es esencial.\n    "
+msgstr "\nMódulo de base para gestionar las comidas.\n=======================================\n\nMuchas empresas piden sándwiches, pizzas y otros, de proveedores habituales, para sus empleados para ofrecerles más facilidades.\n\nSin embargo, la gestión de alimentos en la empresa requiere una administración adecuada, especialmente cuando el número de empleados o proveedores es importante.\n\nEl módulo de pedidos de comida ha sido desarrollado para hacer más fácil esta gestión y también para ofrecer a los empleados más herramientas y usabilidad.\n\nAdemás de una gestión de comida y de proveedores completa, este módulo ofrece la posibilidad de mostrar advertencias y proporciona una selección rápida de pedido basado en las preferencias de los empleados.\n\nSi quiere ahorrar tiempo de sus empleados, y evitar que tengan siempre las monedas en sus bolsillos, este módulo es esencial.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -2949,7 +2949,7 @@ msgid ""
 "\n"
 "The kernel of OpenERP, needed for all installation.\n"
 "===================================================\n"
-msgstr "\nEl núcleo de OpenERP, necesario para todas las instalaciones.\n===================================================\n"
+msgstr "\nEl núcleo de Odoo, necesario para todas las instalaciones.\n====================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3537,7 +3537,7 @@ msgid ""
 "The field 'Working Hours' is the delay(stop date - start date).\n"
 "So, that we can compare the theoretic delay and real delay. \n"
 "    "
-msgstr "\nEste módulo añade estado, fecha inicio, fecha fin en las líneas de operaciones de una orden de fabricación (en la solapa órdenes de trabajo)\n================================================================================================================\n\nEstados: Borrador, confirmado, realizado, cancelado\nAl finalizar/confirmar/cancelar la orden de fabricación, se asigna el estado correspondiente a todas las líneas.\n\nMenús que se crean:\n-------------\n    **Manufacturing** > **Manufacturing** > **Work Orders**\n\nLo que es una vista sobre las líneas 'tareas de fabricación' en la orden de fabricación\n\nAñade botones en la vista formulario de la orden de fabricación bajo la solapa tareas de fabricación:\n---------------------------------------------------------------------------------------------------------------\n    * Iniciar (establece el estado a confirmado) asigna fecha de inicio\n    * Realizar (establece el estado a realizado), asigna fecha de fin\n    * Borrador (establece el estado a borrador) \n    * Cancelar (establece el estado a cancelado) \n\nCuando la orden de fabricación queda \"lista para producir\", las operaciones deben establecerse a \"confirmadas\". Cuando la orden de fabricación se realiza, todas las operaciones deben darse por realizadas.\n\nEl campo \"horas de trabajo\" es el tiempo (fecha fin - fecha inicio). Por lo que se puede comparar la fecha teórica con la real. \n    "
+msgstr "\nEste módulo añade estado, fecha inicio, fecha fin en las líneas de operaciones de una orden de fabricación (en la solapa órdenes de trabajo)\n================================================================================================================\n\nEstados: Borrador, confirmado, realizado, cancelado\nAl finalizar/confirmar/cancelar la orden de fabricación, se asigna el estado correspondiente a todas las líneas.\n\nMenús que se crean:\n-------------\n    **Producción** > **Producción** > **Ordenes de Trabajo**\n\nLo que es una vista sobre las líneas 'tareas de fabricación' en la orden de fabricación\n\nAñade botones en la vista formulario de la orden de fabricación bajo la solapa tareas de fabricación:\n---------------------------------------------------------------------------------------------------------------\n    * Iniciar (establece el estado a confirmado) asigna fecha de inicio\n    * Realizar (establece el estado a realizado), asigna fecha de fin\n    * Borrador (establece el estado a borrador) \n    * Cancelar (establece el estado a cancelado) \n\nCuando la orden de fabricación queda \"lista para producir\", las operaciones deben establecerse a \"confirmadas\". Cuando la orden de fabricación se realiza, todas las operaciones deben darse por realizadas.\n\nEl campo \"horas de trabajo\" es el tiempo (fecha fin - fecha inicio). Por lo que se puede comparar la fecha teórica con la real. \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -3594,7 +3594,7 @@ msgid ""
 "This module adds the picking wave option in warehouse management.\n"
 "=================================================================\n"
 "    "
-msgstr "\nEste módulo añade la opción de grupos de albaranes en la gestión de almacén\n===========================================================================\n    "
+msgstr "\nEste módulo añade la opción de grupos de Movimientos de Inventario en la gestión de Bodegas\n=========================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -4163,7 +4163,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\nMódulo de contabilidad del SGA\n==============================\nEste módulo sirve de puente entre los módulos 'stock' y 'account' y le permite crear asientos contables para valorar los movimientos de existencias.\n\nCaracterísticas clave\n------------\n* Valoración de existencias (periódica o automática)\n* Facturación desde albarán\n\nEl tablero / los informes para la gestión de almacén incluye:\n-------------------------------------------------------------\n* Valoración de existencias en una fecha dada (soporta fechas en el pasado)\n    "
+msgstr "\nMódulo de contabilidad del SGA\n==============================\nEste módulo sirve de puente entre los módulos 'stock' y 'account' y le permite crear asientos contables para valorar los movimientos de existencias.\n\nCaracterísticas clave\n------------\n* Valoración de existencias (periódica o automática)\n* Facturación desde Movimientos de Inventario\n\nEl tablero / los informes para la gestión de almacén incluye:\n-------------------------------------------------------------\n* Valoración de existencias en una fecha dada (soporta fechas en el pasado)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -6973,7 +6973,7 @@ msgstr "Formulario de contacto"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact Name"
-msgstr "Nombre del contacto"
+msgstr "Nombre"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -9493,7 +9493,7 @@ msgid ""
 "Helps you get the most out of your points of sales with fast sale encoding, "
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
-msgstr "Ayuda a sacar lo mejor de sus puntos de venta con la codificación rápida de las ventas, codificación simplificada de modos de pago, generación automática de albaranes y más."
+msgstr "Ayuda a sacar lo mejor de sus puntos de venta con la codificación rápida de las ventas, codificación simplificada de modos de pago, generación automática de Movimientos de Inventario y más."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -10421,7 +10421,7 @@ msgstr "Dirección de Facturación"
 #: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.ui.menu,name:base.menu_invoiced
 msgid "Invoicing"
-msgstr "Facturación"
+msgstr "Finanzas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
@@ -11227,7 +11227,7 @@ msgstr "Programa de Fidelidad para POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_lunch
 msgid "Lunch"
-msgstr "Almuerzo"
+msgstr "Comida"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -11388,7 +11388,7 @@ msgstr "Administra sus créditos y débito gracias a recibos de compras y ventas
 #: model:res.groups,name:base.group_sale_manager
 #: model:res.groups,name:base.group_survey_manager
 msgid "Manager"
-msgstr "Responsable"
+msgstr "Gerente"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_managing_vehicles_and_contracts
@@ -11687,12 +11687,12 @@ msgstr "Señor"
 #: model:ir.model.fields,field_description:base.field_res_partner_mobile
 #: model:ir.model.fields,field_description:base.field_res_users_mobile
 msgid "Mobile"
-msgstr "Móvil"
+msgstr "Tel. Celular"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Mobile:"
-msgstr "Móvil:"
+msgstr "Tel. Celular:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_font_mode
@@ -12175,7 +12175,7 @@ msgstr "¡No se pudo encontrar una vista por defecto de tipo '%s'!"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr "Sin hueco"
+msgstr "Sin vacíos"
 
 #. module: base
 #: code:addons/base/module/wizard/base_update_translations.py:22
@@ -13060,7 +13060,7 @@ msgstr "Utilice el asistente de cambio de contraseña (en Preferencias de usuari
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "Terminal punto de venta"
+msgstr "Punto de Venta POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -14127,7 +14127,7 @@ msgstr "Ventas"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchases"
-msgstr "Ventas & Compras"
+msgstr "Ventas y Compras"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -14168,7 +14168,7 @@ msgstr "Gestión de ventas y MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock
 msgid "Sales and Warehouse Management"
-msgstr "Gestión de ventas y almacén"
+msgstr "Gestión de Ventas y Bodega"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_user_id
@@ -14974,7 +14974,7 @@ msgstr "Iniciar configuración"
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #, python-format
 msgid "State"
-msgstr "Provincia"
+msgstr "Estado"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
@@ -15163,7 +15163,7 @@ msgstr "Surinam"
 #: model:ir.module.category,name:base.module_category_survey
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
-msgstr "Planificación"
+msgstr "Encuestas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -15284,7 +15284,7 @@ msgstr "Formato TGZ: archivo comprimido que contiene un archivo PO, adecuado par
 #: model:ir.model.fields,field_description:base.field_res_users_vat
 #, python-format
 msgid "TIN"
-msgstr "NIF"
+msgstr "Identificación"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -15436,7 +15436,7 @@ msgstr "Prueba de las restricciones de acceso"
 #. module: base
 #: model:ir.module.category,name:base.module_category_tests
 msgid "Tests"
-msgstr "Tests"
+msgstr "Pruebas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -16252,7 +16252,7 @@ msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
-msgstr "Se ofrecen dos implementaciones de  objetos secuencia: 'Estándar' y 'Sin huecos'. La última es más lenta que la primera, pero prohíbe cualquier hueco en la secuencia (mientras que son posibles en la primera)."
+msgstr "Se ofrecen dos implementaciones de  objetos secuencia: 'Estándar' y 'Sin vacíos'. La última es más lenta que la primera, pero prohíbe cualquier hueco en la secuencia (mientras que son posibles en la primera)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_type
@@ -16506,7 +16506,7 @@ msgstr "Actualizar"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr "Lista de Aplicaciones para actualizar"
+msgstr "Actualizar lista de Aplicaciones"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_date_update
@@ -16732,7 +16732,7 @@ msgstr "Uzbekistán"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validación del NIF"
+msgstr "Validación de la Identificación"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip

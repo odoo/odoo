@@ -313,7 +313,7 @@ class mrp_bom(osv.osv):
                 continue
 
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
-                raise UserError(_('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise UserError(_('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.code or "", bom_line_id.product_id.name_get()[0][1]))
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
             bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
@@ -645,7 +645,8 @@ class mrp_production(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
-                raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
+                state_label = dict(production.fields_get(['state'])['state']['selection']).get(production.state)
+                raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % state_label)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context=None):
@@ -1221,6 +1222,7 @@ class mrp_production(osv.osv):
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
             'date': production.date_planned,
+            'date_expected': production.date_planned,
             'product_id': product.id,
             'product_uom_qty': qty,
             'product_uom': uom_id,

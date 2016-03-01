@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-27 21:45+0000\n"
-"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-12 10:22+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,7 +347,7 @@ msgstr "Tempi di consegna cliente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
 msgid "Customer Taxes"
-msgstr "Imposte Cliente"
+msgstr "Imposte cliente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
@@ -512,7 +512,7 @@ msgstr "Margine atteso * 100 / vendita attesa"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
 msgid "Expense Account"
-msgstr "Conto di Costo"
+msgstr "Conto di costo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -706,7 +706,7 @@ msgstr "Stato fattura"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Politica di fatturazione"
+msgstr "Metodo di fatturazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -986,7 +986,7 @@ msgstr "Modello Prodotto"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
 msgid "Product Type"
-msgstr "Tipo Prodotto"
+msgstr "Tipo di prodotto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
@@ -1137,6 +1137,14 @@ msgstr "Aggiungi il prezzo"
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Ordine di spedizione inviato al vettore %s per  la consegna con il tracking number %s"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price

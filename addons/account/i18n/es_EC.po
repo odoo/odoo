@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-01 04:17+0000\n"
+"PO-Revision-Date: 2016-02-27 22:58+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -1114,7 +1114,7 @@ msgstr "Tipo de cuenta"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr "Contable"
+msgstr "Asistente Contable"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1651,9 +1651,8 @@ msgstr "Pedir reembolso"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Administración de activos: le permite administrar los activos pertenecientes a una compañía o persona. Realiza un seguimiento de la depreciación de dichos activos y crea movimientos contables de dicha depreciación.\n\nReconocimiento de ingresos: le permite administrar los ingresos al vender productos. Realiza un seguimiento de los plazos de dichos ingresos y crea los movimientos contables correspondientes.\n- Se instalará el módulo account_asset. Si no marca la casilla será capaz de hacer facturas y pagos, pero no contabilizarlos (Diarios, Planes contables, ...)"
+msgstr "Gestión de Activos: Esto le permite gestionar los activos de propiedad de la compañía o una persona. Se realiza un seguimiento de la depreciación se produjo en esos activos, y crea cuenta de movimiento para esas líneas de depreciación.\n\n-Este Instala el módulo de account_asset. Si no marca esta casilla, usted será capaz de hacer la facturación y los pagos, pero no tomar en cuenta (Diarios contables, Plan de Cuentas, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1662,8 +1661,8 @@ msgstr "Activos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Administración de activos y reconocimiento de ingresos"
+msgid "Assets management"
+msgstr "Administración de Activos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1738,7 +1737,7 @@ msgstr "Saldo pendiente"
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
-msgstr "Balance de situación"
+msgstr "Balance General"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
@@ -2965,7 +2964,7 @@ msgstr "Diferencia en tasa de cambio de divisa"
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr "Activos actuales"
+msgstr "Activos"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4372,14 +4371,6 @@ msgid "If you want to do it yourself:"
 msgstr "Si desea hacerlo usted mismo:"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si necesita ayuda, por favor no dude\nen contactar con nuestros expertos contables a través del\n<span class=\"fa fa-question-circle\"/> icono en la barra superior."
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr "Pago inmediato"
@@ -5780,7 +5771,7 @@ msgstr "Número de mensajes no leidos"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:192
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Aceptar"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6065,7 +6056,7 @@ msgstr "Informes PDF"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PRO-FORMA"
-msgstr "COTIZACIÓN"
+msgstr "Cotización"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -6609,12 +6600,12 @@ msgstr "Factura proforma"
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Pro-forma"
-msgstr "cotización"
+msgstr "Cotización"
 
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "Facturas cotización"
+msgstr "Cotización pre-factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -7539,7 +7530,7 @@ msgstr "Subtotal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "TIN:"
-msgstr "NIF:"
+msgstr "Identificación:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8997,7 +8988,7 @@ msgid ""
 "                                        for you: simply send your Odoo project\n"
 "                                        manager a CSV file containing all your\n"
 "                                        data."
-msgstr "Podemos realizar el proceso de importación por usted:\nsimplemente mande un archivo CSV a su project manager \nen Odoo con todos sus datos."
+msgstr "Podemos realizar el proceso de importación por usted:\nsimplemente mande un archivo CSV a su jefe de proyecto\nen Odoo con todos sus datos."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9240,6 +9231,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "No puede realizar esta modificación en un asiento conciliado. Sólo puede cambiar algunos campos no legales o tiene que anular la conciliación antes.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "No puede eliminar el número de cuenta, una vez establecido.\nSi desea borrar el número de cuenta, puede hacerlo desde la lista de cuentas bancarias."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -9637,7 +9636,7 @@ msgstr "la lista de clientes"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "la compañia matriz"
+msgstr "La Compañía Matriz"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

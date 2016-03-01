@@ -137,8 +137,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_html(self, records, report_name, data=None):
-        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
-                                    data=data, context=self._context)
+        return Report.get_html(self._model, self._cr, self._uid, records.ids,
+                               report_name, data=data, context=self._context)
 
     @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
@@ -251,8 +251,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_pdf(self, records, report_name, html=None, data=None):
-        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+        return Report.get_pdf(self._model, self._cr, self._uid, records.ids,
+                              report_name, html=html, data=data, context=self._context)
 
     @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
@@ -285,8 +285,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_action(self, records, report_name, data=None):
-        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
-                                      data=data, context=self._context)
+        return Report.get_action(self._model, self._cr, self._uid, records.ids,
+                                 report_name, data=data, context=self._context)
 
     #--------------------------------------------------------------------------
     # Report generation helpers
@@ -332,8 +332,8 @@ class Report(osv.Model):
 
     @api.v8
     def _check_attachment_use(self, records, report):
-        return self._model._check_attachment_use(
-            self._cr, self._uid, records.ids, report, context=self._context)
+        return Report._check_attachment_use(
+            self._model, self._cr, self._uid, records.ids, report, context=self._context)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
