@@ -444,6 +444,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.starting_ids = [];
         this.mutex = new utils.Mutex();
         this.view.on("load_record", this, this._on_load_record);
+        this.last_value = null;
         this.dataset.on('dataset_changed', this, function() {
             var options = _.clone(_.last(arguments));
             if (!_.isObject(options) || _.isArray(options)) {
@@ -456,9 +457,17 @@ var AbstractManyField = common.AbstractField.extend({
             }
         });
         this.on("change:commands", this, function (options) {
-            self._inhibit_on_change_flag = !!options._inhibit_on_change_flag;
-            self.set({'value': self.dataset.ids.slice()});
+            self._inhibit_on_change_flag = true;
+            self.set({'value': self.dataset.ids.slice()}, options);
             self._inhibit_on_change_flag = false;
+
+            var value = self.get_value();
+
+            options.has_changed = !_.isEqual(self.last_value, value);
+            if (!options._inhibit_on_change_flag && options.has_changed) {
+                this.trigger('changed_value');
+            }
+            self.last_value = value;
         });
     },
 
@@ -471,25 +480,26 @@ var AbstractManyField = common.AbstractField.extend({
         this.trigger("load_record", record);
     },
 
-    set_value: function(ids) {
+    set_value: function(ids, options) {
         ids = (ids || []).slice();
+        options = options || {};
         if (_.find(ids, function(id) { return typeof(id) === "string"; } )) {
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            return this.send_commands(ids, {'_inhibit_on_change_flag': this._inhibit_on_change_flag});
+            return this.send_commands(ids, _.extend({'_inhibit_on_change_flag': this._inhibit_on_change_flag}, options));
         }
-        this.dataset.reset_ids(ids);
+        this.dataset.reset_ids(ids, options);
         return $.when(this._super(ids));
     },
 
-    internal_set_value: function(ids) {
+    internal_set_value: function(ids, options) {
         if (_.isEqual(ids, this.get("value"))) {
             return;
         }
         var tmp = this.no_rerender;
         this.no_rerender = true;
-        this.data_replace(ids.slice());
+        this.set_value(ids.slice(), _.extend({'keep_read_data': true}, options));
         this.no_rerender = tmp;
     },
 
@@ -585,9 +595,9 @@ var AbstractManyField = common.AbstractField.extend({
                 if (!id || _.isString(id) || _.isNumber(id)) {
                     switch (command[0]) {
                         case COMMANDS.CREATE:
-                            var data = _.clone(command[2]);
-                            delete data.id;
-                            return dataset.create(data, internal_options).then(function (id) {
+                            var value = _.clone(command[2]);
+                            delete value.id;
+                            return dataset.create(value, internal_options).then(function (id) {
                                 dataset.ids.push(id);
                                 res = id;
                             });
@@ -603,14 +613,22 @@ var AbstractManyField = common.AbstractField.extend({
                         case COMMANDS.DELETE:
                             return dataset.unlink([id]);
                         case COMMANDS.LINK_TO:
-                            if (dataset.ids.indexOf(id) === -1) {
-                                return dataset.add_ids([id], internal_options);
+                            if (data.BufferedDataSet.virtual_id_regex.test(id)) {
+                                throw new Error("send_commands to '"+dataset.x2m.name+"' receive corrupted values." +
+                                    "\n" + JSON.stringify(command_list));
                             }
-                            return;
+                            if (dataset.ids.indexOf(id) === -1) {
+                                return dataset.alter_ids(dataset.ids.concat([id]), options);
+                            }
                         case COMMANDS.DELETE_ALL:
                             return dataset.reset_ids([], {keep_read_data: true});
                         case COMMANDS.REPLACE_WITH:
-                            dataset.ids = [];
+                            _.each(command[2], function (id) {
+                                if (data.BufferedDataSet.virtual_id_regex.test(id)) {
+                                    throw new Error("send_commands to '"+dataset.x2m.name+"' receive corrupted values." +
+                                    "\n" + JSON.stringify(command_list));
+                                }
+                            });
                             return dataset.alter_ids(command[2], internal_options);
                     }
                 }
@@ -663,6 +681,8 @@ var AbstractManyField = common.AbstractField.extend({
                     command_list.push(COMMANDS.update(record.id, values));
                 }
                 return;
+            } else if (data.BufferedDataSet.virtual_id_regex.test(id)) {
+                throw new Error("get_value of '"+self.name+"' can't create a command, the widget have corrupted values.", id);
             }
             if (!is_one2many || not_delete || self.dataset.delete_all) {
                 replace_with_ids.push(id);
@@ -701,7 +721,12 @@ var AbstractManyField = common.AbstractField.extend({
     destroy: function () {
         this.view.off("load_record", this, this._on_load_record);
         this._super();
-    }
+    },
+    _get_onchange_fields: function () {
+        var fields_name = this._super();
+        fields_name[this.name + '.display_name'] = "";
+        return fields_name;
+    },
 });
 
 var FieldX2Many = AbstractManyField.extend({
@@ -883,6 +908,38 @@ var FieldX2Many = AbstractManyField.extend({
         }
         return true;
     },
+    _get_onchange_fields: function () {
+        var self = this;
+        var fields_name = this._super();
+
+        _.each(this.field.views, function (view) {
+            _.each(view.fields, function (field, key) {
+                key = self.name + '.' + key;
+                if (!fields_name[key]) {
+                    fields_name[key] = "";
+                }
+            });
+        });
+
+        var views = this.viewmanager.views;
+        if (views.list) {
+            var controller = views.list.controller;
+            var fields = _.extend({}, controller.columns, controller.editor.form.fields);
+            _.each(fields, function(field) {
+                if ('store' in field) {
+                    _.each(field._get_onchange_fields(), function(v, k) {
+                        fields_name[self.name + '.' + k] = v;
+                    });
+                }
+            });
+        } else if (views.kanban) {
+            _.each(views.kanban.controller.fields_keys, function(field) {
+                fields_name[self.name + '.' + field] = "";
+            });
+        }
+
+        return fields_name;
+    },
 });
 
 var X2ManyDataSet = data.BufferedDataSet.extend({
@@ -963,17 +1020,16 @@ var X2ManyListView = ListView.extend({
         var current_values = {};
         _.each(fields, function(field){
             field._inhibit_on_change_flag = true;
-            field.no_rerender = true;
-            current_values[field.name] = field.get('value');
+            current_values[field.name] = field.get_value();
         });
-        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values)});
+        var cached_records = JSON.parse(JSON.stringify(_.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values);})));
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
-                var tmp = field.no_rerender;
-                field.no_rerender = true;
-                field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
-                field.no_rerender = tmp;
+                if (_.isArray(value) && _.isArray(value[0])) {
+                    field.internal_set_value([], {'silent': true});
+                }
+                field.internal_set_value(value, {'silent': true});
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
@@ -982,9 +1038,12 @@ var X2ManyListView = ListView.extend({
             });
         });
         _.each(fields, function(field){
-            field.set('value', current_values[field.name], {silent: true});
+            var value = current_values[field.name];
+            if (_.isArray(value) && _.isArray(value[0])) {
+                field.internal_set_value([], {'silent': true});
+            }
+            field.internal_set_value(value, {'silent': true});
             field._inhibit_on_change_flag = false;
-            field.no_rerender = false;
         });
         return valid;
     },
@@ -1517,7 +1576,14 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             tag.addClass('o_tag_color_' + color);
         });
     },
-
+    _get_onchange_fields: function () {
+        var fields_name = this._super();
+        fields_name[this.name + '.name'] = '';
+        if (this.field_manager.fields.color) {
+            fields_name[this.name + '.color'] = '';
+        }
+        return fields_name;
+    }
 });
 
 /**

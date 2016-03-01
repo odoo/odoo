@@ -86,7 +86,7 @@ var Editor = Widget.extend({
         // TODO: specify sequence of edit calls
         var loaded;
         if(record) {
-            loaded = this.form.trigger('load_record', _.extend({}, record))
+            loaded = this.form.trigger('load_record', JSON.parse(JSON.stringify(record)));
         } else {
             loaded = this.form.load_defaults();
         }

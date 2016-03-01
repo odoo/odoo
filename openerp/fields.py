@@ -779,8 +779,8 @@ class Field(object):
         """ convert ``value`` from the cache to a value as returned by method
             :meth:`BaseModel.onchange`.
 
-            :param fnames: an optional collection of field names to convert
-                (for relational fields only)
+            :param fnames: an optional dictionary of field names to convert
+                (for relational fields only); values are dicts of field names
         """
         return self.convert_to_read(value)
 
@@ -1789,17 +1789,24 @@ class _RelationalMulti(_Relational):
                 result.append((4, record.id))
         return result
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, fnames={}):
+        # do not serialize field 'id' and inverse fields
+        model = value.env[self.model_name]
+        blacklist = set(['id'] + [invf.name for invf in model._field_inverses[self]])
+        fields = [(name, value._fields[name]) for name in fnames if name not in blacklist]
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
-        fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
         result = [(5,)]
         for record in value:
-            vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
+            vals = {
+                name: field.convert_to_onchange(record[name], fnames[name])
+                for name, field in fields
+            }
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
+                result.append((4, record.id))
                 result.append((1, record.id, vals))
             else:
                 result.append((4, record.id))
@@ -1876,12 +1883,6 @@ class One2many(_RelationalMulti):
     _column_fields_id = property(attrgetter('inverse_name'))
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
-
-    def convert_to_onchange(self, value, fnames=None):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
-        return super(One2many, self).convert_to_onchange(value, fnames)
 
 
 class Many2many(_RelationalMulti):
