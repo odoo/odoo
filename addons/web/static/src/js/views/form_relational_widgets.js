@@ -963,6 +963,7 @@ var X2ManyListView = ListView.extend({
         var current_values = {};
         _.each(fields, function(field){
             field._inhibit_on_change_flag = true;
+            field.__no_rerender = field.no_rerender;
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
@@ -970,10 +971,7 @@ var X2ManyListView = ListView.extend({
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
-                var tmp = field.no_rerender;
-                field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
-                field.no_rerender = tmp;
             });
             return _.every(fields, function(field){
                 field.process_modifiers();
@@ -984,7 +982,7 @@ var X2ManyListView = ListView.extend({
         _.each(fields, function(field){
             field.set('value', current_values[field.name], {silent: true});
             field._inhibit_on_change_flag = false;
-            field.no_rerender = false;
+            field.no_rerender = field.__no_rerender;
         });
         return valid;
     },
