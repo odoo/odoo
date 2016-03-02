@@ -166,10 +166,10 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
-            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
-            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -249,6 +249,9 @@ class ProcurementOrder(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    to_refund_so = fields.Boolean(string="To Refund in SO", default=False,
+        help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+
     @api.multi
     def action_done(self):
         result = super(StockMove, self).action_done()
@@ -277,6 +280,27 @@ class StockPicking(models.Model):
             picking.sale_id = sale_order.id if sale_order else False
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund_so:
+                move.to_refund_so = True
+
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund_so = fields.Boolean(string="To Refund in SO", help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
 
 class AccountInvoiceLine(models.Model):
