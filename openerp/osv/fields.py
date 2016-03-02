@@ -352,7 +352,7 @@ class html(text):
             return value
         return html_sanitize(value, silent=True, strict=True, strip_style=self._strip_style, strip_classes=self._strip_classes)
 
-    def __init__(self, string='unknown', sanitize=True, strip_style=False, strip_classes=True, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, strip_classes=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
         self._strip_style = strip_style
