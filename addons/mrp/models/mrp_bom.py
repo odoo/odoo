@@ -66,28 +66,37 @@ class MrpBom(models.Model):
         # order to prioritize bom with product_id over the one without
         return self.search(domain, order='sequence, product_id', limit=1)
 
+    def _prepare_consume_line(self, bom_line, quantity, result=None):
+        if result:
+            result['result'].append({
+                'name': bom_line.product_id.name,
+                'product_id': bom_line.product_id.id,
+                'product_uom_qty': quantity,
+                'product_uom_id': bom_line.product_uom_id.id,
+                'operation_id': bom_line.operation_id.id,
+            })
+
+
     # Quantity must be in same UoM than the BoM: convert uom before explode()
-    def explode(self, product, quantity, method=None, method_wo=None, done=None):
+    def explode(self, product, quantity, method=None, method_wo=None, done=None, **kw):
         self.ensure_one()
         if method_wo and self.routing_id: method_wo(self, quantity)
         done = done or []
-        
         for bom_line in self.bom_line_ids:
             if bom_line._skip_bom_line(product):
                 continue
             if bom_line.product_id.product_tmpl_id.id in done:
                 raise UserError(_('BoM "%s" contains a BoM line with a product recursion: "%s".') % (self.display_name, bom_line.product_id.display_name))
-
             # This is very slow, can we improve that?
             bom = self._bom_find(product=bom_line.product_id, picking_type=self.picking_type_id)
             if not bom or bom.bom_type != "phantom":
                 quantity = bom_line.product_uom_id._compute_qty(quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
-                if method: method(bom_line, quantity)
+                if method: method(bom_line, quantity, kw)
             else:
                 done.append(self.product_tmpl_id.id)
                 # We need to convert to units/UoM of chosen BoM
                 qty2 = bom_line.product_uom_id._compute_qty(quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
-                bom.explode(bom_line.product_id, qty2, method=method, method_wo=method_wo, done=done)
+                bom.explode(bom_line.product_id, qty2, method=method, method_wo=method_wo, done=done, result=kw)
         return True
 
     @api.multi

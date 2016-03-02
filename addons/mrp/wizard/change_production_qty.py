@@ -60,7 +60,7 @@ class ChangeProductionQty(models.TransientModel):
             if wizard_qty.product_qty < produced:
                 raise UserError(_("You have already produced %d qty , Please give update quantity more then %d ")%(produced, produced))
             production.write({'product_qty': wizard_qty.product_qty})
-            #production.action_compute() 
+            #production.action_compute()
             #TODO: Do we still need to change the quantity of a production order?
             production_move = production.move_finished_ids.filtered(lambda x : x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
             for move in production.move_raw_ids:

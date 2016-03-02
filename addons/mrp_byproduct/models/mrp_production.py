@@ -8,12 +8,12 @@ class MrpProduction(models.Model):
 
 
     @api.multi
-    def generate_moves(self, properties=None):
-        """ 
+    def _generate_moves(self):
+        """
             Generates moves and work orders
         """
         StockMove = self.env['stock.move']
-        picking_id = super(MrpProduction, self).generate_moves(properties=properties)
+        picking_id = super(MrpProduction, self)._generate_moves()
         for production in self.filtered(lambda p: p.bom_id):
             source = production.product_id.property_stock_production
             for sub_product in production.bom_id.subproduct_ids:
@@ -28,12 +28,13 @@ class MrpProduction(models.Model):
                     'product_uom_qty': qty1,
                     'product_uom': sub_product.product_uom_id.id,
                     'location_id': source.id,
-                    'location_dest_id': production.location_dest_id.id,
+                    'location_dest_id': production.location_destination().id,
                     'move_dest_id': production.move_prod_id.id,
                     'production_id': production.id,
                     'origin': production.name,
                     'subproduct_id': sub_product.id
                 }
+
                 StockMove.create(data).action_confirm()
         return picking_id
 

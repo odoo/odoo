@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_mocoststructure">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>MO Cost Structure</h2>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs" t-as="o">
+                            <tr style="font-weight: bold;">
+                                <td><span t-field="o.product_id"/></td>
+                                <td><span t-field="o.product_qty"/></td>
+                            </tr>
+                            <tr t-foreach="o.move_raw_ids" t-as="l">
+                                <td style="padding-left: 20px;"><span t-field="l.product_id"/></td>
+                                <td><span t-field="l.product_uom_qty"/></td>
+                                <td><span t-field="l.product_id.standard_price"/></td>
+                                <td><span t-esc="l.product_uom_qty * l.product_id.standard_price"/></td>
+                            </tr>
+                            <tr t-foreach="get_workorders(o.work_order_ids)" t-as="wo">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <h4>Work Order: <span t-esc="wo['name']"/></h4>
+                                        <tr>
+                                            <th>Operator</th>
+                                            <th>Working Time</th>
+                                            <th>Cost/hour</th>
+                                            <th>Total Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="wo['lines']" t-as="l">
+                                            <td><span t-esc="l['operator']"/></td>
+                                            <td><span t-esc="l['duration']"/></td>
+                                            <td><span t-esc="wo['cost']"/></td>
+                                            <td><span t-esc="l['duration'] * wo['cost']"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </tr>
+                            <h4 class="pull-right">Total Finished Product Cost: <span t-esc="get_total_cost(o)"/></h4>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</odoo>

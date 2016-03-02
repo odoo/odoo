@@ -237,6 +237,12 @@
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
+        <record model="ir.actions.act_window" id="lot_open_quants">
+            <field name="name">Quants</field>
+            <field name="context">{'search_default_lot_id': active_id}</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
         <record id="view_production_lot_form" model="ir.ui.view">
             <field name="name">stock.production.lot.form</field>
             <field name="model">stock.production.lot</field>
@@ -244,6 +250,7 @@
                 <form string="Serial Number / Lots">
                     <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                         <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                         <field name="quant_ids" invisible="True"/>
                     </div>

@@ -8,7 +8,7 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.model
     def _update_product_to_produce(self, production, qty):
-        for move in production.move_created_ids:
+        for move in production.move_finished_ids:
             if move.product_id == production.product_id:
                 move.write({'product_uom_qty': qty})
                 continue

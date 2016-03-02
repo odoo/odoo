@@ -28,12 +28,10 @@ class StockMove(models.Model):
 
     production_id = fields.Many2one('mrp.production', string='Production Order for finished products')
     raw_material_production_id = fields.Many2one('mrp.production', string='Production Order for raw materials')
-
     unbuild_id = fields.Many2one('mrp.unbuild', "Unbuild Order")
-
+    raw_material_unbuild_id = fields.Many2one('mrp.unbuild', "Consume material at unbuild")
     operation_id = fields.Many2one('mrp.routing.workcenter', string="Operation To Consume")
     workorder_id = fields.Many2one('mrp.production.work.order', string="Work Order To Consume")
-
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
 
     # Quantities to process, in normalized UoMs
@@ -100,7 +98,7 @@ class StockMove(models.Model):
             quant_obj.quants_unreserve(move)
             move.write({'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
             #Next move in production order
-            if move.move_dest_id: 
+            if move.move_dest_id:
                 move.move_dest_id.action_assign()
         return moves_todo
 
@@ -134,6 +132,64 @@ class StockMove(models.Model):
     @api.multi
     def dummy(self):
         return True
+
+    def _generate_move_phantom(self, bom_line, quantity, result=None):
+        product = bom_line.product_id
+        if product.type in ['product', 'consu']:
+            valdef = {
+                'picking_id': self.picking_id.id if self.picking_id else False,
+                'product_id': bom_line.product_id.id,
+                'product_uom': bom_line.product_uom_id.id,
+                'product_uom_qty': quantity,
+                'state': 'draft',  # will be confirmed below
+                'name': self.name,
+                'procurement_id': self.procurement_id.id,
+                'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
+            }
+            mid = self.copy(default=valdef)
+
+    def _action_explode(self):
+        """ Explodes pickings.
+        :return: True
+        """
+        ProductProduct = self.env['product.product']
+        to_explode_again_ids = self - self
+        bom_point = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id)
+        if bom_point and bom_point.bom_type == 'phantom':
+            processed_ids = self - self
+            factor = self.product_uom.sudo()._compute_qty(self.product_uom_qty, bom_point.product_uom_id.id) / bom_point.product_qty
+            bom_point.sudo().explode(self.product_id, factor, self._generate_move_phantom)
+            to_explode_again_ids = self.search([('split_from', '=', self.id)])
+            if to_explode_again_ids:
+                for new_move in to_explode_again_ids:
+                    processed_ids = processed_ids | new_move._action_explode()
+            if not self.split_from and self.procurement_id:
+                # Check if procurements have been made to wait for
+                moves = self.procurement_id.move_ids
+                if len(moves) == 1:
+                    self.procurement_id.write({'state': 'done'})
+            if processed_ids and self.state == 'assigned':
+                # Set the state of resulting moves according to 'assigned' as the original move is assigned
+                processed_ids.write({'state': 'assigned'})
+            # delete the move with original product which is not relevant anymore
+            self.sudo().unlink()
+            # return list of newly created move
+            return processed_ids
+        return self
+
+    @api.multi
+    def action_confirm(self):
+        moves = self.env['stock.move']
+        for move in self:
+            # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
+            # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
+            # all grouped in the same picking.
+            if move.picking_type_id:
+                moves = moves | move._action_explode()
+            else:
+                moves = moves | move
+        # we go further with the list of ids potentially changed by action_explode
+        return super(StockMove, moves).action_confirm()
 
 
 class StockQuant(models.Model):

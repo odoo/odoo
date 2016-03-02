@@ -20,7 +20,8 @@ class StockWarehouse(models.Model):
             manufacture_route = manufacture_route and manufacture_route[0] or False
         if not manufacture_route:
             raise UserError(_('Can\'t find any generic Manufacture route.'))
-
+        if not self.manu_type_id:
+            self._create_manufacturing_picking_type()
         return {
             'name': self._format_routename(self, _(' Manufacture')),
             'location_id': self.lot_stock_id.id,
@@ -87,11 +88,11 @@ class StockWarehouse(models.Model):
                         warehouse.manufacture_pull_id.unlink()
         return super(StockWarehouse, self).write(vals)
 
-    @api.multi
-    def get_all_routes_for_wh(self):
-        all_routes = super(StockWarehouse, self).get_all_routes_for_wh()
-        if self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id:
-            all_routes += [self.manufacture_pull_id.route_id.id]
+    @api.cr_uid_records_context
+    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        all_routes = super(StockWarehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
+        if warehouse.manufacture_to_resupply and warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
+            all_routes += [warehouse.manufacture_pull_id.route_id.id]
         return all_routes
 
     @api.multi

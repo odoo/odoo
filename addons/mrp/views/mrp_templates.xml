@@ -62,9 +62,9 @@
                         </table>
                     </div>
 
-                    <h3 t-if="o.move_line_ids">Bill Of Material</h3>
+                    <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
 
-                    <table class="table table-condensed" t-if="o.move_line_ids">
+                    <table class="table table-condensed" t-if="o.move_raw_ids">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -78,11 +78,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-if="o.move_line_ids">
+                            <t t-if="o.move_raw_ids">
                                 <tr>
                                     <td colspan="4"><strong>Products to Consume</strong></td>
                                 </tr>
-                                <tr t-foreach="o.move_line_ids" t-as="line">
+                                <tr t-foreach="o.move_raw_ids" t-as="line">
                                     <td>
                                         <span t-field="line.product_id.code"/>
                                         <span t-field="line.product_id.name"/>

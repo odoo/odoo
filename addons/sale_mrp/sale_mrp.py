@@ -27,6 +27,7 @@ class MrpProduction(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+
     @api.multi
     def _get_delivered_qty(self):
         self.ensure_one()
