@@ -110,7 +110,7 @@ class Message(models.Model):
         help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
     message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
-    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
     @api.multi
     def _get_needaction(self):

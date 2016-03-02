@@ -216,7 +216,7 @@ class MailComposer(models.TransientModel):
             if wizard.template_id:
                 # template user_signature is added when generating body_html
                 # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False, mail_server_id=wizard.template_id.mail_server_id.id)
+                Mail = Mail.with_context(mail_notify_user_signature=False)
                 ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
@@ -282,6 +282,7 @@ class MailComposer(models.TransientModel):
                 'email_from': self.email_from,
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
+                'mail_server_id': self.mail_server_id.id,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
