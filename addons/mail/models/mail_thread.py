@@ -1293,8 +1293,8 @@ class MailThread(models.AbstractModel):
         """ Perform some cleaning / postprocess in the body and attachments
         extracted from the email. Note that this processing is specific to the
         mail module, and should not contain security or generic html cleaning.
-        Indeed those aspects should be covered by html_email_clean and
-        html_sanitize methods located in tools. """
+        Indeed those aspects should be covered by the html_sanitize method
+        located in tools. """
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
