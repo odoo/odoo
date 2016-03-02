@@ -90,7 +90,6 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
             })
     else:
         kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style
-        kwargs['frames'] = False,            # do not remove frames (embbed video in CMS blogs)
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
