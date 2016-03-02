@@ -537,7 +537,8 @@ class TestMailgateway(TestMail):
             msg_id='<deadcafe.1337@smtp.agrolait.com>')
         self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.channel should have been created')
         msg = frog_groups.message_ids[0]
-        self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', msg.body,
+        # signature recognition -> Sylvie should be in a span
+        self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n<span data-o-mail-quote="1">\n--\nSylvie\n</span></pre>', msg.body,
                       'message_process: plaintext incoming email incorrectly parsed')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
