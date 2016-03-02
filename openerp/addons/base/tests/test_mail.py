@@ -116,13 +116,45 @@ class TestSanitizer(unittest.TestCase):
                 sanitized,
                 'html_sanitize escaped valid address-like')
 
+    def test_style_parsing(self):
+        test_data = [
+            (
+                '<span style="position: fixed; top: 0px; left: 50px; width: 40%; height: 50%; background-color: red;">Coin coin </span>',
+                ['background-color: red', 'Coin coin'],
+                ['position', 'top', 'left']
+            ), (
+                """<div style='before: "Email Address; coincoin cheval: lapin";  
+   font-size: 30px; max-width: 100%; after: "Not sure
+    
+          this; means: anything ?#ùµ"
+    ; some-property: 2px; top: 3'>youplaboum</div>""",
+                ['font-size: 30px', 'youplaboum'],
+                ['some-property', 'top', 'cheval']
+            ), (
+                '<span style="width">Coincoin</span>',
+                [],
+                ['width']
+            )
+        ]
+
+        for test, in_lst, out_lst in test_data:
+            new_html = html_sanitize(test, strict=False, strip_style=False, strip_classes=False)
+            for text in in_lst:
+                self.assertIn(text, new_html)
+            for text in out_lst:
+                self.assertNotIn(text, new_html)
+
+        # style should not be sanitized if removed
+        new_html = html_sanitize(test_data[0][0], strict=False, strip_style=True, strip_classes=False)
+        self.assertEqual(new_html, u'<span>Coin coin </span>')
+
     def test_edi_source(self):
         html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
-        self.assertIn('div style="font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
-            'html_sanitize removed valid style attribute')
-        self.assertIn('<span style="color: #222; margin-bottom: 5px; display: block; ">', html,
-            'html_sanitize removed valid style attribute')
-        self.assertIn('img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"', html,
+        self.assertIn(
+            'font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif;', html,
+            'html_sanitize removed valid styling')
+        self.assertIn(
+            'src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"', html,
             'html_sanitize removed valid img')
         self.assertNotIn('</body></html>', html, 'html_sanitize did not remove extra closing tags')
 
@@ -403,6 +435,7 @@ class TestEmailTools(unittest.TestCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
+
 
 if __name__ == '__main__':
     unittest.main()

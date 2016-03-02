@@ -38,10 +38,45 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
 
 
 class _Cleaner(clean.Cleaner):
+
+    _style_re = re.compile('''([\w-]+)\s*:\s*((?:[^;"']|"[^"]*"|'[^']*')+)''')
+
+    _style_whitelist = [
+        'font-size', 'font-family', 'background-color', 'color', 'text-align',
+        'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
+        'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right'
+        # box model
+        'border', 'border-color', 'border-radius', 'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
+        # tables
+        'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
+
+    def __call__(self, doc):
+        super(_Cleaner, self).__call__(doc)
+
+        # if we keep style attribute, sanitize them
+        if not self.style:
+            for el in doc.iter():
+                self.parse_style(el)
+
+    def parse_style(self, el):
+        attributes = el.attrib
+        styling = attributes.get('style')
+        if styling:
+            valid_styles = {}
+            styles = self._style_re.findall(styling)
+            for style in styles:
+                if style[0].lower() in self._style_whitelist:
+                    valid_styles[style[0].lower()] = style[1]
+            if valid_styles:
+                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.iteritems())
+            else:
+                del el.attrib['style']
+
     def allow_element(self, el):
         if el.tag == 'object' and el.get('type') == "image/svg+xml":
             return True
         return super(_Cleaner, self).allow_element(el)
+
 
 def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:

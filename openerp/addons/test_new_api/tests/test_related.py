@@ -138,9 +138,12 @@ class TestHtmlField(common.TransactionCase):
 % if object.some_field and not object.oriented:
 <table>
     % if object.other_field:
-    <tr style="border: 10px solid black;">
+    <tr style="margin: 0px; border: 10px solid black;">
         ${object.mako_thing}
         <td>
+    </tr>
+    <tr class="custom_class">
+        This is some html.
     </tr>
     % endif
     <tr>
@@ -156,7 +159,17 @@ class TestHtmlField(common.TransactionCase):
         self.assertEqual(partner.comment, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
 
         self.partner._columns.update({
-            'comment': fields.html('Unsecure Html', sanitize=True),
+            'comment': fields.html('Unsecure Html', sanitize=True, strip_classes=False),
+        })
+        self.partner.write(cr, uid, [pid], {
+            'comment': some_ugly_html,
+        }, context=context)
+        partner = self.partner.browse(cr, uid, pid, context=context)
+        # classes are kept
+        self.assertIn('<tr class="', partner.comment)
+
+        self.partner._columns.update({
+            'comment': fields.html('Unsecure Html', sanitize=True, strip_classes=True),
         })
         self.partner.write(cr, uid, [pid], {
             'comment': some_ugly_html,
@@ -166,6 +179,8 @@ class TestHtmlField(common.TransactionCase):
         self.assertIn('</table>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
         self.assertIn('</td>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
         self.assertIn('<tr style="', partner.comment, 'Style attr should not have been stripped')
+        # sanitize does not keep classes if asked to
+        self.assertNotIn('<tr class="', partner.comment)
 
         self.partner._columns['comment'] = fields.html('Stripped Html', sanitize=True, strip_style=True)
         self.partner.write(cr, uid, [pid], {'comment': some_ugly_html}, context=context)
