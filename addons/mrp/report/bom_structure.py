@@ -18,7 +18,7 @@ class bom_structure(report_sxw.rml_parse):
         def _get_rec(object, level):
             for l in object:
                 res = {}
-                res['pname'] = l.product_id.name
+                res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
                 res['uname'] = l.product_uom.name
