@@ -33,10 +33,15 @@ var _beep = (function () {
     if (typeof(Audio) === "undefined") {
         return function () {};
     }
-    var audio = new Audio();
-    var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-    audio.src = session.url("/mail/static/src/audio/ting" + ext);
-    return function () { audio.play(); };
+    var audio;
+    return function () {
+        if (!audio) {
+            audio = new Audio();
+            var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
+            audio.src = session.url("/mail/static/src/audio/ting" + ext);
+        }
+        audio.play();
+    };
 })();
 
 function parse_and_transform(html_string, transform_function) {
