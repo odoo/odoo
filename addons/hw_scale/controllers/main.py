@@ -94,8 +94,8 @@ class Scale(Thread):
                                                    bytesize = serial.SEVENBITS,
                                                    stopbits = serial.STOPBITS_ONE,
                                                    parity   = serial.PARITY_EVEN,
-                                                   timeout  = 0.02,
-                                                   writeTimeout= 0.02)
+                                                   timeout  = 1,
+                                                   writeTimeout = 1)
 
                         connection.write("W")
                         self.probed_device_paths.append(path)
@@ -104,6 +104,8 @@ class Scale(Thread):
                             _logger.debug(path + ' is scale')
                             self.path_to_scale = path
                             self.set_status('connected','Connected to '+device)
+                            connection.timeout = 0.02
+                            connection.writeTimeout = 0.02
                             return connection
                     else:
                         _logger.debug('Already probed: ' + path)
