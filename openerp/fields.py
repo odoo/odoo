@@ -1273,7 +1273,7 @@ class Html(_String):
     _slots = {
         'sanitize': True,               # whether value must be sanitized
         'strip_style': False,           # whether to strip style attributes (otherwise: sanitized)
-        'strip_classes': True,          # whether to strip classes attributes
+        'strip_classes': False,         # whether to strip classes attributes
     }
 
     def _setup_attrs(self, model, name):
