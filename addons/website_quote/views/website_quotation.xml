@@ -21,7 +21,7 @@
                       <th>Taxes</th>
                       <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                       <th class="text-right">Unit Price</th>
-                      <th class="text-right">Price</th>
+                      <th class="text-right">Tax Excluded Price</th>
                       <th></th>
                   </tr>
               </thead>
