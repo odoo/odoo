@@ -221,7 +221,7 @@ class TestSanitizer(unittest.TestCase):
         for test, in_lst, out_lst in test_data:
             new_html = html_sanitize(test)
             for text in in_lst:
-                self.assertIn(text, new_html, 'html_email_cleaner wrongly removed content')
+                self.assertIn(text, new_html)
             for text in out_lst:
                 self.assertIn('<span data-o-mail-quote="1">%s</span>' % cgi.escape(text), new_html)
 
@@ -279,11 +279,11 @@ class TestSanitizer(unittest.TestCase):
 
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
-    #     new_html = html_email_clean(test_mail_examples.MSOFFICE_1, remove=True)
+    #     new_html = html_sanitize(test_mail_examples.MSOFFICE_1, remove=True)
     #     for ext in test_mail_examples.MSOFFICE_1_IN:
-    #         self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+    #         self.assertIn(ext, new_html)
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
-    #         self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+    #         self.assertNotIn(ext, new_html)
 
 
 class TestHtmlTools(unittest.TestCase):
