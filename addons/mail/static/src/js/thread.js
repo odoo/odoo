@@ -12,6 +12,16 @@ var ORDER = {
     DESC: -1,
 };
 
+var read_more = _t('read more');
+var read_less = _t('read less');
+
+function time_from_now(date) {
+    if (moment().diff(date, 'seconds') < 45) {
+        return _t("now");
+    }
+    return date.fromNow();
+}
+
 var Thread = Widget.extend({
     className: 'o_mail_thread',
 
@@ -69,7 +79,6 @@ var Thread = Widget.extend({
     },
 
     render: function (messages, options) {
-        clearTimeout(this.auto_render_timeout);
         var self = this;
         var msgs = _.map(messages, this._preprocess_message.bind(this));
         if (this.options.display_order === ORDER.DESC) {
@@ -100,13 +109,35 @@ var Thread = Widget.extend({
             ORDER: ORDER,
         }));
 
-        this.auto_render_timeout = setTimeout(function () {
-            if (!self.isDestroyed()) {
-                self.render(messages, options);
-            }
-        }, 1000*60); // re-render the thread every minute to update dates
+        _.each(msgs, function(msg) {
+            self.$('[data-message-id="' + msg.id + '"] .o_mail_timestamp')
+                .data('date', msg.date);
+        });
+
+        this.$('[data-o-mail-quote="1"]').each(function () {
+            var $content = $(this);
+            var $read_more = $('<a class="o_mail_read_more" href="#"></a>').text(read_more);
+            var is_read_more = true;
+            $read_more.click(function() {
+                is_read_more = !is_read_more;
+                $content.toggle(!is_read_more);
+                $read_more.text(is_read_more ? read_more : read_less);
+            });
+            $read_more.insertBefore($content);
+        });
+        if (!this.update_timestamps_interval) {
+            this.update_timestamps_interval = setInterval(function() {
+                self.update_timestamps();
+            }, 1000*60);
+        }
     },
 
+    update_timestamps: function () {
+        this.$('.o_mail_timestamp').each(function() {
+            var date = $(this).data('date');
+            $(this).html(time_from_now(date));
+        });
+    },
     on_click_redirect: function (event) {
         var id = $(event.target).data('oe-id');
         if (id) {
@@ -133,21 +164,15 @@ var Thread = Widget.extend({
         var msg = _.extend({}, message);
 
         msg.date = moment.min(msg.date, moment());
-        var date = msg.date.format('YYYY-MM-DD');
+        msg.hour = time_from_now(msg.date);
 
+        var date = msg.date.format('YYYY-MM-DD');
         if (date === moment().format('YYYY-MM-DD')) {
             msg.day = _t("Today");
-            if (moment().diff(msg.date, 'minutes') === 0) {
-                msg.hour = _t("now");
-            } else {
-                msg.hour = msg.date.fromNow();
-            }
         } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
-           msg.day = _t("Yesterday");
-           msg.hour = msg.date.format('LT');
+            msg.day = _t("Yesterday");
         } else {
             msg.day = msg.date.format('LL');
-            msg.hour = msg.date.format('LT');
         }
 
         if (_.contains(this.expanded_msg_ids, message.id)) {
@@ -207,6 +232,9 @@ var Thread = Widget.extend({
     unselect: function () {
         this.$('.o_thread_message').removeClass('o_thread_selected_message');
         this.selected_id = null;
+    },
+    destroy: function () {
+        clearInterval(this.update_timestamps_interval);
     },
 });
 

@@ -87,9 +87,7 @@
                         <t t-esc="message.displayed_author"/>
                     </strong>
 
-                    <small t-att-title="message.date">
-                        - <t t-esc="message.hour"/>
-                    </small>
+                    - <small class="o_mail_timestamp" t-att-title="message.date"><t t-esc="message.hour"/></small>
                     <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
                         on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
                     </t>
