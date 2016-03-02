@@ -17,7 +17,7 @@
                         <div class="col-xs-3">
                             <strong>Product:</strong><br/>
                             <span t-field="o.product_id.code"/>
-                            <span t-field="o.product_id.name"/>
+                            <span t-esc="o.product_id.name_get()[0][1]"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Quantity:</strong><br/>
