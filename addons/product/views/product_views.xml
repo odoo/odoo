@@ -224,7 +224,8 @@
                         </group>
                         <group>
                             <group name="pricing" string="Pricing">
-                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="product_variant_count" invisible="1"/>
+                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
                                 <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="currency_id" invisible='1'/>
                             </group>
@@ -310,6 +311,7 @@
                 </field>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
+                   <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
                 </field>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>

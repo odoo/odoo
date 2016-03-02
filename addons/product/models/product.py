@@ -116,7 +116,8 @@ class ProductProduct(models.Model):
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
-        digits=dp.get_precision('Product Price'), inverse='_set_product_price')
+        digits=dp.get_precision('Product Price'), inverse='_set_product_price',
+        help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Internal Reference', compute='_compute_product_code')
