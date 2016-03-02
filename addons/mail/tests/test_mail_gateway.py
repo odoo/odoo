@@ -176,6 +176,115 @@ Content-Type: text/html;
 """
 
 
+MAIL_MULTIPART_IMAGE = """X-Original-To: raoul@example.com
+Delivered-To: micheline@example.com
+Received: by mail1.example.com (Postfix, from userid 99999)
+    id 9DFB7BF509; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on mail1.example.com
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=5.0 tests=FREEMAIL_FROM,
+    HTML_IMAGE_ONLY_08,HTML_MESSAGE,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+    RCVD_IN_MSPIKE_WL,T_DKIM_INVALID autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-lf0-f44.example.com (mail-lf0-f44.example.com [209.85.215.44])
+    by mail1.example.com (Postfix) with ESMTPS id 1D80DBF509
+    for <micheline@example.com>; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+Authentication-Results: mail1.example.com; dkim=pass
+    reason="2048-bit key; unprotected key"
+    header.d=example.com header.i=@example.com header.b=kUkTIIlt;
+    dkim-adsp=pass; dkim-atps=neutral
+Received: by mail-lf0-f44.example.com with SMTP id z124so47959461lfa.3
+        for <micheline@example.com>; Thu, 17 Dec 2015 06:22:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=example.com; s=20120113;
+        h=mime-version:date:message-id:subject:from:to:content-type;
+        bh=GdrEuMrz6vxo/Z/F+mJVho/1wSe6hbxLx2SsP8tihzw=;
+        b=kUkTIIlt6fe4dftKHPNBkdHU2rO052o684R0e2bqH7roGUQFb78scYE+kqX0wo1zlk
+         zhKPVBR1TqTsYlqcHu+D3aUzai7L/Q5m40sSGn7uYGkZJ6m1TwrWNqVIgTZibarqvy94
+         NWhrjjK9gqd8segQdSjCgTipNSZME4bJCzPyBg/D5mqe07FPBJBGoF9SmIzEBhYeqLj1
+         GrXjb/D8J11aOyzmVvyt+bT+oeLUJI8E7qO5g2eQkMncyu+TyIXaRofOOBA14NhQ+0nS
+         w5O9rzzqkKuJEG4U2TJ2Vi2nl2tHJW2QPfTtFgcCzGxQ0+5n88OVlbGTLnhEIJ/SYpem
+         O5EA==
+MIME-Version: 1.0
+X-Received: by 10.25.167.197 with SMTP id q188mr22222517lfe.129.1450362175493;
+ Thu, 17 Dec 2015 06:22:55 -0800 (PST)
+Received: by 10.25.209.145 with HTTP; Thu, 17 Dec 2015 06:22:55 -0800 (PST)
+Date: Thu, 17 Dec 2015 15:22:55 +0100
+Message-ID: <CAP76m_UB=aLqWEFccnq86AhkpwRB3aZoGL9vMffX7co3YEro_A@mail.gmail.com>
+Subject: {subject}
+From: =?UTF-8?Q?Thibault_Delavall=C3=A9e?= <raoul@example.com>
+To: {to}
+Content-Type: multipart/related; boundary=001a11416b9e9b229a05272b7052
+
+--001a11416b9e9b229a05272b7052
+Content-Type: multipart/alternative; boundary=001a11416b9e9b229805272b7051
+
+--001a11416b9e9b229805272b7051
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Premi=C3=A8re image, orang=C3=A9e.
+
+[image: Inline image 1]
+
+Seconde image, rosa=C3=A7=C3=A9e.
+
+[image: Inline image 2]
+
+Troisi=C3=A8me image, verte!=C2=B5
+
+[image: Inline image 3]
+
+J'esp=C3=A8re que tout se passera bien.
+--=20
+Thibault Delavall=C3=A9e
+
+--001a11416b9e9b229805272b7051
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Premi=C3=A8re image, orang=C3=A9e.</div><div><br></di=
+v><div><img src=3D"cid:ii_151b519fc025fdd3" alt=3D"Inline image 1" width=3D=
+"2" height=3D"2"><br></div><div><br></div><div>Seconde image, rosa=C3=A7=C3=
+=A9e.</div><div><br></div><div><img src=3D"cid:ii_151b51a290ed6a91" alt=3D"=
+Inline image 2" width=3D"2" height=3D"2"></div><div><br></div><div>Troisi=
+=C3=A8me image, verte!=C2=B5</div><div><br></div><div><img src=3D"cid:ii_15=
+1b51a37e5eb7a6" alt=3D"Inline image 3" width=3D"10" height=3D"10"><br></div=
+><div><br></div><div>J&#39;esp=C3=A8re que tout se passera bien.</div>-- <b=
+r><div class=3D"gmail_signature">Thibault Delavall=C3=A9e</div>
+</div>
+
+--001a11416b9e9b229805272b7051--
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?b3JhbmfDqWUuZ2lm?="
+Content-Disposition: inline; filename="=?UTF-8?B?b3JhbmfDqWUuZ2lm?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_151b519fc025fdd3>
+X-Attachment-Id: ii_151b519fc025fdd3
+
+R0lGODdhAgACALMAAAAAAP///wAAAP//AP8AAP+AAAD/AAAAAAAA//8A/wAAAAAAAAAAAAAAAAAA
+AAAAACwAAAAAAgACAAAEA7DIEgA7
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?dmVydGUhwrUuZ2lm?="
+Content-Disposition: inline; filename="=?UTF-8?B?dmVydGUhwrUuZ2lm?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_151b51a37e5eb7a6>
+X-Attachment-Id: ii_151b51a37e5eb7a6
+
+R0lGODlhCgAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD/
+/////ywAAAAACgAKAAAEClDJSau9OOvNe44AOw==
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?cm9zYcOnw6llLmdpZg==?="
+Content-Disposition: inline; filename="=?UTF-8?B?cm9zYcOnw6llLmdpZg==?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_151b51a290ed6a91>
+X-Attachment-Id: ii_151b51a290ed6a91
+
+R0lGODdhAgACALMAAAAAAP///wAAAP//AP8AAP+AAAD/AAAAAAAA//8A/wAAAP+AgAAAAAAAAAAA
+AAAAACwAAAAAAgACAAAEA3DJFQA7
+--001a11416b9e9b229a05272b7052--
+"""
+
+
 class TestMailgateway(TestMail):
 
     def setUp(self):
@@ -229,6 +338,13 @@ class TestMailgateway(TestMail):
         self.assertIn('Second part',
                       res.get('body', ''),
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
+
+    @mute_logger('openerp.addons.mail.models.mail_thread')
+    def test_message_process_cid(self):
+        new_groups = self.format_and_process(MAIL_MULTIPART_IMAGE, subject='My Frogs', to='groups@example.com')
+        message = new_groups.message_ids[0]
+        for attachment in message.attachment_ids:
+            self.assertIn('/web/image/%s' % attachment.id, message.body)
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
     def test_message_process_alias_basic(self):
