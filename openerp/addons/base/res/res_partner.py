@@ -206,8 +206,6 @@ class Partner(models.Model, FormatAddress):
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
         compute='_compute_company_type', readonly=False)
-    use_parent_address = fields.Boolean(string='Use Company Address',
-        help="Select this if you want to set company's address information  for this contact")
     company_id = fields.Many2one('res.company', 'Company', index=True, default=_default_company)
     color = fields.Integer(string='Color Index', default=0)
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
@@ -388,8 +386,7 @@ class Partner(models.Model, FormatAddress):
 
     @api.model
     def _address_fields(self):
-        """ Returns the list of address fields that are synced from the parent
-        when the `use_parent_address` flag is set. """
+        """Returns the list of address fields that are synced from the parent."""
         return list(ADDRESS_FIELDS)
 
     @api.multi
