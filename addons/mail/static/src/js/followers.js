@@ -287,11 +287,6 @@ var Followers = form_common.AbstractField.extend({
         $list.empty();
 
         this.data_subtype = data;
-        this.records_length = _.map(data, function(value, index) { return index; }).length;
-
-        if (this.records_length > 1) {
-            this.display_followers();
-        }
 
         _.each(data, function (record) {
             if (old_parent_model !== record.parent_model && old_parent_model !== undefined) {
