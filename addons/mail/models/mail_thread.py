@@ -12,6 +12,8 @@ import re
 import socket
 import time
 import xmlrpclib
+
+from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
 from werkzeug import url_encode
@@ -81,6 +83,7 @@ class MailThread(models.AbstractModel):
     _mail_flat_thread = True  # flatten the discussino history
     _mail_post_access = 'write'  # access required on the document to post on it
     _mail_mass_mailing = False  # enable mass mailing on this model
+    _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
@@ -1303,6 +1306,13 @@ class MailThread(models.AbstractModel):
                 postprocessed = True
                 if node.getparent() is not None:
                     to_remove.append(node)
+            if node.tag == 'img' and node.get('src', '').startswith('cid:'):
+                cid = node.get('src').split(':', 1)[1]
+                related_attachment = [attach for attach in attachments if len(attach) == 2 and attach[2] == cid]
+                if related_attachment:
+                    node.set('data-filename', related_attachment[0])
+                    postprocessed = True
+
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
@@ -1314,7 +1324,7 @@ class MailThread(models.AbstractModel):
         attachments = []
         body = u''
         if save_original:
-            attachments.append(('original_email.eml', message.as_string()))
+            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
 
         # Be careful, content-type may contain tricky content like in the
         # following example so test the MIME type with startswith()
@@ -1344,19 +1354,25 @@ class MailThread(models.AbstractModel):
                 # original get_filename is not able to decode iso-8859-1 (for instance).
                 # therefore, iso encoded attachements are not able to be decoded properly with get_filename
                 # code here partially copy the original get_filename method, but handle more encoding
-                filename=part.get_param('filename', None, 'content-disposition')
+                filename = part.get_param('filename', None, 'content-disposition')
                 if not filename:
-                    filename=part.get_param('name', None)
+                    filename = part.get_param('name', None)
                 if filename:
                     if isinstance(filename, tuple):
                         # RFC2231
-                        filename=email.utils.collapse_rfc2231_value(filename).strip()
+                        filename = email.utils.collapse_rfc2231_value(filename).strip()
                     else:
-                        filename=decode(filename)
+                        filename = decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
+
+                # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
+                if filename and part.get('content-id'):
+                    inner_cid = part.get('content-id').strip('><')
+                    attachments.append(self._Attachment(filename, part.get_payload(decode=True), {'cid': inner_cid}))
+                    continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
@@ -1374,7 +1390,7 @@ class MailThread(models.AbstractModel):
                         body = tools.append_content_to_html(body, html, plaintext=False)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
 
         body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
@@ -1601,7 +1617,6 @@ class MailThread(models.AbstractModel):
                 ]).write({'author_id': partner_info['partner_id']})
         return result
 
-    @api.model
     def _message_preprocess_attachments(self, attachments, attachment_ids, attach_model, attach_res_id):
         """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
 
@@ -1611,17 +1626,30 @@ class MailThread(models.AbstractModel):
         :param str attach_model: the model of the attachments parent record
         :param integer attach_res_id: the id of the attachments parent record
         """
+        return self._message_post_process_attachments(attachments, attachment_ids, {'model': attach_model, 'res_id': attach_res_id})
+
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_data):
+        IrAttachment, parameter_attachments = self.env['ir.attachment'], self.env['ir.attachment']
         m2m_attachment_ids = []
+        cid_mapping = {}
         if attachment_ids:
             filtered_attachment_ids = self.env['ir.attachment'].sudo().search([
                 ('res_model', '=', 'mail.compose.message'),
                 ('create_uid', '=', self._uid),
                 ('id', 'in', attachment_ids)])
             if filtered_attachment_ids:
-                filtered_attachment_ids.write({'res_model': attach_model, 'res_id': attach_res_id})
+                filtered_attachment_ids.write({'res_model': message_data['model'], 'res_id': message_data['res_id']})
             m2m_attachment_ids += [(4, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
-        for name, content in attachments:
+        for attachment in attachments:
+            if len(attachment) == 2:
+                name, content = attachment
+            elif len(attachment) == 3:
+                name, content, info = attachment
+                if info and info.get('cid'):
+                    cid_mapping[info['cid']] = name
+            else:
+                continue
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
             data_attach = {
@@ -1629,10 +1657,26 @@ class MailThread(models.AbstractModel):
                 'datas': base64.b64encode(str(content)),
                 'datas_fname': name,
                 'description': name,
-                'res_model': attach_model,
-                'res_id': attach_res_id,
+                'res_model': message_data['model'],
+                'res_id': message_data['res_id'],
             }
-            m2m_attachment_ids.append((0, 0, data_attach))
+            parameter_attachments |= IrAttachment.create(data_attach)
+        m2m_attachment_ids += [(4, attach.id) for attach in parameter_attachments]
+
+        if cid_mapping and message_data.get('body'):
+            root = lxml.html.fromstring(tools.ustr(message_data['body']))
+            postprocessed = False
+            for node in root.iter('img'):
+                if node.get('src', '').startswith('cid:'):
+                    fname = cid_mapping.get(node.get('src').split('cid:')[1], node.get('data-filename', ''))
+                    attachment = parameter_attachments.filtered(lambda attachment: attachment.name == fname)
+                    if attachment:
+                        node.set('src', '/web/image/%s' % attachment.id)
+                        postprocessed = True
+            if postprocessed:
+                body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
+                message_data['body'] = body
+
         return m2m_attachment_ids
 
     @api.multi
@@ -1706,11 +1750,6 @@ class MailThread(models.AbstractModel):
             private_followers -= set([author_id])
             partner_ids |= private_followers
 
-        # 3. Attachments
-        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        attachment_ids = self._message_preprocess_attachments(
-            attachments, kwargs.pop('attachment_ids', []), model, self.ids and self.ids[0] or None)
-
         # 4: mail.message.subtype
         subtype_id = kwargs.get('subtype_id', False)
         if not subtype_id:
@@ -1754,10 +1793,14 @@ class MailThread(models.AbstractModel):
             'subject': subject or False,
             'message_type': message_type,
             'parent_id': parent_id,
-            'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
         })
+
+        # 3. Attachments
+        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
+        values['attachment_ids'] = attachment_ids
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
