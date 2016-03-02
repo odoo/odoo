@@ -214,6 +214,7 @@ class Cursor(object):
 
         if self.sql_log:
             now = mdt.now()
+            _logger.debug("query: %s", query)
 
         try:
             params = params or None
@@ -235,7 +236,6 @@ class Cursor(object):
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            _logger.debug("query: %s", self._obj.query)
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
