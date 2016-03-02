@@ -111,7 +111,7 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="page-header">
-            <p class="pull-right">Page <span t-raw='page_nr + 1'/> on <span t-raw="len(survey.page_ids)"/></p>
+            <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
