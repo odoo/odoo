@@ -1335,7 +1335,7 @@ class mail_thread(osv.AbstractModel):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
         return body, attachments
 
-    def message_parse(self, cr, uid, message, save_original=False, preserve=True, context=None):
+    def message_parse(self, cr, uid, message, save_original=False, context=None, preserve=True):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
