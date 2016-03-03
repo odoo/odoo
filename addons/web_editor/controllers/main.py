@@ -84,6 +84,8 @@ class Web_Editor(http.Controller):
 
             :returns PNG image converted from given font
         """
+        # Make sure we have at least size=1
+        size = max(1, size)
         # Initialize font
         addons_path = http.addons_manifest['web']['addons_path']
         font_obj = ImageFont.truetype(addons_path + font, size)

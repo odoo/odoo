@@ -133,7 +133,7 @@ var font_to_img = function ($editable) {
         });
         if (content) {
             var color = $font.css("color").replace(/\s/g, '');
-            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.height(), window.encodeURI(content), window.encodeURI(color));
+            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+Math.max(1, $font.height()), window.encodeURI(content), window.encodeURI(color));
             var $img = $("<img/>").attr("src", src)
                 .attr("data-class", $font.attr("class"))
                 .attr("class", $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), '')) // remove inline font-awsome style
