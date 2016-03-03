@@ -93,6 +93,7 @@ class Partner(models.Model):
 
         mail_values = {
             'mail_message_id': message.id,
+            'mail_server_id': message.mail_server_id.id,
             'auto_delete': self._context.get('mail_auto_delete', True),
             'references': references,
         }
