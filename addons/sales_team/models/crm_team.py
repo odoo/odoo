@@ -27,7 +27,6 @@ class CrmTeam(models.Model):
         return team_id
 
     name = fields.Char('Sales Team', required=True, translate=True)
-    code = fields.Char()
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the sales team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get('crm.team'))
@@ -36,10 +35,6 @@ class CrmTeam(models.Model):
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales team")
     color = fields.Integer(string='Color Index', help="The color of the team")
-
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
-    ]
 
     @api.model
     def create(self, values):

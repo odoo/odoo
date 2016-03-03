@@ -17,7 +17,6 @@
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
                     <field name="user_id"/>
-                    <field name="code"/>
                     <group expand="0" string="Group By...">
                         <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
@@ -67,7 +66,6 @@
                         <group>
                             <group name="left">
                                 <field name="user_id"/>
-                                <field name="code" groups="base.group_no_one"/>
                             </group>
                             <group name="right">
                             </group>
@@ -117,7 +115,6 @@
                 <tree string="Sales Team">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
-                    <field name="code"/>
                     <field name="user_id"/>
                 </tree>
             </field>
