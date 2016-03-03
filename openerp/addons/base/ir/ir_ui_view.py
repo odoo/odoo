@@ -891,7 +891,7 @@ class view(osv.osv):
                    not Model.check_access_rights(cr, user, operation, raise_exception=False) or \
                    not context.get(action, True):
                     node.set(action, 'false')
-        if node.tag in ('kanban'):
+        if node.tag in ('kanban',):
             group_by_name = node.get('default_group_by')
             if group_by_name in Model._fields:
                 group_by_field = Model._fields[group_by_name]
