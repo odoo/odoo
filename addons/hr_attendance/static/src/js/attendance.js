@@ -4,7 +4,7 @@ odoo.define('hr_attendance.hr_attendance', function(require) {
 var core = require('web.core');
 var data = require('web.data');
 var formats = require('web.formats');
-var Model = require('web.DataModel');
+var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var time = require('web.time');
 var Widget = require('web.Widget');
@@ -75,10 +75,9 @@ var AttendanceSlider = Widget.extend({
     },
 });
 
-// Put the AttendanceSlider widget in the systray menu if the user is an employee
-var Users = new Model('res.users');
-Users.call('has_group', ['base.group_user']).done(function(is_employee) {
-    if (is_employee) {
+session.is_bound.then(function () {
+    // Put the AttendanceSlider widget in the systray menu if the user is an employee
+    if (session.is_employee) {
         SystrayMenu.Items.push(AttendanceSlider);
     }
 });
