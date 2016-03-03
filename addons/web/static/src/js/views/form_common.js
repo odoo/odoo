@@ -154,9 +154,11 @@ var ReinitializeWidgetMixin =  {
 var ReinitializeFieldMixin =  _.extend({}, ReinitializeWidgetMixin, {
     reinitialize: function() {
         ReinitializeWidgetMixin.reinitialize.call(this);
-        var res = this.render_value();
-        if (this.view && this.view.render_value_defs){
-            this.view.render_value_defs.push(res);
+        if (!this.no_rerender) {
+            var res = this.render_value();
+            if (this.view && this.view.render_value_defs){
+                this.view.render_value_defs.push(res);
+            }
         }
     },
 });

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-12 10:47+0000\n"
+"PO-Revision-Date: 2016-02-22 19:04+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -405,6 +405,7 @@ msgid "Customer Reference"
 msgstr "Vásárlói hivatkozás"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Vásárlói értékesítést terhelő adók"
@@ -599,6 +600,11 @@ msgid "Enable customer portal to track orders, delivery and invoices"
 msgstr "Vásárlói portál bekapcsolása a megrendelések, szállítások és számlák nyomonkövetéséhez"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Költség főkönyvi számla"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr "Lejárati idő"
@@ -684,6 +690,7 @@ msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Árbevétel főkönyvi számla"
@@ -1123,12 +1130,6 @@ msgstr "Fizetési feltétel"
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Kérem határozzon meg egy főkönyvi számla értékesítési naplót ehhez a vállalathoz."
-
-#. module: sale
-#: code:addons/sale/sale.py:316
-#, python-format
-msgid "There is no invoicable line."
-msgstr "Nincs számlázandó tételsor."
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1678,9 +1679,36 @@ msgid ""
 msgstr "Nincs bevételi főkönyvi számla meghatározva ehhez a termékhez: \"%s\". Telepítenie kell egy Számlatükröt  a Könyvelési alkalmazás beállítások menüjéből."
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr "Nincs számlázandó tételsor."
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "Tárgyév"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a költségek értékeinek a jelenlegi terméken."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni az értékesítések értékeinek a jelenlegi terméken."
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr "Ez a haladást mutató grafikon mutatja milyen szakaszokon megy át az árajánlata.\n                Használja a baloldali gombokat a következő szakaszokra lépéshez."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1785,6 +1813,11 @@ msgid "Untaxed Amount"
 msgstr "Nettó összeg"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr "Adó nélküli Összérték"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr "Upselling, magasabb értékű értékesítés"
@@ -1794,6 +1827,13 @@ msgstr "Upselling, magasabb értékű értékesítés"
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
 msgstr "Upselling, magasabb értékű értékesítés lehetősége"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
+msgstr "Használja a kimutatás és grafikon nézeteket az értékesítési folyamatának elemzéséhez.\n                Válasszon mércét, szűrjön és csoportosítson méreteket a kívánságának megfelelő hibátlan kimutatás készítéséhez."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist

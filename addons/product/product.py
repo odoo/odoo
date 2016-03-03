@@ -422,6 +422,7 @@ class product_template(osv.osv):
         return product.write({'list_price': value})
 
     def _product_currency(self, cr, uid, ids, name, arg, context=None):
+        uid = SUPERUSER_ID
         try:
             main_company = self.pool['ir.model.data'].get_object(cr, uid, 'base', 'main_company')
         except ValueError:

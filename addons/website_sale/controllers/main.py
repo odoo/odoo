@@ -633,7 +633,8 @@ class website_sale(http.Controller):
                 shipping_info['lang'] = partner_lang
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
-            order.write({'partner_shipping_id': checkout.get('shipping_id')})
+        if checkout.get('shipping_id'):
+            order.write({'partner_shipping_id': checkout['shipping_id']})
 
         order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
         order.order_line._compute_tax_id()

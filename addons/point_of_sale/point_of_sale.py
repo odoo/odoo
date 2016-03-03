@@ -520,28 +520,25 @@ class pos_session(osv.osv):
             journal_proxy.write(cr, SUPERUSER_ID, cashids, {'journal_user': True})
             jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
-
-        pos_config = jobj.browse(cr, uid, config_id, context=context)
-
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+        statements = []
+        create_statement = partial(self.pool['account.bank.statement'].create, cr, uid)
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            context['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': uid,
+                'company_id': pos_config.company_id.id
+            }
+            statements.append(create_statement(st_values, context=context))
 
         values.update({
             'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
-            'statement_ids': statements,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the
-        # newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids:
-                if journal.type == 'cash':
-                    context.update({'journal_id': journal.id})
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 

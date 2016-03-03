@@ -3,14 +3,16 @@
 # * base_action_rule
 # 
 # Translators:
+# ANDRES FELIPE NEGRETE GOMEZ <psi@nubark.com>, 2016
+# Esteban Echeverry <tebanep@nubark.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-12 04:23+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-18 01:25+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +106,7 @@ msgstr "Cerrado(a)"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr "Lista separadas por coma de los nombres de los campos que dispara el onchange."
+msgstr "Lista separadas por coma de los nombres de los campos que dispara el \"onchange\"."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -135,7 +137,7 @@ msgstr "Días"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
-msgstr "Retraso Despues de la Fecha de Disparo"
+msgstr "Retraso Después de la Fecha de Disparo"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
@@ -143,7 +145,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "Retraso después de la fecha de lanzamiento. Puede poner un número negativo si necesita un adelanto antes de la fecha de lanzamiento, como enviar un recordatorio 15 minutos antes de una reunión."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -184,7 +186,7 @@ msgstr "Filtrar"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Indica el orden de secuencia cuando se muestra una lista de reglas."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -211,7 +213,7 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "Si está marcada esta casilla, la condición debe satisfacerse antes de ejecutar la regla de acción."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -219,7 +221,7 @@ msgstr ""
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "Si está presente, esta condición debe satisfacerse antes de la actualización del registro."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -232,7 +234,7 @@ msgid ""
 "In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr ""
+msgstr "En esta misma vista de búsqueda, seleccione el menú \"Guardar filtro actual\", introduzca un nombre (Ejemplo: '01/01/2012) y añada la opción \"Compartir con todos los usuarios\""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -290,7 +292,7 @@ msgstr "Nueva"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr "Disparador de Campos On Change"
+msgstr "Disparador de Campos \"On Change\""
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -368,7 +370,7 @@ msgstr "Fijar Responsable"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Establezca la selección basada en el filtro de búsqueda:"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -413,21 +415,21 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "Use acciones automatizadas para activar automáticamente acciones para\nvarias pantallas. Por ejemplo: una oportunidad creada por un determinado\nusuario podría ser asignada automáticamente a un equipo de ventas determinado,\no una oportunidad que está en estado pendiente tras 14 días podría activar\nun recordatorio automático por e-mail."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "Cuando se calcula una condición de tiempo basada en días, se puede utilizar un calendario para calcular la fecha basada en días laborables."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "Cuándo debe ser lanzada la condición. Si está establecido este campo, la condición será comprobada por el planificador. Si no está establecido, la condición será comprobada en la creación y la actualización."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -437,7 +439,7 @@ msgstr "Cuando Ejecutar"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Si no está marcado, la regla está oculta y no se ejecutará."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
