@@ -165,7 +165,7 @@ class res_partner(osv.Model):
         if partner.user_ids:
             res['login'] = partner.user_ids[0].login
         else:
-            res['email'] = partner.email or ''
+            res['login'] = res['email'] = partner.email or ''
         return res
 
 class res_users(osv.Model):
