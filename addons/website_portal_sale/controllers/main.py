@@ -42,7 +42,7 @@ class website_account(website_account):
         partner = request.env['res.users'].browse(request.uid).partner_id
         domain = [
             ('partner_id.id', '=', partner.id),
-            ('state', 'not in', ['draft', 'cancel']),
+            ('state', 'not in', ['draft']),
             ('id', '=', order)
         ]
         order = request.env['sale.order'].search(domain)
