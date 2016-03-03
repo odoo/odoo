@@ -11,40 +11,94 @@
     </record>
 
     <!-- Account Tags -->
-    <record id="tax_tag_01" model="account.account.tag">
-        <field name="name">TVA 20% VENTES</field>
+
+    <record id="tag_ma_09" model="account.account.tag">
+        <field name="name">TAUX NORMAL DE 20% (Base HT)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_02" model="account.account.tag">
-        <field name="name">TVA 14% VENTES</field>
+
+    <record id="tag_ma_15" model="account.account.tag">
+        <field name="name">TAUX NORMAL DE 20% (TVA exigible)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_03" model="account.account.tag">
-        <field name="name">TVA 10% VENTES</field>
+
+    <record id="tag_ma_21" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 14% (Base HT)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_04" model="account.account.tag">
-        <field name="name">TVA 7% VENTES</field>
+
+    <record id="tag_ma_31" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 14% (TVA exigible)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_05" model="account.account.tag">
-        <field name="name">TVA 10% ACHATS</field>
+
+    <record id="tag_ma_41" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 1O% (Base HT)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_06" model="account.account.tag">
-        <field name="name">TVA 20% ACHATS</field>
+
+    <record id="tag_ma_55" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 1O% (TVA exigible)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_07" model="account.account.tag">
-        <field name="name">TVA 14% ACHATS</field>
+
+    <record id="tag_ma_69" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 7% (Base HT)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_08" model="account.account.tag">
-        <field name="name">TVA 7% ACHATS</field>
+
+    <record id="tag_ma_85" model="account.account.tag">
+        <field name="name">TAUX REDUIT DE 7% (TVA exigible)</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_09" model="account.account.tag">
-        <field name="name">TVA 20% ACHATS (immobilisation)</field>
+
+    <record id="tag_ma_103" model="account.account.tag">
+        <field name="name">Biens matériels (Base HT)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_104" model="account.account.tag">
+        <field name="name">-Achats à l'importation (20%) (HT)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_106" model="account.account.tag">
+        <field name="name">-Achats à l'importation (14%) (HT)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_108" model="account.account.tag">
+        <field name="name">-Achat à l'importation (7%) (HT)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_118" model="account.account.tag">
+        <field name="name">Biens matériels (TVA déductible)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_119" model="account.account.tag">
+        <field name="name">-Achats à l'importation (20%) (TVA)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_121" model="account.account.tag">
+        <field name="name">-Achats à l'importation (14%) (TVA)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_123" model="account.account.tag">
+        <field name="name">-Achat à l'importation (7%) (TVA)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_130" model="account.account.tag">
+        <field name="name">2-IMMOBILISATIONS (Base HT)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_ma_138" model="account.account.tag">
+        <field name="name">2-IMMOBILISATIONS (TVA déductible)</field>
         <field name="applicability">taxes</field>
     </record>
 
@@ -80,7 +134,7 @@
     <field name="amount">20</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_09'), ref('tag_ma_15')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_20"/>
   </record>
   <record model="account.tax.template" id="tva_vt14">
@@ -92,7 +146,7 @@
     <field name="amount">14</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_02')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_21'), ref('tag_ma_31')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_14"/>
   </record>
   <record model="account.tax.template" id="tva_vt10">
@@ -104,7 +158,7 @@
     <field name="amount">10</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_55'), ref('tag_ma_41')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_10"/>
   </record>
   <record model="account.tax.template" id="tva_vt07">
@@ -116,7 +170,7 @@
     <field name="amount">7</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_04')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_69'), ref('tag_ma_85')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_7"/>
   </record>
   <record model="account.tax.template" id="tva_ac20">
@@ -128,7 +182,7 @@
     <field name="amount">20</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_06')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_104'), ref('tag_ma_119')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_20"/>
   </record>
   <record model="account.tax.template" id="tva_acim">
@@ -140,7 +194,7 @@
     <field name="amount">20</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_09')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_130'), ref('tag_ma_138')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_20"/>
   </record>
   <record model="account.tax.template" id="tva_ac14">
@@ -152,7 +206,7 @@
     <field name="amount">14</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_07')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_106'), ref('tag_ma_121')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_14"/>
   </record>
   <record model="account.tax.template" id="tva_ac10">
@@ -164,7 +218,7 @@
     <field name="amount">10</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_05')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_103'), ref('tag_ma_118')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_10"/>
   </record>
   <record model="account.tax.template" id="tva_ac07">
@@ -176,7 +230,7 @@
     <field name="amount">7</field>
     <field name="amount_type">percent</field>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
-    <field name="tag_ids" eval="[(6,0,[ref('tax_tag_08')])]"/>
+    <field name="tag_ids" eval="[(6,0,[ref('tag_ma_108'), ref('tag_ma_123')])]"/>
     <field name="tax_group_id" ref="tax_group_tva_7"/>
   </record>
 </odoo>
