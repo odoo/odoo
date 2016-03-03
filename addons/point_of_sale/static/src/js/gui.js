@@ -335,17 +335,7 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            return new Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
-            .pipe(function(res) {
-                window.location = '/web' + ((session.debug)? '?debug' : '') + '#action=' + res[0]['res_id'];
-            },function(err,event) {
-                event.preventDefault();
-                self.show_popup('error',{
-                    'title': _t('Could not close the point of sale.'),
-                    'body':  _t('Your internet connection is probably down.'),
-                });
-                self.chrome.widget.close_button.renderElement();
-            });
+            window.location = '/web' + ((session.debug)? '?debug' : '') + '#action=point_of_sale.action_client_pos_menu';
         });
     },
 
