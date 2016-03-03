@@ -448,13 +448,7 @@ class Home(http.Controller):
 
         request.uid = request.session.uid
 
-        version_info = openerp.service.common.exp_version()
-        db_info = {
-            'server_version': version_info.get('server_version'),
-            'server_version_info': version_info.get('server_version_info'),
-        }
         context = {
-            'db_info': json.dumps(db_info),
             'menu_data': request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context),
             'session_info': json.dumps(request.env['ir.http'].session_info()),
         }

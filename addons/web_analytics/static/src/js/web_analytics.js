@@ -81,14 +81,10 @@ var Tracker = core.Class.extend({
     * to GA.
     */
     initialize_custom: function() {
-        var self = this;
-        session.rpc("/web/webclient/version_info", {})
-            .done(function(res) {
-                _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
-                self._push_customvars();
-                self.initialized.resolve(self);
-            });
-        return self.initialized;
+        _gaq.push(['_setCustomVar', 5, 'Version', session.version_info.server_version, 3]);
+        this._push_customvars();
+        this.initialized.resolve(this);
+        return this.initialized;
     },
 
     /*
