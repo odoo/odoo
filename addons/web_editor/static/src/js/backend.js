@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
