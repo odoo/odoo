@@ -208,11 +208,10 @@ class AccountJournal(models.Model):
             ('bank', 'Bank'),
             ('general', 'Miscellaneous'),
         ], required=True,
-        help="Select 'Sale' for customer invoices journals."\
-        " Select 'Purchase' for vendor bills journals."\
-        " Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments."\
-        " Select 'General' for miscellaneous operations journals."\
-        " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
+        help="Select 'Sale' for customer invoices journals.\n"\
+        "Select 'Purchase' for vendor bills journals.\n"\
+        "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
+        "Select 'General' for miscellaneous operations journals.")
     type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed')
     account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed',
         domain=[('deprecated', '=', False)])
