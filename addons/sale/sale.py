@@ -860,9 +860,9 @@ class ProductTemplate(models.Model):
             'view_type': action.view_type,
             'view_mode': action.view_mode,
             'target': action.target,
-            'context': "{'search_default_product_id': " + ','.join(map(str, product_ids)) + ", 'default_product_id': " + str(product_ids[0]) + "}",
+            'context': "{'default_product_id': " + str(product_ids[0]) + "}",
             'res_model': action.res_model,
-            'domain': action.domain,
+            'domain': [('state', 'in', ['sale', 'done']), ('product_id.product_tmpl_id', '=', self.id)],
         }
 
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
