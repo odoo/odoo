@@ -1,3 +1,4 @@
+import openerp
 from openerp import models
 from openerp.http import request
 
@@ -8,12 +9,14 @@ class Http(models.Model):
     def session_info(self):
         user = request.env.user
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
+        version_info = openerp.service.common.exp_version()
         return {
             "session_id": request.session_id,
             "uid": request.session.uid,
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
-            "username": request.session.login,
+            "server_version": version_info.get('server_version'),
+            "server_version_info": version_info.get('server_version_info'),
             "name": user.name,
             "company_id": request.env.user.company_id.id if request.session.uid else None,
             "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
