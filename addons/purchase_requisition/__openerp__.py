@@ -25,7 +25,6 @@ keep track and order all your purchase orders.
               'security/ir.model.access.csv','purchase_requisition_sequence.xml',
               'views/report_purchaserequisition.xml',
     ],
-    'auto_install': False,
     'test': [
         'test/purchase_requisition_users.yml',
         'test/purchase_requisition_demo.yml',
@@ -35,5 +34,4 @@ keep track and order all your purchase orders.
     'qweb': [
         'static/src/xml/purchase_requisition.xml',
     ],
-    'installable': True,
 }
