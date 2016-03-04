@@ -157,6 +157,18 @@
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
         </record>
+         <record id="attn_TVA-21-inclus-dans-prix" model="account.tax.template">
+            <field name="sequence">12</field>
+            <field name="description">TVA 21% - Inclus Dans Prix</field>
+            <field name="name">TVA 21% - Inclus Dans Prix</field>
+            <field name="refund_account_id" ref="a451054"/>
+            <field name="account_id" ref="a451054"/>
+            <field name="price_include" eval="0"/>
+            <field name="amount">21</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">none</field>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        </record>
         <record id="attn_VAT-OUT-12-S" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="description">12%</field>
