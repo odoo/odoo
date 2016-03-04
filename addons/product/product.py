@@ -643,7 +643,7 @@ class product_template(osv.osv):
             for variant_id in variant_alone:
                 product_ids = []
                 for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                    if not variant_id.attribute_id <= product_id.mapped('attribute_value_ids').mapped('attribute_id'):
                         product_ids.append(product_id.id)
                 product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
