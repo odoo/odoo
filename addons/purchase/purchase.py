@@ -427,10 +427,33 @@ class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
 
+    @api.multi
+    def _calc_line_base_price(self):
+         """Return the base price of the line to be used for tax calculation.
+
+         This function can be extended by other modules to modify this base
+         price (adding a discount, for example).
+         """
+         self.ensure_one()
+         return self.price_unit
+
+    def _calc_line_quantity(self):
+        """Return the base quantity of the line to be used for the subtotal.
+
+        This function can be extended by other modules to modify this base
+        quantity (adding for example offers 3x2 and so on).
+        """
+        self.ensure_one()
+        return self.product_qty
+
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
         for line in self:
-            taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)
+            line_price = line._calc_line_base_price()
+            line_qty = line._calc_line_quantity()
+            taxes = line.taxes_id.compute_all(
+                line_price, line.order_id.currency_id, line_qty,
+                product=line.product_id, partner=line.order_id.partner_id)
             line.update({
                 'price_tax': taxes['total_included'] - taxes['total_excluded'],
                 'price_total': taxes['total_included'],
