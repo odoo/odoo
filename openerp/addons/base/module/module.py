@@ -532,6 +532,7 @@ class module(osv.osv):
         api.Environment.reset()
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
+        cr.commit()
         config = registry['res.config'].next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
