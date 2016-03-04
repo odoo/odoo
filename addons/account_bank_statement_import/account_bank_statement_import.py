@@ -167,6 +167,10 @@ class AccountBankStatementImport(models.TransientModel):
             st_vals['journal_id'] = journal.id
             if not st_vals.get('reference'):
                 st_vals['reference'] = self.filename
+            if st_vals.get('number'):
+                #build the full name like BNK/2016/00135 by just giving the number '135'
+                st_vals['name'] = journal.sequence_id.with_context(ir_sequence_date=st_vals.get('date')).get_next_char(st_vals['number'])
+                del(st_vals['number'])
             for line_vals in st_vals['transactions']:
                 unique_import_id = line_vals.get('unique_import_id')
                 if unique_import_id:
