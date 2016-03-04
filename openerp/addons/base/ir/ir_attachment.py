@@ -165,7 +165,7 @@ class ir_attachment(osv.osv):
         fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
         # compute the index_content field
-        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
+        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype)
         if location != 'db':
             # create the file
             fname = self._file_write(cr, uid, value, checksum)

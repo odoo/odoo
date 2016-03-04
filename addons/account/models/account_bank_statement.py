@@ -818,7 +818,6 @@ class AccountBankStatementLine(models.Model):
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
-            move.post()
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs
@@ -871,5 +870,6 @@ class AccountBankStatementLine(models.Model):
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
                 (new_aml | counterpart_move_line).reconcile()
 
+            move.post()
         counterpart_moves.assert_balanced()
         return counterpart_moves

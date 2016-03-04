@@ -201,14 +201,12 @@
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
                                             </div>
-                                            <label for="qty_delivered" string="Delivered Quantity"
-                                                invisible="not context.get('show_sale')"/>
-                                            <div>
-                                                <field name="qty_delivered" invisible="not context.get('show_sale')"
-                                                    attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                            <label for="qty_delivered" string="Delivered Quantity" invisible="not context.get('show_sale')"/>
+                                            <div invisible="not context.get('show_sale')">
+                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                             </div>
                                             <label for="qty_invoiced" string="Invoiced Quantity" invisible="not context.get('show_sale')"/>
-                                            <div>
+                                            <div invisible="not context.get('show_sale')">
                                                 <field name="qty_invoiced" invisible="not context.get('show_sale')"/>
                                             </div>
                                             <field name="price_unit"/>
