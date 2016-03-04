@@ -409,8 +409,8 @@
                             <group>
                                 <field name="partner_id"
                                     on_change="on_change_partner_id(partner_id)"
-                                    string="Customer"
-                                    context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                                    string="Customer" domain="[('customer', '=', True)]"
+                                    context="{'default_name': partner_name, 'search_default_customer': 1, 'default_email': email_from, 'default_phone': phone}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
                             </group>
