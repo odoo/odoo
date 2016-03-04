@@ -451,8 +451,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             var self = this;
             FastClick.attach(document.body);
 
-            instance.webclient.set_content_full_screen(true);
-
             this.renderElement();
 
             this.$('.pos-logo').click(function(){
@@ -690,7 +688,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
 
         destroy: function() {
             this.pos.destroy();
-            instance.webclient.set_content_full_screen(false);
             this._super();
         }
     });
