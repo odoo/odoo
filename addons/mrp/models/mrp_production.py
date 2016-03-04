@@ -11,7 +11,6 @@ from dateutil.relativedelta import relativedelta
 import time
 import math
 
-
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
     _name = 'mrp.production'
@@ -168,14 +167,17 @@ class MrpProduction(models.Model):
                 tocheck.append(False)
 
             # Add raw materials for this operation
-            self.move_raw_ids.filtered(lambda x: x.operation_id.id in tocheck).write({
-                'workorder_id': workorder_id.id
+            move_raw_to_check = self.move_raw_ids.filtered(lambda x: x.operation_id.id in tocheck)
+            move_raw_to_check.write({
+                'workorder_id': workorder_id.id,
             })
+            for move in [x for x in move_raw_to_check if x.move_lot_ids]:
+                move.move_lot_ids.write({'workorder_id': workorder_id.id})
             # Add finished products for this operation
             self.move_finished_ids.filtered(lambda x: x.operation_id.id in tocheck).write({
                 'workorder_id': workorder_id.id
             })
-            workorder_id._generate_lot_ids()
+            #workorder_id._generate_lot_ids()
             state = 'pending'
         return True
 
@@ -277,7 +279,7 @@ class MrpProduction(models.Model):
                 for move_raw in moves_to_do:
                     if (move.has_tracking != 'none') and (move_raw.has_tracking != 'none'):
                         for lot in lot_quants:
-                            lots = move_raw.quantity_lots.filtered(lambda x: x.lot_produced_id.id == lot).mapped('lot_id')
+                            lots = move_raw.move_lot_ids.filtered(lambda x: x.lot_produced_id.id == lot).mapped('lot_id')
                             raw_lot_quants[lot] |= move_raw.quant_ids.filtered(lambda x: (x.lot_id in lots) and (x.qty > 0.0))
                     else:
                         quants |= move_raw.quant_ids.filtered(lambda x: x.qty > 0.0)
@@ -378,8 +380,11 @@ class MrpProduction(models.Model):
 
     @api.multi
     def action_assign(self):
+        lots = self.env['stock.move.lots']
         for production in self:
-            production.move_raw_ids.action_assign()
+            move_to_assign = production.move_raw_ids.filtered(lambda x: x.state in ('confirmed', 'waiting', 'assigned'))
+            move_to_assign.action_assign()
+            move_to_assign.create_lots()
         return True
 
     @api.multi
@@ -487,9 +492,8 @@ class MrpProductionWorkcenterLine(models.Model):
 
     @api.multi
     def write(self, values):
-        for production in self:
-            if production.state == 'done' and values.get('date_planned_start') and values.get('date_planned_end'):
-                raise UserError(_('You can not change the finished work order.'))
+        if any([x.state == 'done' for x in self]) and values.get('date_planned_start') and values.get('date_planned_end'):
+            raise UserError(_('You can not change the finished work order.'))
         return super(MrpProductionWorkcenterLine, self).write(values)
 
     def _generate_lot_ids(self):
@@ -507,6 +511,7 @@ class MrpProductionWorkcenterLine(models.Model):
                         move_lot_obj.create({
                             'move_id': move.id,
                             'quantity': min(1,qty),
+                            'quantity_done': min(1,qty),
                             'product_id': move.product_id.id,
                             'production_id': self.production_id.id,
                             'workorder_id': self.id,
@@ -516,6 +521,7 @@ class MrpProductionWorkcenterLine(models.Model):
                     move_lot_obj.create({
                         'move_id': move.id,
                         'quantity': qty,
+                        'quantity_done': qty,
                         'product_id': move.product_id.id,
                         'production_id': self.production_id.id,
                         'workorder_id': self.id,
@@ -553,13 +559,16 @@ class MrpProductionWorkcenterLine(models.Model):
         if not self.next_work_order_id:
             production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
             if production_move.product_id.tracking != 'none':
-                move_lot = production_move.quantity_lots.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
                 if move_lot:
                     move_lot.quantity += self.qty_producing
                 else:
                     move_lot.create({'move_id': production_move.id,
                                      'lot_id': self.final_lot_id.id,
-                                     'quantity': self.qty_producing, })
+                                     'quantity': self.qty_producing,
+                                     'quantity_done': self.qty_producing,
+                                     'workorder_id': self.id
+                                     })
             else:
                 production_move.product_uom_qty += self.qty_producing #TODO: UoM conversion?
         # Update workorder quantity produced

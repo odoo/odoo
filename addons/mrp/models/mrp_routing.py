@@ -44,14 +44,12 @@ class MrpRoutingWorkcenter(models.Model):
     note = fields.Text(string='Description')
     company_id = fields.Many2one('res.company', related='routing_id.company_id', string='Company', store=True, readonly=True)
     worksheet = fields.Binary('worksheet')
-
     time_mode = fields.Selection([
         ('auto','Compute based on real time'), ('manual','Set duration manually')],
         'Duration Computation', default='auto')
     time_mode_batch = fields.Integer('Based on', default=10)
     time_cycle_manual = fields.Float(string='Manual Duration', default=60, help="Time in minutes")
     time_cycle = fields.Float(string='Duration', compute="_get_time_cycle")
-
     wo_count = fields.Integer(string="# of Work Orders", compute="_wo_count")
 
     @api.multi
