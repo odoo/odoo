@@ -235,11 +235,17 @@
                                 <field name="state"/>
                             </tree>
                             <form string="Memberships">
-                                <field name="date"/>
-                                <field name="member_price"/>
-                                <field name="membership_id"/>
-                                <field name="account_invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
-                                <field name="state" colspan="4"/>
+                                <group col="2">
+                                    <group>
+                                        <field name="membership_id"/>
+                                        <field name="date"/>
+                                        <field name="state"/>
+                                    </group>
+                                    <group>
+                                        <field name="member_price"/>
+                                        <field name="account_invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
+                                    </group>
+                                </group>
                             </form>
                         </field>
 
