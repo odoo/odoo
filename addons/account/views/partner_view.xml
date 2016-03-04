@@ -175,7 +175,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="Fiscal Information" name="fiscal_information">
-                            <field name="property_account_position_id" widget="selection"/>
+                            <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
                             <field name="property_account_receivable_id"/>
