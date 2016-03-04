@@ -92,7 +92,7 @@
               <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
-                  "from_currency": "product.company_id.currency_id",
+                  "from_currency": "product.currency_id",
                   "display_currency": "website.currency_id"
                 }'/>
               </t>
@@ -422,7 +422,7 @@
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
-              "from_currency": "product.company_id.currency_id",
+              "from_currency": "product.currency_id",
               "display_currency": "website.currency_id"
            }'/>
           <b class="oe_price" style="white-space: nowrap;"
@@ -438,7 +438,7 @@
         <span t-field="product.lst_price"
             t-field-options='{
                "widget": "monetary",
-               "display_currency": "website.pricelist_id.currency_id"
+               "display_currency": "product.currency_id"
            }'/>
       </h4>
       <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
@@ -458,7 +458,7 @@
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
                 "widget": "monetary",
-                "from_currency": "product.company_id.currency_id",
+                "from_currency": "product.currency_id",
                 "display_currency": "website.currency_id"
               }'/>
         </span>
@@ -483,7 +483,7 @@
                   <span t-if="value_id.price_extra">
                       <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                "widget": "monetary",
-                                "from_currency": "product.company_id.currency_id",
+                                "from_currency": "product.currency_id",
                                "display_currency": "website.currency_id"
                            }'/>
                   </span>
@@ -503,7 +503,7 @@
                           <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                       "widget": "monetary",
-                                      "from_currency": "product.company_id.currency_id",
+                                      "from_currency": "product.currency_id",
                                       "display_currency": "website.currency_id"
                                    }'/>
                           </span>
@@ -899,7 +899,7 @@
                         <del class="text-danger mr8" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
-                              "from_currency": "product.company_id.currency_id",
+                              "from_currency": "product.currency_id",
                               "display_currency": "website.currency_id"
                           }'/>
                       </t>
