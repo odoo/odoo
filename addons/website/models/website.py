@@ -353,14 +353,22 @@ class website(osv.osv):
         if req is None:
             req = request.httprequest
         default = self.get_current_website(cr, uid, context=context).default_lang_code
-        uri = req.path
-        if req.query_string:
-            uri += '?' + req.query_string
         shorts = []
+
+        def get_url_localized(router, lang):
+            arguments = dict(request.endpoint_arguments)
+            for k, v in arguments.items():
+                if isinstance(v, orm.browse_record):
+                    arguments[k] = v.with_context(lang=lang)
+            return router.build(request.endpoint, arguments)
+        router = request.httprequest.app.get_db_router(request.db).bind('')
         for code, name in self.get_languages(cr, uid, ids, context=context):
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
             shorts.append(lg[0])
+            uri = request.endpoint and get_url_localized(router, code) or request.httprequest.path
+            if req.query_string:
+                uri += '?' + req.query_string
             lang = {
                 'hreflang': ('-'.join(lg)).lower(),
                 'short': lg[0],

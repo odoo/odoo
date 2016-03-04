@@ -29,10 +29,12 @@ class Scale(Thread):
         self.lock = Lock()
         self.scalelock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
-        self.input_dir = '/dev/serial/by-id/'
+        self.input_dir = '/dev/serial/by-path/'
         self.weight = 0
         self.weight_info = 'ok'
         self.device = None
+        self.probed_device_paths = []
+        self.path_to_scale = ''
 
     def lockedstart(self):
         with self.lock:
@@ -61,27 +63,55 @@ class Scale(Thread):
             elif status == 'disconnected' and message:
                 _logger.info('Disconnected Scale: %s', message)
 
+    def _get_raw_response(self, connection):
+        response = ""
+        while True:
+            byte = connection.read(1)
+
+            if byte:
+                response += byte
+            else:
+                return response
+
     def get_device(self):
         try:
             if not os.path.exists(self.input_dir):
                 self.set_status('disconnected','Scale Not Found')
                 return None
             devices = [ device for device in listdir(self.input_dir)]
-            scales  = [ device for device in devices if ('mettler' in device.lower()) or ('toledo' in device.lower()) ]
-            if len(scales) > 0:
-                print join(self.input_dir,scales[0])
-                self.set_status('connected','Connected to '+scales[0])
-                return serial.Serial(join(self.input_dir,scales[0]), 
-                        baudrate = 9600, 
-                        bytesize = serial.SEVENBITS, 
-                        stopbits = serial.STOPBITS_ONE, 
-                        parity   = serial.PARITY_EVEN, 
-                        #xonxoff  = serial.XON,
-                        timeout  = 0.02, 
-                        writeTimeout= 0.02)
-            else:
-                self.set_status('disconnected','Scale Not Found')
-                return None
+
+            if len(devices) > 0:
+                for device in devices:
+                    path = self.input_dir + device
+
+                    # don't keep probing devices that are not a scale,
+                    # only keep probing if in the past the device was
+                    # confirmed to be a scale
+                    if path not in self.probed_device_paths or path == self.path_to_scale:
+                        _logger.debug('Probing: ' + path)
+                        connection = serial.Serial(path,
+                                                   baudrate = 9600,
+                                                   bytesize = serial.SEVENBITS,
+                                                   stopbits = serial.STOPBITS_ONE,
+                                                   parity   = serial.PARITY_EVEN,
+                                                   timeout  = 1,
+                                                   writeTimeout = 1)
+
+                        connection.write("W")
+                        self.probed_device_paths.append(path)
+
+                        if self._get_raw_response(connection):
+                            _logger.debug(path + ' is scale')
+                            self.path_to_scale = path
+                            self.set_status('connected','Connected to '+device)
+                            connection.timeout = 0.02
+                            connection.writeTimeout = 0.02
+                            return connection
+                    else:
+                        _logger.debug('Already probed: ' + path)
+
+            self.set_status('disconnected','Scale Not Found')
+            return None
         except Exception as e:
             self.set_status('error',str(e))
             return None
