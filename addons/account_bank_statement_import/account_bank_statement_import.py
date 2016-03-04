@@ -26,6 +26,7 @@ class AccountBankStatementImport(models.TransientModel):
     _description = 'Import Bank Statement'
 
     data_file = fields.Binary(string='Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
+    filename = fields.Char()
 
     @api.multi
     def import_file(self):
@@ -164,7 +165,8 @@ class AccountBankStatementImport(models.TransientModel):
     def _complete_stmts_vals(self, stmts_vals, journal, account_number):
         for st_vals in stmts_vals:
             st_vals['journal_id'] = journal.id
-
+            if not st_vals.get('reference'):
+                st_vals['reference'] = self.filename
             for line_vals in st_vals['transactions']:
                 unique_import_id = line_vals.get('unique_import_id')
                 if unique_import_id:
