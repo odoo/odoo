@@ -92,6 +92,15 @@ class account_voucher(osv.osv):
                 self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
         return super(account_voucher, self).create(cr, uid, vals, context=context)
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        data = super(account_voucher, self).copy_data(cr, uid, id, default=default, context=context)
+        if data.get('period_id') and not data.get('date'):
+            account_period_obj = self.pool.get('account.period')
+            ids = account_period_obj.find(cr, uid, context=context)
+            if ids:
+                data['period_id'] = ids[0]
+        return data
+
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('amount') and 'amount_in_word' not in vals:
             voucher = self.browse(cr, uid, ids, context=context)
