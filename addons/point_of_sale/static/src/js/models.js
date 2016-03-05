@@ -826,7 +826,18 @@ exports.PosModel = Backbone.Model.extend({
 
     scan_product: function(parsed_code){
         var selectedOrder = this.get_order();       
-        var product = this.db.get_product_by_barcode(parsed_code.base_code);
+
+	var product = undefined;
+        if(parsed_code.type == 'price' || parsed_code.type == 'weight'){
+            for (var i = 0; i < parsed_code.variable_strings.length; i++) {
+                product = this.db.get_product_by_default_code(parsed_code.variable_strings[i]);
+                if (product){
+                    break;
+		}
+            }
+        } else {
+            product = this.db.get_product_by_barcode(parsed_code.base_code);
+        }
 
         if(!product){
             return false;
