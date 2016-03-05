@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-01-31 17:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-01 15:58+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Bu epostaya ilişkin Odoo hesabı için parola sıfırlaması istendi.</p>\n\n<p>Dilerseniz; 24 saat geçerliliği olan <a href=\"${object.signup_url}\">bu bağlantıdan</a> parolanızı değiştirebilirsiniz.</p>\n\n<p>Not: Bunu düşünmüyorsanız, bu e-postayı güvenle gözardı edebilirsiniz.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "${object.company_id.name} Odoo'ya bağlanmak için davet"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "Bu kullanıcı için bir parola sıfırlanması istendi. Aşağıdaki bağlantıyı içeren bir eposta gönderilmiştir."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderilmiştir:"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -98,7 +99,7 @@ msgstr "Başka bir kullanıcı bu e-posta adresiyle zaten kayıtlı."
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Kimlik Doğrulama Başarısız Oldu."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -110,7 +111,7 @@ msgstr "Kullanıcı Girişine Dön"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Eposta gönderilemedi: %s isimli kullanıcının eposta adresi bulunmuyor."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -125,7 +126,7 @@ msgstr "Parolayı Doğrula"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Bağlandı"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:43

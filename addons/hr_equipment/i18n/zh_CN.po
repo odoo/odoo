@@ -3,14 +3,14 @@
 # * hr_equipment
 # 
 # Translators:
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-12-18 04:08+0000\n"
+"PO-Revision-Date: 2016-03-03 12:11+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr "<b>类别:</b>"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
 msgid "<b>Model Number:</b>"
-msgstr "<b>模型号码 :</b>"
+msgstr "<b>型号 :</b>"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -72,7 +72,7 @@ msgstr "别名"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_contact
 msgid "Alias Contact Security"
-msgstr "别名联系安全"
+msgstr "别名联系人安全"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_alias_domain
@@ -111,7 +111,7 @@ msgstr "资产"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
 msgstr "资产类别"
 
@@ -170,7 +170,7 @@ msgstr "分配到员工和部门"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Available"
-msgstr "有效的"
+msgstr "可用的"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -272,7 +272,7 @@ msgstr "成本"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_create_uid
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建人"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_create_date
@@ -281,12 +281,12 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_create_date
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_maintenance_open_count
 msgid "Current Maintenance"
-msgstr "当前的维护"
+msgstr "当前保养"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
@@ -484,13 +484,6 @@ msgstr "查看是否有需要留意的新信息。"
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "确认后, 会出现新消息."
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr "重要信息"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -966,6 +959,9 @@ msgstr "处于维护中"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "未读消息"
 
