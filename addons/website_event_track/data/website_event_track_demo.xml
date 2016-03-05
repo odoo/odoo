@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="1">
     <record id="event_track_location5" model="event.track.location">
         <field name="name">Le Foyer du lac</field>
@@ -237,7 +237,7 @@
         <field name="state">confirmed</field>
     </record>
     <record id="event_track22" model="event.track">
-        <field name="name">Manage your KPIs (recomended to openERP partners).</field>
+        <field name="name">Manage your KPIs (recomended to Odoo partners).</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
@@ -322,4 +322,4 @@
         <field name="state">confirmed</field>
     </record>
 </data>
-</openerp>
+</odoo>
