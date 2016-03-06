@@ -100,7 +100,14 @@
                                     <td t-if="not pack_operation.pack_lot_ids"/>
                                 </t>
                                 <td>
-                                    <span t-field="pack_operation.picking_id.move_lines[pack_operation_index].state"/>
+                                    <t t-set="mls" t-value="pack_operation.picking_id.move_lines"/>
+                                    <t t-set="check" t-value="True"/>
+                                    <t t-foreach="mls" t-as="ml">
+                                        <t t-if="ml.product_id.id == pack_operation.product_id.id and check">
+                                            <t t-set="check" t-value="False"/>
+                                            <span t-field="ml.state"/>
+                                        </t>
+                                    </t>
                                 </td>
                                 <td>
                                     <span t-field="pack_operation.location_id"/>
