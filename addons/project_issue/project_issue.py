@@ -133,7 +133,8 @@ class project_issue(osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
-                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
+                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date",
+                                               groups='base.group_user'),
         'date_deadline': fields.date('Deadline'),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.\
@@ -167,19 +168,24 @@ class project_issue(osv.Model):
             help="You can link this issue to an existing task or directly create a new one from here"),
         'day_open': fields.function(_compute_day, string='Days to Assign',
                                     multi='compute_day', type="float",
-                                    store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+                                    store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)},
+                                    groups='base.group_user'),
         'day_close': fields.function(_compute_day, string='Days to Close',
                                      multi='compute_day', type="float",
-                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
+                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)},
+                                     groups='base.group_user'),
         'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility='onchange'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to assign the Issue',
                                               multi='compute_day', type="float",
-                                              store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+                                              store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)},
+                                              groups='base.group_user'),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to close the Issue',
                                                multi='compute_day', type="float",
-                                               store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
+                                               store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)},
+                                               groups='base.group_user'),
         'inactivity_days': fields.function(_compute_day, string='Days since last action',
-                                           multi='compute_day', type="integer", help="Difference in days between last action and current date"),
+                                           multi='compute_day', type="integer", help="Difference in days between last action and current date",
+                                           groups='base.group_user'),
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
@@ -324,12 +330,17 @@ class project_issue(osv.Model):
         recipients. Indeed those will have specific action in their notification
         emails: creating tasks, assigning it. """
         group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        group_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
             if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
                 group_data['group_project_user'] |= recipient
-                done_ids.add(recipient.id)
+            elif not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
         return super(project_issue, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
