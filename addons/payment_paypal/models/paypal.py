@@ -62,25 +62,6 @@ class AcquirerPaypal(osv.Model):
         'paypal_api_enabled': False,
     }
 
-    def _migrate_paypal_account(self, cr, uid, context=None):
-        """ COMPLETE ME """
-        cr.execute('SELECT id, paypal_account FROM res_company')
-        res = cr.fetchall()
-        for (company_id, company_paypal_account) in res:
-            if company_paypal_account:
-                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'paypal')], limit=1, context=context)
-                if company_paypal_ids:
-                    self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
-                else:
-                    paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
-                    self.create(cr, uid, {
-                        'name': 'Paypal',
-                        'provider': 'paypal',
-                        'paypal_email_account': company_paypal_account,
-                        'view_template_id': paypal_view.id,
-                    }, context=context)
-        return True
-
     def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
         """ Compute paypal fees.
 

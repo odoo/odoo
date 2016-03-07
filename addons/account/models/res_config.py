@@ -24,10 +24,6 @@ class AccountConfigSettings(models.TransientModel):
         help='Check this box if this company is a legal entity.')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
-    paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
-        help="""Paypal account (email) for receiving online payments (credit card, etc.)
-             If you set a paypal account, the customer  will be able to pay your invoices or quotations
-             with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal.""")
     company_footer = fields.Text(related='company_id.rml_footer', string='Bank accounts footer preview',
         readonly=True, help="Bank accounts as printed in the footer of each printed document")
 
@@ -144,7 +140,6 @@ class AccountConfigSettings(models.TransientModel):
             self.expects_chart_of_accounts = company.expects_chart_of_accounts
             self.currency_id = company.currency_id
             self.transfer_account_id = company.transfer_account_id
-            self.paypal_account = company.paypal_account
             self.company_footer = company.rml_footer
             self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
             self.bank_account_code_prefix = company.bank_account_code_prefix
