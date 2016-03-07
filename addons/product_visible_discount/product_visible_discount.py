@@ -44,7 +44,7 @@ class sale_order_line(osv.osv):
 
         if uom and uom != product.uom_id.id:
             # the unit price is in a different uom
-            uom_factor = self.pool['product.uom']._compute_price(cr, uid, uom, 1.0, product.uom_id.id)
+            uom_factor = self.pool['product.uom']._compute_price(cr, uid, product.uom_id.id, 1.0, uom)
         else:
             uom_factor = 1.0
 
