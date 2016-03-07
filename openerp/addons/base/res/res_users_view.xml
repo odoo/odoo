@@ -144,8 +144,8 @@
                                 <field name="login"
                                         placeholder="email@yourcompany.com"/>
                             </h2>
-                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_currency"/>
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_currency"/>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
                         <group>
                             <label for="groups_id" string="Access Rights"
@@ -236,7 +236,7 @@
             <field name="arch" type="xml">
                 <search string="Users">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
-                    <field name="company_ids" string="Company" groups="base.group_multi_currency"/>
+                    <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
@@ -294,7 +294,7 @@
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                         <field name="tz_offset" invisible="1"/>
                         <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_currency"/>
+                            groups="base.group_multi_company"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="email" widget="email" readonly="0"/>
