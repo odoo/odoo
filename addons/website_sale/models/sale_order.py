@@ -41,11 +41,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
-        for so in self:
-            domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
-            if line_id:
-                domain += [('id', '=', line_id)]
-            return self.env['sale.order.line'].sudo().search(domain).ids
+        self.ensure_one()
+        domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
+        if line_id:
+            domain += [('id', '=', line_id)]
+        return self.env['sale.order.line'].sudo().search(domain)
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
@@ -75,39 +75,38 @@ class SaleOrder(models.Model):
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
+        self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
         quantity = 0
         order_line = False
-        for so in self:
-            if so.state != 'draft':
-                request.session['sale_order_id'] = None
-                raise UserError(_('It is forbidden to modify a sale order which is not in draft status'))
-            if line_id is not False:
-                line_ids = so._cart_find_product_line(product_id, line_id, **kwargs)
-                if line_ids:
-                    order_line = SaleOrderLineSudo.browse(line_ids[0])
+        if self.state != 'draft':
+            request.session['sale_order_id'] = None
+            raise UserError(_('It is forbidden to modify a sale order which is not in draft status'))
+        if line_id is not False:
+            order_lines = self._cart_find_product_line(product_id, line_id, **kwargs)
+            order_line = order_lines and order_lines[0]
 
-            # Create line if no line with product_id can be located
-            if not order_line:
-                values = self._website_product_id_change(so.id, product_id, qty=1)
-                order_line = SaleOrderLineSudo.create(values)
-                order_line._compute_tax_id()
-                if add_qty:
-                    add_qty -= 1
+        # Create line if no line with product_id can be located
+        if not order_line:
+            values = self._website_product_id_change(self.id, product_id, qty=1)
+            order_line = SaleOrderLineSudo.create(values)
+            order_line._compute_tax_id()
+            if add_qty:
+                add_qty -= 1
 
-            # compute new quantity
-            if set_qty:
-                quantity = set_qty
-            elif add_qty is not None:
-                quantity = order_line.product_uom_qty + (add_qty or 0)
+        # compute new quantity
+        if set_qty:
+            quantity = set_qty
+        elif add_qty is not None:
+            quantity = order_line.product_uom_qty + (add_qty or 0)
 
-            # Remove zero of negative lines
-            if quantity <= 0:
-                order_line.unlink()
-            else:
-                # update line
-                values = self._website_product_id_change(so.id, product_id, qty=quantity)
-                order_line.write(values)
+        # Remove zero of negative lines
+        if quantity <= 0:
+            order_line.unlink()
+        else:
+            # update line
+            values = self._website_product_id_change(self.id, product_id, qty=quantity)
+            order_line.write(values)
 
         return {'line_id': order_line.id, 'quantity': quantity}
 

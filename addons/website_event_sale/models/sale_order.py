@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -8,15 +8,16 @@ from openerp.exceptions import UserError
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
-        line_ids = super(sale_order, self)._cart_find_product_line(cr, uid, ids, product_id, line_id, context=context)
+    @api.multi
+    def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
+        self.ensure_one()
+        lines = super(sale_order, self)._cart_find_product_line(product_id, line_id)
         if line_id:
-            return line_ids
-        for so in self.browse(cr, uid, ids, context=context):
-            domain = [('id', 'in', line_ids)]
-            if context.get("event_ticket_id"):
-                domain += [('event_ticket_id', '=', context.get("event_ticket_id"))]
-            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
+            return lines
+
+        if self.env.context.get("event_ticket_id"):
+            lines = lines.filtered(lambda line: line.event_ticket_id.id == self.env.context["event_ticket_id"])
+        return lines
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
         values = super(sale_order, self)._website_product_id_change(cr, uid, ids, order_id, product_id, qty=qty, context=None)
