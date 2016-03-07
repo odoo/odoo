@@ -214,7 +214,7 @@ class Cursor(object):
 
         if self.sql_log:
             now = mdt.now()
-            _logger.debug("query: %s", self._obj.query)
+            _logger.debug("query: %s", query)
 
         try:
             params = params or None
