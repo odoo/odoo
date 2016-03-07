@@ -2284,12 +2284,13 @@ msgstr "Không thể tạo hóa đơn.\n"
 #, python-format
 msgid "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Không thể tìm thấy một hệ thống tài khoản cho công ty này, bạn nên tạo nó."
 
 #. module: account
-#: code:addons/account/account_move_line.py:567
+#: code:addons/account/account_move_line.py:551
 #, python-format
-msgid "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
+msgid ""
+"Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
 msgstr ""
 
@@ -2408,7 +2409,7 @@ msgstr "Thay đổi"
 #: model:ir.actions.act_window,name:account.action_account_change_currency
 #: model:ir.model,name:account.model_account_change_currency
 msgid "Change Currency"
-msgstr "Thay đổi tiền tệ"
+msgstr "Đổi tiền tệ"
 
 #. module: account
 #: field:account.change.currency,currency_id:0
@@ -11409,11 +11410,13 @@ msgstr "Bạn phải chọn ngày bắt đầu."
 #. module: account
 #: code:addons/account/account.py:430
 #, python-format
-msgid "You need an Opening journal with centralisation checked to set the initial balance."
-msgstr "You need an Opening journal with centralisation checked to set the initial balance."
+msgid ""
+"You need an Opening journal with centralisation checked to set the initial "
+"balance."
+msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1090
+#: code:addons/account/account.py:1080
 #, python-format
 msgid "You should choose the periods that belong to the same company."
 msgstr "Bạn phải chọn kỳ kết toán thuộc cùng công ty."
@@ -11425,16 +11428,21 @@ msgid "You should configure the 'Gain Exchange Rate Account' in the accounting s
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:699
+#: code:addons/account/account_bank_statement.py:686
 #, python-format
-msgid "You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."
+msgid ""
+"You should configure the 'Loss Exchange Rate Account' in the accounting "
+"settings, to manage automatically the booking of accounting entries related "
+"to differences between exchange rates."
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/pos_box.py:60
-#: code:addons/account/wizard/pos_box.py:79
+#: code:addons/account/wizard/pos_box.py:57
+#: code:addons/account/wizard/pos_box.py:75
 #, python-format
-msgid "You should have defined an 'Internal Transfer Account' in your cash register's journal!"
+msgid ""
+"You should have defined an 'Internal Transfer Account' in your cash "
+"register's journal!"
 msgstr ""
 
 #. module: account
@@ -11459,19 +11467,12 @@ msgid "account.analytic.line.extended"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.menu,name:account.final_accounting_reports
-msgid "account.final_accounting_reports"
-msgstr ""
-
-#. module: account
 #: field:account.move,balance:0
 msgid "balance"
 msgstr "cân đối"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:706
-#: code:addons/account/account_bank_statement.py:745
-#: code:addons/account/account_bank_statement.py:760
+#: code:addons/account/account_bank_statement.py:693
 #, python-format
 msgid "change"
 msgstr "thay đổi"
@@ -11503,7 +11504,10 @@ msgstr "cưỡng bức chu kỳ"
 
 #. module: account
 #: help:account.bank.statement,name:0
-msgid "if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself"
+msgid ""
+"if you give the Name other then /, its created Accounting Entries Move will "
+"be with same name as statement name. This allows the statement entries to "
+"have the same references than the statement itself"
 msgstr ""
 
 #. module: account
@@ -11618,8 +11622,9 @@ msgstr "không xác định"
 
 #. module: account
 #: help:account.bank.statement,account_id:0
-msgid "used in statement reconciliation domain, but shouldn't be used elswhere."
-msgstr ""
+msgid ""
+"used in statement reconciliation domain, but shouldn't be used elswhere."
+msgstr "được sử dụng trong phạm vi đối soát, nhưng không được sử dụng ở nơi khác."
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -11628,7 +11633,8 @@ msgstr "năm"
 
 #. module: account
 #: model:res.company,overdue_msg:stock.res_company_1
-msgid "Dear Sir/Madam,\n"
+msgid ""
+"Dear Sir/Madam,\n"
 "\n"
 "Our records indicate that some payments on your account are still due. Please find details below.\n"
 "If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
