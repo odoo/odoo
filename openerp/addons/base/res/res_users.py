@@ -183,7 +183,7 @@ class Users(models.Model):
         return (default_user or self.env['res.users']).groups_id
 
     def _companies_count(self):
-        return self.env['res.company'].search_count([])
+        return self.env['res.company'].sudo().search_count([])
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -674,7 +674,8 @@ class GroupsView(models.Model):
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
-        self._update_user_groups_view()
+        if 'category_id' in values:
+            self._update_user_groups_view()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
