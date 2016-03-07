@@ -29,13 +29,8 @@
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
         </record>
 
-        <record model="res.groups" id="group_light_multi_company">
-            <field name="name">Enable Light Multi Company</field>
-        </record>
-
         <record model="res.groups" id="group_multi_company">
             <field name="name">Multi Companies</field>
-            <field name="implied_ids" eval="[(4, ref('group_light_multi_company'))]"/>
         </record>
 
         <record model="res.groups" id="group_multi_currency">

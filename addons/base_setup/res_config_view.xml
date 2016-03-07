@@ -57,9 +57,9 @@
                     </group>
                     <group>
                         <label for="id" string="Multi Company"/>
-                        <div name="group_light_multi_company">
-                            <field name="group_light_multi_company" class="oe_inline"/>
-                            <label for="group_light_multi_company"/>
+                        <div name="group_multi_currency">
+                            <field name="group_multi_currency" class="oe_inline"/>
+                            <label for="group_multi_currency"/>
                         </div>
                     </group>
                     <group>
@@ -69,7 +69,7 @@
                             <label for="group_multi_currency"/>
                         </div>
                     </group>
-                    <group attrs="{'invisible': [('group_light_multi_company','=',False)]}">
+                    <group attrs="{'invisible': [('group_multi_currency','=',False)]}">
                         <label for="module_inter_company_rules" string="Inter company"/>
                         <div name="inter_company">
                             <div name="module_inter_company_rules">
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     </group>
-                    <group string="Shared resources" name="company_share_resources" attrs="{'invisible': [('group_light_multi_company','=',False)]}">
+                    <group string="Shared resources" name="company_share_resources" attrs="{'invisible': [('group_multi_currency','=',False)]}">
                         <field name="company_share_partner" class="oe_inline" />
                     </group>
                     <group string="Google Integration" name="google">
