@@ -36,6 +36,7 @@ class LunchOrder(models.Model):
                                      states={'new': [('readonly', False)], False: [('readonly', False)]})
     total = fields.Float(compute='_compute_total', string="Total", store=True)
     state = fields.Selection([('new', 'New'),
+                              ('partial_confirmed', 'Partial Received'),
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, copy=False, default='new',
@@ -102,28 +103,24 @@ class LunchOrder(models.Model):
     def _compute_order_state(self):
         """
         Update the state of lunch.order based on its orderlines. Here is the logic:
-        - if at least one order line is cancelled, the order is set as cancelled
-        - if no line is cancelled but at least one line is not confirmed, the order is set as new
-        - if all lines are confirmed, the order is set as confirmed
+        -If all lines are new or ordered, the order is set as 'New'
+        -If all lines are received, the order is set as 'Received'
+        -If all lines are cancelled, the order is set as 'Cancelled'
+        -If at least one or more lines are (received and new) or (received and ordered) or (received and ordered and new and cancelled), the order is set as 'Partial Received'
+        -If at least one or more lines are (new and cancelled) or (new and ordered) or (ordered and cancelled) or (new and ordered and cancelled) , the order is set as 'New'
+        -If at least one or more lines are received and cancelled, the order is set as 'Received'
         """
         if not self.order_line_ids:
             self.state = 'new'
         else:
-            isConfirmed = True
-            for orderline in self.order_line_ids:
-                if orderline.state == 'cancelled':
-                    self.state = 'cancelled'
-                    return
-                elif orderline.state == 'confirmed':
-                    continue
-                else:
-                    isConfirmed = False
-
-            if isConfirmed:
+            if all([x.state == 'cancelled' for x in self.order_line_ids]):
+                self.state = 'cancelled'
+            elif all([x.state in ('confirmed', 'cancelled') for x in self.order_line_ids]):
                 self.state = 'confirmed'
-            else:
+            elif all([x.state in ('new', 'ordered', 'cancelled') for x in self.order_line_ids]):
                 self.state = 'new'
-        return
+            elif any([x.state == 'confirmed' for x in self.order_line_ids]):
+                self.state = 'partial_confirmed'
 
 
 class LunchOrderLine(models.Model):
