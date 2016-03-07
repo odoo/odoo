@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
 
@@ -15,20 +15,22 @@ class sale_order_line(osv.Model):
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
-        line_ids = super(sale_order, self)._cart_find_product_line(cr, uid, ids, product_id, line_id, context=context)
+    @api.multi
+    def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
+        self.ensure_one()
+        lines = super(sale_order, self)._cart_find_product_line(product_id, line_id)
         if line_id:
-            return line_ids
-        linked_line_id = kwargs.get('linked_line_id')
-        optional_product_ids = kwargs.get('optional_product_ids')
-        for so in self.browse(cr, uid, ids, context=context):
-            domain = [('id', 'in', line_ids)]
-            domain += linked_line_id and [('linked_line_id', '=', linked_line_id)] or [('linked_line_id', '=', False)]
-            if optional_product_ids:
-                domain += [('option_line_ids.product_id', '=', pid) for pid in optional_product_ids]
-            else:
-                domain += [('option_line_ids', '=', False)]
-            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
+            return lines
+        linked_line_id = kwargs.get('linked_line_id', False)
+        optional_product_ids = set(kwargs.get('optional_product_ids', []))
+
+        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
+        if optional_product_ids:
+            # only match the lines where where chosen subproducs is a subset of optional products chosen on the existing lines
+            lines = lines.filtered(lambda line: optional_product_ids.issubset(line.mapped('option_line_ids.product_id.id')))
+        else:
+            lines = lines.filtered(lambda line: not line.option_line_ids)
+        return lines
 
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
