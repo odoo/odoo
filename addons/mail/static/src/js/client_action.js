@@ -650,6 +650,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             view_type: 'form',
             views: [[false, 'form']],
             target: 'new',
+            context: "{'default_no_auto_thread': False}",
         });
     },
 });
