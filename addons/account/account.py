@@ -642,7 +642,7 @@ class account_account(osv.osv):
             done_list = []
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
-        default.update(code=_("%s (copy)") % (account['code'] or ''))
+        default.setdefault('code', _("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
         if account.id in done_list:
