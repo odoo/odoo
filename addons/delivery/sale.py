@@ -98,7 +98,11 @@ class sale_order(osv.Model):
                                              qty=values['product_uom_qty'], uom=False, qty_uos=0, uos=False, name='', partner_id=order.partner_id.id,
                                              lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None)
             if res['value'].get('purchase_price'):
-                values['purchase_price'] = res['value'].get('purchase_price')
+                cost = grid_obj.get_cost(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context)
+                if cost and order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
+                    cost = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
+                        cost, context=dict(context or {}, date=order.date_order))
+                values['purchase_price'] = cost or res['value'].get('purchase_price')
             if order.order_line:
                 values['sequence'] = order.order_line[-1].sequence + 1
             line_id = line_obj.create(cr, uid, values, context=context)
