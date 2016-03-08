@@ -20,7 +20,7 @@ class TestSaleService(TestSale):
         self.assertEqual(so.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
         # check task creation
-        project = self.env.ref('sale_service.project_GAP')
+        project = self.env.ref('sale_timesheet.project_GAP')
         task = project.task_ids.filtered(lambda t: t.name == '%s:%s' % (so.name, prod_task.name))
         self.assertTrue(task, 'Sale Service: task is not created')
         self.assertEqual(task.partner_id, so.partner_id, 'Sale Service: customer should be the same on task and on SO')
