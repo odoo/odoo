@@ -530,7 +530,6 @@ class pos_session(osv.osv):
             st_values = {
                 'journal_id': journal.id,
                 'user_id': uid,
-                'company_id': pos_config.company_id.id
             }
             statements.append(create_statement(st_values, context=context))
 
@@ -1248,7 +1247,6 @@ class pos_order(osv.osv):
                     'journal_id' : sale_journal_id,
                     'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
-                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
