@@ -205,11 +205,8 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
-        if '%d' in query or '%f' in query:
-            _logger.info("SQL queries cannot contain %%d or %%f anymore. Use only %%s:\n%s" % query, 
-                exc_info=_logger.isEnabledFor(logging.DEBUG))
         if params and not isinstance(params, (tuple, list, dict)):
-            _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
+            # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
@@ -219,10 +216,6 @@ class Cursor(object):
         try:
             params = params or None
             res = self._obj.execute(query, params)
-        except psycopg2.ProgrammingError, pe:
-            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.info("Programming error: %s, in query %s", pe, query)
-            raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.info("bad query: %s", self._obj.query or query)
