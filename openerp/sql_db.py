@@ -11,6 +11,7 @@ the ORM does, in fact.
 from contextlib import contextmanager
 from functools import wraps
 import logging
+import time
 import urlparse
 import uuid
 
@@ -47,7 +48,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import frame_codeinfo
-from datetime import datetime as mdt
 from datetime import timedelta
 import threading
 from inspect import currentframe
@@ -213,7 +213,7 @@ class Cursor(object):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
-            now = mdt.now()
+            now = time.time()
             _logger.debug("query: %s", query)
 
         try:
@@ -233,8 +233,7 @@ class Cursor(object):
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = mdt.now() - now
-            delay = delay.seconds * 1E6 + delay.microseconds
+            delay = (time.time() - now) * 1E6
 
             res_from = re_from.match(query.lower())
             if res_from:
