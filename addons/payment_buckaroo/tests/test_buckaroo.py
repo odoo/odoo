@@ -1,37 +1,35 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import objectify
 import urlparse
 
-import openerp
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_buckaroo.controllers.main import BuckarooController
-from openerp.tools import mute_logger
+import odoo
+from odoo.tools import mute_logger
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment.tests.common import PaymentAcquirerCommon
+from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(False)
+@odoo.tests.common.at_install(False)
+@odoo.tests.common.post_install(False)
 class BuckarooCommon(PaymentAcquirerCommon):
 
     def setUp(self):
         super(BuckarooCommon, self).setUp()
-        cr, uid = self.cr, self.uid
-        self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        self.base_url = self.env['ir.config_parameter'].get_param('web.base.url')
 
         # get the buckaroo account
-        model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_buckaroo', 'payment_acquirer_buckaroo')
+        self.buckaroo_id = self.env.ref('payment_buckaroo.payment_acquirer_buckaroo')
 
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(False)
+@odoo.tests.common.at_install(False)
+@odoo.tests.common.post_install(False)
 class BuckarooForm(BuckarooCommon):
 
     def test_10_Buckaroo_form_render(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
-        buckaroo = self.payment_acquirer.browse(self.cr, self.uid, self.buckaroo_id, None)
-        self.assertEqual(buckaroo.environment, 'test', 'test without test environment')
+        self.assertEqual(self.buckaroo_id.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -39,7 +37,7 @@ class BuckarooForm(BuckarooCommon):
 
         form_values = {
             'add_returndata': None,
-            'Brq_websitekey': buckaroo.brq_websitekey,
+            'Brq_websitekey': self.buckaroo_id.brq_websitekey,
             'Brq_amount': '2240.0',
             'Brq_currency': 'EUR',
             'Brq_invoicenumber': 'SO004',
@@ -53,12 +51,11 @@ class BuckarooForm(BuckarooCommon):
         }
 
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.buckaroo_id,
+        [res] = self.buckaroo_id.render(
             'SO004', 2240.0, self.currency_euro_id,
             partner_id=None,
-            partner_values=self.buyer_values,
-            context=context)
+            values=self.buyer_values
+            )
 
         # check form result
         tree = objectify.fromstring(res)
@@ -77,27 +74,24 @@ class BuckarooForm(BuckarooCommon):
         # ----------------------------------------
 
         # create a new draft tx
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
+        tx_id = self.env['payment.transaction'].create(
+            {
                 'amount': 2240.0,
-                'acquirer_id': self.buckaroo_id,
+                'acquirer_id': self.buckaroo_id.id,
                 'currency_id': self.currency_euro_id,
                 'reference': 'SO004',
                 'partner_id': self.buyer_id,
-            }, context=context
-        )
+            })
 
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.buckaroo_id,
+        res = self.buckaroo_id.render(
             'should_be_erased', 2240.0, self.currency_euro,
-            tx_id=tx_id,
             partner_id=None,
-            partner_values=self.buyer_values,
-            context=context)
+            values=self.buyer_values
+            )
 
         # check form result
-        tree = objectify.fromstring(res)
+        tree = objectify.fromstring(res[0])
         self.assertEqual(tree.get('action'), 'https://testcheckout.buckaroo.nl/html/', 'Buckaroo: wrong form POST url')
         for form_input in tree.input:
             if form_input.get('name') in ['submit']:
@@ -108,12 +102,10 @@ class BuckarooForm(BuckarooCommon):
                 'Buckaroo: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
-    @mute_logger('openerp.addons.payment_buckaroo.models.buckaroo', 'ValidationError')
+    @mute_logger('odoo.addons.payment_buckaroo.models.buckaroo', 'ValidationError')
     def test_20_buckaroo_form_management(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
-        buckaroo = self.payment_acquirer.browse(self.cr, self.uid, self.buckaroo_id, None)
-        self.assertEqual(buckaroo.environment, 'test', 'test without test environment')
+        self.assertEqual(self.buckaroo_id.environment, 'test', 'test without test environment')
 
         # typical data posted by buckaroo after client has successfully paid
         buckaroo_post_data = {
@@ -142,22 +134,20 @@ class BuckarooForm(BuckarooCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.payment_transaction.form_feedback(cr, uid, buckaroo_post_data, 'buckaroo', context=context)
+            self.env['payment.transaction'].form_feedback(buckaroo_post_data, 'buckaroo')
 
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
+        tx = self.env['payment.transaction'].create(
+            {
                 'amount': 2240.0,
-                'acquirer_id': self.buckaroo_id,
+                'acquirer_id': self.buckaroo_id.id,
                 'currency_id': self.currency_euro_id,
                 'reference': 'SO004',
                 'partner_name': 'Norbert Buyer',
                 'partner_country_id': self.country_france_id,
-            }, context=context
-        )
+            })
         # validate it
-        self.payment_transaction.form_feedback(cr, uid, buckaroo_post_data, 'buckaroo', context=context)
+        self.env['payment.transaction'].form_feedback(buckaroo_post_data, 'buckaroo')
         # check state
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, buckaroo_post_data.get('BRQ_TRANSACTIONS'), 'Buckaroo: validation did not update tx payid')
 
@@ -167,12 +157,11 @@ class BuckarooForm(BuckarooCommon):
         # now buckaroo post is ok: try to modify the SHASIGN
         buckaroo_post_data['BRQ_SIGNATURE'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
         with self.assertRaises(ValidationError):
-            self.payment_transaction.form_feedback(cr, uid, buckaroo_post_data, 'buckaroo', context=context)
+            tx.form_feedback(buckaroo_post_data, 'buckaroo')
 
         # simulate an error
-        buckaroo_post_data['BRQ_STATUSCODE'] = 2
+        buckaroo_post_data['BRQ_STATUSCODE'] = '2'
         buckaroo_post_data['BRQ_SIGNATURE'] = '4164b52adb1e6a2221d3d8a39d8c3e18a9ecb90b'
-        self.payment_transaction.form_feedback(cr, uid, buckaroo_post_data, 'buckaroo', context=context)
+        tx.form_feedback(buckaroo_post_data, 'buckaroo')
         # check state
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'error', 'Buckaroo: erroneous validation did not put tx into error state')
