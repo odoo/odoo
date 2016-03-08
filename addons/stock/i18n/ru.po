@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-23 22:39+0000\n"
+"PO-Revision-Date: 2016-02-27 16:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,16 @@ msgstr " (%s резерв)"
 #, python-format
 msgid " (reserved)"
 msgstr " (резерв)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -2542,12 +2552,12 @@ msgstr "Переместите Отрицательный Квант"
 #. module: stock
 #: field:stock.move,split_from:0
 msgid "Move Split From"
-msgstr ""
+msgstr "Разделить Перемещение Из"
 
 #. module: stock
 #: field:procurement.rule,procure_method:0
 msgid "Move Supply Method"
-msgstr ""
+msgstr "Метод Перемещения Поставки"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2559,7 +2569,7 @@ msgstr "Дата перемещения: запланированная дата
 #. module: stock
 #: help:procurement.order,move_dest_id:0
 msgid "Move which caused (created) the procurement"
-msgstr ""
+msgstr "Движение, которое вызвало (созданные) в закупках"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -2832,7 +2842,7 @@ msgstr "Дополнительные подробности локализаци
 #. module: stock
 #: help:stock.move,returned_move_ids:0
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "Дополнительно: все возвращенные перемещения, созданные из этого перемещения"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
@@ -2878,17 +2888,17 @@ msgstr "Источник"
 #. module: stock
 #: field:stock.move,origin_returned_move_id:0
 msgid "Origin return move"
-msgstr ""
+msgstr "Происхождение Перемещения Возврата"
 
 #. module: stock
 #: field:stock.move,move_orig_ids:0
 msgid "Original Move"
-msgstr ""
+msgstr "Оригинальное Перемещение"
 
 #. module: stock
 #: field:stock.warehouse,out_type_id:0
 msgid "Out Type"
-msgstr ""
+msgstr "Тип Выбытия"
 
 #. module: stock
 #: field:product.product,outgoing_qty:0 field:product.template,outgoing_qty:0
@@ -3207,7 +3217,7 @@ msgstr "Комплектации для Групп"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr ""
+msgstr "Сборки, которые опаздывают по запланированному времени"
 
 #. module: stock
 #: field:make.procurement,date_planned:0
@@ -3700,7 +3710,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,reserved_availability:0
 msgid "Quantity that has already been reserved for this move"
-msgstr ""
+msgstr "Количество, которое уже было зарезервировано для этого перемещения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3758,7 +3768,7 @@ msgstr "Приход"
 #. module: stock
 #: field:stock.warehouse,reception_route_id:0
 msgid "Receipt Route"
-msgstr ""
+msgstr "Маршрут Получения"
 
 #. module: stock
 #: code:addons/stock/stock.py:3389
@@ -3832,7 +3842,7 @@ msgstr "Используемая нумерация"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr ""
+msgstr "Ссылка должна быть уникальной в рамках одной компании!"
 
 #. module: stock
 #: help:stock.picking,origin:0
@@ -3876,19 +3886,19 @@ msgstr ""
 #. module: stock
 #: view:product.removal:stock.view_removal
 msgid "Removal"
-msgstr ""
+msgstr "Удаление"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: field:stock.location,removal_strategy_id:0
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Стратегия удаления"
 
 #. module: stock
 #: code:addons/stock/stock.py:479
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "Стратегия удаления %s не реализована."
 
 #. module: stock
 #. openerp-web
@@ -4032,7 +4042,7 @@ msgstr "Маршруты"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr ""
+msgstr "Маршруты будут созданы для этих складов снабжения и Вы сможете выбирать их в продуктах и категориях продукции"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4098,12 +4108,12 @@ msgstr "Запланированная дата обработки этого п
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "Запланированное для первой части отгрузки время должно быть обработано. Установка значения вручную установит его в качестве предполагаемой даты для всех складских перемещений."
 
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "Запланированное время для последней части отгрузки должно быть обработано"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -4621,7 +4631,7 @@ msgstr "Средняя задержка в днях между подтверж�
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "Штрих-код для местоположения должен быть уникальным в компании!"
 
 #. module: stock
 #: code:addons/stock/stock.py:3874
@@ -4634,7 +4644,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Код склада должен быть уникальным в рамках одной компании!"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -4653,7 +4663,7 @@ msgstr "Компания, которой принадлежат кванты "
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "Дата, которая будет использоваться для проверки уровня запасов продукции и проверки складских перемещений связанных с этой инвентаризацией."
 
 #. module: stock
 #: code:addons/stock/stock.py:3522
@@ -4661,14 +4671,14 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "Склад снабжения по умолчанию должен быть иным, чем сам склад!"
 
 #. module: stock
 #: code:addons/stock/stock.py:1067
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Место назначения должно быть одинаковым для всех перемещений комплектации."
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -4685,7 +4695,7 @@ msgstr "Перемещение кванта зарезервировано дл�
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Имя склада должно быть уникальным в рамках одной компании!"
 
 #. module: stock
 #: help:stock.quant,propagated_from_id:0
@@ -4695,7 +4705,7 @@ msgstr "Отрицательный квант это приходит от"
 #. module: stock
 #: help:stock.quant.package,parent_id:0
 msgid "The package containing this item"
-msgstr ""
+msgstr "Упаковка, содержащая этот элемент"
 
 #. module: stock
 #: help:stock.quant,package_id:0
@@ -4705,7 +4715,7 @@ msgstr "Пакет, содержащий этот квант"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "Тип комплектования определяет вид комплектования"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -4922,14 +4932,14 @@ msgstr ""
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_owner:0
 msgid "This way you can receive products attributed to a certain owner. "
-msgstr ""
+msgstr "Таким образом, Вы можете получить продукты, привязанные к определенному владельцу."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "Здесь Вы увидите местоположения и сможете определить несколько типов комплектации и склады."
 
 #. module: stock
 #. openerp-web
@@ -5170,7 +5180,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "Используйте этот помощник для создания запроса на закупку этого\n                        продукта. В зависимости от конфигурации продукта, можно\n                        создать черновик проекта заказа на поставку, производственного заказа или\n                        новой задачи."
 
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
@@ -5363,7 +5373,7 @@ msgstr "Внимание: неправильное количество!"
 #: help:product.putaway,fixed_location_ids:0
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "Если метод фиксированный, это местоположение будет использоваться для хранения продуктов"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -5371,7 +5381,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "Когда виртуальный склад меньше Мин. Количества, указанного в этом поле, Odoo инициирует закупку, чтобы довести прогнозируемое количество до Макс. Количества."
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -5379,14 +5389,14 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "Когда виртуальный склад меньше Мин. Количества, Odoo инициирует закупку, чтобы довести прогнозируемый объем до Количества, определенного как Maкс. Количество."
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "При выборе серийного номера (партии), количество корректируется по отношению\n                            количества этого серийного номера (партии) а не общего количества продукта."
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0

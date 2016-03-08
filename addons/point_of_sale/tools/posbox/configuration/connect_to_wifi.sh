@@ -7,6 +7,7 @@ function connect () {
 	WPA_PASS_FILE="/tmp/wpa_pass.txt"
 	PERSISTENT_WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 	CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt" # used to repair connection when we lose it
+	LOST_WIFI_FILE="/tmp/lost_wifi.txt"
 	ESSID="${1}"
 	PASSWORD="${2}"
 	PERSIST="${3}"
@@ -15,6 +16,7 @@ function connect () {
 	sleep 3
 
 	sudo pkill -f keep_wifi_alive.sh
+	WIFI_WAS_LOST=$?
 
 	# make network choice persistent
 	if [ -n "${ESSID}" ] ; then
@@ -54,13 +56,24 @@ function connect () {
 
 	# give dhcp some time
 	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet addr:" ; do sleep 0.1 ; done'
+	TIMEOUT_RETURN=$?
 
-	if [ $? -eq 124 ] && [ -z "${NO_AP}" ] ; then
+	if [ ${TIMEOUT_RETURN} -eq 124 ] && [ -z "${NO_AP}" ] ; then
 		logger -t posbox_connect_to_wifi "Failed to connect, forcing Posbox AP"
 		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh "force" &
 	else
-		logger -t posbox_connect_to_wifi "Restarting odoo"
-		sudo service odoo restart
+		if [ ${TIMEOUT_RETURN} -ne 124 ] ; then
+			rm -f "${LOST_WIFI_FILE}"
+		fi
+
+		if [ ! -f "${LOST_WIFI_FILE}" ] ; then
+			logger -t posbox_connect_to_wifi "Restarting odoo"
+			sudo service odoo restart
+		fi
+
+		if [ ${WIFI_WAS_LOST} -eq 0 ] ; then
+			touch "${LOST_WIFI_FILE}"
+		fi
 
 		logger -t posbox_connect_to_wifi "Starting wifi keep alive script"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/keep_wifi_alive.sh &

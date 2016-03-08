@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-01-21 01:16+0000\n"
+"PO-Revision-Date: 2016-01-29 06:12+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1552,7 +1552,7 @@ msgid ""
 "* Stock Value Variation (Graph)\n"
 "* Work Order Analysis\n"
 "    "
-msgstr "\nOdoo的制造过程管理\n===========================================\n\n本模块覆盖了计划、订单、仓库、从原材料和零部件生产或组装成品的功能，处理生产计划中的原材料、必需的机器操作、工具和人力资源。\n\n对可库存商品、消耗品和服务，本模块提供了计划管理，它们和其他软件功能完全集成在一起。举个例子,你可以在物料清单里设置一个子合同服务，系统会自动根据订单去采购所需的零部件。\n\n关键特点\n------------\n* 库存生产/订单生产\n* 无限制多级物料清单 \n* 无限制多级工艺路线 \n* 工艺路线、工作中心与辅助核算的集成 \n* 定期执行行MRP运算 \n* 允许浏览包括子件和虚件在内的完整物料清单明细\n\nMRP看板和报表包括:\n-----------------------------------------\n* 计划外采购(图表\n* 库存价值变化(图表)\n* 工单分析\n    "
+msgstr "\n在Odoo管理制造过程\n===========================================\n\n本模块覆盖了计划、订单、仓库、从原材料和零部件生产或组装成品的功能，处理生产计划中的原材料、必需的机器操作、工具和人力资源。\n\n对可库存商品、消耗品和服务，本模块提供了计划管理，它们和其他软件功能完全集成在一起。举个例子,你可以在物料清单里设置一个子合同服务，系统会自动根据订单去采购所需的零部件。\n\n关键特点\n------------\n* 按库存生产/按订单生产\n* 无限制多级物料清单 \n* 无限制多级工艺路线 \n* 工艺路线、工作中心与分析会计的集成 \n* 定期执行MRP运算 \n* 允许浏览包括子件和虚件在内的完整物料清单明细\n\nMRP看板和报表包括:\n-----------------------------------------\n* 补货异常(图表)\n* 库存价值变化(图表)\n* 工单分析\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -2796,7 +2796,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr "\n这个模块的功能是计算补货。\n==============================================\n\n这个模块仅依赖于product模块，但是对product模块本身没有用处。\n补货代表了基于补货规则需要处理的补货需求。\n当一个补货单被新建后，就会被确认。当发现了一个规则后，\n它将处于运行状态。然后，对于已执行的规则，它将检查需要处理的事物。\n最后它处于完成状态。一个补货\n也可能进入到异常状态，例如，当没有找到规则时，它将被停止。\n\n这个机制被多个模块扩展。仓库的补货规则将\n创建一个移动，然后，当移动完成后，这个补货就被处理完成。\n服务类型的补货将创建一个任务，采购或生产的补货将\n创建一个采购单或生产单。\n\n计划任务将检查对于已确认的补货能否指定一个规则\n并且将处于运行状态的补货置于完成状态。\n\n处于异常状态的补货应该被检查并被重新运行。\n    "
+msgstr "\n这个模块用来计算补货。\n==============================================\n\n这个模块仅依赖于product模块，但是对product模块本身没有用处。\n补货代表了基于补货规则需要处理的补货需求。\n当一个补货单被新建后，就会被确认。当发现了一个规则后，\n它将处于运行状态。然后，对于已执行的规则，它将检查需要处理的事物。\n最后它处于完成状态。一个补货\n也可能进入到异常状态，例如，当没有找到规则时，它将被停止。\n\n这个机制被多个模块扩展。仓库的补货规则将\n创建一个移动，然后，当移动完成后，这个补货就被处理完成。\n服务类型的补货将创建一个任务，采购或生产的补货将\n创建一个采购单或生产单。\n\n计划任务将检查对于已确认的补货能否指定一个规则\n并且将处于运行状态的补货置于完成状态。\n\n处于异常状态的补货应该被检查并被重新运行。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3604,7 +3604,7 @@ msgid ""
 "It is basically used when we want to keep track of production orders generated\n"
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
-msgstr "\n该模块为用户同时提供安装MRP和销售模块的设备。\n==================================================================================== \n\n用于跟踪由销售订单转化为生产单的过程。\n它在产品订单中增加了销售名称和销售参数。\n "
+msgstr "\n该模块为用户同时提供安装MRP和销售模块的设施。\n==================================================================================== \n\n用于跟踪由销售订单转化为生产单的过程。\n它在产品订单中增加了销售名称和销售参数。\n "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -5775,7 +5775,7 @@ msgstr "如果没有被正确设置，则只能改变联系人的公司。如果
 #: code:addons/base/ir/ir_model.py:475
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr "改变一个字段的所属模型是不允许的！"
+msgstr "改变字段的模型是禁止的！"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:419
@@ -8561,7 +8561,7 @@ msgstr "帮您完成销售网点的快速录入订单，简单的付款方式、
 msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
-msgstr "帮你处理需要的账单，如果你是不是会计人员，我们建议你只安装开票模块。"
+msgstr "帮你处理记账需求，如果你是不是会计人员，我们建议你只安装开票模块。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
@@ -9466,7 +9466,7 @@ msgstr "日本"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr "日本会计科目表"
+msgstr "日本- 会计"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11719,7 +11719,7 @@ msgstr "薪水册"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr "薪水册会计"
+msgstr "工资表会计"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_evaluation
@@ -12852,7 +12852,7 @@ msgstr "沙特阿拉伯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr "沙特阿拉伯会计"
+msgstr "Saudi Arabia - Accounting"
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
@@ -14423,7 +14423,7 @@ msgstr "这是用于存储打印结果的附件的文件名。如果不想保存
 #: model:ir.module.module,description:base.module_l10n_no
 msgid ""
 "This is the module to manage the accounting chart for Norway in Open ERP."
-msgstr "这是Open ERP中管理挪威财务报表的模块."
+msgstr "This is the module to manage the accounting chart for Norway in Open ERP."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_mass_mailing
@@ -15313,7 +15313,7 @@ msgstr "可见"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr "仓库管理系统会计"
+msgstr "WMS会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs

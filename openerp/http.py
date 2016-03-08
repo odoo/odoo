@@ -185,6 +185,7 @@ class WebRequest(object):
         self.disable_db = False
         self.uid = None
         self.endpoint = None
+        self.endpoint_arguments = None
         self.auth_method = None
         self._cr = None
 
@@ -267,7 +268,7 @@ class WebRequest(object):
         arguments = dict((k, v) for k, v in arguments.iteritems()
                          if not k.startswith("_ignored_"))
 
-        endpoint.arguments = arguments
+        self.endpoint_arguments = arguments
         self.endpoint = endpoint
         self.auth_method = auth
 
@@ -291,7 +292,8 @@ class WebRequest(object):
             _logger.error(msg, *params)
             raise werkzeug.exceptions.BadRequest(msg % params)
 
-        kwargs.update(self.endpoint.arguments)
+        if self.endpoint_arguments:
+            kwargs.update(self.endpoint_arguments)
 
         # Backward for 7.0
         if self.endpoint.first_arg_is_req:

@@ -208,6 +208,7 @@ class xml_decl(osv.TransientModel):
                 left join res_country countrypartner on countrypartner.id = res_partner.country_id
                 join product_product on inv_line.product_id=product_product.id
                 join product_template on product_product.product_tmpl_id=product_template.id
+                left join account_period on account_period.id=inv.period_id
             where
                 inv.state in ('open','paid')
                 and inv.company_id=%s
@@ -218,8 +219,8 @@ class xml_decl(osv.TransientModel):
                      or (res_country.code is null and countrypartner.code is not null
                      and not countrypartner.code=%s))
                 and inv.type in (%s, %s)
-                and to_char(inv.date_invoice, 'YYYY')=%s
-                and to_char(inv.date_invoice, 'MM')=%s
+                and to_char(account_period.date_start, 'YYYY')=%s
+                and to_char(account_period.date_start, 'MM')=%s
             """
 
         cr.execute(sqlreq, (company.id, company.partner_id.country_id.code,
