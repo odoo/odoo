@@ -10,7 +10,7 @@ class TestsProcurement(common.TransactionCase):
         self.procurement_order0 = self.env['procurement.order'].create({
             'name': 'Procurement Test',
             'company_id': self.ref('base.main_company'),
-            'product_id': self.ref('product.product_product_32'),
+            'product_id': self.ref('product.product_product_3'),
             'product_qty': 15.0,
             'product_uom': self.ref('product.product_uom_unit'),
         })
