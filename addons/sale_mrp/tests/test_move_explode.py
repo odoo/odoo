@@ -48,7 +48,7 @@ class TestMoveExplode(common.TransactionCase):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': self.product_bom.name, 'product_id': self.product_bom.id, 'product_uom_qty': 1, 'product_uom': self.product_bom.uom_id.id})],
+            'order_line': [(0, 0, {'name': self.product_bom.name, 'product_id': self.product_bom.id, 'product_uom_qty': 1, 'product_uom_id': self.product_bom.uom_id.id})],
             'pricelist_id': self.pricelist.id,
         }
         self.so = self.SaleOrder.create(so_vals)

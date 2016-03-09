@@ -47,7 +47,7 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'product_id': product_id,
                 'product_qty': qty,
                 'bom_id': bom_id,
-                'product_uom': uom_id})
+                'product_uom_id': uom_id})
 
         def create_bom(product_tmpl_id, qty, uom_id, bom_type):
             return self.MrpBom.create({
@@ -342,7 +342,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': self.product.name, 'product_id': self.product.id, 'product_uom_qty': 5, 'product_uom': self.product.uom_id.id, 'price_unit': self.product.list_price})],
+            'order_line': [(0, 0, {'name': self.product.name, 'product_id': self.product.id, 'product_uom_qty': 5, 'product_uom_id': self.product.uom_id.id, 'price_unit': self.product.list_price})],
             'pricelist_id': self.env.ref('product.list0').id,
         }
         self.so = self.SaleOrder.create(so_vals)
