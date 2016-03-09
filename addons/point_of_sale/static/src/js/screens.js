@@ -1179,7 +1179,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     input.value = '';
                 }else{
                     input.value = value;
-                    input.select();
+
+                    // Microsoft Edge >= 12 crashes (code 800a025e) when calling
+                    // select on a non-empty input element not part of document
+                    if (! this.hidden) {
+                        input.select();
+                    }
                 }
             }
         },
