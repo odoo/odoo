@@ -1423,6 +1423,7 @@ class procurement_order(osv.osv):
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
+        taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id == procurement.company_id.id)
         # It is necessary to have the appropriate fiscal position to get the right tax mapping
         fiscal_position = False
         fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
