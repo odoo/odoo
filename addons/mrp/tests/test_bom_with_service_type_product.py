@@ -20,7 +20,7 @@ class TestBomWithServiceTypeProduct(common.TransactionCase):
         self.product_3 = self.env.ref('product.product_product_3')
         self.product_uom_unit = self.env.ref('product.product_uom_unit')
         self.product_2 = self.env.ref('product.product_product_2')
-        self.product_44 = self.env.ref('product.product_product_44')
+        self.product_44 = self.env.ref('product.consu_delivery_01')
         self.mrp_production_action = self.env.ref('mrp.menu_mrp_production_action')
 
         self.bill_of_material_product = self.MrpBom.create({
