@@ -79,7 +79,8 @@ var Dialog = Widget.extend({
             var text = b.text || "";
             var classes = b.classes || ((buttons.length === 1)? "btn-primary" : "btn-default");
 
-            var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': classes} }}}));
+            var attrs = { 'class': classes, 'accesskey': b.accesskey };
+            var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: attrs }}}));
             $b.prop('disabled', b.disabled);
             $b.on('click', function(e) {
                 var click_def;
