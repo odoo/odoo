@@ -241,12 +241,16 @@ class website(orm.Model):
         # If the user is signed in, and has a pricelist set different than the public user pricelist
         # then this pricelist will always be considered as available
         available_pricelists = self.get_pricelist_available(cr, uid, context=context)
+        pl = None
         if request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
             #  - Either, he entered a coupon code
-            return self.pool['product.pricelist'].browse(cr, uid, [request.session['website_sale_current_pl']], context=context)[0]
-        else:
+            pl = self.pool['product.pricelist'].browse(cr, uid, [request.session['website_sale_current_pl']], context=context)[0]
+            if pl not in available_pricelists:
+                pl = None
+                request.session.pop('website_sale_current_pl')
+        if not pl:
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
             # If the user has a saved cart, it take the pricelist of this cart, except if
             # the order is no longer draft (It has already been confirmed, or cancelled, ...)
@@ -264,7 +268,7 @@ class website(orm.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
 
-            return pl
+        return pl
 
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
