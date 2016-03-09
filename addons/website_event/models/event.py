@@ -22,6 +22,15 @@ class event(models.Model):
         string='Website Messages',
         help="Website communication history",
     )
+    is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
+
+    def _compute_is_participating(self):
+        # we don't allow public user to see participating label
+        if self.env.user != self.env.ref('base.public_user'):
+            email = self.env.user.partner_id.email
+            for event in self:
+                domain = ['&', '|', ('email', '=', email), ('partner_id.email', '=', email), ('event_id', '=', event.id)]
+                event.is_participating = self.env['event.registration'].search_count(domain)
 
     @api.multi
     @api.depends('name')
