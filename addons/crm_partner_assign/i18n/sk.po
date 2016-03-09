@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-01-08 19:21+0000\n"
+"PO-Revision-Date: 2016-02-07 18:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n\n<p>Dobrý deň,</p>\n\n\n<p>Boli sme kontaktovaní výhliadkami, ktoré sú vo vašom regióne. Preto boli tieto iniciatívy priradené ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n<li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Prosím pripojte sa na Váš <a href=\"${object.get_portal_url()}\">Partnerský portál</a> pre viac detailov. Na každej iniciatíve sú dve tlačidlá v ľavom hornom rohu, ktoré by ste mali stlačiť po kontakte iniciatívou: \"Mám záujem\" & \"Nemám záujem\".</p>\n% else:\n<p>\nNemáte ešte portálový prístup do našej databázy. Prosím kontaktujte\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>Iniciatíva bude odoslaná na iného spoločníka, ak nebudete do 20 dní kontaktovať iniciatívu.</p>\n\n<p>Vďaka,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: Zdá sa, že nemáte priradeného manažéra účtu, prosím kontaktujte nás.\n% endif"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -62,13 +62,13 @@ msgstr "# z prípadov"
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,opp:0
 msgid "# of Opportunity"
-msgstr ""
+msgstr "# Príležitosti"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:48
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Mám záujem o túto iniciatívu.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:53
@@ -81,7 +81,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
+msgstr "<p>Nemám záujem o túto iniciatívu. Nekontaktoval som iniciatívu.</p>"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,activation:0
@@ -100,17 +100,17 @@ msgstr "Aktívny"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_assign:0
 msgid "Assign Date"
-msgstr ""
+msgstr "Dátum priradenia"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Mesiac priradenia"
 
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Priradiť predajcu priradeného partnera"
 
 #. module: crm_partner_assign
 #: field:crm.lead,date_assign:0
@@ -126,7 +126,7 @@ msgstr "Pridelené"
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 #: field:res.partner,opportunity_assigned_ids:0
 msgid "Assigned Opportunities"
-msgstr ""
+msgstr "Priradené príležitosti"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
@@ -136,33 +136,33 @@ msgstr ""
 #: field:crm.lead,partner_assigned_id:0
 #: field:crm.lead.assignation,partner_assigned_id:0
 msgid "Assigned Partner"
-msgstr ""
+msgstr "Priradený partner"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Automatické priradenie"
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Automaticky vylepšený HTML obsah"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability:0
 msgid "Avg Probability"
-msgstr ""
+msgstr "Priem. pravdepodobnosť"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr ""
+msgstr "Výkaz CRM iniciatívy"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partner Report"
-msgstr ""
+msgstr "Výkaz CRM partnera"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -209,7 +209,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0
 msgid "Contents"
-msgstr ""
+msgstr "Obsahy"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -262,22 +262,22 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr ""
+msgstr "Dátum partnerstva"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr ""
+msgstr "Dátum posudku"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_open:0
 msgid "Delay to Assign"
-msgstr ""
+msgstr "Meškanie do priradenia"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
 msgid "Delay to Close"
-msgstr ""
+msgstr "Meškanie do zatvorenia"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
@@ -287,12 +287,12 @@ msgstr "Detaily"
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "Kontaktoval ste inciatívu?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Kontaktoval ste zákazníka?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
@@ -304,7 +304,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr ""
+msgstr "Emailová šablóna"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
@@ -337,28 +337,28 @@ msgstr "Rozšírené filtre..."
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,partner_id:0
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Odoslať iniciatívy ďalej"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,forward_type:0
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Odoslať ďalej zvolené iniciatívy "
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
 msgid "Forward to Partner"
-msgstr ""
+msgstr "Odoslať ďalej partnerovi"
 
 #. module: crm_partner_assign
 #: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fwd: Iniciatíva: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_latitude:0
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geo zemepisná šírka"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -368,18 +368,18 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 msgid "Geo Localize"
-msgstr ""
+msgstr "Geolokalizácia"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_longitude:0
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Geo zemepisná dĺžka"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolokácia"
 
 #. module: crm_partner_assign
 #: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
@@ -392,7 +392,7 @@ msgstr "Dáva pravdepodobnosť priradenia iniciatívy k tomuto partnerovi. (0 zn
 #: field:crm.lead.report.assign,grade_id:0
 #: field:crm.partner.report.assign,grade_id:0 field:res.partner,grade_id:0
 msgid "Grade"
-msgstr ""
+msgstr "Známka"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,name:0
@@ -419,13 +419,13 @@ msgstr "Vysoká"
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "Mám záujem"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "Nemám záujem"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,id:0 field:crm.lead.channel.interested,id:0
@@ -448,7 +448,7 @@ msgstr "Implementoval"
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,interested:0
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Zaujatý touto iniciatívou"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,period_id:0
@@ -476,7 +476,7 @@ msgstr "Naposledy upravované"
 #. module: crm_partner_assign
 #: help:crm.lead,date_assign:0
 msgid "Last date this case was forwarded/assigned to a partner"
-msgstr ""
+msgstr "Posledný dátum tento prípad bol poslan ďalej partnerovi/pridelený partnerovi"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_review:0
@@ -493,27 +493,27 @@ msgstr "Iniciatíva"
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_link:0
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Jednotlivé odkazy iniciatívy"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
 msgid "Lead Assign"
-msgstr ""
+msgstr "Prideliť iniciatívu"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Spätná väzba iniciatívy"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_location:0
 msgid "Lead Location"
-msgstr ""
+msgstr "Lokácia iniciatívy"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "Iniciatíva/Príležitosť"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
@@ -543,13 +543,13 @@ msgstr "Nízka"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability_max:0
 msgid "Max Probability"
-msgstr ""
+msgstr "Max pravdepodobnosť"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
 #: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Moji pridelený partneri"
 
 #. module: crm_partner_assign
 #: field:res.partner.activation,name:0
@@ -579,7 +579,7 @@ msgstr "Počet dní na otvorenie prípadu"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Akonáhle je iniciatíva spracovaná, bude vo vašom menu \"Príležitosti\"."
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,opening_date:0
@@ -590,7 +590,7 @@ msgstr "Dátum otvorenia"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr ""
+msgstr "Analýza prílež. pridelenia"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
@@ -601,7 +601,7 @@ msgstr "Príležitosti"
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Analýza pridelenia príležitostí"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
@@ -626,13 +626,13 @@ msgstr "Partner"
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Activation"
-msgstr ""
+msgstr "Aktivácia partnera"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr ""
+msgstr "Aktivácie partnera"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -640,7 +640,7 @@ msgstr ""
 #: field:crm.lead.assignation,forward_id:0
 #: field:crm.lead.forward.to.partner,assignation_lines:0
 msgid "Partner Assignation"
-msgstr ""
+msgstr "Prideľovanie partnera"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
@@ -653,33 +653,33 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,partner_location:0
 msgid "Partner Location"
-msgstr ""
+msgstr "Lokácia partnera"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 msgid "Partner Name"
-msgstr ""
+msgstr "Názov partnera"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr ""
+msgstr "Preskúmanie partnera"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr ""
+msgstr "Analýza pridelenia partnera"
 
 #. module: crm_partner_assign
 #: help:crm.lead,partner_assigned_id:0
 msgid "Partner this case has been forwarded/assigned to."
-msgstr ""
+msgstr "Partner ktorému bol tento prípad preposlaný/pridelený."
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnership Analysis"
-msgstr ""
+msgstr "Analýza partnerstva"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_partnership:0
@@ -727,19 +727,19 @@ msgstr "Predajca"
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send"
-msgstr ""
+msgstr "Poslať"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Send Email"
-msgstr ""
+msgstr "Poslať email"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send Mail"
-msgstr ""
+msgstr "Poslať poštu"
 
 #. module: crm_partner_assign
 #: field:res.partner.activation,sequence:0 field:res.partner.grade,sequence:0
@@ -762,34 +762,34 @@ msgstr "Predmet"
 #: code:addons/crm_partner_assign/crm_lead.py:34
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "CRM kanál akcia Zainteresovaný chýba"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Emailová šablóna Poslať ďalej nie je v databáze"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "Skupina portálu nemožno nájsť"
 
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,contacted:0
 msgid "The lead has been contacted"
-msgstr ""
+msgstr "Iniciatíva bola kontaktovaná"
 
 #. module: crm_partner_assign
 #: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_recycle
 msgid "To Recycle"
-msgstr ""
+msgstr "Na zrecyklovanie"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,turnover:0
 msgid "Turnover"
-msgstr ""
+msgstr "Zvrat"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,type:0
@@ -799,7 +799,7 @@ msgstr "Typ"
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,type:0
 msgid "Type is used to separate Leads and Opportunities"
-msgstr ""
+msgstr "Typ je používaný pre oddeľovanie iniciatív a príležitostí"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,user_id:0
@@ -810,7 +810,7 @@ msgstr "Používateľ"
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "Veľmi vysoké"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -820,28 +820,28 @@ msgstr "Veľmi nízke"
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,comment:0
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Čo sú elementy, ktoré viedli k tomuto rozhodnutiu?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Čo je ďalšia akcia? Kedy? Aká je čakávaný výnos?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Prečo vás nezaujala táto iniciatíva?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr ""
+msgstr "Musíte kontaktovať iniciatívu než poviete že nemáte záujem"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "jediný partner: manuálny výber partnera"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -854,4 +854,4 @@ msgstr "alebo"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "viacero partnerov: automatické prideľovanie, používanie GPS koordinátov a známok partnera"

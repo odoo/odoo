@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-12-19 19:49+0000\n"
-"Last-Translator: Bogdan\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-02-13 22:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,16 @@ msgstr " (%s зарезервовано)"
 #, python-format
 msgid " (reserved)"
 msgstr " (зарезервовано)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -1503,6 +1513,7 @@ msgstr "Прогноз від’ємних значень запасів"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Прогноз кількості"
 
@@ -1740,7 +1751,7 @@ msgstr ""
 #. module: stock
 #: help:stock.pack.operation,result_package_id:0
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "Якщо вказано, операції будуть запаковані в цю упаковку"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,active:0
@@ -2774,7 +2785,7 @@ msgstr ""
 #: field:stock.move.operation.link,operation_id:0
 #: field:stock.transfer_details_items,packop_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Операція"
 
 #. module: stock
 #: code:addons/stock/stock.py:1840 code:addons/stock/stock.py:1915
@@ -2786,13 +2797,13 @@ msgstr ""
 #. module: stock
 #: field:stock.location.path,name:0
 msgid "Operation Name"
-msgstr ""
+msgstr "Назва операції"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: view:stock.picking:stock.view_picking_form
 msgid "Operations"
-msgstr ""
+msgstr "Операції"
 
 #. module: stock
 #. openerp-web
@@ -2976,7 +2987,7 @@ msgstr "Штрихкод пакування"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "Штрихкод упаковки з вмістом"
 
 #. module: stock
 #: view:stock.quant.package:stock.quant_package_search_view
@@ -3622,7 +3633,7 @@ msgid "Quantity (UOS)"
 msgstr "Кількість (ОП)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -4198,7 +4209,7 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory.line,prodlot_name:0
 msgid "Serial Number Name"
-msgstr ""
+msgstr "Назва серійного номера"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -4276,7 +4287,7 @@ msgstr "Коротка назва"
 #. module: stock
 #: help:stock.warehouse,code:0
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "Коротка назва вашого складу"
 
 #. module: stock
 #: help:stock.move,string_availability_info:0
@@ -4379,7 +4390,7 @@ msgstr "Запаси"
 #. module: stock
 #: view:website:stock.report_inventory
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Інвентаризація на складі"
 
 #. module: stock
 #: view:stock.inventory.line:stock.stock_inventory_line_tree
@@ -4684,7 +4695,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Назва складу повинна бути унікальною для кожної компанії!"
 
 #. module: stock
 #: help:stock.quant,propagated_from_id:0
@@ -5036,12 +5047,12 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,code:0
 msgid "Type of Operation"
-msgstr ""
+msgstr "Тип операції"
 
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "Тип пакування"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
@@ -5212,7 +5223,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.inventory,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Підтверджено"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -5247,7 +5258,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "Очікує іншої операції"
 
 #. module: stock
 #: selection:stock.move,state:0

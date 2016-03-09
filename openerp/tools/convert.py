@@ -23,7 +23,6 @@ import cStringIO
 import csv
 import logging
 import os.path
-import pickle
 import re
 import sys
 
@@ -58,7 +57,7 @@ from translate import _
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
 
-from misc import unquote
+from misc import pickle, unquote
 
 from openerp import SUPERUSER_ID
 

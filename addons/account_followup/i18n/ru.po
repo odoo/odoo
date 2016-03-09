@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-08 10:17+0000\n"
+"PO-Revision-Date: 2016-01-19 20:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,7 @@ msgid ""
 "In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nУважаемый %(partner_name)s,\n\nНесмотря на неоднократные напоминания, ваш счет еще не урегулирован.\n\nЕсли полная оплата не будет произведена в течении следующих 8 дней, то судебные меры взыскании долга будут предприняты без дальнейшего уведомления.\n\nЯ надеюсь, что это действие окажется ненужным. Детали просроченного платежей напечатаны ниже.\n\nВ случае любых вопросов относительно этого вопроса не стесняйтесь связаться с нашим департаментом бухгалтерского учета. \n\nС Наилучшими Пожеланиями,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -178,7 +178,7 @@ msgid ""
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
+msgstr "\nУважаемый %(partner_name)s,\n\nНесмотря на неоднократные напоминания, ваш счет еще не урегулирован.\n\nЕсли полная оплата не будет произведена в течении следующих 8 дней, то судебные меры взыскании долга будут предприняты без дальнейшего уведомления.\n\nЯ надеюсь, что это действие окажется ненужным. Детали просроченных платежей напечатаны ниже.\n\nВ случае любых вопросов относительно этого вопроса не стесняйтесь связаться с нашим департаментом бухгалтерского учета. \n\nС Наилучшими Пожеланиями,"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -191,7 +191,7 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nУважаемый %(partner_name)s,\n\nСледующая сумма остается неоплаченной. Пожалуйста, примите соответствующие меры, чтобы выполнить эту оплату в следующие 8 дней. \n\nЕсли ваша оплата была выполнена после того, как эту почту послали, пожалуйста, проигнорируйте это сообщение. Не смущайтесь связываться с нашим департаментом бухгалтерского учета. \n\nС наилучшими пожеланиями, \n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -209,7 +209,7 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nУважаемый %(partner_name)s, \n\nМы разочарованы тем, что несмотря на отправленное напоминание, ваш счет теперь серьезно просрочен.\n\nВажно, чтобы была произведена немедленная оплата, в противном случае мы будем вынуждены рассмотреть вопрос о  блокировки вашего счета, которая означает, что мы больше не сможем поставлять вашей компании (товары/услуги).\nПожалуйста, примите соответствующие меры для того, чтобы осуществить этот платеж в ближайшие 8 дней.\n\nЕсли есть проблема с оплатой счета, о которой мы не знаем, не смущайтесь связываться с нашим департаментом бухгалтерского учета, так, чтобы мы могли решить вопрос быстро. \n\nДетали подлежащих оплате платежей напечатаны ниже.\n\nС наилучшими пожеланиями,\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
@@ -324,7 +324,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Счет Последующие меры"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -441,7 +441,7 @@ msgstr "Компания"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr ""
+msgstr "Настройте ваши уровни проверки исполнения"
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -472,7 +472,7 @@ msgstr "Напоминание заказчику"
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Покупатель Обещает Оплату"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -487,7 +487,7 @@ msgstr "Дата:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Дни уровней дальнейшего действия должны быть разные"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -533,7 +533,7 @@ msgstr "Дата исполнения"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Даты Оплаты"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
@@ -1106,7 +1106,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
+msgstr "Ждать количество дней после наступления срока оплаты счет-фактуры перед отправкой напоминания. Может быть отрицательным, если вы хотите послать вежливое напоминание заранее."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1166,7 +1166,7 @@ msgid ""
 "                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
+msgstr "Чтобы напомнить клиентам оплачивать свои счета, вы можете\nопределить различные действия в зависимости от того, насколько сильно просрочил клиент. Эти действия связаны\nв последующих уровнях, которые запускаются, когда с\nдаты счета прошло определенное количество дней. Если есть другие просроченные счета-фактуры того же самого клиента, действия наиболее просроченные счета будут выполнены."
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1198,7 +1198,7 @@ msgstr "При обработке будет отправлено эл. пись
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "При обработке, это установит ручное действие, которое следует предпринять для этого клиента."
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -1213,7 +1213,7 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
+msgstr "Напишите здесь введение в письме, в соответствии с уровнем \nпоследующей деятельности. Вы можете использовать следующие \nключевые слова в тексте. Не забудьте перевести на все языки \nкоторые вы установили, используя правый верхний значок."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291
@@ -1227,7 +1227,7 @@ msgstr "Вы стали ответственными, чтобы сделать 
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "Ваше описание недействительно, используйте правильную легенду или %%, если Вы хотите использовать символ процента."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form

@@ -6,7 +6,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Florian Hatat, 2015
 # Henri Cornuau <hcornuau@gmail.com>, 2015
-# Lionel Sausin <ls@numerigraphe.com>, 2015
+# Lionel Sausin <ls@numerigraphe.com>, 2015-2016
 # Martin Trigaux, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-10-31 17:42+0000\n"
-"Last-Translator: Lionel Sausin <ls@numerigraphe.com>\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +61,16 @@ msgstr " (%s réservé)"
 #, python-format
 msgid " (reserved)"
 msgstr " (réservé)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -1508,6 +1518,7 @@ msgstr "Stock négatif prévu"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Quantité prévue"
 
@@ -3627,7 +3638,7 @@ msgid "Quantity (UOS)"
 msgstr "Quantité (UdV)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "Quantité disponible"
 
@@ -4750,7 +4761,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr "Les arrondis de l'unité de mesure %s dans le mouvement contre %s dans l'article ne permettent pas de faire ces opérations ou vous ne transférez pas la préparation en une seule fois. "
+msgstr "Les arrondis des unités de mesure (%s dans le mouvement et %s dans l'article) ne permettent pas de faire ces opérations ; ou vous ne transférez pas la préparation en une seule fois."
 
 #. module: stock
 #: code:addons/stock/stock.py:3867

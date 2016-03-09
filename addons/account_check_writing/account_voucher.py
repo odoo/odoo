@@ -38,7 +38,7 @@ class account_voucher(osv.osv):
     _columns = {
         'amount_in_word' : fields.char("Amount in Word", readonly=True, states={'draft':[('readonly',False)]}),
         'allow_check' : fields.related('journal_id', 'allow_check_writing', type='boolean', string='Allow Check Writing'),
-        'number': fields.char('Number', readonly=True),
+        'number': fields.char('Number', readonly=True, copy=False),
     }
 
     def _amount_to_text(self, cr, uid, amount, currency_id, context=None):
@@ -91,6 +91,15 @@ class account_voucher(osv.osv):
                 self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
                 self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
         return super(account_voucher, self).create(cr, uid, vals, context=context)
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        data = super(account_voucher, self).copy_data(cr, uid, id, default=default, context=context)
+        if data.get('period_id') and not data.get('date'):
+            account_period_obj = self.pool.get('account.period')
+            ids = account_period_obj.find(cr, uid, context=context)
+            if ids:
+                data['period_id'] = ids[0]
+        return data
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('amount') and 'amount_in_word' not in vals:

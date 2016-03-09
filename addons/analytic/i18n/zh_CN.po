@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-24 11:07+0000\n"
+"PO-Revision-Date: 2016-01-13 00:14+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -61,17 +61,17 @@ msgstr "分析会计"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr "辅助核算条目"
+msgstr "分析条目"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "辅助核算明细"
+msgstr "分析明细"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr "解析视图"
+msgstr "分析视图"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -259,7 +259,7 @@ msgid ""
 "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
 "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
 "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
-msgstr "如果选择视图模式，这就意味着你将不允许通过此账户创建日志条目。\n分析账户类型表示这一常用账户你仅用作记账.\n如果选择协议或项目，它将提供管理这个账户有效性和发票选项的可能性.\n协议样本这一特殊类型，允许你定义一个模板，你可以容易地使用默认数据。"
+msgstr "如果选择类型’视图‘，这就意味着你将不允许通过此账户创建分类账分录。\n类型'分析账户'表示这是仅用作记账的账户.\n如果选择’合同或项目‘，它将能管理这个账户有效性和开票选项.\n类型’合同模板‘，允许定义一个模板，这样可以容易地使用默认数据。"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -267,7 +267,7 @@ msgstr "如果选择视图模式，这就意味着你将不允许通过此账户
 msgid ""
 "If you set a company, the currency selected has to be the same as it's currency. \n"
 "You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
-msgstr "如果你设置一个公司，选择的货币必须与公司货币一致。\n针对视图类型的成本科目，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的成本科目合并起来。"
+msgstr "如果你设置一个公司，选择的货币必须与公司货币一致。\n针对视图类型的分析账户，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的分析账户合并起来。"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0

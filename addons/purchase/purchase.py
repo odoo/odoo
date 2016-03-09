@@ -747,6 +747,10 @@ class purchase_order(osv.osv):
         ''' prepare the stock move data from the PO line. This function returns a list of dictionary ready to be used in stock.move's create()'''
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
+        if order_line.taxes_id:
+            taxes = self.pool['account.tax'].compute_all(cr, uid, order_line.taxes_id, price_unit, 1.0,
+                                                             order_line.product_id, order.partner_id)
+            price_unit = taxes['total']
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
             price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
@@ -1512,7 +1516,7 @@ class procurement_order(osv.osv):
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
 
-                    po_to_update = {'origin': po_rec.origin and ', '.join([po_rec.origin, procurement.origin]) or procurement.origin}
+                    po_to_update = {'origin': ', '.join(filter(None, [po_rec.origin, procurement.origin]))}
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
                         po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})

@@ -484,10 +484,10 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, quantity, domain, removal_strategy, context=None):
         if removal_strategy == 'fifo':
-            order = 'in_date, id'
+            order = 'in_date, location_id, package_id, lot_id, id'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         elif removal_strategy == 'lifo':
-            order = 'in_date desc, id desc'
+            order = 'in_date desc, location_id desc, package_id desc, lot_id desc, id desc'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
 
@@ -563,6 +563,9 @@ class stock_quant(osv.osv):
             negative quants. If it's possible, apply the cost of the new
             quant to the conter-part of the negative quant.
         """
+        context = context or {}
+        context = dict(context)
+        context.update({'force_unlink': True})
         solving_quant = quant
         dom = [('qty', '<', 0)]
         if quant.lot_id:
@@ -653,6 +656,12 @@ class stock_quant(osv.osv):
         if location.usage == 'view':
             raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        context = context or {}
+        if not context.get('force_unlink'):
+            raise osv.except_osv(_('Error!'), _('Under no circumstances should you delete or change quants yourselves!'))
+        super(stock_quant, self).unlink(cr, uid, ids, context=context)
 
 #----------------------------------------------------------
 # Stock Picking
@@ -1426,6 +1435,7 @@ class stock_picking(osv.osv):
         """
         if not context:
             context = {}
+        notrack_context = dict(context, mail_notrack=True)
         stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
@@ -1452,7 +1462,7 @@ class stock_picking(osv.osv):
                             todo_move_ids.append(move.id)
                     elif float_compare(remaining_qty,0, precision_rounding = move.product_id.uom_id.rounding) > 0 and \
                                 float_compare(remaining_qty, move.product_qty, precision_rounding = move.product_id.uom_id.rounding) < 0:
-                        new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=context)
+                        new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=notrack_context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
@@ -1461,7 +1471,7 @@ class stock_picking(osv.osv):
                         self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
-                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
+                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=notrack_context)
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
             self._create_backorder(cr, uid, picking, context=context)
@@ -1969,14 +1979,29 @@ class stock_move(osv.osv):
             res.append(self._create_procurement(cr, uid, move, context=context))
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        picking_obj = self.pool['stock.picking']
+        track = not context.get('mail_notrack') and vals.get('picking_id')
+        if track:
+            picking = picking_obj.browse(cr, uid, vals['picking_id'], context=context)
+            initial_values = {picking.id: {'state': picking.state}}
+        res = super(stock_move, self).create(cr, uid, vals, context=context)
+        if track:
+            picking_obj.message_track(cr, uid, [vals['picking_id']], picking_obj.fields_get(cr, uid, ['state'], context=context), initial_values, context=context)
+        return res
+
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        picking_obj = self.pool['stock.picking']
         # Check that we do not modify a stock.move which is done
         frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
-        for move in self.browse(cr, uid, ids, context=context):
+        moves = self.browse(cr, uid, ids, context=context)
+        for move in moves:
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
                     raise osv.except_osv(_('Operation Forbidden!'),
@@ -1987,6 +2012,10 @@ class stock_move(osv.osv):
             propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
         if vals.get('product_uom_id'):
             propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
+        if vals.get('product_uos_qty'):
+            propagated_changes_dict['product_uos_qty'] = vals['product_uos_qty']
+        if vals.get('product_uos_id'):
+            propagated_changes_dict['product_uos_id'] = vals['product_uos_id']
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -2014,7 +2043,18 @@ class stock_move(osv.osv):
                     #Note that, for pulled moves we intentionally don't propagate on the procurement.
                     if propagated_changes_dict:
                         self.write(cr, uid, [move.move_dest_id.id], propagated_changes_dict, context=context)
-        return super(stock_move, self).write(cr, uid, ids, vals, context=context)
+        track_pickings = not context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
+        if track_pickings:
+            to_track_picking_ids = set([move.picking_id.id for move in moves if move.picking_id])
+            if vals.get('picking_id'):
+                to_track_picking_ids.add(vals['picking_id'])
+            to_track_picking_ids = list(to_track_picking_ids)
+            pickings = picking_obj.browse(cr, uid, to_track_picking_ids, context=context)
+            initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
+        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
+        if track_pickings:
+            picking_obj.message_track(cr, uid, to_track_picking_ids, picking_obj.fields_get(cr, uid, ['state'], context=context), initial_values, context=context)
+        return res
 
     def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
         """ On change of product quantity finds UoM and UoS quantities
@@ -2220,7 +2260,7 @@ class stock_move(osv.osv):
 
         for state, write_ids in states.items():
             if len(write_ids):
-                self.write(cr, uid, write_ids, {'state': state})
+                self.write(cr, uid, write_ids, {'state': state}, context=context)
         #assign picking in batch for all confirmed move that share the same details
         for key, move_ids in to_assign.items():
             procurement_group, location_from, location_to = key
@@ -2255,6 +2295,7 @@ class stock_move(osv.osv):
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
+        @return: True
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
@@ -2318,6 +2359,7 @@ class stock_move(osv.osv):
         #force assignation of consumable products and incoming from supplier/inventory/production
         if to_assign_moves:
             self.force_assign(cr, uid, list(to_assign_moves), context=context)
+        return True
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
@@ -2325,7 +2367,7 @@ class stock_move(osv.osv):
         """
         procurement_obj = self.pool.get('procurement.order')
         context = context or {}
-        procs_to_check = []
+        procs_to_check = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 raise osv.except_osv(_('Operation Forbidden!'),
@@ -2345,11 +2387,11 @@ class stock_move(osv.osv):
                         self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
                 if move.procurement_id:
                     # Does the same as procurement check, only eliminating a refresh
-                    procs_to_check.append(move.procurement_id.id)
+                    procs_to_check.add(move.procurement_id.id)
                     
         res = self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
         if procs_to_check:
-            procurement_obj.check(cr, uid, procs_to_check, context=context)
+            procurement_obj.check(cr, uid, list(procs_to_check), context=context)
         return res
 
     def _check_package_from_moves(self, cr, uid, ids, context=None):
@@ -2905,6 +2947,18 @@ class stock_inventory_line(osv.osv):
         'product_qty': 0,
         'product_uom_id': lambda self, cr, uid, ctx=None: self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
     }
+
+    def create(self, cr, uid, values, context=None):
+        product_obj = self.pool.get('product.product')
+        dom = [('product_id', '=', values.get('product_id')), ('inventory_id.state', '=', 'confirm'),
+               ('location_id', '=', values.get('location_id')), ('partner_id', '=', values.get('partner_id')),
+               ('package_id', '=', values.get('package_id')), ('prod_lot_id', '=', values.get('prod_lot_id'))]
+        res = self.search(cr, uid, dom, context=context)
+        if res:
+            location = self.pool['stock.location'].browse(cr, uid, values.get('location_id'), context=context)
+            product = product_obj.browse(cr, uid, values.get('product_id'), context=context)
+            raise Warning(_("You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one.") % (product.name, location.name))
+        return super(stock_inventory_line, self).create(cr, uid, values, context=context)
 
     def _get_quants(self, cr, uid, line, context=None):
         quant_obj = self.pool["stock.quant"]
@@ -3568,7 +3622,7 @@ class stock_warehouse(osv.osv):
             for pull in route.pull_ids:
                 pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
             for push in route.push_ids:
-                push_obj.write(cr, uid, push.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
+                push_obj.write(cr, uid, push.id, {'name': push.name.replace(warehouse.name, name, 1)}, context=context)
         #change the mto pull rule name
         if warehouse.mto_pull_id.id:
             pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)

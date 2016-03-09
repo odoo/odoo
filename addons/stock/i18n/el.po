@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-03-03 14:18+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,16 @@ msgstr "(%s δεσμευμένα)"
 #, python-format
 msgid " (reserved)"
 msgstr "(δεσμευμένα)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -1503,6 +1513,7 @@ msgstr "Πρόβλεψη Αρνητικών Αποθεματικών "
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Πρόβλεψη Ποσότητας"
 
@@ -3622,7 +3633,7 @@ msgid "Quantity (UOS)"
 msgstr "Ποσότητα (ΜoΠ)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "Διαθέσιμη Ποσότητα"
 
@@ -3912,7 +3923,7 @@ msgstr "Λειτουργία Επαναλαμβανόμενης Παραγγελ
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_tree
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "Κανόνες Επαναλαμβανόμενης Παραγγελίας"
+msgstr "Κανόνες Επανα-Παραγγελίας"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search

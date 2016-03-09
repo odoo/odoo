@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-30 11:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-27 21:56+0000\n"
+"Last-Translator: Giacomo Grasso <giacomo.grasso.82@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +83,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Salve ${object.partner_id.name},</p>\n    \n    <p>Questo è un ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} da parte di ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Numero ordine: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Totale ordine: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data ordine: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Riferimenti ordine: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Vostri riferimenti: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;Vostro contatto: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Se avete domande, non esitate a contattarci.</p>\n    <p>Grazie!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -154,7 +155,7 @@ msgstr ""
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\nCrea il percorso navetta e aggiunge prove più complesse-Questo installa il modulo stock_dropshipping"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -345,7 +346,7 @@ msgstr "Rubrica"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Processo di offert avanzata"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -531,7 +532,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Non è possibile trovare nessun percorso d'acquisto"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +552,7 @@ msgstr "Annullato"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Non puoi eliminare una linea di acquisto quanto è in stato '%s'."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -729,12 +730,12 @@ msgstr "Definire il sezionale acquisti per l'azienda: \"%s\" (id:%d)."
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Consegna A "
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Consegne & Fatture"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -1361,7 +1362,7 @@ msgstr "Listini prezzi"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "Stampa RFQ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1371,7 +1372,7 @@ msgstr "Approvigionamento"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regole d'appalto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1535,7 +1536,7 @@ msgstr "Ordini di acquisto che includono righe non fatturate."
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Acquistare per rifornire questo magazzino"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1601,17 +1602,17 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "RFQ Approvato"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "RFQ confermato"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "RFQ campletato"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
@@ -1632,12 +1633,12 @@ msgstr "RFQ e Acquisti"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "Ristampa RFQ"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Rispedisci RFQ per email "
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1730,7 +1731,7 @@ msgstr "Responsabile"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Routes"
-msgstr ""
+msgstr "Rotte"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1760,7 +1761,7 @@ msgstr "L'unità di misura selezionata non appartiene alla stessa categoria di q
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "Invia PO per email"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1958,7 +1959,7 @@ msgstr "Questo listino verrà utilizzato, al posto di quello predefinito, per gl
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "Questo determinerà il tipo di raccolta delle spedizioni in arrivo "
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -2120,7 +2121,7 @@ msgstr "Storico comunicazione sito"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Quando i prodotti sono acquistati, possono essere consegnati a questo magazzino"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538

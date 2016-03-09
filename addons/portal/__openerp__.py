@@ -51,7 +51,7 @@ very handy when used in combination with the module 'share'.
         'views/portal.xml',
     ],
     'demo': ['portal_demo.xml'],
-    'auto_install': True,
+    'auto_install': False,
     'installable': True,
 }
 

@@ -671,6 +671,10 @@ def trans_generate(lang, modules, cr):
         query += ' WHERE module IN %s'
         query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
+    else:
+        query += ' WHERE module != %s'
+        query_models += ' AND imd.module != %s'
+        query_param = ('__export__',)
     query += ' ORDER BY module, model, name'
     query_models += ' ORDER BY module, model'
 

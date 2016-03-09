@@ -3,15 +3,16 @@
 # * stock
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 09:47+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 14:55+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,16 @@ msgstr " (%s gereserveerd)"
 #, python-format
 msgid " (reserved)"
 msgstr " (gereserveerd)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr "U kan geen twee voorraad aanpassingen hebben die zich in de status 'In behandeling' hebben met hetzelfde product (%s), dezelfde locatie (%s), dezelfde verpakking, dezelfde eigenaar en hetzelfde lot. Valideer eerste de eerste voorraad aanpassing voor dit product voor dat u een andere aanmaakt."
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -1503,6 +1514,7 @@ msgstr "Verwachte negatieve voorraad"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Virtuele hoeveelheid"
 
@@ -1542,7 +1554,7 @@ msgstr "Toekomstige leveringen"
 #: code:addons/stock/product.py:268
 #, python-format
 msgid "Future P&L"
-msgstr "Toekomstige W&V"
+msgstr "Virtueel verschillen"
 
 #. module: stock
 #: code:addons/stock/product.py:280
@@ -2940,7 +2952,7 @@ msgstr "Eigenaar van de aantallen"
 #: code:addons/stock/product.py:270
 #, python-format
 msgid "P&L Qty"
-msgstr "Winst&Verlies hoeveelheid"
+msgstr "Werkelijke verschillen"
 
 #. module: stock
 #: code:addons/stock/stock.py:3292 field:stock.inventory.line,package_id:0
@@ -3622,7 +3634,7 @@ msgid "Quantity (UOS)"
 msgstr "Hoeveelheid (verkoopeenheid)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "Virtuele voorraad"
 

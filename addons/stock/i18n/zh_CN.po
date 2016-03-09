@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
 # 珠海-老天 <liangjia@qq.com>, 2015
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-12-30 06:38+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr "\n                * 草稿：即未确认状态，直到确认前不会被安排分拣。\n\n                * 等待其他操作：等待另一库存移动完成后而自动变为可用状态（例如MTO流程）。\n\n                * 等待可用：等待产品可用状态。\n\n                * 部分可用：部分产品可用并被保留。\n\n                * 准备待调拨：产品已被保留，等待确认。\n\n                * 已调拨：已完成调拨，无法修改和取消。\n\n                * 已取消：已取消，无法被再次确认。"
+msgstr "\n                * 草稿：还没被确认，确认前不会被安排。\n\n                * 等待其他作业：在它自动变成可用之前，等待另一库存移动处理完成（例如MTO流程）。\n\n                * 等待可用：尚在等待产品可用。\n\n                * 部分可用：部分产品可用并被保留。\n\n                * 准备好待调拨：产品已被保留，等待确认。\n\n                * 已调拨：已被处理，再也不能修改和取消。\n\n                * 已取消：已取消，再也不能被确认。"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
@@ -68,6 +68,16 @@ msgstr " (%s 已保留)"
 #, python-format
 msgid " (reserved)"
 msgstr " (已保留)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -183,7 +193,7 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order. </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    单击 创建路径。\n              </p>\n                <p>您可以在这里定义您仓库的主要路径\n                    并可以定义您产品的流程。 这些\n                    路线可以分配给产品、产品类别或固定于\n                    需求单或销售订单上。 </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    单击 创建路线。\n              </p>\n                <p>您可以在这里定义主要路径，在你的仓库运行，它\n                    定义产品的流向。 这些\n                    路线可以指派给产品、产品类别，或者固定于\n                    需求单或销售订单上。 </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -409,7 +419,7 @@ msgstr "地址"
 msgid ""
 "Adds a Claim link to the delivery order.\n"
 "-This installs the module claim_from_delivery."
-msgstr "为送货单添加一个索赔链接。\n-这会安装模块claim_from_delivery。"
+msgstr "为交货单添加一个索赔链接。\n-这会安装模块claim_from_delivery。"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -528,7 +538,7 @@ msgstr "指定所有者"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr "指定的移动"
+msgstr "已指派的移动"
 
 #. module: stock
 #: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
@@ -1248,7 +1258,7 @@ msgstr "交货"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Delivery Address:"
-msgstr "送货地址："
+msgstr "交货地址："
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1515,6 +1525,7 @@ msgstr "预测的负数库存"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "预测数量"
 
@@ -3634,7 +3645,7 @@ msgid "Quantity (UOS)"
 msgstr "数量(销售单位)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "可用数量"
 
@@ -3711,7 +3722,7 @@ msgstr "产品数量会考虑此打包作业产生移动(及反向移动)的剩�
 #. module: stock
 #: help:stock.move,reserved_availability:0
 msgid "Quantity that has already been reserved for this move"
-msgstr "已为这次移动保留了数量"
+msgstr "已为这次移动保留的数量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3764,30 +3775,30 @@ msgstr "实际数量"
 #: view:product.product:stock.product_kanban_stock_view
 #: field:product.product,reception_count:0
 msgid "Receipt"
-msgstr "收据"
+msgstr "收货"
 
 #. module: stock
 #: field:stock.warehouse,reception_route_id:0
 msgid "Receipt Route"
-msgstr "接收路线"
+msgstr "收货路线"
 
 #. module: stock
 #: code:addons/stock/stock.py:3389
 #, python-format
 msgid "Receipt in 1 step"
-msgstr "1步接收"
+msgstr "1步收货"
 
 #. module: stock
 #: code:addons/stock/stock.py:3390
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr "2步接收"
+msgstr "2步收货"
 
 #. module: stock
 #: code:addons/stock/stock.py:3391
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr "3步接收"
+msgstr "3步收货"
 
 #. module: stock
 #: code:addons/stock/stock.py:3262
@@ -3797,12 +3808,12 @@ msgstr "3步接收"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "接收"
+msgstr "收货"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr "接收货物直接到库存 (一步)"
+msgstr "直接在库存接收货物 (1步)"
 
 #. module: stock
 #: code:addons/stock/product.py:254
@@ -4866,7 +4877,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr "这是一个库存点的产品数量。对于状态为“完成”的调拨单，这就是真正完成了调拨的产品数量。对于其它调拨单，就是计划进行调拨的数量。降低这个数量不会生成欠单。改变这个指定的调拨数量将影响产品预订，应该慎之又慎。"
+msgstr "这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品保留，应该慎之又慎。"
 
 #. module: stock
 #: help:stock.location.path,auto:0
@@ -5043,7 +5054,7 @@ msgstr "中转位置"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr "如果保留的份变更了，则为True，这意味着我们需要重新计算包裹作业"
+msgstr "如果保留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: field:stock.picking.type,code:0
@@ -5433,7 +5444,7 @@ msgstr "已经被用于库存移动，你不能变更该产品的计量单位。
 #: code:addons/stock/stock.py:2846
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr "您无法储存负的数量或负的份。"
+msgstr "你不能保留负数数量，或者负数份。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5502,7 +5513,7 @@ msgstr "您可能只返回已完成的分拣！"
 #: code:addons/stock/stock.py:2159
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr "您必须为该产品%s指定一个系列号"
+msgstr "您必须为该产品%s指派一个序列号"
 
 #. module: stock
 #: constraint:stock.move:0

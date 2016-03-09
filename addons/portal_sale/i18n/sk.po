@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-01-06 14:38+0000\n"
+"PO-Revision-Date: 2016-01-11 01:05+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -198,7 +198,7 @@ msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and '
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Faktúra (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: view:account.config.settings:portal_sale.portal_sale_payment_option_config
@@ -215,7 +215,7 @@ msgstr "Faktúra"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
@@ -234,7 +234,7 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Odchádzajúca pošta"
 
 #. module: portal_sale
 #: field:account.invoice,portal_payment_options:0
@@ -251,7 +251,7 @@ msgstr "Cenové ponuky"
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Objednávky predaja"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
@@ -283,17 +283,17 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "Nezaslali sme Vám žiadnu faktúru."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "Nezaslali sme Vám žiadnu cenovú ponuku."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "Nezaslali sme Vám žiadnu objednávku predaja."
 
 #. module: portal_sale
 #: view:account.invoice:portal_sale.view_account_invoice_filter_share

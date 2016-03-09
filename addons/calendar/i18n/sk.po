@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-25 13:28+0000\n"
-"PO-Revision-Date: 2016-01-07 19:10+0000\n"
+"PO-Revision-Date: 2016-02-08 18:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -393,22 +393,22 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:20
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [Me]"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name} - Date has been updated"
-msgstr ""
+msgstr "${object.event_id.name} - Dátum bol aktualizovaný"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Pripomienka"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:802
@@ -416,13 +416,13 @@ msgstr ""
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
-msgstr ""
+msgstr "%s o %s Pre\n %s o %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:800
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s o (%s Pre %s) (%s)"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -441,12 +441,12 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Email informujúci o zmene dátumu bol odoslaný!"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr ""
+msgstr "Akceptovať"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
@@ -464,7 +464,7 @@ msgstr "Aktívny"
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "Pridať obľúbený kalendár"
 
 #. module: calendar
 #: field:calendar.event,allday:0
@@ -475,7 +475,7 @@ msgstr "Po celý deň"
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "AllDay , %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -486,13 +486,13 @@ msgstr "Suma"
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "Pozvánka bola zaslaná účastníkovi %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "Pozvánka bola zaslaná účastníkovi(kom)"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
@@ -502,12 +502,12 @@ msgstr "Účastník"
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "Status účastníka"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Informácie o účastníkovi"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -527,12 +527,12 @@ msgstr "Dostupnosť"
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr ""
+msgstr "Zaneprázdnený"
 
 #. module: calendar
 #: field:calendar.event,byday:0
 msgid "By day"
-msgstr ""
+msgstr "Dňom"
 
 #. module: calendar
 #: field:calendar.event,start:0
@@ -555,24 +555,24 @@ msgstr "Kalendár"
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
 #: model:ir.ui.menu,name:calendar.menu_calendar_alarm
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Upozornenie kalendára"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Pozvánka kalendára"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Kliknutím upraviť iba túto inštanciu a nie všetky opakovania."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
 msgid "Common name"
-msgstr ""
+msgstr "Spoločný názov"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -612,7 +612,7 @@ msgstr "Dátum"
 #. module: calendar
 #: field:calendar.event,day:0 selection:calendar.event,month_by:0
 msgid "Date of month"
-msgstr ""
+msgstr "Deň v mesiaci"
 
 #. module: calendar
 #: help:calendar.event,message_last_post:0
@@ -622,12 +622,12 @@ msgstr "Dátum poslednej správy zaslanej záznamu."
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Deň v mesiaci"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 msgid "Day of month"
-msgstr ""
+msgstr "Deň v mesiaci"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
@@ -642,13 +642,13 @@ msgstr "Dni"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr ""
+msgstr "Zamietnuť"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Declined"
-msgstr ""
+msgstr "Zamietnuté"
 
 #. module: calendar
 #: field:calendar.event,description:0
@@ -667,7 +667,7 @@ msgstr "Detaily"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "Naozaj chcete odstrániť tento filter z favoritov?"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
@@ -678,7 +678,7 @@ msgstr "Trvanie"
 #. module: calendar
 #: field:calendar.alarm,duration_minutes:0
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Doba trvania v minútach"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0 field:calendar.attendee,email:0
@@ -689,12 +689,12 @@ msgstr "Email"
 #: code:addons/calendar/calendar.py:1402
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Emailová adresa nebola nájdená"
 
 #. module: calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "Email pozvanej osoby"
 
 #. module: calendar
 #: field:calendar.contacts,partner_id:0
@@ -709,7 +709,7 @@ msgstr "Dátum ukončenia"
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "Koniec Datetime"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -719,12 +719,12 @@ msgstr "Dátum ukončenia"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Končí o"
 
 #. module: calendar
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Chyba! Dátum ukončenia nemôže byť nastavený pred dátumom začatia."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1260
@@ -740,19 +740,19 @@ msgstr "Udalosť"
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "Čas udalosti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Alarm udalosti"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Každého kalendár"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -762,7 +762,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "Piate"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -773,7 +773,7 @@ msgstr "Prvý"
 #: code:addons/calendar/calendar.py:141
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Najprv špecifikujte dátum pozvánky."
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
@@ -789,17 +789,17 @@ msgstr "Štvrtý"
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "Voľný"
 
 #. module: calendar
 #: field:calendar.attendee,availability:0
 msgid "Free/Busy"
-msgstr ""
+msgstr "Voľný/Zaneprázdnený"
 
 #. module: calendar
 #: field:calendar.event,fr:0
 msgid "Fri"
-msgstr ""
+msgstr "Pia"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -815,7 +815,7 @@ msgstr "Zoskupiť podľa"
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "Zoskupovať podľa dátumu nie je podporované, namiesto toho použite pohľad kalendáru."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -851,7 +851,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Ak je aktívne pole nastavené na False, umožní Vám schovať informáciu upozornenia bez jeho odtránenia."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
@@ -861,27 +861,27 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Pozvanie"
 
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "Známka pozvánky"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr ""
+msgstr "Detaily pozvánky"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Pozvánky"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Sprievodca pozvania"
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
@@ -915,12 +915,12 @@ msgstr "Naposledy upravované"
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Posledné upozornenie označené ako prečítané v základnom kalendári."
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Opakovať udalosť podľa tohto intervalu"
 
 #. module: calendar
 #: field:calendar.event,location:0
@@ -930,12 +930,12 @@ msgstr "Umiestnenie"
 #. module: calendar
 #: help:calendar.event,location:0
 msgid "Location of Event"
-msgstr ""
+msgstr "Umiestnenie udalosti"
 
 #. module: calendar
 #: field:calendar.contacts,user_id:0
 msgid "Me"
-msgstr ""
+msgstr "Ja"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -945,12 +945,12 @@ msgstr "Stretnutie"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Detail stretnutia"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Predmet stretnutia"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
@@ -962,12 +962,12 @@ msgstr "Typ stretnutia"
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Typy stretnutí"
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Stretnutie spojené"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -1033,7 +1033,7 @@ msgstr "Moje udalosti"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Moje stretnutia"
 
 #. module: calendar
 #: field:calendar.alarm,name:0 field:calendar.event.type,name:0
@@ -1044,24 +1044,24 @@ msgstr "Meno"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "Vyžaduje akciu"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:46
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "Nie nerobím."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "Notifikácia"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Počet opakovaní"
 
 #. module: calendar
 #. openerp-web
@@ -1088,7 +1088,7 @@ msgstr "Voľba"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Options"
-msgstr ""
+msgstr "Možnosti"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1125,7 +1125,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Zrušenie opakovania"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
@@ -1135,44 +1135,44 @@ msgstr "Opakovanie"
 #. module: calendar
 #: field:calendar.event,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Opakované"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id:0
 msgid "Recurrent ID"
-msgstr ""
+msgstr "ID opakovania"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id_date:0
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "Opakujúce sa ID dátumu"
 
 #. module: calendar
 #: help:calendar.event,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Opakujúce sa stretnutie"
 
 #. module: calendar
 #: field:calendar.event,rrule:0
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "Opakujúce sa pravidlo"
 
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "Upozornenia"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:80
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "Odstrániť favorita zo zoznamu"
 
 #. module: calendar
 #: field:calendar.event,count:0
 msgid "Repeat"
-msgstr ""
+msgstr "Opakovať"
 
 #. module: calendar
 #: field:calendar.event,interval:0
@@ -1182,7 +1182,7 @@ msgstr "Opakovať každé"
 #. module: calendar
 #: field:calendar.event,final_date:0
 msgid "Repeat Until"
-msgstr ""
+msgstr "Opakovať do"
 
 #. module: calendar
 #: help:calendar.event,interval:0
@@ -1192,7 +1192,7 @@ msgstr "Opakovať každý (deň/týždeň/mesiac/rok)"
 #. module: calendar
 #: help:calendar.event,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Opakovať x krát"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1203,22 +1203,22 @@ msgstr "Zodpovedná osoba"
 #. module: calendar
 #: field:calendar.event,sa:0
 msgid "Sat"
-msgstr ""
+msgstr "Sob"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "Sobota"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Vyhľadať stretnutia"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Second"
-msgstr ""
+msgstr "Druhé"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1228,19 +1228,19 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Odoslať mail"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
 msgid "Show Time as"
-msgstr ""
+msgstr "Zobraziť čas ako"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Odložiť"
 
 #. module: calendar
 #: field:calendar.event,start_date:0
@@ -1250,13 +1250,13 @@ msgstr "Počiatočný dátum"
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "Štart DateTime"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "Začína o"
 
 #. module: calendar
 #: field:calendar.attendee,state:0 field:calendar.event,state:0
@@ -1266,7 +1266,7 @@ msgstr "Status"
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Stav účasti "
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1296,18 +1296,18 @@ msgstr "Popisky"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr " "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1377
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Nasledvný kontakt nemá uvedený email: "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr ""
+msgstr "Tretí"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1322,7 +1322,7 @@ msgstr "Štv"
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "Štvrtok"
 
 #. module: calendar
 #: field:calendar.event,tu:0
@@ -1332,7 +1332,7 @@ msgstr "Uto"
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Utorok"
 
 #. module: calendar
 #: field:calendar.alarm,type:0
@@ -1344,12 +1344,12 @@ msgstr "Typ"
 #: view:calendar.event:calendar.view_calendar_event_form
 #: selection:calendar.event,attendee_status:0
 msgid "Uncertain"
-msgstr ""
+msgstr "Neisté"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Nepotvrdené"
 
 #. module: calendar
 #: field:calendar.alarm,interval:0
@@ -1365,12 +1365,12 @@ msgstr "Neprečítané správy"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "Do"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Aktualizovať iba túto inštanciu"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104 code:addons/calendar/calendar.py:141
@@ -1384,12 +1384,12 @@ msgstr "Varovanie !"
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this "
 "event"
-msgstr ""
+msgstr "Upozornenie, povinné pole bolo modifikované od jeho vytvorenia"
 
 #. module: calendar
 #: field:calendar.event,we:0
 msgid "Wed"
-msgstr ""
+msgstr "Str"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1404,28 +1404,28 @@ msgstr "Týždeň(ne)"
 #. module: calendar
 #: field:calendar.event,week_list:0
 msgid "Weekday"
-msgstr ""
+msgstr "Deň v týždni"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:54
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "Kedy"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:58
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "Kde"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:62
 #, python-format
 msgid "Who"
-msgstr ""
+msgstr "Kto"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
@@ -1437,13 +1437,13 @@ msgstr "Rok(y)"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:45
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Áno idem."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Nemôžete duplikovať účastníkov."
 
 #. module: calendar
 #: field:calendar.contacts,active:0
@@ -1465,7 +1465,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "Interval nemôže byť záporný."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245 code:addons/calendar/calendar.py:1247

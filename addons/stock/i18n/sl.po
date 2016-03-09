@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-11-20 13:37+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-02-01 06:28+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,16 @@ msgstr " (%s rezervirano)"
 #, python-format
 msgid " (reserved)"
 msgstr " (rezervirano)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr "Ne morete imeti dveh popravkov zalog 'v teku' za isti proizvod(%s), isto lokacijo(%s), isto pakiranje, istega lastnika in isti lot. Overite prvi popravek zaloge za ta proizvod preden ustvarite novega."
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -1503,6 +1513,7 @@ msgstr "Napoved negativnih zalog"
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr "Napoved količine"
 
@@ -3622,7 +3633,7 @@ msgid "Quantity (UOS)"
 msgstr "Količina (Prodajna EM)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr "Razpoložljiva količina"
 

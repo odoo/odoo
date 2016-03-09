@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-01-06 20:17+0000\n"
+"PO-Revision-Date: 2016-02-03 19:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -157,7 +157,7 @@ msgid ""
 "Default recipients of the record:\n"
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
-msgstr ""
+msgstr "Predvolený adresáti pre záznam:\n- partner (using id on a partner or the partner_id field) OR\n- email (using email_from or email field)"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:355
@@ -170,12 +170,12 @@ msgstr "Zmazanie záznamu akcie zlyhalo."
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr ""
+msgstr "Zobraziť možnosť na súvisiacom dokumente otvoriť kompozitného sprievodcu s touto šablónou"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "Dynamický zástupný objekt"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
@@ -190,22 +190,22 @@ msgstr "Nastavenia Email-u"
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
 msgid "Email Preview"
-msgstr ""
+msgstr "Náhľad emailu"
 
 #. module: email_template
 #: field:ir.actions.server,template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "Emailová šablóna"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "Náhľad šablóny emailu"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Emailové šablóny"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_mail_compose_message
@@ -247,7 +247,7 @@ msgstr "ID"
 msgid ""
 "If checked, the user's signature will be appended to the text version of the"
 " message"
-msgstr ""
+msgstr "Pokiaľ zaškrtnuté, podpis užívateľa bude pridaný do textu správy"
 
 #. module: email_template
 #: help:res.partner,opt_out:0
@@ -255,7 +255,7 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
-msgstr ""
+msgstr "Pokiaľ \"opt-out\" je zaškrtnuté, tento kontakt odmietol sledovanie emailov a marketingových kampaní. Filter \"Dostupné pre emailovú kampaň\" umožňuje užívateľom filtrovať týchto partnerov pri emailových kampaniach. "
 
 #. module: email_template
 #: field:email.template,lang:0 field:email_template.preview,lang:0
@@ -287,7 +287,7 @@ msgstr "Meno"
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
-msgstr ""
+msgstr "Názov použitý pre vygenerovaný report (môže obsahovať dočasný názov)\nRozšírenie môže byť vynechané, potom bude použité z typu reportu."
 
 #. module: email_template
 #: field:res.partner,opt_out:0
@@ -300,13 +300,13 @@ msgstr "Nezasielať"
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr ""
+msgstr "Preferovaný server pre odchádzajúcu poštu. Pokiaľ nie je nastavené inak, použitý bude server s najväčšou prioritou."
 
 #. module: email_template
 #: field:email.template,report_template:0
 #: field:email_template.preview,report_template:0
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Voliteľný report na tlač všetkých príloh"
 
 #. module: email_template
 #: help:email.template,lang:0 help:email_template.preview,lang:0
@@ -315,12 +315,12 @@ msgid ""
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
-msgstr ""
+msgstr "Voliteľný jazyk prekladu (ISO kód) vybraný pri odosielaní emailu. Pokiaľ nie je nastavené, bude použitý Anglický jazyk. Zvyčajne by mal byť zástupný výraz ktorý sa použije pre konkrétny jazyk, napr. ${object.partner_id.lang}."
 
 #. module: email_template
 #: help:email.template,null_value:0 help:email_template.preview,null_value:0
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Voliteľná hodnota použitá v prípade že cieľové pole je prázdne"
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -331,7 +331,7 @@ msgstr "Server odchádzajúcej pošty"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Prepísať autorov email"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_res_partner
@@ -341,12 +341,12 @@ msgstr "Partner"
 #. module: email_template
 #: view:res.partner:email_template.res_partner_opt_out_search
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
-msgstr ""
+msgstr "Partneri ktorí nežiadali nebyť zahrnutí v hromadných emailových kampaniach"
 
 #. module: email_template
 #: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
+msgstr "Navždy odstrániť tento email po jeho odoslaní z dôvodu šetrenia miesta"
 
 #. module: email_template
 #: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
@@ -361,32 +361,32 @@ msgstr "Pred nastavením detailov akcie prosím nastavte Základný model."
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Preferred reply address"
-msgstr ""
+msgstr "Preferovaná adresa odpovede"
 
 #. module: email_template
 #: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
 msgid "Preferred response address (placeholders may be used here)"
-msgstr ""
+msgstr "Preferovaná adresa odpovede (placeholder môže byť použitý)"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Preview"
-msgstr ""
+msgstr "Náhľad"
 
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
 msgid "Preview of"
-msgstr ""
+msgstr "Náhľad "
 
 #. module: email_template
 #: field:email_template.preview,partner_ids:0
 msgid "Recipients"
-msgstr ""
+msgstr "Príjemcovia"
 
 #. module: email_template
 #: field:email.template,model:0 field:email_template.preview,model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Súvisiaci model dokumentu"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -396,7 +396,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
-msgstr ""
+msgstr "Odstrániť kontextuálnu akciu pre použitie šablóny súvisiacich dokumentov"
 
 #. module: email_template
 #: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
@@ -407,12 +407,12 @@ msgstr "Odpoveď-pre"
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
-msgstr ""
+msgstr "Názov reportu"
 
 #. module: email_template
 #: help:email.template,body_html:0 help:email_template.preview,body_html:0
 msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr ""
+msgstr "Rich-text/HTML verzia správy (zástupné objekty môžu byť použité)"
 
 #. module: email_template
 #: view:email.template:email_template.view_email_template_search
@@ -422,17 +422,17 @@ msgstr "SMTP server"
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
-msgstr ""
+msgstr "Ukážkový dokument"
 
 #. module: email_template
 #: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
 msgid "Save as a new template"
-msgstr ""
+msgstr "Uložiť ako novú šablónu"
 
 #. module: email_template
 #: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
 msgid "Save as new template"
-msgstr ""
+msgstr "Uložiť ako novú šablónu"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -446,14 +446,14 @@ msgstr "Vyberte cieľové pole zo súvisiaceho modelu dokumentu.\nPokiaľ sa jed
 #: code:addons/email_template/email_template.py:318
 #, python-format
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "Odoslať Mail (%s)"
 
 #. module: email_template
 #: help:email.template,email_from:0 help:email_template.preview,email_from:0
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
-msgstr ""
+msgstr "Adresa odosielateľa (zástupný prvok tu môže byť použitý). Pokiaľ nie je nastavené, prednastavená hodnota bude autorov emailový alias (pokiaľ je nastavený), alebo emailová adresa."
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:551
@@ -467,13 +467,13 @@ msgstr ""
 #: field:email.template,ref_ir_value:0
 #: field:email_template.preview,ref_ir_value:0
 msgid "Sidebar Button"
-msgstr ""
+msgstr "Tlačidlo postranného panelu"
 
 #. module: email_template
 #: field:email.template,ref_ir_act_window:0
 #: field:email_template.preview,ref_ir_act_window:0
 msgid "Sidebar action"
-msgstr ""
+msgstr "Akcia postranného panelu"
 
 #. module: email_template
 #: help:email.template,ref_ir_act_window:0
@@ -481,13 +481,13 @@ msgstr ""
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr ""
+msgstr "Akcia postranného panelu spraví túto šablónu dostupnú záznamom súvisiaceho modelu dokumentu"
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
 #: help:email_template.preview,ref_ir_value:0
 msgid "Sidebar button to open the sidebar action"
-msgstr ""
+msgstr "Tlačidlo postranného panelu otvorí Akciu postranného panelu"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -510,7 +510,7 @@ msgstr "Predmet"
 #: view:email.template:email_template.email_template_form
 #: help:email.template,subject:0 help:email_template.preview,subject:0
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Subjekt (zástupné objekty môžu byť použité)"
 
 #. module: email_template
 #: view:res.partner:email_template.res_partner_opt_out_search
@@ -520,7 +520,7 @@ msgstr "Dodávatelia"
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
 msgid "Template Preview"
-msgstr ""
+msgstr "Náhľad šablóny"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -529,31 +529,31 @@ msgstr ""
 #: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
 #: model:ir.ui.menu,name:email_template.menu_email_templates
 msgid "Templates"
-msgstr ""
+msgstr "Šablóny"
 
 #. module: email_template
 #: help:email.template,model_id:0 help:email_template.preview,model_id:0
 msgid "The kind of document with with this template can be used"
-msgstr ""
+msgstr "Tento typ dokumentu s touto šablónov môže byť použitý"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
 "The values displayed hereunder are informative. When sending the email, the values\n"
 "                                will be taken from the email template."
-msgstr ""
+msgstr "Hodnoty tu zobrazované sú len informatívne. Pri zasielaní emailu sú tieto\nhodnoty použité zo šablóny emailu."
 
 #. module: email_template
 #: field:email.template,email_to:0 field:email_template.preview,email_to:0
 #: field:ir.actions.server,email_to:0
 msgid "To (Emails)"
-msgstr ""
+msgstr "Komu (emaily)"
 
 #. module: email_template
 #: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
 #: field:ir.actions.server,partner_to:0
 msgid "To (Partners)"
-msgstr ""
+msgstr "Komu (partneri)"
 
 #. module: email_template
 #: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
@@ -594,7 +594,7 @@ msgstr "Keď je vzťahové pole vybrané ako prvé pole, toto pole zobrazuje mod
 msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
-msgstr ""
+msgstr "Môžte priložiť súbory k tejto šablóne, tie potom budú pridané ku všetkým emailom vytvorených z tejto šablóny"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
@@ -605,4 +605,4 @@ msgstr ""
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "záznam:"

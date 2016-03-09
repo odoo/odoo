@@ -28,13 +28,17 @@ class res_partner(osv.osv):
     def _purchase_invoice_count(self, cr, uid, ids, field_name, arg, context=None):
         PurchaseOrder = self.pool['purchase.order']
         Invoice = self.pool['account.invoice']
-        return {
-            partner_id: {
-                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', 'child_of', partner_id)], context=context),
-                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', 'child_of', partner_id), ('type','=','in_invoice')], context=context)
-            }
-            for partner_id in ids
-        }
+        res = {}
+
+        for partner_id in ids:
+            res[partner_id] = {}
+
+            if 'purchase_order_count' in field_name:
+                res[partner_id]['purchase_order_count'] = PurchaseOrder.search_count(cr,uid, [('partner_id', 'child_of', partner_id)], context=context)
+            if 'supplier_invoice_count' in field_name:
+                res[partner_id]['supplier_invoice_count'] = Invoice.search_count(cr,uid, [('partner_id', 'child_of', partner_id), ('type','=','in_invoice')], context=context)
+
+        return res
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist_purchase']

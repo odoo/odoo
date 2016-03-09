@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-08 19:39+0000\n"
+"PO-Revision-Date: 2016-02-02 20:02+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,12 +20,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# vstupov aktív"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr ""
+msgstr "# neschválených riadkov"
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -61,7 +61,7 @@ msgstr ""
 #. module: account_asset
 #: field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr ""
+msgstr "Množstvo neschválených riadkov"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -87,7 +87,7 @@ msgstr "Aktíva"
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
 msgid "Asset Account"
-msgstr ""
+msgstr "Účet aktíva"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
@@ -106,7 +106,7 @@ msgstr "Kategória aktíva"
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "Trvanie aktíva na úpravu"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
@@ -122,7 +122,7 @@ msgstr ""
 #. module: account_asset
 #: field:asset.modify,asset_method_time:0
 msgid "Asset Method Time"
-msgstr ""
+msgstr "Čas metódy aktíva "
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
@@ -135,12 +135,12 @@ msgstr "Názov aktíva"
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
-msgstr ""
+msgstr "Kategória aktíva"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Riadok neschváleného aktíva"
 
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_tree
@@ -165,27 +165,27 @@ msgstr "Aktívny"
 #: model:ir.model,name:account_asset.model_asset_asset_report
 #: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
 msgid "Assets Analysis"
-msgstr ""
+msgstr "Analýza aktív"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Assets in closed state"
-msgstr ""
+msgstr "Aktíva v zavretom stave"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Assets in draft and open states"
-msgstr ""
+msgstr "Aktíva v stave koncept alebo otvorené"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr ""
+msgstr "Aktíva v koncept stave"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
-msgstr ""
+msgstr "Aktíva v bežiacom stave"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
@@ -203,7 +203,7 @@ msgstr ""
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
+msgstr "Zaškrtnite toto ak chcete automaticky potvrdiť aktíva tejto kategórie pri vytvorení faktúrami."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -216,7 +216,7 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
+msgstr "Vyberte metódu na použitie pre výpočet výšky riadkov odpisov.\n* Lineárna: vypočítané na základe: Hrubá hodnota / Počet odpisov\n* Zostupná: vypočítané na základe: Reziduálna hodnota * Zostupný faktor"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -225,14 +225,14 @@ msgid ""
 "Choose the method to use to compute the dates and number of depreciation lines.\n"
 "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr ""
+msgstr "Vyberte metódu na použitie pre výpočet dátumu a počet odpisových riadkov.\n* Počet odpisov: Oprava počtu odpisových riadkov a časový interval medzi 2 odpismi.\n* Dátum ukončenia: Vyberte čas medzi 2 odpismi a dátum ktorý odpisy neprekročia."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
+msgstr "Vyberte obdobie, pre ktoré chcete automaticky zverejnovať odpisové riadky bežiacich aktív"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -255,7 +255,7 @@ msgstr "Spoločnost"
 #. module: account_asset
 #: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
-msgstr ""
+msgstr "Metóda výpočtu"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -266,7 +266,7 @@ msgstr "Vypočítať"
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr ""
+msgstr "Vypočítať aktívum"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
@@ -288,7 +288,7 @@ msgstr ""
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Vytvorené pohyby aktív"
 
 #. module: account_asset
 #: field:account.asset.asset,create_uid:0
@@ -318,12 +318,12 @@ msgstr "Mena"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Current"
-msgstr ""
+msgstr "Aktuálne"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Súčasný odpis"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
@@ -333,24 +333,24 @@ msgstr "Dátum"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Date of asset purchase"
-msgstr ""
+msgstr "Dátum nákupu aktíva"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Date of depreciation"
-msgstr ""
+msgstr "Dátum odpisu"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr ""
+msgstr "Zostupné"
 
 #. module: account_asset
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "Zostupný faktor"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
@@ -360,18 +360,18 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
 msgid "Depreciation Account"
-msgstr ""
+msgstr "Odpisový účet"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Depreciation Board"
-msgstr ""
+msgstr "Nástenka odpisov"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr ""
+msgstr "Dátum odpisu"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -381,28 +381,28 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr ""
+msgstr "Vstup odpisu"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr ""
+msgstr "Odpisové riadky"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 msgid "Depreciation Method"
-msgstr ""
+msgstr "Metóda odpisu"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Mesiac odpisu"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "Názov odpisu"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -423,7 +423,7 @@ msgstr "Dátum ukončenia"
 #: field:account.asset.category,method_end:0
 #: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
-msgstr ""
+msgstr "Dátum ukončovania"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -456,12 +456,12 @@ msgstr "Všeobecný"
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr ""
+msgstr "Hrubá suma"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Hrubá hodnota"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
@@ -507,7 +507,7 @@ msgstr "Položky faktúry"
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "Je to suma ktorú plánujete mať a nemožno ju odpísať."
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
@@ -519,7 +519,7 @@ msgstr "Účtovná kniha"
 #: model:ir.model,name:account_asset.model_account_move_line
 #, python-format
 msgid "Journal Items"
-msgstr ""
+msgstr "Položky účtovnej knihy"
 
 #. module: account_asset
 #: field:account.asset.asset,write_uid:0
@@ -545,7 +545,7 @@ msgstr "Naposledy upravované"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr ""
+msgstr "Lineárne"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
@@ -557,7 +557,7 @@ msgstr "Upraviť"
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "Upraviť aktívum"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -567,7 +567,7 @@ msgstr "Meno"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Ďalšie obdobie odpisu"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0 field:account.asset.category,note:0
@@ -592,12 +592,12 @@ msgstr "Poznámky"
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Počet odpisov"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Počet mesiacov v období"
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -620,7 +620,7 @@ msgstr "Obdobie"
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Dĺžka obdobia"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -632,24 +632,24 @@ msgstr "Zverejnené"
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
 msgid "Posted Amount"
-msgstr ""
+msgstr "Zverejnená suma"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Zverejnené riadky odpisov"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Podľa uplynulej doby"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
+msgstr "'Podľa uplynulej doby' môže byť apikované iba pre časovú metou \"počet odpisov\"."
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -660,7 +660,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Mesiac nákupu"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -675,7 +675,7 @@ msgstr "Referencie"
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
 msgid "Residual Value"
-msgstr ""
+msgstr "Reziduálna hodnota"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -687,12 +687,12 @@ msgstr "Spustené"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Záchranná hodnota"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_search
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Vyhľadať kategóriu aktív"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
@@ -717,12 +717,12 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "Tu uveďte čas medzi 2 odpismi, v mesiacoch"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Stav aktíva"
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -732,7 +732,7 @@ msgstr "Status"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Množstvo času medzi dvoma odpismi, v mesiacoch"
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0
@@ -747,14 +747,14 @@ msgstr ""
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Poçet odpisov potrebných na odpis vášho aktíva"
 
 #. module: account_asset
 #: field:account.asset.asset,method_time:0
 #: field:account.asset.category,method_time:0
 #: field:account.asset.history,method_time:0
 msgid "Time Method"
-msgstr ""
+msgstr "Časová metóda"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -764,7 +764,7 @@ msgstr ""
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Nezverejnená suma"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -777,7 +777,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "Keď je aktívum vytvorené, stav je 'Koncept'.\nAk je aktívum potvrdené, stav sa zmní na 'Prebiehajúce' a odpisové riadky môžu byť zverejnené v účtovníctve.\nMôžete manuálne zavrieť aktívum keď skončí odpis. Ak je posledný riadok odpisu zverejnený, aktívum automaticky prejde do toho stavu."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -793,7 +793,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "months"
-msgstr ""
+msgstr "mesiace"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard

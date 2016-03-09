@@ -163,10 +163,11 @@
                         	<label for="line_dr_ids"/>
                             <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
+                                    <field name="state" invisible="1"/>
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"/>
+                                        attrs="{'required': [('state', 'in', [False, 'draft'])]}"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -179,10 +180,11 @@
                             <label for="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}"/>
                             <field name="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
+                                    <field name="state" invisible="1"/>
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"/>
+                                        attrs="{'required': [('state', 'in', [False, 'draft'])]}"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>

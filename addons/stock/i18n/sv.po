@@ -3,14 +3,15 @@
 # * stock
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # lasch a <bmail440@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-11-23 23:33+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -49,12 +50,22 @@ msgstr ""
 #: code:addons/stock/stock.py:1662
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr "(%s reserverat)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr "(reserverat)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
@@ -67,7 +78,7 @@ msgstr ""
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
 #, python-format
 msgid " On Hand"
-msgstr ""
+msgstr "Tillhanda"
 
 #. module: stock
 #: code:addons/stock/stock.py:3224 code:addons/stock/stock.py:3498
@@ -120,7 +131,7 @@ msgstr ""
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Mellanlager"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -380,7 +391,7 @@ msgstr "Extra funktioner"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Additional Info"
-msgstr ""
+msgstr "Ytterligare information"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form field:stock.location,comment:0
@@ -410,7 +421,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_type_form
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "All Operations"
-msgstr ""
+msgstr "Alla åtgärder"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -682,7 +693,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Cancel Transfer"
-msgstr ""
+msgstr "Avbryt flytt"
 
 #. module: stock
 #: selection:stock.inventory,state:0 selection:stock.move,state:0
@@ -1089,7 +1100,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,date_done:0
 msgid "Date of Transfer"
-msgstr ""
+msgstr "Flyttdatum"
 
 #. module: stock
 #: field:report.stock.lines.date,date:0
@@ -1343,24 +1354,24 @@ msgstr "Klar"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr ""
+msgstr "Klara flyttar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "Klara flyttar per datum"
 
 #. module: stock
 #: selection:stock.inventory,state:0
 #: view:stock.picking:stock.view_picking_internal_search
 #: selection:stock.picking,state:0
 msgid "Draft"
-msgstr "Utdrag"
+msgstr "Utkast"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Draft Moves"
-msgstr "Draft Moves"
+msgstr "Rörelser i utkast"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -1371,7 +1382,7 @@ msgstr "Redigera..."
 #: code:addons/stock/wizard/stock_transfer_details.py:115
 #, python-format
 msgid "Enter transfer details"
-msgstr ""
+msgstr "Ange flyttdetaljer"
 
 #. module: stock
 #: code:addons/stock/stock.py:638 code:addons/stock/stock.py:2353
@@ -1503,6 +1514,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr ""
 
@@ -1914,7 +1926,7 @@ msgstr ""
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "Intern flytt"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
@@ -2181,7 +2193,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "Sen flytt"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2670,7 +2682,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:195
 #, python-format
 msgid "No picking found."
-msgstr ""
+msgstr "Plockningar saknas."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:84
@@ -3061,7 +3073,7 @@ msgstr "Delvis"
 #. module: stock
 #: field:stock.move,partially_available:0 selection:stock.picking,state:0
 msgid "Partially Available"
-msgstr ""
+msgstr "Delvis tillgänglig"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -3134,7 +3146,7 @@ msgstr "Plocklista"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "Plocklistor"
 
 #. module: stock
 #: field:procurement.rule,picking_type_id:0 field:stock.move,picking_type_id:0
@@ -3142,17 +3154,17 @@ msgstr ""
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "Plocktyp"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
 msgid "Picking Type Code"
-msgstr ""
+msgstr "Plocktypskod"
 
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr ""
+msgstr "Plocktypsnamn"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
@@ -3171,7 +3183,7 @@ msgstr ""
 #: view:stock.picking.type:stock.view_picking_type_tree
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "Plocktyper"
 
 #. module: stock
 #: view:stock.picking:stock.vpicktree
@@ -3191,7 +3203,7 @@ msgstr ""
 #. module: stock
 #: view:procurement.group:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr ""
+msgstr "Plock"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3269,7 +3281,7 @@ msgstr "Skriv ut"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Print Picking List"
-msgstr ""
+msgstr "Skriv ut plocklista"
 
 #. module: stock
 #. openerp-web
@@ -3622,7 +3634,7 @@ msgid "Quantity (UOS)"
 msgstr "Quantity (UOS)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -3736,12 +3748,12 @@ msgstr "Redo"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 msgid "Ready Transfers"
-msgstr ""
+msgstr "Klara för flytt"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr ""
+msgstr "Redo att flyttas"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -3989,7 +4001,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "Återflyttad"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -4204,7 +4216,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Serial Numbers"
-msgstr "Seriellnummerna"
+msgstr "Serienummer"
 
 #. module: stock
 #: field:procurement.rule,warehouse_id:0
@@ -5004,22 +5016,22 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr "Överföring"
+msgstr "Flytt"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Transfer details"
-msgstr ""
+msgstr "Flyttdetaljer"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Transferred"
-msgstr ""
+msgstr "Flyttad"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr "Överföringar"
+msgstr "Flyttningar"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -5169,7 +5181,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "Använd denna assistent för att skapa en inköpsanmodan för denna\nprodukt. I enlighet med produktkonfigurationen, detta kan komma att\nutlösa ett inköpsorderförslag, en tillverkningsorder eller\nen ny aktivitet."
 
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
@@ -5255,12 +5267,12 @@ msgstr ""
 #: selection:stock.picking,state:0
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Waiting Availability"
-msgstr ""
+msgstr "Väntar på tillgänglighet"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "Väntar på tillgängliga flyttar"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -5427,7 +5439,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2400
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "You can only delete draft moves."
+msgstr "Det är endast möjlligt att radera rörelser i utkast."
 
 #. module: stock
 #: code:addons/stock/stock.py:2244
@@ -5453,7 +5465,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2465
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
+msgstr "Du kan inte dela en lagerrörelse i utkast. Den måste bekräftas först."
 
 #. module: stock
 #: code:addons/stock/stock.py:2461

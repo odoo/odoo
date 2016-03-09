@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2016-01-09 03:06+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-8/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -48,37 +48,47 @@ msgstr ""
 #: code:addons/stock/stock.py:1662
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr "(%s reservado)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr "(reservado)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
-msgstr ""
+msgstr "MTO"
 
 #. module: stock
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
 #, python-format
 msgid " On Hand"
-msgstr ""
+msgstr "En Mano"
 
 #. module: stock
 #: code:addons/stock/stock.py:3224 code:addons/stock/stock.py:3498
 #, python-format
 msgid " Sequence in"
-msgstr ""
+msgstr "Secuencia en"
 
 #. module: stock
 #: code:addons/stock/stock.py:3228 code:addons/stock/stock.py:3502
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr "Secuencia interna"
 
 #. module: stock
 #: code:addons/stock/stock.py:3225 code:addons/stock/stock.py:3499
@@ -90,7 +100,7 @@ msgstr ""
 #: code:addons/stock/stock.py:3226 code:addons/stock/stock.py:3500
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr "Secuencia del empaque"
 
 #. module: stock
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
@@ -119,7 +129,7 @@ msgstr ""
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Locación En Tránsito"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -129,7 +139,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr ""
+msgstr "* Nuevo: Cuando se crea el stock de movimiento y todavía no confirmado.\n* Esperando Otra Mover: Este estado se puede ver cuando un movimiento está esperando otro, por ejemplo en un flujo encadenado.\n* Espera Disponibilidad: se alcanza este estado cuando la resolución de la contratación no es sencillo. Es posible que el planificador corra, un componente para mí fabricado ... \n* Disponible: Cuando los productos están reservados, se establece en 'Disponible'.\n* Hecho: Cuando se procesa el envío, el estado es 'Hecho'."
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -384,7 +394,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:stock.view_location_form field:stock.location,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Información Adicional"
 
 #. module: stock
 #: field:stock.warehouse,partner_id:0
@@ -454,7 +464,7 @@ msgstr ""
 #: help:stock.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Le permite seleccionar y mantener diferentes unidades de medida de los productos."
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -473,7 +483,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "Aplicable En"
 
 #. module: stock
 #: field:stock.location.route,product_selectable:0
@@ -777,7 +787,7 @@ msgstr "Código"
 #. module: stock
 #: field:stock.picking.type,color:0
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -1027,7 +1037,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "La cantidad actual de productos.\nEn un contexto con una sola Ubicación de archivo, lo que incluye los bienes almacenados en esta oficina, o cualquiera de sus hijos.\nEn un contexto con un único almacén, lo que incluye los bienes almacenados en la Bolsa de ubicación de este almacén, o cualquiera de sus hijos.\nalmacenada en el archivo Ubicación del Almacén de esta tienda, o cualquiera de sus hijos.\nDe lo contrario, esto incluye los bienes almacenados en cualquier Ubicación de archivo con el tipo \"interno\"."
 
 #. module: stock
 #: code:addons/stock/stock.py:4263
@@ -1049,13 +1059,13 @@ msgstr ""
 #. module: stock
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Tiempo de Espera del Cliente"
 
 #. module: stock
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr ""
+msgstr "Ubicación del Cliente"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -1230,7 +1240,7 @@ msgstr ""
 #: view:product.product:stock.product_kanban_stock_view
 #: field:product.product,delivery_count:0
 msgid "Delivery"
-msgstr ""
+msgstr "Entrega"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -1240,7 +1250,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Método de Entrega"
 
 #. module: stock
 #: code:addons/stock/stock.py:3271
@@ -1260,7 +1270,7 @@ msgstr ""
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "En función de los módulos instalados, esto le permitirá definir la ruta del producto: si va a ser comprado, fabricado, MTO/MTS, ..."
 
 #. module: stock
 #: field:stock.move,name:0
@@ -1271,7 +1281,7 @@ msgstr "Descripción"
 #: view:stock.move:stock.view_move_form view:stock.move:stock.view_move_search
 #: view:website:stock.report_picking
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #. module: stock
 #: field:stock.move,partner_id:0
@@ -1502,8 +1512,9 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Cantidad Pronosticada"
 
 #. module: stock
 #: help:product.product,virtual_available:0
@@ -1512,7 +1523,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad Pronóstico (calculado como cantidad disponible - Salientes + Entrantes)\nEn un contexto con una sola Ubicación de archivo, lo que incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijos.\nEn un contexto con un único almacén, lo que incluye los bienes almacenados en la Bolsa de ubicación de este almacén, o cualquiera de sus hijos.\nDe lo contrario, esto incluye los bienes almacenados en cualquier Ubicación de archivo con el tipo \"interno\"."
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -1849,7 +1860,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "Los Incoterms son series de términos de ventas. Se utilizan para dividir los costos de transacción y responsabilidades entre el comprador y el vendedor y reflejar las prácticas de transporte del estado de la técnica."
 
 #. module: stock
 #: code:addons/stock/stock.py:1977
@@ -1973,7 +1984,7 @@ msgstr ""
 #: field:stock.inventory.line,inventory_id:0 selection:stock.location,usage:0
 #: field:stock.move,inventory_id:0 view:website:stock.report_inventory
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2006,7 +2017,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr ""
+msgstr "Línea de Inventario"
 
 #. module: stock
 #: help:stock.inventory,line_ids:0
@@ -2021,7 +2032,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "Ubicaciones de Inventario"
 
 #. module: stock
 #: help:stock.inventory,move_ids:0
@@ -2314,7 +2325,7 @@ msgstr ""
 #: view:product.category:stock.product_category_form_view_inherit
 #: view:stock.location:stock.view_location_form
 msgid "Logistics"
-msgstr ""
+msgstr "Logistica"
 
 #. module: stock
 #: field:stock.move,restrict_lot_id:0 field:stock.move.scrap,restrict_lot_id:0
@@ -2965,7 +2976,7 @@ msgstr ""
 #: view:stock.quant.package:stock.view_quant_package_tree
 #: view:website:stock.report_inventory
 msgid "Package"
-msgstr ""
+msgstr "Paquete"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
@@ -3022,7 +3033,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Operación de Empaque"
 
 #. module: stock
 #: code:addons/stock/stock.py:3354
@@ -3316,7 +3327,7 @@ msgstr "Abastecimiento"
 #: view:stock.picking:stock.view_picking_internal_search
 #: field:stock.picking,group_id:0 field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Grupo de Adquisiciones"
 
 #. module: stock
 #: field:procurement.order,location_id:0 field:procurement.rule,location_id:0
@@ -3621,7 +3632,7 @@ msgid "Quantity (UOS)"
 msgstr ""
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -3711,7 +3722,7 @@ msgstr ""
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr ""
+msgstr "Cuantos"
 
 #. module: stock
 #. openerp-web
@@ -3957,7 +3968,7 @@ msgstr ""
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr ""
+msgstr "Regreso"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -3994,7 +4005,7 @@ msgstr ""
 #: field:stock.location,parent_right:0
 #: field:stock.quant.package,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Pariente derecha"
 
 #. module: stock
 #: field:procurement.rule,route_id:0 field:stock.location.path,route_id:0
@@ -4270,7 +4281,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr ""
+msgstr "Nombre Corto"
 
 #. module: stock
 #: help:stock.warehouse,code:0
@@ -4291,7 +4302,7 @@ msgstr ""
 #: view:stock.move:stock.view_move_search field:stock.move,origin:0
 #: view:website:stock.report_picking
 msgid "Source"
-msgstr ""
+msgstr "Recurso"
 
 #. module: stock
 #: field:stock.picking,origin:0
@@ -4894,7 +4905,7 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr ""
+msgstr "Se utilizará esta ubicación de valores, en lugar de la que viene por defecto, ya que la ubicación de origen de los bienes que reciben de la actual pareja"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -5018,7 +5029,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr ""
+msgstr "Transferencias"
 
 #. module: stock
 #: selection:stock.location,usage:0

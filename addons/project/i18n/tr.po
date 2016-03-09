@@ -5,13 +5,13 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # gezgin biri <gezginbiri@hotmail.com>, 2015
-# Murat Kaplan <muratk@projetgrup.com>, 2015
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-12-09 19:27+0000\n"
+"PO-Revision-Date: 2016-01-20 14:35+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,7 @@ msgstr "Rumuz Modeli"
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr "Görev delegasyonu izin verme"
+msgstr "Görev delegasyonuna izin ver"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
@@ -157,7 +157,7 @@ msgstr "Görevleri ile ilgili çalışma hesaplamak için izin verir."
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr "Başka kullanıcıları görevlendirmenizi sağlar"
+msgstr "Görevleri başka kullanıcılara delege etmenizi sağlar"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -256,7 +256,7 @@ msgstr "KOTROL: "
 #: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
 msgid "CHECK: %s"
-msgstr "KONTOL: %s"
+msgstr "KONTROL: %s"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -443,43 +443,43 @@ msgstr "Gecikme Saatleri"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegate"
-msgstr "Yekilendirme"
+msgstr "Delegasyon"
 
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Delegated Task"
-msgstr "Yekilendirilmiş Görev"
+msgstr "Delege Edilmiş Görev"
 
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr "Yekilendirilmiş Görevler"
+msgstr "Delege Edilmiş Görevler"
 
 #. module: project
 #: field:project.task.delegate,name:0
 msgid "Delegated Title"
-msgstr "Aktarılan Başlık"
+msgstr "Delege Edilen Konu"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr "Aktarılan"
+msgstr "Delege Edilen"
 
 #. module: project
 #: code:addons/project/project.py:938
 #, python-format
 msgid "Delegated User should be specified"
-msgstr "Yetkili Kullanıcı belirtilmelidir"
+msgstr "Delege edilen kullanıcı belirtilmelidir"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegated tasks"
-msgstr "Yekilendirilen Görevler"
+msgstr "Delege Edilen Görevler"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegation"
-msgstr "Yetkilendirme"
+msgstr "Delegasyon"
 
 #. module: project
 #: view:project.project:project.view_project_kanban
@@ -567,12 +567,12 @@ msgstr "Hata! Proje başlangıç tarihi proje bitiş tarihinden küçük olmalı
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr "Bu görev için görevlendirdiğiniz kullanıcı tarafından bitirilen işleri doğrulamanız için tahmini süre"
+msgstr "Bu görevi delege ettiğiniz kullanıcı tarafından bitirilen işleri doğrulamanız için tahmini süre"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr "Görevlendirilen kullanıcı tarafından bu görevin kapatılması için öngörülen süre"
+msgstr "Delege edilen kullanıcı tarafından bu görevin kapatılması için öngörülen süre"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -957,12 +957,12 @@ msgstr "Yeni Görev Tanımı"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr "Görevinizi yeni durumu. Bekleyen, atanan görev kapandığında kendiliğinden yeniden açılacaktır"
+msgstr "Görevin yeni durumu. Bekleyen, delege edilen görev kapandığında kendiliğinden yeniden açılacaktır."
 
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr "Görev Yeni başlık kullanıcıyı yekilenedirme için"
+msgstr "Delege edilen kullanıcının görevle ilgili yeni başlığı"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1151,7 +1151,7 @@ msgstr "Proje Aşamaları"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Project Task Delegate"
-msgstr "Proje Görevi Yetkilndirme"
+msgstr "Proje Görevi Delegasyonu"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -1440,12 +1440,12 @@ msgstr "Görev Oluşturuldu"
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr "Görev Yetkileri"
+msgstr "Görev Delegasyonu"
 
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr "Görev Yetkilendirme"
+msgstr "Görev Delegasyonu"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -1726,7 +1726,7 @@ msgstr "Kullanıcı Email"
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr "Bu görevide yetki vermek istediğiniz Kullanıcı"
+msgstr "Bu görevi delege etmek istediğiniz kullanıcı"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1803,7 +1803,7 @@ msgstr "Görev Başlığınız"
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "_Delegate"
-msgstr "_Yetki"
+msgstr "_Delegasyon"
 
 #. module: project
 #: view:project.task:project.view_task_kanban

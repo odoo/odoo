@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 09:27+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2016-02-14 13:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-8/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +46,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -100,9 +101,16 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
 msgstr ""
 
 #. module: account
@@ -151,14 +159,14 @@ msgstr ""
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (kopia)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
 #: code:addons/account/account.py:787
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopia)"
 
 #. module: account
 #: view:website:account.report_partnerbalance
@@ -210,7 +218,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 egun"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -543,7 +551,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "Teorikoki azken saldoa"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -613,7 +621,7 @@ msgstr ""
 #: view:website:account.report_trialbalance
 #, python-format
 msgid "Account"
-msgstr ""
+msgstr "Kontua"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -689,24 +697,24 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "Txostenaren kontaketa arrunta"
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Kontu-moneta"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
 #: field:account.fiscal.position.account.template,account_dest_id:0
 msgid "Account Destination"
-msgstr ""
+msgstr "Kontu-helmuga"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr ""
+msgstr "Kontu-sarrera"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -719,7 +727,7 @@ msgstr ""
 #: view:account.journal:account.view_account_journal_tree
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr ""
+msgstr "Eguneroko kontua"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -729,14 +737,14 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Marra kontua"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr ""
+msgstr "Mapa kontua"
 
 #. module: account
 #: field:account.use.model,model:0
@@ -754,12 +762,12 @@ msgstr ""
 #: view:website:account.report_centraljournal
 #: view:website:account.report_invertedanalyticbalance
 msgid "Account Name"
-msgstr ""
+msgstr "Kontu izena"
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr ""
+msgstr "kontu izena"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
@@ -769,7 +777,7 @@ msgstr ""
 #. module: account
 #: field:res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr ""
+msgstr "Ordaintzeko kontua"
 
 #. module: account
 #: view:account.period:account.view_account_period_form
@@ -785,12 +793,12 @@ msgstr ""
 #. module: account
 #: view:product.category:account.view_category_property_form
 msgid "Account Properties"
-msgstr ""
+msgstr "Kontuen-ezaugarriak"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr ""
+msgstr "Kontua kobratzeke"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
@@ -804,25 +812,25 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Kontu-txostena"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "Kontuen-txostenak"
 
 #. module: account
 #: view:account.financial.report:account.view_account_report_tree_hierarchy
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Kontu-Txostenak hierarkia"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr ""
+msgstr "Kontu-iturburua"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_state_open
@@ -852,7 +860,7 @@ msgstr ""
 #: view:account.tax:account.view_tax_form
 #: view:account.tax:account.view_tax_tree
 msgid "Account Tax"
-msgstr ""
+msgstr "Kontua-tax"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -877,7 +885,7 @@ msgstr ""
 #: view:account.tax.template:account.view_account_tax_template_form
 #: view:account.tax.template:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr ""
+msgstr "Kontu zergen txantiloia"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -885,18 +893,18 @@ msgstr ""
 #: view:account.account.template:account.view_account_template_tree
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 msgid "Account Template"
-msgstr ""
+msgstr "Kontuen txantiloia"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_template_form
 msgid "Account Templates"
-msgstr ""
+msgstr "Kontuen txantiloiak"
 
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "Kontua guztira"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -914,7 +922,7 @@ msgstr ""
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr ""
+msgstr "Kontu mota"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -929,12 +937,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.ui.menu,name:account.menu_action_account_type_form
 msgid "Account Types"
-msgstr ""
+msgstr "Kontu motak"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "Bateratu kontua"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
@@ -969,12 +977,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr ""
+msgstr "Kontua bateratzeko line mugimendua"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "Kontua bateratzeko linea mugimendua"
 
 #. module: account
 #: view:account.account:account.view_account_form
@@ -1014,7 +1022,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "Kontagailua"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -1023,29 +1031,29 @@ msgstr ""
 #: view:product.template:account.product_template_form_view
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting"
-msgstr ""
+msgstr "Kontabilitatea"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Kontuak/Finantzak"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
 msgid "Accounting Application Configuration"
-msgstr ""
+msgstr "Kontabilitate aplikazioaren konfigurazioa"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 msgid "Accounting Documents"
-msgstr ""
+msgstr "Kontabilitate dokumentuak"
 
 #. module: account
 #: view:res.partner.bank:account.view_partner_bank_form_inherit
 msgid "Accounting Information"
-msgstr ""
+msgstr "Kontabilitate informazioa"
 
 #. module: account
 #: field:account.installer,charts:0
@@ -1060,7 +1068,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "Kontabilitate txostena"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -1070,7 +1078,7 @@ msgstr ""
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Kontabilitate-ezarpenak kudeatzen dira"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1083,7 +1091,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr ""
+msgstr "Kontuak"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -1134,23 +1142,23 @@ msgstr "Gaituta"
 #. module: account
 #: view:account.addtmpl.wizard:account.view_account_addtmpl_wizard_form
 msgid "Add"
-msgstr ""
+msgstr "Gehitu"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Erantsi barne oharra"
 
 #. module: account
 #: field:account.invoice,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Informazio gehigarria"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Ohar gehigarriak"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -1160,7 +1168,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Aurreratutako ezarpenak"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -1205,7 +1213,7 @@ msgstr ""
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "All"
-msgstr ""
+msgstr "Denak"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1227,7 +1235,7 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:67
 #, python-format
 msgid "All Entries"
-msgstr ""
+msgstr "Sarrera guztiak"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1254,22 +1262,22 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr ""
+msgstr "Argitaratutako sarrera guztiak"
 
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "All accounts"
-msgstr ""
+msgstr "Kontu guztiak"
 
 #. module: account
 #: view:website:account.report_generalledger
 msgid "All accounts'"
-msgstr ""
+msgstr "Kontu guztiak"
 
 #. module: account
 #: field:account.bank.statement,all_lines_reconciled:0
 msgid "All lines reconciled"
-msgstr ""
+msgstr "Lerro guztiak adiskidetuak"
 
 #. module: account
 #: help:account.move,state:0
@@ -1411,7 +1419,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.next_id_40
 #: view:website:account.report_analyticjournal
 msgid "Analytic"
-msgstr ""
+msgstr "Analitika"
 
 #. module: account
 #. openerp-web
@@ -1442,14 +1450,14 @@ msgstr ""
 #: view:account.config.settings:account.view_account_config_settings
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Kontabilitate analitikoa"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_list
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr ""
+msgstr "Kontu analitikoak"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
@@ -1466,7 +1474,7 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_tree
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Sarrera analitikoak"
 
 #. module: account
 #: view:analytic.entries.report:account.view_account_analytic_entries_search
@@ -1540,35 +1548,35 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Lerro analitikoa"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Analytic Lines"
-msgstr ""
+msgstr "Lerro analitikoak"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_tree
 #: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Kontu analitikoa"
 
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr ""
+msgstr "Kontabilitate analitikoa"
 
 #. module: account
 #: field:account.move.line,analytic_lines:0
 msgid "Analytic lines"
-msgstr ""
+msgstr "Lerro analitikoa"
 
 #. module: account
 #: field:account.tax,applicable_type:0
 msgid "Applicability"
-msgstr ""
+msgstr "Aplikagarria"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1595,26 +1603,30 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Apply"
-msgstr ""
+msgstr "Aplikatu"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
 msgstr ""
 
 #. module: account
@@ -1627,7 +1639,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "April"
-msgstr ""
+msgstr "Apirila"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model_create_entry
@@ -1675,7 +1687,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "Gaituta"
+msgstr "Aktiboak"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
@@ -1787,7 +1799,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Balance"
-msgstr ""
+msgstr "Balantzea"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -1968,7 +1980,7 @@ msgstr ""
 #. module: account
 #: field:account.vat.declaration,based_on:0
 msgid "Based on"
-msgstr ""
+msgstr "Oinarrituta"
 
 #. module: account
 #: field:account.treasury.report,date:0
@@ -2003,12 +2015,12 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
 msgid "By Country"
-msgstr ""
+msgstr "Herrialdeka"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
 msgid "By Product"
-msgstr ""
+msgstr "Produktuko"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
@@ -2023,7 +2035,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Saltzaileko"
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -2569,6 +2581,13 @@ msgid "Choose Fiscal Year"
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2622,7 +2641,7 @@ msgstr ""
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
 #: selection:account.fiscalyear,state:0 selection:account.period,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Itxita"
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -2703,7 +2722,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Enpresak"
 
 #. module: account
 #: field:res.partner,ref_companies:0
@@ -2834,7 +2853,7 @@ msgstr ""
 #: view:account.config.settings:account.view_account_config_settings
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurazioa"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57
@@ -2897,17 +2916,17 @@ msgstr ""
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr ""
+msgstr "Zirriborro fakturak baieztatu"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 msgid "Confirm Invoices"
-msgstr ""
+msgstr "Fakturak baieztatu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr ""
+msgstr "Aukeratutako fakturak baieztatu"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -2975,13 +2994,13 @@ msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
+msgid "Country"
 msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "Herrialde taldea"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
@@ -2991,7 +3010,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
 msgid "Create"
-msgstr ""
+msgstr "Sortu"
 
 #. module: account
 #: view:account.fiscalyear:account.view_account_fiscalyear_form
@@ -3007,7 +3026,7 @@ msgstr ""
 #. module: account
 #: field:report.invoice.created,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Sortze data"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model
@@ -3027,6 +3046,13 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
 msgstr ""
 
 #. module: account
@@ -3129,7 +3155,7 @@ msgstr ""
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Nork sortua"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3218,7 +3244,7 @@ msgstr ""
 #: field:validate.account.move.lines,create_date:0
 #: field:wizard.multi.charts.accounts,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Noiz sortua"
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -3369,7 +3395,7 @@ msgstr ""
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Bezeroaren Beza"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -3380,13 +3406,13 @@ msgstr ""
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Bezeroaren ordainketa epea"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr ""
+msgstr "Bezeroaren itzultzeak"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
@@ -3397,12 +3423,12 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr ""
+msgstr "Bezeroaren zergak"
 
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "Bezeroaren erreferentzia:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -3782,7 +3808,7 @@ msgstr ""
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr ""
+msgstr "Egina"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -3869,7 +3895,7 @@ msgstr ""
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Duration"
-msgstr ""
+msgstr "Iraupena"
 
 #. module: account
 #: code:addons/account/account.py:3197
@@ -4015,7 +4041,7 @@ msgstr ""
 #: field:account.move,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
-msgstr ""
+msgstr "Idazpenak"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_graph
@@ -4560,7 +4586,7 @@ msgstr ""
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Jarraitzaileak"
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -4858,7 +4884,7 @@ msgstr ""
 #: view:account.treasury.report:account.view_account_treasury_report_search
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Taldekatu"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -4969,7 +4995,7 @@ msgstr ""
 #: field:validate.account.move,id:0 field:validate.account.move.lines,id:0
 #: field:wizard.multi.charts.accounts,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -5303,7 +5329,7 @@ msgstr ""
 #. module: account
 #: view:product.template:account.product_template_form_view
 msgid "Internal Category"
-msgstr ""
+msgstr "Barne kategoria"
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -5377,7 +5403,7 @@ msgstr ""
 #: view:website:account.report_invoice_document
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
@@ -5401,7 +5427,7 @@ msgstr ""
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Faktura lerroa"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -5433,7 +5459,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Faktura egoera"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -5443,7 +5469,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr ""
+msgstr "Faktura zerga"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5505,7 +5531,7 @@ msgstr ""
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
@@ -5549,7 +5575,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturazioa"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -5560,7 +5586,7 @@ msgstr ""
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jarraitzailea da"
 
 #. module: account
 #: help:account.move.reconcile,opening_reconciliation:0
@@ -5931,9 +5957,16 @@ msgstr "Utzi hutsik baliozkotze-eguneko epea erabiltzeko (faktura)."
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -5954,7 +5987,7 @@ msgstr ""
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Azken mezuaren data"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6041,7 +6074,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_uid:0
 #: field:wizard.multi.charts.accounts,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Nork eguneratua"
 
 #. module: account
 #: field:account.account,write_date:0
@@ -6128,7 +6161,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_date:0
 #: field:wizard.multi.charts.accounts,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Noiz eguneratua"
 
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
@@ -6334,7 +6367,7 @@ msgstr "Mezuak"
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Komunikazio eta mezu erregistroa"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -6492,7 +6525,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:113
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Berria"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -6647,7 +6680,7 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Normal"
-msgstr ""
+msgstr "Arrunta"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6692,7 +6725,7 @@ msgstr ""
 #. module: account
 #: field:account.account.template,note:0
 msgid "Note"
-msgstr ""
+msgstr "Oharra"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -7294,7 +7327,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal URL"
 
 #. module: account
 #: field:account.config.settings,paypal_account:0
@@ -7318,7 +7351,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
 msgid "Pending"
-msgstr ""
+msgstr "Zain"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -7542,12 +7575,12 @@ msgstr ""
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "Eguneko sarrerak argitaratu"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "Aldizkariko artikuluak argitaratu"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7590,7 +7623,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Print Invoice"
-msgstr ""
+msgstr "Inprimatu Faktura"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -7668,12 +7701,12 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Produktu kantitatea"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Txantiloi produktua"
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -7691,7 +7724,7 @@ msgstr ""
 #: code:addons/account/account_cash_statement.py:318
 #, python-format
 msgid "Profit"
-msgstr ""
+msgstr "Irabaziak"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -7715,7 +7748,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Irabazien kontua"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
@@ -7726,12 +7759,12 @@ msgstr ""
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Galerak eta irabaziak"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -7757,7 +7790,7 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_form
 msgid "Properties"
-msgstr ""
+msgstr "Propietateak"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -7770,7 +7803,7 @@ msgstr ""
 #: view:account.tax.template:account.view_account_tax_template_search
 #: selection:account.tax.template,type_tax_use:0
 msgid "Purchase"
-msgstr ""
+msgstr "Erosketak"
 
 #. module: account
 #: code:addons/account/account.py:3187
@@ -7823,7 +7856,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Purchases"
-msgstr ""
+msgstr "Erosketak"
 
 #. module: account
 #: view:cash.box.in:account.cash_box_in_form
@@ -7949,14 +7982,14 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr ""
+msgstr "Adiskidetu"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr ""
+msgstr "Sarrerak bateratu"
 
 #. module: account
 #: field:account.move.line,reconcile_ref:0
@@ -8077,7 +8110,7 @@ msgstr ""
 #: field:account.move.line,ref:0 field:account.subscription,ref:0
 #: xsl:account.transfer:0 field:cash.box.in,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Erreferentzia"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -8284,7 +8317,7 @@ msgstr ""
 #: view:account.invoice:account.invoice_supplier_form
 #: view:account.invoice:account.invoice_tree
 msgid "Responsible"
-msgstr ""
+msgstr "Arduraduna"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -8325,6 +8358,12 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
 msgstr ""
 
 #. module: account
@@ -8402,7 +8441,7 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: view:product.template:account.product_template_form_view
 msgid "Sales"
-msgstr ""
+msgstr "Salmentak"
 
 #. module: account
 #: code:addons/account/account.py:3186
@@ -8696,7 +8735,7 @@ msgstr "Sekuentzia"
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
 msgid "Sequences"
-msgstr ""
+msgstr "Sekuentziak"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -9071,7 +9110,7 @@ msgstr ""
 #: field:account.bank.statement,message_summary:0
 #: field:account.invoice,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Laburpena"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -9456,7 +9495,7 @@ msgstr ""
 #: view:account.analytic.account:account.view_account_analytic_account_search
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Txantiloia"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9619,6 +9658,20 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr ""
@@ -9645,6 +9698,11 @@ msgstr ""
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
 msgstr ""
 
 #. module: account
@@ -9959,6 +10017,30 @@ msgid "This Year"
 msgstr ""
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9970,18 +10052,6 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
 msgstr ""
 
 #. module: account
@@ -10298,7 +10368,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -10358,7 +10428,7 @@ msgstr ""
 #: view:website:account.report_salepurchasejournal
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "Guztira"
 
 #. module: account
 #: view:account.invoice:account.invoice_tree
@@ -10372,23 +10442,23 @@ msgstr ""
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_tree
 msgid "Total Credit"
-msgstr ""
+msgstr "Kreditua guztira"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_tree
 msgid "Total Debit"
-msgstr ""
+msgstr "Zorra guztira"
 
 #. module: account
 #: field:res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Fakturazioa guztira"
 
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "Ordaintzekoa guztira"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
@@ -10398,7 +10468,7 @@ msgstr ""
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr ""
+msgstr "Kobratu guztira"
 
 #. module: account
 #: field:account.invoice.report,residual:0
@@ -10483,7 +10553,7 @@ msgstr ""
 #: view:website:account.report_generaljournal
 #: view:website:account.report_partnerbalance
 msgid "Total:"
-msgstr ""
+msgstr "Guztira:"
 
 #. module: account
 #. openerp-web
@@ -10763,7 +10833,7 @@ msgstr ""
 #: view:account.journal:account.view_account_journal_search
 #: field:account.journal,user_id:0 field:analytic.entries.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Erabiltzailea"
 
 #. module: account
 #: code:addons/account/account.py:1414 code:addons/account/account.py:1419
@@ -10893,12 +10963,12 @@ msgstr ""
 #: code:addons/account/wizard/account_validate_account_move.py:60
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Kontuz!"
 
 #. module: account
 #: field:report.account.receivable,name:0
 msgid "Week of Year"
-msgstr ""
+msgstr "Urteko astea"
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -11053,6 +11123,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11060,13 +11137,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
@@ -11074,7 +11159,7 @@ msgstr ""
 #. module: account
 #: constraint:account.fiscal.position:0
 msgid "You can not select a country and a group of countries"
-msgstr ""
+msgstr "Ezin daiteke herrialde eta herrialde talde bat aukeratu."
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -11112,7 +11197,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11583,7 +11668,7 @@ msgstr ""
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "or"
-msgstr ""
+msgstr "edo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -11624,7 +11709,7 @@ msgstr ""
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
 msgid "title"
-msgstr ""
+msgstr "titulua"
 
 #. module: account
 #. openerp-web
@@ -11646,7 +11731,7 @@ msgstr ""
 #: field:account.financial.report,credit:0
 #: field:account.financial.report,debit:0
 msgid "unknown"
-msgstr ""
+msgstr "ezezaguna"
 
 #. module: account
 #: help:account.bank.statement,account_id:0

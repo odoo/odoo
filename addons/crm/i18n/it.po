@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Marius Marolla <mariusmarolla@gmail.com>, 2015
+# Pietro Amoruso <p.amoruso@elvenstudio.it>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-30 09:19+0000\n"
-"Last-Translator: Marius Marolla <mariusmarolla@gmail.com>\n"
+"PO-Revision-Date: 2016-01-26 10:44+0000\n"
+"Last-Translator: Pietro Amoruso <p.amoruso@elvenstudio.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +160,7 @@ msgid ""
 "            prospects to qualify.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nClicca per pianificare una chiamata\n</p><p>\nOdoo consente di definire agevolmente le chiamate da fare\nnel team di vendita e seguirle in base al loro sommario\n</p><p>\nE' possibile usare la funzionalità di import per importare massivamente una lista di nuovi prospetti da qualificare.\n</p>"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -173,7 +174,7 @@ msgid ""
 "                    documents, track all discussions, and much more.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nOdoo ti aiuta a tenere traccia del flusso delle vendite per seguire\npotenziali vendite e prevedere futuri profitti.\n</p><p>\nSarete in grado di pianificare incontri e telefonate dalle\n opportunità, convertirli in preventivi, allegare \ndocumenti, tracciare tutte le discussioni, e molto altro ancora.\n</p>  "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -188,7 +189,7 @@ msgid ""
 "                    opportunity and/or a new customer in your address book.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nUsate leads se avete bisogno di una fase di qualifica prima di creare\n un'opportunità o un cliente. Può essere un biglietto da visita che avete ricevuto,\nun modulo di contatto compilato nel tuo sito web, o un file di prospetto\nimportato ma non qualificato, etc.\n</p><p>\nUna volta qualificato, il lead può essere convertito in un'oppurtunità\nd'affari e/o un nuovo cliente nella rubrica di indirizzi."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
@@ -202,7 +203,7 @@ msgid ""
 "                documents, track all discussions, and much more.\n"
 "            </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\nOdoo ti aiuta a tenere traccia del flusso delle vendite per seguire\npotenziali vendite e prevedere futuri profitti.\n</p><p>\nSarete in grado di pianificare incontri e telefonate dalle\n opportunità, convertirli in preventivi, allegare \ndocumenti, tracciare tutte le discussioni, e molto altro ancora.\n</p>"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
@@ -217,7 +218,7 @@ msgid ""
 "                opportunity and/or a new customer in your address book.\n"
 "            </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\nUsate leads se avete bisogno di una fase di qualifica prima di creare\n un'opportunità o un cliente. Può essere un biglietto da visita che avete ricevuto,\nun modulo di contatto compilato nel tuo sito web, o un file di prospetto\nimportato ma non qualificato, etc.\n</p><p>\nUna volta qualificato, il lead può essere convertito in un'oppurtunità\nd'affari e/o un nuovo cliente nella rubrica di indirizzi."
 
 #. module: crm
 #: model:email.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -228,7 +229,7 @@ msgid ""
 "<li>ID: ${object.id}</li>\n"
 "<li>Description: ${object.description}</field></li>\n"
 "</ul>"
-msgstr ""
+msgstr "<p>Questa opportunità non ha avuto attività da almeno 5 giorni. Ecco alcuni dettagli:</p>\n<ul>\n<li>Nome: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Descrizione: ${object.description}<filed></li>\n</ul>"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
@@ -861,12 +862,12 @@ msgstr "Chiuso"
 #: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
 #: model:ir.ui.menu,name:crm.partner_merge_automatic_menu
 msgid "Deduplicate Contacts"
-msgstr ""
+msgstr "Deduplica contatti"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr ""
+msgstr "Deduplicare gli altri contatti"
 
 #. module: crm
 #: field:sale.config.settings,alias_prefix:0
@@ -1459,12 +1460,12 @@ msgstr "Lead che non hanno chiesto di non essere inclusi in campagne di invio em
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
-msgstr ""
+msgstr "Leads che hai selezionato che hanno un duplicato. Se la lista è vuota, è inteso che non sono stati trovati duplicati"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr ""
+msgstr "Leads con duplicati esistenti (per informazioni)"
 
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
@@ -1519,7 +1520,7 @@ msgstr "Registra una chiamata per %(date)s. %(description)s"
 #. module: crm
 #: model:ir.filters,name:crm.filter_leads_long_term_revenue
 msgid "Long Term Revenue"
-msgstr ""
+msgstr "Entrate a lungo termine"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
@@ -2572,7 +2573,7 @@ msgid ""
 "                            duplicated records. If you select several fields,\n"
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
-msgstr ""
+msgstr "Seleziona l' elenco dei campi utilizzati per la ricerca di\n                            record duplicati . Se si selezionano più campi ,\n                            Odoo proporrà di unire solo coloro che hanno\n                            tutti questi campi in comune . (non uno dei campi ) ."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2771,7 +2772,7 @@ msgid ""
 "The first contact you get with a potential customer is a lead you qualify "
 "before converting it into a real business opportunity. Check this box to "
 "manage leads in this sales team."
-msgstr ""
+msgstr "Il primo contatto che si ottiene con un potenziale cliente è un vantaggio e si qualifica prima di convertirlo in una vera e propria opportunità di business. Seleziona questa casella per gestire i cavi di questo team di vendita ."
 
 #. module: crm
 #: help:crm.lead,partner_name:0
@@ -2804,7 +2805,7 @@ msgid ""
 "                                documents linking to one of these contacts will be\n"
 "                                redirected to the aggregated contact. You can remove\n"
 "                                contacts from this list to avoid merging them."
-msgstr ""
+msgstr "I contatti selezionati verranno uniti. Tutti\ni documenti collegati a uno di questi contatti verranno\nreindirizzati al contatto aggregato. É possibile eliminare\ndei contatti da questa lista per evitare la loro unione."
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -2812,7 +2813,7 @@ msgid ""
 "The status is set to Confirmed, when a case is created.\n"
 "When the call is over, the status is set to Held.\n"
 "If the callis not applicable anymore, the status can be set to Cancelled."
-msgstr ""
+msgstr "Lo stato è impostato su Confermato, quando un caso è creato.\nQuando la chiamata è terminata, lo stato è impostato su In Possesso.\nSe la chiamata non è più applicabile, lo stato può essere impostato su  Annullato."
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -2835,7 +2836,7 @@ msgstr "Queste persone riceveranno email."
 #. module: crm
 #: help:sale.config.settings,group_scheduled_calls:0
 msgid "This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"
-msgstr ""
+msgstr "Questo aggiunge il menu 'Chiamate Pianificate' sotto la voce 'Vendite / Telefonate'"
 
 #. module: crm
 #: help:crm.case.stage,type:0
@@ -2899,7 +2900,7 @@ msgid ""
 "To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n"
 "probability = 0 %, select \"Change Probability Automatically\".\n"
 "Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
-msgstr ""
+msgstr "Per attenuare il canale di vendite e raggruppare tutte le opportunità perse, configura una delle tue fasi di vendita come segue:\nprobabilità = 0 %, seleziona \"Modifica Probabilità Automaticamente\".\nCrea una fase specifica o modifica una esistente modificando le colonne del tuo canale di opportunità."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:417
@@ -2908,7 +2909,7 @@ msgid ""
 "To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n"
 "probability = 100 % and select \"Change Probability Automatically\".\n"
 "Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
-msgstr ""
+msgstr "Per attenuare il canale di vendita e raggruppare tutte le opportunità vinte, configura una delle tue fasi di vendita come segue:\nprobabilità = 100 % e seleziona \"Modifica Probabilità Automaticamente\".\nCrea una fase specifica o modifica una esistente modificando le colonne del tuo canale di opportunità."
 
 #. module: crm
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
@@ -3069,7 +3070,7 @@ msgstr "Si è già al massimo livello del team vendita.\nQuindi non è possibile
 #: code:addons/crm/base_partner_merge.py:446
 #, python-format
 msgid "You have to specify a filter for your selection"
-msgstr ""
+msgstr "Specifica un filtro per la tua selezione"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
@@ -3090,13 +3091,13 @@ msgstr "a"
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_oppor
 msgid "e.g. Call for proposal"
-msgstr ""
+msgstr "es. Invito per proposta"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:971
 #, python-format
 msgid "lead"
-msgstr ""
+msgstr "lead"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:91
@@ -3107,7 +3108,7 @@ msgstr "lead"
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "min(s)"
-msgstr ""
+msgstr "min(s)"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
@@ -3118,7 +3119,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/crm/crm_lead.py:969
 #, python-format
 msgid "opportunity"
-msgstr ""
+msgstr "opportunità"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form

@@ -1044,22 +1044,23 @@ class ir_model_data(osv.osv):
         else:
             if mode=='init' or (mode=='update' and xml_id):
                 inherit_xml_ids = []
-                for table, field_name in model_obj._inherits.items():
-                    xml_ids = self.pool['ir.model.data'].search(cr, uid, [
-                        ('module', '=', module),
-                        ('name', '=', xml_id + '_' + table.replace('.', '_')),
-                    ], context=context)
-                    # XML ID found in the database, try to recover an existing record
-                    if xml_ids:
-                        found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
-                        record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
-                        # The record exists, store the id and don't recreate the XML ID
-                        if record.exists():
-                            inherit_xml_ids.append(found_xml_id.model)
-                            values[field_name] = found_xml_id.res_id
-                        # Orphan XML ID, delete it
-                        else:
-                            found_xml_id.unlink()
+                if xml_id:
+                    for table, field_name in model_obj._inherits.items():
+                        xml_ids = self.pool['ir.model.data'].search(cr, uid, [
+                            ('module', '=', module),
+                            ('name', '=', xml_id + '_' + table.replace('.', '_')),
+                        ], context=context)
+                        # XML ID found in the database, try to recover an existing record
+                        if xml_ids:
+                            found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
+                            record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
+                            # The record exists, store the id and don't recreate the XML ID
+                            if record.exists():
+                                inherit_xml_ids.append(found_xml_id.model)
+                                values[field_name] = found_xml_id.res_id
+                            # Orphan XML ID, delete it
+                            else:
+                                found_xml_id.unlink()
 
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
@@ -1093,30 +1094,8 @@ class ir_model_data(osv.osv):
         return res_id
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        if isinstance(models[0], (list, tuple)):
-            model,res_id = models[0]
-        else:
-            res_id=None
-            model = models[0]
-
-        if res_id:
-            where = ' and res_id=%s' % (res_id,)
-        else:
-            where = ' and (res_id is null)'
-
-        if key2:
-            where += ' and key2=\'%s\'' % (key2,)
-        else:
-            where += ' and (key2 is null)'
-
-        cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
-        res = cr.fetchone()
         ir_values_obj = openerp.registry(cr.dbname)['ir.values']
-        if not res:
-            ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
-        elif xml_id:
-            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
-            ir_values_obj.invalidate_cache(cr, uid, ['value'])
+        ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         return True
 
     def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
