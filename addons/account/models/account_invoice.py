@@ -989,7 +989,6 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        group_user = self.env.res('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
