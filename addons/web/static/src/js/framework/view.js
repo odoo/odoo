@@ -153,7 +153,6 @@ var View = Widget.extend({
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
                 context: _.extend(pyeval.eval('context', context), {'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}),
-                do_not_eval: true
             }).then(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).then(handler);
