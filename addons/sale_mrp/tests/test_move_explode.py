@@ -25,7 +25,7 @@ class TestMoveExplode(common.TransactionCase):
 
         self.template = self.env.ref('product.product_product_3_product_template')
         #product: RAM SR2
-        self.product_bom_prop = self.env.ref('product.product_product_14')
+        self.product_bom_prop = self.env.ref('product.product_product_5')
         #phantom bom for RAM SR2 with three lines containing properties
 #         self.bom_prop_line = self.env.ref('mrp.mrp_bom_property_line')
         #product: iPod included in the phantom bom

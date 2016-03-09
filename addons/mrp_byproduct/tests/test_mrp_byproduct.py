@@ -11,8 +11,8 @@ class TestMrpByProduct(common.TransactionCase):
         self.MrpBom = self.env['mrp.bom']
         self.Move = self.env['stock.move']
         self.MrpProductProduce = self.env['mrp.product.produce']
-        self.product_28 = self.env.ref('product.product_product_28')
-        self.product_33 = self.env.ref('product.product_product_33')
+        self.product_28 = self.env.ref('product.product_delivery_02')
+        self.product_33 = self.env.ref('product.product_delivery_01')
         self.product_uom = self.env.ref('product.product_uom_unit')
         self.location_src = self.env.ref('stock.stock_location_stock')
         self.mrp_action = self.env.ref('mrp.menu_mrp_production_action')
