@@ -211,12 +211,13 @@ class website(orm.Model):
             else:
                 website_id = self.search(cr, uid, [], context=context)
             website = self.browse(cr, uid, website_id, context=context)
+        force_company_context = dict(context, force_company=website.company_id.id)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+        partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=force_company_context).partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pl_ids = self._get_pl_partner_order(cr, uid, isocountry, show_visible,
-                                            website.user_id.sudo().partner_id.property_product_pricelist.id,
+                                            website.user_id.sudo().with_context(force_company_context).partner_id.property_product_pricelist.id,
                                             request.session.get('website_sale_current_pl'),
                                             website.website_pricelist_ids,
                                             partner_pl=partner_pl and partner_pl.id or None,
@@ -251,7 +252,7 @@ class website(orm.Model):
                 pl = None
                 request.session.pop('website_sale_current_pl')
         if not pl:
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=dict(context, force_company=request.website and request.website.company_id.id or None)).partner_id
             # If the user has a saved cart, it take the pricelist of this cart, except if
             # the order is no longer draft (It has already been confirmed, or cancelled, ...)
             pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
