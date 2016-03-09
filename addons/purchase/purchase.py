@@ -1453,8 +1453,7 @@ class procurement_order(osv.osv):
             names_dict[id] = name
         for procurement in procurements:
             taxes_ids = procurement.product_id.supplier_taxes_id
-            companies = self.pool['res.company'].search(cr, uid, [('id', 'child_of', procurement.company_id.id)])
-            taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id in companies)
+            taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id == procurement.company_id.id)
             # It is necessary to have the appropriate fiscal position to get the right tax mapping
             fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)
             if fp:
