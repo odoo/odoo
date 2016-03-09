@@ -82,9 +82,28 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.render(page, values)
 
+    def url_root(self, trailing_slash=True):
+        """Get the URL root.
+
+        :param bool trailing_slash:
+            Indicates wether the returned string should or not end with a
+            slash (``/``).
+        """
+        url = request.env["ir.config_parameter"].get_param(
+            "web.base.url",
+            request.httprequest.url_root)
+
+        has_slash = url.endswith("/")
+        if trailing_slash and not has_slash:
+            url += "/"
+        elif not trailing_slash and has_slash:
+            url = url[:-1]
+
+        return url
+
     @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
+        return request.render('website.robots', {'url_root': self.url_root()}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
@@ -124,7 +143,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
-                    'url_root': request.httprequest.url_root[:-1],
+                    'url_root': self.url_root(False),
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
@@ -143,7 +162,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
-                    url_root=request.httprequest.url_root,
+                    url_root=self.url_root(),
                 ), context=context)
             create_sitemap('/sitemap.xml', content)
 
