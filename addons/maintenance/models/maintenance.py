@@ -22,14 +22,16 @@ class MaintenanceStage(models.Model):
 
 class MaintenanceEquipmentCategory(models.Model):
     _name = 'maintenance.equipment.category'
-    _inherits = {"mail.alias": "alias_id"}
-    _inherit = ['mail.thread']
+    _inherit = ['mail.alias.mixin', 'mail.thread']
     _description = 'Asset Category'
 
-    def _auto_init(self, cr, context=None):
-        """Installation hook to create aliases for all request and avoid constraint errors."""
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(MaintenanceEquipmentCategory, self)._auto_init,
-            'maintenance.equipment.category', self._columns['alias_id'], 'name', alias_prefix='maintenance+', alias_defaults={}, context=context)
+    def get_alias_model_name(self, vals):
+        return vals.get('alias_model', 'maintenance.equipment')
+
+    def get_alias_values(self):
+        values = super(MaintenanceEquipmentCategory, self).get_alias_values()
+        values['alias_defaults'] = {'category_id': self.id}
+        return values
 
     @api.one
     @api.depends('equipment_ids')
