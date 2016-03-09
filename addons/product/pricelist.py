@@ -277,8 +277,7 @@ class product_pricelist(osv.osv):
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id and \
-                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                    if rule.product_id and not (product.product_variant_count == 1 and product.product_variant_ids[0].id == rule.product_id.id):
                         # product rule acceptable on template if has only one variant
                         continue
                 else:

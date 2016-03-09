@@ -4,7 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015-2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Marko Happonen <marko.happonen@sprintit.fi>, 2015
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-04 14:35+0000\n"
+"PO-Revision-Date: 2016-02-24 22:30+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -61,6 +61,16 @@ msgstr "(%s varattu)"
 #, python-format
 msgid " (reserved)"
 msgstr " (varattu)"
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -990,12 +1000,12 @@ msgstr "Luonti"
 #: field:stock.move,create_date:0 field:stock.picking,date:0
 #: field:stock.production.lot,create_date:0 field:stock.quant,create_date:0
 msgid "Creation Date"
-msgstr "Luontipäivämäärä"
+msgstr "Luontipäivä"
 
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Creation Date, usually the time of the order"
-msgstr "Luontipäivämäärä, yleensä tilausaika"
+msgstr "Luontipäivä, yleensä tilausaika"
 
 #. module: stock
 #: code:addons/stock/stock.py:3392
@@ -4074,7 +4084,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:122
 #, python-format
 msgid "Scanned"
-msgstr ""
+msgstr "Skannattu"
 
 #. module: stock
 #. openerp-web
@@ -4165,7 +4175,7 @@ msgstr "Hae varastosta"
 #: code:addons/stock/static/src/xml/picking.xml:191
 #, python-format
 msgid "Search Results"
-msgstr ""
+msgstr "Hakutulokset"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -5292,7 +5302,7 @@ msgstr "Varastonhallinta"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Warehouse Address:"
-msgstr ""
+msgstr "Varaston osoite:"
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
@@ -5318,7 +5328,7 @@ msgstr ""
 #: code:addons/stock/stock.py:3550
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "Varaston reititykset"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
