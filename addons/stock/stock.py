@@ -1826,8 +1826,9 @@ class stock_move(osv.osv):
                 sublocation_ids = self.pool.get('stock.location').search(cr, uid, [('id', 'child_of', [move.location_id.id])], context=context)
                 quant_ids = quant_obj.search(cr, uid, [('location_id', 'in', sublocation_ids), ('product_id', '=', move.product_id.id), ('reservation_id', '=', False)], context=context)
                 availability = 0
-                for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
-                    availability += quant.qty
+                if quant_ids:
+                    cr.execute('SELECT SUM(qty) FROM stock_quant WHERE id in %s', (tuple(quant_ids),))
+                    availability = cr.fetchone()[0]
                 res[move.id] = min(move.product_qty, availability)
         return res
 
