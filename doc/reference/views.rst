@@ -961,7 +961,7 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
 ``event_open_popup``
-    opens the event in a dialog instead of switching to the form view, enabled
+    opens the event in a dialog instead of switching to the form view, disabled
     by default
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
