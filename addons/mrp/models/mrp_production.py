@@ -75,7 +75,6 @@ class MrpProduction(models.Model):
 
     name = fields.Char(string='Reference', readonly=True, copy=False, default='New')
     origin = fields.Char(string='Source', help="Reference of the document that generated this manufacturing order.", copy=False)
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template')
     product_id = fields.Many2one('product.product', string='Product', required=True, readonly=True, states={'confirmed': [('readonly', False)]}, domain=[('type', 'in', ['product', 'consu'])])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(string='Quantity to Produce', digits=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, states={'confirmed': [('readonly', False)]}, default=1.0)
@@ -233,6 +232,10 @@ class MrpProduction(models.Model):
         return True
 
     @api.multi
+    def _cal_price(self, consumed_moves):
+        return True
+
+    @api.multi
     def post_inventory(self):
         for order in self:
             moves_to_do = order.move_raw_ids.move_validate()
@@ -249,7 +252,6 @@ class MrpProduction(models.Model):
                         lot_quants.setdefault(quant.lot_id.id, self.env['stock.quant'])
                         raw_lot_quants.setdefault(quant.lot_id.id, self.env['stock.quant'])
                         lot_quants[quant.lot_id.id] |= quant
-                
                 for move_raw in moves_to_do:
                     if (move.has_tracking != 'none') and (move_raw.has_tracking != 'none'):
                         for lot in lot_quants:
@@ -338,7 +340,7 @@ class MrpProduction(models.Model):
             'procure_method': bom_line.procure_method,
             'price_unit': bom_line.product_id.standard_price,
             'origin': self.name,
-            'warehouse_id': self.env['stock.location'].get_warehouse(source_location),
+            'warehouse_id': source_location.get_warehouse(),
             'group_id': self.move_prod_id and self.move_prod_id.group_id.id or False,
         }
         return self.env['stock.move'].create(data)

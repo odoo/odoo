@@ -176,6 +176,7 @@ class stock_location(osv.osv):
             loc = loc.location_id
         return self._default_removal_strategy(cr, uid, context=context)
 
+    @api.cr_uid_records_context
     def get_warehouse(self, cr, uid, location, context=None):
         """
             Returns warehouse id of warehouse that contains location

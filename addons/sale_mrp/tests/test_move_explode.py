@@ -39,11 +39,7 @@ class TestMoveExplode(common.TransactionCase):
     def test_00_sale_move_explode(self):
         """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the
             BoM"""
-        # Remove properties on the bom an on the bom lines
-        self.bom.write({'property_ids': [(6,0,[])]})
-        for line in self.bom.bom_line_ids:
-            line.write({'property_ids': [(6,0,[])]})
-        # Create sale order with one sale order line containing product with a phantom bom
+        #create sale order with one sale order line containing product with a phantom bom
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -57,5 +53,5 @@ class TestMoveExplode(common.TransactionCase):
         #get all move associated to that sale_order
         move_ids = self.so.picking_ids.mapped('move_lines').ids
         #we should have same amount of move as the component in the phatom bom
-        bom_component_length = self.MrpBom._bom_explode(self.bom, self.product_bom, 1.0, properties=[])
+        bom_component_length = self.bom.explode(self.product_bom, 1, [])
         self.assertEqual(len(move_ids), len(bom_component_length[0]))

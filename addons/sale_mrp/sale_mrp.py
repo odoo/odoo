@@ -37,7 +37,7 @@ class SaleOrderLine(models.Model):
         # delivery was created.
         bom_delivered = {}
         for bom in self.product_id.product_tmpl_id.bom_ids:
-            if bom.type != 'phantom':
+            if bom.bom_type != 'phantom':
                 continue
             bom_delivered[bom.id] = False
             product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)

@@ -9,7 +9,7 @@
     'category': 'Manufacturing',
     'sequence': 14,
     'summary': 'Manufacturing Orders, Bill of Materials, Routings',
-    'depends': ['product', 'stock', 'resource', 'report'],
+    'depends': ['product', 'stock', 'resource'],
     'description': """
 Manage the Manufacturing process in Odoo
 ===========================================
