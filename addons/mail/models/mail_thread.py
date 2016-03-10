@@ -374,13 +374,6 @@ class MailThread(models.AbstractModel):
                 options = eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
-                if is_employee:
-                    Subtype = self.env['mail.message.subtype'].sudo()
-                    # fetch internal subtypes
-                    internal_subtypes = Subtype.search_read([
-                        ('res_model', 'in', [False, self._name]),
-                        ('internal', '=', True)], ['name', 'description', 'sequence'])
-                    options['internal_subtypes'] = internal_subtypes
                 # emoji list
                 options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
                 # save options on the node
