@@ -728,7 +728,7 @@ class SaleOrderLine(models.Model):
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        if not (self.product_uom and (self.product_id.uom_id.category_id.id == self.product_uom.category_id.id)):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
             vals['product_uom'] = self.product_id.uom_id
 
         product = self.product_id.with_context(

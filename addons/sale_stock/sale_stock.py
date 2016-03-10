@@ -130,7 +130,13 @@ class SaleOrderLine(models.Model):
             return self._check_package()
         return {}
 
-    @api.onchange('product_id', 'product_uom_qty', 'product_uom', 'route_id')
+    @api.onchange('product_id')
+    def _onchange_product_id_uom_check_availability(self):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
+            self.product_uom = self.product_id.uom_id
+        self._onchange_product_id_check_availability()
+
+    @api.onchange('product_uom_qty', 'product_uom', 'route_id')
     def _onchange_product_id_check_availability(self):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
