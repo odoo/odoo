@@ -93,7 +93,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=_('New'))
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
 
@@ -728,7 +728,7 @@ class SaleOrderLine(models.Model):
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        if not (self.product_uom and (self.product_id.uom_id.category_id.id == self.product_uom.category_id.id)):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
             vals['product_uom'] = self.product_id.uom_id
 
         product = self.product_id.with_context(
