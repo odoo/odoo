@@ -20,4 +20,12 @@ class MassMailingConfiguration(osv.TransientModel):
             ], string="Website Pop-up",
             implied_group="mass_mailing.group_website_popup_on_exit"),
         'module_mass_mailing_themes': fields.boolean("Mass mailing themes"),
+        'module_website_mass_mailing': fields.boolean("Website mass mailing"),
     }
+
+    def on_change_group_website_popup_on_exit(self, cr, uid, ids, group_website_popup_on_exit, context=None):
+        res = {'value': {'module_website_mass_mailing': False}}
+        if group_website_popup_on_exit: 
+            res['value']['module_website_mass_mailing'] = True
+        return res
+
