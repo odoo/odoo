@@ -30,7 +30,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             display_mode: 'textarea',
             record_name: false,
             is_log: false,
-            internal_subtypes: [],
         });
         if (this.options.is_log) {
             this.options.send_text = _t('Log');
@@ -56,7 +55,6 @@ var ChatterComposer = composer.BasicComposer.extend({
         var def = $.Deferred();
         this._super().then(function (message) {
             message = _.extend(message, {
-                subtype_id: false,
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
                 content_subtype: 'html',
@@ -65,12 +63,7 @@ var ChatterComposer = composer.BasicComposer.extend({
 
             // Subtype
             if (self.options.is_log) {
-                var subtype_id = parseInt(self.$('.o_chatter_composer_subtype_select').val());
-                if (_.indexOf(_.pluck(self.options.internal_subtypes, 'id'), subtype_id) === -1) {
-                    message.subtype = 'mail.mt_note';
-                } else {
-                    message.subtype_id = subtype_id;
-                }
+                message.subtype = 'mail.mt_note';
             }
 
             // Partner_ids
@@ -487,7 +480,6 @@ var Chatter = form_common.AbstractField.extend({
             input_min_height: 50,
             input_max_height: Number.MAX_VALUE, // no max_height limit for the chatter
             input_baseline: 14,
-            internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
             default_body: old_composer && old_composer.$input.val(),
