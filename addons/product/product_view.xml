@@ -137,7 +137,7 @@
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>
-                                <field name="seller_ids" context="{'default_product_tmpl_id': active_id}"/>
+                                <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}"/>
                                 <group name="packaging" string="Packaging"
                                     colspan="4"
                                     attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
