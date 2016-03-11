@@ -233,8 +233,9 @@
 
                       <hr/>
 
+                      <t t-set="show_discount" t-value="order.env.user.has_group('sale.group_discount_per_so_line')"/>
                       <div class="row">
-                        <div class="col-md-6">
+                        <div t-attf-class="col-md-{{ '4' if show_discount else '6' }}">
                           <strong>Product</strong>
                         </div>
                         <div class="col-md-2 text-right">
@@ -243,6 +244,11 @@
                         <div class="col-md-2 text-right">
                           <strong>Quantity</strong>
                         </div>
+                        <t groups="sale.group_discount_per_so_line">
+                          <div class="col-md-2 text-right">
+                            <strong>Discount (%)</strong>
+                          </div>
+                        </t>
                         <div class="col-md-2 text-right">
                           <strong>Subtotal</strong>
                         </div>
@@ -252,7 +258,7 @@
                             <div class="col-md-1 text-center">
                                 <img t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
                             </div>
-                            <div id='product_name' class="col-md-5">
+                            <div id='product_name' t-attf-class="col-md-{{ '3' if show_discount else '5' }}">
                               <span t-esc="ol.product_id.name"/>
                             </div>
                           <div class="col-md-2 text-right">
@@ -266,6 +272,11 @@
                               <span t-esc="ol.quantity"/>
                             </t>
                           </div>
+                          <t groups="sale.group_discount_per_so_line">
+                            <div class="col-md-2 text-right">
+                              <span t-field="ol.discount"/>
+                            </div>
+                          </t>
                           <div class="col-md-2 text-right">
                             <span t-field="ol.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
                           </div>
