@@ -972,6 +972,8 @@ var X2ManyListView = ListView.extend({
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
+                field._inhibit_on_change_flag = true;
+                field.no_rerender = true;
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
             });
             return _.every(fields, function(field){
@@ -1053,7 +1055,6 @@ var One2ManyListView = X2ManyListView.extend({
 
         this.dataset.on('dataset_changed', this, function () {
             this._dataset_changed = true;
-            //this.dataset.x2m._dirty_flag = this.dataset.x2m._dirty_flag || this.__focus;
         });
         this.dataset.x2m.on('load_record', this, function () {
             this._dataset_changed = false;
@@ -1284,6 +1285,7 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments);
     },
     before_save: function() {
+        var self = this;
         var view = this.viewmanager.active_view;
         if(view.type === "list" && view.controller.editable()) {
             return view.controller.save_edition();
@@ -1389,7 +1391,6 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
-        this._display_orderer = new utils.DropMisordered();
 
         var self = this;
         // We need to know if the field 'color' exists on the model
@@ -1398,6 +1399,10 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
                self.fields = fields;
             });
         });
+    },
+    before_save: function() {
+        this.dataset.cancel_read();
+        this._super();
     },
     initialize_content: function() {
         if(!this.get("effective_readonly")) {
@@ -1435,10 +1440,9 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     },
     get_render_data: function(ids){
         var self = this;
-        return this.mutex.exec(function(){
-            var fields = self.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
-            return self.dataset.read_ids(ids, fields);
-        });
+        this.dataset.cancel_read();
+        var fields = this.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
+        return this.dataset.read_ids(ids, fields);
     },
     render_tag: function(data) {
         this.$('.badge').remove();
@@ -1458,7 +1462,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             self.render_tag(data);
         };
         if (!values || values.length > 0) {
-            return this._display_orderer.add(self.get_render_data(values)).done(handle_names);
+            return self.get_render_data(values).done(handle_names);
         } else {
             handle_names([]);
         }
