@@ -117,8 +117,8 @@
                t-att-title="record.name"
                t-att-data-oe-model="record.res_model"
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
-            <i t-if="record.is_editable and (widget.records_length &gt; 1)"
-               class="fa fa-pencil o_edit_subtype hide" title="Edit subscription"
+            <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype hide"
+               title="Edit subscription"
                t-att-data-id="record.id"
                t-att-data-oe-id="record.res_id"
                t-att-data-oe-model="record.res_model"/>

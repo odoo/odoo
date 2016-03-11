@@ -321,19 +321,19 @@ class account_payment(models.Model):
 
             # Use the right sequence to set the name
             if rec.payment_type == 'transfer':
-                sequence = rec.env.ref('account.sequence_payment_transfer')
+                sequence_code = 'account.payment.transfer'
             else:
                 if rec.partner_type == 'customer':
                     if rec.payment_type == 'inbound':
-                        sequence = rec.env.ref('account.sequence_payment_customer_invoice')
+                        sequence_code = 'account.payment.customer.invoice'
                     if rec.payment_type == 'outbound':
-                        sequence = rec.env.ref('account.sequence_payment_customer_refund')
+                        sequence_code = 'account.payment.customer.refund'
                 if rec.partner_type == 'supplier':
                     if rec.payment_type == 'inbound':
-                        sequence = rec.env.ref('account.sequence_payment_supplier_refund')
+                        sequence_code = 'account.payment.supplier.refund'
                     if rec.payment_type == 'outbound':
-                        sequence = rec.env.ref('account.sequence_payment_supplier_invoice')
-            rec.name = sequence.with_context(ir_sequence_date=rec.payment_date).next_by_id()
+                        sequence_code = 'account.payment.supplier.invoice'
+            rec.name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.payment_date).next_by_code(sequence_code)
 
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)

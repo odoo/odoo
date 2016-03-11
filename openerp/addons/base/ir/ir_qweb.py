@@ -1340,7 +1340,7 @@ class AssetsBundle(object):
         preprocessed = True
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
             outdated = False
-            assets = dict((asset.html_url % asset.url, asset) for asset in self.stylesheets if isinstance(asset, atype))
+            assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
                 assets_domain = [('url', 'in', assets.keys())]
                 ira_ids = self.registry['ir.attachment'].search(self.cr, uid, assets_domain)
@@ -1391,7 +1391,7 @@ class AssetsBundle(object):
                         try:
                             ira = self.registry['ir.attachment']
                             fname = os.path.basename(asset.url)
-                            url = asset.html_url % asset.url
+                            url = asset.html_url
                             with self.cr.savepoint():
                                 ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                                     datas=asset.content.encode('utf8').encode('base64'),
@@ -1455,13 +1455,14 @@ class AssetsBundle(object):
         return error
 
 class WebAsset(object):
-    html_url = '%s'
+    html_url_format = '%s'
 
     def __init__(self, bundle, inline=None, url=None):
         self.id = str(uuid.uuid4())
         self.bundle = bundle
         self.inline = inline
         self.url = url
+        self.html_url_args = url
         self.cr = bundle.cr
         self.uid = bundle.uid
         self.registry = bundle.registry
@@ -1473,6 +1474,10 @@ class WebAsset(object):
         self.name = "%s defined in bundle '%s'" % (name, bundle.xmlid)
         if not inline and not url:
             raise Exception("An asset should either be inlined or url linked")
+
+    @property
+    def html_url(self):
+        return self.html_url_format % self.html_url_args
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
@@ -1552,7 +1557,7 @@ class JavascriptAsset(WebAsset):
 
     def to_html(self):
         if self.url:
-            return '<script type="text/javascript" src="%s"></script>' % (self.html_url % self.url)
+            return '<script type="text/javascript" src="%s"></script>' % (self.html_url)
         else:
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
 
@@ -1612,14 +1617,18 @@ class StylesheetAsset(WebAsset):
     def to_html(self):
         media = (' media="%s"' % werkzeug.utils.escape(self.media)) if self.media else ''
         if self.url:
-            href = self.html_url % self.url
+            href = self.html_url
             return '<link rel="stylesheet" href="%s" type="text/css"%s/>' % (href, media)
         else:
             return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
 class PreprocessedCSS(StylesheetAsset):
-    html_url = '%s.css'
     rx_import = None
+
+    def __init__(self, *args, **kw):
+        super(PreprocessedCSS, self).__init__(*args, **kw)
+        self.html_url_format = '%%s/%s/%%s.css' % self.bundle.xmlid
+        self.html_url_args = tuple(self.url.rsplit('/', 1))
 
     def minify(self):
         return self.with_header()

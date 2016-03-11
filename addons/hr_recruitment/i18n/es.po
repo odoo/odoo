@@ -6,13 +6,14 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2016
+# Ivan Nieto <ivan.nieto.sousa@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-02-01 14:55+0000\n"
-"Last-Translator: Antonio Trueba\n"
+"PO-Revision-Date: 2016-03-04 20:28+0000\n"
+"Last-Translator: Ivan Nieto <ivan.nieto.sousa@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgid ""
 "            </p>\n"
 "            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
 "            "
-msgstr ""
+msgstr "\n<p>\n%if object.department_id:\nEstoy encantado de anunciar que <strong> ${object.name} </strong> nos acompañará como ${object.job_id.name}\nen ${object.department_id.name}.\n%else:\nEstoy encantado de anunciar que <strong> ${object.name} </strong> nos acompañará como ${object.job_id.name}.\n%endif\n</p>\n<p>Por favor, démosle la bienvenida y ayudémosle a cumplir sus objetivos.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1

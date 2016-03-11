@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
@@ -66,12 +67,15 @@ var FieldTextHtmlSimple = widget.extend({
 
         if (this.get("effective_readonly")) {
             if (this.options['style-inline']) {
-                this.$textarea.hide().after('<iframe class="o_readonly"/>');
-                setTimeout(function () {
-                    self.$content = $("body", self.$('iframe').contents()[0]);
+                var $iframe = $('<iframe class="o_readonly"/>');
+                this.$textarea.hide().after($iframe);
+                var load = function () {
+                    self.$content = $($iframe.contents()[0]).find("body");
                     self.$content.html(self.text_to_html(self.get('value')));
                     self.resize();
-                });
+                };
+                setTimeout(load);
+                $iframe.on('load', load);
             } else {
                 this.$content = $('<div class="o_readonly"/>');
                 this.$textarea.hide().after(this.$content);
