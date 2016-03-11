@@ -42,7 +42,8 @@ class sale_order_line(osv.osv):
             else:
                 cur_factor = self.pool['res.currency']._get_conversion_rate(cr, uid, product.company_id.currency_id, currency_id, context=context)
 
-        if uom and uom != product.uom_id.id:
+        product_uom = context and context.get('uom') or product.uom_id.id
+        if uom and uom != product_uom:
             # the unit price is in a different uom
             uom_factor = self.pool['product.uom']._compute_price(cr, uid, product.uom_id.id, 1.0, uom)
         else:
