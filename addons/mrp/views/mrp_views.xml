@@ -339,7 +339,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-6 o_kanban_primary_left" style="position:absolute;">
+                                        <div class="col-xs-6 o_kanban_primary_left" style="position:absolute;" name="wc_stages">
                                             <t t-if="record.stage_id.raw_value == 'normal'">
                                                 <t t-set="status" t-value="'Work orders is not running'"/>
                                             </t>
