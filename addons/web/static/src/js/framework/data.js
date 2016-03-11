@@ -940,11 +940,11 @@ var BufferedDataSet = DataSetStatic.extend({
         this.evict_record(id);
         return this._super(id, signal);
     },
-    alter_ids: function(n_ids) {
+    alter_ids: function(n_ids, options) {
         var dirty = !_.isEqual(this.ids, n_ids);
-        this._super(n_ids);
+        this._super(n_ids, options);
         if (dirty) {
-            this.trigger("dataset_changed", n_ids);
+            this.trigger("dataset_changed", n_ids, options);
         }
     },
 });
