@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import company
+import ir_attachment
 import mrp_bom
 import mrp_production
 import mrp_routing

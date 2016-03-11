@@ -461,8 +461,9 @@ class MrpProductionWorkcenterLine(models.Model):
 
     @api.multi
     def write(self, values):
-        if self.state == 'done' and values.get('date_planned_start') and values.get('date_planned_end'):
-            raise UserError(_('You can not change the finished work order.'))
+        for production in self:
+            if production.state == 'done' and values.get('date_planned_start') and values.get('date_planned_end'):
+                raise UserError(_('You can not change the finished work order.'))
         return super(MrpProductionWorkcenterLine, self).write(values)
 
     def _generate_lot_ids(self):

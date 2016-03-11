@@ -580,6 +580,8 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
+                                    <button name="show_documents" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', False)]}"/>
+                                    <field name="has_attachments" invisible="1"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
@@ -1914,4 +1916,46 @@
           parent="menu_mrp_manufacturing"
           action="action_inventory_message"
           sequence="26"/>
+          
+          
+    <!-- Files -->
+    <record model="ir.ui.view" id="view_document_file_kanban_mrp">
+        <field name="name">ir.attachment kanban.mrp</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="datas_fname"/>
+                <field name="name"/>
+                <field name="priority"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_vignette">
+                                <div class="oe_attachment">
+                                    <div class="oe_name">
+                                        <field name="name"/>
+                                    </div>
+                                    <div t-if="record.type.raw_value == 'binary'">
+                                        <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                            <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                            <div t-if="webimage" class="o_kanban_attachment_image">
+                                                <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 </odoo>

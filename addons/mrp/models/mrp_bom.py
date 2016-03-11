@@ -174,11 +174,26 @@ class MrpBomLine(models.Model):
 
     procure_method = fields.Selection(selection=[('make_to_stock', 'From Stock'), ('make_to_order', 'Make to Order')], string='Supply Method', required=True, default='make_to_stock',
         help="""By default, the system will take from the stock in the source location and passively wait for availability. The other possibility allows you to directly create a procurement on the source location (and thus ignore its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, this second option should be chosen.""")
+    has_attachments = fields.Boolean(compute="_compute_has_attachments")
 
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
+
+    @api.multi
+    @api.depends('product_id')
+    def _compute_has_attachments(self):
+        for line in self:
+            domain = [
+                '|',
+                '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)]
+            attach = self.env['ir.attachment'].search(domain, limit=1)
+            if attach:
+                line.has_attachments = True 
+            else:
+                line.has_attachments = False
 
     def _skip_bom_line(self, product):
         """ Control if a BoM line should be produce, can be inherited for add
@@ -212,3 +227,30 @@ class MrpBomLine(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+
+    @api.multi
+    def show_documents(self):
+        self.ensure_one()
+        domain = [
+             '|',
+             '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
+             '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)]
+        ir_model_data = self.env['ir.model.data']
+        attachment_view = ir_model_data.get_object_reference('mrp', 'view_document_file_kanban_mrp')[1]
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': attachment_view,
+            'views': [(attachment_view, 'kanban')],
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'help': _('''<p class="oe_view_nocontent_create">
+                        Documents are attached to the tasks and issues of your project.</p><p>
+                        Send messages or log internal notes with attachments to link
+                        documents to your project.
+                    </p>'''),
+            'limit': 80,
+            #'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }

@@ -17,7 +17,7 @@ class MrpProduction(models.Model):
         for production in self.filtered(lambda p: p.bom_id):
             source = production.product_id.property_stock_production
             for sub_product in production.bom_id.subproduct_ids:
-                product_uom_factor = production.product_uom_id._compute_qty(production.product_qty, production.bom_id.product_uom_id.id)
+                product_uom_factor = 1 #TODO:production.product_uom_id._compute_qty(production.product_qty, production.bom_id.product_uom_id.id)
                 qty1 = sub_product.product_qty
                 if sub_product.subproduct_type == 'variable' and production.product_qty:
                     qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
@@ -28,7 +28,7 @@ class MrpProduction(models.Model):
                     'product_uom_qty': qty1,
                     'product_uom': sub_product.product_uom_id.id,
                     'location_id': source.id,
-                    'location_dest_id': production.location_destination().id,
+                    'location_dest_id': production.location_destination.id,
                     'move_dest_id': production.move_prod_id.id,
                     'production_id': production.id,
                     'origin': production.name,
