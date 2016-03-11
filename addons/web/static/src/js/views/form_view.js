@@ -862,19 +862,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 readonly_values = {},
                 deferred = [];
 
-            _.each(self.fields, function (f) {
-                var res = f.before_save();
-                if (res) {
-                    deferred.push(res);
-                    res.fail(function () {
-                        form_invalid = true;
-                        if (!first_invalid_field) {
-                            first_invalid_field = f;
-                        }
-                    });
-                }
-            });
-
             $.when.apply($, deferred).always(function () {
 
                 _.each(self.fields, function (f) {

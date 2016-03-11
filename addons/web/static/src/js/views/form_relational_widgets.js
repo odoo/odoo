@@ -1284,12 +1284,15 @@ var FieldOne2Many = FieldX2Many.extend({
         this.$el.addClass('oe_form_field_one2many');
         return this._super.apply(this, arguments);
     },
-    before_save: function() {
+    commit_value: function() {
         var self = this;
         var view = this.viewmanager.active_view;
         if(view.type === "list" && view.controller.editable()) {
-            return view.controller.save_edition();
+            return this.mutex.def.then(function () {
+                return view.controller.save_edition();
+            });
         }
+        return this.mutex.def;
     },
 });
 
@@ -1400,7 +1403,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             });
         });
     },
-    before_save: function() {
+    commit_value: function() {
         this.dataset.cancel_read();
         this._super();
     },
