@@ -15,8 +15,6 @@
                     <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
                       <separator/>
-                      <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]"/>
-                      <separator />
                       <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                       <field name="opening_date"/>
                       <field name="date_closed"/>
@@ -26,7 +24,6 @@
                             context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" context="{'group_by':'company_id'}" />
                         <separator/>
                         <filter string="Assign Month" context="{'group_by':'date_assign:month'}"/>
@@ -42,7 +39,6 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <pivot string="Lead Assign" disable_linking="True">
-                    <field name="stage_id" type="row"/>
                     <field name="date_assign" interval="month" type="col"/>
                     <field name="delay_open" type="measure"/>
                     <field name="probability" type="measure"/>
@@ -58,7 +54,6 @@
             <field name="arch" type="xml">
                 <graph string="Lead Assign">
                     <field name="date_assign"/>
-                    <field name="stage_id"/>
                     <field name="delay_open" type="measure"/>
                 </graph>
             </field>

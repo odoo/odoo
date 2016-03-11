@@ -96,12 +96,6 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                     partner_leads['leads'].append(lead_details)
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
-        stage_id = False
-        if record.assignation_lines and record.assignation_lines[0].lead_id.type == 'lead':
-            try:
-                stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'stage_portal_lead_assigned')[1]
-            except ValueError:
-                pass
 
         for partner_id, partner_leads in partners_leads.items():
             in_portal = False
@@ -115,9 +109,9 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             email_template_obj.send_mail(cr, uid, template_id, ids[0], context=local_context)
             lead_ids = [lead['lead_id'].id for lead in partner_leads['leads']]
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
-            if stage_id:
-                values['stage_id'] = stage_id
             lead_obj.write(cr, uid, lead_ids, values)
+            lead_obj.set_tag_assign(cr, uid, lead_ids, True)
+
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
 
