@@ -10,15 +10,15 @@
                 <div class="row mt32 mb32">
                     <div class="col-xs-3">
                         <strong>Price List Name</strong>:<br/>
-                        <span t-esc="get_pricelist(data['form']['price_list'])"/>
+                        <span t-esc="get_pricelist(data['price_list'])"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Currency</strong>:<br/>
-                        <span t-esc="get_currency(data['form']['price_list'])"/>
+                        <span t-esc="get_currency(data['price_list'])"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Print date</strong>:<br/>
-                        <t t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/>
+                        <t t-esc="data['create_date']"/>
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
                             <th>
                                 <strong>Description</strong>
                             </th>
-                            <t t-foreach="get_titles(data['form'])" t-as="k">
+                            <t t-foreach="get_titles(data)" t-as="k">
                                 <th t-if="k.has_key('qty1')"><strong t-esc="k['qty1']"/></th>
                                 <th t-if="k.has_key('qty2')"><strong t-esc="k['qty2']"/></th>
                                 <th t-if="k.has_key('qty3')"><strong t-esc="k['qty3']"/></th>
@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="get_categories(objects,data['form'])" t-as="c">
+                        <t t-foreach="get_categories(objects, data)" t-as="c">
                             <tr>
                                 <td colspan="100">
                                     <strong t-esc="c['name']"/>
