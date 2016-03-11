@@ -1444,7 +1444,9 @@ exports.Paymentline = Backbone.Model.extend({
         return this.amount;
     },
     get_amount_str: function(){
-        return this.amount.toFixed(this.pos.currency.decimals);
+        return formats.format_value(this.amount, {
+            type: 'float', digits: [69, this.pos.currency.decimals]
+        });
     },
     set_selected: function(selected){
         if(this.selected !== selected){
