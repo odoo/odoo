@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-25 10:27+0000\n"
+"PO-Revision-Date: 2016-03-08 16:01+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -975,7 +975,7 @@ msgid ""
 "is updated accordingly. For example, if this procurement corresponds to a sale\n"
 "order line, the sale order line will be considered delivered when the task is\n"
 "completed.\n"
-msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingsregel\n(bijvoorbeeld voor verkooporderlijnen), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderlijnen geleverd worden wanneer de taak\nvoltooid is.\n"
+msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingsregel\n(bijvoorbeeld voor verkooporderregels), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderregels geleverd worden wanneer de taak\nvoltooid is.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -3878,7 +3878,7 @@ msgid ""
 "    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n"
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
-msgstr "\nDeze module laat u kortingen berekenen op verkooporderlijnen en factuurlijnen gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderregels: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurregels:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
+msgstr "\nDeze module laat u kortingen berekenen op verkooporderregels en factuurregels gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderregels: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurregels:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -8336,7 +8336,7 @@ msgstr "Apparatuur beheerder"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_equipment
 msgid "Equipments"
-msgstr "Uitrustingen"
+msgstr "Apparatuur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_equipment
@@ -17501,7 +17501,7 @@ msgstr "U kan de gebruiker waarmee u bent aangemeld niet deactiveren."
 #: code:addons/base/ir/ir_values.py:428
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
-msgstr "U heeft niet de rechten om deze operatie uit te voeren!"
+msgstr "U heeft niet de rechten om deze bewerking uit te voeren!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
