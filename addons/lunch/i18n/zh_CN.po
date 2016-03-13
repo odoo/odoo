@@ -6,6 +6,8 @@
 # fausthuang, 2015
 # fausthuang, 2015-2016
 # James Yu <james.168@163.com>, 2015
+# Joroy <13637815@qq.com>, 2016
+# Martin Trigaux, 2016
 # Xu Lei <xulei8@qq.com>, 2015
 # 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
@@ -13,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2016-01-14 09:22+0000\n"
-"Last-Translator: fausthuang\n"
+"PO-Revision-Date: 2016-03-12 01:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,10 +43,10 @@ msgstr "<strong>总计</strong>"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid ""
-"A cashmove can either be an expense or a payment.<br/>\n"
-"                An expense is automatically created at the order receipt.<br/>\n"
+"A cashmove can either be an expense or a payment.<br>\n"
+"                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
-msgstr "一个现金流可以是费用或支付.<br/>\n                费用是在收到订单自动生成.<br/>\n                支付代表员工向公司公司."
+msgstr "一个现金流可以是费用或支付.<br>\n                费用是在收到订单自动生成.<br>\n                支付代表员工向公司公司."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
@@ -176,7 +178,7 @@ msgstr "点击建立一个午餐提示"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Click to create a lunch category."
-msgstr "点击建立一个午餐种类"
+msgstr "点击建立一个午餐分类"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
@@ -228,7 +230,7 @@ msgstr "供应商控制"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_date
@@ -312,11 +314,11 @@ msgstr "每周"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
-"Example: <br/>\n"
-"                - Recurency: Everyday<br/>\n"
-"                - Time interval: from 00h00 am to 11h59 pm<br/>\n"
+"Example: <br>\n"
+"                - Recurency: Everyday<br>\n"
+"                - Time interval: from 00h00 am to 11h59 pm<br>\n"
 "                - Message: \"You must order before 10h30 am\""
-msgstr "例如: <br/>\n                - 重复: 每天<br/>\n                - 时间间隔: 从 00h00 am to 11h59 pm<br/>\n                - 信息: \"你必须在 10h30 am前下订单\""
+msgstr "例如: <br>\n                - 重复: 每天<br>\n                - 时间间隔: 从 00h00 am to 11h59 pm<br>\n                - 信息: \"你必须在 10h30 am前下订单\""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -362,9 +364,9 @@ msgstr "这里你可以看到以代理商分组的所有今天的订单"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid ""
-"Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
-msgstr "<p>\n                此处可以显示现金的转移。<br/>现金转移可以为费用或付款。\n                当收到一个午餐单时，会自动创建费用。而付款则为经理定义的向公司的缴款。\n              </p>\n            "
+msgstr "<p>\n                此处可以显示现金的转移。<br>现金转移可以为费用或付款。\n                当收到一个午餐单时，会自动创建费用。而付款则为经理定义的向公司的缴款。\n              </p>\n            "
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -903,17 +905,17 @@ msgstr "红色的X 代表订单是无效的."
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid ""
-"to announce that the order is ordered <br/>\n"
+"to announce that the order is ordered <br>\n"
 "                - Click on the"
-msgstr "表示订单已经被预订了 <br/>\n                - 点击"
+msgstr "表示订单已经被预订了 <br>\n                - 点击"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid ""
-"to announce that the order is received <br/>\n"
+"to announce that the order is received <br>\n"
 "                - Click on the"
-msgstr "表示订单已经收到了 <br/>\n                - 点击"
+msgstr "表示订单已经收到了 <br>\n                - 点击"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
