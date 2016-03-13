@@ -20,6 +20,8 @@
 # Martin Trigaux, 2015
 # Martin Trigaux, 2015
 # Mathias Neef <mn@copado.de>, 2015
+# Nicolas Frei, 2016
+# Patrick Belser <patrick.belser@camptocamp.com>, 2016
 # Philipp Hug <philipp@hug.cx>, 2015-2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Renko Spiekermann <renkosp@gmail.com>, 2015
@@ -33,8 +35,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-03-02 09:38+0000\n"
-"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
+"PO-Revision-Date: 2016-03-10 06:06+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -606,7 +608,7 @@ msgstr "<strong>Einkäufe</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr "<strong>Abgleichen der Bankverbindungen</strong>"
+msgstr "<strong>Bankauszug abgleichen</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -618,7 +620,7 @@ msgstr "<strong>Gleichen Sie mit bestehendem Vorgang aus</strong><br/>\n        
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>Gleichen Sie Ihre Bankverbindungen ab</strong>"
+msgstr "<strong>Gleichen Sie Ihre Bankauszüge aus</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1373,7 +1375,7 @@ msgstr "Alle Konten"
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
-msgstr "Alle Rechnungen und Buchungen wurden verglichen. Ihr Konto ist ausgeglichen."
+msgstr "Alle Rechnungen und Zahlungen wurden abgeglichen. Ihre Kontensalden sind nun korrekt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1760,7 +1762,7 @@ msgstr "Endsaldo, der sich aus Anfangssaldo sowie Ein- und Auszahlungen errechne
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
 msgid "Balance cash basis"
-msgstr "Saldo Istversteuerung"
+msgstr "Saldo - Istversteuerung"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2915,7 +2917,7 @@ msgstr "Summe Haben"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
 msgid "Credit cash basis"
-msgstr "Haben Istversteuerung"
+msgstr "Haben - Istversteuerung"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
@@ -2971,7 +2973,7 @@ msgstr "Übliche Währung am Standort des Unternehmens"
 #: code:addons/account/models/account_move.py:1188
 #, python-format
 msgid "Currency exchange rate difference"
-msgstr "Kursdifferenzen der Währung"
+msgstr "Währungskursdifferenzen"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -3128,7 +3130,7 @@ msgstr "Sollbetrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
 msgid "Debit cash basis"
-msgstr "Forderungsbasisbetrag"
+msgstr "Soll - Istversteuerung"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
@@ -3218,7 +3220,7 @@ msgstr "Definition"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
 msgid "Deprecated"
-msgstr "Veraltet"
+msgstr "Nicht mehr verwenden"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation
@@ -5638,7 +5640,7 @@ msgstr "Keine Filter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_blocked
 msgid "No Follow-up"
-msgstr "Keine Ermahnung"
+msgstr "Keine Zahlungserinnerung"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:925
@@ -5921,7 +5923,7 @@ msgstr "Nur Anwender in der Rolle 'Berater' dürfen Konten vor und einschließli
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Öffnen"
+msgstr "Offen"
 
 #. module: account
 #. openerp-web
@@ -6777,7 +6779,7 @@ msgstr "Grund"
 #: selection:account.account.type,type:0
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr "Forderung"
+msgstr "Debitoren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
@@ -6792,7 +6794,7 @@ msgstr "Forderungskonto"
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr "Forderungskonten"
+msgstr "Debitoren"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7143,7 +7145,7 @@ msgstr "Steuerzuordnung prüfen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review Terms"
-msgstr ""
+msgstr "Bedingungen ändern"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8742,7 +8744,7 @@ msgstr "Storno Ausgleich"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "OP-Ausgleich stornieren"
+msgstr "Buchungsausgleich stornieren"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
