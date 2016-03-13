@@ -1004,33 +1004,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.prependTo($header).done(function() {
-            self.searchview.toggle_visibility(true);
-            self.view_list = new SelectCreateListView(self,
-                self.dataset, false,
-                _.extend({'deletable': false,
-                    'selectable': !self.options.disable_multiple_selection,
-                    'import_enabled': false,
-                    '$buttons': self.$footer,
-                    'disable_editable_mode': true,
-                    'pager': true,
-                }, self.options.list_view_options || {}));
-            self.view_list.on('edit:before', self, function (e) {
-                e.cancel = true;
-            });
-            self.view_list.popup = self;
-            self.view_list.appendTo(self.$el).then(function() {
-                self.view_list.do_show();
-                self.view_list.render_pager($pager);
-            }).then(function() {
-                if (self.options.initial_facet) {
-                    self.searchview.query.reset([self.options.initial_facet], {
-                        preventSearch: true,
-                    });
-                }
-                self.searchview.do_search();
-            });
-
+        return this.searchview.prependTo($header).done(function() {
             var buttons = [
                 {text: _t("Cancel"), classes: "btn-default o_form_button_cancel", close: true}
             ];
@@ -1045,6 +1019,32 @@ var SelectCreateDialog = ViewDialog.extend({
                 }});
             }
             self.set_buttons(buttons);
+
+            self.searchview.toggle_visibility(true);
+            self.view_list = new SelectCreateListView(self,
+                self.dataset, false,
+                _.extend({'deletable': false,
+                    'selectable': !self.options.disable_multiple_selection,
+                    'import_enabled': false,
+                    '$buttons': self.$footer,
+                    'disable_editable_mode': true,
+                    'pager': true,
+                }, self.options.list_view_options || {}));
+            self.view_list.on('edit:before', self, function (e) {
+                e.cancel = true;
+            });
+            self.view_list.popup = self;
+            return self.view_list.appendTo(self.$el).then(function() {
+                self.view_list.do_show();
+                self.view_list.render_pager($pager);
+            }).then(function() {
+                if (self.options.initial_facet) {
+                    self.searchview.query.reset([self.options.initial_facet], {
+                        preventSearch: true,
+                    });
+                }
+                self.searchview.do_search();
+            });
         });
     },
     do_search: function(domains, contexts, groupbys) {
@@ -1067,18 +1067,38 @@ var SelectCreateDialog = ViewDialog.extend({
 
 var DomainEditorDialog = SelectCreateDialog.extend({
     init: function(parent, options) {
-        options = _.defaults(options, {initial_facet: {
-            category: _t("Custom Filter"),
-            icon: 'fa-star',
-            field: {
-                get_context: function () { return options.context; },
-                get_groupby: function () { return []; },
-                get_domain: function () { return options.default_domain; },
-            },
-            values: [{label: _t("Selected domain"), value: null}],            
-        }});
+        if (options.default_domain && !options.serialization) {
+            options = _.defaults(options, {
+                initial_facet: {
+                    category: _t("Custom Filter"), icon: 'fa-star', field: {
+                        get_context: function () { return options.context; },
+                        get_groupby: function () { return []; },
+                        get_domain: function () { return options.default_domain; },
+                    }, values: [{label: _t("Selected domain"), value: null}],
+                }
+            });
+        }
 
         this._super(parent, options);
+    },
+
+    setup: function () {
+        var res = this._super.apply(this, arguments);
+        if (!this.options.serialization) {
+            return res;
+        }
+        var _this = this;
+        var filter = {
+            name: _t("Selected domain"),
+            domain: this.options.default_domain || [],
+            context: this.options.context || {},
+            serialization: this.options.serialization
+        };
+        return res.then(function () {
+            return _this.searchview.favorite_menu.to_facets(filter);
+        }).then(function (facets) {
+            _this.searchview.query.reset(facets);
+        });
     },
 
     get_domain: function (selected_ids) {
@@ -1086,7 +1106,7 @@ var DomainEditorDialog = SelectCreateDialog.extend({
             domain;
         if (this.$('input.oe_list_record_selector').prop('checked')) {
             if (this.view_list.grouped) {
-                var group_domain = _.chain(_.values(this.view_list.groups.children))
+                group_domain = _.chain(_.values(this.view_list.groups.children))
                                         .filter(function (child) { return child.records.length; })
                                         .map(function (c) { return c.datagroup.domain;})
                                         .value();

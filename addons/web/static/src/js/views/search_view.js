@@ -516,6 +516,37 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
             groupbys: groupbys,
         };
     },
+    /**
+     * Builds a higher-level serialization of the current search
+     * build_search_data:
+     *
+     * * each field facet value becomes a (field_name, value) pair
+     * * each enabled filter becomes a (filter_name, ``true``)
+     */
+    build_serialization: function () {
+        var serialization = [];
+        this.query.each(function (facet) {
+            var f = facet.get('field');
+            if (f.attrs && f.attrs.name) { // genuine field
+                var name = f.attrs.name;
+                facet.values.each(function (v) {
+                    serialization.push([name, v.get('value')]);
+                });
+            } else if (facet.get('is_custom_filter')) { // custom filter
+                serialization.push([null, facet.get('_id')]);
+            } else if (facet.get('is_extended_filter')) { // extended filter group
+                serialization.push([null, facet.get('values').map(function (val) {
+                    var attrs = val.value.attrs;
+                    return { domain: attrs.domain, label: attrs.string};
+                })]);
+            } else { // regular filter group
+                facet.values.each(function (v) {
+                    serialization.push([v.get('value').attrs.name, true]);
+                });
+            }
+        });
+        return serialization;
+    },
     toggle_visibility: function (is_visible) {
         this.do_toggle(!this.headless && is_visible);
         if (this.$buttons) {

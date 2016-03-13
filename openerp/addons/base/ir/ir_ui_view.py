@@ -3,6 +3,7 @@
 import collections
 import copy
 import datetime
+import uuid
 from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
@@ -332,6 +333,18 @@ class view(osv.osv):
         if 'inherit_id' in values:
             values.setdefault(
                 'mode', 'extension' if values['inherit_id'] else 'primary')
+        if 'arch' in values:
+            t = etree.fromstring(values['arch'])
+            if t.tag == 'search':
+                generated_name = False
+                # forcefully add a name to every <filter> node (fields should
+                # already have a name?)
+                for f in t.iter('filter'):
+                    if not f.get('name'):
+                        generated_name = True
+                        f.set('name', uuid.uuid4().hex[:16])
+                if generated_name:
+                    values['arch'] = etree.tostring(t, encoding='utf-8')
         return values
 
     def create(self, cr, uid, values, context=None):

@@ -1418,7 +1418,7 @@ odoo.define_section('search.groupby', ['web.search_inputs', 'web.SearchView', 'w
 odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
 
     test('checkboxing', function (assert) {
-        assert.expect(6);
+        assert.expect(5);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
         mock.add('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
@@ -1429,7 +1429,6 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
             .done(function () {
                 var $li = view.favorite_menu.$el.find('li:first').click();
 
-                assert.ok($li.hasClass('selected'), "should check/select the filter's row");
                 assert.ok($li.hasClass("oe_searchview_custom_private"),
                     "should have private filter note/class");
                 assert.equal(view.query.length, 1, "should have only one facet");
@@ -1440,41 +1439,6 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
                     "displayed label should be the name of the filter");
                 assert.equal(values.at(0).get('value'), null,
                     "should have no value set");
-            });
-    });
-
-    test('removal', function (assert) {
-        assert.expect(1);
-        var view = makeSearchView(this);
-        mock.add('ir.filters:get_filters', function () {
-            return [{ name: "filter name", user_id: 42 }];
-        });
-
-        var $fix = $('#qunit-fixture');
-        return view.appendTo($fix)
-            .done(function () {
-                var $row = view.favorite_menu.$el.find('li:first').click();
-
-                view.query.remove(view.query.at(0));
-                assert.ok(!$row.hasClass('selected'),
-                    "should not be checked anymore");
-            });
-    });
-
-    test('toggling', function (assert) {
-        assert.expect(2);
-        var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
-        mock.add('ir.filters:get_filters', function () {
-            return [{name: 'filter name', user_id: 42, id: 1}];
-        });
-
-        var $fix = $('#qunit-fixture');
-        return view.appendTo($fix)
-            .done(function () {
-                var $row = view.favorite_menu.$el.find('li:first').click();
-                assert.equal(view.query.length, 1, "should have one facet");
-                $row.click();
-                assert.equal(view.query.length, 0, "should have removed facet");
             });
     });
 

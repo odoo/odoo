@@ -66,6 +66,7 @@
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
             <field name="mailing_model">res.partner</field>
             <field name="mailing_domain">[('customer', '=', True)]</field>
+            <field name="mailing_domain_serialization">[["customer", true]]</field>
             <field name="reply_to_mode">email</field>
             <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
             <field name="body_html"><![CDATA[<div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #ffffff repeat top /100%">
@@ -79,6 +80,7 @@
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
             <field name="mailing_model">res.partner</field>
             <field name="mailing_domain">[('customer', '=', True)]</field>
+            <field name="mailing_domain_serialization">[["customer", true]]</field>
             <field name="reply_to_mode">email</field>
             <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
         </record>

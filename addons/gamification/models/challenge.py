@@ -117,6 +117,7 @@ class gamification_challenge(osv.Model):
             string='Users',
             help="List of users participating to the challenge"),
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
+        'user_domain_serialization': fields.char('Serialization of user domain', invisible=True),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
