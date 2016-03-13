@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-15 13:25+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-09 07:18+0000\n"
+"Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgstr "%s (copia)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s prodotto"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -371,7 +372,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Tipo righe Distinta Base"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -387,7 +388,7 @@ msgstr "Tipo di Distinta base"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Non è possibile trovare un Ordine di Produzione generico"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -413,7 +414,7 @@ msgstr "Annullato"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Non è possibile usare un movimento con quantità nulla o negativa."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
@@ -538,7 +539,7 @@ msgstr "Consuma & Produci"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Utilizza righe"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -567,7 +568,7 @@ msgstr "Prodotti Utilizzati"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Utilizzato per"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -980,17 +981,17 @@ msgstr "Manager"
 #: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Produci"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Regola di Produzione"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Produci in questo Magazzino"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1240,7 +1241,7 @@ msgstr "Settimanale"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Codice Fittizio"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1447,12 +1448,12 @@ msgstr "Ordine di produzione N° :"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Ordine di Produzione per Prodotti fabbricati"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Ordine di Produzione per Materie prime"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1472,7 +1473,7 @@ msgstr "Centri di lavoro"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Progresso produzione"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1495,7 +1496,7 @@ msgstr "Prodotti"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Prodotti utilizzati"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1690,12 +1691,12 @@ msgstr "Data prevista"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Data pianificata per Mese"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Data pianificata:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1732,7 +1733,7 @@ msgstr "Cerca distinta base"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Cerca Componenti della Distinta base"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1947,7 +1948,7 @@ msgstr "Tempo in ore che questo centro di lavoro impiegherà per completare le o
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Da utilizzare"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
@@ -1980,7 +1981,7 @@ msgstr "Tracciamento lotti di produzione"
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Traccia Produzione"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2036,13 +2037,13 @@ msgstr "Valido da"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Valido dalla data per Mese"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Valido dal Mese"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
@@ -2062,7 +2063,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Variante"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
