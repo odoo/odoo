@@ -2,7 +2,7 @@
 
 import time
 from openerp import api, models
-
+from datetime import date,timedelta
 
 class ReportGeneralLedger(models.AbstractModel):
     _name = 'report.account.report_generalledger'
@@ -31,7 +31,9 @@ class ReportGeneralLedger(models.AbstractModel):
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
-            init_tables, init_where_clause, init_where_params = MoveLine.with_context(date_to=self.env.context.get('date_from'), date_from=False)._query_get()
+            dfrom = self.env.context.get('date_from')
+            date_from_minus1 = date(int(dfrom[0:4]), int(dfrom[5:7]), int(dfrom[8:10]))+timedelta(days = -1)            
+            init_tables, init_where_clause, init_where_params = MoveLine.with_context(date_to=date_from_minus1, date_from=False)._query_get()
             init_wheres = [""]
             if init_where_clause.strip():
                 init_wheres.append(init_where_clause.strip())
