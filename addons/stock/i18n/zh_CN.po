@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-30 09:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-12 06:57+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgstr " 出库序列"
 #: code:addons/stock/stock.py:3226 code:addons/stock/stock.py:3500
 #, python-format
 msgid " Sequence packing"
-msgstr " 包裹序列"
+msgstr " 包装序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
@@ -124,7 +124,7 @@ msgstr " 分拣序列"
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr " 库存移动存在？"
+msgstr " 库存移动已存在？"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -315,7 +315,7 @@ msgid ""
 "                Click to define a new warehouse.\n"
 "              </p>\n"
 "            "
-msgstr "            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击定义新仓库.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
@@ -558,7 +558,7 @@ msgstr "自动补货"
 #. module: stock
 #: field:stock.move,string_availability_info:0
 msgid "Availability"
-msgstr "可用"
+msgstr "可用性"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -689,7 +689,7 @@ msgstr "取消"
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
 msgid "Cancel Availability"
-msgstr "取消可用"
+msgstr "取消可用性"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2014,7 +2014,7 @@ msgstr "存货调整"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr "存货控制"
+msgstr "库存管理"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -2025,12 +2025,12 @@ msgstr "盘存时间"
 #: view:stock.inventory:stock.view_inventory_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Inventory Details"
-msgstr "盘存明细"
+msgstr "盘存详情"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "盘存明细"
+msgstr "盘存行"
 
 #. module: stock
 #: help:stock.inventory,line_ids:0
@@ -2040,12 +2040,12 @@ msgstr "盘存明细行。"
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "存货位置"
+msgstr "盘存位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "存货位置"
+msgstr "盘存位置"
 
 #. module: stock
 #: help:stock.inventory,move_ids:0
@@ -2066,7 +2066,7 @@ msgstr "盘存参考"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "库存路径"
+msgstr "库存路线"
 
 #. module: stock
 #: field:stock.quant,inventory_value:0
@@ -2083,7 +2083,7 @@ msgstr "库存调整是通过比较产品在odoo系统中的数量和实际复�
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr "盘存盈亏"
+msgstr "盘存盘亏"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2356,7 +2356,7 @@ msgstr "批次条码"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_tree
 msgid "Lot Inventory"
-msgstr "批次盘存"
+msgstr "盘存批号"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -4289,7 +4289,7 @@ msgstr "仅发货"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr "直接从仓库发货(仅发货)"
+msgstr "直接从库存发货(仅发货)"
 
 #. module: stock
 #: field:stock.warehouse,code:0
@@ -4375,7 +4375,7 @@ msgstr "拆分"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "开始盘点"
+msgstr "开始盘存"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -4407,7 +4407,7 @@ msgstr "库存存货"
 #. module: stock
 #: view:stock.inventory.line:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "库存盘存明细"
+msgstr "库存盘存明细行"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -5223,7 +5223,7 @@ msgstr "VAT:"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Validate Inventory"
-msgstr "确认盘存"
+msgstr "验证盘存"
 
 #. module: stock
 #. openerp-web
