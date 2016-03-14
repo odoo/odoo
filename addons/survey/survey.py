@@ -4,6 +4,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DN
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.addons.website.models.website import slug
 from urlparse import urljoin
@@ -363,8 +364,8 @@ class survey_survey(osv.Model):
                     comments.append(input_line)
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
-        #Calculate and return statistics for free_text, textbox, datetime
-        if question.type in ['free_text', 'textbox', 'datetime']:
+        #Calculate and return statistics for free_text, textbox, date
+        if question.type in ['free_text', 'textbox', 'date']:
             result_summary = []
             for input_line in question.user_input_line_ids:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
@@ -551,7 +552,7 @@ class survey_question(osv.Model):
         'type': fields.selection([('free_text', 'Multiple Lines Text Box'),
                 ('textbox', 'Single Line Text Box'),
                 ('numerical_box', 'Numerical Value'),
-                ('datetime', 'Date and Time'),
+                ('date', 'Date'),
                 ('simple_choice', 'Multiple choice: only one answer'),
                 ('multiple_choice', 'Multiple choice: multiple answers allowed'),
                 ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
@@ -595,8 +596,8 @@ class survey_question(osv.Model):
         'validation_length_max': fields.integer('Maximum Text Length'),
         'validation_min_float_value': fields.float('Minimum value'),
         'validation_max_float_value': fields.float('Maximum value'),
-        'validation_min_date': fields.datetime('Minimum Date'),
-        'validation_max_date': fields.datetime('Maximum Date'),
+        'validation_min_date': fields.date('Minimum Date'),
+        'validation_max_date': fields.date('Maximum Date'),
         'validation_error_msg': fields.char('Error message',
                                             oldname='validation_valid_err_msg',
                                             translate=True),
@@ -699,27 +700,26 @@ class survey_question(osv.Model):
                 pass
         return errors
 
-    def validate_datetime(self, cr, uid, question, post, answer_tag, context=None):
+    def validate_date(self, cr, uid, question, post, answer_tag, context=None):
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
         if question.constr_mandatory and not answer:
             errors.update({answer_tag: question.constr_error_msg})
-        # Checks if user input is a datetime
+        # Checks if user input is a date
         if answer:
             try:
-                dateanswer = datetime.datetime.strptime(answer, DF)
+                dateanswer = datetime.datetime.strptime(answer, DN)
             except ValueError:
-                errors.update({answer_tag: _('This is not a date/time')})
+                errors.update({answer_tag: _('This is not a date')})
                 return errors
         # Answer validation (if properly defined)
         if answer and question.validation_required:
             # Answer is not in the right range
             try:
-                dateanswer = datetime.datetime.strptime(answer, DF)
-                min_date = question.validation_min_date and datetime.datetime.strptime(question.validation_min_date, DF) or False
-                max_date = question.validation_max_date and datetime.datetime.strptime(question.validation_max_date, DF) or False
-
+                dateanswer = datetime.datetime.strptime(answer, DN)
+                min_date = question.validation_min_date and datetime.datetime.strptime(question.validation_min_date, DN) or False
+                max_date = question.validation_max_date and datetime.datetime.strptime(question.validation_max_date, DN) or False
                 if (min_date and max_date and not(min_date <= dateanswer <= max_date)):
                     # If Minimum and Maximum Date are entered
                     errors.update({answer_tag: question.validation_error_msg})
@@ -729,7 +729,7 @@ class survey_question(osv.Model):
                 elif (max_date and not(dateanswer <= max_date)):
                     # If only Maximum Date is entered and not Define Minimum Date
                     errors.update({answer_tag: question.validation_error_msg})
-            except ValueError:  # check that it is a datetime has been done hereunder
+            except ValueError:  # check that it is a date has been done hereunder
                 pass
         return errors
 
@@ -967,7 +967,7 @@ class survey_user_input_line(osv.Model):
                                         'Answer Type'),
         'value_text': fields.char("Text answer"),
         'value_number': fields.float("Numerical answer"),
-        'value_date': fields.datetime("Date answer"),
+        'value_date': fields.date("Date answer"),
         'value_free_text': fields.text("Free Text answer"),
         'value_suggested': fields.many2one('survey.label', "Suggested answer"),
         'value_suggested_row': fields.many2one('survey.label', "Row answer"),
@@ -1086,7 +1086,7 @@ class survey_user_input_line(osv.Model):
             self.create(cr, uid, vals, context=context)
         return True
 
-    def save_line_datetime(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+    def save_line_date(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
         vals = {
             'user_input_id': user_input_id,
             'question_id': question.id,
