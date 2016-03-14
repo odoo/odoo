@@ -56,6 +56,7 @@ class MrpProductProduce(models.TransientModel):
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot')
     consume_line_ids = fields.Many2many('stock.move.lots', 'mrp_produce_stock_move_lots', string='Product to Track')
+    product_tracking = fields.Selection(related="product_id.tracking")
 
     @api.multi
     def do_produce(self):

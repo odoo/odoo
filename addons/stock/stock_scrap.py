@@ -18,6 +18,7 @@ class StockScrap(models.Model):
     scrap_qty = fields.Float('Quantity', states={'done': [('readonly', True)]}, required=True, default=1.0)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default="draft")
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
+    tracking = fields.Selection(related="product_id.tracking")
 
     @api.model
     def create(self, vals):

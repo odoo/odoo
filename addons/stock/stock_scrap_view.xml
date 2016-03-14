@@ -110,7 +110,8 @@
                         </group>
                         <group>
                             <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
-                            <field name="lot_id"/>
+                            <field name="tracking" invisible="True"/>
+                            <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')]}"/>
                             <field name="scrap_location_id" groups="stock.group_locations"/>
                         </group>
                     </group>

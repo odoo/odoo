@@ -418,14 +418,14 @@ class MrpProductionWorkcenterLine(models.Model):
             messages = InventoryMessage.search(domain).mapped('message')
             workorder.inv_message = "<br/>".join(messages) or False
 
-    name = fields.Char(string='Work Order', required=True)
-    workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
-    duration = fields.Float(string='Expected Duration', digits=(16, 2), help="Expected duration in minutes")
+    name = fields.Char(string='Work Order', required=True, states={'done': [('readonly', True)]})
+    workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, states={'done': [('readonly', True)]})
+    duration = fields.Float(string='Expected Duration', digits=(16, 2), help="Expected duration in minutes", states={'done': [('readonly', True)]})
     sequence = fields.Integer(required=True, default=1, help="Gives the sequence order when displaying a list of work orders.")
-    production_id = fields.Many2one('mrp.production', string='Manufacturing Order', track_visibility='onchange', index=True, ondelete='cascade', required=True)
+    production_id = fields.Many2one('mrp.production', string='Manufacturing Order', track_visibility='onchange', index=True, ondelete='cascade', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('pending', 'Pending'), ('ready', 'Ready'), ('progress', 'In Progress'), ('done', 'Finished'), ('cancel', 'Cancelled')], default='pending')
-    date_planned_start = fields.Datetime('Scheduled Date Start')
-    date_planned_end = fields.Datetime('Scheduled Date Finished')
+    date_planned_start = fields.Datetime('Scheduled Date Start', states={'done': [('readonly', True)]})
+    date_planned_end = fields.Datetime('Scheduled Date Finished', states={'done': [('readonly', True)]})
 
     date_start = fields.Datetime('Effective Start Date')
     date_finished = fields.Datetime('Effective End Date')
@@ -455,9 +455,15 @@ class MrpProductionWorkcenterLine(models.Model):
     show_state = fields.Boolean(compute='_get_current_state')
     inv_message = fields.Html(compute="_get_inventory_message")
     final_lot_id = fields.Many2one('stock.production.lot', 'Current Lot', domain="[('product_id', '=', product)]")
-    qty_producing = fields.Float('Qty Producing', default=1.0)
+    qty_producing = fields.Float('Qty Producing', default=1.0, states={'done': [('readonly', True)]})
     next_work_order_id = fields.Many2one('mrp.production.work.order', "Next Work Order")
     tracking = fields.Selection(related='product.tracking', readonly=True)
+
+    @api.multi
+    def write(self, values):
+        if self.state == 'done' and values.get('date_planned_start') and values.get('date_planned_end'):
+            raise UserError(_('You can not change the finished work order.'))
+        return super(MrpProductionWorkcenterLine, self).write(values)
 
     def _generate_lot_ids(self):
         """

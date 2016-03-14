@@ -91,8 +91,8 @@ class MrpBom(models.Model):
             # This is very slow, can we improve that?
             bom = self._bom_find(product=bom_line.product_id, picking_type=self.picking_type_id)
             if not bom or bom.bom_type != "phantom":
-                quantity = quantity * bom_line.product_qty / self.product_qty
-                if method: method(bom_line, quantity, kw)
+                qty = quantity * bom_line.product_qty / self.product_qty
+                if method: method(bom_line, qty, kw)
             else:
                 done.append(self.product_tmpl_id.id)
                 # We need to convert to units/UoM of chosen BoM
