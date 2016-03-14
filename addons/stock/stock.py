@@ -2446,6 +2446,11 @@ class stock_move(osv.osv):
             for link in move.linked_move_operation_ids:
                 operations.add(link.operation_id)
 
+        # Update the date of the move for real-time valuation. The account move line will use the
+        # date of the stock move, it needs to be written before the creation of the account move
+        # line
+        self.write(cr, uid, ids, {'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+
         #Sort operations according to entire packages first, then package + lot, package only, lot only
         operations = list(operations)
         operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
@@ -2508,7 +2513,7 @@ class stock_move(osv.osv):
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
-        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        self.write(cr, uid, ids, {'state': 'done'}, context=context)
         self.pool.get('procurement.order').check(cr, uid, list(procurement_ids), context=context)
         #assign destination moves
         if move_dest_ids:
