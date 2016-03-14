@@ -337,7 +337,7 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            date = context.get('force_period_date', move.date)
+            date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
             new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_ids': move_lines,
                                       'date': date,
