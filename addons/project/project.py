@@ -160,13 +160,6 @@ class project(osv.osv):
     def _get_favorite(self, cr, uid, ids, name, args, context=None):
         return dict((project.id, uid in project.favorite_user_ids.ids) for project in self.browse(cr, uid, ids, context=context))
 
-    def _set_favorite(self, cr, uid, ids, field_name, field_value, args, context=None):
-        if field_value:
-            self.write(cr, uid, ids, {'favorite_user_ids': [(4, uid)]}, context=context)
-        else:
-            self.write(cr, uid, ids, {'favorite_user_ids': [(3, uid)]}, context=context)
-        return True
-
     def _get_default_favorite_user_ids(self, cr, uid, context=None):
         return [(6, 0, [uid])]
 
@@ -185,9 +178,7 @@ class project(osv.osv):
         'favorite_user_ids': fields.many2many(
             'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
             string='Members'),
-        'is_favorite': fields.function(
-            _get_favorite, fnct_inv=_set_favorite, type="boolean",
-            string='Show Project on dashboard',
+        'is_favorite': fields.function(_get_favorite, type="boolean", string='Show Project on dashboard',
             help="Whether this project should be displayed on the dashboard or not"),
         'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -360,8 +351,10 @@ class project(osv.osv):
                 favorite_project_ids.append(project.id)
             else:
                 not_fav_project_ids.append(project.id)
-        self.write(cr, uid, favorite_project_ids, {'is_favorite': False}, context=context)
-        self.write(cr, uid, not_fav_project_ids, {'is_favorite': True}, context=context)
+
+        # Project User has no write access for project.
+        self.write(cr, SUPERUSER_ID, not_fav_project_ids, {'favorite_user_ids': [(4, uid)]}, context=context)
+        self.write(cr, SUPERUSER_ID, favorite_project_ids, {'favorite_user_ids': [(3, uid)]}, context=context)
 
 
 class task(osv.osv):
