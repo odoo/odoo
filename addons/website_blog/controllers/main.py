@@ -50,17 +50,27 @@ class WebsiteBlog(http.Controller):
     _post_comment_per_page = 10
 
     def nav_list(self, blog=None):
-        blog_post_obj = request.registry['blog.post']
-        domain = blog and [('blog_id', '=', blog.id)] or []
-        groups = blog_post_obj.read_group(
-            request.cr, request.uid, domain, ['name', 'create_date'],
-            groupby="create_date", orderby="create_date desc", context=request.context)
+        blog_post_obj = request.env['blog.post']
+        groups = blog_post_obj._read_group_raw(
+            blog and [('blog_id', '=', blog.id)] or [],
+            ['name', 'create_date'],
+            groupby=["create_date"], orderby="create_date desc")
         for group in groups:
-            begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            group['date_begin'] = '%s' % datetime.date.strftime(begin_date, tools.DEFAULT_SERVER_DATE_FORMAT)
-            group['date_end'] = '%s' % datetime.date.strftime(end_date, tools.DEFAULT_SERVER_DATE_FORMAT)
+            (r, label) = group['create_date']
+            start, end = r.split('/')
+            group['create_date'] = label
+            group['date_begin'] = self._to_date(start)
+            group['date_end'] = self._to_date(end)
         return groups
+
+    def _to_date(self, dt):
+        """ create_date is a datetime so start and end are datetime strings,
+        but we just want date strings
+        """
+        return (datetime.datetime
+            .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            .date() # may be unnecessary?
+            .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
 
     @http.route([
         '/blog',

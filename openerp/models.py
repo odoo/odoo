@@ -2058,37 +2058,68 @@ class BaseModel(object):
                 value =  pytz.timezone(context['tz']).localize(value)
         return value
 
-    def _read_group_get_domain(self, groupby, value):
-        """
-            Helper method to construct the domain corresponding to a groupby and 
-            a given value. This is mostly relevant for date/datetime.
-        """
-        if groupby['type'] in ('date', 'datetime') and value:
-            dt_format = DEFAULT_SERVER_DATETIME_FORMAT if groupby['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
-            domain_dt_begin = value
-            domain_dt_end = value + groupby['interval']
-            if groupby['tz_convert']:
-                domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
-                domain_dt_end = domain_dt_end.astimezone(pytz.utc)
-            return [(groupby['field'], '>=', domain_dt_begin.strftime(dt_format)),
-                   (groupby['field'], '<', domain_dt_end.strftime(dt_format))]
-        if groupby['type'] == 'many2one' and value:
-                value = value[0]
-        return [(groupby['field'], '=', value)]
-
-    def _read_group_format_result(self, data, annotated_groupbys, groupby, groupby_dict, domain, context):
+    def _read_group_format_result(self, data, annotated_groupbys, groupby, domain, context):
         """
             Helper method to format the data contained in the dictionary data by 
             adding the domain corresponding to its values, the groupbys in the 
-            context and by properly formatting the date/datetime values. 
-        """
-        domain_group = [dom for gb in annotated_groupbys for dom in self._read_group_get_domain(gb, data[gb['groupby']])]
-        for k,v in data.iteritems():
-            gb = groupby_dict.get(k)
-            if gb and gb['type'] in ('date', 'datetime') and v:
-                data[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
+            context and by properly formatting the date/datetime values.
 
-        data['__domain'] = domain_group + domain 
+        :param data: a single group
+        :param annotated_groupbys: expanded grouping metainformation
+        :param groupby: original grouping metainformation
+        :param domain: original domain for read_group
+        """
+
+        sections = []
+        for gb in annotated_groupbys:
+            ftype = gb['type']
+            value = data[gb['groupby']]
+
+            # full domain for this groupby spec
+            d = None
+            if value:
+                if ftype == 'many2one':
+                    value = value[0]
+                elif ftype in ('date', 'datetime'):
+                    locale = context.get('lang', 'en_US')
+                    fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                    tzinfo = None
+                    range_start = value
+                    range_end = value + gb['interval']
+                    # value from postgres is in local tz (so range is
+                    # considered in local tz e.g. "day" is [00:00, 00:00[
+                    # local rather than UTC which could be [11:00, 11:00]
+                    # local) but domain and raw value should be in UTC
+                    if gb['tz_convert']:
+                        tzinfo = range_start.tzinfo
+                        range_start = range_start.astimezone(pytz.utc)
+                        range_end = range_end.astimezone(pytz.utc)
+
+                    range_start = range_start.strftime(fmt)
+                    range_end = range_end.strftime(fmt)
+                    if ftype == 'datetime':
+                        label = babel.dates.format_datetime(
+                            value, format=gb['display_format'],
+                            tzinfo=tzinfo, locale=locale
+                        )
+                    else:
+                        label = babel.dates.format_date(
+                            value, format=gb['display_format'],
+                            locale=locale
+                        )
+                    data[gb['groupby']] = ('%s/%s' % (range_start, range_end), label)
+                    d = [
+                        '&',
+                        (gb['field'], '>=', range_start),
+                        (gb['field'], '<', range_end),
+                    ]
+
+            if d is None:
+                d = [(gb['field'], '=', value)]
+            sections.append(d)
+        sections.append(domain)
+
+        data['__domain'] = expression.AND(sections)
         if len(groupby) - len(annotated_groupbys) >= 1:
             data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
         del data['id']
@@ -2126,6 +2157,25 @@ class BaseModel(object):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
+        if context is None:
+            context = context
+        result = self._read_group_raw(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
+
+        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        dt = [
+            f for f in groupby
+            if self._fields[f.split(':')[0]].type in ('date', 'datetime')
+        ]
+
+        # iterate on all results and replace the "full" date/datetime value
+        # (range, label) by just the formatted label, in-place
+        for group in result:
+            for df in dt:
+                if df in group:
+                    group[df] = group[df][1]
+        return result
+
+    def _read_group_raw(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if context is None:
             context = {}
         self.check_access_rights(cr, uid, 'read')
@@ -2215,7 +2265,7 @@ class BaseModel(object):
                 d.update(data_dict[d['id']])
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
-        result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
+        result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain, context) for d in data]
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
