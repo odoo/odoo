@@ -14,16 +14,26 @@ class MailGroup(http.Controller):
     _replies_per_page = 10
 
     def _get_archives(self, group_id):
-        MailMessage = request.registry['mail.message']
-        groups = MailMessage.read_group(
-            request.cr, request.uid, [('model', '=', 'mail.channel'), ('res_id', '=', group_id)], ['subject', 'date'],
-            groupby="date", orderby="date desc", context=request.context)
+        MailMessage = request.env['mail.message']
+        groups = MailMessage._read_group_raw(
+            [('model', '=', 'mail.channel'), ('res_id', '=', group_id)], ['subject', 'date'],
+            groupby=["date"], orderby="date desc")
         for group in groups:
-            begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            group['date_begin'] = '%s' % datetime.date.strftime(begin_date, tools.DEFAULT_SERVER_DATE_FORMAT)
-            group['date_end'] = '%s' % datetime.date.strftime(end_date, tools.DEFAULT_SERVER_DATE_FORMAT)
+            (r, label) = group['date']
+            start, end = r.split('/')
+            group['date'] = label
+            group['date_begin'] = self._to_date(start)
+            group['date_end'] = self._to_date(end)
         return groups
+
+    def _to_date(self, dt):
+        """ date is (of course) a datetime so start and end are datetime
+        strings, but we just want date strings
+        """
+        return (datetime.datetime
+            .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            .date() # may be unnecessary?
+            .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
 
     @http.route("/groups", type='http', auth="public", website=True)
     def view(self, **post):
