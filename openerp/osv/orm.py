@@ -4249,6 +4249,10 @@ class BaseModel(object):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        if 'no_store_function_result' not in context:
+            context.update({'no_store_function_result': []})
+        # keep the reference of 'no_store_function_result
+        rel_context.update({'no_store_function_result': context.get('no_store_function_result')})
         result = []
         for field in upd_todo:
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
@@ -4256,12 +4260,15 @@ class BaseModel(object):
 
         if not context.get('no_store_function', False):
             result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += context.get('no_store_function_result', []) or []
             result.sort()
             done = []
             for order, object, ids, fields2 in result:
                 if not (object, ids, fields2) in done:
                     self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
                     done.append((object, ids, fields2))
+        elif 'no_store_function_result' in context and result:
+            context['no_store_function_result'] += result
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
