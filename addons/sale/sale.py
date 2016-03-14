@@ -432,7 +432,6 @@ class SaleOrder(models.Model):
             grouped_lines.append({
                 'name': category and category.name or 'Uncategorized',
                 'subtotal': category and category.subtotal,
-                'separator': category and category.separator,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)
             })
@@ -848,7 +847,6 @@ class AccountInvoice(models.Model):
             grouped_lines.append({
                 'name': category and category.name or 'Uncategorized',
                 'subtotal': category and category.subtotal,
-                'separator': category and category.separator,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)
             })

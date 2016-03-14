@@ -10,7 +10,6 @@
                     <group>
                         <field name="name"/>
                         <field name="subtotal" widget="checkbox"/>
-                        <field name="separator" widget="checkbox"/>
                         <field name="pagebreak" widget="checkbox"/>
                         <field name="sequence"/>
                     </group>
@@ -25,7 +24,6 @@
                 <tree string="Report Configuration">
                         <field name="name"/>
                         <field name="subtotal" widget="checkbox"/>
-                        <field name="separator" widget="checkbox"/>
                         <field name="pagebreak" widget="checkbox"/>
                         <field name="sequence"/>
                 </tree>
@@ -38,8 +36,7 @@
 	        <field name="arch" type="xml">
                 <search string="Search Name">
                     <filter string="Total" domain="[('subtotal','=','True')]"/>
-                    <filter string="Separator" domain="[('separator','=','True')]"/>
-                    <filter string="Break" domain="[('pagebreak','=','True')]"/>
+                    <filter string="Breaks Page" domain="[('pagebreak','=','True')]"/>
                     <group string="Group By Name">
                         <filter string="Name"  context="{'group_by' : 'name'}"/>
                     </group>

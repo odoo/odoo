@@ -11,13 +11,11 @@ class SaleLayoutCategory(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', required=True),
         'subtotal': fields.boolean('Add subtotal'),
-        'separator': fields.boolean('Add separator'),
         'pagebreak': fields.boolean('Add pagebreak')
     }
 
     _defaults = {
         'subtotal': True,
-        'separator': True,
         'pagebreak': False,
         'sequence': 10
     }
