@@ -108,7 +108,7 @@ class stock_landed_cost(osv.osv):
         accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
         debit_account_id = accounts['property_stock_valuation_account_id']
         already_out_account_id = accounts['stock_account_output']
-        credit_account_id = accounts['stock_account_input']
+        credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
 
         if not credit_account_id:
             raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
