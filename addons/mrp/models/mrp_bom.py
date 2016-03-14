@@ -96,7 +96,7 @@ class MrpBom(models.Model):
             else:
                 done.append(self.product_tmpl_id.id)
                 # We need to convert to units/UoM of chosen BoM
-                qty2 = bom_line.product_uom_id._compute_qty(quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
+                qty2 = self.env['product.uom']._compute_qty(bom_line.product_uom_id.id, quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
                 bom.explode(bom_line.product_id, qty2, method=method, method_wo=method_wo, done=done, result=kw)
         return True
 
