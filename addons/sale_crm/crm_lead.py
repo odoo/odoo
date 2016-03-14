@@ -13,9 +13,9 @@ class crm_lead(models.Model):
         total = 0.0
         nbr = 0
         for order in self.order_ids:
-            if order.state == 'draft':
+            if order.state in ('draft', 'sent'):
                 nbr += 1
-            if order.state not in ('draft', 'cancel'):
+            if order.state not in ('draft', 'sent', 'cancel'):
                 total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
         self.sale_amount_total = total
         self.sale_number = nbr
