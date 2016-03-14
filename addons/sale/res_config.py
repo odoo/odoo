@@ -47,7 +47,7 @@ class sale_configuration(osv.TransientModel):
             ], "Margins"),
         'group_sale_layout': fields.selection([
             (0, 'Do not personalize sale orders and invoice reports'),
-            (1, 'Personalize the sale orders and invoice report with separators, page-breaks or subtotals')
+            (1, 'Personalize the sale orders and invoice report with categories, subtotals and page-breaks')
             ], "Sale Reports Layout", implied_group='sale.group_sale_layout'),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),

@@ -33,7 +33,7 @@ You can choose flexible invoicing methods:
 * *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
 With this module you can personnalize the sale order and invoice report with
-separators, page-breaks or subtotals.
+categories, subtotals or page-breaks.
 
 The Dashboard for the Sales Manager will include
 ------------------------------------------------
@@ -60,7 +60,6 @@ The Dashboard for the Sales Manager will include
         'views/sale.xml',
         'views/report_invoice_layouted.xml',
         'views/sale_layout_category_view.xml',
-        'views/sale_layout_template.xml',
         'sales_team_dashboard.xml',
         'sale_tip_data.xml',
     ],

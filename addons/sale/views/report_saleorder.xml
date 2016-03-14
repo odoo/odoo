@@ -111,14 +111,6 @@
                             </tr>
                         </t>
 
-                        <t t-if="layout_category_size > 1 and layout_category['separator']" groups="sale.group_sale_layout">
-                            <tr class="text-center">
-                                <td colspan="6">
-                                    <t t-call="sale.layout_category_separator"/>
-                                </td>
-                            </tr>
-                        </t>
-
                         <t t-if="layout_category_size > 1 and layout_category['pagebreak']" groups="sale.group_sale_layout">
                             <t t-if="layout_category_index &lt; layout_category_size - 1">
                                 <![CDATA[
