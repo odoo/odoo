@@ -80,6 +80,7 @@ class MrpBom(models.Model):
     # Quantity must be in same UoM than the BoM: convert uom before explode()
     def explode(self, product, quantity, method=None, method_wo=None, done=None, **kw):
         self.ensure_one()
+        ProductUom = self.env['product.uom']
         if method_wo and self.routing_id: method_wo(self, quantity)
         done = done or []
         for bom_line in self.bom_line_ids:
@@ -90,7 +91,7 @@ class MrpBom(models.Model):
             # This is very slow, can we improve that?
             bom = self._bom_find(product=bom_line.product_id, picking_type=self.picking_type_id)
             if not bom or bom.bom_type != "phantom":
-                quantity = bom_line.product_uom_id._compute_qty(quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
+                quantity = quantity * bom_line.product_qty / self.product_qty
                 if method: method(bom_line, quantity, kw)
             else:
                 done.append(self.product_tmpl_id.id)
