@@ -1055,6 +1055,7 @@ var One2ManyListView = X2ManyListView.extend({
 
         this.dataset.on('dataset_changed', this, function () {
             this._dataset_changed = true;
+            this.dataset.x2m._dirty_flag = true;
         });
         this.dataset.x2m.on('load_record', this, function () {
             this._dataset_changed = false;
