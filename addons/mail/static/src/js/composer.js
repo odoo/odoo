@@ -226,10 +226,11 @@ var MentionManager = Widget.extend({
                 for (var i=0; i<matches.length; i++) {
                     var match = matches[i];
                     var end_index = match.index + match[0].length;
+                    var selection_id = self.get_selection_id(match, selection);
                     // put back white spaces instead of non-breaking spaces in mention's name
                     var match_name = match[0].substring(1).replace(new RegExp(NON_BREAKING_SPACE, 'g'), ' ');
-                    var href = base_href + _.str.sprintf("#model=%s&id=%s", listener.model, selection[i].id);
-                    var processed_text = _.str.sprintf(mention_link, href, listener.redirect_classname, selection[i].id, listener.model, listener.delimiter, match_name);
+                    var href = base_href + _.str.sprintf("#model=%s&id=%s", listener.model, selection_id);
+                    var processed_text = _.str.sprintf(mention_link, href, listener.redirect_classname, selection_id, listener.model, listener.delimiter, match_name);
                     var subtext = s.substring(start_index, end_index).replace(match[0], processed_text);
                     substrings.push(subtext);
                     start_index = end_index;
@@ -239,6 +240,15 @@ var MentionManager = Widget.extend({
             }
         });
         return s;
+    },
+
+    get_selection_id: function (match, selection) {
+        var m = match[1][0].slice(1);
+        _.each(selection, function (s) {
+            if(s.name == m){
+                return s.id;
+            }
+        });
     },
 
     reset_selections: function () {

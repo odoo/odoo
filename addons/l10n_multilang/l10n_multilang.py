@@ -26,7 +26,7 @@ class AccountChartTemplate(models.Model):
             #find the value from Translation
             value = xlat_obj._get_ids(in_ids._name + ',' + in_field, 'model', lang, in_ids.ids)
             counter = 0
-            for element in in_ids:
+            for element in in_ids.with_context(lang=None):
                 if value[element.id]:
                     #copy Translation from Source to Destination object
                     xlat_obj.create({
@@ -84,3 +84,32 @@ class AccountChartTemplate(models.Model):
         in_ids = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)], order='id')
         out_ids = self.env['account.fiscal.position'].search([('company_id', '=', company_id)], order='id')
         return self.process_translations(langs, field, in_ids, out_ids)
+
+
+class base_language_install(models.TransientModel):
+    """ Install Language"""
+
+    _inherit = "base.language.install"
+
+    @api.multi
+    def lang_install(self):
+        self.ensure_one()
+        already_installed = self.env['res.lang'].search_count([('code', '=', self.lang)])
+        res = super(base_language_install, self).lang_install()
+        if already_installed:
+            # update of translations instead of new installation
+            # skip to avoid duplicating the translations
+            return res
+
+        # CoA in multilang mode
+        for coa in self.env['account.chart.template'].search([('spoken_languages', '!=', False)]):
+            if self.lang in coa.spoken_languages.split(';'):
+                # companies on which it is installed
+                for company in self.env['res.company'].search([('chart_template_id', '=', coa.id)]):
+                    # write account.account translations in the real COA
+                    coa._process_accounts_translations(company.id, [self.lang], 'name')
+                    # copy account.tax translations
+                    coa._process_taxes_translations(company.id, [self.lang], 'name')
+                    # copy account.fiscal.position translations
+                    coa._process_fiscal_pos_translations(company.id, [self.lang], 'name')
+        return res

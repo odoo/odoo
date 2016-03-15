@@ -51,9 +51,14 @@ var WidgetButton = common.FormWidget.extend({
     },
     on_click: function() {
         var self = this;
+        if (this.view.is_disabled) {
+            return;
+        }
         this.force_disabled = true;
         this.check_disable();
+        this.view.disable_button();
         this.execute_action().always(function() {
+            self.view.enable_button();
             self.force_disabled = false;
             self.check_disable();
             if (self.$el.hasClass('o_wow')) {
@@ -1499,6 +1504,9 @@ var FieldStatus = common.AbstractField.extend({
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        if (this.view.is_disabled) {
+            return;
+        }
         var val;
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);

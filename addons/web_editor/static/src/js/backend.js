@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
@@ -66,12 +67,15 @@ var FieldTextHtmlSimple = widget.extend({
 
         if (this.get("effective_readonly")) {
             if (this.options['style-inline']) {
-                this.$textarea.hide().after('<iframe class="o_readonly"/>');
-                setTimeout(function () {
-                    self.$content = $("body", self.$('iframe').contents()[0]);
+                var $iframe = $('<iframe class="o_readonly"/>');
+                this.$textarea.hide().after($iframe);
+                var load = function () {
+                    self.$content = $($iframe.contents()[0]).find("body");
                     self.$content.html(self.text_to_html(self.get('value')));
                     self.resize();
-                });
+                };
+                setTimeout(load);
+                $iframe.on('load', load);
             } else {
                 this.$content = $('<div class="o_readonly"/>');
                 this.$textarea.hide().after(this.$content);
@@ -151,7 +155,7 @@ var FieldTextHtmlSimple = widget.extend({
     is_false: function() {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    before_save: function() {
+    commit_value: function() {
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -357,7 +361,7 @@ var FieldTextHtml = widget.extend({
     is_false: function() {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    before_save: function () {
+    commit_value: function () {
         if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
             this.internal_set_value( this.view.datarecord[this.name] );
             this._dirty_flag = false;

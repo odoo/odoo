@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_is_zero
 from openerp import api, fields, models
 
 
@@ -25,19 +25,27 @@ class AccountPartialReconcile(models.Model):
         aml_set = self.env['account.move.line']
         total_debit = 0
         total_credit = 0
+        total_amount_currency = 0
+        currency = None
         for partial_rec in partial_rec_set:
+            if currency is None:
+                currency = partial_rec.currency_id
             for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
                 if aml not in aml_set:
                     total_debit += aml.debit
                     total_credit += aml.credit
                     aml_set |= aml
+                    if aml.currency_id and aml.currency_id == currency:
+                        total_amount_currency += aml.amount_currency
                 for x in aml.matched_debit_ids | aml.matched_credit_ids:
                     partial_rec_set[x] = None
         partial_rec_ids = [x.id for x in partial_rec_set.keys()]
         aml_ids = [x.id for x in aml_set]
-        #then, if the total debit and credit are equal, the reconciliation is full
+        #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding
-        if float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0:
+        if float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0 \
+          or (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)):
+
             #in that case, mark the reference on the partial reconciliations and the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
                 'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
@@ -47,11 +55,9 @@ class AccountPartialReconcile(models.Model):
     @api.multi
     def unlink(self):
         """When removing a partial reconciliation, also unlink its full reconciliation if it exists"""
-        full_rec = self.env['account.full.reconcile']
         for rec in self:
             if rec.full_reconcile_id:
-                full_rec |= rec.full_reconcile_id
-        full_rec.unlink()
+                rec.full_reconcile_id.unlink()
         return super(AccountPartialReconcile, self).unlink()
 
 
