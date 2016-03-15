@@ -178,129 +178,11 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             });
             $analytics_auth.appendTo($analytics_components);
 
-            // 2. ActiveUsers component
-            var $analytics_users = $('<div>');
-            var activeUsers = new gapi.analytics.ext.ActiveUsers({
-                container: $analytics_users[0],
-                pollingInterval: 10,
-            });
-            $analytics_users.appendTo($analytics_components);
-
-            // 3. View Selector
-            var $analytics_view_selector = $('<div>').addClass('col-md-12 o_properties_selection');
-            var viewSelector = new gapi.analytics.ViewSelector({
-                container: $analytics_view_selector[0],
-            });
-            viewSelector.execute();
-            $analytics_view_selector.appendTo($analytics_components);
-
-            // 4. Chart graph
-            var start_date = '7daysAgo';
-            if (self.date_range === 'month') {
-                start_date = '30daysAgo';
-            } else if (self.date_range === 'year') {
-                start_date = '365daysAgo';
-            }
-            var $analytics_chart_2 = $('<div>').addClass('col-md-6');
-            var breakdownChart = new gapi.analytics.googleCharts.DataChart({
-                query: {
-                    'dimensions': 'ga:date',
-                    'metrics': 'ga:sessions',
-                    'start-date': start_date,
-                    'end-date': 'yesterday'
-                },
-                chart: {
-                    type: 'LINE',
-                    container: $analytics_chart_2[0],
-                    options: {
-                        title: 'All',
-                        width: '100%'
-                    }
-                }
-            });
-            $analytics_chart_2.appendTo($analytics_components);
-
-            // 5. Chart table
-            var $analytics_chart_1 = $('<div>').addClass('col-md-6');
-            var mainChart = new gapi.analytics.googleCharts.DataChart({
-                query: {
-                    'dimensions': 'ga:medium',
-                    'metrics': 'ga:sessions',
-                    'sort': '-ga:sessions',
-                    'max-results': '6'
-                },
-                chart: {
-                    type: 'TABLE',
-                    container: $analytics_chart_1[0],
-                    options: {
-                        width: '100%'
-                    }
-                }
-            });
-            $analytics_chart_1.appendTo($analytics_components);
-
-            // Events handling & animations
-
-            var table_row_listener;
-
-            viewSelector.on('change', function(ids) {
-                var options = {query: {ids: ids}};
-                activeUsers.set({ids: ids}).execute();
-                mainChart.set(options).execute();
-                breakdownChart.set(options).execute();
-
-                if (table_row_listener) { google.visualization.events.removeListener(table_row_listener); }
+            self.handle_analytics_auth($analytics_components);
+            gapi.analytics.auth.on('signIn', function() {
+                self.handle_analytics_auth($analytics_components);
             });
 
-            mainChart.on('success', function(response) {
-                var chart = response.chart;
-                var dataTable = response.dataTable;
-
-                table_row_listener = google.visualization.events.addListener(chart, 'select', function() {
-                    var options;
-                    if (chart.getSelection().length) {
-                        var row =  chart.getSelection()[0].row;
-                        var medium =  dataTable.getValue(row, 0);
-                        options = {
-                            query: {
-                                filters: 'ga:medium==' + medium,
-                            },
-                            chart: {
-                                options: {
-                                    title: medium,
-                                }
-                            }
-                        };
-                    } else {
-                        options = {
-                            chart: {
-                                options: {
-                                    title: 'All',
-                                }
-                            }
-                        };
-                        delete breakdownChart.get().query.filters;
-                    }
-                    breakdownChart.set(options).execute();
-                });
-            });
-
-            // Add CSS animation to visually show the when users come and go.
-            activeUsers.once('success', function() {
-                var element = this.container.firstChild;
-                var timeout;
-
-                this.on('change', function(data) {
-                    element = this.container.firstChild;
-                    var animationClass = data.delta > 0 ? 'is-increasing' : 'is-decreasing';
-                    element.className += (' ' + animationClass);
-
-                    clearTimeout(timeout);
-                    timeout = setTimeout(function() {
-                        element.className = element.className.replace(/ is-(increasing|decreasing)/g, '');
-                    }, 3000);
-                });
-            });
         });
     },
 
@@ -367,6 +249,149 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 self.analytics_create_components();
             });
         }
+    },
+
+    handle_analytics_auth: function($analytics_components) {
+        $analytics_components.find('.js_unauthorized_message').remove();
+
+        // Check if the user is authenticated and has the right to make API calls
+        if (!gapi.analytics.auth.getAuthResponse()) {
+            this.display_unauthorized_message($analytics_components, 'not_connected');
+        } else if (gapi.analytics.auth.getAuthResponse() && gapi.analytics.auth.getAuthResponse().scope.indexOf('https://www.googleapis.com/auth/analytics ') === -1) {
+            this.display_unauthorized_message($analytics_components, 'no_right');
+        } else {
+            this.make_analytics_calls($analytics_components);
+        }
+    },
+
+    display_unauthorized_message: function($analytics_components, reason) {
+        $analytics_components.prepend($(QWeb.render('website.unauthorized_analytics', {reason: reason})));
+    },
+
+    make_analytics_calls: function($analytics_components) {
+        // 2. ActiveUsers component
+        var $analytics_users = $('<div>');
+        var activeUsers = new gapi.analytics.ext.ActiveUsers({
+            container: $analytics_users[0],
+            pollingInterval: 10,
+        });
+        $analytics_users.appendTo($analytics_components);
+
+        // 3. View Selector
+        var $analytics_view_selector = $('<div>').addClass('col-md-12 o_properties_selection');
+        var viewSelector = new gapi.analytics.ViewSelector({
+            container: $analytics_view_selector[0],
+        });
+        viewSelector.execute();
+        $analytics_view_selector.appendTo($analytics_components);
+
+        // 4. Chart graph
+        var start_date = '7daysAgo';
+        if (this.date_range === 'month') {
+            start_date = '30daysAgo';
+        } else if (this.date_range === 'year') {
+            start_date = '365daysAgo';
+        }
+        var $analytics_chart_2 = $('<div>').addClass('col-md-6');
+        var breakdownChart = new gapi.analytics.googleCharts.DataChart({
+            query: {
+                'dimensions': 'ga:date',
+                'metrics': 'ga:sessions',
+                'start-date': start_date,
+                'end-date': 'yesterday'
+            },
+            chart: {
+                type: 'LINE',
+                container: $analytics_chart_2[0],
+                options: {
+                    title: 'All',
+                    width: '100%'
+                }
+            }
+        });
+        $analytics_chart_2.appendTo($analytics_components);
+
+        // 5. Chart table
+        var $analytics_chart_1 = $('<div>').addClass('col-md-6');
+        var mainChart = new gapi.analytics.googleCharts.DataChart({
+            query: {
+                'dimensions': 'ga:medium',
+                'metrics': 'ga:sessions',
+                'sort': '-ga:sessions',
+                'max-results': '6'
+            },
+            chart: {
+                type: 'TABLE',
+                container: $analytics_chart_1[0],
+                options: {
+                    width: '100%'
+                }
+            }
+        });
+        $analytics_chart_1.appendTo($analytics_components);
+
+        // Events handling & animations
+
+        var table_row_listener;
+
+        viewSelector.on('change', function(ids) {
+            var options = {query: {ids: ids}};
+            activeUsers.set({ids: ids}).execute();
+            mainChart.set(options).execute();
+            breakdownChart.set(options).execute();
+
+            if (table_row_listener) { google.visualization.events.removeListener(table_row_listener); }
+        });
+
+        mainChart.on('success', function(response) {
+            var chart = response.chart;
+            var dataTable = response.dataTable;
+
+            table_row_listener = google.visualization.events.addListener(chart, 'select', function() {
+                var options;
+                if (chart.getSelection().length) {
+                    var row =  chart.getSelection()[0].row;
+                    var medium =  dataTable.getValue(row, 0);
+                    options = {
+                        query: {
+                            filters: 'ga:medium==' + medium,
+                        },
+                        chart: {
+                            options: {
+                                title: medium,
+                            }
+                        }
+                    };
+                } else {
+                    options = {
+                        chart: {
+                            options: {
+                                title: 'All',
+                            }
+                        }
+                    };
+                    delete breakdownChart.get().query.filters;
+                }
+                breakdownChart.set(options).execute();
+            });
+        });
+
+        // Add CSS animation to visually show the when users come and go.
+        activeUsers.once('success', function() {
+            var element = this.container.firstChild;
+            var timeout;
+
+            this.on('change', function(data) {
+                element = this.container.firstChild;
+                var animationClass = data.delta > 0 ? 'is-increasing' : 'is-decreasing';
+                element.className += (' ' + animationClass);
+
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    element.className = element.className.replace(/ is-(increasing|decreasing)/g, '');
+                }, 3000);
+            });
+        });
     },
 
     /*
