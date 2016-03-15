@@ -2,6 +2,8 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
+from openerp.exceptions import UserError
+from openerp import api, _
 
 
 class product_template(osv.osv):
@@ -91,7 +93,23 @@ class product_bom(osv.osv):
     _inherit = 'mrp.bom'
             
     _columns = {
-        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
+        'standard_price': fields.related('product_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
     }
 
-product_bom()
+    @api.multi
+    def write(self, vals):
+        for bom in self:
+            if bom.product_tmpl_id.product_variant_count==1:
+                vals['product_id'] = bom.product_tmpl_id.product_variant_ids.id
+            elif vals.get('standard_price', False) and not vals('product_id', False):
+                raise UserError(_('To set the standard price, you have to set a variant.'))
+        return super(product_bom, self).write(vals)
+
+    @api.model
+    def create(self, vals):
+        template = self.env['product.template'].browse(vals['product_tmpl_id'])
+        if template.product_variant_count==1:
+            vals['product_id'] = template.product_variant_ids.id
+        elif vals.get('standard_price', False) and not vals('product_id', False):
+            raise UserError(_('To set the standard price, you have to set a variant.'))
+        return super(product_bom, self).create(vals)
