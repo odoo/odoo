@@ -126,7 +126,7 @@ class template(object):
                 if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html', '.template'):
                     f.write(content)
                 else:
-                    env.from_string(content)\
+                    env.from_string(content.decode('utf-8'))\
                        .stream(params or {})\
                        .dump(f, encoding='utf-8')
 
