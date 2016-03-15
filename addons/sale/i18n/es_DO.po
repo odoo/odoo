@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-22 10:49+0000\n"
+"PO-Revision-Date: 2016-03-10 09:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -604,7 +604,7 @@ msgstr "Habilitar el portal del cliente para dar seguimiento a pedidos, entregas
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
 msgid "Expense Account"
-msgstr ""
+msgstr "Cuenta de gastos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -949,6 +949,12 @@ msgstr "Mis lineas de pedidos de venta"
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
 msgstr "Nunca permitir modificar un pedido de venta confirmado"
+
+#. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1684,7 +1690,7 @@ msgstr "No hay ninguna cuenta de ingresos definida para este producto: “%s”.
 #: code:addons/sale/sale.py:316
 #, python-format
 msgid "There is no invoicable line."
-msgstr ""
+msgstr "No hay línea facturable"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1696,21 +1702,21 @@ msgstr "Este año"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Esta cuenta se utilizará para las facturas en lugar de la opción por defecto para los gastos de valor para el producto actual."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Esta cuenta se utilizará para las facturas en lugar de la predeterminada para ventas de valor para el producto actual."
 
 #. module: sale
 #: model:web.tip,description:sale.sale_tip_1
 msgid ""
 "This progress bar shows the stages your quotation will go through.\n"
 "                Use buttons on the left to move forward to the next stages."
-msgstr ""
+msgstr "Esta barra de progreso muestra las etapas de su cotización atravesarán.\nUtilice los botones de la izquierda para avanzar a las siguientes etapas."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1817,7 +1823,7 @@ msgstr "Base imponible"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total Price"
-msgstr ""
+msgstr "Precio Total sin Impuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1835,7 +1841,7 @@ msgstr "Oportunidad de incrementar"
 msgid ""
 "Use pivot and graph views to analyze your sales pipeline.\n"
 "                Select measures, filter and group dimensions to get the perfect report according to your needs."
-msgstr ""
+msgstr "Utilizar las vistas de pivote y gráfico para analizar el flujo de ventas.\nSeleccionar medidas, filtros y dimensiones de grupo para obtener el informe perfecto de acuerdo a sus necesidades."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist

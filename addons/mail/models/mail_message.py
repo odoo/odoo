@@ -175,7 +175,7 @@ class Message(models.Model):
             if channel_ids:
                 msg_domain += [('channel_ids', 'in', channel_ids)]
             unread_messages = self.search(expression.AND([msg_domain, domain]))
-            unread_messages.write({'needaction_partner_ids': [(3, partner_id)]})
+            unread_messages.sudo().write({'needaction_partner_ids': [(3, partner_id)]})
             ids = unread_messages.mapped('id')
 
         notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}

@@ -10,7 +10,7 @@
 Partners geolocalization
 ========================
     """,
-    'depends': ['crm'],
+    'depends': ['base'],
     'demo': [
     ],
     'data': [

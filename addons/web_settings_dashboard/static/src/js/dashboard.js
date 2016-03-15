@@ -131,6 +131,7 @@ var DashboardInvitations = Widget.extend({
         });
     },
     on_more: function(e) {
+        var self = this;
         e.preventDefault();
         var action = {
             type: 'ir.actions.act_window',

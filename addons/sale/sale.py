@@ -93,7 +93,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default='New')
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
 
@@ -423,6 +423,18 @@ class SaleOrder(models.Model):
             })
             order.project_id = analytic
 
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        group_user = self.env.ref('base.group_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -716,7 +728,7 @@ class SaleOrderLine(models.Model):
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        if not (self.product_uom and (self.product_id.uom_id.category_id.id == self.product_uom.category_id.id)):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
             vals['product_uom'] = self.product_id.uom_id
 
         product = self.product_id.with_context(
