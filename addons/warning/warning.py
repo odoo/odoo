@@ -224,6 +224,29 @@ class sale_order_line(osv.osv):
             result['warning'] = warning
         return result
 
+    @api.onchange('product_id')
+    def onchange_product_id_warning(self):
+        if not self.product_id:
+            return
+        result = {}
+        warning = {}
+        title = False
+        message = False
+
+        product_info = self.product_id
+
+        if product_info.sale_line_warn != 'no-message':
+            title = _("Warning for %s") % product_info.name
+            message = product_info.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            if product_info.sale_line_warn == 'block':
+                return {'warning': warning}
+
+        if warning:
+            result['warning'] = warning
+        return result
+
 
 class purchase_order_line(osv.Model):
     _inherit = 'purchase.order.line'
