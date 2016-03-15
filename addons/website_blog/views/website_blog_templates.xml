@@ -228,7 +228,7 @@
 
     <t t-if="next_post">
         <div class="cover cover_footer mb0 text-center" t-ignore="True">
-            <div id="js_blogcover" t-attf-class="cover_footer_bg #{next_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{next_post_cover_properties.get('background-image')};opacity:#{next_post_cover_properties.get('opacity', '1')}"></div>
+            <div t-attf-class="cover_footer_bg #{next_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{next_post_cover_properties.get('background-image')};opacity:#{next_post_cover_properties.get('opacity', '1')}"></div>
             <div class="blog_title">
                 <a class="hidden js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
                 <h1 t-field="next_post.name" placeholder="Blog Post Title"/>
