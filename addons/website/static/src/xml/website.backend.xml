@@ -15,25 +15,30 @@
             <div class="col-xs-12 o_box">
                 <h2>Visits</h2>
 
-                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id" id="analytics_dashboard" class="row js_analytics_components">
+                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id" class="row js_analytics_components">
                 </div>
 
                 <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)">
                     <div class="o_demo_background">
                         <div class="o_layer">
                         </div>
-                        <button class="btn btn-sm btn-primary js_link_analytics_settings">Link your Analytics Account</button>
+                        <button class="btn btn-sm btn-primary js_link_analytics_settings">Link my Analytics Account</button>
                     </div>
                 </div>
 
-                <a href="#" class="js_link_analytics_settings">Edit my Analytics Account</a>
+                <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
 
             </div>
         </div>
     </t>
 
+    <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message">
+        <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
+        <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+    </div>
+
     <div t-name="website.ga_dialog_content">
-        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key"></input>
+        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
         <br/>Go to our <a href="https://www.odoo.com/documentation/user/9.0/website/google_analytics.html" target="_blank">User Documentation</a> to get more information.
     </div>
 
