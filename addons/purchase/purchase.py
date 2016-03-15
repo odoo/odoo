@@ -1423,6 +1423,7 @@ class procurement_order(osv.osv):
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
+        taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id == procurement.company_id.id)
         # It is necessary to have the appropriate fiscal position to get the right tax mapping
         fiscal_position = False
         fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
@@ -1516,7 +1517,7 @@ class procurement_order(osv.osv):
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
 
-                    po_to_update = {'origin': ', '.join(filter(None, [po_rec.origin, procurement.origin]))}
+                    po_to_update = {'origin': ', '.join(filter(None, set([po_rec.origin, procurement.origin])))}
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
                         po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
