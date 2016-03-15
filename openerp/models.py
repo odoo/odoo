@@ -3059,7 +3059,10 @@ class BaseModel(object):
 
         # set up field triggers
         for field in cls._fields.itervalues():
-            field.setup_triggers(self.env)
+            # dependencies of custom fields may not exist; ignore that case
+            exceptions = (Exception,) if field.manual else ()
+            with tools.ignore(*exceptions):
+                field.setup_triggers(self.env)
 
         # add invalidation triggers on model dependencies
         if cls._depends:
