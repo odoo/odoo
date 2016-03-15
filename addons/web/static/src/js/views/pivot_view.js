@@ -141,7 +141,15 @@ var PivotView = View.extend({
             //noinspection FallThroughInSwitchStatementJS
             switch (field.attrs.type) {
             case 'measure':
-                if (field.attrs.widget) {
+                if (
+                        field.attrs.widget == 'integer' ||
+                        field.attrs.widget == 'monetary' ||
+                        field.attrs.widget == 'float' ||
+                        field.attrs.widget == 'float_time' ||
+                        field.attrs.widget == 'datetime' ||
+                        field.attrs.widget == 'date' ||
+                        field.attrs.widget == 'time'
+                   ) {
                     self.widget.push(field.attrs.widget);
                 }
                 else {
