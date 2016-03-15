@@ -728,6 +728,8 @@ class BaseModel(object):
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
             # add compute function if given
             if field['compute']:
+                if partial and field['depends']:
+                    continue
                 attrs['compute'] = make_compute(field['compute'], field['depends'])
             self._add_field(name, Field.by_type[field['ttype']](**attrs))
 
