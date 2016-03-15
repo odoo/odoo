@@ -314,7 +314,7 @@ class account_account(osv.osv):
         res = {}
         null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
-            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=dict(context or {}, periods_special=False))
 
             wheres = [""]
             if query.strip():
