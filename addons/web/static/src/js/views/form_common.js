@@ -632,12 +632,6 @@ var FieldInterface = {
         the field to save its value before reading it using get_value(). Must return a promise.
     */
     commit_value: function() {},
-    /*
-        The form view call before_save before save data and if before_save return a deferred, 
-        the form view wait that all deferred are resolve or fail.
-        If the deferred is rejected, the field is invalidate
-    */
-    before_save: function() {},
 };
 
 /**
