@@ -36,21 +36,36 @@ class res_currency(osv.osv):
                 res[id] = 1
         return res
 
-    def _decimal_places(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for id in ids:
-            rounding = self.browse(cr, uid, id, context=context).rounding
-            rounding = (0 < rounding < 1) and rounding or 1
-            res[id] = int(math.ceil(math.log10(1 / rounding)))
-        return res
-
-    def _decimal_places(self, cr, uid, ids, name, arg, context=None):
+    def _compute_rounding(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for currency in self.browse(cr, uid, ids, context=context):
-            if currency.rounding > 0 and currency.rounding < 1:
-                res[currency.id] = int(math.ceil(math.log10(1/currency.rounding)))
-            else:
-                res[currency.id] = 0
+            amount_name = context.get('amount_name') or 'default'
+            precision_ids = self.pool.get('res.currency.precision').search(cr, uid, [('currency_id', '=', currency.id), ('name', '=', amount_name)], context=context, limit=1)
+            precision = self.pool.get('res.currency.precision').browse(cr, uid, precision_ids, context=context)
+            rounding = precision.rounding
+            if (not rounding and not amount_name == 'default'):
+                amount_name = 'default'
+                precision_ids = self.pool.get('res.currency.precision').search(cr, uid, [('currency_id', '=', currency.id), ('name', '=', amount_name)], context=context, limit=1)
+                precision = self.pool.get('res.currency.precision').browse(cr, uid, precision_ids, context=context)
+                rounding = precision.rounding
+            res[currency.id] = rounding or float(0.01)
+        return res
+
+    def _compute_decimal_places(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for currency in self.browse(cr, uid, ids, context=context):
+            amount_name = context.get('amount_name') or 'default'
+            precision_ids = self.pool.get('res.currency.precision').search(cr, uid, [('currency_id', '=', currency.id), ('name', '=', amount_name)], context=context, limit=1)
+            precision = self.pool.get('res.currency.precision').browse(cr, uid, precision_ids, context=context)
+            decimal_places = precision.decimal_places
+            if (not decimal_places and not amount_name == 'default'):
+                amount_name = 'default'
+                precision_ids = self.pool.get('res.currency.precision').search(cr, uid, [('currency_id', '=', currency.id), ('name', '=', amount_name)], context=context, limit=1)
+                precision = self.pool.get('res.currency.precision').browse(cr, uid, precision_ids, context=context)
+                decimal_places = precision.decimal_places
+            if (isinstance(decimal_places, bool) and not decimal_places):
+                decimal_places = int(2)
+            res[currency.id] = decimal_places
         return res
 
     _name = "res.currency"
@@ -62,15 +77,15 @@ class res_currency(osv.osv):
         'rate': fields.function(_get_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
-        'rounding': fields.float('Rounding Factor', digits=(12,6)),
-        'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
+        'rounding': fields.function(_compute_rounding, string='Internal Rounding Factor', type='float', digits=(12,6)),
+        'decimal_places': fields.function(_compute_decimal_places, string='Display Decimal Places', type='integer'),
+        'precision_ids': fields.one2many('res.currency.precision', 'currency_id', 'Decimal Precision for amounts', help="Permits to fine tune rounding and decimal place for amounts"),
         'active': fields.boolean('Active'),
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
-        'position' : 'after',
-        'rounding': 0.01,
+        'position': 'after',
     }
     _sql_constraints = [
         ('unique_name', 'unique (name)', 'The currency code must be unique!'),
@@ -117,6 +132,7 @@ class res_currency(osv.osv):
     @api.v8
     def round(self, amount):
         """ Return `amount` rounded according to currency `self`. """
+        rounding = self.rounding
         return float_round(amount, precision_rounding=self.rounding)
 
     @api.v7
@@ -313,3 +329,23 @@ class res_currency_rate(osv.osv):
                 name = ''
                 operator = 'ilike'
         return super(res_currency_rate, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
+
+
+class res_currency_precision(osv.osv):
+    _name = "res.currency.precision"
+    _description = "Currency Precision"
+
+    _columns = {
+        'name': fields.char('Amount Name', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'rounding': fields.float('Internal Rounding Factor', digits=(12,6)),
+        'decimal_places' : fields.integer('Display Decimal Places'),
+    }
+    _defaults = {
+        'rounding': 0.01,
+        'decimal_places': 2,
+    }
+    _sql_constraints = [
+        ('unique_name_currency', 'unique (name, currency_id)', 'The amount name must be unique per currency!'),
+    ]
+    _order = "name"

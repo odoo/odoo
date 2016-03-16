@@ -1154,12 +1154,13 @@ class Monetary(Field):
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
     def convert_to_cache(self, value, record, validate=True):
+        value = float(value or 0.0)
         currency = record[self.currency_field]
         # FIXME @rco-odoo: currency may not be already initialized if it is a
         # function or related field!
-        if currency:
-            return currency.round(float(value or 0.0))
-        return float(value or 0.0)
+        if not currency:
+            return float(value)
+        return currency.with_context(amount_name=self.model_name + '.' + self.name).round(value)
 
 
 class _String(Field):
