@@ -7,7 +7,6 @@
     'name': 'France - FEC',
     'version': '1.0',
     'category': 'French Localization',
-    'license': 'AGPL-3',
     'summary': "Fichier d'Échange Informatisé (FEC) for France",
     'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'http://www.akretion.com',
