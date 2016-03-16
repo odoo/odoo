@@ -74,6 +74,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             "footer_to_buttons": false,
         });
         this.is_initialized = $.Deferred();
+        this.record_loaded = $.Deferred();
         this.mutating_mutex = new utils.Mutex();
         this.save_list = [];
         this.render_value_defs = [];
@@ -361,6 +362,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this._actualize_mode();
         this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
+        this.record_loaded = $.Deferred();
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             field._inhibit_on_change_flag = true;
@@ -376,6 +378,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.on_form_changed();
             self.rendering_engine.init_fields();
             self.is_initialized.resolve();
+            self.record_loaded.resolve();
             self.do_update_pager(record.id === null || record.id === undefined);
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);

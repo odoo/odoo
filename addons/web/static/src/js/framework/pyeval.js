@@ -757,6 +757,12 @@ var wrapping_dict = py.type('wrapping_dict', null, {
     __getattr__: function (key) {
         return this.__getitem__(py.str.fromJSON(key));
     },
+    __len__: function () {
+        return Object.keys(this._store).length
+    },
+    __nonzero__: function () {
+        return py.PY_size(this) > 0 ? py.True : py.False;
+    },
     get: function () {
         var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
 
@@ -779,6 +785,12 @@ var wrapping_list = py.type('wrapping_list', null, {
     },
     __getitem__: function (index) {
         return wrap(this._store[index.toJSON()]);
+    },
+    __len__: function () {
+        return this._store.length;
+    },
+    __nonzero__: function () {
+        return py.PY_size(this) > 0 ? py.True : py.False;
     },
     fromJSON: function (ar) {
         var instance = py.PY_call(wrapping_list);
