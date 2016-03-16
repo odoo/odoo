@@ -1202,7 +1202,7 @@
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
-                              <span t-field="acquirer.name"/>
+                              <span t-field="acquirer.name"/> <span t-if="acquirer.fees_active">(extra fees apply)</span>
                       </label>
                     </li>
                   </ul>
