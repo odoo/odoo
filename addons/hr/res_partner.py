@@ -17,6 +17,6 @@ class Partner(models.Model):
             FROM res_users U
                 INNER JOIN res_groups_users_rel R ON U.id = R.uid
                 INNER JOIN res_partner P ON P.id = U.partner_id
-            WHERE R.gid = %s""", (employee_group_id,))
+            WHERE R.gid = %s AND P.active = 't'""", (employee_group_id,))
         suggestions.append(self._cr.dictfetchall())
         return suggestions
