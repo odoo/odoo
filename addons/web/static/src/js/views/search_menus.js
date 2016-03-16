@@ -2,7 +2,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data_manager = require('web.data_manager');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -31,25 +31,9 @@ return Widget.extend({
         this.searchview = parent;
         this.query = query;
         this.target_model = target_model;
-        this.model = new Model('ir.filters');
         this.action_id = action_id;
-        if (filters) {
-            this.filters = {};
-            _.each(filters, this.add_filter.bind(this));
-        }
-    },
-    willStart: function () {
-        var self = this;
-        var def;
-        if (!this.filters) {
-            def = this.model.call('get_filters', [this.target_model, this.action_id], {
-                context: this.searchview.dataset.context,
-            }).then(function (filters) {
-                self.filters = {};
-                _.each(filters, self.add_filter.bind(self));
-            });
-        }
-        return $.when(def, this._super());
+        this.filters = {};
+        _.each(filters, this.add_filter.bind(this));
     },
     start: function () {
         var self = this;
@@ -136,7 +120,7 @@ return Widget.extend({
             is_default: default_filter,
             action_id: this.action_id,
         };
-        return this.model.call('create_or_replace', [filter]).done(function (id) {
+        return data_manager.create_filter(filter).done(function (id) {
             filter.id = id;
             self.toggle_save_menu(false);
             self.$save_name.find('input').val('').prop('checked', false);
@@ -267,14 +251,16 @@ return Widget.extend({
         if (!confirm(filter.user_id ? warning : global_warning)) {
             return;
         }
-        this.model.call('unlink', [filter.id]).done(function () {
-            $filter.remove();
-            delete self.$filters[key];
-            delete self.filters[key];
-            if (_.isEmpty(self.filters)) {
-                self.$divider.hide();
-            }
-        });
+        return data_manager
+            .delete_filter(filter)
+            .done(function () {
+                $filter.remove();
+                delete self.$filters[key];
+                delete self.filters[key];
+                if (_.isEmpty(self.filters)) {
+                    self.$divider.hide();
+                }
+            });
     },
 });
 
@@ -283,6 +269,7 @@ return Widget.extend({
 odoo.define('web.FilterMenu', function (require) {
 "use strict";
 
+var data_manager = require('web.data_manager');
 var search_filters = require('web.search_filters');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -327,7 +314,7 @@ return Widget.extend({
     },
     get_fields: function () {
         if (!this._fields_def) {
-            this._fields_def = this.searchview.ViewManager.get_fields().then(function (data) {
+            this._fields_def = data_manager.load_fields(this.searchview.dataset).then(function (data) {
                 var fields = {
                     id: { string: 'ID', type: 'id', searchable: true }
                 };
@@ -399,9 +386,10 @@ return Widget.extend({
 odoo.define('web.GroupByMenu', function (require) {
 "use strict";
 
-var Widget = require('web.Widget');
 var core = require('web.core');
+var data_manager = require('web.data_manager');
 var search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
@@ -436,7 +424,7 @@ return Widget.extend({
     get_fields: function () {
         var self = this;
         if (!this._fields_def) {
-            this._fields_def = this.searchview.ViewManager.get_fields().then(function (fields) {
+            this._fields_def = data_manager.load_fields(this.searchview.dataset).then(function (fields) {
                 var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
                 var filter_group_field = _.filter(fields, function(field, name) {
                     if (field.store && _.contains(groupable_types, field.type)) {

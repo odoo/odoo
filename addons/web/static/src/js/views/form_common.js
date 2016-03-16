@@ -3,6 +3,7 @@ odoo.define('web.form_common', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var ListView = require('web.ListView');
 var pyeval = require('web.pyeval');
@@ -919,12 +920,7 @@ var FormViewDialog = ViewDialog.extend({
         if (this.options.alternative_form_view) {
             fields_view_def = $.when(this.options.alternative_form_view);
         } else {
-            fields_view_def = this.dataset._model.fields_view_get({
-                view_id: this.options.view_id || false,
-                view_type: 'form',
-                context: this.dataset.get_context(),
-                toolbar: false,
-            });
+            fields_view_def = data_manager.load_fields_view(this.dataset, this.options.view_id, 'form', false);
         }
         fields_view_def.then(function (fields_view) {
             self.view_form = new FormView(self, self.dataset, fields_view, options);
@@ -977,7 +973,6 @@ var SelectCreateDialog = ViewDialog.extend({
             return this.create_edit_record();
         }
 
-        var self = this;
         var _super = this._super.bind(this);
         this.init_dataset();
         var context = pyeval.sync_eval_domains_and_contexts({
@@ -991,15 +986,12 @@ var SelectCreateDialog = ViewDialog.extend({
                 search_defaults[match[1]] = value_;
             }
         });
-        this.dataset._model.call('load_views', {
-            views: [[false, 'list'], [false, 'search']],
-            context: this.dataset.get_context(),
-        }).then(function (result) {
-            var fields_views = _.mapObject(result.fields_views, self.dataset._model.postprocess_fvg);
-            self.setup(search_defaults, fields_views).then(function (fragment) {
+        data_manager
+            .load_views(this.dataset, [[false, 'list'], [false, 'search']], {})
+            .then(this.setup.bind(this, search_defaults))
+            .then(function (fragment) {
                 _super().$el.append(fragment);
             });
-        });
         return this;
     },
 

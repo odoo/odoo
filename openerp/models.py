@@ -1537,6 +1537,7 @@ class BaseModel(object):
 
         :param views: list of [view_id, view_type]
         :param options.toolbar: true to include contextual actions when loading fields_views
+        :param options.load_filters: true to return the model's filters
         :param options.action_id: id of the action to get the filters
         :param options.load_fields: true to load the model's fields
         :return: dictionary with fields_views, filters and fields
@@ -1555,7 +1556,7 @@ class BaseModel(object):
             for [v_id, v_type] in views
         }
 
-        if 'search' in result['fields_views']:
+        if options.get('load_filters'):
             result['filters'] = self.pool['ir.filters'].get_filters(cr, uid, self._name, options.get('action_id'), context=context)
 
         if options.get('load_fields'):

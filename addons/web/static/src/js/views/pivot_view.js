@@ -6,6 +6,7 @@ odoo.define('web.PivotView', function (require) {
 
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
+var data_manager = require('web.data_manager');
 var formats = require('web.formats');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
@@ -68,8 +69,8 @@ var PivotView = View.extend({
     willStart: function () {
         var self = this;
 
-        var load_fields = this.ViewManager.get_fields();
-        var load_xlwt = session.rpc('/web/pivot/check_xlwt').then(function(result) {
+        var fields_def = data_manager.load_fields(this.dataset);
+        var xlwt_def = session.rpc('/web/pivot/check_xlwt').then(function(result) {
             self.xlwt_installed = result;
         });
 
@@ -99,7 +100,7 @@ var PivotView = View.extend({
         if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
             this.active_measures.push('__count__');
         }
-        return $.when(load_fields, load_xlwt, this._super()).then(function (fields) {
+        return $.when(fields_def, xlwt_def, this._super()).then(function (fields) {
             self.prepare_fields(fields);
             // add active measures to the measure list.  This is very rarely necessary, but it
             // can be useful if one is working with a functional field non stored, but in a

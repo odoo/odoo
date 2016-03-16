@@ -3,6 +3,7 @@ odoo.define('web.ViewManager', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var data_manager = require('web.data_manager');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
@@ -119,33 +120,24 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 views.push([view.view_id, view.type]);
             }
         });
+        var options = {
+            action_id: this.action.id,
+            load_fields: load_fields,
+            toolbar: this.flags.sidebar,
+        };
         if (this.flags.search_view && !this.search_fields_view) {
+            options.load_filters = true;
             var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
             views.push([searchview_id || false, 'search']);
         }
-        var options = {
-            action_id: this.action.id,
-            load_fields: load_fields && !this.fields_get_def,
-            toolbar: this.flags.sidebar,
-        };
-        return this.dataset._model.call('load_views', {
-            views: views,
-            options: options,
-            context: this.dataset.get_context(),
-        }).then(function (result) {
-            _.each(result.fields_views, function (fields_view, view_type) {
+        return data_manager.load_views(this.dataset, views, options).then(function (fields_views) {
+            _.each(fields_views, function (fields_view, view_type) {
                 if (view_type === 'search') {
-                    self.search_fields_view = self.dataset._model.postprocess_fvg(fields_view);
+                    self.search_fields_view = fields_view;
                 } else {
-                    self.views[view_type].fields_view = self.dataset._model.postprocess_fvg(fields_view);
+                    self.views[view_type].fields_view = fields_view;
                 }
             });
-            if (result.filters) {
-                self.search_filters = result.filters;
-            }
-            if (result.fields) {
-                self.fields_get_def = $.when(result.fields);
-            }
         });
     },
     /**
@@ -157,14 +149,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      */
     get_default_view: function() {
         return this.views[this.flags.default_view || this.view_order[0].type];
-    },
-    get_fields: function() {
-        if (!this.fields_get_def) {
-            this.fields_get_def = this.dataset._model.call('fields_get', {
-                context: this.dataset.get_context()
-            });
-        }
-        return this.fields_get_def;
     },
     switch_mode: function(view_type, view_options) {
         var self = this;
@@ -383,7 +367,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             $buttons: $("<div>"),
             action: this.action,
             search_defaults: search_defaults,
-            filters: this.search_filters,
         };
         // Instantiate the SearchView, but do not append it nor its buttons to the DOM as this will
         // be done later, simultaneously to all other ControlPanel elements

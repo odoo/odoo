@@ -160,6 +160,7 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
     var core = test.deps['web.core'];
     var search_inputs = test.deps['web.search_inputs'];
     var data = test.deps['web.data'];
+    var data_manager = test.deps['web.data_manager'];
     var SearchView = test.deps['web.SearchView'];
 
     var mock = test.mock;
@@ -182,14 +183,11 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
     
     var mock_parent = {
         getParent: function () { return null; },
-        get_fields: function () {
-            return dataset._model.call('fields_get', { context: dataset.get_context() });
-        },
     };
     
     options = _.defaults(options || {}, {$buttons: $('<div>')});
     options.search_defaults = defaults;
-    var fields_view = dataset._model.postprocess_fvg(raw_fields_view || {
+    var fields_view = data_manager._postprocess_fvg(raw_fields_view || {
         type: 'search',
         fields: {
             dummy: {type: 'char', string: "Dummy", searchable: true}
@@ -204,7 +202,7 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
     return view;
 };
 
-odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
     test('calling', function (assert) {
         assert.expect(2);
         var defaults_called = false;
@@ -430,7 +428,7 @@ odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', '
 
 });
 
-odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('calling', function (assert) {
         assert.expect(4);
@@ -850,7 +848,7 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
     });
 });
 
-odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('No facet, no call', function (assert, search_inputs, SearchView, core) {
         assert.expect(6);
@@ -1190,7 +1188,7 @@ odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchVie
     });
 });
 
-odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('is-drawn', function (assert) {
         assert.expect(3);
@@ -1209,7 +1207,7 @@ odoo.define_section('search.serialization', ['web.search_inputs', 'web.SearchVie
 
 });
 
-odoo.define_section('search.filters', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.filters', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
     function fields_view_get () {
         // view with a single group of filters
         return {
@@ -1317,9 +1315,9 @@ odoo.define_section('search.filters', ['web.search_inputs', 'web.SearchView', 'w
     });
 });
 
-odoo.define_section('search.groupby', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.groupby', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
-    test('basic', ['web.FavoriteMenu', 'web.FilterMenu', 'web.GroupByMenu'], function (assert, search_inputs, SearchView, core, data, FavoriteMenu, FilterMenu, GroupByMenu) {
+    test('basic', ['web.FavoriteMenu', 'web.FilterMenu', 'web.GroupByMenu'], function (assert, search_inputs, SearchView, core, data, data_manager, FavoriteMenu, FilterMenu, GroupByMenu) {
         assert.expect(12);
         var view = makeSearchView(this, {}, {}, {}, {
             type: 'search',
@@ -1401,7 +1399,7 @@ odoo.define_section('search.groupby', ['web.search_inputs', 'web.SearchView', 'w
     });
 });
 
-odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('checkboxing', function (assert) {
         assert.expect(6);
@@ -1517,7 +1515,7 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
     });
 });
 
-odoo.define_section('search.advanced', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data'], function (test, mock) {
+odoo.define_section('search.advanced', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('single-advanced', function (assert) {
         assert.expect(6);
