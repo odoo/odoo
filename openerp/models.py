@@ -1532,6 +1532,37 @@ class BaseModel(object):
 
         return view
 
+    def load_views(self, cr, uid, views, options=None, context=None):
+        """ Returns the fields_views of given views, and optionally filters and fields.
+
+        :param views: list of [view_id, view_type]
+        :param options.toolbar: true to include contextual actions when loading fields_views
+        :param options.action_id: id of the action to get the filters
+        :param options.load_fields: true to load the model's fields
+        :return: dictionary with fields_views, filters and fields
+        """
+        if options is None:
+            options = {}
+        if context is None:
+            context = {}
+        result = {}
+
+        toolbar = options.get('toolbar')
+        result['fields_views'] = {
+            v_type: self.fields_view_get(cr, uid, v_id, v_type if v_type != 'list' else 'tree',
+                                         toolbar=toolbar if v_type != 'search' else False,
+                                         context=context)
+            for [v_id, v_type] in views
+        }
+
+        if 'search' in result['fields_views']:
+            result['filters'] = self.pool['ir.filters'].get_filters(cr, uid, self._name, options.get('action_id'), context=context)
+
+        if options.get('load_fields'):
+            result['fields'] = self.fields_get(cr, uid, context=context)
+
+        return result
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ fields_view_get([view_id | view_type='form'])
 

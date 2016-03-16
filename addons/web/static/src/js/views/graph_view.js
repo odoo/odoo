@@ -6,7 +6,6 @@ odoo.define('web.GraphView', function (require) {
 
 var core = require('web.core');
 var GraphWidget = require('web.GraphWidget');
-var Model = require('web.DataModel');
 var View = require('web.View');
 
 var _lt = core._lt;
@@ -17,21 +16,30 @@ var GraphView = View.extend({
     className: 'oe_graph',
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
-    view_type: 'graph',
+    require_fields: true,
 
-    init: function(parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, options);
+    init: function () {
+        this._super.apply(this, arguments);
 
-        this.model = new Model(dataset.model, {group_by_no_leaf: true});
         this.measures = [];
         this.active_measure = '__count__';
         this.initial_groupbys = [];
         this.widget = undefined;
     },
-    start: function () {
-        var load_fields = this.model.call('fields_get', [], {context: this.dataset.get_context()})
-                .then(this.prepare_fields.bind(this));
-
+    willStart: function () {
+        var self = this;
+        var load_fields = this.ViewManager.get_fields().then(this.prepare_fields.bind(this));
+        this.fields_view.arch.children.forEach(function (field) {
+            var name = field.attrs.name;
+            if (field.attrs.interval) {
+                name += ':' + field.attrs.interval;
+            }
+            if (field.attrs.type === 'measure') {
+                self.active_measure = name;
+            } else {
+                self.initial_groupbys.push(name);
+            }
+        });
         return $.when(this._super(), load_fields);
     },
     /**
@@ -59,20 +67,6 @@ var GraphView = View.extend({
             $(li).toggleClass('selected', $(li).data('field') === self.active_measure);
         });
     },
-    view_loading: function (fvg) {
-        var self = this;
-        fvg.arch.children.forEach(function (field) {
-            var name = field.attrs.name;
-            if (field.attrs.interval) {
-                name += ':' + field.attrs.interval;
-            }
-            if (field.attrs.type === 'measure') {
-                self.active_measure = name;
-            } else {
-                self.initial_groupbys.push(name);
-            }
-        });
-    },
     do_show: function () {
         this.do_push_state({});
         return this._super();
@@ -92,7 +86,7 @@ var GraphView = View.extend({
     do_search: function (domain, context, group_by) {
         if (!this.widget) {
             this.initial_groupbys = context.graph_groupbys || this.initial_groupbys;
-            this.widget = new GraphWidget(this, this.dataset.model, {
+            this.widget = new GraphWidget(this, this.model, {
                 measure: context.graph_measure || this.active_measure,
                 mode: context.graph_mode || this.active_mode,
                 domain: domain,

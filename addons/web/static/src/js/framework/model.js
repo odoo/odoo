@@ -82,29 +82,31 @@ var Model = Class.extend({
      * @param {Boolean} [args.toolbar=false] get the toolbar definition
      */
     fields_view_get: function (options) {
-
         return this.call('fields_view_get', {
             view_id: options.view_id,
             view_type: options.view_type,
             context: options.context,
             toolbar: options.toolbar || false
-        }).then(function postprocess(fvg) {
-            var doc = $.parseXML(fvg.arch).documentElement;
-            fvg.arch = utils.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
-            if ('id' in fvg.fields) {
-                // Special case for id's
-                var id_field = fvg.fields.id;
-                id_field.original_type = id_field.type;
-                id_field.type = 'id';
-            }
-            _.each(fvg.fields, function(field) {
-                _.each(field.views || {}, function(view) {
-                    postprocess(view);
-                });
+        }).then(this.postprocess_fvg.bind(this));
+    },
+
+    postprocess_fvg: function (fvg) {
+        var self = this;
+        var doc = $.parseXML(fvg.arch).documentElement;
+        fvg.arch = utils.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
+        if ('id' in fvg.fields) {
+            // Special case for id's
+            var id_field = fvg.fields.id;
+            id_field.original_type = id_field.type;
+            id_field.type = 'id';
+        }
+        _.each(fvg.fields, function(field) {
+            _.each(field.views || {}, function(view) {
+                self.postprocess_fvg(view);
             });
-            return fvg;
         });
-    }
+        return fvg;
+    },
 });
 
 return Model;

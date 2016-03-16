@@ -19,10 +19,6 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 var PivotView = View.extend({
-    template: 'PivotView',
-    icon: 'fa-table',
-    display_name: _lt('Pivot'),
-    view_type: 'pivot',
     events: {
         'click .oe-opened': 'on_open_header_click',
         'click .oe-closed': 'on_closed_header_click',
@@ -30,17 +26,20 @@ var PivotView = View.extend({
         'click td': 'on_cell_click',
         'click .measure-row': 'on_measure_row_click',
     },
+    display_name: _lt('Pivot'),
+    icon: 'fa-table',
+    require_fields: true,
+    template: 'PivotView',
 
-    init: function(parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, options);
-        this.model = new Model(dataset.model, {group_by_no_leaf: true});
+    init: function() {
+        this._super.apply(this, arguments);
+        this._model = new Model(this.model, {group_by_no_leaf: true});
 
-        this.fields = {};
         this.measures = {};
         this.groupable_fields = {};
         this.ready = false; // will be ready after the first do_search
         this.data_loaded = $.Deferred();
-        this.title = options.title;
+        this.title = this.options.title || this.fields_view.arch.attrs.string;
 
         this.main_row = {
             root: undefined,
@@ -63,30 +62,72 @@ var PivotView = View.extend({
 
         this.numbering = {};
         this.widgets = [];
+
+        this.enable_linking = !this.fields_view.arch.attrs.disable_linking;
     },
     willStart: function () {
         var self = this;
-        return session.rpc('/web/pivot/check_xlwt').then(function(result) {
+
+        var load_fields = this.ViewManager.get_fields();
+        var load_xlwt = session.rpc('/web/pivot/check_xlwt').then(function(result) {
             self.xlwt_installed = result;
+        });
+
+        this.fields_view.arch.children.forEach(function (field) {
+            var name = field.attrs.name;
+            if (field.attrs.interval) {
+                name += ':' + field.attrs.interval;
+            }
+            //noinspection FallThroughInSwitchStatementJS
+            switch (field.attrs.type) {
+            case 'measure':
+                self.widgets.push(field.attrs.widget || "");
+                self.active_measures.push(name);
+                break;
+            case 'col':
+                self.initial_col_groupby.push(name);
+                break;
+            default:
+                if ('operator' in field.attrs) {
+                    self.active_measures.push(name);
+                    break;
+                }
+            case 'row':
+                self.initial_row_groupby.push(name);
+            }
+        });
+        if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
+            this.active_measures.push('__count__');
+        }
+        return $.when(load_fields, load_xlwt, this._super()).then(function (fields) {
+            self.prepare_fields(fields);
+            // add active measures to the measure list.  This is very rarely necessary, but it
+            // can be useful if one is working with a functional field non stored, but in a
+            // model with an overrided read_group method.  In this case, the pivot view could
+            // work, and the measure should be allowed.  However, be careful if you define a
+            // measure in your pivot view: non stored functional fields will probably not work
+            // (their aggregate will always be 0).
+            _.each(self.active_measures, function (m) {
+                if (!(m in self.measures)) {
+                    self.measures[m] = self.fields[m];
+                }
+            });
         });
     },
     start: function () {
         this.$table_container = this.$('.o-pivot-table');
-
-        var load_fields = this.model.call('fields_get', [], {context: this.dataset.get_context()})
-                .then(this.prepare_fields.bind(this));
-
-        return $.when(this._super(), load_fields).then(this.render_field_selection.bind(this));
-    },
-    render_field_selection: function () {
-        var self = this;
-
-        var context = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
+        this.$el.toggleClass('oe_enable_linking', this.enable_linking);
+        var context = {
+            fields: _.chain(this.groupable_fields).pairs().sortBy(function(f) {
+                return f[1].string;
+            }).value(),
+        };
         this.$field_selection = this.$('.o-field-selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', context));
-        core.bus.on('click', self, function () {
-            self.$field_selection.find('ul').first().hide();
+        core.bus.on('click', this, function () {
+            this.$field_selection.find('ul').first().hide();
         });
+        return this._super();
     },
     /**
      * Render the buttons according to the PivotView.buttons template and
@@ -126,49 +167,6 @@ var PivotView = View.extend({
 
             this.sidebar.appendTo($node);
         }
-    },
-    view_loading: function (fvg) {
-        var self = this;
-        this.title = this.title || fvg.arch.attrs.string;
-        this.enable_linking = !fvg.arch.attrs.disable_linking;
-        this.$el.toggleClass('oe-enable-linking', this.enable_linking);
-        fvg.arch.children.forEach(function (field) {
-            var name = field.attrs.name;
-            if (field.attrs.interval) {
-                name += ':' + field.attrs.interval;
-            }
-            //noinspection FallThroughInSwitchStatementJS
-            switch (field.attrs.type) {
-            case 'measure':
-                self.widgets.push(field.attrs.widget || "");
-                self.active_measures.push(name);
-                break;
-            case 'col':
-                self.initial_col_groupby.push(name);
-                break;
-            default:
-                if ('operator' in field.attrs) {
-                    self.active_measures.push(name);
-                    break;
-                }
-            case 'row':
-                self.initial_row_groupby.push(name);
-            }
-        });
-        if ((!self.active_measures.length) || fvg.arch.attrs.display_quantity){
-            self.active_measures.push('__count__');
-        }
-        // add active measures to the measure list.  This is very rarely necessary, but it
-        // can be useful if one is working with a functional field non stored, but in a
-        // model with an overrided read_group method.  In this case, the pivot view could
-        // work, and the measure should be allowed.  However, be careful if you define a
-        // measure in your pivot view: non stored functional fields will probably not work
-        // (their aggregate will always be 0).
-        _.each(this.active_measures, function (m) {
-            if (!(m in self.measures)) {
-                self.measures[m] = self.fields[m];
-            }
-        });
     },
     prepare_fields: function (fields) {
         var self = this,
@@ -277,15 +275,14 @@ var PivotView = View.extend({
             col_domain = this.headers[col_id].domain,
             context = _.omit(_.clone(this.context), 'group_by');
 
-        var views = [
-            [this.options.action_views_ids.list || false, 'list'],
-            [this.options.action_views_ids.form || false, 'form']
-        ];
+        var views = _.filter(this.options.action.views, function (view) {
+            return view[1] === 'form' || view[1] === 'list';
+        });
 
         return this.do_action({
             type: 'ir.actions.act_window',
             name: this.title,
-            res_model: this.model.name,
+            res_model: this.model,
             views: views,
             view_type : "list",
             view_mode : "list",
@@ -345,7 +342,7 @@ var PivotView = View.extend({
             groupbys.push([field].concat(other_groupbys.slice(0,i)));
         }
         return $.when.apply(null, groupbys.map(function (groupby) {
-            return self.model.query(fields)
+            return self._model.query(fields)
                 .filter(header.domain.length ? header.domain : self.domain)
                 .context(self.context)
                 .lazy(false)
@@ -398,7 +395,7 @@ var PivotView = View.extend({
             }
         }
         return $.when.apply(null, groupbys.map(function (groupby) {
-            return self.model.query(fields)
+            return self._model.query(fields)
                 .filter(self.domain)
                 .context(self.context)
                 .lazy(false)

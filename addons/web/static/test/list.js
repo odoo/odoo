@@ -3,15 +3,6 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data'], function (test
     test('record-deletion', function (assert, ListView, data) {
         assert.expect(2);
         
-        mock.add('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"}
-                },
-                arch: '<tree><field name="a"/><button type="object" name="foo"/></tree>',
-            };
-        });
         mock.add('demo:read', function (args, kwargs) {
             if (_.isEqual(args[0], [1, 2, 3])) {
                 return [
@@ -29,10 +20,18 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data'], function (test
         });
         mock.add('/web/dataset/call_button', function () { return false; });
 
+
         var ds = new data.DataSetStatic(null, 'demo', null, [1, 2, 3]);
+        var fields_view = ds._model.postprocess_fvg({
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"}
+            },
+            arch: '<tree><field name="a"/><button type="object" name="foo"/></tree>',
+        });
         var list = new ListView({
             do_action: odoo.testing.noop
-        }, ds, false, {editable: 'top'});
+        }, ds, fields_view, {editable: 'top'});
 
         var $fix = $( "#qunit-fixture");
 
@@ -52,6 +51,5 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data'], function (test
             assert.strictEqual($fix.find('table tbody tr[data-id]').length, 2,
                         "should have 2 rows left");
         });
-
     });
 });
