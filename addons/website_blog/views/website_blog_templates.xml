@@ -148,14 +148,14 @@
                                 "widget": "contact",
                                 "fields": ["name"]
                             }'/>
-                            &mdash; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
+                            &#8212; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
                             <span t-if="len(blog_post.message_ids) &gt; 0">
-                                &mdash; <t t-esc="len(blog_post.message_ids)"/>
+                                &#8212; <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
                                 <t t-if="len(blog_post.message_ids) > 1">comments</t>
                             </span>
                             <span t-if="blog_post.visits &gt; 0">
-                                &mdash; <t t-esc="blog_post.visits"/>
+                                &#8212; <t t-esc="blog_post.visits"/>
                                 <t t-if="blog_post.visits &lt;= 1" >view</t>
                                 <t t-if="blog_post.visits > 1">views</t>
                             </span>
