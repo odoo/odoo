@@ -1562,7 +1562,13 @@ var FieldMonetary = FieldFloat.extend({
         }
     },
     get_digits_precision: function() {
-        return this.node.attrs.digits || this.field.digits || (this.get('currency_info') && this.get('currency_info').digits);
+        var digits_precision = this.node.attrs.digits || this.field.digits;
+        if (! digits_precision) {
+            var currency = this.get('currency_info');
+            var amount_name = this.view.dataset.model + '.' + this.name;
+            digits_precision = (currency && currency.precisions[amount_name] && currency.precisions[amount_name].digits) || (currency && currency.default_digits);
+        }
+        return digits_precision;
      },
     parse_value: function(val, def) {
         return formats.parse_value(val, {type: "float", digits: this.get_digits_precision()}, def);

@@ -208,9 +208,21 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.currencies = {};
         var self = this;
         return new openerp.web.Model("res.currency").query(["symbol", "position", "decimal_places"]).all()
-                .then(function(value) {
-                    _.each(value, function(k){
-                        self.currencies[k.id] = {'symbol': k.symbol, 'position': k.position, 'digits': [69,k.decimal_places]};
+                .then(function(res_currencies) {
+                    _.each(res_currencies, function(currency){
+                        new openerp.web.Model("res.currency.precision").query(["name", "decimal_places"])
+                                .filter([['currency_id', '=', currency.id]])
+                                .all().then(function(res_precisions){
+                                    var precisions = {}
+                                    _.each(res_precisions, function(precision){
+                                        precisions[precision.name] = { 'digits': [12, precision.decimal_places]};
+                                });
+                                self.currencies[currency.id] = {
+                                    'symbol': currency.symbol,
+                                    'position': currency.position,
+                                    'default_digits': [12, currency.decimal_places],
+                                    'precisions': precisions};
+                        });
                     });
                 });
     },

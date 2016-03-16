@@ -2090,13 +2090,13 @@ var ColumnUrl = Column.extend({
 });
 
 var ColumnMonetary = Column.extend({
-
     _format: function (row_data, options) {
         //name of currency field is defined either by field attribute, in view options or we assume it is named currency_id
         var currency_field = (this.options && this.options.currency_field) || this.currency_field || 'currency_id';
         var currency_id = row_data[currency_field] && row_data[currency_field].value[0];
         var currency = session.get_currency(currency_id);
-        var digits_precision = this.digits || (currency && currency.digits);
+        var amount_name = options.model + '.' + this.id;
+        var digits_precision = this.digits || (currency && currency.precisions[amount_name] && currency.precisions[amount_name].digits) || (currency && currency.default_digits);
         var value = formats.format_value(row_data[this.id].value || 0, {type: this.type, digits: digits_precision}, options.value_if_empty);
         if (currency) {
             if (currency.position === "after") {
