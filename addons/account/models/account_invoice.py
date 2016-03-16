@@ -6,7 +6,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import api, fields, models, _
-from openerp.tools import float_is_zero, float_compare
 from openerp.tools.misc import formatLang
 
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
@@ -42,7 +41,7 @@ class AccountInvoice(models.Model):
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id')
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
-        self.amount_tax = sum(line.amount for line in self.tax_line_ids)
+        self.amount_tax = sum(self.currency_id.with_context(amount_name=self._name + '.amount_tax').round(line.amount) for line in self.tax_line_ids)
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
@@ -96,8 +95,7 @@ class AccountInvoice(models.Model):
         self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
-        digits_rounding_precision = self.currency_id.rounding
-        if float_is_zero(self.residual, precision_rounding=digits_rounding_precision):
+        if self.currency_id.with_context(amount_name=self._name + '.residual').is_zero(self.residual):
             self.reconciled = True
         else:
             self.reconciled = False
@@ -123,7 +121,7 @@ class AccountInvoice(models.Model):
                         amount_to_show = abs(line.amount_residual_currency)
                     else:
                         amount_to_show = line.company_id.currency_id.with_context(date=line.date).compute(abs(line.amount_residual), self.currency_id)
-                    if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
+                    if self.currency_id.with_context(amount_name=self._name + '.amount_residual_currency').is_zero(amount_to_show):
                         continue
                     info['content'].append({
                         'journal_name': line.ref or line.move_id.name,
@@ -156,7 +154,7 @@ class AccountInvoice(models.Model):
                     amount_to_show = amount_currency
                 else:
                     amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount, self.currency_id)
-                if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
+                if self.currency_id.with_context(amount_name=self._name + '.amount_payment_currency').is_zero(amount_to_show):
                     continue
                 payment_ref = payment.move_id.name
                 if payment.move_id.ref:
@@ -576,12 +574,12 @@ class AccountInvoice(models.Model):
             if self.currency_id != company_currency:
                 currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
                 line['currency_id'] = currency.id
-                line['amount_currency'] = currency.round(line['price'])
+                line['amount_currency'] = currency.with_context(amount_name='account.invoice.line.price_subtotal').round(line['price'])
                 line['price'] = currency.compute(line['price'], company_currency)
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
-                line['price'] = self.currency_id.round(line['price'])
+                line['price'] = self.currency_id.with_context(amount_name='account.invoice.line.price_unit').round(line['price'])
             if self.type in ('out_invoice', 'in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
@@ -1117,7 +1115,7 @@ class AccountInvoiceLine(models.Model):
 
         fix_price = self.env['account.tax']._fix_tax_included_price
         if self.invoice_id.type in ('in_invoice', 'in_refund'):
-            if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=self.currency_id.rounding) == 0:
+            if not self.price_unit or self.currency_id.with_context(amount_name=self._name + '.line.price_unit').compare_amounts(self.price_unit, self.product_id.standard_price) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
