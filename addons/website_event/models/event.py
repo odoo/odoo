@@ -29,7 +29,7 @@ class event(models.Model):
         if self.env.user != self.env.ref('base.public_user'):
             email = self.env.user.partner_id.email
             for event in self:
-                domain = ['&', '|', ('email', '=', email), ('partner_id.email', '=', email), ('event_id', '=', event.id)]
+                domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
                 event.is_participating = self.env['event.registration'].search_count(domain)
 
     @api.multi
