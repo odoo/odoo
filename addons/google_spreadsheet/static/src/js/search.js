@@ -27,8 +27,8 @@ FormView.include({
 });
 
 FavoriteMenu.include({
-    prepare_dropdown_menu: function (filters) {
-        this._super(filters);
+    start: function () {
+        this._super();
         var am = this.findAncestor(function(a) {
             return a instanceof ActionManager;
         });
