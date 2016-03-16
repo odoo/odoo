@@ -436,6 +436,20 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         this._super.apply(this, arguments);
         this.debug = session.debug;
     },
+    start: function() {
+        var self = this;
+        var tmp = this._super();
+        if (this.options.model_field){
+            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
+                if (self.view && self.view.record_loaded.state == "resolved" && self.view.onchanges_mutex){
+                    self.view.onchanges_mutex.def.then(function(){
+                        self.render_value();
+                    });
+                }
+            });
+        }
+        return tmp;
+    },
     render_value: function() {
         var self = this;
 

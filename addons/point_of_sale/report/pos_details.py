@@ -31,8 +31,8 @@ class pos_details(report_sxw.rml_parse):
         result = {}
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid) or self.localcontext.get('tz') or 'UTC'
-        tz_name = user.tz
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
         user_tz = pytz.timezone(tz_name)
         between_dates = {}
         for date_field, delta in {'date_start': {'days': 0}, 'date_end': {'days': 1}}.items():
