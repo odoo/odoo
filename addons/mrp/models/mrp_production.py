@@ -374,7 +374,7 @@ class MrpProduction(models.Model):
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'product_ids': self.move_raw_ids.mapped('product_id').ids},
+            'context': {'product_ids': (self.move_raw_ids | self.move_finished_ids).mapped('product_id').ids},
             'target': 'new',
         }
 

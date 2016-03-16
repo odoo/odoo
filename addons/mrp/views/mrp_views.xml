@@ -770,14 +770,15 @@
                             <label for="quantity_done"/>
                             <div>
                                 <field name="quantity_done" readonly="1" class="oe_inline"/>
-                                <field name="product_uom" readonly="1" class="oe_inline"/>
+                                <field name="product_uom" readonly="1" class="oe_inline" groups="product.group_uom"/>
                             </div>
+                            <field name="is_done" invisible="1"/>
                         </group>
                     </group>
-                    <field name="quantity_lots">
+                    <field name="quantity_lots" attrs="{'readonly': [('is_done', '=', True)]}">
                         <tree editable="bottom">
                             <field name="lot_id" domain="[('product_id', '=', parent.product_id)]"/>
-                            <field name="quantity"/>
+                            <field name="quantity" invisible="context.get('serial')"/>
                         </tree>
                     </field>
                     <footer class="oe_edit_only">
@@ -859,16 +860,18 @@
                     <notebook>
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" >
                                     <field name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
+                                    <field name="is_done" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="quantity_available"/>
+                                    <field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
-                                    <field name="quantity_done" attrs="{'readonly': [('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
+                                    <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
                                         attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
                                 </tree>
@@ -876,16 +879,17 @@
                         </page>
                         <page string="Finished Products">
                             <field name="move_finished_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty">
                                     <field name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
-
+                                    <field name="is_done" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Produce"/>
-                                    <field name="quantity_done" attrs="{'readonly': [('has_tracking', 'in', ['lot','serial'])]}" string="Produced"/>
+                                    <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Produced"/>
 
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
                                         attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>

@@ -41,6 +41,13 @@ class StockMove(models.Model):
         compute='_qty_done_compute', inverse='_qty_done_set')
     quantity_lots = fields.One2many('stock.move.lots', 'move_id', string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', string="BoM Line")
+    is_done = fields.Boolean('Done', compute='_compute_is_done', help='Technical Field to order moves', store=True)
+
+    @api.multi
+    @api.depends('state')
+    def _compute_is_done(self):
+        for move in self:
+            move.is_done = (move.state in ('done', 'cancel'))
 
     @api.multi
     @api.depends('quantity_lots','quantity_lots.quantity')
@@ -80,6 +87,7 @@ class StockMove(models.Model):
             if move.quantity_done > move.product_uom_qty:
                 remaining_qty = move.quantity_done - move.product_uom_qty #Convert to UoM of move
                 extra_move = move.copy(default={'quantity_done': remaining_qty, 'product_uom_qty': remaining_qty, 'production_id': move.production_id.id, 'raw_material_production_id': move.raw_material_production_id.id})
+                move.quantity_done = move.product_uom_qty
                 extra_move.action_confirm()
                 moves_todo |= extra_move
         
@@ -108,12 +116,12 @@ class StockMove(models.Model):
         self.ensure_one()
         view = self.env['ir.model.data'].xmlid_to_res_id('stock.view_stock_move_lots')
         serial = (self.has_tracking == 'serial')
-        only_create = self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots
+        only_create = False # Check picking type in theory
         ctx = {
             'serial': serial,
             'only_create': only_create,
-            'create_lots': self.picking_type_id.use_create_lots,
-            'state_done': self.picking_id.state == 'done',
+            'create_lots': True,
+            'state_done': self.is_done,
         }
         result = {
              'name': _('Register Lots'),
@@ -197,6 +205,19 @@ class StockQuant(models.Model):
     
     consumed_quant_ids = fields.Many2many('stock.quant', 'stock_quant_consume_rel', 'produce_quant_id', 'consume_quant_id')
     produced_quant_ids = fields.Many2many('stock.quant', 'stock_quant_consume_rel', 'consume_quant_id', 'produce_quant_id')
+
+
+class StockProductionLot(models.Model):
+    _inherit = "stock.production.lot"
+    
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), '|', ('quant_ids.consumed_quant_ids.lot_id.name', operator, name), ('quant_ids.produced_quant_ids.lot_id.name', operator, name)]
+        pos = self.search(domain + args, limit=limit)
+        return pos.name_get()
 
 
 class StockPickingType(models.Model):
