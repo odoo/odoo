@@ -52,7 +52,6 @@ class account_invoice_line(osv.osv):
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
                     'purchase_value': line.price_subtotal,
-                    'period_id': line.invoice_id.period_id.id,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
