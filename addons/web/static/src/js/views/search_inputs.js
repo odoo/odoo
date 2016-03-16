@@ -68,7 +68,9 @@ var Input = Widget.extend( /** @lends instance.web.search.Input# */{
             "get_domain not implemented for widget " + this.attrs.type);
     },
     load_attrs: function (attrs) {
-        attrs.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        if (!_.isObject(attrs.modifiers)) {
+            attrs.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        }
         this.attrs = attrs;
     },
     /**

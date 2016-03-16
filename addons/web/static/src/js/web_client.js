@@ -5,6 +5,7 @@ var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var framework = require('web.framework');
 var Loading = require('web.Loading');
 var Menu = require('web.Menu');
@@ -16,7 +17,6 @@ var UserMenu = require('web.UserMenu');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-var QWeb = core.qweb;
 var _t = core._t;
 
 var WebClient = Widget.extend({
@@ -310,7 +310,7 @@ var WebClient = Widget.extend({
     },
     on_menu_action: function(options) {
         var self = this;
-        return this.menu_dm.add(this.rpc("/web/action/load", { action_id: options.action_id }))
+        return this.menu_dm.add(data_manager.load_action(options.action_id))
             .then(function (result) {
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {

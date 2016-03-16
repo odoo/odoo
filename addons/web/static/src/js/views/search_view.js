@@ -3,6 +3,7 @@ odoo.define('web.SearchView', function (require) {
 
 var AutoComplete = require('web.AutoComplete');
 var core = require('web.core');
+var data_manager = require('web.data_manager');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
@@ -390,7 +391,17 @@ var SearchView = View.extend({
         this.filter_menu = undefined;
         this.groupby_menu = undefined;
         this.favorite_menu = undefined;
-    },    
+    },
+    willStart: function () {
+        var self = this;
+        var def;
+        if (!this.options.disable_favorites) {
+            def = data_manager.load_filters(this.dataset, this.action_id).then(function (filters) {
+                self.favorite_filters = filters;
+            });
+        }
+        return $.when(this._super(), def);
+    },
     start: function() {
         if (this.headless) {
             this.do_hide();
@@ -417,7 +428,7 @@ var SearchView = View.extend({
                 menu_defs.push(this.groupby_menu.appendTo(this.$buttons));
             }
             if (!this.options.disable_favorites) {
-                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id, this.options.filters);
+                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id, this.favorite_filters);
                 menu_defs.push(this.favorite_menu.appendTo(this.$buttons));
             }
         }

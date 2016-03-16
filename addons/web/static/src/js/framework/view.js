@@ -3,6 +3,7 @@ odoo.define('web.View', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 
@@ -122,10 +123,11 @@ var View = Widget.extend({
                 core.bus.trigger('do_reload_needaction');
             });
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', {
-                action_id: action_data.name,
-                context: _.extend(pyeval.eval('context', context), {'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}),
-            }).then(handler);
+            return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
+                active_model: dataset.model,
+                active_ids: dataset.ids,
+                active_id: record_id
+            })).then(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }

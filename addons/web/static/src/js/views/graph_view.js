@@ -5,6 +5,7 @@ odoo.define('web.GraphView', function (require) {
  *---------------------------------------------------------*/
 
 var core = require('web.core');
+var data_manager = require('web.data_manager');
 var GraphWidget = require('web.GraphWidget');
 var View = require('web.View');
 
@@ -28,7 +29,7 @@ var GraphView = View.extend({
     },
     willStart: function () {
         var self = this;
-        var load_fields = this.ViewManager.get_fields().then(this.prepare_fields.bind(this));
+        var fields_def = data_manager.load_fields(this.dataset).then(this.prepare_fields.bind(this));
         this.fields_view.arch.children.forEach(function (field) {
             var name = field.attrs.name;
             if (field.attrs.interval) {
@@ -40,7 +41,7 @@ var GraphView = View.extend({
                 self.initial_groupbys.push(name);
             }
         });
-        return $.when(this._super(), load_fields);
+        return $.when(this._super(), fields_def);
     },
     /**
      * Render the buttons according to the GraphView.buttons and

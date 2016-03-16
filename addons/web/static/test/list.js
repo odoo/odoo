@@ -1,6 +1,6 @@
-odoo.define_section('list.buttons', ['web.ListView', 'web.data'], function (test, mock) {
+odoo.define_section('list.buttons', ['web.ListView', 'web.data', 'web.data_manager'], function (test, mock) {
 
-    test('record-deletion', function (assert, ListView, data) {
+    test('record-deletion', function (assert, ListView, data, data_manager) {
         assert.expect(2);
         
         mock.add('demo:read', function (args, kwargs) {
@@ -22,7 +22,7 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data'], function (test
 
 
         var ds = new data.DataSetStatic(null, 'demo', null, [1, 2, 3]);
-        var fields_view = ds._model.postprocess_fvg({
+        var fields_view = data_manager._postprocess_fvg({
             type: 'tree',
             fields: {
                 a: {type: 'char', string: "A"}
