@@ -764,15 +764,13 @@ class website_sale(http.Controller):
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
         if not values['errors']:
-            # find an already existing transaction
-            tx = request.website.sale_get_transaction()
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
             values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
             render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     cr, SUPERUSER_ID, acquirer.id,
-                    tx and tx.reference or request.env['payment.transaction'].get_next_reference(order.name),
+                    request.env['payment.transaction'].get_next_reference(order.name),
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
@@ -803,30 +801,19 @@ class website_sale(http.Controller):
 
         assert order.partner_id.id != request.website.partner_id.id
 
-        # find an already existing transaction
-        tx = request.website.sale_get_transaction()
-        if tx:
-            tx_id = tx.id
-            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
-                tx = False
-                tx_id = False
-            elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'amount': order.amount_total,
-                })
-        if not tx:
-            tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
-                'acquirer_id': acquirer_id,
-                'type': 'form',
-                'amount': order.amount_total,
-                'currency_id': order.pricelist_id.currency_id.id,
-                'partner_id': order.partner_id.id,
-                'partner_country_id': order.partner_id.country_id.id,
-                'reference': request.env['payment.transaction'].get_next_reference(order.name),
-                'sale_order_id': order.id,
-            }, context=context)
-            request.session['sale_transaction_id'] = tx_id
-            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+        
+        tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
+            'acquirer_id': acquirer_id,
+            'type': 'form',
+            'amount': order.amount_total,
+            'currency_id': order.pricelist_id.currency_id.id,
+            'partner_id': order.partner_id.id,
+            'partner_country_id': order.partner_id.country_id.id,
+            'reference': request.env['payment.transaction'].get_next_reference(order.name),
+            'sale_order_id': order.id,
+        }, context=context)
+        request.session['sale_transaction_id'] = tx_id
+        tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(

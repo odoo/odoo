@@ -40,8 +40,7 @@ class sale_quote(http.Controller):
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
-        tx = request.registry['payment.transaction'].browse(request.cr, SUPERUSER_ID, tx_id, context=request.context) if tx_id else False
+        tx = order.payment_tx_id
         values = {
             'quotation': order,
             'message': message and int(message) or False,
@@ -50,7 +49,7 @@ class sale_quote(http.Controller):
             'days_valid': days,
             'action': action,
             'breadcrumb': user.partner_id == order.partner_id,
-            'tx_id': tx_id,
+            'tx_id': tx.id,
             'tx_state': tx.state if tx else False,
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
             'need_payment': order.invoice_status == 'to invoice' and (not tx or tx.state in ['draft', 'cancel', 'error']),
@@ -65,7 +64,7 @@ class sale_quote(http.Controller):
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     request.cr, SUPERUSER_ID, acquirer.id,
-                    order.name,
+                    request.env['payment.transaction'].get_next_reference(order.name),
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
@@ -175,33 +174,23 @@ class sale_quote(http.Controller):
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/quote/" + str(order_id))
 
-        # find an already existing transaction
-        tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
+        tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
+            'acquirer_id': acquirer_id,
+            'type': 'form',
+            'amount': order.amount_total,
+            'currency_id': order.pricelist_id.currency_id.id,
+            'partner_id': order.partner_id.id,
+            'reference': request.env['payment.transaction'].get_next_reference(order.name),
+            'sale_order_id': order.id,
+            'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+        }, context=context)
         tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
-        if tx:
-            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'acquirer_id': acquirer_id,
-                })
-            tx_id = tx.id
-        else:
-            tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
-                'acquirer_id': acquirer_id,
-                'type': 'form',
-                'amount': order.amount_total,
-                'currency_id': order.pricelist_id.currency_id.id,
-                'partner_id': order.partner_id.id,
-                'reference': order.name,
-                'sale_order_id': order.id,
-                'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+        # update quotation
+        request.registry['sale.order'].write(
+            cr, SUPERUSER_ID, [order.id], {
+                'payment_acquirer_id': acquirer_id,
+                'payment_tx_id': tx_id
             }, context=context)
-            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
-            # update quotation
-            request.registry['sale.order'].write(
-                cr, SUPERUSER_ID, [order.id], {
-                    'payment_acquirer_id': acquirer_id,
-                    'payment_tx_id': tx_id
-                }, context=context)
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
