@@ -38,12 +38,14 @@ class StockMove(osv.osv):
         uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
         property_ids = context.get('property_ids') or []
-        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids)
+        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids, context={'bom_effectivity_date': move.date})
         bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis, context=context)
         if bis and bom_point.type == 'phantom':
+            ctx = context.copy()
+            ctx['bom_effectivity_date'] = move.date
             processed_ids = []
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, property_ids, context=context)
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, property_ids, context=ctx)
 
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)

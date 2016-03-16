@@ -596,11 +596,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" context='{"default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" context='{"default_type": "product", "bom_effectivity_date": date_planned}'/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" on_change="product_id_change(product_id, product_qty)"/>
+                                <field name="product_qty" on_change="product_id_change(product_id, product_qty)" context='{"bom_effectivity_date": date_planned}'/>
                                 <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"

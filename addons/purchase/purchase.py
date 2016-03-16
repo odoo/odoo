@@ -481,9 +481,11 @@ class PurchaseOrderLine(models.Model):
             for bom in line.product_id.product_tmpl_id.bom_ids:
                 if bom.type != 'phantom':
                     continue
+                ctx = dict(self.env.context or {})
+                ctx.update({'bom_effectivity_date': line.order_id.date_order})
                 bom_delivered[bom.id] = False
                 product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_qty, bom.product_uom)
-                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, product_uom_qty_bom)[0]
+                bom_exploded = self.env['mrp.bom'].with_context(ctx)._bom_explode(bom, line.product_id, product_uom_qty_bom)[0]
                 for bom_line in bom_exploded:
                     qty = 0.0
                     for move in line.move_ids:

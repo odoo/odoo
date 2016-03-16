@@ -59,10 +59,12 @@ class change_production_qty(osv.osv_memory):
             prod_obj.action_compute(cr, uid, [prod.id])
 
             for move in prod.move_lines:
+                ctx = context and context.copy() or {}
+                ctx['bom_effectivity_date'] = prod.date_planned
                 bom_point = prod.bom_id
                 bom_id = prod.bom_id.id
                 if not bom_point:
-                    bom_id = bom_obj._bom_find(cr, uid, product_id=prod.product_id.id, context=context)
+                    bom_id = bom_obj._bom_find(cr, uid, product_id=prod.product_id.id, context=ctx)
                     if not bom_id:
                         raise UserError(_("Cannot find bill of material for this product."))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
@@ -73,7 +75,7 @@ class change_production_qty(osv.osv_memory):
 
                 factor = uom_obj._compute_qty(cr, uid, prod.product_uom.id, prod.product_qty, bom_point.product_uom.id)
                 product_details, workcenter_details = \
-                    bom_obj._bom_explode(cr, uid, bom_point, prod.product_id, factor / bom_point.product_qty, [], context=context)
+                    bom_obj._bom_explode(cr, uid, bom_point, prod.product_id, factor / bom_point.product_qty, [], context=ctx)
                 for r in product_details:
                     if r['product_id'] == move.product_id.id:
                         move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
