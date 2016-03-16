@@ -26,11 +26,6 @@ var fields_registry = kanban_widgets.registry;
 var KanbanView = View.extend({
     accesskey: "K",
     className: "o_kanban_view",
-    display_name: _lt("Kanban"),
-    icon: 'fa-th-large',
-    mobile_friendly: true,
-    view_type: "kanban",
-
     custom_events: {
         'kanban_record_open': 'open_record',
         'kanban_record_edit': 'edit_record',
@@ -49,27 +44,30 @@ var KanbanView = View.extend({
         'kanban_load_more': 'load_more',
         'kanban_call_method': 'call_method',
     },
+    defaults: _.extend(View.prototype.defaults, {
+        quick_creatable: true,
+        creatable: true,
+        create_text: undefined,
+        read_only_mode: false,
+        confirm_on_delete: true,
+    }),
+    display_name: _lt("Kanban"),
+    icon: 'fa-th-large',
+    mobile_friendly: true,
 
-    init: function (parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, options);
-        _.defaults(this.options, {
-            "quick_creatable": true,
-            "creatable": true,
-            "create_text": undefined,
-            "read_only_mode": false,
-            "confirm_on_delete": true,
-        });
+    init: function () {
+        this._super.apply(this, arguments);
 
         // qweb setup
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = session.debug;
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
-        this.model = this.dataset.model;
-        this.limit = options.limit || 40;
+        this.limit = this.options.limit || 40;
+        this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
         this.group_by_field = undefined;
-        this.default_group_by = undefined;
+        this.default_group_by = this.fields_view.arch.attrs.default_group_by;
         this.grouped_by_m2o = undefined;
         this.relation = undefined;
         this.is_empty = undefined;
@@ -77,39 +75,39 @@ var KanbanView = View.extend({
         this.m2m_context = {};
         this.widgets = [];
         this.data = undefined;
-        this.model = dataset.model;
-        this.quick_creatable = options.quick_creatable;
-        this.no_content_msg = options.action && (options.action.get_empty_list_help || options.action.help);
+        this.quick_creatable = this.options.quick_creatable;
+        this.no_content_msg = this.options.action &&
+                              (this.options.action.get_empty_list_help || this.options.action.help);
         this.search_orderer = new utils.DropMisordered();
-    },
-
-    view_loading: function(fvg) {
-        this.$el.addClass(fvg.arch.attrs.class);
-        this.fields_view = fvg;
-        this.default_group_by = fvg.arch.attrs.default_group_by;
-
-        this.fields_keys = _.keys(this.fields_view.fields);
 
         // use default order if defined in xml description
         var default_order = this.fields_view.arch.attrs.default_order;
         if (!this.dataset._sort.length && default_order) {
             this.dataset.set_sort(default_order.split(','));
         }
+    },
+
+    willStart: function() {
         // add qweb templates
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
             if (child.tag === "templates") {
-                transform_qweb_template(child, fvg, this.many2manys);
+                transform_qweb_template(child, this.fields_view, this.many2manys);
                 this.qweb.add_template(utils.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
                 var ftype = child.attrs.widget || this.fields_view.fields[child.attrs.name].type;
-                if(ftype == "many2many" && "context" in child.attrs) {
+                if(ftype === "many2many" && "context" in child.attrs) {
                     this.m2m_context[child.attrs.name] = child.attrs.context;
                 }
             }
         }
-        this.trigger('kanban_view_loaded');
+        return this._super();
+    },
+
+    start: function() {
+        this.$el.addClass(this.fields_view.arch.attrs.class);
+        return this._super();
     },
 
     do_search: function(domain, context, group_by) {
@@ -254,7 +252,7 @@ var KanbanView = View.extend({
             var is_empty = true;
             return $.when.apply(null, _.map(groups, function (group) {
                 var def = $.when([]);
-                var dataset = new data.DataSetSearch(self, self.dataset.model,
+                var dataset = new data.DataSetSearch(self, self.model,
                     new data.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 if (self.dataset._sort) {
                     dataset.set_sort(self.dataset._sort);
@@ -494,7 +492,7 @@ var KanbanView = View.extend({
         context.set_eval_context({
             active_id: event.target.id,
             active_ids: [event.target.id],
-            active_model: this.dataset.model,
+            active_model: this.model,
         });
         this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
             self.reload_record(event.target);
@@ -655,7 +653,7 @@ var KanbanView = View.extend({
             event.preventDefault();
             var popup = new form_common.SelectCreatePopup(this);
             popup.select_element(
-                self.dataset.model,
+                self.model,
                 {
                     title: _t("Create: "),
                     initial_view: "form",
@@ -683,7 +681,7 @@ var KanbanView = View.extend({
         model.call('create', [{name: event.data.value}], {
             context: this.search_context,
         }).then(function (id) {
-            var dataset = new data.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), []);
+            var dataset = new data.DataSetSearch(self, self.model, self.dataset.get_context(), []);
             var group_data = {
                 records: [],
                 title: event.data.value,

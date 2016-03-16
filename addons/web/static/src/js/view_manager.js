@@ -3,7 +3,6 @@ odoo.define('web.ViewManager', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var data = require('web.data');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
@@ -17,14 +16,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     template: "ViewManager",
     /**
      * @param {Object} [dataset]
-     * @param {Array} [views] List of [view_id, view_type]
+     * @param {Array} [views] List of [view_id, view_type[, fields_view]]
      * @param {Object} [flags] various boolean describing UI state
      */
     init: function(parent, dataset, views, flags, options) {
         var self = this;
         this._super(parent);
 
-        this.action = options && options.action;
+        this.action = options && options.action || {};
         this.action_manager = options && options.action_manager;
         this.flags = flags || {};
         this.dataset = dataset;
@@ -33,7 +32,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.view_stack = []; // used for breadcrumbs
         this.active_view = null;
         this.registry = core.view_registry;
-        this.title = this.action && this.action.name;
+        this.title = this.action.name;
         this.is_in_DOM = false; // used to know if the view manager is attached in the DOM
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
@@ -44,45 +43,42 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             }
             var view_label = View.prototype.display_name;
             var view_descr = {
-                    controller: null,
-                    options: view.options || {},
-                    view_id: view[0] || view.view_id,
-                    type: view_type,
-                    label: view_label,
-                    embedded_view: view.embedded_view,
-                    title: self.title,
-                    button_label: _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}),
-                    multi_record: View.prototype.multi_record,
-                    accesskey: View.prototype.accesskey,
-                    icon: View.prototype.icon,
-                };
+                accesskey: View.prototype.accesskey,
+                button_label: _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}),
+                controller: null,
+                fields_view: view[2] || view.fields_view,
+                embedded_view: view.embedded_view,
+                icon: View.prototype.icon,
+                label: view_label,
+                multi_record: View.prototype.multi_record,
+                options: view.options || {},
+                require_fields: View.prototype.require_fields,
+                title: self.title,
+                type: view_type,
+                view_id: view[0] || view.view_id,
+            };
             self.view_order.push(view_descr);
             self.views[view_type] = view_descr;
         });
         this.first_view = this.views[options && options.view_type]; // view to open first
-
-        // Listen to event 'switch_view' indicating that the VM must now display view wiew_type
-        this.on('switch_view', this, function(view_type) {
-            if (view_type === 'form' && this.active_view && this.active_view.type === 'form') {
-                this._display_view(view_type);
-            } else {
-                this.switch_mode(view_type);
-            }
-        });
+        this.default_view = this.get_default_view();
+    },
+    willStart: function () {
+        var views_def;
+        var first_view_to_display = this.first_view || this.default_view;
+        if (!first_view_to_display.fields_view || (this.flags.search_view && !this.search_fields_view)) {
+            views_def = this.load_views(first_view_to_display.require_fields);
+        }
+        return $.when(this._super(), views_def);
     },
     /**
-     * @returns {jQuery.Deferred} initial view loading promise
+     * @return {Deferred} initial view and search view (if any) loading promise
      */
     start: function() {
         var self = this;
-        this._super();
-
-        var views_ids = {};
         _.each(this.views, function (view) {
-            views_ids[view.type] = view.view_id;
             view.options = _.extend({
-                action : self.action,
-                action_views_ids : views_ids,
+                action: self.action,
             }, self.flags, self.flags[view.type], view.options);
             view.$container = self.$(".oe-view-manager-view-" + view.type);
         });
@@ -99,16 +95,58 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         // If a non multi-record first_view is given, switch to it but first push the default_view
         // to the view_stack to complete the breadcrumbs
-        var default_view = this.get_default_view();
-        if (this.first_view && !this.first_view.multi_record && default_view.multi_record) {
-            default_view.controller = this.create_view(default_view);
-            this.view_stack.push(default_view);
+        if (this.first_view && !this.first_view.multi_record && this.default_view.multi_record) {
+            this.default_view.controller = this.create_view(this.default_view);
+            this.view_stack.push(this.default_view);
         }
-        var view_to_load = this.first_view || default_view;
+        var view_to_load = this.first_view || this.default_view;
         var options = this.flags[view_to_load] && this.flags[view_to_load].options;
         var main_view_loaded = this.switch_mode(view_to_load.type, options);
 
-        return $.when(main_view_loaded, this.search_view_loaded);
+        return $.when(this._super(), main_view_loaded, this.search_view_loaded);
+    },
+    /**
+     * Loads all missing field_views of views in this.views and the search view.
+     *
+     * @param {Boolean} [load_fields] whether or not to load the fields as well
+     * @return {Deferred}
+     */
+    load_views: function (load_fields) {
+        var self = this;
+        var views = [];
+        _.each(this.views, function (view) {
+            if (!view.fields_view) {
+                views.push([view.view_id, view.type]);
+            }
+        });
+        if (this.flags.search_view && !this.search_fields_view) {
+            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+            views.push([searchview_id || false, 'search']);
+        }
+        var options = {
+            action_id: this.action.id,
+            load_fields: load_fields && !this.fields_get_def,
+            toolbar: this.flags.sidebar,
+        };
+        return this.dataset._model.call('load_views', {
+            views: views,
+            options: options,
+            context: this.dataset.get_context(),
+        }).then(function (result) {
+            _.each(result.fields_views, function (fields_view, view_type) {
+                if (view_type === 'search') {
+                    self.search_fields_view = self.dataset._model.postprocess_fvg(fields_view);
+                } else {
+                    self.views[view_type].fields_view = self.dataset._model.postprocess_fvg(fields_view);
+                }
+            });
+            if (result.filters) {
+                self.search_filters = result.filters;
+            }
+            if (result.fields) {
+                self.fields_get_def = $.when(result.fields);
+            }
+        });
     },
     /**
      * Returns the default view with the following fallbacks:
@@ -119,6 +157,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      */
     get_default_view: function() {
         return this.views[this.flags.default_view || this.view_order[0].type];
+    },
+    get_fields: function() {
+        if (!this.fields_get_def) {
+            this.fields_get_def = this.dataset._model.call('fields_get', {
+                context: this.dataset.get_context()
+            });
+        }
+        return this.fields_get_def;
     },
     switch_mode: function(view_type, view_options) {
         var self = this;
@@ -131,51 +177,60 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             this.currently_switching = true;  // prevent overlapping switches
         }
 
-        if (view.multi_record) {
-            this.view_stack = [];
-        } else if (this.view_stack.length > 0 && !(_.last(this.view_stack).multi_record)) {
-            // Replace the last view by the new one if both are mono_record
-            this.view_stack.pop();
-        }
-        this.view_stack.push(view);
-        this.active_view = view;
-
-        if (!view.loaded) {
-            if (!view.controller) {
-                view.controller = this.create_view(view, view_options);
-            }
-            view.$fragment = $('<div>');
-            view.loaded = view.controller.appendTo(view.$fragment).done(function () {
-                // Remove the unnecessary outer div
-                view.$fragment = view.$fragment.contents();
-                self.trigger("controller_inited", view.type, view.controller);
-            });
+        // Ensure that the fields_view has been loaded
+        var views_def;
+        if (!view.fields_view) {
+            views_def = this.load_views(view.require_fields);
         }
 
-        // Call do_search on the searchview to compute domains, contexts and groupbys
-        if (this.search_view_loaded &&
-                this.flags.auto_search &&
-                view.controller.searchable !== false) {
-            this.active_search = $.Deferred();
-            $.when(this.search_view_loaded, view.loaded).done(function() {
-                self.searchview.do_search();
-            });
-        }
-
-        return $.when(view.loaded, this.active_search)
-            .then(function() {
-                return self._display_view(view_options, old_view).then(function() {
-                    self.trigger('switch_mode', view_type, view_options);
-                });
-            }).fail(function(e) {
-                if (!(e && e.code === 200 && e.data.exception_type)) {
-                    self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
-                }
-                // Restore internal state
-                self.active_view = old_view;
+        return $.when(views_def).then(function () {
+            if (view.multi_record) {
+                self.view_stack = [];
+            } else if (self.view_stack.length > 0 && !(_.last(self.view_stack).multi_record)) {
+                // Replace the last view by the new one if both are mono_record
                 self.view_stack.pop();
-            }).always(function () {
-                self.currently_switching = false;
+            }
+            self.view_stack.push(view);
+
+            self.active_view = view;
+
+            if (!view.loaded) {
+                if (!view.controller) {
+                    view.controller = self.create_view(view, view_options);
+                }
+                view.$fragment = $('<div>');
+                view.loaded = view.controller.appendTo(view.$fragment).done(function () {
+                    // Remove the unnecessary outer div
+                    view.$fragment = view.$fragment.contents();
+                    self.trigger("controller_inited", view.type, view.controller);
+                });
+            }
+
+            // Call do_search on the searchview to compute domains, contexts and groupbys
+            if (self.search_view_loaded &&
+                    self.flags.auto_search &&
+                    view.controller.searchable !== false) {
+                self.active_search = $.Deferred();
+                $.when(self.search_view_loaded, view.loaded).done(function() {
+                    self.searchview.do_search();
+                });
+            }
+
+            return $.when(view.loaded, self.active_search)
+                .then(function() {
+                    return self._display_view(view_options, old_view).then(function() {
+                        self.trigger('switch_mode', view_type, view_options);
+                    });
+                }).fail(function(e) {
+                    if (!(e && e.code === 200 && e.data.exception_type)) {
+                        self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+                    }
+                    // Restore internal state
+                    self.active_view = old_view;
+                    self.view_stack.pop();
+                });
+        }).always(function () {
+            self.currently_switching = false;
         });
     },
     _display_view: function (view_options, old_view) {
@@ -218,17 +273,12 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var View = this.registry.get(view.type);
         var options = _.clone(view.options);
-
-        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline')) ||
+        if (view.type === "form" && ((this.action.target === 'new' || this.action.target === 'inline') ||
             (view_options && view_options.mode === 'edit'))) {
             options.initial_mode = options.initial_mode || 'edit';
         }
 
-        var controller = new View(this, this.dataset, view.view_id, options);
-
-        if (view.embedded_view) {
-            controller.set_embedded_view(view.embedded_view);
-        }
+        var controller = new View(this, this.dataset, view.fields_view, options);
 
         controller.on('switch_mode', this, this.switch_mode.bind(this));
         controller.on('history_back', this, function () {
@@ -307,12 +357,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         return this.active_view.control_elements;
     },
     /**
-     * @returns {Number|Boolean} the view id of the given type, false if not found
-     */
-    get_view_id: function(view_type) {
-        return this.views[view_type] && this.views[view_type].view_id || false;
-    },
-    /**
      * Sets up the current viewmanager's search view.
      * Sets $searchview and $searchview_buttons in control_elements to send to the ControlPanel
      *
@@ -325,28 +369,25 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             this.searchview.destroy();
         }
 
-        var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
-
         var search_defaults = {};
-
-        var context = this.action ? this.action.context : [];
+        var context = this.action.context || [];
         _.each(context, function (value, key) {
             var match = /^search_default_(.*)$/.exec(key);
             if (match) {
                 search_defaults[match[1]] = value;
             }
         });
-
-
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
             $buttons: $("<div>"),
             action: this.action,
+            search_defaults: search_defaults,
+            filters: this.search_filters,
         };
         // Instantiate the SearchView, but do not append it nor its buttons to the DOM as this will
         // be done later, simultaneously to all other ControlPanel elements
-        this.searchview = new SearchView(this, this.dataset, view_id, search_defaults, options);
+        this.searchview = new SearchView(this, this.dataset, this.search_fields_view, options);
 
         this.searchview.on('search_data', this, this.search.bind(this));
         return $.when(this.searchview.appendTo($("<div>"))).done(function() {

@@ -38,19 +38,18 @@ var Editor = Widget.extend({
             delegate: this.getParent(),
         });
         this.delegate = this.options.delegate;
-
         this.record = null;
-        this.form = new (this.options.formView)(this, this.delegate.dataset, false, {
+    },
+    start: function () {
+        var self = this;
+        var form_fields_view = this._validate_view(this.delegate.edition_view(this));
+        this.form = new (this.options.formView)(this, this.delegate.dataset, form_fields_view, {
             initial_mode: 'edit',
             is_list_editable: true,
             disable_autofocus: true,
             $buttons: $(),
             $pager: $(),
         });
-    },
-    start: function () {
-        var self = this;
-        this.form.embedded_view = this._validate_view(this.delegate.edition_view(this));
         return $.when(this._super(), this.form.appendTo($('<div/>')).then(function() {
             self.form.$el.addClass(self.$el.attr('class'));
             self.replaceElement(self.form.$el);
@@ -258,7 +257,7 @@ ListView.include(/** @lends instance.web.ListView# */{
             this._super.apply(this, arguments);
         }
     },
-    load_list: function (data, grouped) {
+    start: function () {
         // tree/@editable takes priority on everything else if present.
         var result = this._super.apply(this, arguments);
 

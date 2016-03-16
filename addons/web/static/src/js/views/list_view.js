@@ -32,33 +32,33 @@ var row_decoration = [
     'decoration-warning'
 ];
 
-var ListView = View.extend( /** @lends instance.web.ListView# */ {
+var ListView = View.extend({
     _template: 'ListView',
     accesskey: 'L',
-    icon: 'fa-list-ul',
     display_name: _lt('List'),
-    defaults: {
+    defaults: _.extend({}, View.prototype.defaults, {
         // records can be selected one by one
-        'selectable': true,
+        selectable: true,
         // list rows can be deleted
-        'deletable': false,
+        deletable: false,
         // whether the column headers should be displayed
-        'header': true,
+        header: true,
         // display addition button, with that label
-        'addable': _lt("Create"),
+        addable: _lt("Create"),
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
-        'sortable': true,
+        sortable: true,
         // whether the view rows can be reordered (via vertical drag & drop)
-        'reorderable': true,
-        'action_buttons': true,
+        reorderable: true,
+        action_buttons: true,
         //whether the editable property of the view has to be disabled
-        'disable_editable_mode': false,
-    },
-    view_type: 'tree',
+        disable_editable_mode: false,
+    }),
     events: {
         'click thead th.oe_sortable[data-id]': 'sort_by_column'
     },
+    icon: 'fa-list-ul',
+
     /**
      * Core class for list-type displays.
      *
@@ -69,11 +69,11 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * See constructor parameters and method documentations for information on
      * the default behaviors and possible options for the list view.
      *
-     * @constructs instance.web.ListView
-     * @extends instance.web.View
+     * @constructs ListView
+     * @extends View
      *
      * @param parent parent object
-     * @param {instance.web.DataSet} dataset the dataset the view should work with
+     * @param {DataSet} dataset the dataset the view should work with
      * @param {String} view_id the listview's identifier, if any
      * @param {Object} options A set of options used to configure the view
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
@@ -83,13 +83,14 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
      */
-    init: function(parent, dataset, view_id, options) {
+    init: function() {
         var self = this;
-        this._super(parent);
-        this.set_default_options(_.extend({}, this.defaults, options || {}));
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.view_id = view_id;
+        this._super.apply(this, arguments);
+        this.options = _.defaults(this.options, {
+            GroupsType: ListView.Groups,
+            ListType: ListView.List,
+        });
+
         this.previous_colspan = null;
         this.colors = null;
         this.fonts = null;
@@ -105,8 +106,8 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         } else {
             this.groups.datagroup = new DataGroup(
                 this, this.model,
-                dataset.get_domain(),
-                dataset.get_context());
+                this.dataset.get_domain(),
+                this.dataset.get_context());
             this.groups.datagroup.sort = this.dataset._sort;
         }
 
@@ -125,21 +126,22 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         if (!this.options.$pager || !this.options.$pager.length) {
             this.options.$pager = false;
         }
+
+        this.name = "" + this.fields_view.arch.attrs.string;
+
         // the view's number of records per page (|| section)
         this._limit = (this.options.limit ||
                        this.defaults.limit ||
                        (this.getParent().action || {}).limit ||
+                       parseInt(this.fields_view.arch.attrs.limit, 10) ||
                        80);
-    },
-    view_loading: function(r) {
-        return this.load_list(r);
-    },
-    set_default_options: function (options) {
-        this._super(options);
-        _.defaults(this.options, {
-            GroupsType: ListView.Groups,
-            ListType: ListView.List
-        });
+
+        //Sort
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order && !this.grouped) {
+            this.dataset.set_sort(default_order.split(','));
+        }
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -169,14 +171,41 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             }
         });
     },
-    /**
-     * View startup method, the default behavior is to set the ``oe_list``
-     * class on its root element and to perform an RPC load call.
-     *
-     * @returns {$.Deferred} loading promise
-     */
+    willStart: function() {
+        // Retrieve the decoration defined on the model's list view
+        this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
+            return row_decoration.indexOf(key) >= 0;
+        });
+        this.decoration = _.mapObject(this.decoration, function(value) {
+            return py.parse(py.tokenize(value));
+        });
+
+        this.setup_columns(this.fields_view.fields, this.grouped);
+
+        return this._super();
+    },
     start: function() {
+        var self = this;
+        this.$el.html(QWeb.render(this._template, this));
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$el.addClass('oe_list o_list_view');
+
+        // Selecting records
+        this.$('.oe_list_record_selector').click(function() {
+            var checked = self.$('.oe_list_record_selector').prop('checked');
+            self.$('.oe_list_record_selector input').prop('checked', checked || false);
+            var selection = self.groups.get_selection();
+            $(self.groups).trigger('selected', [selection.ids, selection.records]);
+        });
+
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') === -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
+        this.trigger('list_view_loaded', data, this.grouped);
         return this._super();
     },
     /**
@@ -200,73 +229,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             }
         });
         return classnames;
-    },
-    /**
-     * Called after loading the list view's description, sets up such things
-     * as the view table's columns, renders the table itself and hooks up the
-     * various table-level and row-level DOM events (action buttons, deletion
-     * buttons, selection of records, [New] button, selection of a given
-     * record, ...)
-     *
-     * Sets up the following:
-     *
-     * * Processes arch and fields to generate a complete field descriptor for each field
-     * * Create the table itself and allocate visible columns
-     * * Hook in the top-level (header) [New|Add] and [Delete] button
-     * * Sets up showing/hiding the top-level [Delete] button based on records being selected or not
-     * * Sets up event handlers for action buttons and per-row deletion button
-     * * Hooks global callback for clicking on a row
-     *
-     * @param {Object} data wrapped fields_view_get result
-     * @param {Object} data.fields_view fields_view_get result (processed)
-     * @param {Object} data.fields_view.fields mapping of fields for the current model
-     * @param {Object} data.fields_view.arch current list view descriptor
-     * @param {Boolean} grouped Is the list view grouped
-     */
-    load_list: function(data) {
-        var self = this;
-        this.fields_view = data;
-        this.name = "" + this.fields_view.arch.attrs.string;
-        this._limit = parseInt(this.fields_view.arch.attrs.limit, 10) || this._limit;
-
-        // Retrieve the decoration defined on the model's list view
-        this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
-            return row_decoration.indexOf(key) >= 0;
-        });
-        this.decoration = _.mapObject(this.decoration, function(value) {
-            return py.parse(py.tokenize(value));
-        });
-
-        this.setup_columns(this.fields_view.fields, this.grouped);
-
-        this.$el.html(QWeb.render(this._template, this));
-        this.$el.addClass(this.fields_view.arch.attrs['class']);
-
-        // Head hook
-        // Selecting records
-        this.$el.find('.oe_list_record_selector').click(function(){
-            self.$el.find('.oe_list_record_selector input').prop('checked',
-                self.$el.find('.oe_list_record_selector').prop('checked')  || false);
-            var selection = self.groups.get_selection();
-            $(self.groups).trigger(
-                'selected', [selection.ids, selection.records]);
-        });
-
-        //Sort
-        var default_order = this.fields_view.arch.attrs.default_order,
-            unsorted = !this.dataset._sort.length;
-        if (unsorted && default_order && !this.grouped) {
-            this.dataset.set_sort(default_order.split(','));
-        }
-
-        if(this.dataset._sort.length){
-            if(this.dataset._sort[0].indexOf('-') == -1){
-                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
-            }else {
-                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
-            }
-        }
-        this.trigger('list_view_loaded', data, this.grouped);
     },
     /**
      * Render the buttons according to the ListView.buttons template and
@@ -500,16 +462,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         }
     },
     /**
-     * Reloads the list view based on the current settings (dataset & al)
-     *
-     * @deprecated
-     * @param {Boolean} [grouped] Should the list be displayed grouped
-     * @param {Object} [context] context to send the server while loading the view
-     */
-    reload_view: function (grouped, context) {
-        return this.load_view(context);
-    },
-    /**
      * re-renders the content of the list view
      *
      * @returns {$.Deferred} promise to content reloading
@@ -617,8 +569,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.alive(this.load_view(context)).then(
-            this.proxy('reload_content'));
+        return this.reload_content();
     },
     /**
      * Handles the signal to delete lines from the records list
@@ -720,7 +671,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         c.set_eval_context(_.extend({
             active_id: id,
             active_ids: [id],
-            active_model: this.dataset.model
+            active_model: this.model
         }, this.records.get(id).toContext()));
         if (action.context) {
             c.add(action.context);
@@ -960,7 +911,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
 });
 core.view_registry.add('list', ListView);
 
-ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
+ListView.List = Class.extend({
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -1187,7 +1138,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
             }
         }
         return column.format(record.toForm().data, {
-            model: this.dataset.model,
+            model: this.model,
             id: record.get('id')
         });
     },
@@ -1299,7 +1250,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     }
 });
 
-ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
+ListView.Groups = Class.extend({
     passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts

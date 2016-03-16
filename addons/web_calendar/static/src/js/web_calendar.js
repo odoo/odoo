@@ -61,65 +61,32 @@ function isNullOrUndef(value) {
 }
 
 var CalendarView = View.extend({
-    template: "CalendarView",
+    defaults: _.extend({}, View.prototype.defaults, {
+        confirm_on_delete: true,
+    }),
     display_name: _lt('Calendar'),
     icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
+    template: "CalendarView",
 
-    init: function (parent, dataset, view_id, options) {
-        this._super(parent);
-        this.ready = $.Deferred();
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.fields_view = {};
-        this.view_id = view_id;
-        this.view_type = 'calendar';
+    init: function () {
+        this._super.apply(this, arguments);
         this.color_map = {};
         this.range_start = null;
         this.range_stop = null;
         this.selected_filters = [];
+        this.info_fields = [];
 
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
-    },
 
-    set_default_options: function(options) {
-        this._super(options);
-        _.defaults(this.options, {
-            confirm_on_delete: true
-        });
-    },
-
-    destroy: function() {
-        if (this.$calendar) {
-            this.$calendar.fullCalendar('destroy');
-        }
-        if (this.$small_calendar) {
-            this.$small_calendar.datepicker('destroy');
-        }
-        this._super.apply(this, arguments);
-    },
-
-    view_loading: function (fv) {
-        /* xml view calendar options */
-        var attrs = fv.arch.attrs,
-            self = this;
-        this.fields_view = fv;
-        this.$calendar = this.$(".o_calendar_widget");
-
-        this.info_fields = [];
-
+        var attrs = this.fields_view.arch.attrs;
         if (!attrs.date_start) {
             throw new Error(_t("Calendar view has not defined 'date_start' attribute."));
         }
-
-        this.$el.addClass(attrs['class']);
-
-        this.name = fv.name || attrs.string;
-        this.view_id = fv.view_id;
-
+        this.fields = this.fields_view.fields;
+        this.name = this.fields_view.name || attrs.string;
         this.mode = attrs.mode;                 // one of month, week or day
         this.date_start = attrs.date_start;     // Field name of starting date field
         this.date_delay = attrs.date_delay;     // duration
@@ -129,7 +96,7 @@ var CalendarView = View.extend({
         this.attendee_people = attrs.attendee;
 
         // Check whether the date field is editable (i.e. if the events can be dragged and dropped)
-        this.editable = !this.options.read_only_mode && !this.fields_view.fields[this.date_start].readonly;
+        this.editable = !this.options.read_only_mode && !this.fields[this.date_start].readonly;
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default quick_create_instance
@@ -155,7 +122,7 @@ var CalendarView = View.extend({
         this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-        if (isNullOrUndef(self.options.sidebar)) {
+        if (isNullOrUndef(this.options.sidebar)) {
             this.useContacts = false;
             this.colorIsAttendee = false;
             this.attendee_people = undefined;
@@ -203,32 +170,38 @@ var CalendarView = View.extend({
             }
         }
 
-        this.fields = fv.fields;
-
-        for (var fld = 0; fld < fv.arch.children.length; fld++) {
-            this.info_fields.push(fv.arch.children[fld].attrs.name);
+        for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
+            this.info_fields.push(this.fields_view.arch.children[fld].attrs.name);
         }
-
-        self.shown.done(this._do_show_init.bind(this));
-        var edit_check = new Model(this.dataset.model)
-            .call("check_access_rights", ["write", false])
-            .then(function (write_right) {
-                self.write_right = write_right;
-            });
-        var init = new Model(this.dataset.model)
-            .call("check_access_rights", ["create", false])
-            .then(function (create_right) {
-                self.create_right = create_right;
-                self.ready.resolve();
-                self.trigger('calendar_view_loaded', fv);
-            });
-        return $.when(edit_check, init);
     },
-    _do_show_init: function () {
+    willStart: function () {
         var self = this;
+        var write_def = this.dataset.call("check_access_rights", ["write", false]);
+        var create_def = this.dataset.call("check_access_rights", ["create", false]);
+        return $.when(write_def, create_def, this._super()).then(function (write, create) {
+            self.write_right = write;
+            self.create_right = create;
+        });
+    },
+    start: function () {
+        this.$calendar = this.$(".o_calendar_widget");
+        this.$el.addClass(this.fields_view.arch.attrs.class);
+        this.shown.done(this._do_show_init.bind(this));
+        return this._super();
+    },
+    destroy: function() {
+        if (this.$calendar) {
+            this.$calendar.fullCalendar('destroy');
+        }
+        if (this.$small_calendar) {
+            this.$small_calendar.datepicker('destroy');
+        }
+        this._super.apply(this, arguments);
+    },
+
+    _do_show_init: function () {
         this.init_calendar().then(function() {
             $(window).trigger('resize');
-            self.trigger('calendar_view_loaded', self.fields_view);
         });
     },
     /**
@@ -876,9 +849,9 @@ var CalendarView = View.extend({
             }
         }
         else {
-            var dialog = new form_common.FormViewDialog(this, {
-                res_model: this.dataset.model,
-                res_id: parseInt(id).toString() == id ? parseInt(id) : id,
+            new form_common.FormViewDialog(this, {
+                res_model: this.model,
+                res_id: parseInt(id).toString() === id ? parseInt(id) : id,
                 context: this.dataset.get_context(),
                 title: title,
                 view_id: +this.open_popup_action,
