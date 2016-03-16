@@ -419,7 +419,7 @@ class Invoice(osv.osv):
         for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
-                        [l.id for l in invoice.invoice_line])])
+                        [l.id for l in invoice.invoice_line_ids])])
             member_line_obj.unlink(cr, uid, mlines, context=context)
         return super(Invoice, self).unlink(cr, uid, ids, context=context)
 

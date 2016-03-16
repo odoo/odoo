@@ -285,7 +285,7 @@ ListView.include(/** @lends instance.web.ListView# */{
         var add_button = !this.$buttons; // Ensures that this is only done once
         var result = this._super.apply(this, arguments); // Sets this.$buttons
 
-        if (add_button && this.editable()) {
+        if (add_button && (this.editable() || this.grouped)) {
             var self = this;
             this.$buttons
                 .off('click', '.o_list_button_save')

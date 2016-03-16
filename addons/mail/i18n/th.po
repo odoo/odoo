@@ -3,13 +3,14 @@
 # * mail
 # 
 # Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-02-06 10:33+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-10 05:38+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,13 +147,13 @@ msgstr ""
 #: code:addons/mail/models/mail_template.py:216
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (สำเนา)"
+msgstr "(สำเนา) %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
-msgstr "%s สร้างแล้ว"
+msgstr "สร้าง%sแล้ว"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:81
@@ -172,7 +173,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:48
 #, python-format
 msgid "(no email address)"
-msgstr "(ไม่มีอีเมล์)"
+msgstr "(ไม่มีอีเมล)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
@@ -397,7 +398,7 @@ msgstr "ขั้นสูง"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Advanced Settings"
-msgstr "Advanced Settings"
+msgstr "การตั้งค่าขั้นสูง"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_id
@@ -456,7 +457,7 @@ msgstr "นามแฝง"
 #: code:addons/mail/static/src/xml/systray.xml:12
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "ทั้งหมด"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -505,7 +506,7 @@ msgstr "แนบไฟล์"
 #: model:ir.model.fields,field_description:mail.field_mail_template_attachment_ids
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Attachments"
-msgstr "แนบไฟล์"
+msgstr "เอกสารแนบ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
@@ -603,7 +604,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Body"
-msgstr "เนื้อความ HTML"
+msgstr "เนื้อความ"
 
 #. module: mail
 #. openerp-web
@@ -618,7 +619,7 @@ msgstr "ยกเลิก"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "ยกเลิกอีเมล์"
+msgstr "ยกเลิกอีเมล"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -651,7 +652,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_cc
 msgid "Cc"
-msgstr "สำเนา"
+msgstr "Cc"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -694,7 +695,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
-msgstr "ช่อง"
+msgstr "ช่องทาง"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
@@ -708,12 +709,12 @@ msgstr ""
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "สนทนา"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "การสนทนา"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -812,7 +813,7 @@ msgstr "เขียนอีเมล"
 #: code:addons/mail/static/src/xml/systray.xml:4
 #, python-format
 msgid "Compose new Message"
-msgstr ""
+msgstr "เขียนข้อความใหม่"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
@@ -830,7 +831,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.action_contacts
 #: model:ir.ui.menu,name:mail.menu_contacts
 msgid "Contacts"
-msgstr "ที่อยู่ติดต่อ"
+msgstr "ผู้ติดต่อ"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -883,7 +884,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_uid
 msgid "Created by"
-msgstr "จัดทำโดย"
+msgstr "สร้างโดย"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
@@ -904,7 +905,7 @@ msgstr "สร้างเมื่อ"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Creation Month"
-msgstr "Creation Month"
+msgstr "เดือนที่สร้าง"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_starred
@@ -932,7 +933,7 @@ msgstr "วันที่"
 #: model:ir.model.fields,help:mail.field_res_partner_message_last_post
 #: model:ir.model.fields,help:mail.field_res_users_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
+msgstr "วันที่ข้อความล่าสุดถูกบันทึก"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
@@ -943,14 +944,14 @@ msgstr "ค่าเริ่มต้น"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template_null_value
 msgid "Default Value"
-msgstr "ค่าปริยาย"
+msgstr "ค่าเริ่มต้น"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_defaults
 msgid "Default Values"
-msgstr "ค่าปริยาย"
+msgstr "ค่าเริ่มต้น"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_use_default_to
@@ -972,12 +973,12 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:111
 #, python-format
 msgid "Delete this attachment"
-msgstr "ลบสิ่งที่แนบมานี้"
+msgstr "ลบเอกสารแนบนี้"
 
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr "การส่งผิดพลาด"
+msgstr "การส่งล้มเหลว"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_description
@@ -1018,12 +1019,12 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
 msgid "Discuss"
-msgstr ""
+msgstr "การสนทนา"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "ช่องทางการสนทนา"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1047,7 +1048,7 @@ msgstr "การสนทนา"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ชื่อที่ใช้แสดง"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1086,7 +1087,7 @@ msgstr ""
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Email"
-msgstr "อีเมล์"
+msgstr "อีเมล"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1101,18 +1102,18 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr "ตั้งค่าอีเมล์"
+msgstr "ตั้งค่าอีเมล"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_notify_email
 #: model:ir.model.fields,field_description:mail.field_res_users_notify_email
 msgid "Email Messages and Notifications"
-msgstr ""
+msgstr "ข้อความอีเมลและการแจ้งเตือน"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Email Preview"
-msgstr "ตัวอย่างอีเมล์"
+msgstr "ตัวอย่างอีเมล"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1122,7 +1123,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
 msgid "Email Template"
-msgstr "แม่แบบอีเมล์"
+msgstr "แม่แบบอีเมล"
 
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
@@ -1132,7 +1133,7 @@ msgstr "ตัวอย่างแม่แบบอีเมล"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
 msgid "Email Templates"
-msgstr "แม่แบบอีเมล์"
+msgstr "แม่แบบอีเมล"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -1176,7 +1177,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_mail_mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr "อีเมล์"
+msgstr "อีเมล"
 
 #. module: mail
 #: code:addons/mail/models/update.py:91
@@ -1216,7 +1217,7 @@ msgstr "ทุกคน"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "ตัวกรองเพิ่มเติม"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
@@ -1268,7 +1269,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_type
 msgid "Field Type"
-msgstr "Field Type"
+msgstr "ประเภทฟิลด์"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_relation_field
@@ -1284,7 +1285,7 @@ msgstr ""
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "Final placeholder expression, to be copy-pasted in the desired template field."
+msgstr ""
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1383,7 +1384,7 @@ msgstr "กลุ่มต่าง ๆ"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has attachments"
-msgstr "มีไฟล์แนบมา"
+msgstr "มีเอกสารแนบมา"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_headers
@@ -1418,7 +1419,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_id
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_id
 msgid "ID"
-msgstr "รหัส"
+msgstr "ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_thread_id
@@ -1448,7 +1449,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner_message_unread
 #: model:ir.model.fields,help:mail.field_res_users_message_unread
 msgid "If checked new messages require your attention."
-msgstr "ถ้าการตรวจสอบข้อความใหม่ให้ระบุความสนใจของคุณ"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_message_needaction
@@ -1633,7 +1634,7 @@ msgstr "ภาษา"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_last_post
 #: model:ir.model.fields,field_description:mail.field_res_users_message_last_post
 msgid "Last Message Date"
-msgstr "วันที่ข้อความล่าสุด"
+msgstr "วันที่ได้รับข้อความล่าสุด"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview___last_update
@@ -1652,7 +1653,7 @@ msgstr "วันที่ข้อความล่าสุด"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite___last_update
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
@@ -1741,14 +1742,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "เขียนบันทึกใหม่"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:75
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "เขียนบันทึกใหม่"
 
 #. module: mail
 #. openerp-web
@@ -1768,7 +1769,7 @@ msgstr ""
 #: code:addons/mail/models/mail_mail.py:306
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr "Mail Delivery Failed"
+msgstr "การส่งอีเมลล้มเหลว"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
@@ -2052,21 +2053,21 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:16
 #, python-format
 msgid "New message"
-msgstr ""
+msgstr "เขียนข้อความใหม่"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:140
 #, python-format
 msgid "New messages"
-msgstr ""
+msgstr "ข้อความใหม่"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:25
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "ข้อความใหม่จะปรากฎขึ้นตรงนี้"
 
 #. module: mail
 #. openerp-web
@@ -2120,7 +2121,7 @@ msgstr "บันทึกย่อ"
 #: code:addons/mail/static/src/xml/thread.xml:48
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "บันทึกโดย"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2317,13 +2318,13 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 msgid "Outgoing"
-msgstr "กำลังออก"
+msgstr "กล่องขาออก"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_mail_server_id
 msgid "Outgoing Mail Server"
-msgstr "Outgoing Mail Server"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -2352,7 +2353,7 @@ msgstr "เจ้าของ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_parent_id
 msgid "Parent"
-msgstr "Parent"
+msgstr "แม่"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_parent_id
@@ -2432,7 +2433,7 @@ msgstr "รูปภาพ"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template_copyvalue
 msgid "Placeholder Expression"
-msgstr "Placeholder Expression"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2451,7 +2452,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Please set the Base Model before setting the action details."
-msgstr "Please set the Base Model before setting the action details."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2494,7 +2495,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
-msgstr "แสดงตัวอย่าง"
+msgstr "ตัวอย่าง"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -2580,7 +2581,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_partner_id
 msgid "Related Partner"
-msgstr "บริษัทคู่ค้าที่เกี่ยวข้อง"
+msgstr "คู่ค้าที่เกี่ยวข้อง"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_relation_field
@@ -2694,7 +2695,7 @@ msgstr ""
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr "Select target field from the related document model.\nIf it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2769,14 +2770,14 @@ msgstr "ส่ง"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_sequence
 msgid "Sequence"
-msgstr "กำหนดเลขที่เอกสาร"
+msgstr "ลำดับ"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:128
 #, python-format
 msgid "Settings"
-msgstr "ตั้งค่าต่างๆ"
+msgstr "ตั้งค่า"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_shortcode_type
@@ -2828,7 +2829,7 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
@@ -2870,13 +2871,13 @@ msgstr "สถานะ"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_model_object_field
 msgid "Sub-field"
-msgstr "Sub-field"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_object
 msgid "Sub-model"
-msgstr "Sub-model"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -3007,7 +3008,7 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)"
+msgstr "(เอกสารประเภท%s) การขอ%sนี้ไม่ได้รับอนุญาต เนื่องจากข้อจำกัดด้านความปลอดภัย กรุณาติดต่อผู้ดูแลระบบ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
@@ -3043,7 +3044,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_to
 msgid "To"
-msgstr "To"
+msgstr "ถึง"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_to
@@ -3258,12 +3259,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "User"
-msgstr "ผู้ใช้งาน"
+msgstr "ผู้ใช้"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
 msgid "Users"
-msgstr "ผู้ใช้งาน"
+msgstr "ผู้ใช้"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:593
@@ -3287,7 +3288,7 @@ msgstr ""
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr "When a relationship field is selected as first field, this field lets you select the target field within the destination document model (sub-model)."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -3295,7 +3296,7 @@ msgstr "When a relationship field is selected as first field, this field lets yo
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr "When a relationship field is selected as first field, this field shows the document model the relationship goes to."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -3350,7 +3351,7 @@ msgstr ""
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr "คุณไม่สามารถลบกลุ่มได้.  มีการเรียกใช้งานจากโมดูลอื่น"
+msgstr "คุณไม่สามารถลบกลุ่ม \"ทั้งบริษัท\" ได้ เนื่องจากมีการเรียกใช้งานจากโมดูลอื่น"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:315

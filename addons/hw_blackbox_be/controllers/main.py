@@ -37,7 +37,7 @@ class Blackbox(Thread):
     # request. The first device to give an answer that makes sense
     # wins.
     def _find_device_path_by_probing(self):
-        path = "/dev/serial/by-id/"
+        path = "/dev/serial/by-path/"
         probe_message = self._wrap_low_level_message_around("S000")
 
         try:

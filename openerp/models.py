@@ -3075,7 +3075,10 @@ class BaseModel(object):
 
         # set up field triggers
         for field in cls._fields.itervalues():
-            field.setup_triggers(self.env)
+            # dependencies of custom fields may not exist; ignore that case
+            exceptions = (Exception,) if field.manual else ()
+            with tools.ignore(*exceptions):
+                field.setup_triggers(self.env)
 
         # add invalidation triggers on model dependencies
         if cls._depends:
@@ -4610,7 +4613,7 @@ class BaseModel(object):
         :return: the qualified field name (or expression) to use for ``field``
         """
         lang = self._context.get('lang')
-        if lang and lang != 'en_US':
+        if lang:
             # Sub-select to return at most one translation per record.
             # Even if it shoud probably not be the case,
             # this is possible to have multiple translations for a same record in the same language.

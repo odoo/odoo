@@ -18,7 +18,7 @@
 % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
 % set access_name = is_online and object.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
-% set access_url = is_online and access_action['url'] or '/report/pdf/sale.report_saleorder/' + str(object.id)
+% set access_url = is_online and access_action['url'] or object.get_signup_url()
 
 <p>Dear
 % if object.partner_id.company_type == 'company' and object.child_ids:
