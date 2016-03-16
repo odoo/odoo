@@ -10,6 +10,7 @@ var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var Model = require('web.Model');
@@ -173,14 +174,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     willStart: function () {
         var self = this;
         var view_id = this.action && this.action.search_view_id && this.action.search_view_id[0];
-        var def = this.dataset._model.fields_view_get({
-            view_id: view_id,
-            view_type: 'search',
-            context: this.dataset.get_context(),
-            toolbar: false,
-        }).then(function (fields_view) {
-            self.fields_view = fields_view;
-        });
+        var def = data_manager
+            .load_fields_view(this.dataset, view_id, 'search', false)
+            .then(function (fields_view) {
+                self.fields_view = fields_view;
+            });
         return $.when(this._super(), chat_manager.is_ready, def);
     },
 
