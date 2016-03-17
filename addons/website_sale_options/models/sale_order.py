@@ -26,8 +26,8 @@ class sale_order(osv.Model):
 
         lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
         if optional_product_ids:
-            # only match the lines where where chosen subproducs is a subset of optional products chosen on the existing lines
-            lines = lines.filtered(lambda line: optional_product_ids.issubset(line.mapped('option_line_ids.product_id.id')))
+            # only match the lines with the same chosen optional products on the existing lines
+            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
         else:
             lines = lines.filtered(lambda line: not line.option_line_ids)
         return lines
