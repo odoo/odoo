@@ -82,6 +82,8 @@ class mail_compose_message(osv.TransientModel):
         vals = {}
         if 'active_domain' in context:  # not context.get() because we want to keep global [] domains
             vals['use_active_domain'] = True
+            import pdb
+            pdb.set_trace()
             vals['active_domain'] = '%s' % context.get('active_domain')
         if result['composition_mode'] == 'comment':
             vals.update(self.get_record_data(cr, uid, result, context=context))

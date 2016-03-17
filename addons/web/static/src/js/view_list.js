@@ -837,7 +837,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     get_active_domain: function () {
         return this.get_active_search_data().then(function(search_data) {
             if(search_data) {
-                return search_data.context;
+                return search_data.domain;
             }
         });
     },
