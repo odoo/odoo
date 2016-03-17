@@ -772,11 +772,12 @@ class Post(models.Model):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
+        post = self.sudo()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
+            'url': '/forum/%s/question/%s' % (post.forum_id.id, post.id),
             'target': 'self',
-            'res_id': self.id,
+            'res_id': post.id,
         }
 
     @api.multi

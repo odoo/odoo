@@ -277,7 +277,7 @@ class sale_order(osv.osv):
     def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the online quote if exists. """
-        quote = self.browse(cr, uid, ids[0], context=context)
+        quote = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
         if not quote.template_id:
             return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {

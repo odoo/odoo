@@ -13,9 +13,10 @@ class Issue(models.Model):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
+        issue = self.sudo()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/my/issues/%s' % self.id,
+            'url': '/my/issues/%s' % issue.id,
             'target': 'self',
-            'res_id': self.id,
+            'res_id': issue.id,
         }

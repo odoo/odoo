@@ -927,7 +927,7 @@ Update your business card, phone book, social media,... Send an email right now 
         return dict((lead.id, aliases.get(lead.team_id and lead.team_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
-        obj = self.browse(cr, uid, id, context=context)
+        obj = self.browse(cr, SUPERUSER_ID, id, context=context)
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
         else:
