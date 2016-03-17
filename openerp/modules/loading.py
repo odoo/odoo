@@ -415,7 +415,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         t0 = time.time()
         t0_sql = openerp.sql_db.sql_counter
         if openerp.tools.config['test_enable']:
-            if update_module:
+            if update_module and mods:
                 cr.execute("SELECT name FROM ir_module_module WHERE state='installed' and name in %s", (tuple(mods),))
             else:
                 cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
