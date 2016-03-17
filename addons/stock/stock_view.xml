@@ -114,7 +114,7 @@
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
                             <button name="reset_real_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
-                            <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
+                            <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
                                 <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
                                     <field name="product_id"  domain="[('type','=','product')]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
                                     <field name="product_uom_id" groups="product.group_uom" string="UoM" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
@@ -126,6 +126,48 @@
                                     <field name="product_qty" string="Real Quantity"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id"  domain="[('type','=','product')]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
+                                    <field name="product_uom_id" groups="product.group_uom" string="UoM" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_locations" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
+                                    <field name="prod_lot_id" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                    <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" groups="stock.group_tracking_lot"/>
+                                    <field name="partner_id" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)" groups="stock.group_tracking_owner"/>
+                                    <field name="theoretical_qty" readonly="1"/>
+                                    <field name="product_qty" string="Real Quantity"/>
+                                    <field name="state" invisible="True"/>
+
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_global_click_edit
+                                                               #{record.product_qty.raw_value!=record.theoretical_qty.raw_value ? 'oe_kanban_color_6' : ''}
+                                                               #{record.theoretical_qty.raw_value&lt;0 ? 'oe_kanban_color_2' : ''}">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong>
+                                                            <field name='product_id'/>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <span><t t-esc='record.location_id.string'/>: <t t-esc='record.location_id.value'/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <span><t t-esc='record.theoretical_qty.string'/>: <t t-esc='record.theoretical_qty.value'/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <span><t t-esc='record.product_qty.string'/>: <t t-esc='record.product_qty.value'/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                             <p></p>
                             <h3 class="oe_grey">Notes</h3>
@@ -840,7 +882,7 @@
                             <button name="do_prepare_partial" type="object" string="Recompute" attrs="{'invisible': [('recompute_pack_op','=', False)]}"/>
                             <field name="recompute_pack_op" invisible="1"/>
                             <field name="pack_operation_ids" invisible="1"/>
-                            <field name="pack_operation_product_ids" options="{'reload_on_button': True}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="pack_operation_product_ids" options="{'reload_on_button': True}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" mode="tree,kanban">
                                 <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_qty" decoration-success="qty_done==product_qty and state!='done' and not result_package_id">
                                     <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
                                     <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
@@ -861,6 +903,53 @@
                                     <button name="show_details" string="Modify" type="object" icon="fa-pencil" groups="stock.group_locations"
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
+                                    <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
+                                    <field name="fresh_record" invisible="1"/>
+                                    <field name="product_uom_id" attrs="{'readonly': [('fresh_record', '=', False)]}" groups="product.group_uom"/>
+                                    <field name="lots_visible" invisible="1"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                                    <field name="from_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
+                                    <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                    <field name="qty_done" attrs="{'readonly': [('lots_visible', '=', True)]}"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click
+                                                               #{record.qty_done.raw_value&gt;record.product_qty.raw_value ? 'oe_kanban_color_2' : ''}
+                                                               #{record.qty_done.raw_value==record.product_qty.raw_value &amp;&amp; record.state.raw_value!='done' &amp;&amp; ! record.result_package_id.raw_value ? 'oe_kanban_color_3' : ''}">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 text-muted">
+                                                        <span><t t-esc="record.from_loc.string"/>: <t t-esc="record.from_loc.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-6 text-muted">
+                                                        <span><t t-esc="record.to_loc.string"/>: <t t-esc="record.to_loc.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 text-muted">
+                                                        <span><t t-esc="record.product_qty.string"/>: <t t-esc="record.product_qty.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-6 text-muted">
+                                                        <span>
+                                                            <t t-esc="record.qty_done.string"/>: <t t-esc="record.qty_done.value"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                             <field name="picking_type_entire_packs" invisible="1"/>
                             <field name="pack_operation_pack_ids" options="{'reload_on_button': True}" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
