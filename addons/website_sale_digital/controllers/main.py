@@ -4,12 +4,12 @@ import base64
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_portal.controllers.main import website_account
-from openerp.addons.website_sale.controllers.main import website_sale
+from openerp.addons.website_sale.controllers.main import WebsiteSale
 from cStringIO import StringIO
 from werkzeug.utils import redirect
 
 
-class website_sale_digital_confirmation(website_sale):
+class website_sale_digital_confirmation(WebsiteSale):
 
     @http.route([
         '/shop/confirmation',

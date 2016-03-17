@@ -3,9 +3,9 @@
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website_sale.controllers.main import website_sale
+from openerp.addons.website_sale.controllers.main import WebsiteSale
 
-class website_sale_options(website_sale):
+class website_sale_options(WebsiteSale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
@@ -56,7 +56,7 @@ class website_sale_options(website_sale):
     @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
     def modal(self, product_id, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        pricelist = self.get_pricelist()
+        pricelist = request.website.get_current_pricelist()
         if not context.get('pricelist'):
             context['pricelist'] = int(pricelist)
 
