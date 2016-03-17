@@ -117,18 +117,22 @@ If you have development competencies, we can propose you specific traineeships</
 
       <record id="employee_category_2" model="hr.employee.category">
           <field name="name">Sales</field>
+          <field name="color" eval="1"/>
       </record>
 
       <record id="employee_category_3" model="hr.employee.category">
           <field name="name">Trainer</field>
+          <field name="color" eval="2"/>
       </record>
 
       <record id="employee_category_4" model="hr.employee.category">
           <field name="name">Employee</field>
+          <field name="color" eval="6"/>
       </record>
 
       <record id="employee_category_5" model="hr.employee.category">
           <field name="name">Consultant</field>
+          <field name="color" eval="4"/>
       </record>
 
     <!--Employees-->
@@ -138,7 +142,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="user_id" ref="base.user_root"/>
           <field name="department_id" ref="dep_management"/>
           <field name="job_id" ref="hr.job_ceo"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_2')])]"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">pieter@openerp.com</field>
@@ -150,7 +154,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Antoine Langlais</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_cto"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_3')])]"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">antoine@openerp.com</field>
@@ -236,7 +240,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="department_id" ref="dep_ps"/>
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_5')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">martin@openerp.com</field>
@@ -248,7 +252,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="department_id" ref="dep_ps"/>
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_5')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">jimmy@openerp.com</field>
@@ -260,7 +264,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="department_id" ref="dep_sales"/>
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_marketing"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_2')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">famke@openerp.com</field>
