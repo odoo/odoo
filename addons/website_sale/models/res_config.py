@@ -1,7 +1,9 @@
-# -*- encoding: utf-8 -*-
-from openerp import models, fields
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import models, fields
 
-class website_config_settings(models.TransientModel):
+
+class WebsiteConfigSettings(models.TransientModel):
     _inherit = 'website.config.settings'
 
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
