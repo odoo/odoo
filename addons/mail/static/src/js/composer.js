@@ -243,7 +243,7 @@ var MentionManager = Widget.extend({
     },
 
     get_selection_id: function (match, selection) {
-        var m = match[1][0].slice(1);
+        var m = match[0].slice(1);
         _.each(selection, function (s) {
             if(s.name == m){
                 return s.id;
