@@ -78,7 +78,11 @@ var SlideDialog = Widget.extend({
         var self = this,
             file = ev.target.files[0],
             is_image = /^image\/.*/.test(file.type),
+            max_payload = false,
             loaded = false;
+        website.session.rpc("/slides/max_size").then(function(result){
+            max_payload = result;
+        })
         this.file.name = file.name;
         this.file.type = file.type;
         if (!(is_image || this.file.type === 'application/pdf')) {
@@ -86,8 +90,15 @@ var SlideDialog = Widget.extend({
             this.reset_file();
             return;
         }
-        if (file.size / 1024 / 1024 > 15) {
-            this.display_alert(_t("File is too big. File size cannot exceed 15MB"));
+
+        // Wait for max_payload to be available
+        while (max_payload === false);
+
+        if (file.size / 1024 / 1024 > max_payload) {
+            this.display_alert(
+                _t("File is too big. File size cannot exceed %dMiB.")
+                .replace("%d", max_payload)
+            );
             this.reset_file();
             return;
         }
