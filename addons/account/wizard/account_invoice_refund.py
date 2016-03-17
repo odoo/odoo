@@ -98,7 +98,8 @@ class AccountInvoiceRefund(models.TransientModel):
                             'invoice_line_ids': invoice_lines,
                             'tax_line_ids': tax_lines,
                             'date': date,
-                            'name': description
+                            'name': description,
+                            'origin': inv.origin
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',
                                          'payment_term_id', 'journal_id'):
