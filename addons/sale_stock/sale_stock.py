@@ -235,8 +235,8 @@ class SaleOrderLine(models.Model):
         # Check Drop-Shipping
         if not is_available:
             for pull_rule in product_routes.mapped('pull_ids'):
-                if pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and\
-                        pull_rule.picking_type_id.default_location_dest_id.usage == 'customer':
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
                     is_available = True
                     break
 

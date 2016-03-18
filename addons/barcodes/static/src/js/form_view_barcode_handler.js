@@ -64,30 +64,33 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         var self = this;
         var character = String.fromCharCode(event.which);
 
-        if (this.form_view.get('actual_mode') === 'view') {
-            this._display_no_edit_mode_warning();
-        } else if ($(event.target).is('body') && /[0-9]/.test(character)) { // only catch the event if we're not focused in
-                                                                            // another field and it's a number
-            var field = this.form_view.fields[this.m2x_field];
-            var view = field.viewmanager.active_view;
+        // only catch the event if we're not focused in
+        // another field and it's a number
+        if ($(event.target).is('body') && /[0-9]/.test(character)) {
+            if (this.form_view.get('actual_mode') === 'view') {
+                this._display_no_edit_mode_warning();
+            } else {
+                var field = this.form_view.fields[this.m2x_field];
+                var view = field.viewmanager.active_view;
 
-            if (this.last_scanned_barcode) {
-                var new_qty = window.prompt(_t('Set quantity'), character) || "0";
-                new_qty = new_qty.replace(',', '.');
-                var record = this._get_records(field).find(function(record) {
-                    return record.get('product_barcode') === self.last_scanned_barcode;
-                });
-                if (record) {
-                    var values = {};
-                    values[this.quantity_field] = parseFloat(new_qty);
-                    field.data_update(record.get('id'), values).then(function () {
-                        view.controller.reload_record(record);
+                if (this.last_scanned_barcode) {
+                    var new_qty = window.prompt(_t('Set quantity'), character) || "0";
+                    new_qty = new_qty.replace(',', '.');
+                    var record = this._get_records(field).find(function(record) {
+                        return record.get('product_barcode') === self.last_scanned_barcode;
                     });
+                    if (record) {
+                        var values = {};
+                        values[this.quantity_field] = parseFloat(new_qty);
+                        field.data_update(record.get('id'), values).then(function () {
+                            view.controller.reload_record(record);
+                        });
+                    } else {
+                        this._display_no_last_scanned_warning();
+                    }
                 } else {
                     this._display_no_last_scanned_warning();
                 }
-            } else {
-                this._display_no_last_scanned_warning();
             }
         }
     },
