@@ -67,7 +67,7 @@ class sale_quote(http.Controller):
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     request.cr, SUPERUSER_ID, acquirer.id,
-                    order.name,
+                    '/',
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
@@ -162,6 +162,10 @@ class sale_quote(http.Controller):
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
     def payment_transaction(self, acquirer_id, order_id):
+        return self.payment_transaction_token(acquirer_id, order_id, None)
+
+    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>/<token>'], type='json', auth="public", website=True)
+    def payment_transaction_token(self, acquirer_id, order_id, token):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -171,6 +175,7 @@ class sale_quote(http.Controller):
                                 user is redirected to the checkout page
         """
         cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.registry.get('sale.order').browse(cr, SUPERUSER_ID, order_id, context=context)
 
@@ -211,5 +216,16 @@ class sale_quote(http.Controller):
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
             request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=dict(request.context, send_email=True))
-
-        return tx_id
+        return payment_obj.render(
+            request.cr, SUPERUSER_ID, tx.acquirer_id.id,
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            values={
+                'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                'type': 'form',
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
+                'billing_partner_id': order.partner_invoice_id.id,
+            },
+            context=dict(context, submit_class='btn btn-primary', submit_txt=_('Pay & Confirm')))
