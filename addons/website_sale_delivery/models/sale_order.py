@@ -44,52 +44,56 @@ class SaleOrder(models.Model):
         if not self:
             return False
         self.ensure_one()
+        DeliveryCarrier = self.env['delivery.carrier']
         if self.only_services:
             self.write({'carrier_id': None})
             self._delivery_unset()
             return True
         else:
-            carrier_id = force_carrier_id or self.carrier_id.id
-            carrier_ids = self._get_delivery_methods()
-            if carrier_id:
-                if carrier_id not in carrier_ids:
-                    carrier_id = False
+            carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
+            available_carriers = self._get_delivery_methods()
+            if carrier:
+                if carrier not in available_carriers:
+                    carrier = DeliveryCarrier
                 else:
-                    carrier_ids.remove(carrier_id)
-                    carrier_ids.insert(0, carrier_id)
-            if force_carrier_id or not carrier_id or carrier_id not in carrier_ids:
-                for delivery in self.env['delivery.carrier'].sudo().browse(carrier_ids):
-                    carrier = delivery.verify_carrier(self.partner_shipping_id)
-                    if carrier:
-                        carrier_id = delivery.id
+                    # set the forced carrier at the beginning of the list to be verfied first below
+                    available_carriers -= carrier
+                    available_carriers = carrier + available_carriers
+            if force_carrier_id or not carrier or carrier not in available_carriers:
+                for delivery in available_carriers:
+                    verified_carrier = delivery.verify_carrier(self.partner_shipping_id)
+                    if verified_carrier:
+                        carrier = delivery
                         break
-                self.write({'carrier_id': carrier_id})
-            if carrier_id:
+                self.write({'carrier_id': carrier.id})
+            if carrier:
                 self.delivery_set()
             else:
                 self._delivery_unset()
 
-        return bool(carrier_id)
+        return bool(carrier)
 
     def _get_delivery_methods(self):
+        """Return the available and published delivery carriers"""
         self.ensure_one()
-        available_carrier_ids = []
+        available_carriers = DeliveryCarrier = self.env['delivery.carrier']
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        carriers = self.env['delivery.carrier'].with_context(order_id=self.id).sudo().search(
-            [('website_published', '=', True)])
-        for carrier in carriers:
+        carrier_ids = DeliveryCarrier.sudo().search(
+            [('website_published', '=', True)]).ids
+        for carrier_id in carrier_ids:
+            carrier = DeliveryCarrier.browse(carrier_id)
             try:
-                _logger.debug("Checking availability of carrier #%s" % carrier.id)
-                available = carrier.read(fields=['available'])[0]['available']
+                _logger.debug("Checking availability of carrier #%s" % carrier_id)
+                available = carrier.with_context(order_id=self.id).read(fields=['available'])[0]['available']
                 if available:
-                    available_carrier_ids.append(carrier.id)
+                    available_carriers += carrier
             except ValidationError as e:
                 # RIM TODO: hack to remove, make available field not depend on a SOAP call to external shipping provider
                 # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier.id, e))
-        return available_carrier_ids
+                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier_id, e))
+        return available_carriers
 
     @api.model
     def _get_errors(self, order):
@@ -110,9 +114,8 @@ class SaleOrder(models.Model):
         if not has_stockable_products:
             return values
 
-        delivery_ids = order._get_delivery_methods()
-
-        values['deliveries'] = self.env['delivery.carrier'].sudo().with_context(order_id=order.id).browse(delivery_ids)
+        delivery_carriers = order._get_delivery_methods()
+        values['deliveries'] = delivery_carriers.sudo().with_context(order_id=order.id)
         return values
 
     @api.multi
