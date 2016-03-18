@@ -62,7 +62,7 @@ class SaleOrder(orm.Model):
             _has_delivery, type='boolean', string='Has delivery',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                'sale.order.line': (_get_order, ['is_delivery'], 10),
             },
             help="Has an order line set for delivery"
         ),
