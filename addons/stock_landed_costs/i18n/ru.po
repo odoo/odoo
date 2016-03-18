@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Ivan Ivan <kolobok2048@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-21 12:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-06 10:23+0000\n"
+"Last-Translator: Ivan Ivan <kolobok2048@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "                    Click to create a new landed cost.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите, чтобы создать новую марку.\n              </p>\n            "
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
@@ -41,7 +42,7 @@ msgid ""
 "                Click to define a new kind of landed cost.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите, чтобы создать новую марку.\n              </p>\n            "
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost.lines,account_id:0
@@ -62,7 +63,7 @@ msgstr "Дополнительная \"Стоимость CIF+доп.издер�
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost Price"
-msgstr ""
+msgstr "По Текущей Стоимости"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -443,7 +444,7 @@ msgstr "Вес"
 #: code:addons/stock_landed_costs/stock_landed_costs.py:192
 #, python-format
 msgid "You cannot validate a landed cost which has no valid valuation lines."
-msgstr ""
+msgstr "Вы не можете подтвердить заказ продаж, который не имеет ни одной позиции."
 
 #. module: stock_landed_costs
 #: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form
