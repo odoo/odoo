@@ -88,6 +88,11 @@ class SaleOrder(models.Model):
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
         return res
 
+    @api.model
+    def _get_customer_lead(self, product_tmpl_id):
+        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
+        return product_tmpl_id.sale_delay
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
