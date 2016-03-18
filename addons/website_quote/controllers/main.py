@@ -179,12 +179,14 @@ class sale_quote(http.Controller):
         tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
         tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
         if tx:
-            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
+                tx = False
+                tx_id = False
+            elif tx.state == 'draft':
                 tx.write({
-                    'acquirer_id': acquirer_id,
+                    'amount': order.amount_total,
                 })
-            tx_id = tx.id
-        else:
+        if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
                 'type': 'form',
