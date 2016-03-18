@@ -1,34 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from openerp.osv import fields, osv
+from datetime import date
+
+from odoo import api, fields, models
 
 
-class account_budget_crossvered_summary_report(osv.osv_memory):
+class AccountBudgetCrossveredSummaryReport(models.TransientModel):
     """
     This wizard provides the crossovered budget summary report'
     """
     _name = 'account.budget.crossvered.summary.report'
     _description = 'Account Budget crossovered summary report'
-    _columns = {
-        'date_from': fields.date('Start of period', required=True),
-        'date_to': fields.date('End of period', required=True),
-    }
-    _defaults = {
-        'date_from': lambda *a: time.strftime('%Y-01-01'),
-        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
-    }
 
-    def check_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids, context=context)[0]
+    date_from = fields.Date(string='Start of period', required=True, default=fields.Datetime.to_string(date(date.today().year, 01, 01)))
+    date_to = fields.Date(string='End of period', required=True, default=fields.Date.today())
+
+    @api.multi
+    def check_report(self):
+        self.ensure_one()
         datas = {
-            'ids': context.get('active_ids',[]),
+            'ids': self.env.context.get('active_ids'),
             'model': 'crossovered.budget',
-            'form': data
+            'form': self.read()[0]
         }
         datas['form']['ids'] = datas['ids']
         datas['form']['report'] = 'analytic-one'
-        return self.pool['report'].get_action(cr, uid, [], 'account_budget.report_crossoveredbudget', data=datas, context=context)
+        analytic_account = self.env['crossovered.budget'].browse(self.env.context.get('active_ids'))
+        return self.env['report'].get_action(analytic_account, 'account_budget.report_crossoveredbudget', data=datas)
