@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp import api, models, _
+from openerp import api, fields, models, _
+
+
+class MrpProductionWorkcenterLineTime(models.Model):
+    _inherit = 'mrp.production.work.order.time'
+
+    used = fields.Boolean('Used')
 
 
 class MrpProduction(models.Model):
@@ -14,7 +20,7 @@ class MrpProduction(models.Model):
             for work_order in self.work_order_ids:
                 time_lines = work_order.time_ids.filtered(lambda x: x.state == 'done' and not x.used)
                 duration += sum(time_lines.mapped('duration'))
-                time_lines.write({'used' : True})
+                time_lines.write({'used': True})
                 work_center_cost += (duration / 60) * work_order.workcenter_id.costs_hour
         for move in self.move_finished_ids.filtered(lambda x: x.product_id.id == self.product_id.id and x.state not in ('done', 'cancel')):
             if move.product_id.cost_method in ('real', 'average'):

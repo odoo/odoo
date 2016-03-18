@@ -829,14 +829,15 @@
                     </div>
                     <group>
                         <group>
+                            <field name="is_move_raw" invisible="1"/>
                             <field name="availability" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}" domain="[('bom_ids', '!=', [])]"/>
+                            <field name="product_id" attrs="{'readonly': [('is_move_raw', '=', True)]}" domain="[('bom_ids', '!=', [])]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                <field name="product_qty" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
@@ -848,15 +849,15 @@
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
                                                 ('bom_type', '=', 'normal')]"
-                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
-                            <field name="date_planned" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="user_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="origin" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                            <field name="move_prod_id" groups="base.group_no_one" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                            <field name="date_planned" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                            <field name="user_id" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                            <field name="origin" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                            <field name="move_prod_id" groups="base.group_no_one" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -901,9 +902,9 @@
                         <page string="Miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
-                                    <field name="picking_type_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
                                 </group>
                             </group>
                         </page>
@@ -1268,7 +1269,7 @@
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
             <header>
-                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|',('state', '!=', 'progress'), ('qty_produced', '=', 0)]}" class="btn-info"/>
+                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|',('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'ready')]}" class="btn-success"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', '|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
@@ -1292,6 +1293,7 @@
                             <field name="uom" widget="selection"/>
                         </div>
                         <field name="sequence" invisible="1"/>
+                        <field name="is_produced" invisible="1"/>
                     </group>
                     <div class="alert alert-warning alert-dismissible text-center" role="alert" attrs="{'invisible': [('inv_message', '=', False)]}">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
@@ -1615,6 +1617,7 @@
           name="Work Orders"
           parent="menu_mrp_reporting"
           action="mrp_workorder_report"
+          groups="group_mrp_routings"
           sequence="11"/>
 
 
