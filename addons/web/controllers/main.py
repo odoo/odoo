@@ -1103,7 +1103,7 @@ class Binary(http.Controller):
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
-    def load(self, action_id, do_not_eval=False, additional_context=None):
+    def load(self, action_id, additional_context=None):
         Actions = request.session.model('ir.actions.actions')
         value = False
         try:

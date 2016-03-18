@@ -2,7 +2,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data_manager = require('web.data_manager');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -26,18 +26,18 @@ return Widget.extend({
             }
         },
     },
-    init: function (parent, query, target_model, action_id) {
+    init: function (parent, query, target_model, action_id, filters) {
         this._super.apply(this,arguments);
         this.searchview = parent;
         this.query = query;
         this.target_model = target_model;
-        this.model = new Model('ir.filters');
-        this.filters = {};
-        this.$filters = {};
         this.action_id = action_id;
+        this.filters = {};
+        _.each(filters, this.add_filter.bind(this));
     },
     start: function () {
         var self = this;
+        this.$filters = {};
         this.$save_search = this.$('.oe-save-search');
         this.$save_name = this.$('.oe-save-name');
         this.$inputs = this.$save_name.find('input');
@@ -55,12 +55,10 @@ return Widget.extend({
                 }
             })
             .on('reset', this.proxy('clear_selection'));
-        return this.model.call('get_filters', [this.target_model, this.action_id],
-                               {context: this.searchview.dataset.context})
-            .done(this.proxy('prepare_dropdown_menu'));
-    },
-    prepare_dropdown_menu: function (filters) {
-        filters.map(this.append_filter.bind(this));
+
+        _.each(this.filters, this.append_filter.bind(this));
+
+        return this._super();
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
@@ -115,17 +113,18 @@ return Widget.extend({
         var filter = {
             name: filter_name,
             user_id: shared_filter ? false : session.uid,
-            model_id: this.searchview.dataset.model,
+            model_id: this.target_model,
             context: results.context,
             domain: results.domain,
             sort: JSON.stringify(this.searchview.dataset._sort),
             is_default: default_filter,
             action_id: this.action_id,
         };
-        return this.model.call('create_or_replace', [filter]).done(function (id) {
+        return data_manager.create_filter(filter).done(function (id) {
             filter.id = id;
             self.toggle_save_menu(false);
             self.$save_name.find('input').val('').prop('checked', false);
+            self.add_filter(filter);
             self.append_filter(filter);
             self.toggle_filter(filter, true);
         });
@@ -187,31 +186,39 @@ return Widget.extend({
     clear_selection: function () {
         this.$('li.selected').removeClass('selected');
     },
+    /**
+     * Adds a filter description to the filters dict
+     * @param {Object} [filter] the filter description
+     */
+    add_filter: function (filter) {
+        this.filters[this.key_for(filter)] = filter;
+    },
+    /**
+     * Creates a $filter JQuery node, adds it to the $filters dict and appends it to the filter menu
+     * @param {Object} [filter] the filter description
+     */
     append_filter: function (filter) {
-        var self = this,
-            key = this.key_for(filter),
-            $filter;
+        var self = this;
+        var key = this.key_for(filter);
 
         this.$divider.show();
-        if (key in this.$filters) {
-            $filter = this.$filters[key];
-        } else {
-            this.filters[key] = filter;
-            $filter = $('<li></li>')
-                .insertBefore(this.$divider)
+        if (!(key in this.$filters)) {
+            var $filter = $('<li>')
+                .addClass(filter.user_id ? 'oe_searchview_custom_private'
+                                         : 'oe_searchview_custom_public')
                 .toggleClass('oe_searchview_custom_default', filter.is_default)
-                .append($('<a>').text(filter.name));
-
+                .append($('<a>').text(filter.name))
+                .append($('<span>', {
+                    class: 'fa fa-trash-o remove-filter',
+                    on: {
+                        click: function (event) {
+                            event.stopImmediatePropagation();
+                            self.remove_filter(filter, $filter, key);
+                        },
+                    },
+                }))
+                .insertBefore(this.$divider);
             this.$filters[key] = $filter;
-            this.$filters[key].addClass(filter.user_id ? 'oe_searchview_custom_private'
-                                         : 'oe_searchview_custom_public');
-            $('<span>')
-                .addClass('fa fa-trash-o remove-filter')
-                .click(function (event) {
-                    event.stopImmediatePropagation();
-                    self.remove_filter(filter, $filter, key);
-                })
-                .appendTo($filter);
         }
         this.$filters[key].unbind('click').click(function () {
             self.toggle_filter(filter);
@@ -244,14 +251,16 @@ return Widget.extend({
         if (!confirm(filter.user_id ? warning : global_warning)) {
             return;
         }
-        this.model.call('unlink', [filter.id]).done(function () {
-            $filter.remove();
-            delete self.$filters[key];
-            delete self.filters[key];
-            if (_.isEmpty(self.filters)) {
-                self.$divider.hide();
-            }
-        });
+        return data_manager
+            .delete_filter(filter)
+            .done(function () {
+                $filter.remove();
+                delete self.$filters[key];
+                delete self.filters[key];
+                if (_.isEmpty(self.filters)) {
+                    self.$divider.hide();
+                }
+            });
     },
 });
 
@@ -260,6 +269,7 @@ return Widget.extend({
 odoo.define('web.FilterMenu', function (require) {
 "use strict";
 
+var data_manager = require('web.data_manager');
 var search_filters = require('web.search_filters');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -282,22 +292,12 @@ return Widget.extend({
             }
         },
     },
-    init: function (parent, filters, fields_def) {
+    init: function (parent, filters) {
         this._super(parent);
         this.filters = filters || [];
         this.searchview = parent;
         this.propositions = [];
-        this.fields_def = fields_def.then(function (data) {
-            var fields = {
-                id: { string: 'ID', type: 'id', searchable: true }
-            };
-            _.each(data, function(field_def, field_name) {
-                if (field_def.selectable !== false && field_name !== 'id') {
-                    fields[field_name] = field_def;
-                }
-            });
-            return fields;
-        });
+        this.custom_filters_open = false;
     },
     start: function () {
         var self = this;
@@ -311,23 +311,41 @@ return Widget.extend({
                 $('<li class="divider">').insertBefore(self.$add_filter);
             }
         });
-        this.append_proposition().then(function (prop) {
-            prop.$el.hide();
-        });
+    },
+    get_fields: function () {
+        if (!this._fields_def) {
+            this._fields_def = data_manager.load_fields(this.searchview.dataset).then(function (data) {
+                var fields = {
+                    id: { string: 'ID', type: 'id', searchable: true }
+                };
+                _.each(data, function(field_def, field_name) {
+                    if (field_def.selectable !== false && field_name !== 'id') {
+                        fields[field_name] = field_def;
+                    }
+                });
+                return fields;
+            });
+        }
+        return this._fields_def;
     },
     toggle_custom_filter_menu: function (is_open) {
-        this.$add_filter
-            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('o_open_menu', is_open);
-        this.$add_filter_menu.toggle(is_open);
-        if (this.$add_filter.hasClass('o_closed_menu') && (!this.propositions.length)) {
-            this.append_proposition();
+        var self = this;
+        this.custom_filters_open = !_.isUndefined(is_open) ? is_open : !this.custom_filters_open;
+        var def;
+        if (this.custom_filters_open && !this.propositions.length) {
+            def = this.append_proposition();
         }
-        this.$('.oe-filter-condition').toggle(is_open);
+        $.when(def).then(function () {
+            self.$add_filter
+                .toggleClass('o_closed_menu', !self.custom_filters_open)
+                .toggleClass('o_open_menu', self.custom_filters_open);
+            self.$add_filter_menu.toggle(self.custom_filters_open);
+            self.$('.oe-filter-condition').toggle(self.custom_filters_open);
+        });
     },
     append_proposition: function () {
         var self = this;
-        return this.fields_def.then(function (fields) {
+        return this.get_fields().then(function (fields) {
             var prop = new search_filters.ExtendedSearchProposition(self, fields);
             self.propositions.push(prop);
             prop.insertBefore(self.$add_filter_menu);
@@ -368,9 +386,10 @@ return Widget.extend({
 odoo.define('web.GroupByMenu', function (require) {
 "use strict";
 
-var Widget = require('web.Widget');
 var core = require('web.core');
+var data_manager = require('web.data_manager');
 var search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
@@ -387,15 +406,13 @@ return Widget.extend({
             this.toggle_add_menu();
         },
     },
-    init: function (parent, groups, fields_def) {
+    init: function (parent, groups) {
         this._super(parent);
         this.groups = groups || [];
         this.groupable_fields = [];
         this.searchview = parent;
-        this.fields_def = fields_def.then(this.proxy('get_groupable_fields'));
     },
     start: function () {
-        var self = this;
         this.$menu = this.$('.group-by-menu');
         var divider = this.$menu.find('.divider');
         _.invoke(this.groups, 'insertBefore', divider);
@@ -403,35 +420,43 @@ return Widget.extend({
             divider.show();
         }
         this.$add_group = this.$menu.find('.add-custom-group');
-        this.fields_def.then(function () {
-            self.$menu.append(QWeb.render('GroupByMenuSelector', self));
-            self.$add_group_menu = self.$('.oe-add-group');
-            self.$group_selector = self.$('.oe-group-selector');
-            self.$('.oe-select-group').click(function () {
-                self.toggle_add_menu(false);
-                var field = self.$group_selector.find(':selected').data('name');
-                self.add_groupby_to_menu(field);
-            });
-        });
     },
-    get_groupable_fields: function (fields) {
-        var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
-        var filter_group_field = _.filter(fields, function(field, name) {
-            if (field.store && _.contains(groupable_types, field.type)) {
-                field.name = name;
-                return field;
-            }
-        });
-        this.groupable_fields = _.sortBy(filter_group_field, 'string');
+    get_fields: function () {
+        var self = this;
+        if (!this._fields_def) {
+            this._fields_def = data_manager.load_fields(this.searchview.dataset).then(function (fields) {
+                var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+                var filter_group_field = _.filter(fields, function(field, name) {
+                    if (field.store && _.contains(groupable_types, field.type)) {
+                        field.name = name;
+                        return field;
+                    }
+                });
+                self.groupable_fields = _.sortBy(filter_group_field, 'string');
+
+                self.$menu.append(QWeb.render('GroupByMenuSelector', self));
+                self.$add_group_menu = self.$('.oe-add-group');
+                self.$group_selector = self.$('.oe-group-selector');
+                self.$('.oe-select-group').click(function () {
+                    self.toggle_add_menu(false);
+                    var field = self.$group_selector.find(':selected').data('name');
+                    self.add_groupby_to_menu(field);
+                });
+            });
+        }
+        return this._fields_def;
     },
     toggle_add_menu: function (is_open) {
-        this.$add_group
-            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('o_open_menu', is_open);
-        this.$add_group_menu.toggle(is_open);
-        if (this.$add_group.hasClass('o_open_menu')) {
-            this.$group_selector.focus();
-        }
+        var self = this;
+        this.get_fields().then(function () {
+            self.$add_group
+                .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+                .toggleClass('o_open_menu', is_open);
+            self.$add_group_menu.toggle(is_open);
+            if (self.$add_group.hasClass('o_open_menu')) {
+                self.$group_selector.focus();
+            }
+        });
     },
     add_groupby_to_menu: function (field_name) {
         var filter = new search_inputs.Filter({attrs:{

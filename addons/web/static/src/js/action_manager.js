@@ -5,6 +5,7 @@ var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var pyeval = require('web.pyeval');
@@ -564,7 +565,7 @@ var ActionManager = Widget.extend({
                 active_ids : options.additional_context.active_ids,
                 active_model : options.additional_context.active_model
             };
-            return self.rpc("/web/action/load", { action_id: action, additional_context : additional_context }).then(function(result) {
+            return data_manager.load_action(action, additional_context).then(function(result) {
                 return self.do_action(result, options);
             });
         }
