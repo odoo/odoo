@@ -3,6 +3,7 @@ odoo.define('web_kanban.KanbanView', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Model = require('web.DataModel');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
@@ -64,6 +65,7 @@ var KanbanView = View.extend({
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
         this.limit = this.options.limit || 40;
+        this.fields = {};
         this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
         this.group_by_field = undefined;
@@ -88,6 +90,8 @@ var KanbanView = View.extend({
     },
 
     willStart: function() {
+        var self = this;
+        var fields_def = data_manager.load_fields(this.dataset);
         // add qweb templates
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
@@ -102,7 +106,9 @@ var KanbanView = View.extend({
                 }
             }
         }
-        return this._super();
+        return $.when(fields_def, this._super()).then(function (fields) {
+            self.fields = fields;
+        });
     },
 
     start: function() {
@@ -415,8 +421,24 @@ var KanbanView = View.extend({
 
     render_grouped: function (fragment) {
         var self = this;
+
+        // Drag'n'drop activation/deactivation
+        var group_by_field_attrs = this.fields[this.group_by_field];
+
+        // Deactivate the drag'n'drop if:
+        // - field is a date or datetime since we group by month
+        // - field is readonly
+        var draggable = true;
+        if (group_by_field_attrs) {
+            if (group_by_field_attrs.type === "date" || group_by_field_attrs.type === "datetime") {
+                var draggable = false;
+            }
+            else if (group_by_field_attrs.readonly !== undefined) {
+                var draggable = !(group_by_field_attrs.readonly);
+            }
+        }
         var record_options = _.extend(this.record_options, {
-            draggable: true,
+            draggable: draggable,
         });
 
         var column_options = this.get_column_options();
