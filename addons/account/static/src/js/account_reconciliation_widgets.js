@@ -493,21 +493,20 @@ var abstractReconciliationLine = Widget.extend({
         // field_manager
         var dataset = new data.DataSet(this, "account.account", self.context);
         dataset.ids = [];
-        dataset.arch = {
+        var fields_view = {};
+        fields_view.arch = {
             attrs: { string: "Stéphanie de Monaco", version: "7.0", class: "oe_form_container o_form_container" },
             children: [],
             tag: "form"
         };
-
         self.field_manager = new FormView (
-            this, dataset, false, {
+            this, dataset, fields_view, {
                 initial_mode: 'edit',
                 disable_autofocus: false,
                 $buttons: $(),
                 $pager: $()
         });
-
-        self.field_manager.load_form(dataset);
+        self.field_manager.appendTo(document.createDocumentFragment()); // starts the FormView
 
         // fields default properties
         var Default_field = function() {

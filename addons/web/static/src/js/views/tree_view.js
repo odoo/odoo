@@ -14,41 +14,21 @@ var View = require('web.View');
 var _lt = core._lt;
 var QWeb = core.qweb;
 
-var TreeView = View.extend(/** @lends instance.web.TreeView# */{
+var TreeView = View.extend({
     display_name: _lt('Tree'),
     icon: 'fa-align-left',
-    view_type: 'tree',
-    /**
-     * Indicates that this view is not searchable, and thus that no search
-     * view should be displayed (if there is one active).
-     */
-    searchable : false,
+    // Indicates that this view is not searchable, and thus that no search view should be displayed.
+    searchable: false,
+
     /**
      * Genuine tree view (the one displayed as a tree, not the list)
-     *
-     * @constructs instance.web.TreeView
-     * @extends instance.web.View
-     *
-     * @param parent
-     * @param dataset
-     * @param view_id
-     * @param options
      */
-    init: function(parent, dataset, view_id, options) {
-        this._super(parent);
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.view_id = view_id;
-
+    init: function() {
+        this._super.apply(this, arguments);
         this.records = {};
-
-        this.options = _.extend({}, this.defaults, options || {});
-
         _.bindAll(this, 'color_for');
-    },
-
-    view_loading: function(r) {
-        return this.load_tree(r);
+        this.fields = this.fields_view.fields;
+        this.children_field = this.fields_view.field_parent;
     },
 
     /**
@@ -67,20 +47,29 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
         }
         return fields;
     },
-    load_tree: function (fields_view) {
-        var self = this;
-        var has_toolbar = !!fields_view.arch.attrs.toolbar;
-        // field name in OpenERP is kinda stupid: this is the name of the field
-        // holding the ids to the children of the current node, why call it
-        // field_parent?
-        this.children_field = fields_view.field_parent;
-        this.fields_view = fields_view;
+    willStart: function () {
         _(this.fields_view.arch.children).each(function (field) {
             if (field.attrs.modifiers) {
                 field.attrs.modifiers = JSON.parse(field.attrs.modifiers);
             }
         });
-        this.fields = fields_view.fields;
+
+        if (this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+                .compact()
+                .map(function(color_pair) {
+                    var pair = color_pair.split(':'),
+                        color = pair[0],
+                        expr = pair[1];
+                    return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+
+        return this._super();
+    },
+    start: function () {
+        var self = this;
+        var has_toolbar = !!this.fields_view.arch.attrs.toolbar;
         this.hook_row_click();
         this.$el.html(QWeb.render('TreeView', {
             'title': this.fields_view.arch.attrs.string,
@@ -120,17 +109,7 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
         // TODO store open nodes in url ?...
         this.do_push_state({});
 
-        if (!this.fields_view.arch.attrs.colors) {
-            return;
-        }
-        this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
-            .compact()
-            .map(function(color_pair) {
-                var pair = color_pair.split(':'),
-                    color = pair[0],
-                    expr = pair[1];
-                return [color, py.parse(py.tokenize(expr)), expr];
-            }).value();
+        return this._super();
     },
     /**
      * Returns the color for the provided record in the current view (from the
@@ -225,7 +204,7 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
     activate: function(id) {
         var self = this;
         var local_context = {
-            active_model: self.dataset.model,
+            active_model: self.model,
             active_id: id,
             active_ids: [id]
         };
@@ -234,7 +213,7 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
                 this.dataset.get_context(), local_context));
         return this.rpc('/web/treeview/action', {
             id: id,
-            model: this.dataset.model,
+            model: this.model,
             context: ctx
         }).then(function (actions) {
             if (!actions.length) { return; }
@@ -260,11 +239,6 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
             $child_row.toggle(show);
         }, this);
     },
-
-    do_hide: function () {
-        this.hidden = true;
-        this._super();
-    }
 });
 
 core.view_registry.add('tree', TreeView);
