@@ -987,7 +987,7 @@ class ir_model_data(osv.osv):
 
     def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
         """ Return a browse_record
-        if not found and raise_if_not_found is True return None
+        if not found and raise_if_not_found is False return None
         """ 
         t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
         res_model, res_id = t
