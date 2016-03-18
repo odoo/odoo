@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api
-from openerp.osv import osv
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.addons.website.models.website import slug
+from odoo import api, models
+from odoo.tools.safe_eval import safe_eval as eval
+from odoo.addons.website.models.website import slug
 
 
-class MailGroup(osv.Model):
+class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
-    @api.cr_uid_ids_context
-    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
-        res = super(MailGroup, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
-        group = self.browse(cr, uid, id, context=context)
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+    @api.multi
+    def message_get_email_values(self, notif_mail=None):
+        self.ensure_one()
+        res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         headers = {}
         if res.get('headers'):
             try:
@@ -21,7 +21,7 @@ class MailGroup(osv.Model):
             except Exception:
                 pass
         headers.update({
-            'List-Archive': '<%s/groups/%s>' % (base_url, slug(group)),
+            'List-Archive': '<%s/groups/%s>' % (base_url, slug(self)),
             'List-Subscribe': '<%s/groups>' % (base_url),
             'List-Unsubscribe': '<%s/groups?unsubscribe>' % (base_url,),
         })
