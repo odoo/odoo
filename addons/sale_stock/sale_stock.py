@@ -290,6 +290,13 @@ class sale_order_line(osv.osv):
                     if product_route.id == mto_route_id:
                         is_available = True
                         break
+        if not is_available:
+            product_routes = product.route_ids + product.categ_id.total_route_ids
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
         return is_available
 
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
