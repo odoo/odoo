@@ -40,7 +40,9 @@ class sale_quote(http.Controller):
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
+        tx_id = request.session.get('quote_transaction_id')
+        if not tx_id:
+            tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
         tx = request.registry['payment.transaction'].browse(request.cr, SUPERUSER_ID, tx_id, context=request.context) if tx_id else False
         values = {
             'quotation': order,
@@ -193,10 +195,11 @@ class sale_quote(http.Controller):
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
-                'reference': order.name,
+                'reference': transaction_obj.get_next_reference(cr, uid, order.name, context=context),
                 'sale_order_id': order.id,
                 'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
+            request.session['quote_transaction_id'] = tx_id
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
             # update quotation
             request.registry['sale.order'].write(
