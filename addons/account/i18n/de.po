@@ -35,7 +35,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-03-10 06:06+0000\n"
+"PO-Revision-Date: 2016-03-13 11:31+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -4626,7 +4626,7 @@ msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
 msgid "Invoice Reference"
-msgstr "Rechnungsbezug"
+msgstr "Rechnungsreferenz"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -5304,13 +5304,13 @@ msgstr "Rechtsstreit"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_lock_date
 msgid "Lock Date"
-msgstr "Sperrdatum"
+msgstr "Sperrdatum für alle Benutzer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr "Sperrdatum für nicht-Berater"
+msgstr "Sperrdatum für Benutzer ohne erweiterte Rechte"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -5741,7 +5741,7 @@ msgstr "November"
 #: model:ir.model.fields,field_description:account.field_account_invoice_number
 #: model:ir.model.fields,field_description:account.field_account_move_name
 msgid "Number"
-msgstr "Anzahl"
+msgstr "Nummer"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5762,7 +5762,7 @@ msgstr "Anzahl der Münzen/Geldscheine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_days
 msgid "Number of Days"
-msgstr "Anzahl Tage"
+msgstr "Anzahl der Tage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_accounts_code_digits
@@ -6943,7 +6943,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
 msgid "Reference/Description"
-msgstr "Referenz / Beschreibung"
+msgstr "Referenz/Beschreibung"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:809
@@ -9184,7 +9184,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr "Sie können keine Rechnung mit Teilzahlung stornieren und einfach löschen. Sie sollten deshalb zunächst die korrespondierenden Zahlungsbuchungen stornieren."
+msgstr "Sie können eine Rechnung mit Teilzahlung nicht stornieren. Sie müssen zuerst den Ausgleich der Zahlungen rückgängig machen."
 
 #. module: account
 #: code:addons/account/models/account.py:162
@@ -9245,7 +9245,7 @@ msgstr "Sie können keine Änderung bereits erfolgter Buchungen vornehmen. Ledig
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr "Sie können einen bereits ausgeglichenen Beleg nicht mehr modifizieren. Entweder können Sie nur die unkritischen Daten anpassen oder den vorgenommenen Ausgleich vorher stornieren. \n%s"
+msgstr "Diese Änderung einer ausgeglichenen Buchung ist nicht erlaubt. Sie können lediglich rechtlich nicht relevante Felder ändern oder Sie müssen zuerst den Ausgleich stornieren.\n%s."
 
 #. module: account
 #: code:addons/account/models/account.py:329
