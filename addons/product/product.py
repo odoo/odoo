@@ -930,7 +930,7 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
+    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=False, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
         if context is None:
             context = {}
         res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
@@ -946,7 +946,7 @@ class product_product(osv.osv):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller < seller.qty:
+            if quantity_uom_seller and quantity_uom_seller < seller.qty:
                 continue
             if seller.product_id and seller.product_id != product_id:
                 continue
