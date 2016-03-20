@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-03-12 02:16+0000\n"
+"PO-Revision-Date: 2016-03-19 10:20+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -112,7 +112,7 @@ msgstr " * 当用户编辑一张新的未确认的发票时为“草稿\"状态�
 #: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
-msgstr " 集中"
+msgstr " 集中制"
 
 #. module: account
 #. openerp-web
@@ -2320,12 +2320,12 @@ msgstr "集中"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr "集中的对方"
+msgstr "集中式对方科目"
 
 #. module: account
 #: view:website:account.report_centraljournal
 msgid "Centralized Journal"
-msgstr "集中的分类账"
+msgstr "集中式分类账"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
@@ -3290,7 +3290,7 @@ msgstr "贷方"
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Credit Centralisation"
-msgstr "贷方集中"
+msgstr "贷方集中制"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -3607,7 +3607,7 @@ msgstr "借方"
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr "借方集中"
+msgstr "借方集中制"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
@@ -8055,29 +8055,29 @@ msgstr "调节"
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 msgid "Reconciliation Result"
-msgstr "调节结果"
+msgstr "对账结果"
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
 msgid "Reconciliation Transactions"
-msgstr "调节交易"
+msgstr "对账交易"
 
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr "调节号码"
+msgstr "对账号码"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 #: model:ir.ui.menu,name:account.menu_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr "银行对账单的调节"
+msgstr "银行对账单的对账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "调节：下一个业务伙伴"
+msgstr "对账：下一个业务伙伴"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_form
@@ -9037,7 +9037,7 @@ msgstr "对账单作业模板"
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
-msgstr "对账单行"
+msgstr "对账单明细行"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_pp_statements
@@ -9095,14 +9095,14 @@ msgstr "订阅计算"
 #: view:account.subscription:account.view_subscription_form
 #: field:account.subscription,lines_id:0
 msgid "Subscription Lines"
-msgstr "订阅行"
+msgstr "订阅明细行"
 
 #. module: account
 #: view:account.subscription.line:account.view_subscription_line_form
 #: view:account.subscription.line:account.view_subscription_line_form_complete
 #: view:account.subscription.line:account.view_subscription_line_tree
 msgid "Subscription lines"
-msgstr "订阅行"
+msgstr "订阅明细行"
 
 #. module: account
 #: field:account.invoice,amount_untaxed:0
@@ -9362,7 +9362,7 @@ msgstr "税金包含在价格中"
 #. module: account
 #: field:account.invoice,tax_line:0
 msgid "Tax Lines"
-msgstr "税金行"
+msgstr "税金明细行"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9588,7 +9588,7 @@ msgstr "该账户未作合并的定义"
 #: code:addons/account/account_move_line.py:1115
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
-msgstr "集中的会计分录(%s)已被确认。"
+msgstr "集中制的会计分录(%s)已被确认。"
 
 #. module: account
 #: help:account.bank.statement.line,amount_currency:0
@@ -9633,7 +9633,7 @@ msgstr "银行对账单行已经调节。"
 #. module: account
 #: help:account.move.line,statement_id:0
 msgid "The bank statement used for bank reconciliation"
-msgstr "该银行对账单用于银行调节"
+msgstr "该银行对账单用于银行对账"
 
 #. module: account
 #: help:account.fiscalyear.close,journal_id:0
@@ -9642,7 +9642,7 @@ msgid ""
 "entries of all fiscal years. Note that you should define it with default "
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
-msgstr "最好使用一个专用的分类账去控制所有会计年度的开账分录。\n注意您应该设定默认的借方/贷方科目，类型是 “期初/期末状态”，并且选中“合并对方科目”。"
+msgstr "最佳实践是使用一个分类账专门用来放置所有会计年度的开账分录。\n注意，应该设置默认借方/贷方科目，类型为 “期初/期末状态”，并且选中“集中式对方科目”。"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9745,7 +9745,7 @@ msgstr "所选的分类账和期间必须属于相同公司。"
 msgid ""
 "The journal must have centralized counterpart without the Skipping draft "
 "state option checked."
-msgstr "这个分类账的“合并对方科目”必须被选中，“跳过草稿状态”不能选中。"
+msgstr "这个分类账的“集中式对方科目”必须被选中，并且不能勾选“跳过草稿状态”。"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:101
@@ -11268,7 +11268,7 @@ msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
 "centralized counterpart box in the related journal from the configuration "
 "menu."
-msgstr "您不能在汇总分类账上面创建发票。在配置菜单中 相关的 分类分录表单里不要选中“合并对方科目”。"
+msgstr "您不能在集中式分类账上面创建发票。从配置菜单，取消勾选 相关分类 账的选项“集中式对方科目”。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:599
@@ -11298,7 +11298,7 @@ msgstr "对于没有币种和外币总额的第二货币，您不能用它来创
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr "在每个会计期间，您不可以创建1个以上的总分类账"
+msgstr "对于集中式分类账，不可以在会计期间创建一个以上的分录。"
 
 #. module: account
 #: code:addons/account/account.py:657
@@ -11531,7 +11531,7 @@ msgstr "您须配置开始日期。"
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr "需要一个开帐分类账并勾选集中，用以设置初始余额。"
+msgstr "需要一个勾选了“集中式对方科目”的开帐分类账，用于设置初始余额。"
 
 #. module: account
 #: code:addons/account/account.py:1080
