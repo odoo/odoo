@@ -364,6 +364,7 @@ class AccountChartTemplate(models.Model):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            template_external_id = self.env['ir.model.data'].search([("model", "=", "account.account.template"), ("res_id", "=", account_template.id)])
             vals = {
                 'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -374,6 +375,7 @@ class AccountChartTemplate(models.Model):
                 'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company.id,
                 'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
+                'origin_template_external_id': template_external_id and template_external_id.name or "",
             }
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
@@ -456,6 +458,7 @@ class AccountTaxTemplate(models.Model):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
         self.ensure_one()
+        template_external_id = self.env['ir.model.data'].search([("model", "=", "account.tax.template"), ("res_id", "=", self.id)])
         val = {
             'name': self.name,
             'type_tax_use': self.type_tax_use,
@@ -469,6 +472,7 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
+            'origin_template_external_id': template_external_id and template_external_id.name or "",
         }
         if self.tax_group_id:
             val['tax_group_id'] = self.tax_group_id.id
