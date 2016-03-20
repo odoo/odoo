@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-03-12 22:15+0000\n"
+"PO-Revision-Date: 2016-03-17 06:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -1285,21 +1285,21 @@ msgstr "Chyba! Minimálna marža by mala byť nižšia ako maximálna marža."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "Chyba! Nemôžete prideliť Hlavný cenník ako Iný cnník v Položke cenníka!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr ""
+msgstr "Chyba! Nemôžete definovať zaokrúhľovací faktor pre hlavnú menu spoločnosti, ktorý je menší ako desatinná presnosť 'Účtu'."
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr ""
+msgstr "Chyba! Nemôžete definovať desatinnú presnosť 'Účtu' vyššiu ako zaokrúhľovací faktor hlavnej meny spoločnosti."
 
 #. module: product
 #: constraint:product.packaging:0
@@ -1311,7 +1311,7 @@ msgstr "Chyba: Neplatný ean kód"
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
+msgstr "Chyba: predvolená merná jednotka a nákupná merná jednotka musia byť v rovnakej kategórii."
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -1508,14 +1508,14 @@ msgstr "Hodina(y)"
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "Koľko ráz je táto merná jednotka väčšia ako referenčná merná jednotka v tejto kategórii:\n1 * (táto jednotka) = pomer * (referenčná jednotka)"
 
 #. module: product
 #: help:product.uom,factor:0
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "O koľko väčšia alebo menšia je táto jednotka v porovnaní s referenčnou mernou jednotkou pre túto kategóriu:\n1 * (referenčná jednotka) = pomer * (táto jednotka)"
 
 #. module: product
 #: field:pricelist.partnerinfo,id:0 field:product.attribute,id:0
@@ -1744,7 +1744,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
+msgstr "Čas dodania v dňoch od potvrdenia objednávky a časom prijatia produktov do vášho skladu. Použite plánovačom na automatický výpočet pri plánovaní objednávok"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -1845,7 +1845,7 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "Stredne veľký obrázok produktu. Veľkosť je automaticky zmenená na 128x128px obrázok, so zachovaním pomeru strán, iba keď obrázok presiahne jednu z tých veľkostí. Použite toto pole v zobrazeniach formulárov alebo niektorých kanban zobrazeniach. "
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -2122,7 +2122,7 @@ msgstr "Extra cena"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr ""
+msgstr "Cena Extra: Extra cena pre variant s týmto atribútom hodnoty na predajné ceny. napr. 200 cena extra, 1.000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2639,7 +2639,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
+msgstr "Nastaví cenu tak, že je násobkom tejto hodnoty.\nZaokrúhľovanie sa aplikuje po zľave a pred príplatkom.\nAk chcete mať ceny, ktoré končia v 9.99, nastavte zaokrúhlenie 10, príplatok -0.01"
 
 #. module: product
 #: field:product.product,image_small:0 field:product.template,image_small:0
@@ -2957,12 +2957,12 @@ msgstr "Toto pole obsahuje obrázok použitý ako obrázok pre túto produktovú
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "Toto pole obsahuje obrázok použitý ako obrázok pre tento produkt, obmedzený na 1024x1024px."
 
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr ""
+msgstr "Toto je množstvo ktoré je konvertované do predvolenej mernej jendotky."
 
 #. module: product
 #: help:product.template,seller_qty:0
@@ -3036,7 +3036,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_39_product_template
 msgid "Toner Cartridge"
-msgstr ""
+msgstr "Tonerová kazeta"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -3052,7 +3052,7 @@ msgstr "Typ"
 #. module: product
 #: model:product.template,name:product.product_product_48_product_template
 msgid "USB Adapter"
-msgstr ""
+msgstr "USB adaptér"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -3110,7 +3110,7 @@ msgstr "Merné jednotky"
 #. module: product
 #: view:product.uom.categ:product.product_uom_categ_form_view
 msgid "Units of Measure categories"
-msgstr ""
+msgstr "Kategórie merných jendotiek"
 
 #. module: product
 #: field:product.product,message_unread:0
@@ -3153,7 +3153,7 @@ msgstr "Obrázok varianty"
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "Ceny varianty"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_template_action
@@ -3161,7 +3161,7 @@ msgstr ""
 #: view:product.attribute.value:product.variants_template_tree_view
 #: view:product.attribute.value:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Hodnoty varianty"
 
 #. module: product
 #: field:product.attribute.value,product_ids:0
@@ -3205,7 +3205,7 @@ msgstr "Záruka"
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
 msgid "Webcam"
-msgstr ""
+msgstr "Webkamera"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -3243,12 +3243,12 @@ msgstr "Šírka"
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
 msgid "Windows 7 Professional"
-msgstr ""
+msgstr "Windows 7 Professional"
 
 #. module: product
 #: model:product.template,name:product.product_product_41_product_template
 msgid "Windows Home Server 2011"
-msgstr ""
+msgstr "Windows Home Server 2011"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3270,7 +3270,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_43_product_template
 msgid "Zed+ Antivirus"
-msgstr ""
+msgstr "Zed+ Antivírus"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
@@ -3285,37 +3285,37 @@ msgstr "Popíšte charakteristiku produktu...p"
 #. module: product
 #: view:product.uom:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "napr: 1 * (referenčná jednotka) = pomer * (táto jednotka)"
 
 #. module: product
 #: view:product.uom:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "napr: 1 * (táto jednotka) = pomer * (referenčná jednotka)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "fl oz"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "stopa(ft)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "gal(s)"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
 msgid "iMac"
-msgstr ""
+msgstr "iMac"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
@@ -3323,18 +3323,18 @@ msgstr ""
 #: model:product.template,name:product.product_product_4c_product_template
 #: model:product.template,name:product.product_product_4d_product_template
 msgid "iPad Retina Display"
-msgstr ""
+msgstr "iPad Retina displej"
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "palec(e)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -3349,12 +3349,12 @@ msgstr "km"
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
 msgid "lb(s)"
-msgstr ""
+msgstr "lb(s)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "míle"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3374,12 +3374,12 @@ msgstr "alebo"
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "oz(s)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "množ"
 
 #. module: product
 #: view:res.partner:product.view_partner_property_form
