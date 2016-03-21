@@ -300,6 +300,9 @@ class account_account(osv.osv):
                         (__compute will handle their escaping) as a
                         tuple
         """
+        if context is None:
+            context = {}
+
         mapping = {
             'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
@@ -314,7 +317,8 @@ class account_account(osv.osv):
         res = {}
         null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
-            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=dict(context or {}, periods_special=False))
+            periods_special = context['periods_special'] if 'periods_special' in context else True
+            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=dict(context or {}, periods_special=periods_special))
 
             wheres = [""]
             if query.strip():
