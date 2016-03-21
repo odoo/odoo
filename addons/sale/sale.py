@@ -142,6 +142,10 @@ class SaleOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
+    @api.model
+    def _get_customer_lead(self, product_tmpl_id):
+        return False
+
     @api.multi
     def button_dummy(self):
         return True
