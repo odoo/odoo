@@ -135,7 +135,7 @@ class BlogPost(osv.Model):
             select=True, readonly=True,
         ),
         'create_uid': fields.many2one(
-            'res.users', 'Author',
+            'res.users', 'Created by',
             select=True, readonly=True,
         ),
         'write_date': fields.datetime(

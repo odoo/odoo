@@ -88,7 +88,7 @@ class ProductTemplate(models.Model):
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
-    website_sequence = fields.Integer('Sequence', help="Determine the display order in the Website E-commerce",
+    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
     public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
                                         help="Those categories are used to group similar products for e-commerce.")

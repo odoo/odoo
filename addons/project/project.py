@@ -186,7 +186,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_needaction_count': fields.function(_task_needaction_count, type='integer', string="Tasks",),
-        'task_ids': fields.one2many('project.task', 'project_id',
+        'task_ids': fields.one2many('project.task', 'project_id', string='Tasks',
                                     domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]),
         'color': fields.integer('Color Index'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
@@ -888,7 +888,7 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
+        'use_tasks': fields.boolean(string='Use Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
         'project_ids': fields.one2many('project.project', 'analytic_account_id', 'Projects'),
         'project_count': fields.function(_compute_project_count, string='Project Count', type='integer')

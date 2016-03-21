@@ -45,7 +45,7 @@ class StockMove(models.Model):
         states={'done': [('readonly', True)]})
     ordered_qty = fields.Float('Ordered Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
     product_qty = fields.Float(
-        'Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
+        'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(

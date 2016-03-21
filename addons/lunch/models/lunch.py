@@ -130,7 +130,7 @@ class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
 
-    name = fields.Char(related='product_id.name', readonly=True)
+    name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
     product_id = fields.Many2one('lunch.product', 'Product', required=True)
     category_id = fields.Many2one('lunch.product.category', string='Product Category',

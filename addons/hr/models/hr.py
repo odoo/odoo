@@ -108,7 +108,7 @@ class Employee(models.Model):
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     # we need a related field in order to be able to sort the employee by name
-    name_related = fields.Char('Name', related='resource_id.name', readonly=True, store=True)
+    name_related = fields.Char(related='resource_id.name', string="Resource Name", readonly=True, store=True)
     country_id = fields.Many2one('res.country', string='Nationality (Country)')
     birthday = fields.Date('Date of Birth')
     ssnid = fields.Char('SSN No', help='Social Security Number')

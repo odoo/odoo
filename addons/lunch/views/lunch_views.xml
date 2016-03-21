@@ -14,7 +14,7 @@
                 <search string="Search">
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
+                    <field name="name" string="Product" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
                     <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
