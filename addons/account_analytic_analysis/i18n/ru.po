@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Ivan Ivan <kolobok2048@gmail.com>, 2016
 # Андрей Гусев <gaussgss@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-02-01 13:49+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-06 10:26+0000\n"
+"Last-Translator: Ivan Ivan <kolobok2048@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,12 +84,12 @@ msgid ""
 "</pre>\n"
 "\n"
 "            "
-msgstr ""
+msgstr "\nПривет ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n    <tr>\n        <th>Заказчик</th>\n        <th>Договор </th>\n        <th>Сроки </th>\n        <th>Предоплаченные Единицы </th>\n        <th>Контыкты</th>\n    </tr>\n    % для партнера, счета в значениях:\n        % для дебиторского счета ::\n        <tr>\n            <td>${partner.name}</td>\n            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n            <td>${account.date_start} до ${account.date and account.date or '???'}</td>\n            <td>\n            % if account.quantity_max != 0.0:\n                ${account.remaining_hours}/${account.quantity_max} units\n            % endif\n            </td>\n            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n        </tr>\n        % endfor\n    % endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n    <h2>Следующие договоры истекли: </h2>\n    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n    <h2>Следующие просроченные договоры ещё не обработаны: </h2>\n    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n    <h2>Следующие договоры истекают менее чем за один месяц: </h2>\n    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\n    Вы можете проверить все договоры, которые будут переписаны  с помощью меню:\n</p>\n<ul>\n    <li>Продажи/ Выставление счетов/ Договоры на пересмотрении</li>\n</ul>\n<p>\n    Спасибо,\n</p>\n\n<pre>\n-- \nOdoo Автоматическая электронная почта\n</pre>\n\n            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Сумма всего, на что может быть выставлен счет по контракту."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -161,19 +162,19 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "Позиции счета аналитики"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Account Manager"
-msgstr ""
+msgstr "Управляющий счётом"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
 msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
-msgstr ""
+msgstr "В соответствии с требованиями, позволяет установить поле шаблона при создании аналитического счета или договора."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,analytic_account_id:0
@@ -189,87 +190,87 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
+msgstr "Основано на издержках которые Вы имели в проекте, которые были бы доходом если бы были учтены в нормальной продажной цене предусмотренной прайс-листом."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Cancelled"
-msgstr ""
+msgstr "Отменено"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "Отмененные контракты"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed"
-msgstr ""
+msgstr "Закрыт"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed contracts"
-msgstr ""
+msgstr "Закрытые контракты"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
-msgstr ""
+msgstr "Вычеслено используя формулу: Максимальное время - Всё время выставленное в счетах"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "Вычисленно используя формулу: Сумма по счету - Все издержки"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "Рассчитанный по формуле: Сумма по счетам / Итоговое время"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "Вычислено по формуле: Максимальная цена по Счету - Итоговая сумма по выставленным счетам."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "Вычисляется по формуле: Максимальное время - Всё Рабочее Время"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "Рассчитанный по формуле: теоретическая выручка - общие издержки"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "Вычисляется по формуле: (Реальная маржа / Суммарные издержки) * 100."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Contract"
-msgstr ""
+msgstr "Договор"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "Шаблон контракта"
 
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "Напоминание об окончании контракта ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "Договоры"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -445,7 +446,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "In Progress"
-msgstr ""
+msgstr "Выполняется"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
