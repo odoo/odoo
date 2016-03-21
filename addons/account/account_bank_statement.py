@@ -30,9 +30,13 @@ import time
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
-            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
+            period_context = context.copy()
+            period_context.update(dict(statement_period_id = vals.get('period_id')))
+            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=period_context)
         if 'line_ids' in vals:
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
@@ -67,7 +71,13 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
+        if context is None:
+            context = {}
+        context_period_id = context.get('statement_period_id')
+        if context_period_id:
+            periods = self.pool.get('account.period').search(cr, uid, [('id','=',context_period_id)], context=context)
+        else:
+            periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False
