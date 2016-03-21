@@ -332,7 +332,11 @@ class ir_model_fields(osv.osv):
     def _check_depends(self):
         """ Check whether all fields in dependencies are valid. """
         for record in self:
-            for seq in (record.depends or "").split(","):
+            if not record.depends:
+                continue
+            for seq in record.depends.split(","):
+                if not seq.strip():
+                    raise UserError(_("Empty dependency in %r") % (record.depends))
                 model = self.env[record.model]
                 names = seq.strip().split(".")
                 last = len(names) - 1
