@@ -320,6 +320,8 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if not context:
+            context = {}
         if user_id and context.get('team_id'):
             team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
             if user_id in team.member_ids.ids:
