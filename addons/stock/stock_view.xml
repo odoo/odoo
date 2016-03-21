@@ -1393,8 +1393,8 @@
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="location_id" groups="stock.group_locations"/>
-                    <field name="location_dest_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>

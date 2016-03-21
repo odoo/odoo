@@ -258,7 +258,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
-            <field name="domain">[('routing_id', '!=', False)]</field>
+            <field name="domain">[('routing_id', '!=', False),('routing_id.work_order_ids.workcenter_id','=', active_id)]</field>
         </record>
 
         <record id="production_order_server_action" model="ir.actions.server">
@@ -341,7 +341,7 @@
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left" style="position:absolute;" name="wc_stages">
                                             <t t-if="record.stage_id.raw_value == 'normal'">
-                                                <t t-set="status" t-value="'Work orders is not running'"/>
+                                                <t t-set="status" t-value="'No work order in progress'"/>
                                             </t>
                                             <t t-if="record.stage_id.raw_value == 'blocked'">
                                                 <t t-set="status" t-value="'Work orders is blocked'"/>
@@ -586,7 +586,7 @@
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]"/>
-                                    <field name="procure_method" groups="stock.group_locations"/>
+                                    <field name="procure_method" groups="stock.group_stock_multi_locations"/>
                                 </tree>
                             </field>
                         </page>
@@ -900,7 +900,7 @@
                         </page>
                         <page string="Miscellaneous">
                             <group>
-                                <group groups="stock.group_locations">
+                                <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                                     <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
@@ -1273,6 +1273,7 @@
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'ready')]}" class="btn-success"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', '|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"><span>(<field name="delay" widget="float_time" class="oe_inline"/>)</span></button>
+                <button name="button_block" type="object" string="Blocked" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
                 <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
@@ -1677,8 +1678,8 @@
                             </group>
                             <group>
                                 <field name="mo_id"/>
-                                <field name="location_id" groups="stock.group_locations"/>
-                                <field name="location_dest_id" groups="stock.group_locations"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="lot_id"/>
                             </group>
                         </group>
@@ -1703,7 +1704,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom_id"/>
                     <field name="state"/>
-                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 </tree>
             </field>
         </record>

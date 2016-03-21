@@ -20,23 +20,6 @@ class MrpProduction(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_planned asc,id'
 
-    # Returns the destination location or default value from the picking type if none provided
-    @api.multi
-    def location_source(self):
-        self.ensure_one()
-        if self.location_src_id: return self.location_src_id
-        if not self.picking_type_id.default_location_src_id:
-            raise UserError(_('Please set a default source location in the operation type, using the coniguration menu of the Inventory app.'))
-        return self.picking_type_id.default_location_src_id
-
-    # Returns the destination location or default value from the picking type if none provided
-    @api.multi
-    def location_destination(self):
-        self.ensure_one()
-        if self.location_dest_id: return self.location_dest_id
-        if not self.picking_type_id.default_location_dest_id:
-            raise UserError(_('Please set a default destination location in the operation type, using the coniguration menu of the Inventory app.'))
-        return self.picking_type_id.default_location_dest_id
 
     @api.model
     def _default_picking_type(self):
@@ -44,6 +27,14 @@ class MrpProduction(models.Model):
         company_id = self.env.context.get('company_id') or self.env.user.company_id.id
         types = type_obj.search([('code', '=', 'mrp_operation'), ('warehouse_id.company_id', 'in', [company_id, False])])
         return types[0].id if types else False
+
+    def _location_default(self):
+        try:
+            location = self.env.ref('stock.stock_location_stock')
+            location.check_access_rule('read')
+        except (AccessError, ValueError):
+            location = False
+        return location
 
     @api.multi
     @api.depends('move_raw_ids.state', 'work_order_ids.move_raw_ids')
@@ -81,9 +72,9 @@ class MrpProduction(models.Model):
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', required=True, readonly=True, states={'confirmed': [('readonly', False)]}, oldname='product_uom')
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', default=_default_picking_type, required=True)
-    location_src_id = fields.Many2one('stock.location', string='Raw Materials Location', 
+    location_src_id = fields.Many2one('stock.location', string='Raw Materials Location', default=_location_default,
                                       readonly=True, states={'confirmed': [('readonly', False)]})
-    location_dest_id = fields.Many2one('stock.location', string='Finished Products Location',
+    location_dest_id = fields.Many2one('stock.location', string='Finished Products Location', default=_location_default,
                                        readonly=True, states={'confirmed': [('readonly', False)]})
     date_planned = fields.Datetime(string='Expected Date', required=True, index=True, readonly=True, states={'confirmed': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
 
@@ -196,6 +187,12 @@ class MrpProduction(models.Model):
                 raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
         return super(MrpProduction, self).unlink()
 
+    @api.onchange('picking_type_id')
+    def onchange_picking_type(self):
+        location = self.env.ref('stock.stock_location_stock')
+        self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
+        self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+
     @api.multi
     @api.onchange('product_id', 'company_id', 'picking_type_id')
     def onchange_product_id(self):
@@ -298,7 +295,7 @@ class MrpProduction(models.Model):
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.product_qty,
             'location_id': self.product_id.property_stock_production.id,
-            'location_dest_id': self.location_destination().id,
+            'location_dest_id': self.location_dest_id.id,
             'move_dest_id': self.move_prod_id.id,
             'procurement_id': procurement and procurement.id or False,
             'company_id': self.company_id.id,
@@ -328,7 +325,7 @@ class MrpProduction(models.Model):
         if self.bom_id.routing_id and self.bom_id.routing_id.location_id:
             source_location = self.bom_id.routing_id.location_id
         else:
-            source_location = self.location_source()
+            source_location = self.location_src_id
         data = {
             'name': self.name,
             'date': self.date_planned,
@@ -597,6 +594,12 @@ class MrpProductionWorkcenterLine(models.Model):
     @api.multi
     def button_pending(self):
         self.end_previous()
+
+    @api.multi
+    def button_block(self):
+        for order in self:
+            order.end_previous()
+            order.workcenter_id.write({'stage_id': 'blocked'})
 
     @api.multi
     def button_cancel(self):
