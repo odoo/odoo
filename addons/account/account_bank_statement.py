@@ -30,6 +30,8 @@ import time
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
             vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=dict(context, period_id=vals.get('period_id')))
