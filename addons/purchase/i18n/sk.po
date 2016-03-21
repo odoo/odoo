@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-03-06 13:44+0000\n"
+"PO-Revision-Date: 2016-03-18 07:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -169,7 +169,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr "Kúpiť"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
@@ -195,12 +195,12 @@ msgstr "# Objednávok"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Objednávka (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Objednávka (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -345,7 +345,7 @@ msgstr "Adresár"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Pokročilý príkazový proces"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -378,7 +378,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
+msgstr "Umožňuje vypočítať cenu produktu na základe priemernej ceny."
 
 #. module: purchase
 #: help:purchase.config.settings,group_uom:0
@@ -400,13 +400,13 @@ msgstr "Analytický účet"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Analytické účtovníctvo pre Nákupy"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Analytické účtovníctvo pre nákupy"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -416,7 +416,7 @@ msgstr "Použiť"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "Schváliť objednávku"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -437,7 +437,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Priemerná dodacia doba"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
@@ -498,7 +498,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
-msgstr ""
+msgstr "Kúpiť"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_calendar
@@ -531,7 +531,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Nemožno nájsť žiadnu generickú trasu Kúpiť."
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +551,7 @@ msgstr "Zrušené"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Nie je možné zmazať nákupnú objednávku ktorá je v stave '%s'."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -601,7 +601,7 @@ msgstr "Chyba konfigurácie!"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "Nakonfigurovať nákupy"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -611,7 +611,7 @@ msgstr "Potvrdiť"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Confirm Order"
-msgstr ""
+msgstr "Potvrdiť objednávku"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -657,7 +657,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
-msgstr ""
+msgstr "Dátum schválený"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -692,12 +692,12 @@ msgstr "Odo dňa, keď bol tento dokument vytvorený"
 #. module: purchase
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Dni na doručenie"
 
 #. module: purchase
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "Dni na overenie"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -729,12 +729,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Doručiť"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Doručenia & Faktúry"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -781,7 +781,7 @@ msgstr "Návrh"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "Koncept PO"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1384
@@ -864,7 +864,7 @@ msgstr "Zoskupiť podľa"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "Skryť zrušené riadky"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -894,7 +894,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Pre zmazanie nákupnej objednávky ju musíte najskôr zrušiť."
 
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
@@ -922,7 +922,7 @@ msgstr "Prichádzajúce zásielky"
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr ""
+msgstr "Prichádzajúce zásielky na vyfaktúrovanie"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
@@ -970,7 +970,7 @@ msgstr "Položky faktúry"
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "Faktúra prijatá"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1500
@@ -1003,7 +1003,7 @@ msgstr "Faktúry"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "Faktúry a prichádzajúce zásielky"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1105,7 +1105,7 @@ msgstr "Manažér"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Manuálne faktúry"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1143,7 +1143,7 @@ msgstr "Správa a história komunikácie"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "Mesačné nákupy"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1205,7 +1205,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "Otvoriť nákupné menu"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -1250,7 +1250,7 @@ msgstr "Stav objednávky"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr ""
+msgstr "Objednávka dňa"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
@@ -1276,7 +1276,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1361,7 +1361,7 @@ msgstr "Cenníky"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "Vytlačiť RFQ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1408,7 +1408,7 @@ msgstr "Produkty"
 #. module: purchase
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Hodnota produktov"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1437,7 +1437,7 @@ msgstr "Nákup"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Nákupná analýza"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1455,7 +1455,7 @@ msgstr ""
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Dodacia doba nákupu"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
@@ -1482,7 +1482,7 @@ msgstr ""
 #: view:purchase.order.line:purchase.purchase_order_line_form2
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Riadok nákupnej objednávky"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1493,7 +1493,7 @@ msgstr ""
 #: view:purchase.order:purchase.purchase_order_form
 #: view:purchase.order.line:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Riadky nákupnej objednávky"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
@@ -1508,12 +1508,12 @@ msgstr ""
 #: view:purchase.report:purchase.view_purchase_order_search
 #, python-format
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Nakupné objednávky"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_graph
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "Štatistiky nákupných objednávok"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1530,17 +1530,17 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr ""
+msgstr "Nákupné objednávky ktoré obsahuú nevyfaktúrované riadky."
 
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Nákup na doplnenie tohto skladiska"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Nákup-Štandardná cena"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1555,7 +1555,7 @@ msgstr "Nákupy"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "Nákupy objednávok"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -1601,43 +1601,43 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "RFQ schválené"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "RFQ potvrdené"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "RFQ dokončené"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "RFQ vytvorené"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "RFQ a Nákupy"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "Dotlačiť RFQ"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Preposlať RFQ emailom"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1647,7 +1647,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Products"
-msgstr ""
+msgstr "Prijať produkty"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -1702,7 +1702,7 @@ msgstr ""
 #: selection:purchase.report,state:0
 #: view:website:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Žiadosť o cenovú ponuku"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1713,12 +1713,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Žiadosti o cenovú ponuku"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr ""
+msgstr "Rezervácia"
 
 #. module: purchase
 #: field:purchase.order,create_uid:0
@@ -1742,7 +1742,7 @@ msgstr "Naplánovaný dátum"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Vyhľadať nákupnú objednávku"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -1760,12 +1760,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "Poslať PO emailom"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Poslať RFQ emailom"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1958,7 +1958,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "Toto určí typ odberu prichádzajúcej zásielky."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1974,7 +1974,7 @@ msgstr "Celková cena"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Celková nezdanená suma"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -2120,7 +2120,7 @@ msgstr "História komunikácie webovej stránky"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Keď sú produkty zakúpené, môźu byť doručené do tohto skladiska"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538
