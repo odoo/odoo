@@ -512,7 +512,7 @@ class IrActionsServer(models.Model):
     # Workflow signal
     use_relational_model = fields.Selection([('base', 'Use the base model of the action'),
                                              ('relational', 'Use a relation field on the base model')],
-                                            string='Target Model', default='base', required=True)
+                                            string='Relational Target Model', default='base', required=True)
     wkf_transition_id = fields.Many2one('workflow.transition', string='Signal to Trigger',
                                         help="Select the workflow signal to trigger.")
     wkf_model_id = fields.Many2one('ir.model', string='Target Model',
@@ -529,7 +529,7 @@ class IrActionsServer(models.Model):
                                    ('copy_current', 'Copy the current record'),
                                    ('copy_other', 'Choose and copy a record in the database')],
                                   string="Creation Policy", default='new', required=True)
-    crud_model_id = fields.Many2one('ir.model', string='Target Model',
+    crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(string='Create/Write Target Model Name', related='crud_model_id.model', store=True, readonly=True)
     ref_object = fields.Reference(string='Reference record', selection='_select_objects', oldname='copy_object')

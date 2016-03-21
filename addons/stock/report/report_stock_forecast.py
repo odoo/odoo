@@ -9,7 +9,7 @@ class ReportStockForecat(models.Model):
 
     date = fields.Date(string='Date')
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', string='Product', related='product_id.product_tmpl_id', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', related='product_id.product_tmpl_id', readonly=True)
     cumulative_quantity = fields.Float(string='Cumulative Quantity', readonly=True)
     quantity = fields.Float(readonly=True)
 

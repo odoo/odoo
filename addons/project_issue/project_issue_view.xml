@@ -271,9 +271,9 @@
                 </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
                     <div>
-                        <field name="use_issues" class="oe_inline" string="Use Issues"
+                        <field name="use_issues" class="oe_inline"
                                 on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                        <label for="use_issues" class="oe_inline"/>
+                        <label for="use_issues" class="oe_inline" string="Issues"/>
                         <span attrs="{'invisible':[('use_issues', '=', False)]}">as </span>
                         <field name="label_issues" class="oe_inline oe_input_align" attrs="{'invisible': [('use_issues', '=', False)]}"/>
                     </div>

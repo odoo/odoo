@@ -231,7 +231,7 @@ class Post(models.Model):
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
     user_vote = fields.Integer('My Vote', compute='_get_user_vote')
-    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
+    vote_count = fields.Integer('Total Votes', compute='_get_vote_count', store=True)
 
     # favorite
     favourite_ids = fields.Many2many('res.users', string='Favourite')

@@ -27,12 +27,12 @@ class Property(models.Model):
     res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)
     company_id = fields.Many2one('res.company', string='Company', index=True)
     fields_id = fields.Many2one('ir.model.fields', string='Field', ondelete='cascade', required=True, index=True)
-    value_float = fields.Float(string='Value')
-    value_integer = fields.Integer(string='Value')
-    value_text = fields.Text(string='Value')  # will contain (char, text)
-    value_binary = fields.Binary(string='Value')
-    value_reference = fields.Char(string='Value')
-    value_datetime = fields.Datetime(string='Value')
+    value_float = fields.Float()
+    value_integer = fields.Integer()
+    value_text = fields.Text()  # will contain (char, text)
+    value_binary = fields.Binary()
+    value_reference = fields.Char()
+    value_datetime = fields.Datetime()
     type = fields.Selection([('char', 'Char'),
                              ('float', 'Float'),
                              ('boolean', 'Boolean'),

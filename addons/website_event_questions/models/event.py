@@ -8,9 +8,9 @@ class EventEvent(models.Model):
     _inherit = 'event.event'
 
     question_ids = fields.One2many('event.question', 'event_id', 'Questions', copy=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'Questions',
+    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
                                            domain=[('is_individual', '=', False)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Questions',
+    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
                                             domain=[('is_individual', '=', True)])
 
 

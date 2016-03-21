@@ -49,9 +49,9 @@ class Project(models.Model):
         self.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
 
     percentage_satisfaction_task = fields.Integer(
-        compute='_compute_percentage_satisfaction_task', string='% Happy', store=True, default=-1)
+        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)
     percentage_satisfaction_project = fields.Integer(
-        compute="_compute_percentage_satisfaction_project", string="% Happy", store=True, default=-1)
+        compute="_compute_percentage_satisfaction_project", string="Happy % on Project", store=True, default=-1)
     is_visible_happy_customer = fields.Boolean(string="Customer Satisfaction", default=False,
         help="Display information about rating of the project on kanban and form view. This buttons will only be displayed if at least a rating exists.")
 
