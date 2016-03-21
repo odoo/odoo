@@ -12,7 +12,9 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" on_change="on_change_website_id(website_id)"/>
+                        <div attrs="{'invisible':[('is_multi_website','=',False)]}">
+                            <field name="website_id" on_change="on_change_website_id(website_id)"/>
+                        </div>
                         <group string="Domain">
                             <field name="website_name" />
                             <label for="google_analytics_key"/>
@@ -87,7 +89,7 @@
                                 <button type="action" name="%(base.action_view_base_language_install)d" string="Install a language" class="oe_link"/>
                             </div>
                         </group>
-                        <group string="Menu" groups="base.group_no_one">
+                        <group string="Menu" groups="base.group_no_one" attrs="{'invisible':[('is_multi_website','=',False)]}">
                             <button type="action"
                                 name="%(website.action_website_menu)d"
                                 string="Configure website menus" class="oe_link"/>
@@ -107,6 +109,10 @@
                                     <field name="module_website_version" widget="upgrade_boolean"/>
                                     <label for="module_website_version"/>
                                     <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank"> More Info</a>
+                                </div>
+                                <div>
+                                    <field name="is_multi_website"/>
+                                    <label for="is_multi_website"/>
                                 </div>
                             </div>
                         </group>
