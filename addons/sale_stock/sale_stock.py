@@ -236,6 +236,13 @@ class SaleOrderLine(models.Model):
                 pass
             if mto_route_id and mto_route_id in product_routes.ids:
                 is_available = True
+        if not is_available:
+            product_routes = product.route_ids + product.categ_id.total_route_ids
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
 
         # Check Drop-Shipping
         if not is_available:
