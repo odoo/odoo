@@ -2,6 +2,30 @@
 <openerp>
     <data>
 
+        <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group string="Logistics">
+                        <field name="route_ids" widget="many2many_tags"/>
+                        <div colspan="2" attrs="{'invisible': [('parent_id', '=', False)]}">
+                            The following routes will apply to the products in this category taking into account parent categories: 
+                            <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
+                        </div>
+                        <field name="removal_strategy_id" options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="product_open_orderpoint">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Reordering Rules</field>
+            <field name="res_model">stock.warehouse.orderpoint</field>
+        </record>
+
         <record id="view_stock_product_tree" model="ir.ui.view">
             <field name="name">product.stock.tree.inherit</field>
             <field name="model">product.product</field>
@@ -328,5 +352,24 @@
                 </data>
             </field>
         </record>
+
+    <record id="product_template_action_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="context">{"search_default_products": 1, 'default_type': 'product'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new product.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_product_variant_config_stock" name="Products" action="product_template_action_product"
+        parent="stock.menu_stock_inventory_control" sequence="1"/>
+    <menuitem id="product_product_menu" name="Product Variants" action="product.product_normal_action"
+        parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
+
     </data>
 </openerp>

@@ -69,10 +69,12 @@ Dashboard / Reports for Inventory Management will include:
         'wizard/stock_immediate_transfer.xml',
         'wizard/stock_backorder_confirmation.xml',
 
+        'views/res_partner_views.xml',
+        'views/product_strategy_views.xml',
         'stock_view.xml',
-        'product_view.xml',
-        'partner_view.xml',
-        'res_config_view.xml',
+        'views/procurement_views.xml',
+        'views/product_views.xml',
+        'views/stock_config_settings_views.xml',
         'stock_dashboard.xml',
 
         'data/default_barcode_patterns.xml',
