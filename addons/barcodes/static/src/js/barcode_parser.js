@@ -127,18 +127,16 @@ var BarcodeParser = Class.extend({
         };
 
         // if there are dot series in the partern, extract the corresponding values in the barcode and return them
-        var previous_dot = false;
         var serie = "";
         for (var i = 0; i < barcode.length; i++) {
             if (pattern[i] == '.') {
                 serie += barcode[i];
                 previous_dot = true;
             } else {
-                if (previous_dot) {
+                if (serie != "") {
                     match.variable_strings.push(serie);
                 }
                 serie = "" ;
-                previous_dot = false;
             }
         }
 
