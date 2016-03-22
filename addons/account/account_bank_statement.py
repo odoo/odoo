@@ -924,7 +924,7 @@ class account_bank_statement_line(osv.osv):
         user = self.pool.get("res.users").browse(cr, uid, uid)
         return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False), ('account_id', '=', False)]
 
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
