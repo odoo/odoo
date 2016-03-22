@@ -97,6 +97,7 @@ class IrFilters(models.Model):
         raise UserError(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {'model': vals.get('model_id')})
 
     @api.model
+    @api.returns('self', lambda value: value.id)
     def create_or_replace(self, vals):
         action_id = vals.get('action_id')
         current_filters = self.get_filters(vals['model_id'], action_id)
@@ -125,8 +126,9 @@ class IrFilters(models.Model):
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition (considering action_id irrelevant here)
         if matching_filters:
-            self.browse(matching_filters[0]['id']).write(vals)
-            return matching_filters[0]['id']
+            matching_filter = self.browse(matching_filters[0]['id'])
+            matching_filter.write(vals)
+            return matching_filter
 
         return self.create(vals)
 
