@@ -433,7 +433,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry['website']._image_placeholder(response)
 
     @http.route([
-        '/website/image',
         '/website/image/<xmlid>',
         '/website/image/<xmlid>/<int:max_width>x<int:max_height>',
         '/website/image/<xmlid>/<field>',
@@ -528,7 +527,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Backend html field
     #------------------------------------------------------
-    @http.route('/website/field/html', type='http', auth="public", website=True)
+    @http.route('/website/field/html', type='http', auth="user", website=True)
     def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
         record = None
         if model and res_id:

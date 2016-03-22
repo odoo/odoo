@@ -82,12 +82,12 @@ class Website(addons.website.controllers.main.Website):
     #------------------------------------------------------
     # Backend email template field
     #------------------------------------------------------
-    @http.route('/website_mail/field/email', type='http', auth="public", website=True)
+    @http.route('/website_mail/field/email', type='http', auth="user", website=True)
     def FieldTextHtmlEmail(self, model=None, res_id=None, field=None, callback=None, **kwargs):
         kwargs['template'] = "website_mail.FieldTextHtmlEmail"
         return self.FieldTextHtml(model, res_id, field, callback, **kwargs)
 
-    @http.route('/website_mail/field/email_template', type='http', auth="public", website=True)
+    @http.route('/website_mail/field/email_template', type='http', auth="user", website=True)
     def FieldTextHtmlEmailTemplate(self, model=None, res_id=None, field=None, callback=None, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         kwargs['theme'] = True
