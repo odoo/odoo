@@ -1,53 +1,50 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class product_removal_strategy(osv.osv):
+class RemovalStrategy(models.Model):
     _name = 'product.removal'
     _description = 'Removal Strategy'
 
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'method': fields.char("Method", required=True, help="FIFO, LIFO..."),
-    }
+    name = fields.Char('Name', required=True)
+    method = fields.Char("Method", required=True, help="FIFO, LIFO...")
 
 
-class product_putaway_strategy(osv.osv):
+class PutAwayStrategy(models.Model):
     _name = 'product.putaway'
     _description = 'Put Away Strategy'
 
-    def _get_putaway_options(self, cr, uid, context=None):
+    name = fields.Char('Name', required=True)
+    method = fields.Selection('_get_putaway_options', "Method", default='fixed', required=True)
+    fixed_location_ids = fields.One2many(
+        'stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', copy=True,
+        help="When the method is fixed, this location will be used to store the products")
+
+    def _get_putaway_options(self):
         return [('fixed', 'Fixed Location')]
 
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'method': fields.selection(_get_putaway_options, "Method", required=True),
-        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products", copy=True),
-    }
+    def _putaway_apply_fixed(self, product):
+        for strat in self.fixed_location_ids:
+            categ = product.categ_id
+            while categ:
+                if strat.category_id.id == categ.id:
+                    return strat.fixed_location_id.id
+                categ = categ.parent_id
+        return self.env['stock.location']
 
-    _defaults = {
-        'method': 'fixed',
-    }
-
-    def putaway_apply(self, cr, uid, ids, product, context=None):
-        putaway_strat = self.browse(cr, uid, ids[0], context=context)
-        if putaway_strat.method == 'fixed':
-            for strat in putaway_strat.fixed_location_ids:
-                categ = product.categ_id
-                while categ:
-                    if strat.category_id.id == categ.id:
-                        return strat.fixed_location_id.id
-                    categ = categ.parent_id
+    def putaway_apply(self, product):
+        if hasattr(self, '_putaway_apply_%s' % (self.method)):
+            return getattr(self, '_putaway_apply_%s' % (self.method))
+        return self.env['stock.location']
 
 
-class fixed_putaway_strat(osv.osv):
+class FixedPutAwayStrategy(models.Model):
     _name = 'stock.fixed.putaway.strat'
     _order = 'sequence'
-    _columns = {
-        'putaway_id': fields.many2one('product.putaway', 'Put Away Method', required=True),
-        'category_id': fields.many2one('product.category', 'Product Category', required=True),
-        'fixed_location_id': fields.many2one('stock.location', 'Location', required=True),
-        'sequence': fields.integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list."),
-    }
+
+    putaway_id = fields.Many2one('product.putaway', 'Put Away Method', required=True)
+    category_id = fields.Many2one('product.category', 'Product Category', required=True)
+    fixed_location_id = fields.Many2one('stock.location', 'Location', required=True)
+    sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
