@@ -526,7 +526,7 @@ class PosOrder(models.Model):
                 destination_id = order.partner_id.property_stock_customer.id
             else:
                 if (not picking_type) or (not picking_type.default_location_dest_id):
-                    customerloc, supplierloc = StockWarehouse._get_partner_locations([])
+                    customerloc, supplierloc = StockWarehouse._get_partner_locations()
                     destination_id = customerloc.id
                 else:
                     destination_id = picking_type.default_location_dest_id.id

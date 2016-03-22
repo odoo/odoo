@@ -104,6 +104,7 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
+    @api.cr_uid
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
         if not from_uom_id or not qty or not to_uom_id:
             return qty

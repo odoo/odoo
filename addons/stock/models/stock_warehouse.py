@@ -1,770 +1,692 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import namedtuple
 from datetime import datetime
 from dateutil import relativedelta
 
-from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
-class stock_warehouse(osv.osv):
+class Warehouse(models.Model):
     _name = "stock.warehouse"
     _description = "Warehouse"
+    # namedtuple used in helper methods generating values for routes
+    Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type'])
 
-    _columns = {
-        'name': fields.char('Warehouse Name', required=True, select=True),
-        'active': fields.boolean('Active'),
-        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True, help='The company is automatically set from your user preferences.'),
-        'partner_id': fields.many2one('res.partner', 'Address'),
-        'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True),
-        'code': fields.char('Short Name', size=5, required=True, help="Short name used to identify your warehouse"),
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', 'Routes', domain="[('warehouse_selectable', '=', True)]", help='Defaults routes through the warehouse'),
-        'reception_steps': fields.selection([
-            ('one_step', 'Receive goods directly in stock (1 step)'),
-            ('two_steps', 'Unload in input location then go to stock (2 steps)'),
-            ('three_steps', 'Unload in input location, go through a quality control before being admitted in stock (3 steps)')], 'Incoming Shipments', 
-                                            help="Default incoming route to follow", required=True),
-        'delivery_steps': fields.selection([
-            ('ship_only', 'Ship directly from stock (Ship only)'),
-            ('pick_ship', 'Bring goods to output location before shipping (Pick + Ship)'),
-            ('pick_pack_ship', 'Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)')], 'Outgoing Shippings', 
-                                           help="Default outgoing route to follow", required=True),
-        'wh_input_stock_loc_id': fields.many2one('stock.location', 'Input Location'),
-        'wh_qc_stock_loc_id': fields.many2one('stock.location', 'Quality Control Location'),
-        'wh_output_stock_loc_id': fields.many2one('stock.location', 'Output Location'),
-        'wh_pack_stock_loc_id': fields.many2one('stock.location', 'Packing Location'),
-        'mto_pull_id': fields.many2one('procurement.rule', 'MTO rule'),
-        'pick_type_id': fields.many2one('stock.picking.type', 'Pick Type'),
-        'pack_type_id': fields.many2one('stock.picking.type', 'Pack Type'),
-        'out_type_id': fields.many2one('stock.picking.type', 'Out Type'),
-        'in_type_id': fields.many2one('stock.picking.type', 'In Type'),
-        'int_type_id': fields.many2one('stock.picking.type', 'Internal Type'),
-        'crossdock_route_id': fields.many2one('stock.location.route', 'Crossdock Route'),
-        'reception_route_id': fields.many2one('stock.location.route', 'Receipt Route'),
-        'delivery_route_id': fields.many2one('stock.location.route', 'Delivery Route'),
-        'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
-        'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes', 
-                                              help="Routes will be created for these resupply warehouses and you can select them on products and product categories"),
-        'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse', help="Goods will always be resupplied from this warehouse"),
-    }
+    name = fields.Char('Warehouse Name', index=True, required=True)
+    active = fields.Boolean('Active', default=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('stock.inventory'),
+        index=True, readonly=True, required=True,
+        help='The company is automatically set from your user preferences.')
+    partner_id = fields.Many2one('res.partner', 'Address')
+    view_location_id = fields.Many2one('stock.location', 'View Location', domain=[('usage', '=', 'view')], required=True)
+    lot_stock_id = fields.Many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True)
+    code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
+    route_ids = fields.Many2many(
+        'stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
+        'Routes', domain="[('warehouse_selectable', '=', True)]",
+        help='Defaults routes through the warehouse')
+    reception_steps = fields.Selection([
+        ('one_step', 'Receive goods directly in stock (1 step)'),
+        ('two_steps', 'Unload in input location then go to stock (2 steps)'),
+        ('three_steps', 'Unload in input location, go through a quality control before being admitted in stock (3 steps)')],
+        'Incoming Shipments', default='one_step', required=True,
+        help="Default incoming route to follow")
+    delivery_steps = fields.Selection([
+        ('ship_only', 'Ship directly from stock (Ship only)'),
+        ('pick_ship', 'Bring goods to output location before shipping (Pick + Ship)'),
+        ('pick_pack_ship', 'Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)')],
+        'Outgoing Shippings', default='ship_only', required=True,
+        help="Default outgoing route to follow")
+    wh_input_stock_loc_id = fields.Many2one('stock.location', 'Input Location')
+    wh_qc_stock_loc_id = fields.Many2one('stock.location', 'Quality Control Location')
+    wh_output_stock_loc_id = fields.Many2one('stock.location', 'Output Location')
+    wh_pack_stock_loc_id = fields.Many2one('stock.location', 'Packing Location')
+    mto_pull_id = fields.Many2one('procurement.rule', 'MTO rule')
+    pick_type_id = fields.Many2one('stock.picking.type', 'Pick Type')
+    pack_type_id = fields.Many2one('stock.picking.type', 'Pack Type')
+    out_type_id = fields.Many2one('stock.picking.type', 'Out Type')
+    in_type_id = fields.Many2one('stock.picking.type', 'In Type')
+    int_type_id = fields.Many2one('stock.picking.type', 'Internal Type')
+    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route')
+    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route')
+    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route')
+    resupply_wh_ids = fields.Many2many(
+        'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
+        'Resupply Warehouses')
+    resupply_route_ids = fields.One2many(
+        'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
+        help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
+    default_resupply_wh_id = fields.Many2one(
+        'stock.warehouse', 'Default Resupply Warehouse',
+        help="Goods will always be resupplied from this warehouse")
 
-    def onchange_filter_default_resupply_wh_id(self, cr, uid, ids, default_resupply_wh_id, resupply_wh_ids, context=None):
-        resupply_wh_ids = set([x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids', resupply_wh_ids, ['id']))])
-        if default_resupply_wh_id: #If we are removing the default resupply, we don't have default_resupply_wh_id 
-            resupply_wh_ids.add(default_resupply_wh_id)
-        resupply_wh_ids = list(resupply_wh_ids)        
-        return {'value': {'resupply_wh_ids': resupply_wh_ids}}
-
-    def _get_external_transit_location(self, cr, uid, ids, context=None):
-        ''' returns browse record of inter company transit location, if found'''
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        data_obj = self.pool.get('ir.model.data')
-        location_obj = self.pool.get('stock.location')
-        try:
-            inter_wh_loc = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_inter_wh')[1]
-        except:
-            return False
-        return location_obj.browse(cr, uid, inter_wh_loc, context=context)
-
-    def _get_inter_wh_route(self, cr, uid, ids, wh, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        return {
-            'name': _('%s: Supply Product from %s') % (warehouse.name, wh.name),
-            'warehouse_selectable': False,
-            'product_selectable': True,
-            'product_categ_selectable': True,
-            'supplied_wh_id': warehouse.id,
-            'supplier_wh_id': wh.id,
-        }
-
-    def _create_resupply_routes(self, cr, uid, ids, supplier_warehouses, default_resupply_wh, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        route_obj = self.pool.get('stock.location.route')
-        pull_obj = self.pool.get('procurement.rule')
-        #create route selectable on the product to resupply the warehouse from another one
-        external_transit_location = warehouse._get_external_transit_location()
-        internal_transit_location = warehouse.company_id.internal_transit_location_id
-        input_loc = warehouse.wh_input_stock_loc_id
-        if warehouse.reception_steps == 'one_step':
-            input_loc = warehouse.lot_stock_id
-        for wh in supplier_warehouses:
-            transit_location = wh.company_id.id == warehouse.company_id.id and internal_transit_location or external_transit_location
-            if transit_location:
-                output_loc = wh.wh_output_stock_loc_id
-                if wh.delivery_steps == 'ship_only':
-                    output_loc = wh.lot_stock_id
-                    # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
-                    mto_pull_vals = wh._get_mto_pull_rule([(output_loc, transit_location, wh.out_type_id.id)])[0]
-                    pull_obj.create(cr, uid, mto_pull_vals, context=context)
-                inter_wh_route_vals = warehouse._get_inter_wh_route(wh)
-                inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
-                values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
-                pull_rules_list = self._get_supply_pull_rules(cr, uid, [wh.id], values, inter_wh_route_id, context=context)
-                for pull_rule in pull_rules_list:
-                    pull_obj.create(cr, uid, vals=pull_rule, context=context)
-                #if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
-                if default_resupply_wh and default_resupply_wh.id == wh.id:
-                    self.write(cr, uid, [warehouse.id, wh.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
-
-    _defaults = {
-        'active': True,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
-        'reception_steps': 'one_step',
-        'delivery_steps': 'ship_only',
-    }
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
     ]
 
-    def _get_partner_locations(self, cr, uid, ids, context=None):
-        ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
-        data_obj = self.pool.get('ir.model.data')
-        location_obj = self.pool.get('stock.location')
-        try:
-            customer_loc = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')[1]
-            supplier_loc = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_suppliers')[1]
-        except:
-            customer_loc = location_obj.search(cr, uid, [('usage', '=', 'customer')], context=context)
-            customer_loc = customer_loc and customer_loc[0] or False
-            supplier_loc = location_obj.search(cr, uid, [('usage', '=', 'supplier')], context=context)
-            supplier_loc = supplier_loc and supplier_loc[0] or False
-        if not (customer_loc and supplier_loc):
-            raise UserError(_('Can\'t find any customer or supplier location.'))
-        return location_obj.browse(cr, uid, [customer_loc, supplier_loc], context=context)
+    @api.depends('default_resupply_wh_id', 'resupply_wh_ids')
+    def onchange_resupply_warehouses(self):
+        # If we are removing the default resupply, we don't have default_resupply_wh_id # TDE note: and we want one
+        self.resupply_wh_ids |= self.default_resupply_wh_id
 
-    def _location_used(self, cr, uid, ids, location_id, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        pull_obj = self.pool['procurement.rule']
-        push_obj = self.pool['stock.location.path']
+    @api.model
+    def create(self, vals):
+        # create view location for warehouse then create all locations
+        loc_vals = {'name': _(vals.get('code')), 'usage': 'view',
+                    'location_id': self.env.ref('stock.stock_location_locations').id}
+        if vals.get('company_id'):
+            loc_vals['company_id'] = vals.get('company_id')
+        vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
 
-        domain = ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]),
-                       '|', ('location_src_id', '=', location_id),                      # noqa
-                            ('location_id', '=', location_id)
-                  ]
-        pulls = pull_obj.search_count(cr, uid, domain, context=context)
+        def_values = self.default_get(['reception_steps', 'delivery_steps'])
+        reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
+        delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        sub_locations = {
+            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
+            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
+            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
+            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
+            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+        }
+        for field_name, values in sub_locations.iteritems():
+            values['location_id'] = vals['view_location_id']
+            if vals.get('company_id'):
+                values['company_id'] = vals.get('company_id')
+            vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
 
-        domain = ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]),
-                       '|', ('location_from_id', '=', location_id),                     # noqa
-                            ('location_dest_id', '=', location_id)
-                  ]
-        pushs = push_obj.search_count(cr, uid, domain, context=context)
-        if pulls or pushs:
-            return True
-        return False
+        # actually create WH
+        warehouse = super(Warehouse, self).create(vals)
+        # create sequences and picking types
+        new_vals = warehouse.create_sequences_and_picking_types()
+        warehouse.write(new_vals)  # TDE FIXME: use super ?
+        # create routes and push/procurement rules
+        route_vals = warehouse.create_routes()
+        warehouse.write(route_vals)
+        # update partner data if partner assigned
+        if vals.get('partner_id'):
+            self._update_partner_data(vals['partner_id'], vals.get('company_id'))
+        return warehouse
 
-    def switch_location(self, cr, uid, ids, new_reception_step=False, new_delivery_step=False, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        location_obj = self.pool.get('stock.location')
+    @api.multi
+    def write(self, vals):
+        Route = self.env['stock.location.route']
+        warehouses = self.with_context(active_test=False)  # TDE FIXME: check this
 
-        new_reception_step = new_reception_step or warehouse.reception_steps
-        new_delivery_step = new_delivery_step or warehouse.delivery_steps
-        if warehouse.reception_steps != new_reception_step:
-            if not warehouse._location_used(warehouse.wh_input_stock_loc_id.id):
-                location_obj.write(cr, uid, [warehouse.wh_input_stock_loc_id.id, warehouse.wh_qc_stock_loc_id.id], {'active': False}, context=context)
-            if new_reception_step != 'one_step':
-                location_obj.write(cr, uid, warehouse.wh_input_stock_loc_id.id, {'active': True}, context=context)
-            if new_reception_step == 'three_steps':
-                location_obj.write(cr, uid, warehouse.wh_qc_stock_loc_id.id, {'active': True}, context=context)
+        if vals.get('code') or vals.get('name'):
+            warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
 
-        if warehouse.delivery_steps != new_delivery_step:
-            if not warehouse._location_used(warehouse.wh_output_stock_loc_id.id):
-                location_obj.write(cr, uid, [warehouse.wh_output_stock_loc_id.id], {'active': False}, context=context)
-            if not warehouse._location_used(warehouse.wh_pack_stock_loc_id.id):
-                location_obj.write(cr, uid, [warehouse.wh_pack_stock_loc_id.id], {'active': False}, context=context)
-            if new_delivery_step != 'ship_only':
-                location_obj.write(cr, uid, warehouse.wh_output_stock_loc_id.id, {'active': True}, context=context)
-            if new_delivery_step == 'pick_pack_ship':
-                location_obj.write(cr, uid, warehouse.wh_pack_stock_loc_id.id, {'active': True}, context=context)
-        return True
+        # activate and deactivate location according to reception and delivery option
+        if vals.get('reception_steps'):
+            warehouses._update_location_reception(vals['reception_steps'])
+        if vals.get('delivery_steps'):
+            warehouses._update_location_delivery(vals['delivery_steps'])
+        if vals.get('reception_steps') or vals.get('delivery_steps'):
+            warehouses._update_reception_delivery_resupply(vals.get('reception_steps'), vals.get('delivery_steps'))
 
-    def _get_reception_delivery_route(self, cr, uid, ids, route_name, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
+        if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
+            resupply_whs = self.resolve_2many_commands('resupply_wh_ids', vals['resupply_wh_ids'])
+            new_resupply_whs = self.browse([wh['id'] for wh in resupply_whs])
+            old_resupply_whs = {(warehouse.id, warehouse.resupply_wh_ids) for warehouse in warehouses}
+
+        if 'default_resupply_wh_id' in vals:
+            if vals.get('default_resupply_wh_id') and any(vals['default_resupply_wh_id'] == warehouse.id for warehouse in warehouses):
+                raise UserError(_('The default resupply warehouse should be different than the warehouse itself!'))
+            for warehouse in warehouses.filtered(lambda wh: wh.default_resupply_wh_id):
+                # remove the existing resupplying route on the warehouse
+                to_remove_routes = Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)])
+                for inter_wh_route in to_remove_routes:
+                    warehouse.write({'route_ids': [(3, inter_wh_route.id)]})
+
+        # If another partner assigned
+        if vals.get('partner_id'):
+            warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+        res = super(Warehouse, self).write(vals)
+
+        # check if we need to delete and recreate route
+        if vals.get('reception_steps') or vals.get('delivery_steps'):
+            warehouses._update_routes()
+
+        if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
+            for warehouse in warehouses:
+                to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
+                to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
+                if to_add:
+                    warehouse.create_resupply_routes(to_add, warehouse.default_resupply_wh_id)
+                if to_remove:
+                    Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).unlink()
+                    # TDE FIXME: shouldn't we remove procurement rules also ? because this could make them global (not sure)
+
+        return res
+
+    @api.model
+    def _update_partner_data(self, partner_id, company_id):
+        if not partner_id:
+            return
+        ResCompany = self.env['res.company']
+        if company_id:
+            transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
+        else:
+            transit_loc = ResCompany._company_default_get('stock.warehouse').internal_transit_location_id.id
+        self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
+
+    def create_sequences_and_picking_types(self):
+        IrSequenceSudo = self.env['ir.sequence'].sudo()
+        PickingType = self.env['stock.picking.type']
+
+        input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
+
+        # choose the next available color for the picking types of this warehouse
+        all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
+        available_colors = [zef for zef in [0, 3, 4, 5, 6, 7, 8, 1, 2] if zef not in all_used_colors]
+        color = available_colors and available_colors[0] or 0
+
+        # suit for each warehouse: reception, internal, pick, pack, ship
+        max_sequence = PickingType.search_read([], ['sequence'], limit=1, order='sequence desc')
+        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
+
+        warehouse_data = {}
+        sequence_data = self._get_sequence_values()
+        # tde todo: backport sequence fix
+        create_data = {
+            'in_type_id': {
+                'name': _('Receipts'),
+                'code': 'incoming',
+                'use_create_lots': True,
+                'use_existing_lots': False,
+                'default_location_src_id': False,
+                'sequence': max_sequence + 1,
+            }, 'out_type_id': {
+                'name': _('Delivery Orders'),
+                'code': 'outgoing',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_dest_id': False,
+                'sequence': max_sequence + 5,
+            }, 'pack_type_id': {
+                'name': _('Pack'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.wh_pack_stock_loc_id.id,
+                'default_location_dest_id': output_loc.id,
+                'sequence': max_sequence + 4,
+            }, 'pick_type_id': {
+                'name': _('Pick'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.lot_stock_id.id,
+                'sequence': max_sequence + 3,
+            }, 'int_type_id': {
+                'name': _('Internal Transfers'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.lot_stock_id.id,
+                'default_location_dest_id': self.lot_stock_id.id,
+                'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
+                'sequence': max_sequence + 2,
+            },
+        }
+        data = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
+        for field_name, values in data.iteritems():
+            data[field_name].update(create_data[field_name])
+
+        for picking_type, values in data.iteritems():
+            sequence = IrSequenceSudo.create(sequence_data[picking_type])
+            values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
+            warehouse_data[picking_type] = PickingType.create(values).id
+        PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data['in_type_id']})
+        PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
+        return warehouse_data
+
+    @api.multi
+    def create_routes(self):
+        self.ensure_one()
+        routes_data = self.get_routes_dict()
+
+        reception_route = self._create_or_update_reception_route(routes_data)
+        delivery_route = self._create_or_update_delivery_route(routes_data)
+        mto_pull = self._create_or_update_mto_pull(routes_data)
+        crossdock_route = self._create_or_update_crossdock_route(routes_data)
+
+        # create route selectable on the product to resupply the warehouse from another one
+        self.create_resupply_routes(self.resupply_wh_ids, self.default_resupply_wh_id)
+
+        # return routes and mto procurement rule to store on the warehouse
         return {
-            'name': self._format_routename(cr, uid, warehouse, route_name, context=context),
+            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
+            'mto_pull_id': mto_pull.id,
+            'reception_route_id': reception_route.id,
+            'delivery_route_id': delivery_route.id,
+            'crossdock_route_id': crossdock_route.id,
+        }
+
+    def _create_or_update_reception_route(self, routes_data):
+        routes_data = routes_data or self.get_routes_dict()
+        for warehouse in self:
+            if warehouse.reception_route_id:
+                reception_route = warehouse.reception_route_id
+                reception_route.write({'name':  warehouse._format_routename(route_type=warehouse.reception_steps)})
+                reception_route.pull_ids.unlink()
+                reception_route.push_ids.unlink()
+            else:
+                reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
+            # push / procurement (pull) rules for reception
+            routings = routes_data[warehouse.id][warehouse.reception_steps]
+            push_rules_list, pull_rules_list = warehouse._get_push_pull_rules_values(
+                routings, values={'active': True, 'route_id': reception_route.id},
+                push_values=None, pull_values={'procure_method': 'make_to_order'})
+            for push_vals in push_rules_list:
+                self.env['stock.location.path'].create(push_vals)
+            for pull_vals in pull_rules_list:
+                self.env['procurement.rule'].create(pull_vals)
+        return reception_route
+
+    def _create_or_update_delivery_route(self, routes_data):
+        """ Delivery (MTS) route """
+        routes_data = routes_data or self.get_routes_dict()
+        for warehouse in self:
+            if warehouse.delivery_route_id:
+                delivery_route = warehouse.delivery_route_id
+                delivery_route.write({'name': warehouse._format_routename(route_type=warehouse.delivery_steps)})
+                delivery_route.pull_ids.unlink()
+            else:
+                delivery_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.delivery_steps))
+            # procurement (pull) rules for delivery
+            routings = routes_data[warehouse.id][warehouse.delivery_steps]
+            dummy, pull_rules_list = warehouse._get_push_pull_rules_values(
+                routings, values={'active': True, 'route_id': delivery_route.id})
+            for pull_vals in pull_rules_list:
+                self.env['procurement.rule'].create(pull_vals)
+        return delivery_route
+
+    def _create_or_update_mto_pull(self, routes_data):
+        """ Create MTO procurement rule and link it to the generic MTO route """
+        routes_data = routes_data or self.get_routes_dict()
+        for warehouse in self:
+            routings = routes_data[warehouse.id][warehouse.delivery_steps]
+            if warehouse.mto_pull_id:
+                mto_pull = warehouse.mto_pull_id
+                mto_pull.write(warehouse._get_mto_pull_rules_values(routings)[0])
+            else:
+                mto_pull = self.env['procurement.rule'].create(warehouse._get_mto_pull_rules_values(routings)[0])
+        return mto_pull
+
+    def _create_or_update_crossdock_route(self, routes_data):
+        """ Create or update the cross dock operations route, that can be set on
+        products and product categories """
+        routes_data = routes_data or self.get_routes_dict()
+        for warehouse in self:
+            if warehouse.crossdock_route_id:
+                crossdock_route = warehouse.crossdock_route_id
+                crossdock_route.write({'active': warehouse.reception_steps != 'one_step' and warehouse.delivery_steps != 'ship_only'})
+            else:
+                crossdock_route = self.env['stock.location.route'].create(warehouse._get_crossdock_route_values())
+                # note: fixed cross-dock is logically mto
+                routings = routes_data[warehouse.id]['crossdock']
+                dummy, pull_rules_list = warehouse._get_push_pull_rules_values(
+                    routings,
+                    values={'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', 'route_id': crossdock_route.id},
+                    push_values=None, pull_values={'procure_method': 'make_to_order'})
+                for pull_vals in pull_rules_list:
+                    self.env['procurement.rule'].create(pull_vals)
+        return crossdock_route
+
+    def create_resupply_routes(self, supplier_warehouses, default_resupply_wh):
+        Route = self.env['stock.location.route']
+        Pull = self.env['procurement.rule']
+
+        input_location, output_location = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
+        internal_transit_location, external_transit_location = self._get_transit_locations()
+
+        for supplier_wh in supplier_warehouses:
+            transit_location = internal_transit_location if supplier_wh.company_id == self.company_id else external_transit_location
+            if not transit_location:
+                continue
+            output_location = supplier_wh.lot_stock_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.wh_output_stock_loc_id
+            # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
+            if supplier_wh.delivery_steps == 'ship_only':
+                Pull.create(supplier_wh._get_mto_pull_rules_values([
+                    self.Routing(output_location, transit_location, supplier_wh.out_type_id)])[0])
+
+            inter_wh_route = Route.create(self._get_inter_warehouse_route_values(supplier_wh))
+
+            pull_rules_list = supplier_wh._get_supply_pull_rules_values(
+                [self.Routing(output_location, transit_location, supplier_wh.out_type_id)],
+                values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': self.id})
+            pull_rules_list += self._get_supply_pull_rules_values(
+                [self.Routing(transit_location, input_location, self.in_type_id)],
+                values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
+            for pull_rule_vals in pull_rules_list:
+                Pull.create(pull_rule_vals)
+
+            # if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
+            if supplier_wh == default_resupply_wh:
+                (self | supplier_wh).write({'route_ids': [(4, inter_wh_route.id)]})
+
+    # Routing tools
+    # ------------------------------------------------------------
+
+    def _get_input_output_locations(self, reception_steps, delivery_steps):
+        return (self.lot_stock_id if reception_steps == 'one_step' else self.wh_input_stock_loc_id,
+                self.lot_stock_id if delivery_steps == 'ship_only' else self.wh_output_stock_loc_id)
+
+    def _get_transit_locations(self):
+        return self.company_id.internal_transit_location_id, self.env.ref('stock.stock_location_inter_wh', raise_if_not_found=False) or self.env['stock.location']
+
+    @api.model
+    def _get_partner_locations(self):
+        ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
+        Location = self.env['stock.location']
+        customer_loc = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
+        supplier_loc = self.env.ref('stock.stock_location_suppliers', raise_if_not_found=False)
+        if not customer_loc:
+            customer_loc = Location.search([('usage', '=', 'customer')], limit=1)
+        if not supplier_loc:
+            supplier_loc = Location.search([('usage', '=', 'supplier')], limit=1)
+        if not customer_loc and not supplier_loc:
+            raise UserError(_('Can\'t find any customer or supplier location.'))
+        return customer_loc, supplier_loc
+
+    def _get_route_name(self, route_type):
+        names = {'one_step': _('Receipt in 1 step'), 'two_steps': _('Receipt in 2 steps'),
+                 'three_steps': _('Receipt in 3 steps'), 'crossdock': _('Cross-Dock'),
+                 'ship_only': _('Ship Only'), 'pick_ship': _('Pick + Ship'),
+                 'pick_pack_ship': _('Pick + Pack + Ship')}
+        return names[route_type]
+
+    def get_routes_dict(self):
+        # TDE todo: rename me (was get_routes_dict)
+        customer_loc, supplier_loc = self._get_partner_locations()
+        return dict((warehouse.id, {
+            'one_step': [],
+            'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id)],
+            'three_steps': [
+                self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id),
+                self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id)],
+            'crossdock': [
+                self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id),
+                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id)],
+            'pick_ship': [
+                self.Routing(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id),
+                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'pick_pack_ship': [
+                self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id),
+                self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id),
+                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+        }) for warehouse in self)
+
+    @api.multi
+    def _get_reception_delivery_route_values(self, route_type):
+        return {
+            'name': self._format_routename(route_type=route_type),
             'product_categ_selectable': True,
             'product_selectable': False,
             'sequence': 10,
         }
 
-    def _get_supply_pull_rules(self, cr, uid, ids, values, new_route_id, context=None):
-        supply_warehouse = ids[0]
-        pull_rules_list = []
-        for from_loc, dest_loc, pick_type_id, warehouse in values:
-            pull_rules_list.append({
-                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
-                'location_src_id': from_loc.id,
-                'location_id': dest_loc.id,
-                'route_id': new_route_id,
-                'action': 'move',
-                'picking_type_id': pick_type_id,
-                'procure_method': warehouse.lot_stock_id.id != from_loc.id and 'make_to_order' or 'make_to_stock', # first part of the resuply route is MTS
-                'warehouse_id': warehouse.id,
-                'propagate_warehouse_id': supply_warehouse,
-            })
-        return pull_rules_list
-
-    def _get_push_pull_rules(self, cr, uid, ids, active, values, new_route_id, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        first_rule = True
-        push_rules_list = []
-        pull_rules_list = []
-        for from_loc, dest_loc, pick_type_id in values:
-            push_rules_list.append({
-                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
-                'location_from_id': from_loc.id,
-                'location_dest_id': dest_loc.id,
-                'route_id': new_route_id,
-                'auto': 'manual',
-                'picking_type_id': pick_type_id,
-                'active': active,
-                'warehouse_id': warehouse.id,
-            })
-            pull_rules_list.append({
-                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
-                'location_src_id': from_loc.id,
-                'location_id': dest_loc.id,
-                'route_id': new_route_id,
-                'action': 'move',
-                'picking_type_id': pick_type_id,
-                'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
-                'active': active,
-                'warehouse_id': warehouse.id,
-            })
-            first_rule = False
-        return push_rules_list, pull_rules_list
-
-    def _get_mto_route(self, cr, uid, context=None):
-        route_obj = self.pool.get('stock.location.route')
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            mto_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
-        except:
-            mto_route_id = route_obj.search(cr, uid, [('name', 'like', _('Make To Order'))], context=context)
-            mto_route_id = mto_route_id and mto_route_id[0] or False
-        if not mto_route_id:
+    @api.model
+    @api.returns('stock.location.route', lambda value: value.id)
+    def _get_mto_route(self):
+        mto_route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
+        if not mto_route:
+            mto_route = self.env['stock.location.route'].search([('name', 'like', _('Make To Order'))], limit=1)
+        if not mto_route:
             raise UserError(_('Can\'t find any generic Make To Order route.'))
-        return mto_route_id
+        return mto_route
 
-    def _get_mto_pull_rule(self, cr, uid, ids, values, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        mto_route_id = self._get_mto_route(cr, uid, context=context)
-        res = []
-        for value in values:
-            from_loc, dest_loc, pick_type_id = value
-            res += [{
-            'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context) + _(' MTO'),
-            'location_src_id': from_loc.id,
-            'location_id': dest_loc.id,
-            'route_id': mto_route_id,
-            'action': 'move',
-            'picking_type_id': pick_type_id,
-            'procure_method': 'make_to_order',
-            'active': True,
-            'warehouse_id': warehouse.id,
-            }]
-        return res
-
-    def _get_crossdock_route(self, cr, uid, ids, route_name, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
+    def _get_inter_warehouse_route_values(self, supplier_warehouse):
         return {
-            'name': self._format_routename(cr, uid, warehouse, route_name, context=context),
+            'name': _('%s: Supply Product from %s') % (self.name, supplier_warehouse.name),
             'warehouse_selectable': False,
             'product_selectable': True,
             'product_categ_selectable': True,
-            'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
-            'sequence': 20,
-        }
+            'supplied_wh_id': self.id,
+            'supplier_wh_id': supplier_warehouse.id}
+    _get_inter_wh_route = _get_inter_warehouse_route_values  # compatibility
 
-    def create_routes(self, cr, uid, ids, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        wh_route_ids = []
-        route_obj = self.pool.get('stock.location.route')
-        pull_obj = self.pool.get('procurement.rule')
-        push_obj = self.pool.get('stock.location.path')
-        routes_dict = warehouse.get_routes_dict()
-        #create reception route and rules
-        route_name, values = routes_dict[warehouse.reception_steps]
-        route_vals = warehouse._get_reception_delivery_route(route_name)
-        reception_route_id = route_obj.create(cr, uid, route_vals, context=context)
-        wh_route_ids.append((4, reception_route_id))
-        push_rules_list, pull_rules_list = warehouse._get_push_pull_rules(True, values, reception_route_id)
-        #create the push/procurement rules
-        for push_rule in push_rules_list:
-            push_obj.create(cr, uid, vals=push_rule, context=context)
-        for pull_rule in pull_rules_list:
-            #all procurement rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
-            pull_rule['procure_method'] = 'make_to_order'
-            pull_obj.create(cr, uid, vals=pull_rule, context=context)
-
-        #create MTS route and procurement rules for delivery and a specific route MTO to be set on the product
-        route_name, values = routes_dict[warehouse.delivery_steps]
-        route_vals = warehouse._get_reception_delivery_route(route_name)
-        #create the route and its procurement rules
-        delivery_route_id = route_obj.create(cr, uid, route_vals, context=context)
-        wh_route_ids.append((4, delivery_route_id))
-        dummy, pull_rules_list = warehouse._get_push_pull_rules(True, values, delivery_route_id)
-        for pull_rule in pull_rules_list:
-            pull_obj.create(cr, uid, vals=pull_rule, context=context)
-        #create MTO procurement rule and link it to the generic MTO route
-        mto_pull_vals = warehouse._get_mto_pull_rule(values)[0]
-        mto_pull_id = pull_obj.create(cr, uid, mto_pull_vals, context=context)
-
-        #create a route for cross dock operations, that can be set on products and product categories
-        route_name, values = routes_dict['crossdock']
-        crossdock_route_vals = warehouse._get_crossdock_route(route_name)
-        crossdock_route_id = route_obj.create(cr, uid, vals=crossdock_route_vals, context=context)
-        wh_route_ids.append((4, crossdock_route_id))
-        dummy, pull_rules_list = warehouse._get_push_pull_rules(warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id)
-        for pull_rule in pull_rules_list:
-            # Fixed cross-dock is logically mto
-            pull_rule['procure_method'] = 'make_to_order'
-            pull_obj.create(cr, uid, vals=pull_rule, context=context)
-
-        #create route selectable on the product to resupply the warehouse from another one
-        warehouse._create_resupply_routes(warehouse.resupply_wh_ids, warehouse.default_resupply_wh_id)
-
-        #return routes and mto procurement rule to store on the warehouse
+    def _get_crossdock_route_values(self):
         return {
-            'route_ids': wh_route_ids,
-            'mto_pull_id': mto_pull_id,
-            'reception_route_id': reception_route_id,
-            'delivery_route_id': delivery_route_id,
-            'crossdock_route_id': crossdock_route_id,
-        }
+            'name': self._format_routename(route_type='crossdock'),
+            'warehouse_selectable': False,
+            'product_selectable': True,
+            'product_categ_selectable': True,
+            'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
+            'sequence': 20}
 
-    def change_route(self, cr, uid, ids, new_reception_step=False, new_delivery_step=False, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        picking_type_obj = self.pool.get('stock.picking.type')
-        pull_obj = self.pool.get('procurement.rule')
-        push_obj = self.pool.get('stock.location.path')
-        route_obj = self.pool.get('stock.location.route')
-        new_reception_step = new_reception_step or warehouse.reception_steps
-        new_delivery_step = new_delivery_step or warehouse.delivery_steps
+    def _get_crossdock_route(self, route_name):  # compatibility
+        return self._get_crossdock_route_values()
 
-        #change the default source and destination location and (de)activate picking types
-        input_loc = warehouse.wh_input_stock_loc_id
-        if new_reception_step == 'one_step':
-            input_loc = warehouse.lot_stock_id
-        output_loc = warehouse.wh_output_stock_loc_id
-        if new_delivery_step == 'ship_only':
-            output_loc = warehouse.lot_stock_id
-        picking_type_obj.write(cr, uid, warehouse.in_type_id.id, {'default_location_dest_id': input_loc.id}, context=context)
-        picking_type_obj.write(cr, uid, warehouse.out_type_id.id, {'default_location_src_id': output_loc.id}, context=context)
-        picking_type_obj.write(cr, uid, warehouse.pick_type_id.id, {
-                'active': new_delivery_step != 'ship_only',
-                'default_location_dest_id': output_loc.id if new_delivery_step == 'pick_ship' else warehouse.wh_pack_stock_loc_id.id,
-            }, context=context)
-        picking_type_obj.write(cr, uid, warehouse.pack_type_id.id, {'active': new_delivery_step == 'pick_pack_ship'}, context=context)
+    # Pull / Push tools
+    # ------------------------------------------------------------
 
-        routes_dict = warehouse.get_routes_dict()
-        #update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
-        pull_obj.unlink(cr, uid, [pu.id for pu in warehouse.delivery_route_id.pull_ids], context=context)
-        route_name, values = routes_dict[new_delivery_step]
-        route_obj.write(cr, uid, warehouse.delivery_route_id.id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
-        dummy, pull_rules_list = warehouse._get_push_pull_rules(True, values, warehouse.delivery_route_id.id)
-        #create the procurement rules
-        for pull_rule in pull_rules_list:
-            pull_obj.create(cr, uid, vals=pull_rule, context=context)
+    @api.multi
+    def _get_push_pull_rules_values(self, route_values, values=None, push_values=None, pull_values=None, name_suffix=''):
+        first_rule = True
+        push_rules_list, pull_rules_list = [], []
+        for routing in route_values:
+            route_push_values = {
+                'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
+                'location_from_id': routing.from_loc.id,
+                'location_dest_id': routing.dest_loc.id,
+                'auto': 'manual',
+                'picking_type_id': routing.picking_type.id,
+                'warehouse_id': self.id}
+            route_push_values.update((values or {}).items() + (push_values or {}).items())
+            push_rules_list.append(route_push_values)
+            route_pull_values = {
+                'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
+                'location_src_id': routing.from_loc.id,
+                'location_id': routing.dest_loc.id,
+                'action': 'move',
+                'picking_type_id': routing.picking_type.id,
+                'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
+                'warehouse_id': self.id}
+            route_pull_values.update((values or {}).items() + (pull_values or {}).items())
+            pull_rules_list.append(route_pull_values)
+            first_rule = False
+        return push_rules_list, pull_rules_list
 
-        #update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
-        pull_obj.unlink(cr, uid, [pu.id for pu in warehouse.reception_route_id.pull_ids], context=context)
-        push_obj.unlink(cr, uid, [pu.id for pu in warehouse.reception_route_id.push_ids], context=context)
-        route_name, values = routes_dict[new_reception_step]
-        route_obj.write(cr, uid, warehouse.reception_route_id.id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
-        push_rules_list, pull_rules_list = warehouse._get_push_pull_rules(True, values, warehouse.reception_route_id.id)
-        #create the push/procurement rules
-        for push_rule in push_rules_list:
-            push_obj.create(cr, uid, vals=push_rule, context=context)
-        for pull_rule in pull_rules_list:
-            #all procurement rules in receipt route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
-            pull_rule['procure_method'] = 'make_to_order'
-            pull_obj.create(cr, uid, vals=pull_rule, context=context)
+    def _get_mto_pull_rules_values(self, route_values):
+        mto_route = self._get_mto_route()
+        dummy, pull_rules_list = self._get_push_pull_rules_values(route_values, pull_values={
+            'route_id': mto_route.id,
+            'procure_method': 'make_to_order',
+            'active': True}, name_suffix=_('MTO'))
+        return pull_rules_list
+    _get_mto_pull_rule = _get_mto_pull_rules_values  # compatibility
 
-        route_obj.write(cr, uid, warehouse.crossdock_route_id.id, {'active': new_reception_step != 'one_step' and new_delivery_step != 'ship_only'}, context=context)
+    def _get_push_pull_rules(self, active, values, new_route_id):  # compatibility
+        return self._get_push_pull_rules_values(values, values={'active': active, 'route_id': new_route_id})
 
-        #change MTO rule
-        dummy, values = routes_dict[new_delivery_step]
-        mto_pull_vals = warehouse._get_mto_pull_rule(values)[0]
-        pull_obj.write(cr, uid, warehouse.mto_pull_id.id, mto_pull_vals, context=context)
-        return True
+    def _get_supply_pull_rules_values(self, route_values, values=None):
+        dummy, pull_rules_list = self._get_push_pull_rules_values(route_values, values=values, pull_values={'active': True})
+        for pull_rules in pull_rules_list:
+            pull_rules['procure_method'] = self.lot_stock_id.id != pull_rules['location_src_id'] and 'make_to_order' or 'make_to_stock'  # first part of the resuply route is MTS
+        return pull_rules_list
 
-    def create_sequences_and_picking_types(self, cr, uid, ids, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        seq_obj = self.pool.get('ir.sequence')
-        picking_type_obj = self.pool.get('stock.picking.type')
-        #create new sequences
-        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, {'name': warehouse.name + _(' Sequence in'), 'prefix': warehouse.code + '/IN/', 'padding': 5}, context=context)
-        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, {'name': warehouse.name + _(' Sequence out'), 'prefix': warehouse.code + '/OUT/', 'padding': 5}, context=context)
-        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, {'name': warehouse.name + _(' Sequence packing'), 'prefix': warehouse.code + '/PACK/', 'padding': 5}, context=context)
-        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, {'name': warehouse.name + _(' Sequence picking'), 'prefix': warehouse.code + '/PICK/', 'padding': 5}, context=context)
-        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, {'name': warehouse.name + _(' Sequence internal'), 'prefix': warehouse.code + '/INT/', 'padding': 5}, context=context)
+    def _update_reception_delivery_resupply(self, reception_new, delivery_new):
+        """ Check if we need to change something to resupply warehouses and associated MTO rules """
+        input_loc, output_loc = self._get_input_output_locations(reception_new, delivery_new)
+        for warehouse in self:
+            if reception_new and warehouse.reception_steps != reception_new and (warehouse.reception_steps == 'one_step' or reception_new == 'one_step'):
+                warehouse._check_reception_resupply(input_loc)
+            if delivery_new and warehouse.delivery_steps != delivery_new and (warehouse.delivery_steps == 'ship_only' or delivery_new == 'ship_only'):
+                change_to_multiple = warehouse.delivery_steps == 'ship_only'
+                warehouse._check_delivery_resupply(output_loc, change_to_multiple)
+    _check_resupply = _update_reception_delivery_resupply
 
-        wh_stock_loc = warehouse.lot_stock_id
-        wh_input_stock_loc = warehouse.wh_input_stock_loc_id
-        wh_output_stock_loc = warehouse.wh_output_stock_loc_id
-        wh_pack_stock_loc = warehouse.wh_pack_stock_loc_id
-
-        #create in, out, internal picking types for warehouse
-        input_loc = wh_input_stock_loc
-        if warehouse.reception_steps == 'one_step':
-            input_loc = wh_stock_loc
-        output_loc = wh_output_stock_loc
-        if warehouse.delivery_steps == 'ship_only':
-            output_loc = wh_stock_loc
-
-        #choose the next available color for the picking types of this warehouse
-        color = 0
-        available_colors = [0, 3, 4, 5, 6, 7, 8, 1, 2]  # put white color first
-        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
-        #don't use sets to preserve the list order
-        for x in all_used_colors:
-            if x['color'] in available_colors:
-                available_colors.remove(x['color'])
-        if available_colors:
-            color = available_colors[0]
-
-        #order the picking types with a sequence allowing to have the following suit for each warehouse: reception, internal, pick, pack, ship. 
-        max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
-        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
-        internal_active_false = (warehouse.reception_steps == 'one_step') and (warehouse.delivery_steps == 'ship_only')
-        internal_active_false = internal_active_false and not self.user_has_groups(cr, uid, 'stock.group_stock_multi_locations')
-
-        in_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Receipts'),
-            'warehouse_id': warehouse.id,
-            'code': 'incoming',
-            'use_create_lots': True,
-            'use_existing_lots': False,
-            'sequence_id': in_seq_id,
-            'default_location_src_id': False,
-            'default_location_dest_id': input_loc.id,
-            'sequence': max_sequence + 1,
-            'color': color}, context=context)
-        out_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Delivery Orders'),
-            'warehouse_id': warehouse.id,
-            'code': 'outgoing',
-            'use_create_lots': False,
-            'use_existing_lots': True,
-            'sequence_id': out_seq_id,
-            'return_picking_type_id': in_type_id,
-            'default_location_src_id': output_loc.id,
-            'default_location_dest_id': False,
-            'sequence': max_sequence + 4,
-            'color': color}, context=context)
-        picking_type_obj.write(cr, uid, [in_type_id], {'return_picking_type_id': out_type_id}, context=context)
-        int_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Internal Transfers'),
-            'warehouse_id': warehouse.id,
-            'code': 'internal',
-            'use_create_lots': False,
-            'use_existing_lots': True,
-            'sequence_id': int_seq_id,
-            'default_location_src_id': wh_stock_loc.id,
-            'default_location_dest_id': wh_stock_loc.id,
-            'active': not internal_active_false,
-            'sequence': max_sequence + 2,
-            'color': color}, context=context)
-        pack_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Pack'),
-            'warehouse_id': warehouse.id,
-            'code': 'internal',
-            'use_create_lots': False,
-            'use_existing_lots': True,
-            'sequence_id': pack_seq_id,
-            'default_location_src_id': wh_pack_stock_loc.id,
-            'default_location_dest_id': output_loc.id,
-            'active': warehouse.delivery_steps == 'pick_pack_ship',
-            'sequence': max_sequence + 3,
-            'color': color}, context=context)
-        pick_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Pick'),
-            'warehouse_id': warehouse.id,
-            'code': 'internal',
-            'use_create_lots': False,
-            'use_existing_lots': True,
-            'sequence_id': pick_seq_id,
-            'default_location_src_id': wh_stock_loc.id,
-            'default_location_dest_id': output_loc.id if warehouse.delivery_steps == 'pick_ship' else wh_pack_stock_loc.id,
-            'active': warehouse.delivery_steps != 'ship_only',
-            'sequence': max_sequence + 2,
-            'color': color}, context=context)
-
-        #write picking types on WH
-        vals = {
-            'in_type_id': in_type_id,
-            'out_type_id': out_type_id,
-            'pack_type_id': pack_type_id,
-            'pick_type_id': pick_type_id,
-            'int_type_id': int_type_id,
-        }
-        super(stock_warehouse, self).write(cr, uid, warehouse.id, vals=vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if vals is None:
-            vals = {}
-        data_obj = self.pool.get('ir.model.data')
-        seq_obj = self.pool.get('ir.sequence')
-        picking_type_obj = self.pool.get('stock.picking.type')
-        location_obj = self.pool.get('stock.location')
-
-        #create view location for warehouse
-        loc_vals = {
-                'name': _(vals.get('code')),
-                'usage': 'view',
-                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
-        }
-        if vals.get('company_id'):
-            loc_vals['company_id'] = vals.get('company_id')
-        wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
-        vals['view_location_id'] = wh_loc_id
-        #create all location
-        def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
-        reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
-        delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        context_with_inactive = context.copy()
-        context_with_inactive['active_test'] = False
-        sub_locations = [
-            {'name': _('Stock'), 'active': True, 'field': 'lot_stock_id'},
-            {'name': _('Input'), 'active': reception_steps != 'one_step', 'field': 'wh_input_stock_loc_id'},
-            {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'field': 'wh_qc_stock_loc_id'},
-            {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'field': 'wh_output_stock_loc_id'},
-            {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
-        ]
-        for values in sub_locations:
-            loc_vals = {
-                'name': values['name'],
-                'usage': 'internal',
-                'location_id': wh_loc_id,
-                'active': values['active'],
-            }
-            if vals.get('company_id'):
-                loc_vals['company_id'] = vals.get('company_id')
-            location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
-            vals[values['field']] = location_id
-
-        #create WH
-        new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
-        warehouse = self.browse(cr, uid, new_id, context=context)
-        self.create_sequences_and_picking_types(cr, uid, [warehouse.id], context=context)
-
-        #create routes and push/procurement rules
-        new_objects_dict = self.create_routes(cr, uid, [new_id], context=context)
-        self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
-
-        # If partner assigned
-        if vals.get('partner_id'):
-            comp_obj = self.pool['res.company']
-            if vals.get('company_id'):
-                transit_loc = comp_obj.browse(cr, uid, vals.get('company_id'), context=context).internal_transit_location_id.id
-            else:
-                transit_loc = comp_obj.browse(cr, uid, comp_obj._company_default_get(cr, uid, 'stock.warehouse', context=context)).internal_transit_location_id.id
-            self.pool['res.partner'].write(cr, uid, [vals['partner_id']], {'property_stock_customer': transit_loc,
-                                                                            'property_stock_supplier': transit_loc}, context=context)
-        return new_id
-
-    def _format_rulename(self, cr, uid, obj, from_loc, dest_loc, context=None):
-        return obj.code + ': ' + from_loc.name + ' -> ' + dest_loc.name
-
-    def _format_routename(self, cr, uid, obj, name, context=None):
-        return obj.name + ': ' + name
-
-    def get_routes_dict(self, cr, uid, ids, context=None):
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        #fetch customer and supplier locations, for references
-        customer_loc, supplier_loc = self._get_partner_locations(cr, uid, ids, context=context)
-
-        return {
-            'one_step': (_('Receipt in 1 step'), []),
-            'two_steps': (_('Receipt in 2 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
-            'three_steps': (_('Receipt in 3 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
-            'crossdock': (_('Cross-Dock'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
-            'ship_only': (_('Ship Only'), [(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id.id)]),
-            'pick_ship': (_('Pick + Ship'), [(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
-            'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
-        }
-
-    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        location_obj = self.pool.get('stock.location')
-        route_obj = self.pool.get('stock.location.route')
-        pull_obj = self.pool.get('procurement.rule')
-        push_obj = self.pool.get('stock.location.path')
-        #rename location
-        location_id = warehouse.lot_stock_id.location_id.id
-        location_obj.write(cr, uid, location_id, {'name': code}, context=context)
-        #rename route and push-procurement rules
-        for route in warehouse.route_ids:
-            route_obj.write(cr, uid, route.id, {'name': route.name.replace(warehouse.name, name, 1)}, context=context)
-            for pull in route.pull_ids:
-                pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
-            for push in route.push_ids:
-                push_obj.write(cr, uid, push.id, {'name': push.name.replace(warehouse.name, name, 1)}, context=context)
-        #change the mto procurement rule name
-        if warehouse.mto_pull_id.id:
-            pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
-
-    def _check_delivery_resupply(self, cr, uid, ids, new_location, change_to_multiple, context=None):
-        """ Will check if the resupply routes from this warehouse follow the changes of number of delivery steps """
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        #Check routes that are being delivered by this warehouse and change the rule going to transit location
-        route_obj = self.pool.get("stock.location.route")
-        pull_obj = self.pool.get("procurement.rule")
-        routes = route_obj.search(cr, uid, [('supplier_wh_id','=', warehouse.id)], context=context)
-        pulls = pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_id.usage', '=', 'transit')], context=context)
-        if pulls:
-            pull_obj.write(cr, uid, pulls, {'location_src_id': new_location, 'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"}, context=context)
-        # Create or clean MTO rules
-        mto_route_id = self._get_mto_route(cr, uid, context=context)
+    def _check_delivery_resupply(self, new_location, change_to_multiple):
+        """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
+        Check routes being delivery bu this warehouse and change the rule going to transit location """
+        Pull = self.env["procurement.rule"]
+        routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
+        pulls = Pull.search(['&', ('route_id', 'in', routes.ids), ('location_id.usage', '=', 'transit')])
+        pulls.write({
+            'location_src_id': new_location,
+            'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
-            # If single delivery we should create the necessary MTO rules for the resupply 
-            # pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
-            pull_recs = pull_obj.browse(cr, uid, pulls, context=context)
-            transfer_locs = list(set([x.location_id for x in pull_recs]))
-            vals = [(warehouse.lot_stock_id , x, warehouse.out_type_id.id) for x in transfer_locs]
-            mto_pull_vals = warehouse._get_mto_pull_rule(vals)
+            # If single delivery we should create the necessary MTO rules for the resupply
+            routings = [self.Routing(self.lot_stock_id , location, self.out_type_id) for location in pulls.mapped('location_id')]
+            mto_pull_vals = self._get_mto_pull_rules_values(routings)
             for mto_pull_val in mto_pull_vals:
-                pull_obj.create(cr, uid, mto_pull_val, context=context)
+                Pull.create(mto_pull_val)
         else:
             # We need to delete all the MTO procurement rules, otherwise they risk to be used in the system
-            pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
-            if pulls:
-                pull_obj.unlink(cr, uid, pulls, context=context)
+            Pull.search([
+                '&', ('route_id', '=', self._get_mto_route().id),
+                ('location_id.usage', '=', 'transit'),
+                ('location_src_id', '=', self.lot_stock_id.id)]).unlink()
 
-    def _check_reception_resupply(self, cr, uid, ids, new_location, context=None):
-        """
-            Will check if the resupply routes to this warehouse follow the changes of number of receipt steps
-        """
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        #Check routes that are being delivered by this warehouse and change the rule coming from transit location
-        route_obj = self.pool.get("stock.location.route")
-        pull_obj = self.pool.get("procurement.rule")
-        routes = route_obj.search(cr, uid, [('supplied_wh_id','=', warehouse.id)], context=context)
-        pulls= pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_src_id.usage', '=', 'transit')])
+    def _check_reception_resupply(self, new_location):
+        """ Check routes being delivered by the warehouses (resupply routes) and
+        change their rule coming from the transit location """
+        routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
+        self.env['procurement.rule'].search([
+            '&', ('route_id', 'in', routes.ids),
+            ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location})
+
+    @api.multi
+    def _update_routes(self):
+        routes_data = self.get_routes_dict()
+        # change the default source and destination location and (de)activate picking types
+        self._update_picking_type()
+        # update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
+        self._create_or_update_delivery_route(routes_data)
+        # update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
+        self._create_or_update_reception_route(routes_data)
+        self._create_or_update_crossdock_route(routes_data)
+        self._create_or_update_mto_pull(routes_data)
+        return True
+    change_route = _update_routes
+
+    @api.one
+    def _update_picking_type(self):
+        picking_type_values = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
+        for field_name, values in picking_type_values.iteritems():
+            getattr(self, field_name).write(values)
+
+    @api.multi
+    def _update_name_and_code(self, new_name=False, new_code=False):
+        if new_code:
+            self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
+        if new_name:
+            # TDE FIXME: replacing the route name ? not better to re-generate the route naming ?
+            for warehouse in self:
+                routes = warehouse.route_ids
+                for route in routes:
+                    route.write({'name': route.name.replace(warehouse.name, new_name, 1)})
+                    for pull in route.pull_ids:
+                        pull.write({'name': pull.name.replace(warehouse.name, new_name, 1)})
+                    for push in route.push_ids:
+                        push.write({'name': push.name.replace(warehouse.name, new_name, 1)})
+                warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
+        for warehouse in self:
+            sequence_data = warehouse._get_sequence_values()
+            warehouse.in_type_id.sequence_id.write(sequence_data['in_type_id'])
+            warehouse.out_type_id.sequence_id.write(sequence_data['out_type_id'])
+            warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])
+            warehouse.pick_type_id.sequence_id.write(sequence_data['pick_type_id'])
+            warehouse.int_type_id.sequence_id.write(sequence_data['int_type_id'])
+    _handle_renaming = _update_name_and_code
+
+    def _update_location_reception(self, new_reception_step):
+        switch_warehouses = self.filtered(lambda wh: wh.reception_steps != new_reception_step and not wh._location_used(wh.wh_input_stock_loc_id))
+        if switch_warehouses:
+            (switch_warehouses.mapped('wh_input_stock_loc_id') + switch_warehouses.mapped('wh_qc_stock_loc_id')).write({'active': False})
+        if new_reception_step == 'three_steps':
+            self.mapped('wh_qc_stock_loc_id').write({'active': True})
+        if new_reception_step != 'one_step':
+            self.mapped('wh_input_stock_loc_id').write({'active': True})
+
+    def _update_location_delivery(self, new_delivery_step):
+        switch_warehouses = self.filtered(lambda wh: wh.delivery_steps != new_delivery_step)
+        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.wh_output_stock_loc_id))
+        if loc_warehouse:
+            loc_warehouse.mapped('wh_output_stock_loc_id').write({'active': False})
+        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.wh_pack_stock_loc_id))
+        if loc_warehouse:
+            loc_warehouse.mapped('wh_pack_stock_loc_id').write({'active': False})
+        if new_delivery_step == 'pick_pack_ship':
+            self.mapped('wh_pack_stock_loc_id').write({'active': True})
+        if new_delivery_step != 'ship_only':
+            self.mapped('wh_output_stock_loc_id').write({'active': True})
+
+    def _location_used(self, location):
+        pulls = self.env['procurement.rule'].search_count([
+            '&',
+            ('route_id', 'not in', [x.id for x in self.route_ids]),
+            '|', ('location_src_id', '=', location.id),
+            ('location_id', '=', location.id)])
         if pulls:
-            pull_obj.write(cr, uid, pulls, {'location_id': new_location}, context=context)
+            return True
+        pushs = self.env['stock.location.path'].search_count([
+            '&',
+            ('route_id', 'not in', [x.id for x in self.route_ids]),
+            '|', ('location_from_id', '=', location.id),
+            ('location_dest_id', '=', location.id)])
+        if pushs:
+            return True
+        return False
 
-    def _check_resupply(self, cr, uid, ids, reception_new, delivery_new, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        if reception_new:
-            old_val = warehouse.reception_steps
-            new_val = reception_new
-            change_to_one = (old_val != 'one_step' and new_val == 'one_step')
-            change_to_multiple = (old_val == 'one_step' and new_val != 'one_step')
-            if change_to_one or change_to_multiple:
-                new_location = change_to_one and warehouse.lot_stock_id.id or warehouse.wh_input_stock_loc_id.id
-                self._check_reception_resupply(cr, uid, [warehouse.id], new_location, context=context)
-        if delivery_new:
-            old_val = warehouse.delivery_steps
-            new_val = delivery_new
-            change_to_one = (old_val != 'ship_only' and new_val == 'ship_only')
-            change_to_multiple = (old_val == 'ship_only' and new_val != 'ship_only')
-            if change_to_one or change_to_multiple:
-                new_location = change_to_one and warehouse.lot_stock_id.id or warehouse.wh_output_stock_loc_id.id 
-                self._check_delivery_resupply(cr, uid, [warehouse.id], new_location, change_to_multiple, context=context)
+    # Misc
+    # ------------------------------------------------------------
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        seq_obj = self.pool.get('ir.sequence')
-        route_obj = self.pool.get('stock.location.route')
-        context_with_inactive = context.copy()
-        context_with_inactive['active_test'] = False
-        for warehouse in self.browse(cr, uid, ids, context=context_with_inactive):
-            #first of all, check if we need to delete and recreate route
-            if vals.get('reception_steps') or vals.get('delivery_steps'):
-                #activate and deactivate location according to reception and delivery option
-                warehouse.switch_location(vals.get('reception_steps', False), vals.get('delivery_steps', False))
-                # switch between route
-                self.change_route(cr, uid, [warehouse.id], vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
-                # Check if we need to change something to resupply warehouses and associated MTO rules
-                warehouse._check_resupply(vals.get('reception_steps'), vals.get('delivery_steps'))
-            if vals.get('code') or vals.get('name'):
-                name = warehouse.name
-                #rename sequence
-                if vals.get('name'):
-                    name = vals.get('name', warehouse.name)
-                self._handle_renaming(cr, uid, [warehouse.id], name, vals.get('code', warehouse.code), context=context_with_inactive)
-                if warehouse.in_type_id:
-                    seq_obj.write(cr, uid, [warehouse.in_type_id.sequence_id.id], {'name': name + _(' Sequence in'), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
-                if warehouse.out_type_id:
-                    seq_obj.write(cr, uid, [warehouse.out_type_id.sequence_id.id], {'name': name + _(' Sequence out'), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
-                if warehouse.pack_type_id:
-                    seq_obj.write(cr, uid, [warehouse.pack_type_id.sequence_id.id], {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
-                if warehouse.pick_type_id:
-                    seq_obj.write(cr, uid, [warehouse.pick_type_id.sequence_id.id], {'name': name + _(' Sequence picking'), 'prefix': vals.get('code', warehouse.code) + '\PICK\\'}, context=context)
-                if warehouse.int_type_id:
-                    seq_obj.write(cr, uid, [warehouse.int_type_id.sequence_id.id], {'name': name + _(' Sequence internal'), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
-        if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
-            for cmd in vals.get('resupply_wh_ids'):
-                if cmd[0] == 6:
-                    new_ids = set(cmd[2])
-                    old_ids = set([wh.id for wh in warehouse.resupply_wh_ids])
-                    to_add_wh_ids = new_ids - old_ids
-                    if to_add_wh_ids:
-                        supplier_warehouses = self.browse(cr, uid, list(to_add_wh_ids), context=context)
-                        warehouse._create_resupply_routes(supplier_warehouses, warehouse.default_resupply_wh_id)
-                    to_remove_wh_ids = old_ids - new_ids
-                    if to_remove_wh_ids:
-                        to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', list(to_remove_wh_ids))], context=context)
-                        if to_remove_route_ids:
-                            route_obj.unlink(cr, uid, to_remove_route_ids, context=context)
-                else:
-                    #not implemented
-                    pass
-        if 'default_resupply_wh_id' in vals:
-            if vals.get('default_resupply_wh_id') == warehouse.id:
-                raise UserError(_('The default resupply warehouse should be different than the warehouse itself!'))
-            if warehouse.default_resupply_wh_id:
-                #remove the existing resupplying route on the warehouse
-                to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
-                for inter_wh_route_id in to_remove_route_ids:
-                    self.write(cr, uid, [warehouse.id], {'route_ids': [(3, inter_wh_route_id)]})
-            if vals.get('default_resupply_wh_id'):
-                #assign the new resupplying route on all products
-                to_assign_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', vals.get('default_resupply_wh_id'))], context=context)
-                for inter_wh_route_id in to_assign_route_ids:
-                    self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]})
+    def _get_picking_type_values(self, reception_steps, delivery_steps, pack_stop_location):
+        input_loc, output_loc = self._get_input_output_locations(reception_steps, delivery_steps)
+        return {
+            'in_type_id': {'default_location_dest_id': input_loc.id},
+            'out_type_id': {'default_location_src_id': output_loc.id},
+            'pick_type_id': {
+                'active': delivery_steps != 'ship_only',
+                'default_location_dest_id': output_loc.id if delivery_steps == 'pick_ship' else pack_stop_location.id},
+            'pack_type_id': {'active': delivery_steps == 'pick_pack_ship'},
+            'int_type_id': {},
+        }
 
-        # If another partner assigned
-        if vals.get('partner_id'):
-            if not vals.get('company_id'):
-                company = self.browse(cr, uid, ids[0], context=context).company_id
-            else:
-                company = self.pool['res.company'].browse(cr, uid, vals['company_id'])
-            transit_loc = company.internal_transit_location_id.id
-            self.pool['res.partner'].write(cr, uid, [vals['partner_id']], {'property_stock_customer': transit_loc,
-                                                                            'property_stock_supplier': transit_loc}, context=context)
-        return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
+    def _get_sequence_values(self):
+        return {
+            'in_type_id': {'name': self.name + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
+            'out_type_id': {'name': self.name + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
+            'pack_type_id': {'name': self.name + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
+            'pick_type_id': {'name': self.name + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
+            'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
+        }
 
-    def get_all_routes_for_wh(self, cr, uid, ids, context=None):
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        route_obj = self.pool.get("stock.location.route")
-        all_routes = [route.id for route in warehouse.route_ids]
-        all_routes += route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id)], context=context)
-        all_routes += [warehouse.mto_pull_id.route_id.id]
-        return all_routes
+    @api.multi
+    def _format_rulename(self, from_loc, dest_loc, suffix):
+        return '%s: %s -> %s%s' % (self.code, from_loc.name, dest_loc.name, suffix)
 
-    def action_view_all_routes(self, cr, uid, ids, context=None):
-        all_routes = []
-        for wh in self.browse(cr, uid, ids, context=context):
-            all_routes += wh.get_all_routes_for_wh()
+    @api.multi
+    def _format_routename(self, name=None, route_type=None):
+        if route_type:
+            name = self._get_route_name(route_type)
+        return '%s: %s' % (self.name, name)
 
-        domain = [('id', 'in', all_routes)]
+    @api.returns('self')
+    @api.multi
+    def _get_all_routes(self):
+        # TDE FIXME: check overrides
+        routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
+        routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
+        return routes
+    get_all_routes_for_wh = _get_all_routes
+
+    @api.multi
+    def action_view_all_routes(self):
+        routes = self._get_all_routes()
         return {
             'name': _('Warehouse\'s Routes'),
-            'domain': domain,
+            'domain': [('id', 'in', routes.ids)],
             'res_model': 'stock.location.route',
             'type': 'ir.actions.act_window',
             'view_id': False,
@@ -774,157 +696,136 @@ class stock_warehouse(osv.osv):
         }
 
 
-class stock_warehouse_orderpoint(osv.osv):
-    """
-    Defines Minimum stock rules.
-    """
+class Orderpoint(models.Model):
+    """ Defines Minimum stock rules. """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
-    def subtract_procurements_from_orderpoints(self, cr, uid, orderpoint_ids, context=None):
-        '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
-        '''
-
-        cr.execute("""select op.id, p.id, p.product_uom, p.product_qty, pt.uom_id, sm.product_qty from procurement_order as p left join stock_move as sm ON sm.procurement_id = p.id,
-                                    stock_warehouse_orderpoint op, product_product pp, product_template pt
-                                WHERE p.orderpoint_id = op.id AND p.state not in ('done', 'cancel') AND (sm.state IS NULL OR sm.state not in ('draft'))
-                                AND pp.id = p.product_id AND pp.product_tmpl_id = pt.id
-                                AND op.id IN %s
-                                ORDER BY op.id, p.id
-                    """, (tuple(orderpoint_ids),))
-        results = cr.fetchall()
-        current_proc = False
-        current_op = False
-        uom_obj = self.pool.get("product.uom")
-        op_qty = 0
-        res = dict.fromkeys(orderpoint_ids, 0.0)
-        for move_result in results:
-            op = move_result[0]
-            if current_op != op:
-                if current_op:
-                    res[current_op] = op_qty
-                current_op = op
-                op_qty = 0
-            proc = move_result[1]
-            if proc != current_proc:
-                op_qty += uom_obj._compute_qty(cr, uid, move_result[2], move_result[3], move_result[4], round=False)
-                current_proc = proc
-            if move_result[5]: #If a move is associated (is move qty)
-                op_qty -= move_result[5]
-        if current_op:
-            res[current_op] = op_qty
+    @api.model
+    def default_get(self, fields):
+        res = super(Orderpoint, self).default_get(fields)
+        warehouse = None
+        if 'warehouse_id' not in res and res.get('company_id'):
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', res['company_id'])], limit=1)
+        if warehouse:
+            res['warehouse_id'] = warehouse.id
+            res['location_id'] = warehouse.lot_stock_id.id
         return res
 
-    def _check_product_uom(self, cr, uid, ids, context=None):
-        '''
-        Check if the UoM has the same category as the product standard UoM
-        '''
-        if not context:
-            context = {}
+    name = fields.Char(
+        'Name', copy=False, required=True,
+        default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
+    active = fields.Boolean(
+        'Active', default=True,
+        help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.")
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', 'Warehouse',
+        ondelete="cascade", required=True)
+    location_id = fields.Many2one(
+        'stock.location', 'Location',
+        ondelete="cascade", required=True)
+    product_id = fields.Many2one(
+        'product.product', 'Product',
+        domain=[('type', '=', 'product')], ondelete='cascade', required=True)
+    product_uom = fields.Many2one(
+        'product.uom', 'Product Unit of Measure', related='product_id.uom_id',
+        readonly=True, required=True,
+        default=lambda self: self._context.get('product_uom', False))
+    product_min_qty = fields.Float(
+        'Minimum Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
+             "a procurement to bring the forecasted quantity to the Max Quantity.")
+    product_max_qty = fields.Float(
+        'Maximum Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        help="When the virtual stock goes below the Min Quantity, Odoo generates "
+             "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
+    qty_multiple = fields.Float(
+        'Qty Multiple', digits_compute=dp.get_precision('Product Unit of Measure'),
+        default=1, required=True,
+        help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
+    procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
+    group_id = fields.Many2one(
+        'procurement.group', 'Procurement Group', copy=False,
+        help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.")
+    company_id = fields.Many2one(
+        'res.company', 'Company', required=True,
+        default=lambda self: self.env['res.company']._company_default_get('stock.warehouse.orderpoint'))
+    lead_days = fields.Integer(
+        'Lead Time', default=1,
+        help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor")
+    lead_type = fields.Selection(
+        [('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type',
+        required=True, default='supplier')
 
-        for rule in self.browse(cr, uid, ids, context=context):
-            if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
-                return False
-        return True
-
-    _columns = {
-        'name': fields.char('Name', required=True, copy=False),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
-        'product_uom': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True),
-        'product_min_qty': fields.float('Minimum Quantity', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "\
-            "a procurement to bring the forecasted quantity to the Max Quantity."),
-        'product_max_qty': fields.float('Maximum Quantity', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="When the virtual stock goes below the Min Quantity, Odoo generates "\
-            "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
-        'qty_multiple': fields.float('Qty Multiple', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "),
-        'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
-        'group_id': fields.many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'lead_days': fields.integer('Lead Time', help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor"),
-        'lead_type': fields.selection([
-            ('net', 'Day(s) to get the products'),
-            ('supplier', 'Day(s) to purchase')
-         ], 'Lead Type', required=True)
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-        'lead_days': lambda *a: 1,
-        'lead_type': lambda *a: 'supplier',
-        'qty_multiple': lambda *a: 1,
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.orderpoint') or '',
-        'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),
-        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
-    }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
-    _constraints = [
-        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
-    ]
 
-    def default_get(self, cr, uid, fields, context=None):
-        warehouse_obj = self.pool.get('stock.warehouse')
-        res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
-        # default 'warehouse_id' and 'location_id'
-        if 'warehouse_id' not in res:
-            warehouse_ids = res.get('company_id') and warehouse_obj.search(cr, uid, [('company_id', '=', res['company_id'])], limit=1, context=context) or []
-            res['warehouse_id'] = warehouse_ids and warehouse_ids[0] or False
-        if 'location_id' not in res:
-            res['location_id'] = res.get('warehouse_id') and warehouse_obj.browse(cr, uid, res['warehouse_id'], context).lot_stock_id.id or False
-        return res
+    @api.constrains('product_id', 'product_uom')
+    def _check_product_uom(self):
+        ''' Check if the UoM has the same category as the product standard UoM '''
+        if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
+            raise ValidationError(_('You have to select a product unit of measure in the same category than the default unit of measure of the product'))
 
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
-        """ Finds location id for changed warehouse.
-        @param warehouse_id: Changed id of warehouse.
-        @return: Dictionary of values.
-        """
-        if warehouse_id:
-            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            v = {'location_id': w.lot_stock_id.id}
-            return {'value': v}
-        return {}
+    @api.onchange('warehouse_id')
+    def onchange_warehouse_id(self):
+        """ Finds location id for changed warehouse. """
+        if self.warehouse_id:
+            self.location_id = self.warehoues_id.lot_stock_id.id
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
-        """ Finds UoM for changed product.
-        @param product_id: Changed id of product.
-        @return: Dictionary of values.
-        """
-        if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            d = {'product_uom': [('category_id', '=', prod.uom_id.category_id.id)]}
-            v = {'product_uom': prod.uom_id.id}
-            return {'value': v, 'domain': d}
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if self.product_id:
+            self.product_uom = self.product_id.uom_id.id
+            return {'domain':  {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
         return {'domain': {'product_uom': []}}
 
-    def _get_date_planned(self, cr, uid, ids, start_date, context=None):
-        orderpoint = self.browse(cr, uid, ids[0], context=context)
-        days = orderpoint.lead_days or 0.0
-        if orderpoint.lead_type == 'purchase':
+    @api.multi
+    def subtract_procurements_from_orderpoints(self):
+        '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
+        '''
+        self._cr.execute("""SELECT orderpoint.id, procurement.id, procurement.product_uom, procurement.product_qty, template.uom_id, move.product_qty
+            FROM stock_warehouse_orderpoint orderpoint
+            JOIN procurement_order AS procurement ON procurement.orderpoint_id = orderpoint.id
+            JOIN product_product AS product ON product.id = procurement.product_id
+            JOIN product_template AS template ON template.id = product.product_tmpl_id
+            LEFT JOIN stock_move AS move ON move.procurement_id = procurement.id
+            WHERE procurement.state not in ('done', 'cancel')
+                AND (move.state IS NULL OR move.state != 'draft')
+                AND orderpoint.id IN %s
+            ORDER BY orderpoint.id, procurement.id
+        """, (tuple(self.ids),))
+        UoM = self.env["product.uom"]
+        procurements_done = set()
+        res = dict.fromkeys(self.ids, 0.0)
+        for orderpoint_id, procurement_id, product_uom_id, procurement_qty, template_uom_id, move_qty in self._cr.fetchall():
+            if procurement_id not in procurements_done:  # count procurement once, if multiple move in this orderpoint/procurement combo
+                procurements_done.add(procurement_id)
+                res[orderpoint_id] += UoM._compute_qty(product_uom_id, procurement_qty, template_uom_id, round=False)
+            if move_qty:
+                res[orderpoint_id] -= move_qty
+        return res
+
+    def _get_date_planned(self, start_date):
+        days = self.lead_days or 0.0
+        if self.lead_type == 'purchase':
             # These days will be substracted when creating the PO
-            days += orderpoint.product_id._select_seller(orderpoint.product_id).delay or 0.0
+            days += self.product_id._select_seller(self.product_id).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-    def _prepare_procurement_values(self, cr, uid, ids, product_qty, date=False, group=False, context=None):
-        orderpoint = self.browse(cr, uid, ids[0], context=context)
+    @api.multi
+    def _prepare_procurement_values(self, product_qty, date=False, group=False):
         return {
-            'name': orderpoint.name,
-            'date_planned': date or orderpoint._get_date_planned(datetime.today()),
-            'product_id': orderpoint.product_id.id,
+            'name': self.name,
+            'date_planned': date or self._get_date_planned(datetime.today()),
+            'product_id': self.product_id.id,
             'product_qty': product_qty,
-            'company_id': orderpoint.company_id.id,
-            'product_uom': orderpoint.product_uom.id,
-            'location_id': orderpoint.location_id.id,
-            'origin': orderpoint.name,
-            'warehouse_id': orderpoint.warehouse_id.id,
-            'orderpoint_id': orderpoint.id,
-            'group_id': group or orderpoint.group_id.id,
+            'company_id': self.company_id.id,
+            'product_uom': self.product_uom.id,
+            'location_id': self.location_id.id,
+            'origin': self.name,
+            'warehouse_id': self.warehouse_id.id,
+            'orderpoint_id': self.id,
+            'group_id': group or self.group_id.id,
         }
