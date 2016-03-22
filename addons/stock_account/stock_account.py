@@ -133,10 +133,13 @@ class stock_location(osv.osv):
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
-    def _get_inventory_value(self, cr, uid, quant, context=None):
-        if quant.product_id.cost_method in ('real'):
-            return quant.cost * quant.qty
-        return super(stock_quant, self)._get_inventory_value(cr, uid, quant, context=context)
+    @api.multi
+    def _compute_inventory_value(self):
+        real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method == 'real')
+        for quant in real_value_quants:
+            quant.inventory_value = quant.cost * quant.qty
+        other = self - real_value_quants
+        return super(stock_quant, other)._compute_inventory_value()
 
     @api.cr_uid_ids_context
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
@@ -147,7 +150,7 @@ class stock_quant(osv.osv):
         account_move_obj = self.pool['account.move']
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
         for quant in self.browse(cr, uid, quant_ids, context=context):
-            move = self._get_latest_move(cr, uid, quant, context=context)
+            move = quant._get_latest_move()
             valuation_update = newprice - quant.cost
             # this is where we post accounting entries for adjustment, if needed
             if not quant.company_id.currency_id.is_zero(valuation_update):
@@ -245,9 +248,10 @@ class stock_quant(osv.osv):
                 quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
         return quant
 
-    def _quant_update_from_move(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
-        res = super(stock_quant, self)._quant_update_from_move(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
-        self._account_entry_move(cr, uid, quants, move, context=context)
+    @api.multi
+    def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
+        res = super(stock_quant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
+        self._account_entry_move(move)
         return res
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):

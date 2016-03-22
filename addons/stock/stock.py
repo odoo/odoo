@@ -677,9 +677,8 @@ class stock_picking(models.Model):
             good_pack = False
             pack_destination = False
             while loop:
-                pack_quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
                 all_in = True
-                for quant in quant_obj.browse(cr, uid, pack_quants, context=context):
+                for quant in test_pack.get_content():
                     # If the quant is not in the quants to compare and not in the common location
                     if not quant in quants_to_compare:
                         all_in = False
@@ -759,8 +758,7 @@ class stock_picking(models.Model):
         top_lvl_packages = self._get_top_level_packages(cr, uid, quants_suggested_locations, context=context)
         # and then create pack operations for the top-level packages found
         for pack in top_lvl_packages:
-            pack_quant_ids = pack_obj.get_content(cr, uid, [pack.id], context=context)
-            pack_quants = quant_obj.browse(cr, uid, pack_quant_ids, context=context)
+            pack_quants = pack.get_content()
             vals.append({
                     'picking_id': picking.id,
                     'package_id': pack.id,
@@ -950,8 +948,7 @@ class stock_picking(models.Model):
             #and deffer the operation if there is some ambiguity on the move to select
             if ops.package_id and not ops.product_id and (not done_qtys or ops.qty_done):
                 #entire package
-                quant_ids = package_obj.get_content(cr, uid, [ops.package_id.id], context=context)
-                for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
+                for quant in ops.package_id.get_content():
                     remaining_qty_on_quant = quant.qty
                     if quant.reservation_id:
                         #avoid quants being counted twice
