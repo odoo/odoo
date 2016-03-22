@@ -573,7 +573,7 @@ class stock_quant(osv.osv):
                                                  ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')], context=context)
             if other_quants:
                 lot_name = self.pool['stock.production.lot'].browse(cr, uid, lot_id, context=context).name
-                raise UserError(_('The serial number %s is already in stock') % lot_name)
+                raise UserError(_('The serial number %s is already in stock.') % lot_name + _("Otherwise make sure the right stock/owner is set."))
 
         #create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         quant_id = self.create(cr, SUPERUSER_ID, vals, context=context)

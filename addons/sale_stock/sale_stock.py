@@ -88,6 +88,11 @@ class SaleOrder(models.Model):
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
         return res
 
+    @api.model
+    def _get_customer_lead(self, product_tmpl_id):
+        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
+        return product_tmpl_id.sale_delay
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -235,8 +240,8 @@ class SaleOrderLine(models.Model):
         # Check Drop-Shipping
         if not is_available:
             for pull_rule in product_routes.mapped('pull_ids'):
-                if pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and\
-                        pull_rule.picking_type_id.default_location_dest_id.usage == 'customer':
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
                     is_available = True
                     break
 

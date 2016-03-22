@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-03-03 14:18+0000\n"
+"PO-Revision-Date: 2016-03-16 21:56+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -150,7 +150,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Τοποθεσία Προμηθευτή: Εικονική Τοποθεσία που αντιπροσωπεύει την τοποθεσία προέλευσης για τα προϊόντα που προέρχονται από τους προμηθευτές σας\n\n* Προβολή: Εικονική τοποθεσία που χρησιμοποιείται για να δημιουργηθεί  μια ιεραρχική δομή  για την αποθήκη σας, συγκεντρώνοντας τις θυγατρικές τοποθεσίες; Δεν μπορεί να περιέχει άμεσα προϊόντα\n\n* Εσωτερική Τοποθεσία: Φυσικές τοποθεσίες μέσα στις δικές σας αποθήκες, \n\n* Περιοχή Πελατών: Εικονική τοποθεσία η οποία αντιπροσωπεύει την τοποθεσία προορισμού για τα προϊόντα που αποστέλλονται στους πελάτες σας\n\n* Απογραφή: Εικονική τοποθεσία που χρησιμεύει ως αντιστάθμισμα για τις ενέργειες απογραφής που χρησιμοποιείται για να διορθώσει το επίπεδο των αποθεμάτων (Φυσικές απογραφές) \n\n* Προμήθεια: Εικονική τοποθεσία  που χρησιμεύει ως αντιστάθμισμα για τις ενέργειες προμηθειών όταν η πηγή (προμηθευτής ή παραγωγής) δεν είναι ακόμη γνωστή. Η τοποθεσία αυτή πρέπει να είναι κενή όταν ο προγραμματιστής προμηθειών θα  έχει τελειώσει την εκτέλεση \n\n* Παραγωγή: Εικονικό αντιστάθμισμα για δραστηριότητες παραγωγής: αυτή η τοποθεσία καταναλώνει τις πρώτες ύλες και παράγει τα τελικά προϊόντα\n\n* Τοποθεσία Διέλευσης: Τοποθεσία αντισταθμίσματος που θα πρέπει να χρησιμοποιείται  για λειτουργίες  μεταξύ επιχειρήσεων ή μεταξύ των αποθηκών "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4118,7 +4118,7 @@ msgstr "Φυσικές Απογραφές ανά Μήνα"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
-msgstr "Φυσικές Τοποοθεσίες"
+msgstr "Φυσικές Τοποθεσίες"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
@@ -4396,7 +4396,7 @@ msgstr "Προμήθειες"
 #: code:addons/stock/product.py:323
 #, python-format
 msgid "Produced Qty"
-msgstr "Ποσ. Παραγωγής"
+msgstr "Ποσ. Παραχθέντων"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -6165,7 +6165,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Serial Number"
-msgstr "Μοναδικό Serial Number"
+msgstr "Μοναδικός Σειριακός Αριθμός"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
