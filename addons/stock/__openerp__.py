@@ -73,11 +73,11 @@ Dashboard / Reports for Inventory Management will include:
         'views/product_strategy_views.xml',
         'views/stock_inventory_views.xml',
         'stock_view.xml',
+        'views/stock_picking_views.xml',
         'views/stock_quant_views.xml',
         'views/procurement_views.xml',
         'views/product_views.xml',
         'views/stock_config_settings_views.xml',
-        'stock_dashboard.xml',
 
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
