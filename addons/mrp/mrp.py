@@ -1137,7 +1137,9 @@ class mrp_production(osv.osv):
             'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
+        # TDE FIXME: necessary return ?
+        stock_move.action_confirm(cr, uid, [move_id], context=context)
+        return move_id
 
     def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):
         '''This method returns the procure_method to use when creating the stock move for the production raw materials

@@ -57,8 +57,8 @@
                     <field name="origin"/>
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
-                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                    <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
@@ -80,9 +80,9 @@
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
-                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
+                    <field name="product_id"/>
                     <field name="name" invisible="1"/>
-                    <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="create_date" invisible="1" />
@@ -115,11 +115,10 @@
                     <group>
                         <group name="main_grp" colspan="2">
                             <group name="main_grp_col1">
-                                <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                                <field name="product_id"/>
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
-                                    <field name="product_uom_qty"
-                                        on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
+                                    <field name="product_uom_qty"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                     <button name="%(stock.move_scrap)d" class="btn-default"
                                             string="Scrap" type="action" context="{'scrap': True}"
@@ -131,7 +130,7 @@
                                 <field name="picking_type_id"/>
                                 <field name="priority"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                                <field name="date_expected" attrs="{'invisible': [('state', '=', 'done')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             </group>
                         </group>
@@ -172,12 +171,12 @@
                 </header>
                 <group>
                     <group string="#Products">
-                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
+                        <field name="product_id"/>
                         <field name="picking_type_id" invisible="1"/>
                         <field name="group_id" invisible="1"/>
                         <label for="product_uom_qty"/>
                         <div>
-                            <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)" class="oe_inline"/>
+                            <field name="product_uom_qty"/>
                             <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
