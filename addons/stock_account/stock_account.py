@@ -16,13 +16,14 @@ class stock_inventory(osv.osv):
         'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
     }
 
-    def post_inventory(self, cr, uid, inv, context=None):
+    def post_inventory(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         ctx = context.copy()
+        inv = self.browse(cr, uid, ids, context=context)[0]
         if inv.accounting_date:
             ctx['force_period_date'] = inv.accounting_date
-        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
+        return super(stock_inventory, self).post_inventory(cr, uid, ids, context=ctx)
 
 
 class account_invoice_line(osv.osv):
@@ -161,20 +162,21 @@ class stock_quant(osv.osv):
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
 
-    def _account_entry_move(self, cr, uid, quants, move, context=None):
+    def _account_entry_move(self, cr, uid, ids, move, context=None):
         """
         Accounting Valuation Entries
 
         quants: browse record list of Quants to create accounting valuation entries for. Unempty and all quants are supposed to have the same location id (thay already moved in)
         move: Move to use. browse record
         """
+        quants = self.browse(cr, uid, ids, context=context)
         if context is None:
             context = {}
         location_obj = self.pool.get('stock.location')
         location_from = move.location_id
         location_to = quants[0].location_id
-        company_from = location_obj._location_owner(cr, uid, location_from, context=context)
-        company_to = location_obj._location_owner(cr, uid, location_to, context=context)
+        company_from = location_from and (location_from.usage == 'internal') and location_from.company_id or False
+        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
 
         if move.product_id.valuation != 'real_time':
             return False
@@ -214,10 +216,10 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
+    def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
-        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
-        self._account_entry_move(cr, uid, [quant], move, context)
+        quant = super(stock_quant, self)._quant_create_from_move(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
+        quant._account_entry_move(move)
         if move.product_id.valuation == 'real_time':
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
@@ -237,14 +239,14 @@ class stock_quant(osv.osv):
                     and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
                 qty = quant.qty
                 cost = quant.cost
-                quant_correct = quant_obj._quant_split(cr, uid, quant, quant.qty - 1.0, context=context)
+                quant_correct = quant._quant_split(quant.qty - 1.0)
                 cost_correct += (qty * cost) - (qty * cost_rounded)
                 quant_obj.write(cr, SUPERUSER_ID, [quant.id], {'cost': cost_rounded}, context=context)
                 quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
         return quant
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
+    def _quant_update_from_move(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
+        res = super(stock_quant, self)._quant_update_from_move(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
         self._account_entry_move(cr, uid, quants, move, context=context)
         return res
 

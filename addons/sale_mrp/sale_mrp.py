@@ -70,11 +70,11 @@ class SaleOrderLine(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    @api.model
-    def _prepare_procurement_from_move(self, move):
-        res = super(StockMove, self)._prepare_procurement_from_move(move)
-        if res and move.procurement_id and move.procurement_id.property_ids:
-            res['property_ids'] = [(6, 0, move.procurement_id.property_ids.ids)]
+    @api.multi
+    def _prepare_procurement_from_move(self):
+        res = super(StockMove, self)._prepare_procurement_from_move()
+        if res and self.procurement_id and self.procurement_id.property_ids:
+            res['property_ids'] = [(6, 0, self.procurement_id.property_ids.ids)]
         return res
 
     @api.model

@@ -339,6 +339,7 @@ class PurchaseOrder(models.Model):
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+            # TDE FIXME: I don' think context key is necessary, as actions are not related / called from each other
             if not self.env.context.get('cancel_procurement'):
                 procurements = order.order_line.mapped('procurement_ids')
                 procurements.filtered(lambda r: r.state not in ('cancel', 'exception') and r.rule_id.propagate).write({'state': 'cancel'})
@@ -811,19 +812,19 @@ class ProcurementOrder(models.Model):
 
         return result
 
-    @api.model
-    def _run(self, procurement):
-        if procurement.rule_id and procurement.rule_id.action == 'buy':
-            return procurement.make_po()
-        return super(ProcurementOrder, self)._run(procurement)
+    @api.multi
+    def _run(self):
+        if self.rule_id and self.rule_id.action == 'buy':
+            return self.make_po()
+        return super(ProcurementOrder, self)._run()
 
-    @api.model
-    def _check(self, procurement):
-        if procurement.purchase_line_id:
-            if not procurement.move_ids:
+    @api.multi
+    def _check(self):
+        if self.purchase_line_id:
+            if not self.move_ids:
                 return False
-            return all(move.state == 'done' for move in procurement.move_ids)
-        return super(ProcurementOrder, self)._check(procurement)
+            return all(move.state == 'done' for move in self.move_ids)
+        return super(ProcurementOrder, self)._check()
 
     @api.v8
     def _get_purchase_schedule_date(self):

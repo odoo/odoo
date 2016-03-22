@@ -209,12 +209,6 @@ class product_product(osv.osv):
         quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
         return(list(quants))
 
-    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
-        return res
-
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
         res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
@@ -382,12 +376,6 @@ class product_template(osv.osv):
         product_variant_ids = prod.search(cr, uid, domain, context=context)
         return [('product_variant_ids', 'in', product_variant_ids)]
 
-    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
-        return res
-
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
         res = {k: {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for k in ids}
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
@@ -552,7 +540,8 @@ class product_putaway_strategy(osv.osv):
         'method': 'fixed',
     }
 
-    def putaway_apply(self, cr, uid, putaway_strat, product, context=None):
+    def putaway_apply(self, cr, uid, ids, product, context=None):
+        putaway_strat = self.browse(cr, uid, ids[0], context=context)
         if putaway_strat.method == 'fixed':
             for strat in putaway_strat.fixed_location_ids:
                 categ = product.categ_id

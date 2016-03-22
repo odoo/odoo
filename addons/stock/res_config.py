@@ -159,15 +159,6 @@ class stock_config_settings(osv.osv_memory):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.id
 
-    def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
-        return {'decimal_precision': dp.digits}
-
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
-        dp.write({'digits': config.decimal_precision})
-
     _defaults = {
         'company_id': _default_company,
     }
