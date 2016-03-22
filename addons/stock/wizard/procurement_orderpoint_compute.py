@@ -6,16 +6,16 @@
 #    - Order if the virtual stock of today is bellow the min of the defined order point
 #
 
-import threading
-from openerp.osv import fields,osv
-from openerp.api import Environment
+from odoo import api, models
 
-class procurement_compute(osv.osv_memory):
+import threading
+
+
+class ProcurementOrderpointConfirm(models.TransientModel):
     _name = 'procurement.orderpoint.compute'
     _description = 'Compute Minimum Stock Rules'
 
-
-    def _procure_calculation_orderpoint(self, cr, uid, ids, context=None):
+    def _procure_calculation_orderpoint(self):
         """
         @param self: The object pointer.
         @param cr: A database cursor
@@ -23,26 +23,19 @@ class procurement_compute(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        with Environment.manage():
-            proc_obj = self.pool.get('procurement.order')
-            #As this function is in a new thread, I need to open a new cursor, because the old one may be closed
+        # TDE FIXME: seems to have an error here: AttributeError: environments
+        company_id = self.env.user.company_id.id
+        with api.Environment.manage():
+            # As this function is in a new thread, I need to open a new cursor, because the old one may be closed
             new_cr = self.pool.cursor()
-            user_obj = self.pool.get('res.users')
-            company_id = user_obj.browse(new_cr, uid, uid, context=context).company_id.id
-            proc_obj._procure_orderpoint_confirm(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = company_id, context=context)
-            #close the new cursor
+            self = self.with_env(self.env(cr=new_cr))  # TDE FIXME
+            self.env['procurement.order']._procure_orderpoint_confirm(use_new_cursor=new_cr.dbname, company_id=company_id)
+            # close the new cursor
             new_cr.close()
             return {}
 
-    def procure_calculation(self, cr, uid, ids, context=None):
-        """
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
-        """
-        
-        threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
+    @api.multi
+    def procure_calculation(self):
+        threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=())
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
