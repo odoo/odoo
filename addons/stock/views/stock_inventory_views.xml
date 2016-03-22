@@ -143,7 +143,7 @@
                         <field name="move_ids">
                             <tree decoration-muted="scrapped == True" string="Stock Moves">
                                 <field name="product_id"/>
-                                <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
+                                <field name="product_uom_qty"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="picking_id" invisible="1" />
                                 <field name="create_date" invisible="1" />
