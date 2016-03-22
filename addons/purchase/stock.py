@@ -80,7 +80,7 @@ class stock_warehouse(osv.osv):
             raise UserError(_('Can\'t find any generic Buy route.'))
 
         return {
-            'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),
+            'name': warehouse._format_routename(_(' Buy')),
             'location_id': warehouse.in_type_id.default_location_dest_id.id,
             'route_id': buy_route_id,
             'action': 'buy',
@@ -117,12 +117,11 @@ class stock_warehouse(osv.osv):
                         buy_pull_id = pull_obj.unlink(cr, uid, warehouse.buy_pull_id.id, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
 
-    def get_all_routes_for_wh(self, cr, uid, ids, context=None):
-        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, ids, context=context)
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        if warehouse.buy_to_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
-            all_routes += [warehouse.buy_pull_id.route_id.id]
-        return all_routes
+    @api.multi
+    def _get_all_routes(self):
+        routes = super(stock_warehouse, self).get_all_routes_for_wh()
+        routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
+        return routes
 
     def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
         res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
@@ -143,9 +142,9 @@ class stock_warehouse(osv.osv):
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
 
-    def change_route(self, cr, uid, ids, new_reception_step=False, new_delivery_step=False, context=None):
-        res = super(stock_warehouse, self).change_route(cr, uid, ids, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
-            self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
+    def change_route(self, cr, uid, ids, context=None):
+        res = super(stock_warehouse, self).change_route(cr, uid, ids, context=context)
+        for warehouse in self.browse(cr, uid, ids[0], context=context):
+            if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
+                self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
         return res

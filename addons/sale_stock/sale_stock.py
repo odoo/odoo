@@ -228,13 +228,13 @@ class SaleOrderLine(models.Model):
         if wh_mto_route and wh_mto_route <= product_routes:
             is_available = True
         else:
-            mto_route_id = False
+            mto_route = False
             try:
-                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+                mto_route = self.env['stock.warehouse']._get_mto_route()
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
-            if mto_route_id and mto_route_id in product_routes.ids:
+            if mto_route and mto_route in product_routes:
                 is_available = True
 
         # Check Drop-Shipping

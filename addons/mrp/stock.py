@@ -3,6 +3,7 @@
 
 import time
 
+from openerp import api
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
@@ -246,7 +247,7 @@ class stock_warehouse(osv.osv):
             raise UserError(_('Can\'t find any generic Manufacture route.'))
 
         return {
-            'name': self._format_routename(cr, uid, warehouse, _(' Manufacture'), context=context),
+            'name': warehouse._format_routename(_(' Manufacture')),
             'location_id': warehouse.lot_stock_id.id,
             'route_id': manufacture_route_id,
             'action': 'manufacture',
@@ -283,12 +284,11 @@ class stock_warehouse(osv.osv):
                         pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals, context=context)
 
-    def get_all_routes_for_wh(self, cr, uid, ids, context=None):
-        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, ids, context=context)
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        if warehouse.manufacture_to_resupply and warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
-            all_routes += [warehouse.manufacture_pull_id.route_id.id]
-        return all_routes
+    @api.multi
+    def _get_all_routes(self):
+        routes = super(stock_warehouse, self).get_all_routes_for_wh()
+        routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
+        return routes
 
     def _handle_renaming(self, cr, uid, ids, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
