@@ -1456,7 +1456,7 @@
             <field name="view_id" ref="stock.view_move_tree"/>
         </record>
 
-        <record id="action_move_form2" model="ir.actions.act_window">
+        <record id="stock_move_action" model="ir.actions.act_window">
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
@@ -1479,28 +1479,28 @@
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_tree"/>
-            <field name="act_window_id" ref="action_move_form2"/>
+            <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_form_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_move_form"/>
-        <field name="act_window_id" ref="action_move_form2"/>
+        <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_pivot_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_move_pivot"/>
-            <field name="act_window_id" ref="action_move_form2"/>
+            <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_move_graph"/>
-            <field name="act_window_id" ref="action_move_form2"/>
+            <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
         <!--
@@ -1865,8 +1865,7 @@
             <field name="res_model">stock.location.path</field>
         </record>
 
-
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="stock.menu_warehouse_report" sequence="130"/>
+        <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="130"/>
         <menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
         <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4" groups="stock.group_stock_multi_locations"/>
         
