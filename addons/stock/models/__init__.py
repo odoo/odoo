@@ -11,4 +11,5 @@ import stock_config_settings
 import stock_inventory
 import stock_picking
 import stock_quant
+import stock_warehouse
 import web_planner
