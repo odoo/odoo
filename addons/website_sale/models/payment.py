@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from openerp import SUPERUSER_ID
 from openerp.osv import orm, fields
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(orm.Model):
@@ -19,12 +22,15 @@ class PaymentTransaction(orm.Model):
         res = super(PaymentTransaction, self).form_feedback(cr, uid, data, acquirer_name, context=context)
 
         # fetch the tx, check its state, confirm the potential SO
-        tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
-        if hasattr(self, tx_find_method_name):
-            tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
-        if tx and tx.state == 'done' and tx.sale_order_id and tx.sale_order_id.state in ['draft', 'sent']:
-            self.pool['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=dict(context, send_email=True))
-        elif tx and tx.state not in ['cancel'] and tx.sale_order_id and tx.sale_order_id.state in ['draft']:
-            self.pool['sale.order'].force_quotation_send(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=context)
+        try:
+            tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
+            if hasattr(self, tx_find_method_name):
+                tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
+            if tx and tx.state == 'done' and tx.sale_order_id and tx.sale_order_id.state in ['draft', 'sent']:
+                self.pool['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=dict(context, send_email=True))
+            elif tx and tx.state not in ['cancel'] and tx.sale_order_id and tx.sale_order_id.state in ['draft']:
+                self.pool['sale.order'].force_quotation_send(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=context)
+        except Exception:
+            _logger.exception('Fail to confirm the order or send the confirmation email%s', tx and ' for the transaction %s' % tx.reference or '')
 
         return res
