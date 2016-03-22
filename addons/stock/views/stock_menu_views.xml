@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Inventory" id="menu_stock_root" sequence="30"
+        groups="group_stock_manager,group_stock_user"
+        icon="fa-archive" web_icon="stock,static/description/icon.png"/>
+
+    <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="2" groups="base.group_no_one"/>
+
+    <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+        sequence="100" groups="group_stock_manager"/>
+    <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="stock.group_stock_manager" sequence="1"/>
+    <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_config_settings" sequence="2" groups="stock.group_adv_location"/>
+    <menuitem id="menu_packages_config" name="Packages" parent="menu_stock_config_settings" sequence="3" groups="product.group_stock_packaging"/>
+    <menuitem id="menu_wms_barcode_nomenclature_all" parent="menu_stock_config_settings" action="barcodes.action_barcode_nomenclature_form" 
+        sequence="50" groups="base.group_no_one"/>
+    <menuitem id="menu_product_in_config_stock" name="Products" parent="stock.menu_stock_config_settings" sequence="4"/>
+    <menuitem
+        action="product.product_category_action_form" id="menu_product_category_config_stock"
+        parent="stock.menu_product_in_config_stock" sequence="2"/>
+    <menuitem
+        action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
+        parent="menu_product_in_config_stock" sequence="5" groups="product.group_uom"/>
+    <menuitem
+        id="menu_stock_unit_measure_stock" name="Units of Measure"
+        parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
+    <menuitem id="menu_stock_uom_form_action" action="product.product_uom_form_action" 
+        parent="menu_stock_config_settings" sequence="35" groups="product.group_uom"/>
+
+    <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
+    <record id="product_template_action_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_type">form</field>
+        <field name="context">{"search_default_products": 1, 'default_type': 'product'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new product.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_product_variant_config_stock" name="Products" action="product_template_action_product"
+        parent="stock.menu_stock_inventory_control" sequence="1"/>
+    <menuitem id="product_product_menu" name="Product Variants" action="product.product_normal_action"
+        parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
+
+    <menuitem id="stock.menu_warehouse_report" name="Reports" sequence="99" parent="stock.menu_stock_root" groups="group_stock_manager"/>
+</odoo>
