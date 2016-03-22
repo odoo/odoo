@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -29,22 +30,23 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-    def get_price_unit(self, cr, uid, move, context=None):
+    @api.multi
+    def get_price_unit(self):
         """ Returns the unit price to store on the quant """
-        if move.purchase_line_id:
-            order = move.purchase_line_id.order_id
+        if self.purchase_line_id:
+            order = self.purchase_line_id.order_id
             #if the currency of the PO is different than the company one, the price_unit on the move must be reevaluated
             #(was created at the rate of the PO confirmation, but must be valuated at the rate of stock move execution)
-            if order.currency_id != move.company_id.currency_id:
+            if order.currency_id != self.company_id.currency_id:
                 #we don't pass the move.date in the compute() for the currency rate on purpose because
                 # 1) get_price_unit() is supposed to be called only through move.action_done(),
                 # 2) the move hasn't yet the correct date (currently it is the expected date, after
                 #    completion of action_done() it will be now() )
-                price_unit = move.purchase_line_id._get_stock_move_price_unit()
-                move.write({'price_unit': price_unit})
+                price_unit = self.purchase_line_id._get_stock_move_price_unit()
+                self.write({'price_unit': price_unit})
                 return price_unit
-            return move.price_unit
-        return super(stock_move, self).get_price_unit(cr, uid, move, context=context)
+            return self.price_unit
+        return super(stock_move, self).get_price_unit()
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -87,9 +89,10 @@ class stock_warehouse(osv.osv):
             'group_propagation_option': 'none',
         }
 
-    def create_routes(self, cr, uid, ids, warehouse, context=None):
+    def create_routes(self, cr, uid, ids, context=None):
         pull_obj = self.pool.get('procurement.rule')
-        res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
+        res = super(stock_warehouse, self).create_routes(cr, uid, ids, context=context)
+        warehouse = self.browse(cr, uid, ids, context=context)[0]
         if warehouse.buy_to_resupply:
             buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
             buy_pull_id = pull_obj.create(cr, uid, buy_pull_vals, context=context)
@@ -114,8 +117,9 @@ class stock_warehouse(osv.osv):
                         buy_pull_id = pull_obj.unlink(cr, uid, warehouse.buy_pull_id.id, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
 
-    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
-        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
+    def get_all_routes_for_wh(self, cr, uid, ids, context=None):
+        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, ids, context=context)
+        warehouse = self.browse(cr, uid, ids[0], context=context)
         if warehouse.buy_to_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
             all_routes += [warehouse.buy_pull_id.route_id.id]
         return all_routes
@@ -130,16 +134,18 @@ class stock_warehouse(osv.osv):
                         break
         return res
 
-    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
+    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
+        res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
+        warehouse = self.browse(cr, uid, ids[0], context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the buy procurement rule name
         if warehouse.buy_pull_id:
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
 
-    def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
-        res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
+    def change_route(self, cr, uid, ids, new_reception_step=False, new_delivery_step=False, context=None):
+        res = super(stock_warehouse, self).change_route(cr, uid, ids, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
+        warehouse = self.browse(cr, uid, ids[0], context=context)
         if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
             self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
         return res

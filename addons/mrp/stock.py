@@ -19,8 +19,26 @@ class StockMove(osv.osv):
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
 
-    def check_tracking(self, cr, uid, move, ops, context=None):
-        super(StockMove, self).check_tracking(cr, uid, move, ops, context=context)
+    def get_code_from_locs(self, cr, uid, ids, location_id=False, location_dest_id=False, context=None):
+        """
+        Returns the code the picking type should have.  This can easily be used
+        to check if a move is internal or not
+        move, location_id and location_dest_id are browse records
+        """
+        move = self.browse(cr, uid, ids[0], context=context)
+        # TDE note: called only in MRP
+        code = 'internal'
+        src_loc = location_id or move.location_id
+        dest_loc = location_dest_id or move.location_dest_id
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        return code
+
+    def check_tracking(self, cr, uid, ids, ops, context=None):
+        super(StockMove, self).check_tracking(cr, uid, ids, ops, context=context)
+        move = self.browse(cr, uid, ids[0], context=context)
         if move.raw_material_production_id and move.product_id.tracking!='none' and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.tracking != 'none' and not move.consumed_for:
             raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
@@ -152,7 +170,7 @@ class StockMove(osv.osv):
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
             quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
             if float_compare(quantity_rest_uom, 0, precision_rounding=move.product_uom.rounding) != 0:
-                new_mov = self.split(cr, uid, move, quantity_rest, context=context)
+                new_mov = self.split(cr, uid, [move.id], quantity_rest, context=context)
                 if move.production_id:
                     self.write(cr, uid, [new_mov], {'production_id': move.production_id.id}, context=context)
                 res.append(new_mov)
@@ -237,9 +255,10 @@ class stock_warehouse(osv.osv):
             'warehouse_id': warehouse.id,
         }
 
-    def create_routes(self, cr, uid, ids, warehouse, context=None):
+    def create_routes(self, cr, uid, ids, context=None):
         pull_obj = self.pool.get('procurement.rule')
-        res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
+        res = super(stock_warehouse, self).create_routes(cr, uid, ids, context=context)
+        warehouse = self.browse(cr, uid, ids, context=context)[0]
         if warehouse.manufacture_to_resupply:
             manufacture_pull_vals = self._get_manufacture_pull_rule(cr, uid, warehouse, context=context)
             manufacture_pull_id = pull_obj.create(cr, uid, manufacture_pull_vals, context=context)
@@ -264,14 +283,16 @@ class stock_warehouse(osv.osv):
                         pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals, context=context)
 
-    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
-        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
+    def get_all_routes_for_wh(self, cr, uid, ids, context=None):
+        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, ids, context=context)
+        warehouse = self.browse(cr, uid, ids[0], context=context)
         if warehouse.manufacture_to_resupply and warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
             all_routes += [warehouse.manufacture_pull_id.route_id.id]
         return all_routes
 
-    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
+    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
+        res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
+        warehouse = self.browse(cr, uid, ids[0], context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the manufacture procurement rule name
         if warehouse.manufacture_pull_id:

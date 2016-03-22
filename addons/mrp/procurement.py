@@ -29,16 +29,18 @@ class procurement_order(osv.osv):
                 self.pool.get('mrp.production').action_cancel(cr, uid, [procurement.production_id.id], context=context)
         return super(procurement_order, self).propagate_cancels(cr, uid, ids, context=context)
 
-    def _run(self, cr, uid, procurement, context=None):
+    def _run(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
             #make a manufacturing order for the procurement
             return self.make_mo(cr, uid, [procurement.id], context=context)[procurement.id]
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._run(cr, uid, ids, context=context)
 
-    def _check(self, cr, uid, procurement, context=None):
+    def _check(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
             return True
-        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._check(cr, uid, ids, context=context)
 
     def check_bom_exists(self, cr, uid, ids, context=None):
         """ Finds the bill of material for the product from procurement order.

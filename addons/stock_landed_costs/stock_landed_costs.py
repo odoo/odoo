@@ -232,7 +232,7 @@ class stock_landed_cost(osv.osv):
                     # Search for existing quant of quantity = 1.0 to avoid creating a new one
                     quant_correct = quants.filtered(lambda r: float_compare(r.qty, 1.0, precision_rounding=quants[0].product_id.uom_id.rounding) == 0)
                     if not quant_correct:
-                        quant_correct = quant_obj._quant_split(cr, uid, quants[0], quants[0].qty - 1.0, context=context)
+                        quant_correct = quants[0]._quant_split(quants[0].qty - 1.0)
                     else:
                         quant_correct = quant_correct[0]
                         quants = quants - quant_correct

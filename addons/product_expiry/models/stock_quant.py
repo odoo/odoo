@@ -10,7 +10,7 @@ class StockQuant(models.Model):
     removal_date = fields.Datetime(related='lot_id.removal_date', store=True)
 
     @api.model
-    def apply_removal_strategy(self, qty, move, ops=False, domain=None, removal_strategy='fifo'):
+    def _quants_removal_get_order(self, removal_strategy):
         if removal_strategy == 'fefo':
-            return self._quants_get_order(qty, move, ops=ops, domain=domain, orderby='removal_date, in_date, id')
-        return super(StockQuant, self).apply_removal_strategy(qty, move, ops=ops, domain=domain, removal_strategy=removal_strategy)
+            return 'removal_date, in_date, id'
+        return super(StockQuant, self)._quants_removal_get_order(removal_strategy=removal_strategy)
