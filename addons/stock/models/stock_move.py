@@ -652,7 +652,8 @@ class StockMove(models.Model):
                 move.quants_unreserve()
             if self.env.context.get('cancel_procurement'):
                 if move.propagate:
-                    procurements.search([('move_dest_id', '=', move.id)]).cancel()
+                    pass
+                    # procurements.search([('move_dest_id', '=', move.id)]).cancel()
             else:
                 if move.move_dest_id:
                     if move.propagate:
