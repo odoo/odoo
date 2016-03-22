@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_procurement_compute_wizard" model="ir.ui.view">
+        <field name="name">Run Reordering Rules</field>
+        <field name="model">procurement.orderpoint.compute</field>
+        <field name="arch" type="xml">
+            <form string="Parameters">
+                <group>
+                    <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                </group>
+                <footer>
+                    <button name="procure_calculation" string="Compute Stock" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_procurement_compute" model="ir.actions.act_window">
+        <field name="name">Run Reordering Rules</field>
+        <field name="res_model">procurement.orderpoint.compute</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
