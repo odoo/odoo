@@ -12,7 +12,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" on_change="on_change_website_id(website_id)"/>
+                        <field name="website_id" on_change="on_change_website_id(website_id)" invisible="1"/>
                         <group string="Domain">
                             <field name="website_name" />
                             <label for="google_analytics_key"/>
