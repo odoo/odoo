@@ -98,6 +98,7 @@ class StockPicking(models.Model):
 
     @api.multi
     def do_transfer(self):
+        # TDE FIXME: should work in batch
         self.ensure_one()
         res = super(StockPicking, self).do_transfer()
 
@@ -111,6 +112,7 @@ class StockPicking(models.Model):
 
     @api.multi
     def put_in_pack(self):
+        # TDE FIXME: work in batch, please
         self.ensure_one()
         package_id = super(StockPicking, self).put_in_pack()
         package = self.env['stock.quant.package'].browse(package_id)
