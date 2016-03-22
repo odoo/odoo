@@ -90,8 +90,6 @@ var KanbanView = View.extend({
     },
 
     willStart: function() {
-        var self = this;
-        var fields_def = data_manager.load_fields(this.dataset);
         // add qweb templates
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
@@ -106,9 +104,7 @@ var KanbanView = View.extend({
                 }
             }
         }
-        return $.when(fields_def, this._super()).then(function (fields) {
-            self.fields = fields;
-        });
+        return this._super();
     },
 
     start: function() {
@@ -178,7 +174,14 @@ var KanbanView = View.extend({
         var group_by_field = options.group_by_field;
         var fields_keys = _.uniq(this.fields_keys.concat(group_by_field));
 
-        return new Model(this.model, options.search_context, options.search_domain)
+        var fields_def;
+        if (this.fields_view.fields[group_by_field] === undefined) {
+            fields_def = data_manager.load_fields(this.dataset).then(function (fields) {
+                self.fields = fields;
+            })
+        }
+
+        var load_groups_def = new Model(this.model, options.search_context, options.search_domain)
         .query(fields_keys)
         .group_by([group_by_field])
         .then(function (groups) {
@@ -281,6 +284,7 @@ var KanbanView = View.extend({
                 };
             });
         });
+        return $.when(load_groups_def, fields_def);
     },
 
     is_action_enabled: function(action) {
@@ -423,7 +427,7 @@ var KanbanView = View.extend({
         var self = this;
 
         // Drag'n'drop activation/deactivation
-        var group_by_field_attrs = this.fields[this.group_by_field];
+        var group_by_field_attrs = this.fields_view.fields[this.group_by_field] || this.fields[this.group_by_field];
 
         // Deactivate the drag'n'drop if:
         // - field is a date or datetime since we group by month
