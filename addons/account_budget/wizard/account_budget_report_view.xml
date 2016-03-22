@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-     <data>
-
+<odoo>
       <record id="account_budget_report_view" model="ir.ui.view">
         <field name="name">account.budget.report.form</field>
         <field name="model">account.budget.report</field>
@@ -29,7 +27,7 @@
       <field name="target">new</field>
     </record>
 
-    <record model="ir.values" id="account_budget_report_values">
+    <record id="account_budget_report_values" model="ir.values">
       <field name="model_id" ref="account_budget.model_account_budget_post" />
       <field name="name">Budgets</field>
       <field name="key2">client_print_multi</field>
@@ -37,6 +35,4 @@
       <field name="key">action</field>
       <field name="model">account.budget.post</field>
     </record>
-
-  </data>
-</openerp>
+</odoo>
