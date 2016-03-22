@@ -363,7 +363,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                 Field(name="whoops"),
                 name="target", position="serious_series")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               self.base_arch,
                                               spec, None)
@@ -376,7 +376,7 @@ class TestApplyInheritanceSpecs(ViewCase):
             Field(name="placeholder"),
             foo="42", version="7.0")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               arch,
                                               spec, None)
@@ -385,7 +385,7 @@ class TestApplyInheritanceSpecs(ViewCase):
     def test_target_not_found(self):
         spec = Field(name="targut")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               self.base_arch,
                                               spec, None)
