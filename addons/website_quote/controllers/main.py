@@ -21,6 +21,8 @@ class sale_quote(http.Controller):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id, request.context)
+        message_ids = request.env['mail.message'].sudo()._search([('model', '=', 'sale.order'), ('res_id', 'in', [order_id]), ('subtype_id.internal', '=', False)])
+        messages = request.env['mail.message'].sudo().browse(message_ids)
         now = time.strftime('%Y-%m-%d')
         dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'sale', 'action_quotations')
         if token:
@@ -57,6 +59,7 @@ class sale_quote(http.Controller):
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
             'need_payment': order.invoice_status == 'to invoice' and (not tx or tx.state in ['draft', 'cancel', 'error']),
             'token': token,
+            'messages': messages,
         }
 
         if order.require_payment or values['need_payment']:
