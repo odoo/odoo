@@ -28,7 +28,7 @@ Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'pu
 % if object.origin:
     (RFQ origin: ${object.origin})
 % endif
-amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>
+amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
 from ${object.company_id.name}.
 </p>
 
