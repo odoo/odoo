@@ -223,46 +223,46 @@ var DashBoard = form_common.FormWidget.extend({
             $action = $('#' + this.view.element_id + '_action_' + index);
         $action.parent().data('action_attrs', action_attrs);
         this.action_managers.push(am);
-        am.appendTo($action);
-        am.do_action(action);
-        am.do_action = function (action) {
-            self.do_action(action);
-        };
-        if (am.inner_widget) {
-            var new_form_action = function(id, editable) {
-                var new_views = [];
-                _.each(action_orig.views, function(view) {
-                    new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
-                });
-                if (!new_views.length || new_views[0][1] !== 'form') {
-                    new_views.unshift([false, 'form']);
-                }
-                action_orig.views = new_views;
-                action_orig.res_id = id;
-                action_orig.flags = {
-                    form: {
-                        "initial_mode": editable ? "edit" : "view",
-                    }
-                };
-                self.do_action(action_orig);
-            };
-            var list = am.inner_widget.views.list;
-            if (list) {
-                list.loaded.done(function() {
-                    $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
-                        new_form_action(id);
-                    });
-                });
-            }
-            var kanban = am.inner_widget.views.kanban;
-            if (kanban) {
-                kanban.loaded.done(function() {
-                    kanban.controller.open_record = function(event, editable) {
-                        new_form_action(event.data.id, editable);
+        am.appendTo($action).then(function () {
+            am.do_action(action).then(function () {
+                if (am.inner_widget) {
+                    var new_form_action = function(id, editable) {
+                        var new_views = [];
+                        _.each(action_orig.views, function(view) {
+                            new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
+                        });
+                        if (!new_views.length || new_views[0][1] !== 'form') {
+                            new_views.unshift([false, 'form']);
+                        }
+                        action_orig.views = new_views;
+                        action_orig.res_id = id;
+                        action_orig.flags = {
+                            form: {
+                                "initial_mode": editable ? "edit" : "view",
+                            }
+                        };
+                        self.do_action(action_orig);
                     };
-                });
-            }
-        }
+                    var list = am.inner_widget.views.list;
+                    if (list) {
+                        list.loaded.done(function() {
+                            $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
+                                new_form_action(id);
+                            });
+                        });
+                    }
+                    var kanban = am.inner_widget.views.kanban;
+                    if (kanban) {
+                        kanban.loaded.done(function() {
+                            kanban.controller.open_record = function(event, editable) {
+                                new_form_action(event.data.id, editable);
+                            };
+                        });
+                    }
+                }
+            });
+            am.do_action = self.do_action.bind(self);
+        });
     },
     renderElement: function() {
         this._super();
@@ -333,9 +333,8 @@ core.form_tag_registry
 
 
 FavoriteMenu.include({
-    prepare_dropdown_menu: function (filters) {
+    start: function () {
         var self = this;
-        this._super(filters);
         var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
@@ -355,6 +354,7 @@ FavoriteMenu.include({
             });
             this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
         }
+        return this._super();
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
