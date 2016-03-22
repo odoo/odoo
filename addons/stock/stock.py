@@ -5,7 +5,6 @@ from datetime import datetime
 from dateutil import relativedelta
 import json
 import time
-import sets
 
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
@@ -4935,19 +4934,6 @@ class stock_picking_type(osv.osv):
         'use_existing_lots': True,
         'use_create_lots': True,
     }
-
-class barcode_rule(models.Model):
-    _inherit = 'barcode.rule'
-
-    def _get_type_selection(self):
-        types = sets.Set(super(barcode_rule,self)._get_type_selection()) 
-        types.update([
-            ('weight', _('Weighted Product')),
-            ('location', _('Location')),
-            ('lot', _('Lot')),
-            ('package', _('Package'))
-        ])
-        return list(types)
 
 
 class StockPackOperation(models.Model):
