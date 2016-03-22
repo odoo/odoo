@@ -8,4 +8,5 @@ import product_strategy
 import res_company
 import res_partner
 import stock_config_settings
+import stock_quant
 import web_planner
