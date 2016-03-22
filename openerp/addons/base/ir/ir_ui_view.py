@@ -423,7 +423,7 @@ actual arch.
             'msg': message,
         }
         _logger.info(message)
-        raise AttributeError(message)
+        raise ValueError(message)
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -1150,5 +1150,5 @@ actual arch.
         for vid, in self._cr.fetchall():
             try:
                 self.browse(vid)._check_xml()
-            except Exception:
-                self.raise_view_error("Can't validate view", vid)
+            except Exception as e:
+                self.raise_view_error("Can't validate view: %s" % e.message, vid)
