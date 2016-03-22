@@ -75,7 +75,6 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    # TODO FIXME tde: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
