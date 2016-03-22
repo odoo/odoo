@@ -635,6 +635,7 @@ class AccountInvoice(models.Model):
                     'price': tax_line.amount,
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
+                    'invoice_id': self.id,
                 })
         return res
 

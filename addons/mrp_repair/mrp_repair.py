@@ -52,12 +52,12 @@ class mrp_repair(osv.osv):
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
                 if line.to_invoice and line.tax_id:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
                 if line.to_invoice and line.tax_id:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -546,7 +546,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         for line in self.browse(cr, uid, ids, context=context):
             if line.to_invoice:
                 cur = line.repair_id.pricelist_id.currency_id
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
                 #res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
                 res[line.id] = taxes['total_included']
             else:
@@ -642,7 +642,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         for line in self.browse(cr, uid, ids, context=context):
             if line.to_invoice:
                 cur = line.repair_id.pricelist_id.currency_id
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
                 res[line.id] = taxes['total_included']
             else:
                 res[line.id] = 0

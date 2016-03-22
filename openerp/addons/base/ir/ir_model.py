@@ -337,7 +337,11 @@ class ir_model_fields(osv.osv):
     def _check_depends(self):
         """ Check whether all fields in dependencies are valid. """
         for record in self:
-            for seq in (record.depends or "").split(","):
+            if not record.depends:
+                continue
+            for seq in record.depends.split(","):
+                if not seq.strip():
+                    raise UserError(_("Empty dependency in %r") % (record.depends))
                 model = self.env[record.model]
                 names = seq.strip().split(".")
                 last = len(names) - 1
@@ -992,7 +996,7 @@ class ir_model_data(osv.osv):
 
     def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
         """ Return a browse_record
-        if not found and raise_if_not_found is True return None
+        if not found and raise_if_not_found is False return None
         """ 
         t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
         res_model, res_id = t
