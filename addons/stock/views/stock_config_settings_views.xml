@@ -51,13 +51,13 @@
                     </group>
                     <group string="Location &amp; Warehouse">
                         <field name="module_procurement_jit" widget="radio"/>
-                        <field name="warehouse_and_location_usage_level" widget="radio" on_change="onchange_warehouse_and_location_usage_level(warehouse_and_location_usage_level)"/>
+                        <field name="warehouse_and_location_usage_level" widget="radio"/>
                         <field name="group_stock_multi_locations" invisible="1"/>
                         <field name="group_stock_multi_warehouses" invisible="1"/>
                         
                         <label for="group_stock_adv_location"/>
                         <div>
-                            <field name="group_stock_adv_location" widget="radio" on_change="onchange_adv_location(group_stock_adv_location)"/>
+                            <field name="group_stock_adv_location" widget="radio"/>
                             <div attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}">
                                 <label for="propagation_minimum_delta"/>
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
