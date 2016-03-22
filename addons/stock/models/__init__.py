@@ -8,6 +8,7 @@ import product_strategy
 import res_company
 import res_partner
 import stock_config_settings
+import stock_incoterms
 import stock_inventory
 import stock_location
 import stock_move
