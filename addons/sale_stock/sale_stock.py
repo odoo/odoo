@@ -265,7 +265,6 @@ class AccountInvoice(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
 
-    @api.multi
     def _run_move_create(self):
         vals = super(ProcurementOrder, self)._run_move_create()
         if self.sale_line_id:
