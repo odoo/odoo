@@ -402,7 +402,7 @@ class IrValues(models.Model):
             # FIXME: needs cleanup
             try:
                 action_def = {
-                    field: action._fields[field].convert_to_read(action[field])
+                    field: action._fields[field].convert_to_read(action[field], action)
                     for field in fields
                 }
                 if action._name in ('ir.actions.report.xml', 'ir.actions.act_window'):
