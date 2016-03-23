@@ -142,13 +142,10 @@ var PivotView = View.extend({
             switch (field.attrs.type) {
             case 'measure':
                 if (
-                        field.attrs.widget == 'integer' ||
-                        field.attrs.widget == 'monetary' ||
-                        field.attrs.widget == 'float' ||
-                        field.attrs.widget == 'float_time' ||
-                        field.attrs.widget == 'datetime' ||
-                        field.attrs.widget == 'date' ||
-                        field.attrs.widget == 'time'
+                        field.attrs.widget != 'many2one' &&
+                        field.attrs.widget != 'one2many' &&
+                        field.attrs.widget != 'many2many' &&
+                        field.attrs.widget != 'selection'
                    ) {
                     self.widget.push(field.attrs.widget);
                 }
