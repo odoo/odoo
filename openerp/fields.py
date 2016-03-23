@@ -773,7 +773,10 @@ class Field(object):
         return value
 
     def convert_to_record(self, value, record):
-        """ Convert ``value`` from the cache format to the record format. """
+        """ Convert ``value`` from the cache format to the record format.
+        If the value represents a recordset, it should share the prefetching of
+        ``record``.
+        """
         return value
 
     def convert_to_read(self, value, record, use_name_get=True):
@@ -820,22 +823,21 @@ class Field(object):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        if not record:
+        if record:
+            # only a single record may be accessed
+            record.ensure_one()
+            try:
+                value = record._cache[self]
+            except KeyError:
+                # cache miss, determine value and retrieve it
+                if record.id:
+                    self.determine_value(record)
+                else:
+                    self.determine_draft_value(record)
+                value = record._cache[self]
+        else:
             # null record -> return the null value for this field
-            return self.null(record)
-
-        # only a single record may be accessed
-        record.ensure_one()
-
-        try:
-            value = record._cache[self]
-        except KeyError:
-            # cache miss, determine value and retrieve it
-            if record.id:
-                self.determine_value(record)
-            else:
-                self.determine_draft_value(record)
-            value = record._cache[self]
+            value = self.convert_to_cache(False, record, validate=False)
 
         return self.convert_to_record(value, record)
 
@@ -1699,16 +1701,18 @@ class Many2one(_Relational):
         else:
             return record.env[self.comodel_name]
 
+    def convert_to_record(self, value, record):
+        return value.with_prefetch(record._prefetch)
+
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                value_sudo = value.sudo()
-                # performance trick: make sure that all records of the same
-                # model as value in value.env will be prefetched in value_sudo.env
-                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
+                # performance trick: make sure that all records prefetched with
+                # value will be prefetched with value_sudo
+                value_sudo = value.sudo().with_prefetch(value._prefetch)
                 return value_sudo.name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
@@ -1790,6 +1794,9 @@ class _RelationalMulti(_Relational):
         elif not value:
             return record.env[self.comodel_name]
         raise ValueError("Wrong value for %s: %s" % (self, value))
+
+    def convert_to_record(self, value, record):
+        return value.with_prefetch(record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids

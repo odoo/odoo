@@ -865,7 +865,6 @@ class Environment(object):
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
-        self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
         self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
@@ -878,7 +877,7 @@ class Environment(object):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse(self, ())
+        return self.registry[model_name]._browse((), self)
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -973,7 +972,6 @@ class Environment(object):
         """ Clear the cache of all environments. """
         for env in list(self.all):
             env.cache.clear()
-            env.prefetch.clear()
             env.computed.clear()
             env.dirty.clear()
 
