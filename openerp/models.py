@@ -5509,24 +5509,30 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _browse(cls, env, ids):
-        """ Create an instance attached to ``env``; ``ids`` is a tuple of record
-            ids.
+    def _browse(cls, ids, env, prefetch=None):
+        """ Create a recordset instance.
+
+        :param ids: a tuple of record ids
+        :param env: an environment
+        :param prefetch: an optional prefetch object
         """
         records = object.__new__(cls)
         records.env = env
         records._ids = ids
-        env.prefetch[cls._name].update(ids)
+        if prefetch is None:
+            prefetch = defaultdict(set)         # {model_name: set(ids)}
+        records._prefetch = prefetch
+        prefetch[cls._name].update(ids)
         return records
 
     @api.v7
     def browse(self, cr, uid, arg=None, context=None):
         ids = _normalize_ids(arg)
         #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(Environment(cr, uid, context or {}), ids)
+        return self._browse(ids, Environment(cr, uid, context or {}))
 
     @api.v8
-    def browse(self, arg=None):
+    def browse(self, arg=None, prefetch=None):
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -5536,7 +5542,7 @@ class BaseModel(object):
         """
         ids = _normalize_ids(arg)
         #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(self.env, ids)
+        return self._browse(ids, self.env, prefetch)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5577,7 +5583,7 @@ class BaseModel(object):
 
         :type env: :class:`~openerp.api.Environment`
         """
-        return self._browse(env, self._ids)
+        return self._browse(self._ids, env)
 
     def sudo(self, user=SUPERUSER_ID):
         """ sudo([user=SUPERUSER])
@@ -5627,6 +5633,14 @@ class BaseModel(object):
         """
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
+
+    def with_prefetch(self, prefetch=None):
+        """ with_prefetch([prefetch]) -> records
+
+        Return a new version of this recordset that uses the given prefetch
+        object, or a new prefetch object if not given.
+        """
+        return self._browse(self._ids, self.env, prefetch)
 
     def _convert_to_cache(self, values, update=False, validate=True):
         """ Convert the ``values`` dictionary into cached values.
@@ -5799,7 +5813,7 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over ``self``. """
         for id in self._ids:
-            yield self._browse(self.env, (id,))
+            yield self._browse((id,), self.env, self._prefetch)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -5909,9 +5923,9 @@ class BaseModel(object):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._browse(self.env, self._ids[key])
+            return self._browse(self._ids[key], self.env)
         else:
-            return self._browse(self.env, (self._ids[key],))
+            return self._browse((self._ids[key],), self.env)
 
     def __setitem__(self, key, value):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
@@ -5933,10 +5947,7 @@ class BaseModel(object):
             the records of model ``self`` in cache that have no value for ``field``
             (:class:`Field` instance).
         """
-        env = self.env
-        prefetch_ids = env.prefetch[self._name]
-        prefetch_ids.update(self._ids)
-        ids = filter(None, prefetch_ids - set(env.cache[field]))
+        ids = filter(None, self._prefetch[self._name] - set(self.env.cache[field]))
         return self.browse(ids)
 
     @api.model
