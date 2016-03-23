@@ -1221,6 +1221,7 @@ class account_move_line(osv.osv):
             todo_date = vals['date']
             del vals['date']
 
+        centralized_journals = []
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
             if not ctx.get('journal_id'):
@@ -1235,8 +1236,10 @@ class account_move_line(osv.osv):
                     ctx['period_id'] = line.period_id.id
             #Check for centralisation
             journal = journal_obj.browse(cr, uid, ctx['journal_id'], context=ctx)
-            if journal.centralisation:
-                self._check_moves(cr, uid, context=ctx)
+            if journal.centralisation and (ctx['journal_id'], ctx['period_id']) not in centralized_journals:
+                centralized_journals.append((ctx['journal_id'], ctx['period_id']))
+        for journal_period in centralized_journals:
+            self._check_moves(cr, uid, context=dict(ctx, journal_id=journal_period[0], period_id=journal_period[1]))
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if affects_move and check and not context.get('novalidate'):
