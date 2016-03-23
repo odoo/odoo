@@ -1136,12 +1136,12 @@
         <table class="table mt32 mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td>
-                    <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge) }" class="badge pull-left">
+                    <span class="badge pull-left">
                         <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
                         <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
                         <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
                         <span> </span><span t-field="badge.name"/>
-                    </a>
+                    </span>
                 </td><td>
                     <b t-esc="badge.stat_count_distinct"/>
                     <i class="text-muted"> awarded users</i>
@@ -1150,37 +1150,6 @@
                 </td>
             </tr>
         </table>
-    </t>
-</template>
-
-<template id="badge_user">
-    <t t-call="website_forum.header">
-        <h3 class="mt32 mb32">
-            <b>Badge "<span t-field="badge.name"/>"</b>
-        </h3>
-        <div>
-            <div class="pull-left badge">
-                <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
-                <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
-                <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
-                <span> </span><span t-field="badge.name"/>
-            </div>
-            <span t-field="badge.description" style="margin-left:20px"/>
-        </div>
-        <h4 class="mt32">
-            <t class="pull-left" t-esc="badge.stat_count_distinct"/>
-            <span t-if="badge.stat_count_distinct&gt;1"> users</span>
-            <span t-if="badge.stat_count_distinct&lt;=1"> user</span>
-            received this badge:
-        </h4>
-        <div class="row">
-            <div class="col-sm-3 mt16" t-foreach="users" t-as="user">
-                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
-                <div>
-                    <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
-                </div>
-            </div>
-        </div>
     </t>
 </template>
 
@@ -1498,12 +1467,12 @@
     <table class="table mt32 mb64">
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
-                <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge pull-left">
+                <span class="badge pull-left">
                     <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold"/>
                     <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver"/>
                     <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze"/>
                     <span t-field="badge.badge_id.name"/>
-                </a>
+                </span>
             </td><td>
                 <b t-esc="badge.badge_id.stat_count_distinct"/>
                 <i class="text-muted">awarded users</i>
