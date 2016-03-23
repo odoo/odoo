@@ -212,7 +212,8 @@ odoo.define('website_quote.payment_method', function (require) {
       var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
       token = token ? token[1] : '';
       ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
-          $(data).submit();
+          $form.html(data);
+          $form.submit();
       });
    });
 });
