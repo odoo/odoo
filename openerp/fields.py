@@ -1255,6 +1255,7 @@ class Char(_String):
             return False
         return ustr(value)[:self.size]
 
+
 class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
@@ -1271,6 +1272,7 @@ class Text(_String):
         if value is None or value is False:
             return False
         return ustr(value)
+
 
 class Html(_String):
     type = 'html'
@@ -2016,8 +2018,9 @@ class Id(Field):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
+
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, AccessError, MissingError
-from .models import check_pg_name, BaseModel, MAGIC_COLUMNS
+from .exceptions import AccessError, MissingError
+from .models import check_pg_name, BaseModel
 from .osv import fields
