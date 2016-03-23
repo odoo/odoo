@@ -29,6 +29,7 @@ var DashBoard = form_common.FormWidget.extend({
         this.form_template = 'DashBoard';
         this.actions_attrs = {};
         this.action_managers = [];
+        this.set_title = _t('My Dashboard');
     },
     start: function() {
         var self = this;
@@ -42,6 +43,7 @@ var DashBoard = form_common.FormWidget.extend({
         }).bind('sortstop', self.do_save_dashboard);
 
         var old_title = this.__parentedParent.get('title');
+        self.__parentedParent.set({ 'title': this.set_title});
         this.__parentedParent.on('load_record', self, function(){
             self.__parentedParent.set({ 'title': old_title});
         });
