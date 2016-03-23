@@ -733,9 +733,7 @@ class website_sale(http.Controller):
                 tx = False
                 tx_id = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'amount': order.amount_total,
-                })
+                tx.write(dict(transaction_obj.on_change_partner_id(cr, uid, None, order.partner_id.id, context=context).get('values', {}), amount=order.amount_total))
         if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
