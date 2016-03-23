@@ -9,6 +9,7 @@ import res_company
 import res_partner
 import stock_config_settings
 import stock_inventory
+import stock_pack_operation
 import stock_picking
 import stock_quant
 import stock_warehouse
