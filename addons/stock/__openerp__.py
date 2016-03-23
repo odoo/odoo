@@ -77,11 +77,8 @@ Dashboard / Reports for Inventory Management will include:
         'data/web_planner_data.xml',
     ],
     'test': [
-        'test/inventory.yml',
-        'test/move.yml',
         'test/procrule.yml',
         'test/stock_users.yml',
-        'test/shipment.yml',
         'test/packing.yml',
         'test/packingneg.yml',
         'test/wiseoperator.yml',
