@@ -19,6 +19,7 @@ $(document).ready(function () {
         return false;
       }
       openerp.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+        $form.html(data);
         $form.submit();
       });
    });
