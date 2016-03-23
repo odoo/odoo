@@ -945,7 +945,7 @@ class BaseModel(object):
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value, self.env)
+                        current[i] = field.convert_to_export(value, record)
                     else:
                         primary_done.append(name)
 
@@ -1383,7 +1383,6 @@ class BaseModel(object):
                 parent_fields[field.model_name].append(field.name)
 
         # convert default values to the right format
-        defaults = self._convert_to_cache(defaults, validate=False)
         defaults = self._convert_to_write(defaults)
 
         # add default values for inherited fields
@@ -3393,7 +3392,7 @@ class BaseModel(object):
             try:
                 values = {'id': record.id}
                 for name, field in name_fields:
-                    values[name] = field.convert_to_read(record[name], use_name_get)
+                    values[name] = field.convert_to_read(record[name], record, use_name_get)
                 result.append(values)
             except MissingError:
                 pass
@@ -5650,7 +5649,10 @@ class BaseModel(object):
         result = {}
         for name, value in values.iteritems():
             if name in fields:
-                value = fields[name].convert_to_write(value)
+                field = fields[name]
+                value = field.convert_to_cache(value, self, validate=False)
+                value = field.convert_to_record(value, self)
+                value = field.convert_to_write(value, self)
                 if not isinstance(value, NewId):
                     result[name] = value
         return result
@@ -5696,8 +5698,8 @@ class BaseModel(object):
         recs = self
         for name in name_seq.split('.'):
             field = recs._fields[name]
-            null = field.null(self.env)
-            recs = recs.mapped(lambda rec: rec._cache.get(field, null))
+            null = field.convert_to_cache(False, self, validate=False)
+            recs = recs.mapped(lambda rec: field.convert_to_record(rec._cache.get(field, null), rec))
         return recs
 
     def filtered(self, func):
@@ -6111,9 +6113,9 @@ class BaseModel(object):
                 def __init__(self, record):
                     self._record = record
                 def __getitem__(self, name):
-                    field = self._record._fields[name]
-                    value = self._record[name]
-                    return field.convert_to_write(value)
+                    record = self._record
+                    field = record._fields[name]
+                    return field.convert_to_write(record[name], record)
                 def __getattr__(self, name):
                     return self[name]
 
@@ -6228,7 +6230,7 @@ class BaseModel(object):
 
         # collect values from dirty fields
         result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], subfields.get(name))
+            name: self._fields[name].convert_to_onchange(record[name], record, subfields[name])
             for name in dirty
         }
 

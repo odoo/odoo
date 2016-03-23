@@ -398,7 +398,7 @@ class MailComposer(models.TransientModel):
         # ORM handle the assignation of command list on new onchange (api.v8),
         # this force the complete replacement of x2many field with
         # command and is compatible with onchange api.v7
-        values = self._convert_to_write(self._convert_to_cache(values))
+        values = self._convert_to_write(values)
 
         return {'value': values}
 
