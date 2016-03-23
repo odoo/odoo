@@ -899,6 +899,7 @@ class IrActionsServer(models.Model):
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model = self.env[action.model_id.model]
+        obj = None
         if self._context.get('active_model') == action.model_id.model and self._context.get('active_id'):
             obj = model.browse(self._context['active_id'])
         if self._context.get('onchange_self'):
