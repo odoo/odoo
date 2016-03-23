@@ -688,15 +688,13 @@ class website_sale(http.Controller):
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
         if not values['errors']:
-            # find an already existing transaction
-            tx = request.website.sale_get_transaction()
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
             values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
             render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     cr, SUPERUSER_ID, acquirer.id,
-                    tx and tx.reference or request.env['payment.transaction'].get_next_reference(order.name),
+                    '/',
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     partner_id=shipping_partner_id,
@@ -718,6 +716,7 @@ class website_sale(http.Controller):
                                 user is redirected to the checkout page
         """
         cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.website.sale_get_order(context=context)
 
@@ -749,6 +748,7 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(
@@ -757,7 +757,16 @@ class website_sale(http.Controller):
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
 
-        return tx_id
+        return payment_obj.render(
+            cr, SUPERUSER_ID, tx.acquirer_id.id,
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            partner_id=order.partner_shipping_id.id or order.partner_invoice_id.id,
+            tx_values={
+                'return_url': '/shop/payment/validate',
+            },
+            context=dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now')))
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
