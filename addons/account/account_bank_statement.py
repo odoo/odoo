@@ -33,9 +33,11 @@ import math
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
-            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
+            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=dict(context, period_id=vals.get('period_id')))
         if 'line_ids' in vals:
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
@@ -78,7 +80,7 @@ class account_bank_statement(osv.osv):
     def _compute_default_statement_name(self, cr, uid, journal_id, context=None):
         context = dict(context or {})
         obj_seq = self.pool.get('ir.sequence')
-        period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
+        period = self.pool.get('account.period').browse(cr, uid, context.get('period_id') or self._get_period(cr, uid, context=context), context=context)
         context['ir_sequence_date'] = period.date_start
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, None)
         return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
@@ -987,7 +989,7 @@ class account_bank_statement_line(osv.osv):
         user = self.pool.get("res.users").browse(cr, uid, uid)
         return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_ids', '=', False), ('account_id', '=', False)]
 
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
