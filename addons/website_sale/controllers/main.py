@@ -687,18 +687,16 @@ class website_sale(http.Controller):
         values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
-        # fetch all registered payment means
-        # if tx:
-        #     acquirer_ids = [tx.acquirer_id.id]
-        # else:
         if not values['errors']:
+            # find an already existing transaction
+            tx = request.website.sale_get_transaction()
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
             values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
             render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     cr, SUPERUSER_ID, acquirer.id,
-                    order.name,
+                    tx and tx.reference or request.env['payment.transaction'].get_next_reference(order.name),
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     partner_id=shipping_partner_id,
@@ -748,7 +746,7 @@ class website_sale(http.Controller):
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
                 'partner_country_id': order.partner_id.country_id.id,
-                'reference': order.name,
+                'reference': request.env['payment.transaction'].get_next_reference(order.name),
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
