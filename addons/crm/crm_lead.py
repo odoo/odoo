@@ -190,7 +190,7 @@ class crm_lead(FormatAddress, osv.osv):
             string='Type', select=True, required=True,
             help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Rating', select=True),
-        'date_closed': fields.datetime('Closed', readonly=True, copy=False),
+        'date_closed': fields.datetime('Closed Date', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
