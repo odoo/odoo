@@ -17,12 +17,15 @@ class website_account(website_account):
         res_sale_order = request.env['sale.order']
         res_invoices = request.env['account.invoice']
         quotations = res_sale_order.search([
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sent', 'cancel'])
         ])
         orders = res_sale_order.search([
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sale', 'done'])
         ])
         invoices = res_invoices.search([
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['open', 'paid', 'cancelled'])
         ])
 

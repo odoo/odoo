@@ -30,7 +30,8 @@ $(document).ready(function () {
         return false;
       }
       ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
-          $(data).submit();
+          $form.html(data);
+          $form.submit();
       });
    });
 

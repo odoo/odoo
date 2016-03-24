@@ -319,7 +319,7 @@ class product_pricelist_item(osv.osv):
         'date_start': fields.date('Start Date', help="Starting date for the pricelist item validation"),
         'date_end': fields.date('End Date', help="Ending valid for the pricelist item validation"),
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
-        'fixed_price': fields.float('Fixed Price'),
+        'fixed_price': fields.float('Fixed Price', digits_compute=dp.get_precision('Product Price')),
         'percent_price': fields.float('Percentage Price'),
     }
 
