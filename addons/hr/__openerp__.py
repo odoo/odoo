@@ -38,7 +38,6 @@ You can manage:
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'hr_view.xml',
-        'hr_installer.xml',
         'hr_data.xml',
         'hr_tip_data.xml',
         'views/hr.xml',
