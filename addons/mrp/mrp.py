@@ -811,23 +811,6 @@ class mrp_production(osv.osv):
         """
         for production in self.browse(cr, uid, ids):
             total_cost = self._costs_generate(cr, uid, production)
-            if production.product_id.cost_method == 'real':
-                for consumed_move in production.move_lines2:
-                    for consumed_quant in consumed_move.quant_ids:
-                        total_cost += consumed_quant.inventory_value
-
-                from_uom = production.product_uom
-                to_uom = production.product_id.uom_id
-                quant_cost = total_cost / self.pool['product.uom']._compute_qty_obj(cr, uid, from_uom, production.product_qty, to_uom)
-                self._apply_cost_from_production(cr, uid, production, quant_cost, context=context)
-
-    def _apply_cost_from_production(self, cr, uid, production, quant_cost, context=None):
-        """Update the quant value based on computed production cost"""
-        for produced_product in production.move_created_ids2:
-            if produced_product.product_id == production.product_id:
-                # only the produced product
-                # should only have one quant at the end of the production
-                self.pool['stock.quant'].write(cr, SUPERUSER_ID, produced_product.quant_ids.ids, {'cost': quant_cost}, context=context)
 
     def action_production_end(self, cr, uid, ids, context=None):
         """ Changes production state to Finish and writes finished date.
@@ -967,6 +950,12 @@ class mrp_production(osv.osv):
                 consume_lines.append({'product_id': prod, 'product_qty': qty, 'lot_id': lot})
         return consume_lines
 
+    def _calculate_total_cost(self, cr, uid, total_consume_moves, context=None):
+        total_cost = 0
+        for consumed_move in self.pool['stock.move'].browse(cr, uid, total_consume_moves, context=context):
+            total_cost += sum([x.inventory_value for x in consumed_move.quant_ids if x.qty > 0])
+        return total_cost
+
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz=False, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -986,35 +975,11 @@ class mrp_production(osv.osv):
 
         main_production_move = False
         if production_mode == 'consume_produce':
-            # To produce remaining qty of final product
-            produced_products = {}
-            for produced_product in production.move_created_ids2:
-                if produced_product.scrapped:
-                    continue
-                if not produced_products.get(produced_product.product_id.id, False):
-                    produced_products[produced_product.product_id.id] = 0
-                produced_products[produced_product.product_id.id] += produced_product.product_qty
             for produce_product in production.move_created_ids:
-                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
-                lot_id = False
-                if wiz:
-                    lot_id = wiz.lot_id.id
-                qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
-                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
-                                                         location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
-                stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                remaining_qty = subproduct_factor * production_qty_uom - qty
-                if not float_is_zero(remaining_qty, precision_digits=precision):
-                    # In case you need to make more than planned
-                    #consumed more in wizard than previously planned
-                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
-                                                                                             'production_id': production_id}, context=context)
-                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
-                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
-
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
 
+        total_consume_moves = []
         if production_mode in ['consume', 'consume_produce']:
             if wiz:
                 consume_lines = []
@@ -1034,6 +999,7 @@ class mrp_production(osv.osv):
                     consumed_qty = min(remaining_qty, raw_material_line.product_qty)
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
                                                  restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
+                    total_consume_moves.append(raw_material_line.id)
                     remaining_qty -= consumed_qty
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
@@ -1041,6 +1007,35 @@ class mrp_production(osv.osv):
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, context=context)
                     stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
                                                                     'consumed_for': main_production_move}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    total_consume_moves.append(extra_move_id)
+
+        if production_mode == 'consume_produce':
+            price_unit = 0
+            for produce_product in production.move_created_ids:
+                is_main_product = (produce_product.product_id.id == production.product_id.id) and production.product_id.cost_method=='real'
+                if is_main_product:
+                    total_cost = self._calculate_total_cost(cr, uid, total_consume_moves, context=context)
+                    price_unit = total_cost / production_qty_uom
+                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
+                lot_id = False
+                if wiz:
+                    lot_id = wiz.lot_id.id
+                qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
+                if is_main_product:
+                    stock_mov_obj.write(cr, uid, [produce_product.id], {'price_unit': price_unit}, context=context)
+                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
+                                                         location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
+                stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
+                remaining_qty = subproduct_factor * production_qty_uom - qty
+                if not float_is_zero(remaining_qty, precision_digits=precision):
+                    # In case you need to make more than planned
+                    #consumed more in wizard than previously planned
+                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
+                                                                                             'production_id': production_id}, context=context)
+                    if is_main_product:
+                        stock_mov_obj.write(cr, uid, [extra_move_id], {'price_unit': price_unit}, context=context)
+                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)

@@ -492,7 +492,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_cancel_draft(self):
         # go from canceled state to draft state
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'date': False})
         self.delete_workflow()
         self.create_workflow()
         return True
@@ -635,6 +635,7 @@ class AccountInvoice(models.Model):
                     'price': tax_line.amount,
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
+                    'invoice_id': self.id,
                 })
         return res
 

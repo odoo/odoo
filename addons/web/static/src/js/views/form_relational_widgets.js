@@ -1396,13 +1396,11 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
-
+    },
+    willStart: function () {
         var self = this;
-        // We need to know if the field 'color' exists on the model
-        this.mutex.exec(function(){
-            return self.dataset.call('fields_get', []).then(function(fields) {
-               self.fields = fields;
-            });
+        return this.dataset.call('fields_get', []).then(function(fields) {
+           self.fields = fields;
         });
     },
     commit_value: function() {
@@ -1733,4 +1731,3 @@ return {
 };
 
 });
-

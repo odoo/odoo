@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-03-01 07:57+0000\n"
+"PO-Revision-Date: 2016-03-16 21:53+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Consumed Products</strong>"
-msgstr "<strong>Καταναλωτικά Προϊόντα</strong>"
+msgstr "<strong>Αναλωθέντα Προϊόντα</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -103,7 +103,7 @@ msgstr "<strong>Προϊόν</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Products to Consume</strong>"
-msgstr "<strong>Προϊόντα για Κατανάλωση</strong>"
+msgstr "<strong>Προϊόντα για Ανάλωση</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -381,7 +381,7 @@ msgstr "Ακυρωμένο"
 #: code:addons/mrp/stock.py:149
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Δεν μπορεί να αναλωθεί μια κίνηση με αρνητική ή μηδενική ποσότητα."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:639
@@ -522,23 +522,23 @@ msgstr "Επιβεβαίωση Παραγωγής"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Ανάλωση & Παραγωγή"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Γραμμή Ανάλωσης"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Κίνηση Ανάλωσης"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Αναλώσιμα Μόνο"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
@@ -556,7 +556,7 @@ msgstr "Αναλωθέντα Προϊόντα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
-msgstr ""
+msgstr "Αναλωθέντα για"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -1375,7 +1375,7 @@ msgstr "Παραγωγή"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced Products"
-msgstr ""
+msgstr "Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1400,12 +1400,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Παραγωγή Προϊόντος"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Γραμμές Ανάλωσης Παραγωγής Προϊόντος"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
@@ -1475,7 +1475,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Εντολή Παραγωγής για Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
@@ -1522,7 +1522,7 @@ msgstr "Προϊόντα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
 msgid "Products Consumed"
-msgstr ""
+msgstr "Αναλωθέντα Προϊόντα"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1535,7 +1535,7 @@ msgstr "Τα προϊόντα μπορεί να έχουν διάφορα χαρ
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Consume"
-msgstr ""
+msgstr "Προϊόντα για Κατανάλωση"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1546,7 +1546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Produce"
-msgstr ""
+msgstr "Προϊόντα για Παραγωγή"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1970,7 +1970,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Προς Ανάλωση"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
