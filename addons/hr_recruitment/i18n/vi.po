@@ -205,15 +205,15 @@ msgid ""
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
 msgstr ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>Congrats! Your resume's got our interest!\n"
-"        I will call you as soon as possible to make a 10 minutes phone "
-"interview and  plan a first meeting.</p>\n"
-"        <p>If we can’t reach you or if you miss our call, feel free to reach "
-"me back on the number 001 312 349 3030\n"
-"        If I do not answer, please let me a message with some schedules to "
-"call you back.</p>\n"
-"        <p>Kind regards,</p>\n"
+"<p>Gửi ${object.partner_name or 'applicant'},</p>\n"
+"        <p>Chúc mừng! Hồ sơ của bạn đã nhận được sự quan tâm của chúng tôi!\n"
+"        Chúng tôi sẽ gọi cho bạn ngay khi có thể để thực hiện một cuộc phỏng "
+"vấn ngắn qua điện thoại cũng như đặt lịch hẹn cho lần gặp gỡ đầu tiên.</p>\n"
+"        <p>If chúng tôi không thể liên lạc với bạn hoặc nếu bạn bỏ lỡ cuộc gọi "
+"của chúng tôi, đừng ngần ngại gọi lại cho chúng tôi theo số điện thoại đăng ở mục đăng tuyển của chúng tôi (hoặc theo số ở chữ ký của email này).\n"
+"        Trong trường hợp chúng tôi không trả lời, đừng ngần ngại gửi email cho chúng tôi và cho chúng tôi "
+"biết khi nào chúng tôi có thể gọi lại cho bạn.</p>\n"
+"        <p>Trân trọng,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
 
@@ -229,14 +229,12 @@ msgid ""
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
 msgstr ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>We thank you for your interest in our company and for your "
-"application.\n"
-"        Unfortunately, your profile does not match with our needs or our "
-"recruitment\n"
-"        campaign has reached its term.</p>\n"
-"        <p>If you want more details, feel free to contact us by phone.</p>\n"
-"        <p>Kind regards,</p>\n"
+"<p>Xin chào ${object.partner_name or 'applicant'},</p>\n"
+"        <p>Cám ơn đã quan tâm đến công ty chúng tôi và đã gửi hồ sơ ứng tuyển.\n"
+"        Thật không may, hồ sơ của bạn chưa phù hợp với nhu cầu của chúng tôi, hoặc\n"
+"        chiến dịch tuyển dụng của chúng tôi đã hết thời hạn trước khi nhận được hồ sơ của bạn.</p>\n"
+"        <p>Nếu bạn cần thêm thông tin chi tiết, đừng ngần ngại liên hệ với chúng tôi.</p>\n"
+"        <p>Trân trọng,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
 
@@ -263,7 +261,7 @@ msgstr "Một liên hệ đã tồn tại với cùng tên."
 #. module: hr_recruitment
 #: field:hr.applicant,active:0
 msgid "Active"
-msgstr "Hiệu lực"
+msgstr "Có hiệu lực"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_4
@@ -283,7 +281,7 @@ msgstr "Bí danh"
 #. module: hr_recruitment
 #: field:hr.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr "Alias Domain"
+msgstr "Miền bí danh"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
@@ -292,7 +290,7 @@ msgid ""
 "(jobs@mycompany.com), and create automatically application documents in the "
 "system."
 msgstr ""
-"Cho phép ứng viên gửi hồ sơ xin việc tới một địa chỉ email (jobs@mycompany."
+"Cho phép ứng viên gửi hồ sơ xin việc tới một địa chỉ email (vieclam@mycompany."
 "com) và tự động tạo hồ sơ ứng viên trong hệ thống."
 
 #. module: hr_recruitment
@@ -352,22 +350,22 @@ msgstr "Ứng viên"
 #. module: hr_recruitment
 #: view:hr.job:0
 msgid "Application"
-msgstr "Application"
+msgstr "Ứng viên"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
-msgstr "Application Summary"
+msgstr "Tóm tắt ứng viên"
 
 #. module: hr_recruitment
 #: model:email.template,subject:hr_recruitment.applicant_interest
 msgid "Application approved"
-msgstr "Application approved"
+msgstr "Ứng viên được duyệt"
 
 #. module: hr_recruitment
 #: model:email.template,subject:hr_recruitment.applicant_refuse
 msgid "Application refused"
-msgstr "Application refused"
+msgstr "Ứng viên bị từ chối"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
@@ -378,18 +376,18 @@ msgstr "Application refused"
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
-msgstr "Applications"
+msgstr "Ứng viên"
 
 #. module: hr_recruitment
 #: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
-msgstr "Applied Job"
+msgstr "Vị trí ứng tuyển"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0 field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
-msgstr "Đánh giá cao"
+msgstr "Đánh giá"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
@@ -411,7 +409,7 @@ msgstr "Khả dụng"
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Average"
-msgstr "Average"
+msgstr "Trung bình"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
@@ -448,7 +446,7 @@ msgstr "Thông tin cơ bản"
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Below Average"
-msgstr "Below Average"
+msgstr "Dưới mức trung bình"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
@@ -683,7 +681,7 @@ msgstr "Bằng Cấp"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr "Degree of Recruitment"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
@@ -725,7 +723,7 @@ msgstr "Miêu tả"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
-msgstr "Desk space"
+msgstr "Không gian làm việc"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -759,12 +757,12 @@ msgstr "Sửa..."
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_2
 msgid "Education"
-msgstr "Education"
+msgstr "Học vấn"
 
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_2
 msgid "Education and Activities"
-msgstr "Education and Activities"
+msgstr "Học vấn & Các hoạt động"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0

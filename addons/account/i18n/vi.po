@@ -2968,8 +2968,8 @@ msgstr "Lỗi cấu hình!\n"
 #: constraint:account.account:0
 msgid "Configuration Error!\n"
 "You cannot select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
-msgstr "Configuration Error!\n"
-"You cannot select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
+msgstr "Lỗi cấu hình!\n"
+"Bạn không thể chọn một kiểu tài khoản có Phương thức kết chuyển khác với \"Không đổi soát\" cho các tài khoản có kiểu nội bộ là \"Phải thu/Phải trả\"."
 
 #. module: account
 #: constraint:account.journal:0
@@ -3026,12 +3026,12 @@ msgstr "Đã xác nhận"
 #: code:addons/account/static/src/js/account_widgets.js:525
 #, python-format
 msgid "Congrats, you're all done !"
-msgstr "Congrats, you're all done !"
+msgstr "Chúc mừng, bạn đã hoàn thành!"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
 msgid "Consolidated Children"
-msgstr "Consolidated Children"
+msgstr "Con hợp nhất"
 
 #. module: account
 #: selection:account.account,type:0
@@ -3084,12 +3084,12 @@ msgstr "Đối ứng"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Country"
-msgstr "Country"
+msgstr "Quốc gia"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr "Country Group"
+msgstr "Nhóm Quốc gia"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
@@ -3104,7 +3104,7 @@ msgstr "Tạo"
 #. module: account
 #: view:account.fiscalyear:account.view_account_fiscalyear_form
 msgid "Create 3 Months Periods"
-msgstr "Tạo chu kỳ 3 tháng"
+msgstr "Tạo chu kỳ 3 tháng một"
 
 #. module: account
 #: view:account.addtmpl.wizard:account.view_account_addtmpl_wizard_form
@@ -3125,7 +3125,7 @@ msgstr "Tạo bút toán"
 #. module: account
 #: view:account.use.model:account.view_account_use_model
 msgid "Create Entries From Models"
-msgstr "Create Entries From Models"
+msgstr "Tạo bút toán từ Models"
 
 #. module: account
 #: view:account.fiscalyear:account.view_account_fiscalyear_form
@@ -3142,7 +3142,7 @@ msgstr "Tạo hoàn tiền"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr "Create Write-off"
+msgstr "Tạo Write-off"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3254,7 +3254,7 @@ msgstr "Tạo bút toán"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr "Created by"
+msgstr "Tạo bởi"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3350,7 +3350,7 @@ msgstr "Created by"
 #: field:validate.account.move.lines,create_date:0
 #: field:wizard.multi.charts.accounts,create_date:0
 msgid "Created on"
-msgstr "Created on"
+msgstr "Tạo vào"
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -3385,7 +3385,7 @@ msgstr "Ngày tạo"
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "Credit"
-msgstr "Số dư có"
+msgstr "Có"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3771,7 +3771,7 @@ msgstr "Thuế bán hàng mặc định"
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr "Phương pháp hoãn lại"
+msgstr "Phương thức Kết chuyển"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -8845,10 +8845,10 @@ msgid "Set here the method that will be used to generate the end of year journal
 " 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."
 msgstr "Thiết lập phương thức mà sẽ được sử dụng để tạo ra bút toán sổ nhật ký kết thúc năm cho tất cả các loại tài khoản này.\n"
 "\n"
-" 'Không làm gì' có nghĩa là không có gì để thực hiện.\n"
-" 'Cân đối' thường được sử dụng cho tài khoản tiền mặt.\n"
-" 'Chi tiết' sao chép từng phát sinh đã tồn tại của năm trước, thậm chí cả những phát sinh đã đối soát.\n"
-" 'Không đối soát' chỉ sao chép phát sinh chưa được đối soát trên sang ngày đầu tiên của một năm tài chính mới."
+" 'Không làm gì' có nghĩa là không có gì để thực hiện, không kết chuyển (thường là tài khoản của Báo cáo kết quả hoạt động kinh doanh)\n"
+" 'Cân đối' thường được sử dụng cho tài khoản tiền mặt. Có thể dùng cho tài khoản để kết chuyển số dư tài khoản (thường là tài khoản của Bảng cân đối kế toán)\n"
+" 'Chi tiết' sao chép/kết chuyển từng phát sinh của năm trước, thậm chí cả những phát sinh đã đối soát/đối chiếu.\n"
+" 'Không đối soát' Chỉ những bút toán không được đối chiếu/ đối soát vào ngày đầu tiên của năm tài chính mới được kết chuyển. Chỉ sử dụng cho tài khoản có kiểu nội bộ là khoản phải thu hoặc khoản phải trả."
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -8859,7 +8859,7 @@ msgstr "Thiết lập nếu số tiền thuế phải được bao gồm trong t
 #: help:account.tax,child_depend:0
 #: help:account.tax.template,child_depend:0
 msgid "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
-msgstr "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
+msgstr "Thiết lập nếu việc tính thuế dựa trên tính toán của các phụ thuế (thuế con) chứ không dựa trên tổng số."
 
 #. module: account
 #: help:account.tax,account_collected_id:0
@@ -8909,7 +8909,7 @@ msgstr "Phím tắt"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "Show more... ("
-msgstr "Show more... ("
+msgstr "Hiển thị thêm... ("
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -10701,7 +10701,7 @@ msgstr "Bỏ đối soát các giao dịch"
 #: view:account.entries.report:account.view_account_entries_report_search
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Chưa đối soát"
+msgstr "Không đối soát"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -10709,24 +10709,24 @@ msgstr "Chưa đối soát"
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "Bút toán chưa đối soát"
+msgstr "Bút toán không đối soát"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled Journal Items"
-msgstr "Phát sinh chưa đối soát"
+msgstr "Phát sinh không đối soát"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Unreconciled entries"
-msgstr "Bút toán chưa đối soát"
+msgstr "Bút toán không đối soát"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:account.view_account_move_line_unreconcile_select
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "Chưa đối soát"
+msgstr "Không đối soát"
 
 #. module: account
 #: field:report.invoice.created,amount_untaxed:0
