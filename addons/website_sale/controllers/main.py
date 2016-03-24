@@ -687,10 +687,6 @@ class website_sale(http.Controller):
         values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
-        # fetch all registered payment means
-        # if tx:
-        #     acquirer_ids = [tx.acquirer_id.id]
-        # else:
         if not values['errors']:
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
             values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
@@ -698,7 +694,7 @@ class website_sale(http.Controller):
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     cr, SUPERUSER_ID, acquirer.id,
-                    order.name,
+                    '/',
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     partner_id=shipping_partner_id,
@@ -720,6 +716,7 @@ class website_sale(http.Controller):
                                 user is redirected to the checkout page
         """
         cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.website.sale_get_order(context=context)
 
@@ -732,14 +729,11 @@ class website_sale(http.Controller):
         tx = request.website.sale_get_transaction()
         if tx:
             tx_id = tx.id
-            if tx.reference != order.name:
+            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
                 tx = False
                 tx_id = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'acquirer_id': acquirer_id,
-                    'amount': order.amount_total,
-                })
+                tx.write(dict(transaction_obj.on_change_partner_id(cr, uid, None, order.partner_id.id, context=context).get('values', {}), amount=order.amount_total))
         if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
@@ -748,10 +742,11 @@ class website_sale(http.Controller):
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
                 'partner_country_id': order.partner_id.country_id.id,
-                'reference': order.name,
+                'reference': request.env['payment.transaction'].get_next_reference(order.name),
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(
@@ -760,7 +755,16 @@ class website_sale(http.Controller):
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
 
-        return tx_id
+        return payment_obj.render(
+            cr, SUPERUSER_ID, tx.acquirer_id.id,
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            partner_id=order.partner_shipping_id.id or order.partner_invoice_id.id,
+            tx_values={
+                'return_url': '/shop/payment/validate',
+            },
+            context=dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now')))
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
