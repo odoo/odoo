@@ -6,6 +6,7 @@
 # ANDRES FELIPE NEGRETE GOMEZ <psi@nubark.com>, 2016
 # Denis Ledoux <dle@odoo.com>, 2016
 # Esteban Echeverry <tebanep@nubark.com>, 2016
+# Juan Pablo Vargas Soruco <juanpablo.vargas@cruzoil.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 # Thomas Groutars, 2016
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-13 21:43+0000\n"
+"PO-Revision-Date: 2016-03-17 20:20+0000\n"
 "Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -1135,7 +1136,7 @@ msgstr "Configuración contable: guía paso a paso."
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Panel Contable"
+msgstr "Tablero Contable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
@@ -4364,14 +4365,6 @@ msgid "If you want to do it yourself:"
 msgstr "Si desea hacerlo usted mismo:"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si le gustaría alguna asistencia en los temas anteriores, por favor no dude en contactar a nuestros expertos en contabilidad usando el icono <span class=\"fa fa-question-circle\"/> en la barra superior."
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr "Pago inmediato"
@@ -4954,12 +4947,12 @@ msgstr "Junio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr "Panel Kanban"
+msgstr "Tablero Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr "Panel gráfico Kanban"
+msgstr "Tablero gráfico Kanban"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5860,7 +5853,7 @@ msgid ""
 "Once your bank accounts are registered, you will be able \n"
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
-msgstr "Una vez registradas sus cuentas bancarias, será capaz de \nacceder a sus extractos desde el Panel Contable.\nLos métodos de sincronización disponibles son los siguientes."
+msgstr "Una vez registradas sus cuentas bancarias, será capaz de \nacceder a sus extractos desde el Tablero Contable.\nLos métodos de sincronización disponibles son los siguientes."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5921,7 +5914,7 @@ msgstr "Pago Abierto"
 #. module: account
 #: model:ir.actions.client,name:account.action_client_account_menu
 msgid "Open account dashboard menu"
-msgstr "Abrir Menú de Contabilidad"
+msgstr "Abrir menú del tablero de contabilidad"
 
 #. module: account
 #. openerp-web
@@ -7407,7 +7400,7 @@ msgstr "Mostrar en el Pie de Página de las Facturas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Mostrar el diario en el panel"
+msgstr "Mostrar el diario en el tablero"
 
 #. module: account
 #. openerp-web
@@ -8339,7 +8332,7 @@ msgstr "Esta guía le ayudará a comenzar con la Contabilidad Odoo.\nCuando term
 msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
-msgstr "Este es el panel contable. Si no ha instalado un plan\nde cuentas todavía, por favor hágalo antes que nada."
+msgstr "Este es el tablero contable. Si no ha instalado un plan\nde cuentas todavía, por favor hágalo antes que nada."
 
 #. module: account
 #: code:addons/account/models/account.py:304
@@ -8830,7 +8823,7 @@ msgstr "Utilizado en informes para saber si se deberían considerar los registro
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Usado para ordenar los Diarios en el panel"
+msgstr "Usado para ordenar los Diarios en la vista de tablero"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -9032,7 +9025,7 @@ msgstr "Al invitar a usuarios tendrá que definir qué derechos de acceso pueden
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Si este diario debe ser mostrado en el panel o no"
+msgstr "Si este diario debe ser mostrado en el tablero o no"
 
 #. module: account
 #. openerp-web
@@ -9232,6 +9225,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "No puede realizar esta modificación en un asiento conciliado. Sólo puede cambiar algunos campos no legales o tiene que anular la conciliación antes.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "Usted no puede eliminar el número de cuenta una vez establecido.\nSi usted quiere eliminar el número de cuenta, usted puede hacerlo desde la lista de cuentas de Banco."
 
 #. module: account
 #: code:addons/account/models/account.py:96

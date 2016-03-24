@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-02-06 10:58+0000\n"
+"PO-Revision-Date: 2016-03-11 12:44+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -62,16 +62,6 @@ msgstr " (%s gereserveerd)"
 #, python-format
 msgid " (reserved)"
 msgstr " (gereserveerd)"
-
-#. module: stock
-#: code:addons/stock/stock.py:3182
-#, python-format
-msgid ""
-"You cannot have two inventory adjustements in state 'in Progess' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validate the first inventory adjustement with this product "
-"before creating another one."
-msgstr "U kan geen twee voorraad aanpassingen hebben die zich in de status 'In behandeling' hebben met hetzelfde product (%s), dezelfde locatie (%s), dezelfde verpakking, dezelfde eigenaar en hetzelfde lot. Valideer eerste de eerste voorraad aanpassing voor dit product voor dat u een andere aanmaakt."
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -167,7 +157,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "* Leverancier locatie: Virtuele locatie die de bron locatie is voor producten die afkomstig zijn van uw leveranciers\n                       \n* Weergave: Virtuele locatie welke gebruikt wordt om ​​een hiërarchische structuur te creëren voor uw magazijn, deze bevat de onderliggende locaties en kan zelf geen producten  bevatten\n                       \n* Interne locatie: Fysieke locaties in uw eigen magazijnen\n                       \n* Klant locatie: Virtuele locatie die de plaats van bestemming aangeeft voor de producten naar uw klanten\n                       \n* Voorraadtelling: Virtuele locatie die dient als tegenhanger voor voorraadtellingsactiviteiten gebruikt om de voorraden (Fysieke voorraden) te corrigeren\n                       \n* Verwerving: Virtuele locatie die dient als tijdelijke tegenhanger voor verwervingsactiviteiten, wanneer de oorsprong  (leverancier of productie) nog niet bekend is. Deze locatie moet leeg zijn als de planner voor verwerving klaar is.\n                       \n* Productie: virtuele locatie die dient als tijdelijke tegenhanger voor productieactiviteiten: deze locatie verbruikt de grondstoffen en levert gereed producten\n\n* Tussen locatie: Tegenlocatie welke moet worden gebruikt bij inter-company of inter-warehouse bewerkingen\n                      "
+msgstr "* Leverancier locatie: Virtuele locatie die de bronlocatie is voor producten die afkomstig zijn van uw leveranciers\n                       \n* Weergave: Virtuele locatie welke gebruikt wordt om ​​een hiërarchische structuur te creëren voor uw magazijn, deze bevat de onderliggende locaties en kan zelf geen producten  bevatten\n                       \n* Interne locatie: Fysieke locaties in uw eigen magazijnen\n                       \n* Klant locatie: Virtuele locatie die de plaats van bestemming aangeeft voor de producten naar uw klanten\n                       \n* Voorraadtelling: Virtuele locatie die dient als tegenhanger voor voorraadtellingsactiviteiten gebruikt om de voorraden (Fysieke voorraden) te corrigeren\n                       \n* Verwerving: Virtuele locatie die dient als tijdelijke tegenhanger voor verwervingsactiviteiten, wanneer de oorsprong  (leverancier of productie) nog niet bekend is. Deze locatie moet leeg zijn als de planner voor verwerving klaar is.\n                       \n* Productie: virtuele locatie die dient als tijdelijke tegenhanger voor productieactiviteiten: deze locatie verbruikt de grondstoffen en levert gereed producten\n\n* Tussen locatie: Tegenlocatie welke moet worden gebruikt bij inter-company of inter-warehouse bewerkingen\n                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1135,7 +1125,7 @@ msgstr "Klachtenregistratie"
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Click here to create a new transfer."
-msgstr "Klik hier om een nieuwe overplaatsing aan te maken."
+msgstr "Klik hier om een nieuwe verplaatsing aan te maken."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -1180,7 +1170,7 @@ msgstr "Klik om een nieuwe voorraadbewerking aan te maken."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 msgid "Click to define a new transfer."
-msgstr "Klik om een nieuwe overplaatsing aan te maken."
+msgstr "Klik om een nieuwe verplaatsing aan te maken."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -1313,7 +1303,7 @@ msgstr "Rij (X)"
 msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
-msgstr "Kon niet alle gevraagde producten reserveren. Gebruik aub de 'Markeer als Todo' knop om de reservering handmatig  af te handelen."
+msgstr "Kon niet alle gevraagde producten reserveren. Gebruik de 'Markeer als Taak' knop om de reservering handmatig  af te handelen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1630,7 +1620,7 @@ msgstr "Decimale precisie van het gewicht"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_dest_id
 msgid "Default Destination Location"
-msgstr "Standaard bestemming locatie"
+msgstr "Standaard bestemmingslocatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_owner_id
@@ -1645,7 +1635,7 @@ msgstr "Standaard magazijn heraanvullen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
 msgid "Default Source Location"
-msgstr "Standaard bron locatie"
+msgstr "Standaard bronlocatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1816,7 +1806,7 @@ msgstr "Bestemming"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_dest_id
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Destination Location Zone"
-msgstr "Bestemmingszone"
+msgstr "Bestemmingslocatie zone"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_move_dest_id
@@ -1845,7 +1835,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr "Bepaald de verwervingsmethode van de te genereren voorraadmutatie: Of het de beschikbare voorraad moet nemen in de bron locatie of dat het de voorraad moet negeren en een verwervingsopdracht moet genereren."
+msgstr "Bepaald de verwervingsmethode van de te genereren voorraadmutatie: Of het de beschikbare voorraad moet nemen in de bronlocatie of dat het de voorraad moet negeren en een verwervingsopdracht moet genereren."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -1925,7 +1915,7 @@ msgstr "Beheer geen verpakking"
 #. module: stock
 #: selection:stock.config.settings,group_stock_multiple_locations:0
 msgid "Do not record internal moves within a warehouse"
-msgstr "Beveel interne mutaties niet aan in een magazijn"
+msgstr "Beheer geen meerdere locaties per magazijn"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -2518,14 +2508,6 @@ msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
 msgstr "Indien u minder dan 50 leveranciers heeft, adviseren wij u deze \nhandmatig aan te maken."
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.inventory_planner
-msgid ""
-"If you need help, do not hesitate to contact our experts\n"
-"                        using the <span class=\"fa fa-question-circle\"/> button on\n"
-"                        the top bar."
-msgstr "Aarzel niet om onze experten te contacteren als u hulp nodig heeft.\nGebruik de <span class=\"fa fa-question-circle\"/> knop in\nde bovenste balk."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3341,12 +3323,12 @@ msgstr "Beheer standaardlocaties per product"
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage picking in batch per worker"
-msgstr "Beheer leveringen in batch per werker"
+msgstr "Verwerk leveringen in batch per werknemer"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage pickings one at a time"
-msgstr "Beheer leveringen één per één"
+msgstr "Verwerk leveringen één voor één"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3581,7 +3563,7 @@ msgstr "Nieuwe voorraad"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr "Nieuwe overplaatsing"
+msgstr "Nieuwe verplaatsing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_fresh_record
@@ -3814,7 +3796,7 @@ msgstr "Handeling"
 #: code:addons/stock/stock.py:4490
 #, python-format
 msgid "Operation Details"
-msgstr "Operatie details"
+msgstr "Bewerkingdetails"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -3830,7 +3812,7 @@ msgstr "Bewerkingen"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "Operatie soorten"
+msgstr "Bewerkingsoorten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_linked_move_operation_ids
@@ -4018,7 +4000,7 @@ msgstr "Verpakking te verplaatsen"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "Verpakking overplaatsingen"
+msgstr "Verpakking verplaatsingen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4286,7 +4268,7 @@ msgstr "Planner"
 msgid ""
 "Please create some Initial Demand or Mark as Todo and create some "
 "Operations. "
-msgstr "Maak alsjeblieft een initiële aanvraag of markeer als To Do en maak bewerkingen aan."
+msgstr "Maak een initiële aanvraag of Markeer als Taak en maak bewerkingen aan."
 
 #. module: stock
 #: code:addons/stock/stock.py:1706
@@ -4470,7 +4452,7 @@ msgstr "Productcode"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Product Lots"
-msgstr "Productie partijen"
+msgstr "Partijen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4959,7 +4941,7 @@ msgstr "Gereserveerde hoeveelheden"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reset Operations"
-msgstr "Operaties terugzetten"
+msgstr "Bewerkingen terugzetten"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5346,7 +5328,7 @@ msgstr "Bronlocatie"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_id
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Source Location Zone"
-msgstr "Bron locatie zone"
+msgstr "Bronlocatie zone"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_package_id
@@ -5356,7 +5338,7 @@ msgstr "Bron verpakking"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr "Bron locatie is actie=mutatie"
+msgstr "Bronlocatie is actie=mutatie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
@@ -5422,7 +5404,7 @@ msgstr "Voorraadtelling"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "Stock Inventory Lines"
+msgstr "Voorraad telregels"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
@@ -5914,7 +5896,7 @@ msgstr "Dit is de standaard doellocatie wanneer u handmatig een levering aanmaak
 msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "                you select a lot, you can get the traceability of the products contained in lot."
-msgstr "Dit is de lijst van alle productie partijen die u heeft geregistreerd. Wanneer\nu een partij selecteert kan u de traceerbaarheid van de producten in een partij ophalen."
+msgstr "Dit is de lijst van alle partijen die u heeft geregistreerd. Wanneer\nu een partij selecteert kan u de traceerbaarheid van de producten in een partij ophalen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -6322,7 +6304,7 @@ msgstr "Update beschikbare Hvh"
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Urgent"
-msgstr "Dringend"
+msgstr "Urgent"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
@@ -6341,7 +6323,7 @@ msgstr "Gebruik dit scherm voor het aanmaken van een verwervingsverzoek voor dit
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 msgid "Use your scanner to validate the transferred quantity quicker."
-msgstr "Gebruik uw scanner om de overplaatsingshoeveelheid sneller te valideren."
+msgstr "Gebruik uw scanner om de verplaatsingshoeveelheid sneller te valideren."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -6692,7 +6674,7 @@ msgstr "U kan dit of direct doen of markeren als To do voor verwerking in de toe
 msgid ""
 "You can either do it immediatly or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
-msgstr "U kan dit of handmatig doen of markeren als To do voor verwerking in de toekomst. Gebruik uw scanner om de overplaatsingshoeveelheid sneller te valideren."
+msgstr "U kan dit of handmatig doen of markeren als To do voor verwerking in de toekomst. Gebruik uw scanner om de verplaatsingshoeveelheid sneller te valideren."
 
 #. module: stock
 #: code:addons/stock/product.py:517
@@ -6970,7 +6952,7 @@ msgstr "van uw leverancier met de producten en de gevraagde hoeveelheden"
 msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
-msgstr "Wordt getoond op de overplaatsing als uw product zijn bevoorrading correct is geconfigureerd. <strong>Controleer de beschikbaarheid</strong> anders manhandmatig ueel"
+msgstr "Wordt getoond op de verplaatsing als uw product zijn bevoorrading correct is geconfigureerd. <strong>Controleer de beschikbaarheid</strong> anders manhandmatig ueel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id

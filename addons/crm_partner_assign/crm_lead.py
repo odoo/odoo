@@ -40,3 +40,10 @@ class crm_lead(osv.osv):
         for salesman_id, lead_ids in salesmans_leads.items():
             salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
             self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)
+
+    def set_tag_assign(self, cr, uid, ids, assign, context=None):
+        ASSIGNED = 'tag_portal_lead_assigned'
+        RECYCLE = 'tag_portal_lead_recycle'
+        tag_to_add = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', assign and ASSIGNED or RECYCLE)[1]
+        tag_to_rem = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', assign and RECYCLE or ASSIGNED)[1]
+        self.write(cr, uid, ids, {'tag_ids': [(3, tag_to_rem, False), (4, tag_to_add, False)]}, context=context)

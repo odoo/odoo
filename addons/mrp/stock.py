@@ -57,11 +57,12 @@ class StockMove(osv.osv):
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
+                        'price_unit': product.standard_price,
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
-                    if product.type in ('consu','product'):
+                    if product._need_procurement():
                         valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,

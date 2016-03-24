@@ -5,7 +5,7 @@
 
 {
     "name": "Bolivia - Accounting",
-    "version": "1.0",
+    "version": "2.0",
     "description": """
 Bolivian accounting chart and tax localization.
 

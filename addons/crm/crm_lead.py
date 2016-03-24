@@ -61,7 +61,7 @@ class crm_lead(FormatAddress, osv.osv):
 
     def _get_default_probability(self, cr, uid, context=None):
         """ Gives default probability """
-        stage_id = self._get_default_stage_id(cr, uid, context=None)
+        stage_id = self._get_default_stage_id(cr, uid, context=context)
         if stage_id:
             return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         else:
@@ -291,6 +291,8 @@ class crm_lead(FormatAddress, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if not context:
+            context = {}
         if user_id and context.get('team_id'):
             team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
             if user_id in team.member_ids.ids:
@@ -323,7 +325,7 @@ class crm_lead(FormatAddress, osv.osv):
         else:
             search_domain = [('team_id', '=', False)]
         # AND with the domain in parameter
-        search_domain = ['&'] + list(domain) + search_domain
+        search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('crm.stage').search(cr, uid, search_domain, order=order, limit=1, context=context)
         if stage_ids:
@@ -606,7 +608,8 @@ class crm_lead(FormatAddress, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_id', '=', merged_data['team_id'])], order='sequence', context=context)
+            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, ['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence', context=context)
+
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
@@ -632,7 +635,10 @@ class crm_lead(FormatAddress, osv.osv):
             'date_conversion': fields.datetime.now(),
         }
         if not lead.stage_id:
-            val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], team_id, [], context=context)
+            val['stage_id'] = stage_id
+            if stage_id:
+                val['probability'] = self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, team_id=False, context=None):

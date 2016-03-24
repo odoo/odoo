@@ -650,6 +650,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             target: 'current'
         });
     },
+            context: "{'default_no_auto_thread': False}",
 });
 
 

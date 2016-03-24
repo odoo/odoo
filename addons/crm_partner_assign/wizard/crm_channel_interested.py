@@ -30,7 +30,6 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             message = _('<p>I am interested by this lead.</p>')
             values = {}
         else:
-            stage = 'stage_portal_lead_recycle'
             if wizard.contacted:
                 message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
             else:
@@ -39,18 +38,13 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             partner_ids = self.pool.get('res.partner').search(cr, SUPERUSER_ID, [('id', 'child_of', user.partner_id.commercial_partner_id.id)], context=context)
             lead_obj.message_unsubscribe(cr, SUPERUSER_ID, context.get('active_ids', []), partner_ids, context=None)
-            try:
-                stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', stage)[1]
-            except ValueError:
-                stage_id = False
-            if stage_id:
-                values.update({'stage_id': stage_id})
         if wizard.comment:
             message += '<p>%s</p>' % wizard.comment
         for active_id in context.get('active_ids', []):
             lead_obj.message_post(cr, uid, active_id, body=message, subtype="mail.mt_comment", context=context)
         if values:
             lead_obj.write(cr, SUPERUSER_ID, context.get('active_ids', []), values)
+            lead_obj.set_tag_assign(cr, SUPERUSER_ID, context.get('active_ids', []), False)
         if wizard.interested:
             for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
                 lead_obj.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
