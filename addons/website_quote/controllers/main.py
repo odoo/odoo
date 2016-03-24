@@ -20,17 +20,21 @@ class sale_quote(http.Controller):
     def view(self, order_id, pdf=None, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
-        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id, request.context)
-        now = time.strftime('%Y-%m-%d')
-        dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'sale', 'action_quotations')
         if token:
-            if token != order.access_token:
-                return request.website.render('website.404')
+            order = request.env['sale.order'].sudo().search([('id', '=', order_id), ('access_token', '=', token)])
             # Log only once a day
-            if request.session.get('view_quote',False)!=now:
+            now = time.strftime('%Y-%m-%d')
+            if order and request.session.get('view_quote', False) != now:
                 request.session['view_quote'] = now
-                body=_('Quotation viewed by customer')
+                body = _('Quotation viewed by customer')
                 _message_post_helper(res_model='sale.order', res_id=order.id, message=body, token=token, token_field="access_token", message_type='notification')
+        else:
+            order = request.env['sale.order'].search([('id', '=', order_id)])
+
+        if not order:
+            return request.website.render('website.404')
+
+        dummy, action = request.env['ir.model.data'].get_object_reference('sale', 'action_quotations')
         days = 0
         if order.validity_date:
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
