@@ -55,88 +55,71 @@
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
 
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th class="text-right">Quantity</th>
-                        <th class="text-right">Unit Price</th>
-                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                        <th class="text-right">Taxes</th>
-                        <th class="text-right">Tax Excluded Price</th>
-                    </tr>
-               </thead>
-               <tbody class="sale_tbody">
-                    <t t-foreach="doc.layout_categories()" t-as="layout_category">
+            <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit Price</th>
+                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                            <th class="text-right">Taxes</th>
+                            <th class="text-right">Tax Excluded Price</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                        <t t-foreach="page" t-as="layout_category">
 
-                        <t t-if="layout_category_size > 1" groups="sale.group_sale_layout">
-                            <tr class="active">
-                                <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
-                                    <t t-esc="layout_category['name']"/>
-                                </td>
-                            </tr>
-                        </t>
-
-                        <!-- Lines associated -->
-                        <t t-foreach="layout_category['lines']" t-as="l">
-                            <tr>
-                                <td><span t-field="l.name"/></td>
-                                <td class="text-right">
-                                    <span t-field="l.product_uom_qty"/>
-                                    <span t-field="l.product_uom" groups="product.group_uom"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="l.price_unit"/>
-                                </td>
-                                <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
-                                    <span t-field="l.discount"/>
-                                </td>
-                                <td>
-                                    <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="l.price_subtotal"
-                                        t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </t>
-
-                        <t t-if="layout_category_size > 1 and layout_category['subtotal']" groups="sale.group_sale_layout">
-                            <tr class="text-right">
-                                <td colspan="6">
-                                    <strong>Subtotal: </strong>
-                                    <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                    <span t-esc="subtotal" t-esc-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </t>
-
-                        <t t-if="layout_category_size > 1 and layout_category['pagebreak']" groups="sale.group_sale_layout">
-                            <t t-if="layout_category_index &lt; layout_category_size - 1">
-                                <![CDATA[
-                                        </tbody>
-                                    </table>
-                                    <p style="page-break-before:always;"> </p>
-                                    <table class="table table-condensed">
-                                ]]>
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th class="text-right">Quantity</th>
-                                        <th class="text-right">Unit Price</th>
-                                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                                        <th class="text-right">Taxes</th>
-                                        <th class="text-right">Tax Excluded Price</th>
-                                    </tr>
-                                </thead>
-                                <![CDATA[
-                                    <tbody>
-                                ]]>
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
                             </t>
+
+                            <!-- Lines associated -->
+                            <t t-foreach="layout_category['lines']" t-as="l">
+                                <tr>
+                                    <td><span t-field="l.name"/></td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom_qty"/>
+                                        <span t-field="l.product_uom" groups="product.group_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_subtotal"
+                                            t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
+                                <tr class="text-right">
+                                    <td colspan="6">
+                                        <strong>Subtotal: </strong>
+                                        <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
+                                        <span t-esc="subtotal" t-esc-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </t>
+
                         </t>
-                    </t>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+
+                <t t-if="page_index &lt; page_size - 1" groups="sale.group_sale_layout">
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
 
             <div class="row" name="total">
                 <div class="col-xs-4 pull-right">
