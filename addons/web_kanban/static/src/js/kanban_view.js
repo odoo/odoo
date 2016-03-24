@@ -423,8 +423,34 @@ var KanbanView = View.extend({
 
     render_grouped: function (fragment) {
         var self = this;
+
+        // FORWARDPORT UP TO SAAS-10, NOT IN MASTER!
+        // Drag'n'drop activation/deactivation
+        var group_by_field_attrs = this.fields_view.fields[this.group_by_field];
+
+        // Group_by field might not be in the Kanban view, so we need to get it somewhere else...
+        // This somewhere else is on the search view.
+        if (group_by_field_attrs === undefined) {
+            if (this.ViewManager.searchview.groupby_menu && this.ViewManager.searchview.groupby_menu.groupable_fields) {
+                group_by_field_attrs = _.find(this.ViewManager.searchview.groupby_menu.groupable_fields, function(field) {
+                    return field.name === self.group_by_field;
+                })
+            }
+        }
+        // Deactivate the drag'n'drop if:
+        // - field is a date or datetime since we group by month
+        // - field is readonly
+        var draggable = true;
+        if (group_by_field_attrs) {
+            if (group_by_field_attrs.type === "date" || group_by_field_attrs.type === "datetime") {
+                var draggable = false;
+            }
+            else if (group_by_field_attrs.readonly !== undefined) {
+                var draggable = !(group_by_field_attrs.readonly);
+            }
+        }
         var record_options = _.extend(this.record_options, {
-            draggable: true,
+            draggable: draggable,
         });
 
         var column_options = this.get_column_options();

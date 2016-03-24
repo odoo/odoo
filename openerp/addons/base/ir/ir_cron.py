@@ -87,7 +87,7 @@ class ir_cron(osv.osv):
             context={}
         cron_obj = self.browse(cr, uid, ids, context=context)
         for cron in cron_obj:
-            self._callback(cr, uid, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
+            self._callback(cr, cron_obj.user_id.id, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
         return True
 
     def _handle_callback_exception(self, cr, uid, model_name, method_name, args, job_id, job_exception):

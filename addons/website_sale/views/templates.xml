@@ -1376,7 +1376,7 @@
     <t t-if="tx_ids and state == 'cancel'">
       <p>The payment seems to have been canceled.</p>
     </t>
-    <t t-if="tx_ids and state == 'pending' and validation == 'manual'">
+    <t t-if="tx_ids and state == 'pending' and validation">
       <p>Your transaction is waiting a manual confirmation.</p><br />
       <t t-if="tx_post_msg">
         <div class="hidden-print"><t t-raw="tx_post_msg"/></div>
@@ -1426,8 +1426,11 @@
 <!-- payment acquirer information -->
 <template id="payment_confirmation_status">
     <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
-      <div class="alert alert-info" role="alert">
-        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+      <div class="panel panel-info">
+        <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
+        <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
+            <t t-raw="order.payment_acquirer_id.post_msg"/>
+        </div>
       </div>
     </t>
     <t t-if="order.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
